@@ -1,0 +1,67 @@
+# Node
+
+node_modules/
+dist/
+build/
+
+# Python
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+
+# Logs
+
+logs/
+*.log
+
+# IDE
+
+.vscode/
+.idea/
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Tauri
+
+src-tauri/target/
+
+# Docker
+
+docker-data/
+
+# AI Models
+
+ai-models/
+
+# Environment
+
+.env.local
+.env.production
+
+# Coverage
+
+coverage/
+
+# Redis
+
+dump.rdb
+
+# PostgreSQL
+
+postgres-data/
+
+# ChromaDB
+
+chromadb/
+
+# Temporary
+
+tmp/
+temp/

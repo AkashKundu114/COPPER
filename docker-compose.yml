@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: copper-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: copper-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+      - chromadb
+      - ollama
+
+  postgres:
+    image: postgres:16
+    container_name: copper-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: copper
+      POSTGRES_PASSWORD: copperpass
+      POSTGRES_DB: copperdb
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: copper-redis
+    ports:
+      - "6379:6379"
+
+  chromadb:
+    image: chromadb/chroma
+    container_name: copper-chromadb
+    ports:
+      - "8001:8000"
+
+  ollama:
+    image: ollama/ollama
+    container_name: copper-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  ollama:
