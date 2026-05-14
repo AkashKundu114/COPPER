@@ -1,0 +1,69 @@
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from app.core.config import settings
+from app.core.logger import logger
+from app.database.postgres import init_db
+from app.database.redis_client import redis_close
+from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
+from app.api.routes import chat, voice, memory, reminders, automation, vision
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    try:
+        init_db()
+    except Exception as e:
+        logger.warning(f"DB init failed (continuing): {e}")
+    start_scheduler()
+    logger.info("COPPER backend ready")
+    yield
+    stop_scheduler()
+    await redis_close()
+    logger.info("COPPER backend shutdown complete")
+
+
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description="Centralized Omnifunctional Personal Productivity and Execution Routine",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+app.include_router(chat.router, prefix="/api/v1")
+app.include_router(voice.router, prefix="/api/v1")
+app.include_router(memory.router, prefix="/api/v1")
+app.include_router(reminders.router, prefix="/api/v1")
+app.include_router(automation.router, prefix="/api/v1")
+app.include_router(vision.router, prefix="/api/v1")
+
+
+@app.get("/")
+async def root():
+    return {
+        "name": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "status": "online",
+    }
+
+
+@app.get("/health")
+async def health():
+    from app.ai.llm.ollama_client import ollama_client
+    ollama_ok = await ollama_client.is_available()
+    return {
+        "status": "healthy",
+        "ollama": ollama_ok,
+        "version": settings.APP_VERSION,
+    }

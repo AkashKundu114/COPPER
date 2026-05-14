@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --copper: #ff7c1f;
+  --copper-dim: rgba(255, 124, 31, 0.15);
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a28;
+  --border: rgba(255, 124, 31, 0.2);
+  --text-primary: #f0f0f8;
+  --text-muted: #8888aa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--copper-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 124, 31, 0.4); }
+
+/* Selection */
+::selection { background: rgba(255, 124, 31, 0.3); color: #fff; }
+
+/* Glass card */
+.glass {
+  background: rgba(26, 26, 40, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* Copper glow text */
+.glow-text {
+  color: var(--copper);
+  text-shadow: 0 0 20px rgba(255, 124, 31, 0.5);
+}
+
+/* Neon border */
+.neon-border {
+  border: 1px solid var(--copper);
+  box-shadow: 0 0 10px rgba(255, 124, 31, 0.3), inset 0 0 10px rgba(255, 124, 31, 0.05);
+}
+
+/* Copper button */
+.btn-copper {
+  @apply bg-copper-600 hover:bg-copper-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200;
+  box-shadow: 0 0 15px rgba(255, 124, 31, 0.3);
+}
+.btn-copper:hover {
+  box-shadow: 0 0 25px rgba(255, 124, 31, 0.5);
+}
+
+/* Ghost button */
+.btn-ghost {
+  @apply border border-copper-600/30 hover:border-copper-500/60 text-copper-400 hover:text-copper-300 px-4 py-2 rounded-lg transition-all duration-200;
+}
+
+/* Input */
+.input-copper {
+  @apply bg-dark-700 border border-copper-600/30 focus:border-copper-500/60 text-white rounded-lg px-4 py-2 outline-none transition-all;
+}
+.input-copper:focus {
+  box-shadow: 0 0 0 2px rgba(255, 124, 31, 0.15);
+}
+
+/* Markdown prose */
+.prose-copper { @apply text-gray-300 leading-relaxed; }
+.prose-copper h1, .prose-copper h2, .prose-copper h3 { @apply text-white font-semibold mt-4 mb-2; }
+.prose-copper code { @apply bg-dark-600 text-copper-300 rounded px-1.5 py-0.5 text-sm font-mono; }
+.prose-copper pre { @apply bg-dark-800 rounded-lg p-4 overflow-x-auto my-3; }
+.prose-copper ul, .prose-copper ol { @apply pl-5 space-y-1; }
+.prose-copper li { @apply list-disc; }
+.prose-copper a { @apply text-copper-400 hover:text-copper-300 underline; }
+.prose-copper strong { @apply text-white font-semibold; }
+.prose-copper blockquote { @apply border-l-2 border-copper-600 pl-4 italic text-gray-400; }
