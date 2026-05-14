@@ -104,6 +104,7 @@ ai-models/     -> Local AI models
 scripts/       -> Automation scripts
 infrastructure/-> Docker and deployment configs
 docs/          -> Project documentation
+tests/         -> Automated test suites
 ```
 
 ---
@@ -120,6 +121,7 @@ cd COPPER
 ## Start Docker Services
 
 ```bash
+cp backend/.env.example backend/.env
 docker-compose up --build
 ```
 

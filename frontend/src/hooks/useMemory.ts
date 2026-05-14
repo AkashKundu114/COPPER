@@ -1,8 +1,13 @@
 import { useState, useCallback } from "react";
 import { memoryAPI } from "@/services/api";
 
+export interface MemorySearchResults {
+  chat_context: string;
+  documents: unknown[];
+}
+
 export function useMemory() {
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<MemorySearchResults | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [stats, setStats] = useState<any>(null);
 
@@ -10,7 +15,7 @@ export function useMemory() {
     setIsSearching(true);
     try {
       const { data } = await memoryAPI.search(query);
-      setResults(data);
+      setResults(data as MemorySearchResults);
       return data;
     } catch (e) {
       console.error("Memory search error:", e);

@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+coverage
+src-tauri/target
+.env
+.env.local
+.env.production
+npm-debug.log*
