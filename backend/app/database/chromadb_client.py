@@ -1,6 +1,5 @@
 from typing import Optional
 import chromadb
-from chromadb.config import Settings as ChromaSettings
 from app.core.config import settings
 from app.core.logger import logger
 
@@ -10,6 +9,7 @@ _client: Optional[chromadb.AsyncHttpClient] = None
 async def get_chroma_client() -> chromadb.AsyncHttpClient:
     global _client
     if _client is None:
+        # AsyncHttpClient is NOT awaitable itself in chromadb>=0.5 — use the factory
         _client = await chromadb.AsyncHttpClient(
             host=settings.CHROMA_HOST,
             port=settings.CHROMA_PORT,

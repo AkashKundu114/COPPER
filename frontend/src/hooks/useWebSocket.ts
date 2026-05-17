@@ -9,17 +9,20 @@ export function useWebSocket(sessionId: string) {
     wsService.connect(sessionId);
 
     const unsub = wsService.onMessage((msg: WSMessage) => {
+      const { streamingId } = useChatStore.getState();
+
       if (msg.type === "chunk" && msg.content) {
-        const { streamingId } = useChatStore.getState();
+        // Append to the already-created streaming bubble
         if (streamingId) appendChunk(streamingId, msg.content);
       } else if (msg.type === "done") {
-        const { streamingId } = useChatStore.getState();
         if (streamingId) finishStream(streamingId);
       } else if (msg.type === "thinking") {
-        addMessage("assistant", "");
+        // "thinking" just means the server acknowledged the message — no new bubble needed
+        // The empty assistant bubble was already created by send() below
       } else if (msg.type === "error" && msg.content) {
-        const { streamingId } = useChatStore.getState();
-        if (streamingId) finishStream(streamingId);
+        if (streamingId) {
+          finishStream(streamingId);
+        }
         addMessage("assistant", `❌ Error: ${msg.content}`);
       }
     });
@@ -31,8 +34,11 @@ export function useWebSocket(sessionId: string) {
 
   const send = useCallback(
     (message: string, provider = "ollama") => {
+      // 1. Show user bubble immediately
       addMessage("user", message);
+      // 2. Reserve the assistant streaming bubble
       addMessage("assistant", "");
+      // 3. Fire to server
       wsService.sendMessage(message, provider);
     },
     [addMessage]

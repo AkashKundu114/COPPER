@@ -1,5 +1,5 @@
 from typing import Optional, AsyncGenerator
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama          # ← fixed: was langchain_community
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
 from app.core.config import settings
