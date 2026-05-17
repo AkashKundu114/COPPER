@@ -103,7 +103,7 @@ COPPER/
 ### 1. Clone
 
 ```bash
-git clone https://github.com/your-username/COPPER.git
+git clone https://github.com/AkashKundu114/COPPER.git
 cd COPPER
 ```
 
