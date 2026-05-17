@@ -10,7 +10,7 @@ build/
 *.pyc
 *.pyo
 *.pyd
-venv/
+backend/.venv/
 .env
 
 # Logs
