@@ -1,5 +1,5 @@
 import io
-from typing import Optional, tuple
+from typing import Optional
 from app.core.logger import logger
 
 

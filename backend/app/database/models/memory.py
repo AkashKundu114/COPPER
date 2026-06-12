@@ -10,7 +10,7 @@ class Memory(Base):
     user_id = Column(Integer, nullable=True)
     key = Column(String(200), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    metadata = Column(JSON, nullable=True)
+    extra_metadata = Column("metadata", JSON, nullable=True)
     source = Column(String(100), nullable=True)  # chat | file | voice | manual
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
@@ -20,7 +20,7 @@ class Memory(Base):
             "id": self.id,
             "key": self.key,
             "content": self.content,
-            "metadata": self.metadata,
+            "metadata": self.extra_metadata,
             "source": self.source,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }

@@ -28,6 +28,8 @@ def get_db():
 
 def init_db():
     try:
+        from app.database.models import history, memory, reminders, user  # noqa: F401
+
         Base.metadata.create_all(bind=engine)
         logger.info("Database tables created successfully")
     except Exception as e:

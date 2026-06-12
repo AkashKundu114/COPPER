@@ -1,16 +1,15 @@
-from typing import Optional
+from typing import Any, Optional
 import chromadb
 from app.core.config import settings
 from app.core.logger import logger
 
-_client: Optional[chromadb.AsyncHttpClient] = None
+_client: Optional[Any] = None
 
 
-async def get_chroma_client() -> chromadb.AsyncHttpClient:
+async def get_chroma_client() -> Any:
     global _client
     if _client is None:
-        # AsyncHttpClient is NOT awaitable itself in chromadb>=0.5 — use the factory
-        _client = await chromadb.AsyncHttpClient(
+        _client = chromadb.HttpClient(
             host=settings.CHROMA_HOST,
             port=settings.CHROMA_PORT,
         )
@@ -21,7 +20,7 @@ async def get_chroma_client() -> chromadb.AsyncHttpClient:
 async def get_or_create_collection(name: str, metadata: dict = None):
     client = await get_chroma_client()
     try:
-        collection = await client.get_or_create_collection(
+        collection = client.get_or_create_collection(
             name=name,
             metadata=metadata or {"hnsw:space": "cosine"},
         )

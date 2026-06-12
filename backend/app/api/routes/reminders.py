@@ -6,8 +6,11 @@ from sqlalchemy.orm import Session
 from app.database.postgres import get_db
 from app.database.models.reminders import Reminder
 from app.ai.agents.reminder_agent import reminder_agent
-from app.ai.orchestration.task_scheduler import schedule_once, schedule_recurring, remove_job, list_jobs
+from app.ai.orchestration.task_scheduler import (
+    schedule_once, schedule_recurring, remove_job, list_jobs,
+)
 from app.core.logger import logger
+import asyncio
 
 router = APIRouter(prefix="/reminders", tags=["reminders"])
 
@@ -15,7 +18,7 @@ router = APIRouter(prefix="/reminders", tags=["reminders"])
 class ReminderCreate(BaseModel):
     title: str
     description: Optional[str] = None
-    due_at: str  # ISO datetime string
+    due_at: str
     is_recurring: bool = False
     recurrence_rule: Optional[str] = None
 
@@ -24,13 +27,21 @@ class ReminderFromText(BaseModel):
     text: str
 
 
+def _fire_reminder(reminder_id: int):
+    loop = asyncio.get_event_loop()
+    if loop.is_running():
+        asyncio.run_coroutine_threadsafe(_notify_reminder(reminder_id), loop)
+    else:
+        loop.run_until_complete(_notify_reminder(reminder_id))
+
+
 async def _notify_reminder(reminder_id: int):
-    """Called by scheduler when reminder fires."""
     from app.api.websocket.socket_manager import manager
     await manager.broadcast({
         "type": "reminder",
         "reminder_id": reminder_id,
-        "message": "Reminder triggered",
+        "title": "Reminder",
+        "body": f"Reminder #{reminder_id} triggered",
     })
     logger.info(f"Reminder {reminder_id} fired")
 
@@ -53,19 +64,17 @@ async def create_reminder(req: ReminderCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(reminder)
 
-    # Schedule notification
     job_id = f"reminder_{reminder.id}"
     if req.is_recurring and req.recurrence_rule:
-        schedule_recurring(job_id, _notify_reminder, req.recurrence_rule, args=[reminder.id])
+        schedule_recurring(job_id, _fire_reminder, req.recurrence_rule, args=[reminder.id])
     else:
-        schedule_once(job_id, _notify_reminder, due_at, args=[reminder.id])
+        schedule_once(job_id, _fire_reminder, due_at, args=[reminder.id])
 
     return reminder.to_dict()
 
 
 @router.post("/parse")
 async def parse_reminder_from_text(req: ReminderFromText):
-    """Extract reminder details from natural language."""
     extracted = await reminder_agent.extract_reminder(req.text)
     if not extracted:
         raise HTTPException(status_code=422, detail="Could not extract reminder details")
@@ -84,6 +93,11 @@ async def list_reminders(
         .all()
     )
     return [r.to_dict() for r in reminders]
+
+
+@router.get("/scheduler/jobs")
+async def scheduled_jobs():
+    return list_jobs()
 
 
 @router.get("/{reminder_id}")
@@ -114,8 +128,3 @@ async def delete_reminder(reminder_id: int, db: Session = Depends(get_db)):
     db.commit()
     remove_job(f"reminder_{reminder_id}")
     return {"deleted": True}
-
-
-@router.get("/scheduler/jobs")
-async def scheduled_jobs():
-    return list_jobs()

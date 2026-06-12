@@ -16,7 +16,7 @@ langchain==0.2.0
 langchain-community==0.2.0
 langchain-openai==0.1.7
 langchain-ollama==0.1.1
-langgraph>=0.1.1
+langgraph==0.1.1
 
 # Embeddings & vector search
 sentence-transformers==2.7.0
@@ -38,13 +38,14 @@ selenium==4.21.0
 
 # Voice / Audio
 faster-whisper==1.0.2
+# Installed separately in Docker with the CPU wheel index.
 torch==2.3.0
 transformers==4.41.0
 pyttsx3==2.90
 SpeechRecognition==3.10.4
 
 # Ollama python client
-ollama==0.2.1
+ollama==0.3.3
 
 # Web / API
 websockets==12.0

@@ -1,4 +1,5 @@
 import uuid
+import asyncio
 from typing import Optional
 from app.database.chromadb_client import get_or_create_collection
 from app.ai.memory.embeddings import embed_text, embed_texts
@@ -24,7 +25,8 @@ class VectorStore:
         collection = await self._get_collection()
         doc_id = doc_id or str(uuid.uuid4())
         embedding = embed_text(text)
-        await collection.add(
+        await asyncio.to_thread(
+            collection.add,
             ids=[doc_id],
             embeddings=[embedding],
             documents=[text],
@@ -41,7 +43,8 @@ class VectorStore:
         collection = await self._get_collection()
         ids = ids or [str(uuid.uuid4()) for _ in texts]
         embeddings = embed_texts(texts)
-        await collection.add(
+        await asyncio.to_thread(
+            collection.add,
             ids=ids,
             embeddings=embeddings,
             documents=texts,
@@ -65,7 +68,7 @@ class VectorStore:
         if where:
             kwargs["where"] = where
         try:
-            results = await collection.query(**kwargs)
+            results = await asyncio.to_thread(collection.query, **kwargs)
             items = []
             for i in range(len(results["ids"][0])):
                 items.append({
@@ -82,7 +85,7 @@ class VectorStore:
     async def delete(self, doc_id: str) -> bool:
         collection = await self._get_collection()
         try:
-            await collection.delete(ids=[doc_id])
+            await asyncio.to_thread(collection.delete, ids=[doc_id])
             return True
         except Exception as e:
             logger.error(f"Vector delete error: {e}")
@@ -90,4 +93,4 @@ class VectorStore:
 
     async def count(self) -> int:
         collection = await self._get_collection()
-        return await collection.count()
+        return await asyncio.to_thread(collection.count)

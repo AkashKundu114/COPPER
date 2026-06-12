@@ -3,13 +3,13 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # System dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     libpq-dev \
     tesseract-ocr \
     tesseract-ocr-eng \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.3.0+cpu \
+    && grep -v '^torch==' requirements.txt > /tmp/requirements-no-torch.txt \
+    && pip install --no-cache-dir -r /tmp/requirements-no-torch.txt
 
 COPY . .
 

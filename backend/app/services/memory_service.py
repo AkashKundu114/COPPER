@@ -25,7 +25,7 @@ class MemoryService:
         doc_id = await memory_manager.save_document(content, source, metadata)
 
         if db:
-            mem = Memory(key=key, content=content, source=source, metadata=metadata)
+            mem = Memory(key=key, content=content, source=source, extra_metadata=metadata)
             db.add(mem)
             db.commit()
             db.refresh(mem)
