@@ -1,0 +1,657 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# COPPER Kubernetes Deployment — Full Manifest
+# Apply: kubectl apply -f copper-full-deployment.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: copper
+  labels:
+    app.kubernetes.io/part-of: copper
+
+---
+# ── Secrets (use Sealed Secrets or Vault in production) ─────────────────────
+apiVersion: v1
+kind: Secret
+metadata:
+  name: copper-secrets
+  namespace: copper
+type: Opaque
+stringData:
+  SECRET_KEY: "CHANGE_ME_64_CHAR_HEX"
+  POSTGRES_PASSWORD: "CHANGE_ME"
+  REDIS_PASSWORD: "CHANGE_ME"
+  OPENAI_API_KEY: ""
+  CHROMA_TOKEN: "CHANGE_ME"
+  SENTRY_DSN: ""
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: copper-config
+  namespace: copper
+data:
+  POSTGRES_USER: "copper"
+  POSTGRES_DB: "copperdb"
+  POSTGRES_HOST: "postgres"
+  REDIS_HOST: "redis"
+  CHROMA_HOST: "chromadb"
+  CHROMA_PORT: "8000"
+  OLLAMA_HOST: "http://ollama:11434"
+  OLLAMA_MODEL: "llama3"
+  WHISPER_MODEL: "base"
+  DEBUG: "false"
+  APP_ENV: "production"
+
+---
+# ── Backend Deployment ────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: copper-backend
+  namespace: copper
+  labels:
+    app: copper-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: copper-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: copper-backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: copper-backend
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: backend
+          image: ghcr.io/YOURORG/copper-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: copper-config
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: SECRET_KEY
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: REDIS_PASSWORD
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: OPENAI_API_KEY
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: copper-backend
+  namespace: copper
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: copper
+  labels:
+    app: copper-backend
+spec:
+  selector:
+    app: copper-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: copper-backend-hpa
+  namespace: copper
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: copper-backend
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# ── Frontend Deployment ───────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: copper-frontend
+  namespace: copper
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: copper-frontend
+  template:
+    metadata:
+      labels:
+        app: copper-frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: frontend
+          image: ghcr.io/YOURORG/copper-frontend:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: copper
+spec:
+  selector:
+    app: copper-frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+
+---
+# ── PostgreSQL StatefulSet ────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: copper
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 999
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: copper-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: copper-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: POSTGRES_PASSWORD
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "copper", "-d", "copperdb"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "copper", "-d", "copperdb"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard-rwo
+        resources:
+          requests:
+            storage: 20Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: copper
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+  clusterIP: None  # Headless for StatefulSet DNS
+
+---
+# ── Redis StatefulSet ─────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: copper
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command:
+            - redis-server
+            - --maxmemory 512mb
+            - --maxmemory-policy allkeys-lru
+            - --appendonly yes
+            - --requirepass $(REDIS_PASSWORD)
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: copper-secrets
+                  key: REDIS_PASSWORD
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "768Mi"
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: copper
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+  clusterIP: None
+
+---
+# ── ChromaDB StatefulSet ──────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chromadb
+  namespace: copper
+spec:
+  serviceName: chromadb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chromadb
+  template:
+    metadata:
+      labels:
+        app: chromadb
+    spec:
+      containers:
+        - name: chromadb
+          image: chromadb/chroma:0.5.0
+          env:
+            - name: IS_PERSISTENT
+              value: "TRUE"
+            - name: ANONYMIZED_TELEMETRY
+              value: "FALSE"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: chromadb-data
+              mountPath: /chroma/chroma
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+  volumeClaimTemplates:
+    - metadata:
+        name: chromadb-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chromadb
+  namespace: copper
+spec:
+  selector:
+    app: chromadb
+  ports:
+    - port: 8000
+
+---
+# ── Ollama StatefulSet (GPU Node) ─────────────────────────────────────────────
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ollama
+  namespace: copper
+spec:
+  serviceName: ollama
+  replicas: 1  # NEVER scale to >1 — single GPU, sequential model loading
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4  # adjust for your cloud
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: ollama
+          image: ollama/ollama:latest
+          ports:
+            - containerPort: 11434
+          env:
+            - name: OLLAMA_NUM_PARALLEL
+              value: "1"
+            - name: OLLAMA_MAX_LOADED_MODELS
+              value: "1"
+            - name: OLLAMA_KEEP_ALIVE
+              value: "0"
+          volumeMounts:
+            - name: ollama-data
+              mountPath: /root/.ollama
+          resources:
+            requests:
+              cpu: "2000m"
+              memory: "4Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "4000m"
+              memory: "10Gi"
+              nvidia.com/gpu: "1"
+          livenessProbe:
+            httpGet:
+              path: /api/tags
+              port: 11434
+            initialDelaySeconds: 60
+            periodSeconds: 30
+  volumeClaimTemplates:
+    - metadata:
+        name: ollama-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: premium-rwo  # NVMe-backed for fast model loading
+        resources:
+          requests:
+            storage: 50Gi  # enough for 3-4 7B models
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: copper
+spec:
+  selector:
+    app: ollama
+  ports:
+    - port: 11434
+  clusterIP: None
+
+---
+# ── Ingress (nginx-ingress-controller) ───────────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: copper-ingress
+  namespace: copper
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/enable-websocket: "true"
+    nginx.ingress.kubernetes.io/rate-limit-rps: "30"
+spec:
+  tls:
+    - hosts:
+        - copper.yourdomain.com
+      secretName: copper-tls
+  rules:
+    - host: copper.yourdomain.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000
+
+---
+# ── Network Policies ──────────────────────────────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-only-to-db
+  namespace: copper
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: copper-backend
+  policyTypes:
+    - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-only-to-redis
+  namespace: copper
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: copper-backend
+  policyTypes:
+    - Ingress
+
+---
+# ── PodDisruptionBudget ───────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: copper-backend-pdb
+  namespace: copper
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: copper-backend
+
+---
+# ── Resource Quota ────────────────────────────────────────────────────────────
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: copper-quota
+  namespace: copper
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    pods: "30"
+    requests.nvidia.com/gpu: "1"
+    limits.nvidia.com/gpu: "1"
+
+---
+# ── Prometheus ServiceMonitor (requires prometheus-operator) ─────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: copper-backend-monitor
+  namespace: copper
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: copper-backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
