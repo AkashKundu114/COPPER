@@ -1,0 +1,32 @@
+# COPPER Fine-Tune — Python dependencies
+# Install with:  pip install -r requirements_finetune.txt
+#
+# Tested on:
+#   Python 3.10 / 3.11
+#   CUDA 11.8  →  torch 2.1.x + bitsandbytes 0.43
+#   CUDA 12.1  →  torch 2.2.x + bitsandbytes 0.43
+#
+# For H100 / CUDA 12.4+:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+
+# ── Core ML stack ──────────────────────────────────────────────────────────
+torch>=2.1.0
+transformers>=4.40.0
+datasets>=2.18.0
+tokenizers>=0.19.0
+accelerate>=0.27.0
+safetensors>=0.4.2
+
+# ── Parameter-efficient fine-tuning ────────────────────────────────────────
+peft>=0.10.0
+trl>=0.8.6
+
+# ── 4-bit / 8-bit quantisation ─────────────────────────────────────────────
+bitsandbytes>=0.43.0
+
+# ── Optional: Weights & Biases experiment tracking ─────────────────────────
+# wandb>=0.17.0
+
+# ── Utilities ──────────────────────────────────────────────────────────────
+tqdm>=4.66.0
+numpy>=1.26.0
