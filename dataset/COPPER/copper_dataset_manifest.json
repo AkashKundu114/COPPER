@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-07-01T11:48:33.495698",
+  "total_records": 1000,
+  "multi_turn_records": 100,
+  "splits": {
+    "train": "copper_train.jsonl",
+    "val": "copper_val.jsonl",
+    "test": "copper_test.jsonl"
+  },
+  "agent_distribution": {
+    "CHRONOS": 50,
+    "AXIS": 38,
+    "FORGE": 39,
+    "CYPHER": 78,
+    "CRUCIBLE": 65,
+    "HERMES": 45,
+    "ATLAS": 46,
+    "TALON": 37,
+    "SONAR": 5,
+    "AETHER": 29,
+    "COMPLETE": 40,
+    "KINETIC": 46,
+    "DIRECTOR": 21,
+    "PORTAL": 48,
+    "HAWK": 31,
+    "ORACLE": 13,
+    "ARGUS": 45,
+    "BEACON": 33,
+    "VANGUARD": 51,
+    "IRIS": 14,
+    "AEON": 33,
+    "PULSE": 13,
+    "ZENITH": 22,
+    "PHANTOM": 43,
+    "RAPTOR": 44,
+    "NEXUS": 35,
+    "LEDGER": 36
+  }
+}
