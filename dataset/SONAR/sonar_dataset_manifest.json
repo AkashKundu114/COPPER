@@ -1,0 +1,19 @@
+{
+  "agent": "SONAR",
+  "model_tier": "MODEL_6_AUDIO",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "sonar_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "sonar_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "sonar_test.jsonl",
+      "count": 150
+    }
+  }
+}

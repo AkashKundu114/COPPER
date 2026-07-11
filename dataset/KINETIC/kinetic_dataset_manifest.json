@@ -1,0 +1,19 @@
+{
+  "agent": "KINETIC",
+  "model_tier": "MODEL_3_OS",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "kinetic_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "kinetic_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "kinetic_test.jsonl",
+      "count": 150
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "agent": "DIRECTOR",
+  "model_tier": "MODEL_5_WEB",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "director_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "director_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "director_test.jsonl",
+      "count": 150
+    }
+  }
+}

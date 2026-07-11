@@ -1,0 +1,19 @@
+{
+  "agent": "ARGUS",
+  "model_tier": "MODEL_2_CODE",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "argus_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "argus_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "argus_test.jsonl",
+      "count": 150
+    }
+  }
+}

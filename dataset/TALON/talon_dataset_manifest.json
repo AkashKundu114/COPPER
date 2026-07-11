@@ -1,0 +1,19 @@
+{
+  "agent": "TALON",
+  "model_tier": "MODEL_4_VISION",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "talon_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "talon_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "talon_test.jsonl",
+      "count": 150
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "agent": "HAWK",
+  "model_tier": "MODEL_4_VISION",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "hawk_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "hawk_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "hawk_test.jsonl",
+      "count": 150
+    }
+  }
+}

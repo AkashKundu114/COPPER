@@ -1,0 +1,19 @@
+{
+  "agent": "MNEMONIC",
+  "model_tier": "MODEL_1_CORE",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "mnemonic_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "mnemonic_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "mnemonic_test.jsonl",
+      "count": 150
+    }
+  }
+}

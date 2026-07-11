@@ -1,0 +1,19 @@
+{
+  "agent": "CYPHER",
+  "model_tier": "MODEL_2_CODE",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "cypher_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "cypher_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "cypher_test.jsonl",
+      "count": 150
+    }
+  }
+}

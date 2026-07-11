@@ -1,0 +1,19 @@
+{
+  "agent": "VAULT",
+  "model_tier": "MODEL_3_OS",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "vault_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "vault_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "vault_test.jsonl",
+      "count": 150
+    }
+  }
+}

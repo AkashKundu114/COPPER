@@ -1,0 +1,19 @@
+{
+  "agent": "ZENITH",
+  "model_tier": "MODEL_3_OS",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "zenith_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "zenith_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "zenith_test.jsonl",
+      "count": 150
+    }
+  }
+}

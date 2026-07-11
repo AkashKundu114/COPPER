@@ -1,0 +1,216 @@
+{
+  "total_agents": 30,
+  "records_per_agent_requested": 1500,
+  "agents": {
+    "AEON": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "AETHER": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "ARGUS": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "ATLAS": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "AXIS": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "BEACON": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "CHRONOS": {
+      "model_tier": "MODEL_1_CORE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "CRUCIBLE": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "CYPHER": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "DIRECTOR": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "FORGE": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "GLITCH": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "HAWK": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "HERMES": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "IRIS": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "KINETIC": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "LEDGER": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "MNEMONIC": {
+      "model_tier": "MODEL_1_CORE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "NEXUS": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "ORACLE": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "PHANTOM": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "POLYGLOT": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "PORTAL": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "PULSE": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "RAPTOR": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "SONAR": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "TALON": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "VANGUARD": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "VAULT": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "ZENITH": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "agent": "POLYGLOT",
+  "model_tier": "MODEL_6_AUDIO",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "polyglot_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "polyglot_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "polyglot_test.jsonl",
+      "count": 150
+    }
+  }
+}
