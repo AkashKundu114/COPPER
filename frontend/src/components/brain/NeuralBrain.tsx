@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AGENTS, TIER_COLORS } from "../../data/agents";
-import { computeLayout, CENTER, VIEWBOX } from "../../lib/layout";
+import { computeLayout, hashStr, CENTER, VIEWBOX } from "../../lib/layout";
 import type { AgentStats } from "../../lib/api";
 
 interface Props {
@@ -50,8 +50,9 @@ export function NeuralBrain({
           const stats = agentStats[agent.id];
           const glow = stats?.glow ?? 0;
           const tierColor = TIER_COLORS[agent.tier];
+          const baseLineOpacity = 0.12 + glow * 0.35;
           return (
-            <line
+            <motion.line
               key={`synapse-${agent.id}`}
               x1={CENTER}
               y1={CENTER}
@@ -59,8 +60,14 @@ export function NeuralBrain({
               y2={pos.y}
               stroke={tierColor}
               strokeWidth={1 + glow * 1.5}
-              opacity={0.12 + glow * 0.35}
               strokeLinecap="round"
+              animate={{ opacity: [baseLineOpacity, baseLineOpacity + 0.1, baseLineOpacity] }}
+              transition={{
+                duration: 4 + (hashStr(agent.id) % 25) / 10,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: (hashStr(agent.id) % 20) / 10,
+              }}
             />
           );
         })}
@@ -156,14 +163,28 @@ export function NeuralBrain({
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
-                r={radius}
                 fill={isActive ? "#eaf6ff" : tierColor}
-                opacity={isActive ? 1 : baseOpacity}
                 filter={isActive ? "url(#soft-blur)" : undefined}
                 stroke={isSelected ? "#eaf6ff" : "transparent"}
                 strokeWidth={isSelected ? 2 : 0}
-                className="cursor-pointer transition-[filter] duration-300"
-                whileHover={{ scale: 1.25 }}
+                style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
+                animate={
+                  isActive
+                    ? { r: radius, opacity: 1, scale: 1 }
+                    : { r: radius, opacity: [baseOpacity, baseOpacity + 0.18, baseOpacity], scale: [1, 1.05, 1] }
+                }
+                transition={
+                  isActive
+                    ? { duration: 0.25 }
+                    : {
+                        duration: 3.4 + (hashStr(agent.id) % 22) / 10,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: (hashStr(agent.id) % 30) / 10,
+                      }
+                }
+                className="cursor-pointer"
+                whileHover={{ scale: 1.35 }}
                 onClick={() => onSelectAgent(agent.id)}
                 role="button"
                 tabIndex={0}

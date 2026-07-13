@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { NeuralBrain } from "./components/brain/NeuralBrain";
 import { ChatDock } from "./components/chat/ChatDock";
+import { SpeakingBar } from "./components/chat/SpeakingBar";
 import { SideDrawer } from "./components/profile/SideDrawer";
 import { TopBar } from "./components/layout/TopBar";
+import { WidgetRail } from "./components/widgets/WidgetRail";
+import { EmberParticles } from "./components/effects/EmberParticles";
 import { useBrainSocket } from "./lib/useBrainSocket";
 import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
 
@@ -23,7 +26,9 @@ export default function App() {
     refresh();
   }, [refresh]);
 
-  const { connected, thinking, activeAgent, activeEdge, pulseSeq, lines, send } = useBrainSocket(refresh);
+  const {
+    connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send,
+  } = useBrainSocket(refresh);
 
   const handleSelectAgent = (id: string) => {
     setSelectedAgent(id);
@@ -48,8 +53,15 @@ export default function App() {
           background: "radial-gradient(ellipse at center, rgba(184,115,51,0.07) 0%, transparent 60%)",
         }}
       />
+      <EmberParticles />
 
       <TopBar profile={profile} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} />
+
+      <WidgetRail
+        connected={connected}
+        agentsMet={profile?.agents_met ?? 0}
+        agentsTotal={profile?.agents_total ?? 30}
+      />
 
       <main className="w-full h-full flex items-center justify-center px-4">
         <NeuralBrain
@@ -64,6 +76,7 @@ export default function App() {
       </main>
 
       <div className="fixed bottom-6 left-0 right-0 px-4 z-20">
+        <SpeakingBar speaking={speaking} agentId={speakingAgent} />
         <ChatDock lines={lines} connected={connected} thinking={thinking} onSend={send} />
       </div>
 

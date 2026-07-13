@@ -33,3 +33,20 @@ html, body, #root {
     transition-duration: 0.01ms !important;
   }
 }
+
+@keyframes ember-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(var(--drift, 0px));
+    opacity: 0;
+  }
+}

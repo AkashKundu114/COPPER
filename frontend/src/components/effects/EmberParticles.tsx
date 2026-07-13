@@ -1,0 +1,46 @@
+// Slow-drifting embers behind the brain map — purely decorative, gives the
+// void background some organic life instead of a flat static gradient.
+// Deterministic (seeded), so it doesn't reflow randomly on every re-render.
+
+interface Ember {
+  left: number;
+  size: number;
+  duration: number;
+  delay: number;
+  drift: number;
+}
+
+const EMBERS: Ember[] = Array.from({ length: 18 }, (_, i) => {
+  const seed = (i * 2654435761) % 1000;
+  return {
+    left: (seed % 100),
+    size: 1.5 + (seed % 3),
+    duration: 14 + (seed % 12),
+    delay: (seed % 14),
+    drift: ((seed % 60) - 30),
+  };
+});
+
+export function EmberParticles() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      {EMBERS.map((e, i) => (
+        <span
+          key={i}
+          className="absolute bottom-0 rounded-full bg-copper-hot"
+          style={{
+            left: `${e.left}%`,
+            width: e.size,
+            height: e.size,
+            opacity: 0,
+            boxShadow: "0 0 6px 1px rgba(224,152,95,0.6)",
+            animation: `ember-rise ${e.duration}s linear infinite`,
+            animationDelay: `${e.delay}s`,
+            // custom property consumed by the keyframe for horizontal drift
+            ["--drift" as string]: `${e.drift}px`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}

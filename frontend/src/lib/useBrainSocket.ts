@@ -23,9 +23,18 @@ interface BrainState {
   activeAgent: string | null;
   activeEdge: { from: string; to: string } | null;
   pulseSeq: number;
+  speaking: boolean;
+  speakingAgent: string | null;
   lines: ChatLine[];
   send: (message: string) => void;
   lastMemoryUpdate: BrainEvent | null;
+}
+
+// No real TTS audio here (see orchestrator.py's generate_reply doc) — the
+// speaking indicator's duration is simulated from text length so the bar
+// rises and falls roughly in step with how long a line "reads out loud".
+function estimateSpeakingDuration(text: string): number {
+  return Math.min(5000, Math.max(900, text.length * 45));
 }
 
 const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/chat/ws";
@@ -38,8 +47,11 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [pulseSeq, setPulseSeq] = useState(0);
   const [lines, setLines] = useState<ChatLine[]>([]);
   const [lastMemoryUpdate, setLastMemoryUpdate] = useState<BrainEvent | null>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const [speakingAgent, setSpeakingAgent] = useState<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const speakingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const connect = useCallback(() => {
     const ws = new WebSocket(WS_URL);
@@ -59,6 +71,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           setThinking(true);
           setActiveAgent(null);
           setActiveEdge(null);
+          setSpeaking(false);
+          clearTimeout(speakingTimer.current);
           break;
         case "route_decision":
           break;
@@ -74,6 +88,10 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
             ...prev,
             { id: `${Date.now()}-${Math.random()}`, agent: event.agent, text: event.text, timestamp: Date.now() },
           ]);
+          setSpeakingAgent(event.agent);
+          setSpeaking(true);
+          clearTimeout(speakingTimer.current);
+          speakingTimer.current = setTimeout(() => setSpeaking(false), estimateSpeakingDuration(event.text));
           break;
         case "memory_update":
           setLastMemoryUpdate(event);
@@ -92,6 +110,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     connect();
     return () => {
       clearTimeout(reconnectTimer.current);
+      clearTimeout(speakingTimer.current);
       wsRef.current?.close();
     };
   }, [connect]);
@@ -103,5 +122,5 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     }
   }, []);
 
-  return { connected, thinking, activeAgent, activeEdge, pulseSeq, lines, send, lastMemoryUpdate };
+  return { connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send, lastMemoryUpdate };
 }

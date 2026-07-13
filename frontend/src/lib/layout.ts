@@ -29,7 +29,7 @@ const RING_OFFSET_DEG: Record<Tier, number> = {
   MODEL_6_AUDIO: 22,
 };
 
-function hashStr(s: string): number {
+export function hashStr(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) {
     h = (h * 31 + s.charCodeAt(i)) & 0xffffffff;

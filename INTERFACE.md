@@ -51,12 +51,15 @@ backend/
 
 frontend/
   src/
-    components/brain/NeuralBrain.tsx   the neural map — SVG, deterministic layout
-    components/chat/ChatDock.tsx        minimal glass chat dock
-    components/profile/SideDrawer.tsx   "what COPPER knows about you" + per-agent job log
-    components/layout/TopBar.tsx        wordmark + relationship tier badge
+    components/brain/NeuralBrain.tsx     the neural map — SVG, deterministic layout, organic idle breathing
+    components/chat/ChatDock.tsx          minimal glass chat dock
+    components/chat/SpeakingBar.tsx       equalizer bar that rises while COPPER/an agent is "speaking"
+    components/profile/SideDrawer.tsx     "what COPPER knows about you" + per-agent job log
+    components/layout/TopBar.tsx          wordmark + relationship tier badge
+    components/widgets/                    ClockWidget, CalendarWidget, WeatherWidget, NetworkWidget
+    components/effects/EmberParticles.tsx  ambient drifting embers behind the brain map
     lib/layout.ts                       radial layout engine (tested standalone, see below)
-    lib/useBrainSocket.ts                WebSocket → animation state machine
+    lib/useBrainSocket.ts                WebSocket → animation + speaking-duration state machine
     lib/api.ts                          REST client
     data/agents.ts                       static agent metadata (mirrors backend)
   tailwind.config.js                    molten-copper design tokens
@@ -104,6 +107,32 @@ brain animation don't need to change at all.
 
 ---
 
+## Widgets, the speaking bar, and "feeling more natural"
+
+Three additions on top of the base brain/chat/memory system:
+
+**Always-on widget rail** (top-left): clock, calendar (with a mini week
+strip, today highlighted), weather (via the browser's geolocation + the
+free Open-Meteo API — no key required, degrades gracefully to "Location
+unavailable" if permission is denied), and a network status card showing
+connection health and how many of the 30 agents you've been acquainted
+with. These stay on screen regardless of what else is open, since the
+brief asked for them to be "ready on screen" rather than tucked in a menu.
+
+**The speaking bar** — a literal music-player-style equalizer that rises
+from the bottom edge when COPPER or an agent is "talking," and slides back
+down when it's done. There's no real TTS audio backing it (see the honesty
+note above), so its duration is simulated from the reply's text length —
+short lines get a quick flicker, longer ones hold the bar up longer, which
+reads close enough to actual speech timing without overclaiming real audio.
+
+**Feeling more natural** — three small things instead of one big one:
+dormant brain nodes and their synapse lines now breathe (slow, staggered
+opacity/scale drift, timed per-node from a deterministic hash so they're
+not all pulsing in lockstep — 30 nodes breathing in perfect unison reads as
+mechanical, not alive), plus ambient embers drift upward from the bottom of
+the screen at slow, varied speeds. Both respect `prefers-reduced-motion`.
+
 ## Running it
 
 ### Backend
@@ -148,10 +177,13 @@ don't require one:
   growth/fact extraction/callback jokes all fire correctly, and watched the
   raw WebSocket event sequence end-to-end.
 - Frontend: `tsc --noEmit` clean, `npm run build` clean, `oxlint` clean
-  (0 warnings/errors), and the radial layout math verified standalone — 30
-  nodes, zero NaN, minimum 49px pairwise spacing (comfortably more than
-  2× node radius, so nothing overlaps).
+  (0 warnings/errors across all 20 source files including the new widgets,
+  speaking bar, and ember effect), and the radial layout math verified
+  standalone — 30 nodes, zero NaN, minimum 49px pairwise spacing.
 - CORS preflight confirmed working against the real Vite dev origin.
+- Re-ran the full backend request cycle after adding the widgets/speaking
+  bar to confirm nothing on the API side needed to change (it didn't —
+  these are frontend-only additions layered on the existing event stream).
 
 What I couldn't verify directly: actual pixel-level rendering and animation
 feel in a real browser. The code is written carefully and the underlying
