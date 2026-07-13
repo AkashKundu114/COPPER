@@ -4,72 +4,58 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Real copper-metal tones — warm amber-brown, not neon orange
-        copper: {
-          50:  "#fdf7f0",
-          100: "#f8e8d4",
-          200: "#f0ccaa",
-          300: "#e5a870",
-          400: "#d4843c",
-          500: "#b87333",  // actual copper metal
-          600: "#9a5e28",
-          700: "#7a4820",
-          800: "#5a3318",
-          900: "#3a200e",
-          950: "#1e0e06",
+        void: {
+          DEFAULT: "#0a0807",
+          panel: "#14100c",
+          raised: "#1c1611",
         },
-        // Zinc surfaces — no blue tint, true neutral dark
-        dark: {
-          950: "#09090b",
-          900: "#111113",
-          800: "#1a1a1e",
-          700: "#232328",
-          600: "#2d2d33",
-          500: "#3d3d45",
-          400: "#52525c",
-          300: "#71717c",
+        copper: {
+          dim: "#4a3527",
+          ember: "#6b4a35",
+          base: "#b87333",
+          hot: "#e0985f",
+          flare: "#ffcb94",
+        },
+        spark: {
+          DEFAULT: "#8fd6ff",
+          hot: "#eaf6ff",
+        },
+        ink: {
+          primary: "#f3ece2",
+          secondary: "#a8998a",
+          faint: "#5c5248",
         },
       },
       fontFamily: {
-        // Figtree: geometric sans, excellent legibility at small sizes
-        sans: ["Figtree", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-      },
-      fontSize: {
-        "2xs": ["10px", { lineHeight: "14px" }],
-      },
-      animation: {
-        "fade-in":    "fadeIn 0.2s ease-out",
-        "slide-up":   "slideUp 0.25s ease-out",
-        "slide-right":"slideRight 0.2s ease-out",
-        "dot-bounce": "dotBounce 1.4s ease-in-out infinite",
-        "pulse-slow": "pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite",
-        "spin-slow":  "spin 8s linear infinite",
+        display: ["Space Grotesk", "system-ui", "sans-serif"],
+        body: ["Inter", "system-ui", "sans-serif"],
+        mono: ["IBM Plex Mono", "monospace"],
       },
       keyframes: {
-        fadeIn: {
-          from: { opacity: "0" },
-          to:   { opacity: "1" },
+        breathe: {
+          "0%, 100%": { opacity: "0.55", transform: "scale(1)" },
+          "50%": { opacity: "0.85", transform: "scale(1.04)" },
         },
-        slideUp: {
-          from: { opacity: "0", transform: "translateY(6px)" },
-          to:   { opacity: "1", transform: "translateY(0)" },
+        "core-pulse": {
+          "0%, 100%": { opacity: "0.8", filter: "brightness(1)" },
+          "50%": { opacity: "1", filter: "brightness(1.35)" },
         },
-        slideRight: {
-          from: { opacity: "0", transform: "translateX(12px)" },
-          to:   { opacity: "1", transform: "translateX(0)" },
+        "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "slide-up": {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
-        dotBounce: {
-          "0%, 80%, 100%": { transform: "translateY(0)" },
-          "40%":            { transform: "translateY(-5px)" },
+        "slide-in-right": {
+          from: { opacity: "0", transform: "translateX(16px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
         },
       },
-      // Subtle dot-grid background for the home splash
-      backgroundImage: {
-        "dot-grid": "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
-      },
-      backgroundSize: {
-        "dot-grid": "20px 20px",
+      animation: {
+        breathe: "breathe 4.5s ease-in-out infinite",
+        "core-pulse": "core-pulse 3s ease-in-out infinite",
+        "fade-in": "fade-in 0.4s ease-out",
+        "slide-up": "slide-up 0.35s ease-out",
+        "slide-in-right": "slide-in-right 0.3s ease-out",
       },
     },
   },
