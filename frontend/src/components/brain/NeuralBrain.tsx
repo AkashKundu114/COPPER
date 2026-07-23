@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AGENTS, TIER_COLORS } from "../../data/agents";
-import { computeLayout, hashStr, CENTER, VIEWBOX } from "../../lib/layout";
+import { computeLayout, computeOrbit, hashStr, CENTER, VIEWBOX } from "../../lib/layout";
 import type { AgentStats } from "../../lib/api";
 
 interface Props {
@@ -28,7 +28,7 @@ export function NeuralBrain({
         viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}
         className="w-full h-full max-w-[1100px] max-h-[1100px]"
         role="img"
-        aria-label="COPPER neural map of active agents"
+        aria-label="COPPER neural map of active agents, orbiting like a solar system"
       >
         <defs>
           <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
@@ -44,71 +44,7 @@ export function NeuralBrain({
           </filter>
         </defs>
 
-        {/* Dormant synapses — always visible, brightness reflects familiarity */}
-        {AGENTS.map((agent) => {
-          const pos = positions[agent.id];
-          const stats = agentStats[agent.id];
-          const glow = stats?.glow ?? 0;
-          const tierColor = TIER_COLORS[agent.tier];
-          const baseLineOpacity = 0.12 + glow * 0.35;
-          return (
-            <motion.line
-              key={`synapse-${agent.id}`}
-              x1={CENTER}
-              y1={CENTER}
-              x2={pos.x}
-              y2={pos.y}
-              stroke={tierColor}
-              strokeWidth={1 + glow * 1.5}
-              strokeLinecap="round"
-              animate={{ opacity: [baseLineOpacity, baseLineOpacity + 0.1, baseLineOpacity] }}
-              transition={{
-                duration: 4 + (hashStr(agent.id) % 25) / 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: (hashStr(agent.id) % 20) / 10,
-              }}
-            />
-          );
-        })}
-
-        {/* Active pulse — bright traveling flare when a request routes through */}
-        <AnimatePresence>
-          {activeEdge && (
-            <motion.line
-              key={`pulse-${activeEdge.to}-${pulseSeq}`}
-              x1={CENTER}
-              y1={CENTER}
-              x2={positions[activeEdge.to]?.x}
-              y2={positions[activeEdge.to]?.y}
-              stroke="#8fd6ff"
-              strokeWidth={2.5}
-              strokeLinecap="round"
-              filter="url(#tight-blur)"
-              initial={{ opacity: 0, pathLength: 0 }}
-              animate={{ opacity: [0, 1, 1, 0], pathLength: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.9, times: [0, 0.15, 0.7, 1] }}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Traveling spark dot */}
-        <AnimatePresence>
-          {activeEdge && positions[activeEdge.to] && (
-            <motion.circle
-              key={`spark-${activeEdge.to}-${pulseSeq}`}
-              r={4}
-              fill="#eaf6ff"
-              filter="url(#tight-blur)"
-              initial={{ cx: CENTER, cy: CENTER, opacity: 1 }}
-              animate={{ cx: positions[activeEdge.to].x, cy: positions[activeEdge.to].y, opacity: [1, 1, 0] }}
-              transition={{ duration: 0.55, ease: "easeOut" }}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* COPPER core */}
+        {/* COPPER core — the stationary "sun" everything else orbits */}
         <g>
           <circle cx={CENTER} cy={CENTER} r={95} fill="url(#core-glow)" className={thinking ? "animate-core-pulse" : ""} />
           <motion.circle
@@ -134,9 +70,12 @@ export function NeuralBrain({
           </text>
         </g>
 
-        {/* Agent nodes */}
+        {/* Each agent orbits COPPER at a fixed radius (its tier's "range"),
+            via a native CSS rotation on the wrapping <g> — cheap (no React
+            re-renders per frame) and keeps distance-from-core constant. */}
         {AGENTS.map((agent) => {
           const pos = positions[agent.id];
+          const orbit = computeOrbit(agent.id, agent.tier);
           const stats = agentStats[agent.id];
           const glow = stats?.glow ?? 0;
           const isActive = activeAgent === agent.id;
@@ -144,9 +83,74 @@ export function NeuralBrain({
           const tierColor = TIER_COLORS[agent.tier];
           const radius = isActive ? NODE_R_ACTIVE : NODE_R_BASE + glow * 3;
           const baseOpacity = 0.35 + glow * 0.65;
+          const baseLineOpacity = 0.12 + glow * 0.35;
+          const labelY = pos.y + radius + 12;
 
           return (
-            <g key={agent.id}>
+            <g
+              key={agent.id}
+              style={{
+                transformOrigin: `${CENTER}px ${CENTER}px`,
+                animation: `orbit ${orbit.durationSec}s linear infinite`,
+                animationDirection: orbit.direction,
+                animationDelay: `${orbit.delaySec}s`,
+                willChange: "transform",
+              }}
+            >
+              {/* Dormant synapse — a tether from core to node, brightness = familiarity */}
+              <motion.line
+                x1={CENTER}
+                y1={CENTER}
+                x2={pos.x}
+                y2={pos.y}
+                stroke={tierColor}
+                strokeWidth={1 + glow * 1.5}
+                strokeLinecap="round"
+                animate={{ opacity: [baseLineOpacity, baseLineOpacity + 0.1, baseLineOpacity] }}
+                transition={{
+                  duration: 4 + (hashStr(agent.id) % 25) / 10,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: (hashStr(agent.id) % 20) / 10,
+                }}
+              />
+
+              {/* Active pulse + traveling spark — rendered inside this node's
+                  own orbiting frame so they land correctly on its current
+                  position regardless of where it's currently revolved to. */}
+              <AnimatePresence>
+                {activeEdge?.to === agent.id && (
+                  <motion.line
+                    key={`pulse-${pulseSeq}`}
+                    x1={CENTER}
+                    y1={CENTER}
+                    x2={pos.x}
+                    y2={pos.y}
+                    stroke="#8fd6ff"
+                    strokeWidth={2.5}
+                    strokeLinecap="round"
+                    filter="url(#tight-blur)"
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0], pathLength: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.9, times: [0, 0.15, 0.7, 1] }}
+                  />
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {activeEdge?.to === agent.id && (
+                  <motion.circle
+                    key={`spark-${pulseSeq}`}
+                    r={4}
+                    fill="#eaf6ff"
+                    filter="url(#tight-blur)"
+                    initial={{ cx: CENTER, cy: CENTER, opacity: 1 }}
+                    animate={{ cx: pos.x, cy: pos.y, opacity: [1, 1, 0] }}
+                    transition={{ duration: 0.55, ease: "easeOut" }}
+                  />
+                )}
+              </AnimatePresence>
+
               {isActive && (
                 <motion.circle
                   cx={pos.x}
@@ -160,6 +164,8 @@ export function NeuralBrain({
                   transition={{ duration: 1, repeat: Infinity, ease: "easeOut" }}
                 />
               )}
+
+              {/* The node itself */}
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
@@ -193,17 +199,29 @@ export function NeuralBrain({
                   if (e.key === "Enter" || e.key === " ") onSelectAgent(agent.id);
                 }}
               />
-              <text
-                x={pos.x}
-                y={pos.y + radius + 12}
-                textAnchor="middle"
-                fontSize="9"
-                className={`font-mono pointer-events-none select-none transition-opacity duration-300 ${
-                  isActive || isSelected ? "fill-ink-primary opacity-100" : "fill-ink-faint opacity-70"
-                }`}
+
+              {/* Label counter-rotates against the node's own orbit so it
+                  stays upright and readable as the node revolves. */}
+              <g
+                style={{
+                  transformOrigin: `${pos.x}px ${labelY}px`,
+                  animation: `orbit ${orbit.durationSec}s linear infinite`,
+                  animationDirection: orbit.direction === "normal" ? "reverse" : "normal",
+                  animationDelay: `${orbit.delaySec}s`,
+                }}
               >
-                {agent.name}
-              </text>
+                <text
+                  x={pos.x}
+                  y={labelY}
+                  textAnchor="middle"
+                  fontSize="9"
+                  className={`font-mono pointer-events-none select-none transition-opacity duration-300 ${
+                    isActive || isSelected ? "fill-ink-primary opacity-100" : "fill-ink-faint opacity-60"
+                  }`}
+                >
+                  {agent.name}
+                </text>
+              </g>
             </g>
           );
         })}

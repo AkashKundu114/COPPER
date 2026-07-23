@@ -37,6 +37,33 @@ export function hashStr(s: string): number {
   return Math.abs(h);
 }
 
+// Base seconds-per-revolution per ring — inner tiers orbit faster than
+// outer ones, like real orbital mechanics (closer to the "sun" = faster).
+const RING_ORBIT_SECONDS: Record<Tier, number> = {
+  MODEL_1_CORE: 46,
+  MODEL_2_CODE: 62,
+  MODEL_3_OS: 80,
+  MODEL_4_VISION: 98,
+  MODEL_5_WEB: 118,
+  MODEL_6_AUDIO: 140,
+};
+
+export interface OrbitParams {
+  durationSec: number;
+  direction: "normal" | "reverse";
+  delaySec: number;
+}
+
+export function computeOrbit(agentId: string, tier: Tier): OrbitParams {
+  const h = hashStr(agentId);
+  const jitter = 1 + (((h % 100) / 100) - 0.5) * 0.3; // ±15%
+  return {
+    durationSec: RING_ORBIT_SECONDS[tier] * jitter,
+    direction: h % 2 === 0 ? "normal" : "reverse",
+    delaySec: -((h >> 4) % 400) / 10, // negative = starts partway through, desyncs phase
+  };
+}
+
 export interface NodePosition {
   id: string;
   x: number;

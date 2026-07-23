@@ -107,6 +107,37 @@ brain animation don't need to change at all.
 
 ---
 
+## The brain now orbits
+
+Nodes no longer sit still — each agent continuously revolves around the
+COPPER core at a fixed radius (its tier's "range"), like planets around a
+sun. A few deliberate choices:
+
+- **Inner tiers orbit faster than outer ones** (Core Reasoning completes a
+  revolution in ~45-55s; Audio & Language takes ~120-155s) — mirrors real
+  orbital mechanics (closer = faster) rather than everything spinning at
+  the same rate, which read as mechanical in an earlier pass.
+- **Roughly half orbit clockwise, half counter-clockwise** (deterministic
+  per agent, not random per render), so the whole map doesn't look like a
+  single spinning wheel — more like independent bodies in motion.
+- **Distance from the core never changes** — rotation preserves radius by
+  construction, so "stays in range" is guaranteed, not just visually
+  approximated.
+- **Labels counter-rotate** against their node's own orbit so agent names
+  stay upright and readable the entire time, rather than tumbling as the
+  node revolves.
+- Implemented as native CSS `transform: rotate()` animations on each
+  node's wrapping `<g>`, not React state updates — so 30 nodes orbiting
+  continuously costs nothing per frame on the React side; the browser's
+  compositor handles it. The "active pulse" traveling spark and highlighted
+  synapse line live *inside* each node's own rotating group, so they always
+  land correctly on wherever that node currently is in its orbit, even
+  mid-animation.
+
+I verified the underlying math standalone (durations, direction split,
+NaN-free) before wiring it into the component — see the verification notes
+below.
+
 ## Widgets, the speaking bar, and "feeling more natural"
 
 Three additions on top of the base brain/chat/memory system:
@@ -178,8 +209,11 @@ don't require one:
   raw WebSocket event sequence end-to-end.
 - Frontend: `tsc --noEmit` clean, `npm run build` clean, `oxlint` clean
   (0 warnings/errors across all 20 source files including the new widgets,
-  speaking bar, and ember effect), and the radial layout math verified
-  standalone — 30 nodes, zero NaN, minimum 49px pairwise spacing.
+  speaking bar, and ember effect), the radial layout math verified
+  standalone (30 nodes, zero NaN, minimum 49px pairwise spacing), and the
+  orbital motion parameters verified standalone too — even normal/reverse
+  direction split, correct tier-based speed scaling, zero NaN across all
+  30 agents.
 - CORS preflight confirmed working against the real Vite dev origin.
 - Re-ran the full backend request cycle after adding the widgets/speaking
   bar to confirm nothing on the API side needed to change (it didn't —

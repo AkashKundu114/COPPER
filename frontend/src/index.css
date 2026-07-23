@@ -34,6 +34,11 @@ html, body, #root {
   }
 }
 
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @keyframes ember-rise {
   0% {
     transform: translateY(0) translateX(0);
