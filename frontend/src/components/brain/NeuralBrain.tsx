@@ -32,15 +32,15 @@ export function NeuralBrain({
       >
         <defs>
           <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffcb94" stopOpacity="0.9" />
-            <stop offset="45%" stopColor="#e0985f" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#b87333" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.12" />
+            <stop offset="60%" stopColor="#27272a" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
           </radialGradient>
           <filter id="soft-blur" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" />
+            <feGaussianBlur stdDeviation="4" />
           </filter>
           <filter id="tight-blur" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.5" />
+            <feGaussianBlur stdDeviation="1.5" />
           </filter>
         </defs>
 
@@ -51,10 +51,10 @@ export function NeuralBrain({
             cx={CENTER}
             cy={CENTER}
             r={38}
-            fill="#1c1611"
-            stroke="#e0985f"
-            strokeWidth={2}
-            animate={thinking ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+            fill="#09090b"
+            stroke="#ffffff"
+            strokeWidth={1.5}
+            animate={thinking ? { scale: [1, 1.05, 1] } : { scale: 1 }}
             transition={{ duration: 1.1, repeat: thinking ? Infinity : 0, ease: "easeInOut" }}
             style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
           />
@@ -62,7 +62,7 @@ export function NeuralBrain({
             x={CENTER}
             y={CENTER + 5}
             textAnchor="middle"
-            className="fill-ink-primary font-display font-semibold"
+            className="fill-white font-display font-semibold"
             fontSize="15"
             letterSpacing="1.5"
           >
@@ -126,8 +126,8 @@ export function NeuralBrain({
                     y1={CENTER}
                     x2={pos.x}
                     y2={pos.y}
-                    stroke="#8fd6ff"
-                    strokeWidth={2.5}
+                    stroke="#ffffff"
+                    strokeWidth={2}
                     strokeLinecap="round"
                     filter="url(#tight-blur)"
                     initial={{ opacity: 0, pathLength: 0 }}
@@ -141,8 +141,8 @@ export function NeuralBrain({
                 {activeEdge?.to === agent.id && (
                   <motion.circle
                     key={`spark-${pulseSeq}`}
-                    r={4}
-                    fill="#eaf6ff"
+                    r={3}
+                    fill="#ffffff"
                     filter="url(#tight-blur)"
                     initial={{ cx: CENTER, cy: CENTER, opacity: 1 }}
                     animate={{ cx: pos.x, cy: pos.y, opacity: [1, 1, 0] }}
@@ -157,10 +157,10 @@ export function NeuralBrain({
                   cy={pos.y}
                   r={radius + 10}
                   fill="none"
-                  stroke="#8fd6ff"
-                  strokeWidth={1.5}
+                  stroke="#ffffff"
+                  strokeWidth={1.2}
                   initial={{ opacity: 0.8, r: radius }}
-                  animate={{ opacity: 0, r: radius + 22 }}
+                  animate={{ opacity: 0, r: radius + 18 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "easeOut" }}
                 />
               )}
@@ -169,10 +169,10 @@ export function NeuralBrain({
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
-                fill={isActive ? "#eaf6ff" : tierColor}
+                fill={isActive ? "#ffffff" : tierColor}
                 filter={isActive ? "url(#soft-blur)" : undefined}
-                stroke={isSelected ? "#eaf6ff" : "transparent"}
-                strokeWidth={isSelected ? 2 : 0}
+                stroke={isSelected ? "#ffffff" : "transparent"}
+                strokeWidth={isSelected ? 1.5 : 0}
                 style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
                 animate={
                   isActive
@@ -190,7 +190,7 @@ export function NeuralBrain({
                       }
                 }
                 className="cursor-pointer"
-                whileHover={{ scale: 1.35 }}
+                whileHover={{ scale: 1.25 }}
                 onClick={() => onSelectAgent(agent.id)}
                 role="button"
                 tabIndex={0}

@@ -15,13 +15,13 @@ export function CalendarWidget() {
   });
 
   return (
-    <div className="rounded-xl border border-copper-dim/40 bg-void-panel/70 backdrop-blur-md px-4 py-3 min-w-[190px]">
+    <div className="rounded-none border border-zinc-800 bg-void-panel px-4 py-3 min-w-[190px]">
       <div className="flex items-baseline justify-between mb-2">
         <div>
           <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider">{month}</p>
-          <p className="font-display font-semibold text-xl text-ink-primary leading-tight">{weekday}</p>
+          <p className="font-display font-semibold text-xl text-white leading-tight">{weekday}</p>
         </div>
-        <span className="font-display font-bold text-2xl text-copper-hot">{date}</span>
+        <span className="font-display font-bold text-2xl text-zinc-100">{date}</span>
       </div>
       <div className="flex justify-between gap-1">
         {week.map((d, i) => {
@@ -29,12 +29,12 @@ export function CalendarWidget() {
           return (
             <div
               key={i}
-              className={`flex-1 flex flex-col items-center gap-0.5 rounded-md py-1 ${
-                isToday ? "bg-copper-base/25" : ""
+              className={`flex-1 flex flex-col items-center gap-0.5 rounded-none py-1 ${
+                isToday ? "bg-zinc-800" : ""
               }`}
             >
               <span className="font-mono text-[9px] text-ink-faint">{DAY_LABELS[i]}</span>
-              <span className={`text-xs ${isToday ? "text-copper-flare font-semibold" : "text-ink-secondary"}`}>
+              <span className={`text-xs ${isToday ? "text-white font-semibold" : "text-ink-secondary"}`}>
                 {d.getDate()}
               </span>
             </div>

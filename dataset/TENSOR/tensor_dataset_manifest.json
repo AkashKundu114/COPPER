@@ -1,0 +1,19 @@
+{
+  "agent": "TENSOR",
+  "model_tier": "MODEL_2_CODE",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "tensor_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "tensor_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "tensor_test.jsonl",
+      "count": 150
+    }
+  }
+}

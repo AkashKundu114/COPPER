@@ -1,0 +1,19 @@
+{
+  "agent": "SIREN",
+  "model_tier": "MODEL_6_AUDIO",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "siren_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "siren_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "siren_test.jsonl",
+      "count": 150
+    }
+  }
+}

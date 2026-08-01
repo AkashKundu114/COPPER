@@ -1,7 +1,14 @@
 {
-  "total_agents": 30,
+  "total_agents": 50,
   "records_per_agent_requested": 1500,
   "agents": {
+    "AEGIS": {
+      "model_tier": "MODEL_1_CORE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "AEON": {
       "model_tier": "MODEL_6_AUDIO",
       "total_records": 1500,
@@ -11,6 +18,13 @@
     },
     "AETHER": {
       "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "APEX": {
+      "model_tier": "MODEL_2_CODE",
       "total_records": 1500,
       "train": 1200,
       "val": 150,
@@ -44,6 +58,13 @@
       "val": 150,
       "test": 150
     },
+    "CANVAS": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "CHRONOS": {
       "model_tier": "MODEL_1_CORE",
       "total_records": 1500,
@@ -72,6 +93,20 @@
       "val": 150,
       "test": 150
     },
+    "ECHO": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "ENIGMA": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "FORGE": {
       "model_tier": "MODEL_2_CODE",
       "total_records": 1500,
@@ -81,6 +116,13 @@
     },
     "GLITCH": {
       "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "GOLIATH": {
+      "model_tier": "MODEL_2_CODE",
       "total_records": 1500,
       "train": 1200,
       "val": 150,
@@ -121,6 +163,13 @@
       "val": 150,
       "test": 150
     },
+    "LUMEN": {
+      "model_tier": "MODEL_1_CORE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "MNEMONIC": {
       "model_tier": "MODEL_1_CORE",
       "total_records": 1500,
@@ -130,6 +179,13 @@
     },
     "NEXUS": {
       "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "OMNI": {
+      "model_tier": "MODEL_5_WEB",
       "total_records": 1500,
       "train": 1200,
       "val": 150,
@@ -149,6 +205,13 @@
       "val": 150,
       "test": 150
     },
+    "PIVOT": {
+      "model_tier": "MODEL_2_CODE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "POLYGLOT": {
       "model_tier": "MODEL_6_AUDIO",
       "total_records": 1500,
@@ -163,8 +226,29 @@
       "val": 150,
       "test": 150
     },
+    "PRISM": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "PROXY": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "PULSE": {
       "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "QUANTA": {
+      "model_tier": "MODEL_2_CODE",
       "total_records": 1500,
       "train": 1200,
       "val": 150,
@@ -177,6 +261,20 @@
       "val": 150,
       "test": 150
     },
+    "RENDER": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "SIREN": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "SONAR": {
       "model_tier": "MODEL_6_AUDIO",
       "total_records": 1500,
@@ -184,8 +282,36 @@
       "val": 150,
       "test": 150
     },
+    "SPECTRE": {
+      "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "SPIDER": {
+      "model_tier": "MODEL_5_WEB",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "SYNAPSE": {
+      "model_tier": "MODEL_1_CORE",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
     "TALON": {
       "model_tier": "MODEL_4_VISION",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "TENSOR": {
+      "model_tier": "MODEL_2_CODE",
       "total_records": 1500,
       "train": 1200,
       "val": 150,
@@ -199,6 +325,20 @@
       "test": 150
     },
     "VAULT": {
+      "model_tier": "MODEL_3_OS",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "VORTEX": {
+      "model_tier": "MODEL_6_AUDIO",
+      "total_records": 1500,
+      "train": 1200,
+      "val": 150,
+      "test": 150
+    },
+    "WARDEN": {
       "model_tier": "MODEL_3_OS",
       "total_records": 1500,
       "train": 1200,

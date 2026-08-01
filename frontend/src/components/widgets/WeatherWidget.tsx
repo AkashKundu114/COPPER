@@ -7,10 +7,10 @@ interface Weather {
 }
 
 function WeatherIcon({ code }: { code: number }) {
-  if (code >= 95) return <CloudLightning size={22} className="text-copper-flare" />;
-  if (code >= 51) return <CloudRain size={22} className="text-spark" />;
-  if (code >= 2) return <Cloud size={22} className="text-ink-secondary" />;
-  return <Sun size={22} className="text-copper-hot" />;
+  if (code >= 95) return <CloudLightning size={22} className="text-zinc-100" />;
+  if (code >= 51) return <CloudRain size={22} className="text-zinc-300" />;
+  if (code >= 2) return <Cloud size={22} className="text-zinc-400" />;
+  return <Sun size={22} className="text-white" />;
 }
 
 function label(code: number): string {
@@ -49,7 +49,7 @@ export function WeatherWidget() {
   }, []);
 
   return (
-    <div className="rounded-xl border border-copper-dim/40 bg-void-panel/70 backdrop-blur-md px-4 py-3 min-w-[150px]">
+    <div className="rounded-none border border-zinc-800 bg-void-panel px-4 py-3 min-w-[150px]">
       {status === "loading" && <p className="text-xs text-ink-faint font-mono">Locating…</p>}
       {status === "denied" && (
         <div className="flex items-center gap-2 text-ink-faint">
@@ -61,7 +61,7 @@ export function WeatherWidget() {
         <div className="flex items-center gap-3">
           <WeatherIcon code={weather.code} />
           <div>
-            <p className="font-display font-semibold text-xl text-ink-primary leading-none">{weather.temp}°</p>
+            <p className="font-display font-semibold text-xl text-white leading-none">{weather.temp}°</p>
             <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider mt-1">{label(weather.code)}</p>
           </div>
         </div>

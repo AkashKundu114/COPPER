@@ -5,25 +5,25 @@ export default {
     extend: {
       colors: {
         void: {
-          DEFAULT: "#0a0807",
-          panel: "#14100c",
-          raised: "#1c1611",
+          DEFAULT: "#000000",
+          panel: "#09090b",
+          raised: "#18181b",
         },
         copper: {
-          dim: "#4a3527",
-          ember: "#6b4a35",
-          base: "#b87333",
-          hot: "#e0985f",
-          flare: "#ffcb94",
+          dim: "#27272a",
+          ember: "#3f3f46",
+          base: "#a1a1aa",
+          hot: "#ffffff",
+          flare: "#e4e4e7",
         },
         spark: {
-          DEFAULT: "#8fd6ff",
-          hot: "#eaf6ff",
+          DEFAULT: "#ffffff",
+          hot: "#f4f4f5",
         },
         ink: {
-          primary: "#f3ece2",
-          secondary: "#a8998a",
-          faint: "#5c5248",
+          primary: "#ffffff",
+          secondary: "#a1a1aa",
+          faint: "#52525b",
         },
       },
       fontFamily: {

@@ -36,7 +36,7 @@ export function ChatDock({ lines, connected, thinking, onSend }: Props) {
       {lines.length > 0 && (
         <div
           ref={scrollRef}
-          className="mb-2 max-h-56 overflow-y-auto rounded-xl border border-copper-dim/40 bg-void-panel/80 backdrop-blur-md px-4 py-3 space-y-2"
+          className="mb-2 max-h-56 overflow-y-auto rounded-none border border-zinc-850 bg-void-panel px-4 py-3 space-y-2"
         >
           <AnimatePresence initial={false}>
             {lines.map((line) => (
@@ -56,9 +56,9 @@ export function ChatDock({ lines, connected, thinking, onSend }: Props) {
         </div>
       )}
 
-      <div className="flex items-center gap-2 rounded-2xl border border-copper-dim/50 bg-void-panel/90 backdrop-blur-md px-3 py-2 shadow-[0_0_30px_rgba(184,115,51,0.08)]">
+      <div className="flex items-center gap-2 rounded-none border border-zinc-800 bg-void-panel px-3 py-2">
         <span
-          className={`w-2 h-2 rounded-full flex-shrink-0 ${connected ? "bg-copper-hot" : "bg-ink-faint"}`}
+          className={`w-2 h-2 rounded-none flex-shrink-0 ${connected ? "bg-white" : "bg-ink-faint"}`}
           title={connected ? "Connected" : "Reconnecting…"}
         />
         <input
@@ -71,7 +71,7 @@ export function ChatDock({ lines, connected, thinking, onSend }: Props) {
         <button
           onClick={submit}
           disabled={!draft.trim()}
-          className="px-3 py-1.5 rounded-lg bg-copper-base/20 hover:bg-copper-base/35 text-copper-flare text-xs font-mono tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="px-3 py-1.5 rounded-none border border-zinc-800 bg-void-raised hover:bg-zinc-800 text-zinc-300 text-xs font-mono tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           SEND
         </button>

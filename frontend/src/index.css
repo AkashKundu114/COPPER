@@ -7,23 +7,23 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  background: #0a0807;
-  color: #f3ece2;
+  background: #000000;
+  color: #ffffff;
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #4a3527; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #6b4a35; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 0px; }
+::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
-::selection { background: rgba(184, 115, 51, 0.35); color: #fff; }
+::selection { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
 :focus-visible {
-  outline: 2px solid #e0985f;
-  outline-offset: 2px;
+  outline: 1.5px solid #ffffff;
+  outline-offset: 1px;
 }
 
 @media (prefers-reduced-motion: reduce) {

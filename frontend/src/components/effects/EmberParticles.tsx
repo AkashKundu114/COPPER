@@ -27,13 +27,13 @@ export function EmberParticles() {
       {EMBERS.map((e, i) => (
         <span
           key={i}
-          className="absolute bottom-0 rounded-full bg-copper-hot"
+          className="absolute bottom-0 bg-white"
           style={{
             left: `${e.left}%`,
             width: e.size,
             height: e.size,
             opacity: 0,
-            boxShadow: "0 0 6px 1px rgba(224,152,95,0.6)",
+            boxShadow: "none",
             animation: `ember-rise ${e.duration}s linear infinite`,
             animationDelay: `${e.delay}s`,
             // custom property consumed by the keyframe for horizontal drift

@@ -50,7 +50,7 @@ export default function App() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(184,115,51,0.07) 0%, transparent 60%)",
+          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 65%)",
         }}
       />
       <EmberParticles />

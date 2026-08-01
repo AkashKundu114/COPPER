@@ -1,0 +1,19 @@
+{
+  "agent": "LUMEN",
+  "model_tier": "MODEL_1_CORE",
+  "total_records": 1500,
+  "splits": {
+    "train": {
+      "file": "lumen_train.jsonl",
+      "count": 1200
+    },
+    "val": {
+      "file": "lumen_val.jsonl",
+      "count": 150
+    },
+    "test": {
+      "file": "lumen_test.jsonl",
+      "count": 150
+    }
+  }
+}

@@ -1,7 +1,7 @@
 """
 agents.py
 ==========
-Single source of truth for the 30-agent roster + COPPER. Each entry carries
+Single source of truth for the 50-agent roster + COPPER. Each entry carries
 everything both the router (keyword matching) and the frontend brain
 visualization need: which tier/model group it belongs to, a color for its
 node glow, routing keywords, and a small bank of persona lines used to
@@ -32,15 +32,16 @@ TIER_LABELS = {
 # Tier accent colors (bronze/copper family, warming as tiers progress —
 # purely aesthetic grouping for the brain map, doesn't affect logic)
 TIER_COLORS = {
-    "MODEL_1_CORE": "#e8c07d",
-    "MODEL_2_CODE": "#eab676",
-    "MODEL_3_OS": "#e0985f",
-    "MODEL_4_VISION": "#d97b52",
-    "MODEL_5_WEB": "#c2654a",
-    "MODEL_6_AUDIO": "#a8524a",
+    "MODEL_1_CORE": "#ffffff",
+    "MODEL_2_CODE": "#d4d4d8",
+    "MODEL_3_OS": "#a1a1aa",
+    "MODEL_4_VISION": "#71717a",
+    "MODEL_5_WEB": "#52525b",
+    "MODEL_6_AUDIO": "#3f3f46",
 }
 
 AGENTS: dict[str, dict] = {
+    # ── MODEL_1_CORE ─────────────────────────────────────────────────────────
     "CHRONOS": {
         "tier": "MODEL_1_CORE", "name": "Chronos", "domain": "Architecture & Planning",
         "blurb": "Breaks big asks into phased, dependency-aware roadmaps.",
@@ -53,6 +54,26 @@ AGENTS: dict[str, dict] = {
         "keywords": ["remember", "recall", "last time", "what did i", "forget", "previously"],
         "lines": ["Cross-referencing the archive.", "I remember this one.", "Filed away for next time."],
     },
+    "AEGIS": {
+        "tier": "MODEL_1_CORE", "name": "Aegis", "domain": "Compliance & Risk",
+        "blurb": "Reviews tasks for legal, ethical, and GDPR compliance.",
+        "keywords": ["compliance", "gdpr", "legal", "risk assessment", "privacy violation", "data policy"],
+        "lines": ["Compliance check initiated.", "Assessing risk before we proceed.", "Protecting you from a lawsuit."],
+    },
+    "SYNAPSE": {
+        "tier": "MODEL_1_CORE", "name": "Synapse", "domain": "Task Orchestration",
+        "blurb": "Breaks down workflows and assigns them to other sub-agents.",
+        "keywords": ["break down", "orchestrate", "delegate", "pipeline", "coordinate", "multi-step process"],
+        "lines": ["Breaking this down into delegatable tasks.", "Routing sub-tasks to specialists.", "Orchestration engaged."],
+    },
+    "LUMEN": {
+        "tier": "MODEL_1_CORE", "name": "Lumen", "domain": "Ideation & Creative",
+        "blurb": "Generates lateral, creative ideas and potential solutions.",
+        "keywords": ["brainstorm", "creative ideas", "novel approach", "outside the box", "features list"],
+        "lines": ["Brainstorming engaged. Thinking laterally.", "Let's see what sticks.", "Generating some out-of-the-box ideas."],
+    },
+
+    # ── MODEL_2_CODE ─────────────────────────────────────────────────────────
     "CYPHER": {
         "tier": "MODEL_2_CODE", "name": "Cypher", "domain": "Code Generation",
         "blurb": "Writes clean implementation code, fast, minimal commentary.",
@@ -83,6 +104,38 @@ AGENTS: dict[str, dict] = {
         "keywords": ["security review", "vulnerability", "audit", "code review", "owasp", "injection", "cve"],
         "lines": ["Brace yourself for the critique.", "Finding the vulnerabilities now.", "Better I find it than your users."],
     },
+    "APEX": {
+        "tier": "MODEL_2_CODE", "name": "Apex", "domain": "Performance Opt",
+        "blurb": "Analyzes algorithms and systems to improve speed and efficiency.",
+        "keywords": ["optimize function", "performance bottleneck", "big-o", "latency", "profile code", "make faster"],
+        "lines": ["Analyzing for bottlenecks.", "I can make this faster.", "Squeezing out every millisecond of performance."],
+    },
+    "QUANTA": {
+        "tier": "MODEL_2_CODE", "name": "Quanta", "domain": "Data Science & ML",
+        "blurb": "Writes code for data processing, ML models, and statistics.",
+        "keywords": ["pandas script", "pytorch", "statistical analysis", "train classifier", "extract features", "dataframe"],
+        "lines": ["Data science operations initialized.", "Wrangling the dataframes now.", "Setting up the ML pipeline."],
+    },
+    "TENSOR": {
+        "tier": "MODEL_2_CODE", "name": "Tensor", "domain": "Algorithmic Math",
+        "blurb": "Solves complex math equations and designs algorithmic logic.",
+        "keywords": ["solve math", "equation", "proof", "differential equation", "algorithm design", "calculus"],
+        "lines": ["Calculating the mathematical solution.", "Applying formal logic.", "Deriving the formula."],
+    },
+    "GOLIATH": {
+        "tier": "MODEL_2_CODE", "name": "Goliath", "domain": "DevOps & Infra",
+        "blurb": "Writes Dockerfiles, Terraform, and Kubernetes manifests.",
+        "keywords": ["dockerfile", "terraform", "kubernetes manifest", "ci/cd pipeline", "ansible", "provision"],
+        "lines": ["Infrastructure as code. Building the foundation.", "Dockerizing the application.", "IaC templates ready."],
+    },
+    "PIVOT": {
+        "tier": "MODEL_2_CODE", "name": "Pivot", "domain": "Refactoring & Debt",
+        "blurb": "Rewrites legacy code into modern, clean standards.",
+        "keywords": ["refactor code", "legacy script", "tech debt", "modernize syntax", "rewrite functional"],
+        "lines": ["Cleaning up tech debt.", "Modernizing the codebase.", "Making this readable again."],
+    },
+
+    # ── MODEL_3_OS ───────────────────────────────────────────────────────────
     "AXIS": {
         "tier": "MODEL_3_OS", "name": "Axis", "domain": "Shell & System Admin",
         "blurb": "Executes terminal commands precisely, flags anything risky.",
@@ -125,6 +178,26 @@ AGENTS: dict[str, dict] = {
         "keywords": ["api key", "password", "credential", "secret", "token", "rotate access"],
         "lines": ["Handling this carefully.", "Verifying first.", "Access controlled, as it should be."],
     },
+    "ECHO": {
+        "tier": "MODEL_3_OS", "name": "Echo", "domain": "Log Aggregation",
+        "blurb": "Parses massive server logs to find errors and trends.",
+        "keywords": ["parse log", "server log", "syslog dump", "server crash log", "warnings in log"],
+        "lines": ["Parsing the log dump.", "Looking for the needle in the haystack.", "Scanning for anomalies."],
+    },
+    "WARDEN": {
+        "tier": "MODEL_3_OS", "name": "Warden", "domain": "Firewall & Security",
+        "blurb": "Manages iptables firewall rules and blocks malicious IPs.",
+        "keywords": ["block ip", "iptables", "firewall rules", "open port", "whitelist ip"],
+        "lines": ["Managing firewall rules.", "Blocking malicious traffic.", "Rule applied. Access denied."],
+    },
+    "PROXY": {
+        "tier": "MODEL_3_OS", "name": "Proxy", "domain": "Network Routing",
+        "blurb": "Manages reverse proxies, SSH tunnels, and port forwarding.",
+        "keywords": ["ssh tunnel", "reverse proxy", "nginx config", "port forward", "routing table"],
+        "lines": ["Routing traffic.", "Establishing the tunnel.", "Configuring the reverse proxy."],
+    },
+
+    # ── MODEL_4_VISION ───────────────────────────────────────────────────────
     "HAWK": {
         "tier": "MODEL_4_VISION", "name": "Hawk", "domain": "Screen Analysis",
         "blurb": "Detects and locates UI elements from screenshots.",
@@ -149,6 +222,32 @@ AGENTS: dict[str, dict] = {
         "keywords": ["extract text from image", "ocr", "read this scan", "what does this screenshot say"],
         "lines": ["Extracting the characters.", "Parsing image to text.", "Reading it, even if barely legible."],
     },
+    "CANVAS": {
+        "tier": "MODEL_4_VISION", "name": "Canvas", "domain": "UI/UX Mockups",
+        "blurb": "Designs component wireframes, styles, and web mockups.",
+        "keywords": ["design landing page", "css layout", "tailwind wireframe", "mockup screen", "color palette design"],
+        "lines": ["Designing the layout.", "Aligning the components.", "Drafting the UI mockup."],
+    },
+    "PRISM": {
+        "tier": "MODEL_4_VISION", "name": "Prism", "domain": "Image Processing",
+        "blurb": "Crops, resizes, filters, and processes images via CLI tools.",
+        "keywords": ["resize image", "convert png", "image filter", "crop photo", "imageMagick"],
+        "lines": ["Processing image pixels.", "Applying visual filters.", "Image manipulation complete."],
+    },
+    "RENDER": {
+        "tier": "MODEL_4_VISION", "name": "Render", "domain": "Video Transcoding",
+        "blurb": "Generates FFmpeg arguments to encode and edit video streams.",
+        "keywords": ["convert mkv", "ffmpeg video", "compress video", "trim clip", "merge video"],
+        "lines": ["Drafting FFmpeg arguments.", "Encoding the video stream.", "Render pipeline initialized."],
+    },
+    "SPECTRE": {
+        "tier": "MODEL_4_VISION", "name": "Spectre", "domain": "Visual QA",
+        "blurb": "Compares screen states to detect UI bugs and visual regressions.",
+        "keywords": ["compare screenshots", "visual regression", "ui changed", "responsive verify", "visual qa"],
+        "lines": ["Performing visual diff.", "Checking for UI regressions.", "Visual QA complete. Layout intact."],
+    },
+
+    # ── MODEL_5_WEB ──────────────────────────────────────────────────────────
     "RAPTOR": {
         "tier": "MODEL_5_WEB", "name": "Raptor", "domain": "Static Scraping",
         "blurb": "Extracts data from HTML without needing a browser.",
@@ -191,6 +290,20 @@ AGENTS: dict[str, dict] = {
         "keywords": ["that failed", "timed out", "retry", "keeps failing", "connection dropped"],
         "lines": ["Something broke. Standard Tuesday.", "Diagnosing before we retry blindly.", "Rerouting around the failure."],
     },
+    "OMNI": {
+        "tier": "MODEL_5_WEB", "name": "Omni", "domain": "Social Media API",
+        "blurb": "Interacts with social network APIs and schedules posts.",
+        "keywords": ["post to twitter", "linkedin schedule", "social metrics", "oauth token", "draft thread"],
+        "lines": ["Drafting the social payload.", "Connecting to the API.", "Broadcasting to the network."],
+    },
+    "SPIDER": {
+        "tier": "MODEL_5_WEB", "name": "Spider", "domain": "Web Crawling",
+        "blurb": "Recursively crawls domains to map sitemaps and links.",
+        "keywords": ["crawl website", "sitemap generate", "broken links scan", "hidden endpoints scan", "spidering"],
+        "lines": ["Spidering the domain.", "Mapping the site architecture.", "Crawl complete. Pages mapped."],
+    },
+
+    # ── MODEL_6_AUDIO ────────────────────────────────────────────────────────
     "SONAR": {
         "tier": "MODEL_6_AUDIO", "name": "Sonar", "domain": "Speech-to-Text",
         "blurb": "Transcribes audio quickly and literally.",
@@ -220,6 +333,24 @@ AGENTS: dict[str, dict] = {
         "blurb": "Translates and localizes speech and text between languages.",
         "keywords": ["translate", "localize", "what does this mean in", "convert this transcript from"],
         "lines": ["Converting now.", "Adjusting for tone as well as words.", "Translated and localized."],
+    },
+    "SIREN": {
+        "tier": "MODEL_6_AUDIO", "name": "Siren", "domain": "Audio Mixing",
+        "blurb": "Applies noise filters, mixes audio tracks, and edits volume.",
+        "keywords": ["background noise remove", "normalize volume", "mix audio", "vocals compress", "sound editing"],
+        "lines": ["Mixing the audio tracks.", "Applying noise reduction.", "Audio processing complete."],
+    },
+    "VORTEX": {
+        "tier": "MODEL_6_AUDIO", "name": "Vortex", "domain": "Meeting Digests",
+        "blurb": "Summarizes transcripts and meetings into direct action items.",
+        "keywords": ["summarize meeting", "extract action items", "meeting key decisions", "condense transcript"],
+        "lines": ["Condensing the transcript.", "Cutting the fluff. Finding the action items.", "Summarizing the key decisions."],
+    },
+    "ENIGMA": {
+        "tier": "MODEL_6_AUDIO", "name": "Enigma", "domain": "Cryptography",
+        "blurb": "Encrypts messages, signs documents, and handles keys safely.",
+        "keywords": ["pgp encrypt", "decrypt private", "cryptographically sign", "verify signature", "generate rsa"],
+        "lines": ["Encrypting the payload.", "Decrypting now. Verifying keys.", "Math doesn't lie. Signature verified."],
     },
 }
 

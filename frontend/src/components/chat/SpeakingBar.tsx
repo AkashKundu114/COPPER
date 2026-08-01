@@ -30,9 +30,9 @@ export function SpeakingBar({ speaking, agentId }: Props) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "100%", opacity: 0 }}
           transition={{ type: "spring", damping: 22, stiffness: 260 }}
-          className="w-full max-w-2xl mx-auto mb-2 rounded-xl border border-copper-dim/40 bg-void-panel/90 backdrop-blur-md px-4 py-2.5 flex items-center gap-3"
+          className="w-full max-w-2xl mx-auto mb-2 rounded-none border border-zinc-800 bg-void-panel px-4 py-2.5 flex items-center gap-3"
         >
-          <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ background: color }} />
+          <span className="w-2 h-2 rounded-none flex-shrink-0 animate-pulse" style={{ background: color }} />
           <span className="font-mono text-[10px] tracking-wider text-ink-secondary flex-shrink-0">
             {label} SPEAKING
           </span>
@@ -40,7 +40,7 @@ export function SpeakingBar({ speaking, agentId }: Props) {
             {BAR_PROFILES.map((p, i) => (
               <motion.span
                 key={i}
-                className="w-[3px] rounded-full"
+                className="w-[3px] rounded-none"
                 style={{ background: color }}
                 animate={{ height: [p.minH, p.maxH, p.minH] }}
                 transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
