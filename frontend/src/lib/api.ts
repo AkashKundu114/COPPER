@@ -52,3 +52,7 @@ export const fetchProfile = () => api.get<ProfileResponse>("/api/memory/profile"
 export const resetProfile = () => api.post("/api/memory/reset").then((r) => r.data);
 export const sendMessage = (message: string) =>
   api.post("/api/chat/message", { message }).then((r) => r.data);
+export const fetchLogs = (filter?: string) =>
+  api.get("/api/v1/audit/logs", { params: { filter } }).then((r) => r.data).catch(() => []);
+export const fetchStats = () =>
+  api.get("/api/v1/audit/stats").then((r) => r.data).catch(() => ({}));

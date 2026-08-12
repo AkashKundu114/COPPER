@@ -1,0 +1,66 @@
+# ==============================================================================
+# COPPER — Root Docker Ignore Specification
+# Prevents sensitive local memory, models, and build artifacts from entering Docker build context
+# ==============================================================================
+
+# Version Control
+.git
+.gitignore
+.github
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.yaml
+
+# Local Persistence & Data
+*.db
+*.sqlite
+*.sqlite3
+backend/app/data/*.db
+postgres-data/
+redis-data/
+dump.rdb
+
+# AI Models & Vector Databases
+ai-models/
+models/
+*.gguf
+*.bin
+*.safetensors
+chromadb/
+chromadb_data/
+
+# Dependencies & Build Outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+src-tauri/target/
+__pycache__/
+*.pyc
+*.pyo
+backend/.venv/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs & Temporary Data
+logs/
+*.log
+tmp/
+temp/
+scratch/
+
+# Documentation & IDE
+docs/
+.vscode/
+.idea/
+README.md
+CHANGELOG.md
+ISSUES.md

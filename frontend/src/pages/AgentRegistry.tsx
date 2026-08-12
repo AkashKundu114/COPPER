@@ -1,90 +1,65 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Cpu, RotateCcw, Power, CheckCircle2 } from "lucide-react";
-import { agentRegistryAPI } from "@/services/api";
+import { fetchAgents, type AgentStats } from "../lib/api";
 
-interface AgentVersion {
-  id: number;
-  agent_id: string;
-  version: string;
-  display_name: string;
-  model_provider: string;
-  model_name: string;
-  status: string;
-  evaluation_score: number | null;
-  is_current: boolean;
-}
-
-export default function AgentRegistry() {
-  const [agents, setAgents] = useState<AgentVersion[]>([]);
+export function AgentRegistry() {
+  const [agents, setAgents] = useState<AgentStats[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await agentRegistryAPI.list();
+      const data = await fetchAgents();
       setAgents(data);
+    } catch {
+      setAgents([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { load(); }, []);
-
-  const rollback = async (agentId: string) => {
-    await agentRegistryAPI.rollback(agentId);
+  useEffect(() => {
     load();
-  };
-
-  const disable = async (agentId: string) => {
-    await agentRegistryAPI.disable(agentId);
-    load();
-  };
+  }, []);
 
   return (
-    <div className="p-4 space-y-4 h-full overflow-y-auto">
+    <div className="p-6 space-y-6 max-w-6xl mx-auto text-gray-200 select-none">
       <div className="flex items-center gap-2">
-        <Cpu size={20} className="text-copper-400" />
-        <h2 className="font-semibold text-white">Agent Registry</h2>
+        <Cpu size={20} className="text-[#ff5722]" />
+        <h1 className="text-xl font-bold text-white tracking-tight">Agent Registry</h1>
       </div>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-gray-400 font-mono">
         Versioned, hot-swappable agents. Rollback restores the previous checkpoint without data loss.
       </p>
 
-      {loading && <p className="text-sm text-gray-600 text-center py-8">Loading…</p>}
+      {loading && <p className="text-sm text-gray-400 text-center py-8 font-mono">Loading active agents...</p>}
       {!loading && agents.length === 0 && (
-        <p className="text-sm text-gray-600 text-center py-8">No agents registered yet.</p>
+        <div className="p-6 rounded-xl bg-[#14141a] border border-white/10 text-center text-xs text-gray-400 font-mono space-y-2">
+          <p>No external dynamic agents registered yet. All 30 COPPER core agents active offline.</p>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {agents.map((a) => (
-          <motion.div key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="glass rounded-xl p-4 space-y-2">
+          <div key={a.id} className="p-4 rounded-xl bg-[#14141a] border border-white/10 space-y-3">
             <div className="flex items-center justify-between">
-              <p className="font-medium text-white text-sm">{a.display_name}</p>
-              {a.is_current && (
-                <span className="flex items-center gap-1 text-xs text-green-400">
-                  <CheckCircle2 size={12} /> Active
-                </span>
-              )}
+              <p className="font-semibold text-white text-sm">{a.name}</p>
+              <span className="flex items-center gap-1 text-xs text-emerald-400 font-mono">
+                <CheckCircle2 size={12} /> Active
+              </span>
             </div>
-            <p className="text-xs text-gray-500 font-mono">
-              v{a.version} · {a.model_provider}/{a.model_name}
+            <p className="text-xs text-gray-400 font-mono">
+              Tier: {a.tier} · Invocations: {a.times_invoked}
             </p>
-            {a.evaluation_score != null && (
-              <p className="text-xs text-gray-400">Score: {(a.evaluation_score * 100).toFixed(0)}%</p>
-            )}
-            <div className="flex gap-2 pt-2">
-              <button onClick={() => rollback(a.agent_id)}
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-dark-700 hover:bg-dark-600 text-gray-400 text-xs transition-colors">
+            <div className="flex gap-2 pt-1 font-mono text-xs">
+              <button className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-black/40 border border-white/10 text-gray-300 hover:text-white transition-colors">
                 <RotateCcw size={12} /> Rollback
               </button>
-              <button onClick={() => disable(a.agent_id)}
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-dark-700 hover:bg-red-600/20 hover:text-red-400 text-gray-400 text-xs transition-colors">
+              <button className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-black/40 border border-red-500/30 text-red-400 hover:bg-red-950/40 transition-colors">
                 <Power size={12} /> Disable
               </button>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

@@ -1,67 +1,147 @@
-# Node
+# ==============================================================================
+# COPPER — Root Git Ignore Specification
+# Privacy-First Local AI Operating System
+# ==============================================================================
 
-node_modules/
-dist/
-build/
-
-# Python
-
-**pycache**/
-*.pyc
-*.pyo
-*.pyd
-backend/.venv/
+# ------------------------------------------------------------------------------
+# 1. Environment & Credentials (CRITICAL PRIVACY BOUNDARY)
+# ------------------------------------------------------------------------------
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+secrets.yaml
+credentials.json
 
-# Logs
+# ------------------------------------------------------------------------------
+# 2. Local Databases & Persistence (Zero Cloud Egress)
+# ------------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+backend/app/data/*.db
+backend/app/data/*.sqlite
+postgres-data/
+dump.rdb
+redis-data/
 
+# ------------------------------------------------------------------------------
+# 3. Local AI Models & Vector Databases
+# ------------------------------------------------------------------------------
+ai-models/
+models/
+*.gguf
+*.bin
+*.safetensors
+*.onnx
+chromadb/
+chromadb_data/
+*.parquet
+
+# ------------------------------------------------------------------------------
+# 4. Python Runtime & Caches
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+backend/.venv/
+
+# Testing & Linting Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+
+# ------------------------------------------------------------------------------
+# 5. Node.js & Frontend Caches
+# ------------------------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.npm
+.eslintcache
+.stylelintcache
+.vite/
+frontend/.vite/
+
+# ------------------------------------------------------------------------------
+# 6. Tauri & Desktop Native Build Targets
+# ------------------------------------------------------------------------------
+src-tauri/target/
+frontend/src-tauri/target/
+
+# ------------------------------------------------------------------------------
+# 7. Logs & Temporary Files
+# ------------------------------------------------------------------------------
 logs/
 *.log
-
-# IDE
-
-.vscode/
-.idea/
-
-# OS
-
-.DS_Store
-Thumbs.db
-
-# Tauri
-
-src-tauri/target/
-
-# Docker
-
-docker-data/
-
-# AI Models
-
-ai-models/
-
-# Environment
-
-.env.local
-.env.production
-
-# Coverage
-
-coverage/
-
-# Redis
-
-dump.rdb
-
-# PostgreSQL
-
-postgres-data/
-
-# ChromaDB
-
-chromadb/
-
-# Temporary
-
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 tmp/
 temp/
+scratch/
+.tmp/
+
+# ------------------------------------------------------------------------------
+# 8. IDE & Operating System Artifacts
+# ------------------------------------------------------------------------------
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini

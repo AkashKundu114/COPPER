@@ -1,19 +1,38 @@
 import { useCallback, useEffect, useState } from "react";
+import { Sidebar, type NavSection } from "./components/layout/Sidebar";
+import { TopBar } from "./components/layout/TopBar";
+import { CommandPalette } from "./components/common/CommandPalette";
+import { GuardianChallengeModal, type GuardianChallengePayload } from "./components/chat/GuardianChallengeModal";
 import { NeuralBrain } from "./components/brain/NeuralBrain";
 import { ChatDock } from "./components/chat/ChatDock";
 import { SpeakingBar } from "./components/chat/SpeakingBar";
 import { SideDrawer } from "./components/profile/SideDrawer";
-import { TopBar } from "./components/layout/TopBar";
-import { WidgetRail } from "./components/widgets/WidgetRail";
 import { EmberParticles } from "./components/effects/EmberParticles";
 import { useBrainSocket } from "./lib/useBrainSocket";
 import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
 
+import { DashboardView } from "./pages/DashboardView";
+import { TodayView } from "./pages/TodayView";
+import { TasksView } from "./pages/TasksView";
+import { ProjectsView } from "./pages/ProjectsView";
+import { MemoryView } from "./pages/MemoryView";
+import { ActivityView } from "./pages/ActivityView";
+import { SelfImprovementView } from "./pages/SelfImprovementView";
+import { FoodView } from "./pages/FoodView";
+import { SettingsView } from "./pages/SettingsView";
+
+import { AgentRegistry } from "./pages/AgentRegistry";
+import { Insights } from "./pages/Insights";
+import { SecurityCenter } from "./pages/SecurityCenter";
+
 export default function App() {
+  const [activeSection, setActiveSection] = useState<NavSection>("dashboard");
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [guardianChallenge, setGuardianChallenge] = useState<GuardianChallengePayload | null>(null);
 
   const refresh = useCallback(() => {
     fetchAgents()
@@ -44,41 +63,94 @@ export default function App() {
     }
   };
 
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case "dashboard":
+        return <DashboardView />;
+      case "chat":
+        return (
+          <div className="relative w-full h-full flex flex-col items-center justify-center">
+            <NeuralBrain
+              agentStats={agentStats}
+              thinking={thinking}
+              activeAgent={activeAgent}
+              activeEdge={activeEdge}
+              pulseSeq={pulseSeq}
+              selectedAgent={selectedAgent}
+              onSelectAgent={handleSelectAgent}
+            />
+            <div className="fixed bottom-6 left-64 right-0 px-8 z-20">
+              <SpeakingBar speaking={speaking} agentId={speakingAgent} />
+              <ChatDock lines={lines} connected={connected} thinking={thinking} onSend={send} />
+            </div>
+          </div>
+        );
+      case "today":
+        return <TodayView />;
+      case "tasks":
+        return <TasksView />;
+      case "projects":
+        return <ProjectsView />;
+      case "memory":
+        return <MemoryView />;
+      case "agents":
+        return <AgentRegistry />;
+      case "activity":
+        return <ActivityView />;
+      case "insights":
+        return <Insights />;
+      case "self-improvement":
+        return <SelfImprovementView />;
+      case "security":
+        return <SecurityCenter />;
+      case "food":
+        return <FoodView />;
+      case "settings":
+        return <SettingsView />;
+      default:
+        return <DashboardView />;
+    }
+  };
+
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-void">
-      {/* Ambient background glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 65%)",
-        }}
-      />
+    <div className="relative w-screen h-screen overflow-hidden bg-void flex">
+      {/* Background Effect */}
       <EmberParticles />
 
-      <TopBar profile={profile} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} />
+      {/* Persistent 13-Section Sidebar */}
+      <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
 
-      <WidgetRail
-        connected={connected}
-        agentsMet={profile?.agents_met ?? 0}
-        agentsTotal={profile?.agents_total ?? 30}
+      {/* Main OS Content Shell */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <TopBar
+          sectionTitle={activeSection.replace("-", " ")}
+          profile={profile}
+          drawerOpen={drawerOpen}
+          onToggleDrawer={handleToggleDrawer}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        />
+
+        <main className="flex-1 overflow-y-auto relative custom-scrollbar">
+          {renderActiveSection()}
+        </main>
+      </div>
+
+      {/* Global Overlays */}
+      <CommandPalette
+        open={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onSelectSection={setActiveSection}
       />
 
-      <main className="w-full h-full flex items-center justify-center px-4">
-        <NeuralBrain
-          agentStats={agentStats}
-          thinking={thinking}
-          activeAgent={activeAgent}
-          activeEdge={activeEdge}
-          pulseSeq={pulseSeq}
-          selectedAgent={selectedAgent}
-          onSelectAgent={handleSelectAgent}
-        />
-      </main>
-
-      <div className="fixed bottom-6 left-0 right-0 px-4 z-20">
-        <SpeakingBar speaking={speaking} agentId={speakingAgent} />
-        <ChatDock lines={lines} connected={connected} thinking={thinking} onSend={send} />
-      </div>
+      <GuardianChallengeModal
+        payload={guardianChallenge}
+        onFollowRecommendation={() => setGuardianChallenge(null)}
+        onProceedAnyway={() => setGuardianChallenge(null)}
+        onDiscuss={() => {
+          setActiveSection("chat");
+          setGuardianChallenge(null);
+        }}
+      />
 
       <SideDrawer
         open={drawerOpen}

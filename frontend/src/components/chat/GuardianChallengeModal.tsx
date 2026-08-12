@@ -1,118 +1,98 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { ShieldAlert, AlertTriangle } from "lucide-react";
-import { guardianAPI } from "@/services/api";
+import React from "react";
+import { ShieldAlert, CheckCircle2, XCircle, MessageSquare } from "lucide-react";
 
-export interface GuardianVerdict {
-  level: number; // 2 = CHALLENGE, 3 = SAFETY
-  level_name: string;
-  reasoning?: string;
+export interface GuardianChallengePayload {
+  level: number;
+  reasoning: string;
   evidence: string[];
-  confidence?: string;
-  recommendation?: string;
-  requires_confirmation: boolean;
+  confidence: string;
+  recommendation: string;
 }
 
-interface Props {
-  verdict: GuardianVerdict | null;
-  sessionId: string;
-  onResolved: (decision: "follow" | "proceed" | "discuss") => void;
-  onClose: () => void;
+interface GuardianChallengeModalProps {
+  payload: GuardianChallengePayload | null;
+  onProceedAnyway: () => void;
+  onFollowRecommendation: () => void;
+  onDiscuss: () => void;
 }
 
-export function GuardianChallengeModal({ verdict, sessionId, onResolved, onClose }: Props) {
-  const [confirmText, setConfirmText] = useState("");
-  if (!verdict) return null;
-
-  const isSafety = verdict.level === 3;
-
-  const resolve = async (decision: "follow" | "proceed" | "discuss") => {
-    await guardianAPI.acknowledge(sessionId, decision);
-    onResolved(decision);
-  };
-
-  const confirmSafety = async () => {
-    if (confirmText.trim().toLowerCase() !== "confirm") return;
-    await guardianAPI.confirmSafetyAction(sessionId, confirmText);
-    onResolved("proceed");
-  };
+export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
+  payload,
+  onProceedAnyway,
+  onFollowRecommendation,
+  onDiscuss,
+}) => {
+  if (!payload) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-      >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-          className={`glass rounded-2xl w-full max-w-lg p-6 space-y-4 border-2 ${
-            isSafety ? "border-red-500/50" : "border-amber-500/40"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            {isSafety ? (
-              <AlertTriangle size={18} className="text-red-400" />
-            ) : (
-              <ShieldAlert size={18} className="text-amber-400" />
-            )}
-            <h3 className="font-semibold text-white text-sm tracking-wide">
-              {isSafety ? "CONFIRMATION REQUIRED" : "COPPER RECOMMENDS AGAINST THIS"}
-            </h3>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none">
+      <div className="w-full max-w-lg bg-[#0d0d11] border-2 border-amber-500/60 rounded-xl p-6 shadow-2xl space-y-4">
+        {/* Header Alert */}
+        <div className="flex items-center gap-3 border-b border-amber-500/20 pb-4">
+          <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <ShieldAlert size={24} />
           </div>
+          <div>
+            <h3 className="text-sm font-bold text-amber-400 uppercase tracking-wider font-mono">
+              COPPER Recommends Against This
+            </h3>
+            <p className="text-xs text-gray-400">Guardian Level 2 Conflict Challenge</p>
+          </div>
+        </div>
 
-          {verdict.reasoning && (
-            <p className="text-sm text-gray-300 leading-relaxed">{verdict.reasoning}</p>
-          )}
-
-          {verdict.evidence.length > 0 && (
-            <div className="text-xs text-gray-400 space-y-1">
-              <p className="uppercase tracking-wide text-gray-600">Evidence</p>
-              {verdict.evidence.map((e, i) => (
-                <p key={i}>• {e}</p>
+        {/* Reasoning */}
+        <div className="space-y-2 text-xs text-gray-300 leading-relaxed">
+          <p className="font-medium text-white">{payload.reasoning}</p>
+          
+          {payload.evidence && payload.evidence.length > 0 && (
+            <div className="space-y-1 bg-white/5 p-3 rounded-lg border border-white/5 font-mono text-[11px]">
+              <span className="text-gray-400 font-semibold block mb-1">Evidence:</span>
+              {payload.evidence.map((ev, i) => (
+                <div key={i} className="flex items-center gap-2 text-gray-300">
+                  <span className="text-amber-400">•</span>
+                  <span>{ev}</span>
+                </div>
               ))}
             </div>
           )}
 
-          {verdict.confidence && (
-            <p className="text-xs text-gray-500">Confidence: {verdict.confidence}</p>
-          )}
+          <div className="flex items-center justify-between text-[11px] font-mono pt-1 text-gray-400">
+            <span>Confidence: <strong className="text-amber-400">{payload.confidence}</strong></span>
+          </div>
 
-          {verdict.recommendation && (
-            <p className="text-sm text-copper-400">Recommendation: {verdict.recommendation}</p>
-          )}
+          <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-lg text-amber-200">
+            <strong className="block text-[11px] uppercase tracking-wide text-amber-400 mb-0.5">Recommendation:</strong>
+            {payload.recommendation}
+          </div>
+        </div>
 
-          {isSafety ? (
-            <div className="space-y-2 pt-2">
-              <p className="text-xs text-gray-500">Type "confirm" to proceed anyway.</p>
-              <input
-                value={confirmText}
-                onChange={(e) => setConfirmText(e.target.value)}
-                placeholder="confirm"
-                className="w-full input-copper text-sm"
-              />
-              <div className="flex gap-2 pt-1">
-                <button onClick={confirmSafety} disabled={confirmText.trim().toLowerCase() !== "confirm"}
-                  className="flex-1 py-2 rounded-lg bg-red-600/80 hover:bg-red-600 text-white text-sm disabled:opacity-40">
-                  Confirm & Proceed
-                </button>
-                <button onClick={onClose} className="flex-1 btn-ghost text-sm">Cancel</button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2 pt-2">
-              <button onClick={() => resolve("follow")} className="btn-copper text-sm w-full">
-                Follow COPPER's recommendation
-              </button>
-              <button onClick={() => resolve("proceed")} className="btn-ghost text-sm w-full">
-                Proceed anyway
-              </button>
-              <button onClick={() => resolve("discuss")} className="text-xs text-gray-500 hover:text-gray-300 text-center">
-                Discuss further
-              </button>
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        {/* Action Buttons */}
+        <div className="grid grid-cols-3 gap-2 pt-2">
+          <button
+            onClick={onFollowRecommendation}
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-md"
+          >
+            <CheckCircle2 size={14} />
+            <span>Follow Rec</span>
+          </button>
+
+          <button
+            onClick={onDiscuss}
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-all border border-white/10"
+          >
+            <MessageSquare size={14} />
+            <span>Discuss</span>
+          </button>
+
+          <button
+            onClick={onProceedAnyway}
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-red-950/60 hover:bg-red-900/80 text-red-300 text-xs font-medium transition-all border border-red-500/40"
+          >
+            <XCircle size={14} />
+            <span>Proceed Anyway</span>
+          </button>
+        </div>
+      </div>
+    </div>
   );
-}
+};
