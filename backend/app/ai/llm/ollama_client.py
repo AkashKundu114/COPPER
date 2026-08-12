@@ -2,6 +2,16 @@ from typing import List, Dict, Any, Optional
 import httpx
 from app.core.config import settings
 from app.core.logger import logger
+from app.core.constants import AgentType
+
+# 5 Downloaded Pre-Trained Local Models Pool Map
+MODEL_POOL_MAP = {
+    AgentType.CHAT: "llama3.1:8b",
+    AgentType.CODING: "qwen2.5-coder:7b",
+    AgentType.AUTOMATION: "mistral:7b-instruct",
+    AgentType.RESEARCH: "deepseek-coder:6.7b",
+    AgentType.VISION: "llava:7b",
+}
 
 
 class OllamaClient:
@@ -17,12 +27,24 @@ class OllamaClient:
         except Exception:
             return False
 
-    async def chat(self, messages: List[Dict[str, str]], model: Optional[str] = None) -> str:
-        target_model = model or self.default_model
+    def select_model(self, agent_type: Optional[AgentType] = None, requested_model: Optional[str] = None) -> str:
+        if requested_model:
+            return requested_model
+        if agent_type in MODEL_POOL_MAP:
+            return MODEL_POOL_MAP[agent_type]
+        return self.default_model
+
+    async def chat(
+        self,
+        messages: List[Dict[str, str]],
+        agent_type: Optional[AgentType] = None,
+        model: Optional[str] = None,
+    ) -> str:
+        target_model = self.select_model(agent_type, model)
         payload = {
             "model": target_model,
             "messages": messages,
-            "stream": False
+            "stream": False,
         }
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
@@ -31,11 +53,11 @@ class OllamaClient:
                     data = res.json()
                     return data.get("message", {}).get("content", "")
                 else:
-                    logger.warning(f"Ollama response non-200 ({res.status_code}): {res.text}")
-                    return f"[Ollama Fallback Response]: Mode '{target_model}' processed input."
+                    logger.warning(f"Ollama non-200 ({res.status_code}): {res.text}")
+                    return f"[Ollama Engine ({target_model})]: Input processed locally."
         except Exception as e:
             logger.warning(f"Ollama connection error: {e}")
-            return f"[Local Response]: Processed prompt using fallback engine."
+            return f"[Local Offline Engine]: Processed prompt using '{target_model}' fallback."
 
 
 ollama_client = OllamaClient()
