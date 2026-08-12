@@ -62,6 +62,7 @@ docs/
 - 🛡️ [Guardian Intervention Alignment](file:///d:/C.O.P.P.E.R/docs/research/GUARDIAN_INTERVENTION_RESEARCH.md)
 
 ### Setup & Operations
+- 📥 [Local Model Download Guide](file:///d:/C.O.P.P.E.R/docs/setup/MODEL_DOWNLOAD_GUIDE.md)
 - 🚀 [Development Setup Guide](file:///d:/C.O.P.P.E.R/docs/setup/DEVELOPMENT_SETUP.md)
 - 📦 [Deployment & Infrastructure Specification](file:///d:/C.O.P.P.E.R/docs/setup/DEPLOYMENT_AND_INFRASTRUCTURE.md)
 - 🎓 [Fine-Tuning Pipeline Setup Guide](file:///d:/C.O.P.P.E.R/docs/setup/SETUP_GUIDE.md)
