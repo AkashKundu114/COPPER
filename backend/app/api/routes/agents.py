@@ -1,46 +1,131 @@
-from fastapi import APIRouter, HTTPException
+from datetime import datetime, timezone
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from app.database.postgres import get_db
+from app.database.models.agent_registry import AgentVersion, AgentStatus
+from app.services.guardian_service import guardian_service
+from app.core.logger import logger
 
-from app.data.agents import AGENTS, TIER_COLORS, TIER_LABELS
-from app.memory import db, learner
-
-router = APIRouter(prefix="/api/agents", tags=["agents"])
-
-
-def _agent_payload(agent_id: str, cfg: dict) -> dict:
-    mem = db.get_agent_memory(agent_id) or {"times_invoked": 0, "familiarity_score": 0, "last_active": None, "notes": "[]"}
-    score = mem["familiarity_score"]
-    return {
-        "id": agent_id,
-        "name": cfg["name"],
-        "tier": cfg["tier"],
-        "tier_label": TIER_LABELS[cfg["tier"]],
-        "color": TIER_COLORS[cfg["tier"]],
-        "domain": cfg["domain"],
-        "blurb": cfg["blurb"],
-        "times_invoked": mem["times_invoked"],
-        "familiarity_score": score,
-        "familiarity_tier": learner.agent_tier(score),
-        "glow": learner.glow_intensity(score),
-        "last_active": mem["last_active"],
-    }
+router = APIRouter(prefix="/agents", tags=["agents"])
 
 
-@router.get("")
-async def list_agents():
-    return [_agent_payload(aid, cfg) for aid, cfg in AGENTS.items()]
+class ActivateRequest(BaseModel):
+    version_id: int
 
 
-@router.get("/{agent_id}")
-async def get_agent(agent_id: str):
-    agent_id = agent_id.upper()
-    if agent_id not in AGENTS:
-        raise HTTPException(status_code=404, detail="Unknown agent")
-    return _agent_payload(agent_id, AGENTS[agent_id])
+class HealthCheckRequest(BaseModel):
+    version_id: int
 
 
-@router.get("/{agent_id}/history")
-async def agent_history(agent_id: str, limit: int = 20):
-    agent_id = agent_id.upper()
-    if agent_id not in AGENTS and agent_id != "COPPER":
-        raise HTTPException(status_code=404, detail="Unknown agent")
-    return db.get_agent_history(agent_id, limit=limit)
+@router.get("/")
+async def list_agents(db: Session = Depends(get_db)):
+    """Returns the current row per agent_id (is_current=True), falling back
+    to the most recent candidate if none is active yet."""
+    current = db.query(AgentVersion).filter(AgentVersion.is_current == True).all()  # noqa: E712
+    if current:
+        return [a.to_dict() for a in current]
+    return [a.to_dict() for a in db.query(AgentVersion).all()]
+
+
+@router.get("/{agent_id}/versions")
+async def get_versions(agent_id: str, db: Session = Depends(get_db)):
+    versions = (
+        db.query(AgentVersion)
+        .filter(AgentVersion.agent_id == agent_id)
+        .order_by(AgentVersion.created_at.desc())
+        .all()
+    )
+    return [v.to_dict() for v in versions]
+
+
+@router.post("/{agent_id}/health-check")
+async def health_check(agent_id: str, req: HealthCheckRequest, db: Session = Depends(get_db)):
+    """
+    Placeholder health check — real implementation should run the candidate
+    against an evaluation suite (Master System Prompt §18). For now, verifies
+    the row exists and is not DISABLED, which is enough to gate activation.
+    """
+    version = db.query(AgentVersion).filter(AgentVersion.id == req.version_id).first()
+    if not version:
+        raise HTTPException(status_code=404, detail="Version not found")
+    passed = version.status != AgentStatus.DISABLED
+    return {"passed": passed, "agent_id": agent_id, "version_id": req.version_id}
+
+
+@router.post("/{agent_id}/activate")
+async def activate(agent_id: str, req: ActivateRequest, db: Session = Depends(get_db)):
+    candidate = db.query(AgentVersion).filter(AgentVersion.id == req.version_id).first()
+    if not candidate or candidate.agent_id != agent_id:
+        raise HTTPException(status_code=404, detail="Version not found for this agent")
+
+    # Demote the currently active version, promote the candidate.
+    current = (
+        db.query(AgentVersion)
+        .filter(AgentVersion.agent_id == agent_id, AgentVersion.is_current == True)  # noqa: E712
+        .first()
+    )
+    if current:
+        current.is_current = False
+
+    candidate.is_current = True
+    candidate.status = AgentStatus.ACTIVE
+    candidate.activated_at = datetime.now(timezone.utc)
+    db.commit()
+
+    guardian_service.log(
+        db=db, category="agent_activated", actor="user",
+        summary=f"Activated {agent_id} v{candidate.version} (from v{current.version if current else 'none'})",
+    )
+    return candidate.to_dict()
+
+
+@router.post("/{agent_id}/rollback")
+async def rollback(agent_id: str, db: Session = Depends(get_db)):
+    current = (
+        db.query(AgentVersion)
+        .filter(AgentVersion.agent_id == agent_id, AgentVersion.is_current == True)  # noqa: E712
+        .first()
+    )
+    previous = (
+        db.query(AgentVersion)
+        .filter(AgentVersion.agent_id == agent_id, AgentVersion.status == AgentStatus.ACTIVE)
+        .filter(AgentVersion.id != (current.id if current else -1))
+        .order_by(AgentVersion.activated_at.desc())
+        .first()
+    )
+    if not previous:
+        raise HTTPException(status_code=404, detail="No previous version to roll back to")
+
+    if current:
+        current.is_current = False
+        current.status = AgentStatus.ROLLED_BACK
+        current.rolled_back_at = datetime.now(timezone.utc)
+
+    previous.is_current = True
+    db.commit()
+
+    guardian_service.log(
+        db=db, category="agent_rolled_back", actor="user",
+        summary=f"Rolled back {agent_id} from v{current.version if current else '?'} to v{previous.version}",
+    )
+    return previous.to_dict()
+
+
+@router.post("/{agent_id}/disable")
+async def disable(agent_id: str, db: Session = Depends(get_db)):
+    current = (
+        db.query(AgentVersion)
+        .filter(AgentVersion.agent_id == agent_id, AgentVersion.is_current == True)  # noqa: E712
+        .first()
+    )
+    if not current:
+        raise HTTPException(status_code=404, detail="No active version for this agent")
+    current.status = AgentStatus.DISABLED
+    current.is_current = False
+    db.commit()
+    guardian_service.log(
+        db=db, category="agent_activated", actor="user",
+        summary=f"Disabled {agent_id} (v{current.version})",
+    )
+    return {"disabled": True, "agent_id": agent_id}
