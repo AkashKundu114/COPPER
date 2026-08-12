@@ -1,55 +1,74 @@
-# COPPER Framework — Documentation Hub
+# C.O.P.P.E.R. Documentation Directory
 
-> **Root:** [Project README](../README.md)
-
-This directory is the single source of truth for the COPPER Framework. Every document below cross-links to the others — when in doubt, start with the [PRD](PRD.md) for *what* and *why*, the [TRD](TRD.md) for *how*, and [Implementation Guide](IMPLEMENTATION.md) for *the actual code*.
+Welcome to the official documentation directory for **C.O.P.P.E.R.** (Centralized Omnifunctional Personal Productivity and Execution Routine).
 
 ---
 
-## Core Specification
+## Documentation Structure
 
-| Document | Status | Description |
-|---|---|---|
-| [PRD.md](PRD.md) | Stable | Product vision, goals, the 30-agent roster, user stories & acceptance criteria, hardware constraints |
-| [TRD.md](TRD.md) | Stable | System architecture pattern, 6-model specialist architecture, technology stack, technical requirements (TR-01–TR-07) |
-| [APP_FLOW.md](APP_FLOW.md) | Stable | Execution flows: primary hot-swap loop, interrupt flow, passive vision flow, Boss Mode, frontend dashboard flow |
-| [UI_UX_BRIEF.md](UI_UX_BRIEF.md) | Stable | Design system (AeroNet-derived tokens), dashboard component specs, layout, motion, ambient effects |
-| [BACKEND_SCHEMA.md](BACKEND_SCHEMA.md) | Stable | `state.json` active-state schema and full SQLite (`copper.db`) schema with indexes |
-| [IMPLEMENTATION.md](IMPLEMENTATION.md) | Stable | Directory structure, core engine code listings, fine-tuning pipeline, deployment & setup, implementation phases, known limitations |
-
----
-
-## Reference Material
-
-| Folder | Description |
-|---|---|
-| [`architecture/`](architecture/README.md) | Layered system architecture, aligned with [TRD §6](TRD.md#6-system-architecture-overview) |
-| [`api/`](api/README.md) | Local-only API surface: Ollama inference API + dashboard bridge API |
-| [`diagrams/`](diagrams/README.md) | Diagram catalog — flowcharts, sequence diagrams, ER diagrams, export instructions |
-| [`research/`](research/README.md) | Model selection rationale, architecture alternatives considered, open questions / backlog |
-| [`setup/`](setup/README.md) | Step-by-step setup & deployment guide, troubleshooting |
-
----
-
-## Reading Order
-
-For someone new to the project, the recommended reading order is:
-
-1. [Project README](../README.md) — what COPPER is, in two minutes
-2. [PRD.md](PRD.md) — vision, goals, the 30 agents, hardware envelope
-3. [architecture/README.md](architecture/README.md) — how the system is laid out
-4. [TRD.md](TRD.md) — the sequential hot-swap pattern and the 6-model architecture
-5. [APP_FLOW.md](APP_FLOW.md) — what actually happens on a single user prompt
-6. [BACKEND_SCHEMA.md](BACKEND_SCHEMA.md) — the data that flows through that loop
-7. [UI_UX_BRIEF.md](UI_UX_BRIEF.md) — how it's presented to the user
-8. [IMPLEMENTATION.md](IMPLEMENTATION.md) — the code
-9. [setup/README.md](setup/README.md) — run it yourself
+```
+docs/
+├── architecture/                     # Architecture & System Design
+│   ├── ARCHITECTURE_OVERVIEW.md      # High-level architecture, sub-systems & stack
+│   ├── BACKEND_SCHEMA.md             # Relational, vector, & Redis DB schemas
+│   └── DATA_FIREWALL_AND_SECURITY.md # Zero-trust privacy, PII scanner, & firewall rules
+├── technical/                        # Technical Requirements & Guides
+│   ├── TRD.md                        # Technical Requirements Document & APIs
+│   ├── IMPLEMENTATION_GUIDE.md       # Developer codebase layout & agent creation guide
+│   └── MODEL_SELECTION.md            # Ollama local vs cloud models & fine-tuning strategy
+├── research/                         # Product & Epistemic Research
+│   ├── PRD.md                        # Product Requirements Document & personas
+│   ├── EPISTEMIC_MEMORY_RESEARCH.md  # Fact / Observation / Hypothesis math & memory decay
+│   └── GUARDIAN_INTERVENTION_RESEARCH.md # Levels 0-3 Guardian alignment framework
+├── setup/                            # Installation & Operational Guides
+│   ├── DEVELOPMENT_SETUP.md          # Local environment, Docker, & desktop build setup
+│   ├── DEPLOYMENT_AND_INFRASTRUCTURE.md # Docker Compose production & K8s deployment
+│   └── TROUBLESHOOTING.md            # Operational diagnostics & common FAQs
+├── diagrams/                         # Visual Architecture & Sequence Flow Diagrams
+│   ├── SYSTEM_ARCHITECTURE.md        # Mermaid system architecture diagrams
+│   ├── APP_FLOW.md                   # Request lifecycle & memory flow sequence diagrams
+│   └── STATE_MACHINES.md             # Agent registry, memory, & guardian state machines
+├── ui_ux/                            # Design Systems & User Experience
+│   ├── UI_UX_BRIEF.md                # Molten Copper theme & neural visualizer specifications
+│   └── ACCESSIBILITY_AND_DESIGN.md   # WCAG compliance, reduced motion, & design tokens
+└── planning/                         # Roadmap & Open Questions
+    ├── OPEN_QUESTIONS.md             # Active trade-offs & open architectural questions
+    └── ROADMAP_AND_MILESTONES.md     # Release roadmap & milestone breakdown
+```
 
 ---
 
-## Documentation Conventions
+## Quick File Links
 
-- **Status tags** (`Stable`, `Draft`, `Deprecated`) appear at the top of each document's index entry. A `Deprecated` document remains in the repo for historical traceability but must not be treated as current guidance — see [research/architecture-alternatives.md](research/architecture-alternatives.md) for an example.
-- **Cross-links** use relative paths and, where possible, point to a specific section anchor (e.g. `TRD.md#61-architecture-pattern-sequential-hot-swap-engine`) rather than just the document, so references don't go stale silently when sections are reordered.
-- **Source of truth hierarchy:** if two documents disagree, [PRD.md](PRD.md) wins on *product* questions (goals, non-goals, agent roster) and [TRD.md](TRD.md) wins on *technical* questions (architecture pattern, stack, hardware enforcement). Any document that cannot be reconciled with these two must be flagged and moved to `research/` until resolved.
-- **Open items** (ambiguities, unresolved duplicates, TODOs) are called out inline with a `> **Open item:**` blockquote rather than silently resolved, so they remain visible until explicitly closed. See [PRD §3, footnote 1](PRD.md#3-the-30-agents--full-roster) for the current open item (duplicate `NEXUS` entry).
+### Architecture & System Specifications
+- 📐 [Architecture Overview](file:///d:/C.O.P.P.E.R/docs/architecture/ARCHITECTURE_OVERVIEW.md)
+- 🗄️ [Backend Schema Specification](file:///d:/C.O.P.P.E.R/docs/architecture/BACKEND_SCHEMA.md)
+- 🔒 [Data Firewall & Security](file:///d:/C.O.P.P.E.R/docs/architecture/DATA_FIREWALL_AND_SECURITY.md)
+
+### Technical & Engineering Guides
+- ⚙️ [Technical Requirements Document (TRD)](file:///d:/C.O.P.P.E.R/docs/technical/TRD.md)
+- 🛠️ [Implementation & Developer Guide](file:///d:/C.O.P.P.E.R/docs/technical/IMPLEMENTATION_GUIDE.md)
+- 🧠 [Model Selection & Fine-Tuning Strategy](file:///d:/C.O.P.P.E.R/docs/technical/MODEL_SELECTION.md)
+
+### Product & Epistemic Research
+- 📋 [Product Requirements Document (PRD)](file:///d:/C.O.P.P.E.R/docs/research/PRD.md)
+- 💡 [Epistemic Memory Research](file:///d:/C.O.P.P.E.R/docs/research/EPISTEMIC_MEMORY_RESEARCH.md)
+- 🛡️ [Guardian Intervention Alignment](file:///d:/C.O.P.P.E.R/docs/research/GUARDIAN_INTERVENTION_RESEARCH.md)
+
+### Setup & Operations
+- 🚀 [Development Setup Guide](file:///d:/C.O.P.P.E.R/docs/setup/DEVELOPMENT_SETUP.md)
+- 📦 [Deployment & Infrastructure Specification](file:///d:/C.O.P.P.E.R/docs/setup/DEPLOYMENT_AND_INFRASTRUCTURE.md)
+- 🔍 [Troubleshooting & Diagnostics](file:///d:/C.O.P.P.E.R/docs/setup/TROUBLESHOOTING.md)
+
+### Visual Diagrams
+- 📊 [System Architecture Diagrams](file:///d:/C.O.P.P.E.R/docs/diagrams/SYSTEM_ARCHITECTURE.md)
+- 🔄 [Application Sequence Flow](file:///d:/C.O.P.P.E.R/docs/diagrams/APP_FLOW.md)
+- ⚙️ [System State Machines](file:///d:/C.O.P.P.E.R/docs/diagrams/STATE_MACHINES.md)
+
+### Design & User Experience
+- 🎨 [UI/UX Brief & Molten Copper Design Language](file:///d:/C.O.P.P.E.R/docs/ui_ux/UI_UX_BRIEF.md)
+- ♿ [Accessibility & Design Tokens](file:///d:/C.O.P.P.E.R/docs/ui_ux/ACCESSIBILITY_AND_DESIGN.md)
+
+### Planning & Future Roadmap
+- ❓ [Open Architectural Questions](file:///d:/C.O.P.P.E.R/docs/planning/OPEN_QUESTIONS.md)
+- 🗓️ [Product Roadmap & Milestones](file:///d:/C.O.P.P.E.R/docs/planning/ROADMAP_AND_MILESTONES.md)
