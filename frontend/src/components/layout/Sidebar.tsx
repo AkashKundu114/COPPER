@@ -54,7 +54,7 @@ const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] = 
 export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection }) => {
   return (
     <aside className="w-64 h-screen bg-[#0d0d11]/90 backdrop-blur-xl border-r border-[#b87333]/20 flex flex-col justify-between p-4 text-gray-200 z-30 select-none">
-      {/* Brand Header */}
+      {}
       <div>
         <div className="flex items-center gap-3 px-3 py-4 border-b border-[#b87333]/20 mb-4">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#ff5722] via-[#b87333] to-[#4a3b32] flex items-center justify-center font-bold text-white shadow-lg shadow-[#ff5722]/20 border border-[#ff5722]/40">
@@ -66,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
           </div>
         </div>
 
-        {/* Navigation List */}
+        {}
         <nav className="space-y-1 overflow-y-auto max-h-[calc(100vh-180px)] custom-scrollbar pr-1">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
         </nav>
       </div>
 
-      {/* Footer System Mode */}
+      {}
       <div className="p-3 rounded-lg bg-[#14141a] border border-white/5 text-[11px] text-gray-400 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

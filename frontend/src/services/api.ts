@@ -17,7 +17,6 @@ api.interceptors.response.use(
   }
 );
 
-// Chat
 export const chatAPI = {
   sendMessage: (message: string, sessionId?: string, provider = "ollama") =>
     api.post("/chat/message", { message, session_id: sessionId, provider }),
@@ -30,7 +29,6 @@ export const chatAPI = {
     `${BASE_URL}/chat/stream?message=${encodeURIComponent(message)}&session_id=${sessionId}`,
 };
 
-// Voice
 export const voiceAPI = {
   transcribe: (audioBlob: Blob, language?: string) => {
     const fd = new FormData();
@@ -53,7 +51,6 @@ export const voiceAPI = {
   getVoices: () => api.get("/voice/voices"),
 };
 
-// Memory
 export const memoryAPI = {
   search: (query: string, limit = 10) => api.post("/memory/search", { query, limit }),
   add: (key: string, content: string, source = "manual") =>
@@ -63,7 +60,6 @@ export const memoryAPI = {
   getStats: () => api.get("/memory/stats"),
 };
 
-// Reminders
 export const remindersAPI = {
   create: (data: object) => api.post("/reminders/", data),
   parseFromText: (text: string) => api.post("/reminders/parse", { text }),
@@ -72,7 +68,6 @@ export const remindersAPI = {
   delete: (id: number) => api.delete(`/reminders/${id}`),
 };
 
-// Automation
 export const automationAPI = {
   getStats: () => api.get("/automation/system/stats"),
   getProcesses: () => api.get("/automation/system/processes"),
@@ -84,7 +79,6 @@ export const automationAPI = {
     api.post("/automation/files/organize", { source, destination }),
 };
 
-// Vision
 export const visionAPI = {
   analyzeImage: (imageBlob: Blob, prompt?: string) => {
     const fd = new FormData();
@@ -97,9 +91,6 @@ export const visionAPI = {
     api.get(`/vision/screen/analyze${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`),
 };
 
-// Guardian — disagreement verdicts surfaced from chat responses (pass 2/3 backend).
-// A verdict rides along on ChatResponse.guardian_verdict; these calls are for the
-// explicit user actions taken in the challenge modal.
 export const guardianAPI = {
   acknowledge: (sessionId: string, decision: "follow" | "proceed" | "discuss") =>
     api.post("/guardian/acknowledge", { session_id: sessionId, decision }),
@@ -107,7 +98,6 @@ export const guardianAPI = {
     api.post("/guardian/confirm", { session_id: sessionId, confirmation_text: confirmationText }),
 };
 
-// Agent Registry — Master UI Prompt §13-14
 export const agentRegistryAPI = {
   list: () => api.get("/agents/"),
   getVersions: (agentId: string) => api.get(`/agents/${agentId}/versions`),
@@ -119,7 +109,6 @@ export const agentRegistryAPI = {
     api.post(`/agents/${agentId}/health-check`, { version_id: versionId }),
 };
 
-// Security / Audit — Master UI Prompt §20-21
 export const auditAPI = {
   list: (category?: string, limit = 100) =>
     api.get(`/audit/${category ? `?category=${category}&limit=${limit}` : `?limit=${limit}`}`),

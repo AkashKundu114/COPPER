@@ -6,7 +6,7 @@ export const TodayView: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-gray-200 select-none">
-      {/* Header Controls */}
+      {}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">Schedule & Today Overview</h1>
@@ -27,7 +27,7 @@ export const TodayView: React.FC = () => {
         </div>
       </div>
 
-      {/* COPPER Schedule Recommendation Alert */}
+      {}
       <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 text-xs space-y-2">
         <div className="flex items-center gap-2 text-amber-400 font-semibold font-mono">
           <AlertCircle size={16} />
@@ -43,7 +43,7 @@ export const TodayView: React.FC = () => {
         </div>
       </div>
 
-      {/* Schedule Timeline */}
+      {}
       <div className="p-5 rounded-xl bg-[#14141a] border border-white/10 space-y-4">
         <h3 className="text-xs font-mono font-semibold text-gray-400 uppercase tracking-wider">Today's Timeline</h3>
         <div className="space-y-3 font-mono text-xs">

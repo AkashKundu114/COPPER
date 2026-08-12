@@ -8,8 +8,8 @@ interface Props {
 
 const BAR_COUNT = 20;
 
-// Deterministic per-bar animation timing so the equalizer looks like a real
-// spectrum (varied bar heights/speeds) rather than a uniform mechanical bounce.
+
+
 const BAR_PROFILES = Array.from({ length: BAR_COUNT }, (_, i) => ({
   duration: 0.5 + ((i * 37) % 50) / 100,
   delay: ((i * 53) % 30) / 100,

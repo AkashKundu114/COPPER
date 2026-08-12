@@ -1,6 +1,6 @@
-// Slow-drifting embers behind the brain map — purely decorative, gives the
-// void background some organic life instead of a flat static gradient.
-// Deterministic (seeded), so it doesn't reflow randomly on every re-render.
+
+
+
 
 interface Ember {
   left: number;
@@ -36,7 +36,7 @@ export function EmberParticles() {
             boxShadow: "none",
             animation: `ember-rise ${e.duration}s linear infinite`,
             animationDelay: `${e.delay}s`,
-            // custom property consumed by the keyframe for horizontal drift
+            
             ["--drift" as string]: `${e.drift}px`,
           }}
         />

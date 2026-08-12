@@ -12,7 +12,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        {/* Local LLM Settings */}
+        {}
         <div className="p-5 rounded-xl bg-[#14141a] border border-white/10 space-y-3 font-mono text-xs">
           <div className="flex items-center gap-2 text-white font-bold">
             <Server size={16} className="text-[#ff5722]" /> Local Ollama Model Server
@@ -37,7 +37,7 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Developer Mode Toggle */}
+        {}
         <div className="p-5 rounded-xl bg-[#14141a] border border-white/10 flex items-center justify-between font-mono text-xs">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2 text-white font-bold">

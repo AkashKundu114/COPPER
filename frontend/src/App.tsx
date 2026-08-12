@@ -114,13 +114,13 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-void flex">
-      {/* Background Effect */}
+      {}
       <EmberParticles />
 
-      {/* Persistent 13-Section Sidebar */}
+      {}
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
 
-      {/* Main OS Content Shell */}
+      {}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         <TopBar
           sectionTitle={activeSection.replace("-", " ")}
@@ -135,7 +135,7 @@ export default function App() {
         </main>
       </div>
 
-      {/* Global Overlays */}
+      {}
       <CommandPalette
         open={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}

@@ -9,7 +9,7 @@ export const FoodView: React.FC = () => {
         <p className="text-xs text-gray-400 font-mono">Meal logs, grocery lists, and budget-conscious food planning</p>
       </div>
 
-      {/* Non-Medical Disclaimer Banner */}
+      {}
       <div className="p-3 rounded-lg bg-blue-950/30 border border-blue-500/30 text-xs flex items-center gap-2 text-blue-300">
         <AlertCircle size={16} className="text-blue-400 shrink-0" />
         <span>General information disclaimer: COPPER provides food organization and estimates only. Not medical or dietary advice.</span>

@@ -1,8 +1,6 @@
 from fastapi import APIRouter
+router = APIRouter(prefix='/reminders', tags=['reminders'])
 
-router = APIRouter(prefix="/reminders", tags=["reminders"])
-
-
-@router.get("/")
+@router.get('/')
 async def list_reminders():
-    return {"reminders": []}
+    return {'reminders': []}

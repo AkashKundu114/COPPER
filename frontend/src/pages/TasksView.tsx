@@ -36,7 +36,7 @@ export const TasksView: React.FC = () => {
         </button>
       </div>
 
-      {/* Task Columns Grid */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {statuses.slice(0, 3).map((status) => (
           <div key={status} className="p-4 rounded-xl bg-[#14141a] border border-white/10 space-y-3">

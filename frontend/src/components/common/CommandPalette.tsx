@@ -45,7 +45,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-24 select-none">
       <div className="w-full max-w-xl bg-[#0d0d11] border border-[#b87333]/40 rounded-xl shadow-2xl overflow-hidden">
-        {/* Input Header */}
+        {}
         <div className="flex items-center px-4 py-3 border-b border-white/10 gap-3">
           <Search size={18} className="text-[#ff5722]" />
           <input
@@ -61,7 +61,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           </kbd>
         </div>
 
-        {/* Command List */}
+        {}
         <div className="max-h-80 overflow-y-auto p-2 space-y-1">
           {commands.length > 0 ? (
             commands.map((cmd, idx) => {

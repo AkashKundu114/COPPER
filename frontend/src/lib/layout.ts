@@ -1,8 +1,3 @@
-// Computes fixed node positions for the neural brain map. Deterministic
-// (no physics/force simulation) so the layout is stable and predictable —
-// each tier is a ring around the COPPER core, with agents spread across
-// the full ring and a small per-node hash-based jitter so it reads as an
-// organic cluster of ganglia rather than a mechanical spoked wheel.
 
 import { AGENTS, TIER_ORDER, type Tier } from "../data/agents";
 
@@ -18,8 +13,6 @@ const RING_RADIUS: Record<Tier, number> = {
   MODEL_6_AUDIO: 485,
 };
 
-// Rotational offset per ring so nodes don't line up into straight spokes
-// across rings — purely visual, keeps the constellation feel.
 const RING_OFFSET_DEG: Record<Tier, number> = {
   MODEL_1_CORE: 0,
   MODEL_2_CODE: 18,
@@ -37,8 +30,6 @@ export function hashStr(s: string): number {
   return Math.abs(h);
 }
 
-// Base seconds-per-revolution per ring — inner tiers orbit faster than
-// outer ones, like real orbital mechanics (closer to the "sun" = faster).
 const RING_ORBIT_SECONDS: Record<Tier, number> = {
   MODEL_1_CORE: 46,
   MODEL_2_CODE: 62,
@@ -56,11 +47,11 @@ export interface OrbitParams {
 
 export function computeOrbit(agentId: string, tier: Tier): OrbitParams {
   const h = hashStr(agentId);
-  const jitter = 1 + (((h % 100) / 100) - 0.5) * 0.3; // ±15%
+  const jitter = 1 + (((h % 100) / 100) - 0.5) * 0.3; 
   return {
     durationSec: RING_ORBIT_SECONDS[tier] * jitter,
     direction: h % 2 === 0 ? "normal" : "reverse",
-    delaySec: -((h >> 4) % 400) / 10, // negative = starts partway through, desyncs phase
+    delaySec: -((h >> 4) % 400) / 10, 
   };
 }
 

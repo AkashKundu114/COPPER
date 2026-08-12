@@ -1,10 +1,3 @@
-"""
-Wires GuardianEngine + AuditLogEntry together. Called from chat_service.py
-before executing any action classified as consequential by the agent router.
-
-NOTE (pass 3): redaction now delegates to core/data_firewall.py instead of
-keeping a private pattern list here — single source of truth for §17-18.
-"""
 from typing import Optional
 from sqlalchemy.orm import Session
 from app.core.guardian import guardian_engine, DisagreementLevel, GuardianVerdict
@@ -12,51 +5,17 @@ from app.core.data_firewall import redact
 from app.database.models.audit_log import AuditLogEntry
 from app.core.logger import logger
 
-
 class GuardianService:
-    async def evaluate_action(
-        self,
-        proposed_action: str,
-        context: dict,
-        db: Session,
-        session_id: Optional[str] = None,
-        actor: str = "system",
-    ) -> GuardianVerdict:
+
+    async def evaluate_action(self, proposed_action: str, context: dict, db: Session, session_id: Optional[str]=None, actor: str='system') -> GuardianVerdict:
         verdict = guardian_engine.evaluate(proposed_action, context)
-
         if verdict.level >= DisagreementLevel.CHALLENGE:
-            db.add(AuditLogEntry(
-                session_id=session_id,
-                category="guardian_safety_block" if verdict.level == DisagreementLevel.SAFETY
-                          else "guardian_challenge",
-                actor=actor,
-                summary=redact(f"Guardian raised {verdict.level.name} on: {proposed_action[:200]}"),
-                detail=redact(verdict.reasoning or ""),
-            ))
+            db.add(AuditLogEntry(session_id=session_id, category='guardian_safety_block' if verdict.level == DisagreementLevel.SAFETY else 'guardian_challenge', actor=actor, summary=redact(f'Guardian raised {verdict.level.name} on: {proposed_action[:200]}'), detail=redact(verdict.reasoning or '')))
             db.commit()
-            logger.info(f"Guardian verdict {verdict.level.name} for action: {proposed_action[:80]}")
-
+            logger.info(f'Guardian verdict {verdict.level.name} for action: {proposed_action[:80]}')
         return verdict
 
-    def log(
-        self,
-        db: Session,
-        category: str,
-        actor: str,
-        summary: str,
-        detail: Optional[str] = None,
-        session_id: Optional[str] = None,
-        scope: str = "local",
-    ) -> None:
-        db.add(AuditLogEntry(
-            session_id=session_id,
-            category=category,
-            actor=actor,
-            summary=redact(summary),
-            detail=redact(detail) if detail else None,
-            scope=scope,
-        ))
+    def log(self, db: Session, category: str, actor: str, summary: str, detail: Optional[str]=None, session_id: Optional[str]=None, scope: str='local') -> None:
+        db.add(AuditLogEntry(session_id=session_id, category=category, actor=actor, summary=redact(summary), detail=redact(detail) if detail else None, scope=scope))
         db.commit()
-
-
 guardian_service = GuardianService()

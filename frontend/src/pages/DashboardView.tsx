@@ -4,15 +4,15 @@ import { Calendar, ArrowUpRight, Target, Sparkles } from "lucide-react";
 export const DashboardView: React.FC = () => {
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-gray-200 select-none">
-      {/* Greeting Banner */}
+      {}
       <div className="p-6 rounded-xl bg-gradient-to-r from-[#14141a] via-[#1a1614] to-[#0d0d11] border border-[#b87333]/30 shadow-xl space-y-2">
         <h1 className="text-2xl font-bold text-white tracking-tight">Good morning, Alex.</h1>
         <p className="text-sm text-[#ff5722] font-mono">You have 4 important tasks scheduled today.</p>
       </div>
 
-      {/* Today Overview Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Card 1: Schedule */}
+        {}
         <div className="p-4 rounded-xl bg-[#14141a] border border-white/10 space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-medium text-white">
@@ -38,7 +38,7 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
-        {/* Card 2: Priority Task */}
+        {}
         <div className="p-4 rounded-xl bg-[#14141a] border border-white/10 space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-medium text-white">
@@ -56,7 +56,7 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
-        {/* Card 3: COPPER Recommendation */}
+        {}
         <div className="p-4 rounded-xl bg-[#14141a] border border-white/10 space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-medium text-white">
@@ -78,7 +78,7 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Productivity Status Bar (Neutral Metrics) */}
+      {}
       <div className="p-5 rounded-xl bg-[#14141a] border border-white/10 space-y-4">
         <h3 className="text-xs font-mono font-semibold text-gray-400 uppercase tracking-wider">Productivity Metrics (Neutral Overview)</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

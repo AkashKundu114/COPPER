@@ -30,9 +30,6 @@ interface BrainState {
   lastMemoryUpdate: BrainEvent | null;
 }
 
-// No real TTS audio here (see orchestrator.py's generate_reply doc) — the
-// speaking indicator's duration is simulated from text length so the bar
-// rises and falls roughly in step with how long a line "reads out loud".
 function estimateSpeakingDuration(text: string): number {
   return Math.min(5000, Math.max(900, text.length * 45));
 }

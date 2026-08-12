@@ -44,7 +44,7 @@ export function NeuralBrain({
           </filter>
         </defs>
 
-        {/* COPPER core — the stationary "sun" everything else orbits */}
+        {}
         <g>
           <circle cx={CENTER} cy={CENTER} r={95} fill="url(#core-glow)" className={thinking ? "animate-core-pulse" : ""} />
           <motion.circle
@@ -70,9 +70,7 @@ export function NeuralBrain({
           </text>
         </g>
 
-        {/* Each agent orbits COPPER at a fixed radius (its tier's "range"),
-            via a native CSS rotation on the wrapping <g> — cheap (no React
-            re-renders per frame) and keeps distance-from-core constant. */}
+        {}
         {AGENTS.map((agent) => {
           const pos = positions[agent.id];
           const orbit = computeOrbit(agent.id, agent.tier);
@@ -97,7 +95,7 @@ export function NeuralBrain({
                 willChange: "transform",
               }}
             >
-              {/* Dormant synapse — a tether from core to node, brightness = familiarity */}
+              {}
               <motion.line
                 x1={CENTER}
                 y1={CENTER}
@@ -115,9 +113,7 @@ export function NeuralBrain({
                 }}
               />
 
-              {/* Active pulse + traveling spark — rendered inside this node's
-                  own orbiting frame so they land correctly on its current
-                  position regardless of where it's currently revolved to. */}
+              {}
               <AnimatePresence>
                 {activeEdge?.to === agent.id && (
                   <motion.line
@@ -165,7 +161,7 @@ export function NeuralBrain({
                 />
               )}
 
-              {/* The node itself */}
+              {}
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
@@ -200,8 +196,7 @@ export function NeuralBrain({
                 }}
               />
 
-              {/* Label counter-rotates against the node's own orbit so it
-                  stays upright and readable as the node revolves. */}
+              {}
               <g
                 style={{
                   transformOrigin: `${pos.x}px ${labelY}px`,
