@@ -1,10 +1,9 @@
-from fastapi import HTTPException
+from typing import Tuple
 
-
-def validate_message(message: str) -> str:
+def validate_message(message: str) -> Tuple[bool, str]:
     cleaned = message.strip()
     if not cleaned:
-        raise HTTPException(status_code=400, detail="Message content cannot be empty.")
+        return False, "Message content cannot be empty."
     if len(cleaned) > 20000:
-        raise HTTPException(status_code=400, detail="Message exceeds maximum allowed length.")
-    return cleaned
+        return False, "Message exceeds maximum allowed length."
+    return True, ""

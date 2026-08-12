@@ -22,6 +22,17 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Static Analysis & Linting (Gate 1)
         run: |
-          echo "Backend tests placeholder"
+          cd backend
+          ruff check app/
+
+      - name: Formatting Check (Gate 2)
+        run: |
+          cd backend
+          ruff format --check app/
+
+      - name: Run Tests & Coverage (Gate 3)
+        run: |
+          cd backend
+          pytest ../tests/backend/ -v --tb=short --cov=app

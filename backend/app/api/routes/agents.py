@@ -125,7 +125,7 @@ async def disable(agent_id: str, db: Session = Depends(get_db)):
     current.is_current = False
     db.commit()
     guardian_service.log(
-        db=db, category="agent_activated", actor="user",
+        db=db, category="agent_disabled", actor="user",
         summary=f"Disabled {agent_id} (v{current.version})",
     )
     return {"disabled": True, "agent_id": agent_id}

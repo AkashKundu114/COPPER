@@ -39,6 +39,8 @@ _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
      "•••PHONE_REDACTED•••", DataClass.SENSITIVE),
     (re.compile(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"), "•••IP_REDACTED•••", DataClass.SENSITIVE),
     (re.compile(r"(?:/home/|/Users/|C:\\Users\\)[\w.\\/ -]+"), "•••PATH_REDACTED•••", DataClass.PERSONAL),
+    (re.compile(r"\b\d{3}-\d{2}-\d{4}\b"), "•••SSN_REDACTED•••", DataClass.SENSITIVE),
+    (re.compile(r"\b(?:\d[ -]*?){13,19}\b"), "•••CREDIT_CARD_REDACTED•••", DataClass.SENSITIVE),
 ]
 
 

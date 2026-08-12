@@ -22,6 +22,16 @@ jobs:
           cd frontend
           npm ci
 
+      - name: Linting (Gate 1)
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Type Check (Gate 2)
+        run: |
+          cd frontend
+          npx tsc --noEmit
+
       - name: Build Frontend
         run: |
           cd frontend

@@ -1,6 +1,6 @@
 # ==============================================================================
 # COPPER — Windows Startup Installer Script
-# Configures COPPER AI Guardian to start automatically on Windows boot
+# Configures COPPER AI Guardian Standalone Desktop App to start automatically on Windows boot
 # ==============================================================================
 
 $copperRoot = "D:\C.O.P.P.E.R"
@@ -8,17 +8,20 @@ $startupFolder = [System.IO.Path]::Combine($env:APPDATA, "Microsoft\Windows\Star
 $vbsPath = [System.IO.Path]::Combine($copperRoot, "scripts\windows\launch_copper.vbs")
 $shortcutPath = [System.IO.Path]::Combine($startupFolder, "COPPER AI Guardian.lnk")
 
-# 1. Create launch_copper.vbs background runner
+# 1. Create launch_copper.vbs background runner for Standalone Desktop App Window
 $cmdBackend = 'cmd /c "cd /d D:\C.O.P.P.E.R\backend & python -m uvicorn app.main:app --host 127.0.0.1 --port 8000"'
 $cmdFrontend = 'cmd /c "cd /d D:\C.O.P.P.E.R\frontend & npm run dev"'
+$cmdAppWindow = 'cmd /c "start msedge --app=http://localhost:5173 --window-name=""COPPER AI Guardian"""'
 
 $vbsContent = "Set WshShell = CreateObject(`"WScript.Shell`")" + "`r`n" +
               "WshShell.Run `"$cmdBackend`", 0, False" + "`r`n" +
               "WScript.Sleep 2000" + "`r`n" +
-              "WshShell.Run `"$cmdFrontend`", 0, False"
+              "WshShell.Run `"$cmdFrontend`", 0, False" + "`r`n" +
+              "WScript.Sleep 1500" + "`r`n" +
+              "WshShell.Run `"$cmdAppWindow`", 0, False"
 
 [System.IO.File]::WriteAllText($vbsPath, $vbsContent)
-Write-Host "[OK] Created background launcher VBS: $vbsPath"
+Write-Host "[OK] Created standalone background launcher VBS: $vbsPath"
 
 # 2. Create Windows Startup Folder Shortcut
 $WshShell = New-Object -ComObject WScript.Shell
@@ -36,4 +39,4 @@ $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
 Set-ItemProperty -Path $registryPath -Name "COPPER_Guardian" -Value "wscript.exe `"$vbsPath`""
 Write-Host "[OK] Registered Windows Registry Startup Key: COPPER_Guardian"
 
-Write-Host "SUCCESS: COPPER desktop application will now auto-start on Windows startup!"
+Write-Host "SUCCESS: COPPER Standalone Desktop Application is configured to auto-start on Windows startup!"

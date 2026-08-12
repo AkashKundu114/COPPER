@@ -15,6 +15,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.1.0] - 2026-08-13
+
+### Security, Quality, & Documentation Overhaul
+
+> **Accomplished** a production-ready CI/CD and security baseline **as measured by** passing a strict Red Team security audit and zero build failures on main, **by implementing** Microsoft code quality practices, a robust Pytest suite, and expanding the Zero-Trust Data Firewall.
+
+### Added
+- 🧪 **Comprehensive Test Suite:** Added backend test coverage for Data Firewall, Guardian, Self-Healing, and Validators using `pytest`.
+- 🏗️ **Automated Quality Gates:** Integrated `ruff` (Python) and `oxlint` with strict `tsc` checks into GitHub Actions CI workflows.
+- 📜 **PR Template:** Enforced the Google XYZ formula for all open-source contributions.
+
+### Changed
+- 📖 **Documentation:** Rewrote `README.md` and `CHANGELOG.md` using the Google XYZ impact formula to clearly communicate architectural value.
+- 🛡️ **Data Firewall:** Upgraded the PII redaction engine to identify and scrub **Social Security Numbers (SSNs)** and **Credit Card numbers** before external egress.
+
+### Fixed
+- **Routing & Validation:** Fixed a critical return-type mismatch in `validators.py` and a double `/api` prefix in `memory.py`.
+- **Audit Trails:** Corrected mislabeled disablement events in `agents.py` audit logs.
+- **CORS Hardening:** Restricted CORS middleware in `main.py` to explicit methods and headers, preventing unauthorized cross-origin requests.
+
+---
+
 ## [1.0.0] - 2026-08-12
 
 ### Architecture Reconciliation Release (v1.0.0 Major Milestone)

@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.memory import db, learner
 from app.data.agents import AGENTS
 
-router = APIRouter(prefix="/api/memory", tags=["memory"])
+router = APIRouter(prefix="/memory", tags=["memory"])
 
 
 @router.get("/profile")
