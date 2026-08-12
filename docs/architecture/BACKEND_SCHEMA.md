@@ -1,132 +1,223 @@
-# C.O.P.P.E.R. Backend Database & Schema Specification
+# C.O.P.P.E.R. Backend Database & State Schema Specification
 
-This document details the relational database schemas, vector database structures, and Redis caching keys utilized across C.O.P.P.E.R.
-
----
-
-## 1. Database Architecture Overview
-
-C.O.P.P.E.R. utilizes a hybrid storage pattern:
-1. **Relational Database (PostgreSQL / SQLite):** Stores structured entity data including epistemic user memory, agent registry metadata, system settings, and audit logs.
-2. **Vector Database (ChromaDB):** Stores high-dimensional vector embeddings for memory chunks, past interactions, and document knowledge indexing.
-3. **In-Memory Store (Redis):** Stores active chat sessions, rate-limit counters, WebSocket state, and self-healing transaction logs.
+This document specifies the 3-layer state architecture (Live `state.json`, Relational SQLite DB, and ChromaDB Vector Store) specified in the **C.O.P.P.E.R. Master System Prompt**.
 
 ---
 
-## 2. Relational Schema Definition
+## 1. The 3-Layer State Architecture
 
-### 2.1 `memory_v2` Table (Epistemic Memory Engine)
-Stores memory items categorised by epistemic type, confidence metrics, and evidence tracking.
+```
++-----------------------------------------------------------------------------------+
+| LAYER 1: Portable Live State (state.json)                                         |
+| - Compact human-readable JSON representing active session, current task,          |
+|   pending schedule recommendations, and active agent locks.                       |
++-----------------------------------------------------------------------------------+
+                                         |
+                                         v
++-----------------------------------------------------------------------------------+
+| LAYER 2: Persistent Structured Relational Storage (SQLite)                        |
+| - 14 ACIDs-compliant tables tracking goals, projects, tasks, schedules,           |
+|   epistemic memories, conversations, tool runs, audit logs, and self-healing.     |
++-----------------------------------------------------------------------------------+
+                                         |
+                                         v
++-----------------------------------------------------------------------------------+
+| LAYER 3: In-Process Semantic Vector Store (ChromaDB)                              |
+| - High-dimensional vector embeddings for epistemic memory RAG search.             |
++-----------------------------------------------------------------------------------+
+```
+
+---
+
+## 2. Portable Live State Schema (`state.json`)
+
+`state.json` maintains real-time active session context:
+
+```json
+{
+  "version": "1.0.0",
+  "last_updated": "2026-08-12T17:40:00Z",
+  "active_session": {
+    "session_id": "sess_891823",
+    "user_id": "default_user",
+    "offline_mode": true,
+    "privacy_status": "LOCAL_PRIVATE",
+    "voice_status": "READY"
+  },
+  "current_context": {
+    "active_task_id": "task_4019",
+    "current_project_id": "proj_102",
+    "active_agent_id": "coding_agent",
+    "pending_guardian_challenge": null
+  },
+  "live_system_health": {
+    "agents": "healthy",
+    "database": "healthy",
+    "tools": "healthy",
+    "model_runtime": "healthy"
+  }
+}
+```
+
+---
+
+## 3. Relational Schema Specification (14 Core Tables)
+
+### 3.1 Core Relational Tables (SQLite / PostgreSQL)
 
 ```sql
+-- 1. Users Table
+CREATE TABLE users (
+    id VARCHAR(64) PRIMARY KEY,
+    name VARCHAR(128) NOT NULL,
+    guardian_mode VARCHAR(32) DEFAULT 'balanced' CHECK (guardian_mode IN ('passive', 'balanced', 'strong')),
+    cloud_fallback_enabled BOOLEAN DEFAULT FALSE,
+    voice_enabled BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Goals Table (Goal Hierarchy: Vision -> Goal -> Project)
+CREATE TABLE goals (
+    id VARCHAR(64) PRIMARY KEY,
+    user_id VARCHAR(64) REFERENCES users(id),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    target_date DATE,
+    status VARCHAR(32) DEFAULT 'active'
+);
+
+-- 3. Projects Table
+CREATE TABLE projects (
+    id VARCHAR(64) PRIMARY KEY,
+    goal_id VARCHAR(64) REFERENCES goals(id),
+    title VARCHAR(255) NOT NULL,
+    health_status VARCHAR(32) DEFAULT 'healthy' CHECK (health_status IN ('healthy', 'at_risk', 'blocked')),
+    health_reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Tasks Table
+CREATE TABLE tasks (
+    id VARCHAR(64) PRIMARY KEY,
+    project_id VARCHAR(64) REFERENCES projects(id),
+    title VARCHAR(255) NOT NULL,
+    priority VARCHAR(16) DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high', 'critical')),
+    estimated_duration_min INT DEFAULT 60,
+    deadline TIMESTAMP,
+    status VARCHAR(32) DEFAULT 'inbox' CHECK (status IN ('inbox', 'planned', 'active', 'blocked', 'completed', 'archived'))
+);
+
+-- 5. Schedules Table
+CREATE TABLE schedules (
+    id VARCHAR(64) PRIMARY KEY,
+    task_id VARCHAR(64) REFERENCES tasks(id),
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
+    adherence_status VARCHAR(32) DEFAULT 'scheduled'
+);
+
+-- 6. Epistemic Memories Table (v2)
 CREATE TABLE memory_v2 (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id VARCHAR(64) NOT NULL DEFAULT 'default_user',
+    id VARCHAR(64) PRIMARY KEY,
     memory_type VARCHAR(32) NOT NULL CHECK (memory_type IN ('fact', 'observation', 'hypothesis')),
-    category VARCHAR(64) NOT NULL, -- e.g., 'preference', 'habit', 'project', 'constraint'
+    category VARCHAR(64) NOT NULL,
     key_phrase VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     confidence_score FLOAT NOT NULL CHECK (confidence_score >= 0.0 AND confidence_score <= 1.0),
-    evidence_count INT NOT NULL DEFAULT 1,
-    decay_rate FLOAT NOT NULL DEFAULT 0.05, -- Daily confidence decay
-    last_reinforced_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    evidence_count INT DEFAULT 1,
+    decay_rate FLOAT DEFAULT 0.05,
+    last_reinforced_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_memory_user_type ON memory_v2(user_id, memory_type);
-CREATE INDEX idx_memory_category ON memory_v2(category);
-```
-
-### 2.2 `agent_registry` Table (Dynamic Agent Management)
-Manages the 30 specialized agents, active versions, health status, and rollback targets.
-
-```sql
-CREATE TABLE agent_registry (
-    id VARCHAR(64) PRIMARY KEY, -- e.g., 'planner_agent', 'coding_agent'
-    name VARCHAR(128) NOT NULL,
-    tier VARCHAR(32) NOT NULL CHECK (tier IN ('core', 'execution', 'knowledge', 'interface')),
-    version VARCHAR(32) NOT NULL DEFAULT '1.0.0',
-    previous_version VARCHAR(32),
-    status VARCHAR(32) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'degraded', 'disabled', 'testing')),
-    description TEXT,
-    system_prompt TEXT NOT NULL,
-    routing_keywords TEXT[] NOT NULL, -- Array of triggers
-    familiarity_score FLOAT DEFAULT 0.0,
-    health_check_endpoint VARCHAR(255),
-    last_health_check TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_agent_tier ON agent_registry(tier);
-CREATE INDEX idx_agent_status ON agent_registry(status);
-```
-
-### 2.3 `audit_log` Table (Security Center & Audit Trail)
-Stores immutable records of consequential system actions, Data Firewall redactions, and Guardian interventions.
-
-```sql
-CREATE TABLE audit_log (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+-- 7. Conversations Table
+CREATE TABLE conversations (
+    id VARCHAR(64) PRIMARY KEY,
     session_id VARCHAR(64) NOT NULL,
-    event_type VARCHAR(64) NOT NULL, -- e.g., 'GUARDIAN_CHALLENGE', 'FIREWALL_REDACTION', 'AGENT_SWAP', 'TOOL_EXECUTION'
-    severity VARCHAR(16) NOT NULL CHECK (severity IN ('INFO', 'WARN', 'CRITICAL')),
-    agent_id VARCHAR(64) REFERENCES agent_registry(id),
-    guardian_level INT CHECK (guardian_level BETWEEN 0 AND 3),
-    raw_prompt_hash VARCHAR(64), -- SHA256 of raw prompt for correlation
-    redacted_content TEXT,
-    action_details JSONB NOT NULL DEFAULT '{}'::jsonb,
-    execution_time_ms INT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    sender VARCHAR(16) NOT NULL CHECK (sender IN ('user', 'assistant')),
+    agent_id VARCHAR(64),
+    content TEXT NOT NULL,
+    is_voice BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_audit_event_type ON audit_log(event_type);
-CREATE INDEX idx_audit_severity ON audit_log(severity);
-CREATE INDEX idx_audit_created_at ON audit_log(created_at DESC);
-```
-
-### 2.4 `interactions` Table (Node History per Agent)
-Tracks individual job runs and conversation history mapped to specific agent nodes.
-
-```sql
-CREATE TABLE interactions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    agent_id VARCHAR(64) NOT NULL REFERENCES agent_registry(id),
+-- 8. Experiences Table (Continual Experience Learning)
+CREATE TABLE experiences (
+    id VARCHAR(64) PRIMARY KEY,
+    task_type VARCHAR(64) NOT NULL,
     user_prompt TEXT NOT NULL,
-    agent_response TEXT NOT NULL,
-    tokens_used INT DEFAULT 0,
-    execution_status VARCHAR(32) NOT NULL DEFAULT 'success',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    cop_decision TEXT NOT NULL,
+    outcome VARCHAR(32) NOT NULL CHECK (outcome IN ('success', 'user_rejected', 'failed')),
+    quality_score FLOAT DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_interactions_agent ON interactions(agent_id, created_at DESC);
+-- 9. Agent Runs Table
+CREATE TABLE agent_runs (
+    id VARCHAR(64) PRIMARY KEY,
+    agent_id VARCHAR(64) NOT NULL,
+    model_used VARCHAR(64) NOT NULL,
+    status VARCHAR(32) DEFAULT 'completed',
+    duration_ms INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 10. Tool Calls Table
+CREATE TABLE tool_calls (
+    id VARCHAR(64) PRIMARY KEY,
+    agent_run_id VARCHAR(64) REFERENCES agent_runs(id),
+    tool_name VARCHAR(64) NOT NULL,
+    parameters JSONB NOT NULL,
+    execution_result TEXT,
+    is_destructive BOOLEAN DEFAULT FALSE,
+    user_approved BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 11. Evaluations Table
+CREATE TABLE evaluations (
+    id VARCHAR(64) PRIMARY KEY,
+    agent_run_id VARCHAR(64) REFERENCES agent_runs(id),
+    accuracy_score FLOAT,
+    goal_alignment_score FLOAT,
+    safety_passed BOOLEAN DEFAULT TRUE
+);
+
+-- 12. Agent Versions Table (Agent Registry & Hot-Swap)
+CREATE TABLE agent_versions (
+    id VARCHAR(64) PRIMARY KEY,
+    agent_id VARCHAR(64) NOT NULL,
+    version VARCHAR(32) NOT NULL,
+    model_name VARCHAR(64) NOT NULL,
+    evaluation_score FLOAT DEFAULT 0.0,
+    status VARCHAR(32) DEFAULT 'active' CHECK (status IN ('active', 'candidate', 'disabled'))
+);
+
+-- 13. Incidents Table (Self-Healing Incident Tracker)
+CREATE TABLE incidents (
+    id VARCHAR(64) PRIMARY KEY,
+    agent_id VARCHAR(64) NOT NULL,
+    failure_reason TEXT NOT NULL,
+    recovery_steps JSONB NOT NULL,
+    status VARCHAR(32) DEFAULT 'recovered' CHECK (status IN ('recovered', 'escalated', 'failed')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 14. Training Examples Table (Self-Improvement Benchmarking)
+CREATE TABLE training_examples (
+    id VARCHAR(64) PRIMARY KEY,
+    context_snippet TEXT NOT NULL,
+    decision_rationale TEXT NOT NULL,
+    user_feedback VARCHAR(32),
+    benchmark_quality_score FLOAT DEFAULT 0.0,
+    is_included_in_training BOOLEAN DEFAULT TRUE
+);
 ```
 
 ---
 
-## 3. Vector Database Schema (ChromaDB)
+## 4. ChromaDB Vector Store Collections
 
-C.O.P.P.E.R. maintains three core collections in ChromaDB using default embeddings (`all-MiniLM-L6-v2` or `nomic-embed-text`):
-
-1. **`copper_epistemic_memory` Collection**
-   - **Document:** Text snippet of memory content.
-   - **Metadata:** `{ "memory_id": "UUID", "type": "fact|observation|hypothesis", "confidence": 0.85, "category": "preference" }`
-2. **`copper_agent_knowledge` Collection**
-   - **Document:** Indexed documentation, codebase snippets, research artifacts.
-   - **Metadata:** `{ "source": "filepath/url", "agent_tier": "knowledge", "chunk_index": 4 }`
-3. **`copper_chat_history` Collection**
-   - **Document:** Turn-by-turn conversation messages.
-   - **Metadata:** `{ "session_id": "UUID", "sender": "user|assistant", "agent_id": "coding_agent" }`
-
----
-
-## 4. Redis Key Structure & TTL Policies
-
-| Key Pattern | Data Type | TTL | Purpose |
-| :--- | :--- | :--- | :--- |
-| `copper:session:{session_id}:state` | Hash | 24 Hours | Current user context, active agent lock, turn count. |
-| `copper:ws:active_connections` | Set | Ephemeral | Active WebSocket connection IDs for pub/sub event broadcasting. |
-| `copper:rate_limit:{user_id}` | String / Counter | 1 Minute | Slotted window rate limiter for cloud API endpoints. |
-| `copper:self_healing:retry:{task_id}` | List / JSON | 1 Hour | Stack trace, attempt counts, and tool retry histories. |
-| `copper:agent:health_cache` | Hash | 30 Seconds | Cached health status of all 30 sub-agents. |
+1. `copper_epistemic_memory`: Embedded memory snippets for RAG search.
+2. `copper_project_knowledge`: Codebase snippets, markdown docs, project context.
+3. `copper_conversation_history`: Dialogue context vector index.

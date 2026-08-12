@@ -1,44 +1,125 @@
-# C.O.P.P.E.R. UI/UX Design Brief & Aesthetics Guide
+# C.O.P.P.E.R. UI/UX Design Brief & Desktop Operating System Spec
 
 ---
 
-## 1. Visual Language & Aesthetics Strategy
+## 1. Design Philosophy & Product Identity
 
-The visual identity of **C.O.P.P.E.R.** moves away from standard generic AI aesthetics (acid green / dark blue tech dashboards). Instead, it draws inspiration from **Molten Copper Physics**:
-- **Dormant State:** Dim bronze filaments, subtle metallic textures, organic breathing movements.
-- **Active State:** The instant a task is routed through a node, synapse lines flare white-hot / electric blue—resembling high current passing through copper wire.
-- **Familiarity-Based Resting Glow:** Nodes belonging to agents with higher familiarity scores glow warmer even while resting, visually representing deep user-assistant relationships.
+COPPER is positioned as **"Your Personal AI Operating System"**.
 
----
-
-## 2. Core UI Components Specification
-
-### 2.1 Fixed Radial Ganglia Map (`NeuralBrain.tsx`)
-- **Deterministic 30-Node Radial Layout:** Nodes positioned dynamically across four orbital tiers (Core Reasoning, Task Execution, Specialized Knowledge, Interface & Audio).
-- **Orbital Mechanics:** Inner tiers complete revolutions faster than outer tiers; alternating clockwise/counter-clockwise orbits with counter-rotating labels for constant legibility.
-- **Synapse Filaments:** SVG paths connecting COPPER core to agent nodes. Synapses pulse with animated traveling sparks during WebSocket events.
-
-### 2.2 Glass Chat Dock & Speaking Bar (`ChatDock.tsx` & `SpeakingBar.tsx`)
-- **Minimal Glassmorphism:** Translucent glass surface (`backdrop-blur-md`, subtle copper border glows).
-- **Audio Equalizer Bar:** Dynamic multi-bar equalizer that rises smoothly from the bottom dock whenever COPPER or an agent is "speaking", synchronized with response stream duration.
-
-### 2.3 Guardian Challenge Modal (`GuardianChallengeModal.tsx`)
-- **Friction-Based Alert:** High-contrast amber/red backdrop filter.
-- **Clear Information Hierarchy:** Displays Risk Score, Objections, Suggested Alternatives, and explicit "Override Guardian" button.
-
-### 2.4 Security Center & Memory Inspector (`SecurityCenter.tsx` & `SideDrawer.tsx`)
-- **Epistemic Fact Cards:** Categorized view of stored user memory with interactive confidence progress bars.
-- **Audit Log Inspector:** Filterable log of Data Firewall redactions and Guardian challenges with instant encrypted JSON export and permanent `delete-all` trigger.
+### Core Philosophical Pillars
+- **Understand me:** Remembers what matters with epistemic precision.
+- **Help me execute:** Facilitates scheduling, task planning, and coding.
+- **Challenge me when necessary:** Guardian Level 2 friction for risky or off-schedule decisions.
+- **Protect my privacy:** 100% local-first operation; zero data egress without explicit permission.
+- **Keep me in control:** Transparent controls, no dark patterns, no manipulative shaming.
 
 ---
 
-## 3. Color Palette & Token Definitions
+## 2. Desktop Application Structure
 
-| Token Name | Hex Code | Purpose |
-| :--- | :--- | :--- |
-| `--copper-core` | `#B87333` | Primary copper brand accent. |
-| `--copper-molten` | `#FF5722` | Active routing node glow & white-hot synapse highlights. |
-| `--copper-bronze` | `#4A3B32` | Dormant node background & resting filament lines. |
-| `--electric-blue` | `#00E5FF` | Secondary signal pulse & Data Firewall encryption indicator. |
-| `--bg-dark` | `#0D0D11` | Deep obsidian backdrop background. |
-| `--glass-border` | `rgba(184, 115, 51, 0.15)` | Glassmorphism container border glow. |
+COPPER features a responsive, keyboard-friendly desktop application layout:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ COPPER                       ● Local   🔒 Private   🎙 Ready  [Profile]│
+├──────────────┬─────────────────────────────────────────────────────────┤
+│ ❖ Logo       │                                                         │
+│ 📊 Dashboard │                                                         │
+│ 💬 Chat      │                     MAIN WORKSPACE                      │
+│ 📅 Today     │                                                         │
+│ ☑ Tasks      │    - Dashboard / Today Overview / Focus Session         │
+│ 📁 Projects  │    - Hybrid Text + Voice Chat & Equalizer Bar           │
+│ 🧠 Memory    │    - Epistemic Memory Center & Consent                  │
+│ 🤖 Agents    │    - Agent Registry & Hot-Swap Manager                  │
+│ 📈 Activity  │    - Security Center & Zero-Trust Data Firewall         │
+│ 💡 Insights  │    - Self-Healing & Self-Improvement Dashboards         │
+│ ⚡ Self-Impr │    - Coding Workspace & Terminal Safety Review          │
+│ 🛡️ Security  │                                                         │
+│ ⚙️ Settings  │                                                         │
+└──────────────┴─────────────────────────────────────────────────────────┘
+```
+
+### 13 Persistent Left Sidebar Sections
+1. **Dashboard:** Home overview (greeting, schedule cards, priority tasks, productivity status).
+2. **Conversation:** Text & Voice hybrid chat workspace.
+3. **Today:** Day timeline, schedule recommendations, focus blocks.
+4. **Tasks:** Drag-and-drop task management (Inbox, Planned, Active, Blocked, Completed, Archived).
+5. **Projects:** Project health indicators (Healthy, At Risk, Blocked) with file/task milestones.
+6. **Memory:** Epistemic facts, observations, hypotheses with confidence %, evidence counts, and actions ([Edit], [Confirm], [Forget], [Mark incorrect]).
+7. **Agents:** Agent Registry manager showing active models, scores, and hot-swap controls.
+8. **Activity:** Execution graph and step-by-step agent run logs.
+9. **Insights:** Evidence-based productivity patterns and focus metrics.
+10. **Self-Improvement:** Training example evaluator, model benchmarks, and rollback controls.
+11. **Security:** Zero-trust Data Firewall, secret masking (`sk-••••`), audit trail, data export/purge.
+12. **Food / Nutrition:** Grocery planning, meal logs, and general nutrition information (non-medical).
+13. **Settings:** Preferences, Voice STT/TTS devices, Local LLM models, and Developer Mode.
+
+---
+
+## 3. Global Top Bar Status Indicators
+
+- **Left:** Section title / breadcrumb.
+- **Center:** Processing indicator & active agent state.
+- **Right:**
+  - Model Mode: `● Local` (Green) or `☁ Cloud` (Blue, when cloud fallback enabled).
+  - Privacy Status: `🔒 Private` (Local encryption active).
+  - Voice Status: `🎙 Ready` / `🎙 Listening...` / `🎙 Speaking...`.
+  - Profile & Notifications.
+
+---
+
+## 4. Voice Interaction & Privacy UI
+
+- **Voice Controls:** `[ + ] [ Text input... ] [ 🎙 ] [ Send ]`
+- **Voice States:** `Ready`, `Listening...`, `Processing...`, `Speaking...`, `Paused`.
+- **Playback Controls:** `▶ Play`, `⏸ Pause`, `■ Stop`.
+- **Output Toggles:** Switch seamlessly between `Text only`, `Voice only`, `Text + Voice`.
+- **Privacy Rule:** Microphone requires explicit consent; visual mic indicator is active whenever audio recording is engaged.
+
+---
+
+## 5. Guardian Disagreement UI
+
+When COPPER challenges a user decision (Level 2 Challenge):
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ ⚠ COPPER RECOMMENDS AGAINST THIS                                       │
+│                                                                        │
+│ I disagree with this plan because it conflicts with tomorrow's         │
+│ interview deadline.                                                    │
+│                                                                        │
+│ Evidence:                                                              │
+│ • Interview scheduled for tomorrow 9:00 AM                             │
+│ • 2 preparation tasks remain incomplete                                │
+│ • Only 45 minutes of preparation completed today                       │
+│                                                                        │
+│ Confidence: High (92%)                                                 │
+│ Recommendation: Complete preparation tasks first.                      │
+│                                                                        │
+│ [ Follow COPPER's Recommendation ]  [ Proceed Anyway ]  [ Discuss ]   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+*Note: Uses neutral, non-manipulative wording. Never uses phrases like "COPPER knows best".*
+
+---
+
+## 6. Terminal Safety & Tool Execution UI
+
+### Terminal Safety Tiers
+- **Harmless Commands:** `[Run]`
+- **Potentially Destructive Commands:** `[Review Command]` $\rightarrow$ `[Run]` / `[Cancel]`
+- **Destructive Commands:** Displays Command, Target, Expected Effect, Risk, and explicit confirmation dialog.
+
+### Tool Execution Progress Bar
+- Displays collapsible activity (`✓ Read schedule` $\rightarrow$ `✓ Checked priorities` $\rightarrow$ `→ Updating tasks`).
+- Secrets (API keys, passwords, tokens) automatically masked (`sk-••••••••`).
+
+---
+
+## 7. Developer Mode & Observability
+
+When Developer Mode is enabled in Settings:
+- Displays LangGraph State, LangCrew Execution, latency metrics, token consumption, and model benchmarks.
+- Secrets, private keys, hidden prompts, and chain-of-thought traces remain strictly protected and masked.

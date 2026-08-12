@@ -2,65 +2,66 @@
 
 ---
 
-## 1. Executive Summary & Product Vision
+## 1. Executive Summary & Product Identity
 
-**C.O.P.P.E.R.** (Centralized Omnifunctional Personal Productivity and Execution Routine) is a persistent, adaptive, guardian-style personal AI assistant designed to help users plan, execute, code, and maintain routines over time while protecting their long-term interests and autonomy.
+**C.O.P.P.E.R.** (Centralized Omnifunctional Personal Productivity and Execution Routine) is positioned as:
 
-Existing AI chat assistants fall into two flawed extremes:
-- **Passive Obedience:** Executing every command without regard for context, schedule conflicts, or long-term fatigue.
-- **Rigid Refusal:** Rejecting prompts based on overly broad guardrails, creating user frustration.
+> **"Your Personal AI Operating System"**
 
-C.O.P.P.E.R. introduces a **Guardian Alignment Framework** that evaluates user instructions against an epistemic memory model of their goals, offering graduated intervention levels (0 to 3) ranging from standard execution to friction-based challenges and safety boundaries.
+COPPER is a persistent, adaptive, local-first personal productivity and guardian AI environment. It combines persistent user memory, daily scheduling, task execution, coding assistance, project management, behavioral tracking, nutrition organization, research, and multi-agent orchestration into a desktop operating environment.
 
----
-
-## 2. Core User Personas
-
-### Persona 1: The High-Output Developer ("Alex")
-- **Profile:** Software engineer managing multiple projects, context-switching frequently, prone to late-night refactoring burnouts.
-- **Pain Points:** Loses track of architectural decisions across sessions; needs an assistant that knows project context deeply without re-explaining.
-- **C.O.P.P.E.R. Value:** Epistemic memory tracks past codebase decisions; Guardian Level 2 challenges late-night risky deployments; self-healing coding agents automate script runs.
-
-### Persona 2: The Multi-Disciplinary Founder ("Morgan")
-- **Profile:** Runs a tech startup, balances research, planning, automation, and operational tasks.
-- **Pain Points:** Concerns over cloud data privacy and API leaks; overloaded by context switching across 20+ specialized tasks.
-- **C.O.P.P.E.R. Value:** Data Firewall guarantees PII protection; 30 specialized hot-swappable agents route tasks automatically via a neural visualizer UI.
+### Core Philosophical Identity
+- **Understand me:** Remembers what matters with epistemic precision.
+- **Help me execute:** Facilitates scheduling, coding, and workflow tasks.
+- **Challenge me when necessary:** Level 2 Guardian friction for off-schedule or high-risk decisions.
+- **Protect my privacy:** Operates 100% offline by default; zero data egress without explicit confirmation.
+- **Keep me in control:** Human-in-the-loop approval, no dark patterns, no manipulative shaming.
 
 ---
 
-## 3. Product Feature Matrix
+## 2. Desktop Application Structure & 13 Core Sections
 
-| Feature | Description | Priority | Success Metric |
-| :--- | :--- | :--- | :--- |
-| **Guardian Framework (Levels 0–3)** | Evaluates prompt safety and alignment against user routines. | P0 (Critical) | $< 1\%$ false positive challenges; $100\%$ intercept of destructive commands. |
-| **Epistemic Memory Engine** | Categorizes user facts into Facts, Observations, Hypotheses. | P0 (Critical) | $> 90\%$ fact recall precision over 30 days. |
-| **Zero-Trust Data Firewall** | Scans, redacts, and tokenizes PII before cloud offload. | P0 (Critical) | $0$ sensitive credentials leaked to cloud APIs. |
-| **30-Agent Radial Visualizer** | Interactive SVG ganglia map showing active neural routing. | P1 (High) | 60 FPS animation performance; instant visual routing clarity. |
-| **Self-Healing Tool Execution** | Automatic retries and tool fallbacks for failed agent actions. | P1 (High) | $> 85\%$ unassisted failure recovery rate. |
-| **Security Center & Audit Log** | Transparent, human-readable logging with one-click export/purge. | P1 (High) | Single click encrypted export & instantaneous wipe capability. |
+COPPER is structured around a persistent 13-section navigation sidebar:
 
----
-
-## 4. Intervention Levels Definition (Levels 0–3)
-
-- **Level 0 (Direct Execution):** Standard task request aligning with user goals. Assistant executes immediately with no friction.
-- **Level 1 (Nudge / Suggestion):** Minor conflict with schedule or routine; assistant executes while providing an inline suggestion or alternative perspective.
-- **Level 2 (Challenge / Friction):** Moderate conflict (e.g., scheduling a heavy task during rest hours); assistant triggers `GuardianChallengeModal`, requiring explicit user confirmation before proceeding.
-- **Level 3 (Safety Boundary):** Severe conflict with user safety or long-term goals; assistant halts cleanly and provides clear explanation.
+1. **Dashboard:** Home screen greeting ("Good morning. You have 4 important things today."), schedule overview, productivity status (neutral metrics, no shaming).
+2. **Conversation:** Text & Voice hybrid input/output dock with equalizer visualizer.
+3. **Today:** Day/Week/Month schedule timeline with focus blocks and COPPER schedule recommendations.
+4. **Tasks:** Drag-and-drop task cards (Inbox, Planned, Active, Blocked, Completed, Archived).
+5. **Projects:** Project health indicators (Healthy, At Risk, Blocked) with evidence explanations.
+6. **Memory:** Epistemic facts, observations, hypotheses with confidence scores, evidence counts, and user controls ([Edit], [Confirm], [Forget], [Mark incorrect]).
+7. **Agents:** Agent Registry manager showing active models, scores, and hot-swap controls.
+8. **Activity:** Agent run history and step-by-step execution traces.
+9. **Insights:** Evidence-based focus statistics and working pattern analytics.
+10. **Self-Improvement:** Training example inspector, candidate model benchmarks, and rollback controls.
+11. **Security:** Zero-trust Data Firewall, secret masking (`sk-••••`), human-readable audit log, export & purge.
+12. **Food / Nutrition:** Grocery list, meal log, budget tracking, general nutrition information (non-medical).
+13. **Settings:** Voice devices, Local LLMs, Keyboard shortcuts, Developer Mode.
 
 ---
 
-## 5. Key User Journeys
+## 3. Guardian Alignment Framework (Levels 0–3)
 
-### Journey 1: Late-Night Code Refactor (Guardian Level 2)
-1. User enters: `"Drop the production database and rerun all migrations."` at 2:30 AM.
-2. Guardian Engine detects high-risk operation during low-energy window.
-3. System triggers Level 2 Challenge: *"Warning: Re-running migrations on production at 2:30 AM conflicts with your scheduled maintenance window. Are you sure?"*
-4. User reviews challenge in `GuardianChallengeModal` and confirms or cancels.
-5. All actions and confirmation choices are logged in the Security Center.
+Evaluates user instructions against schedule commitments, fatigue, and long-term goals:
 
-### Journey 2: Private Code Analysis via Cloud Model
-1. User prompts: `"Analyze this private payment script for security bugs using GPT-4o."`
-2. Data Firewall detects Stripe API key `sk_live_...` and customer email addresses in prompt.
-3. Firewall replaces PII with tokens `[REDACTED_API_KEY_1]` and sends anonymized payload to OpenAI.
-4. Response is received, tokens are re-hydrated locally, and output is presented cleanly to user.
+- **Level 0 (Direct Execution):** Standard task request. Execute immediately.
+- **Level 1 (Nudge / Suggestion):** Minor optimization opportunity. Provide inline tip while executing.
+- **Level 2 (Challenge / Friction):** Moderate conflict (e.g., late-night heavy task before deadline). Trigger `GuardianChallengeModal` with evidence, confidence, recommendation, and options ([Follow recommendation], [Proceed anyway], [Discuss]).
+- **Level 3 (Safety Boundary):** Severe conflict with data integrity or system safety. Halt cleanly with clear explanation.
+
+---
+
+## 4. Voice Privacy & Interaction Specifications
+
+- **Voice Controls:** Push-to-talk, click-to-speak, recording state (`Ready`, `Listening...`, `Processing...`, `Speaking...`, `Paused`).
+- **Privacy Rule:** Microphone requires explicit user permission; top bar displays `🎙 Ready` or active recording pulse. Never record silently.
+- **Output Toggles:** Switch between `Text only`, `Voice only`, and `Text + Voice`.
+
+---
+
+## 5. Security & Privacy Architecture
+
+- **100% Offline Default:** Local model execution via Ollama.
+- **Secret Masking:** Automatically masks API keys, passwords, tokens (`sk-••••••••`).
+- **Data Firewall:** Scans all outgoing payloads for PII redaction if cloud fallback is enabled.
+- **Audit Log:** Human-readable log of all agent runs, tool calls, and API events.
+- **Data Export & Deletion:** Granular memory deletion, encrypted JSON export, and permanent `delete-all` capability.
