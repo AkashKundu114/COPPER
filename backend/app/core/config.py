@@ -4,8 +4,17 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     APP_NAME: str = "COPPER"
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    APP_VERSION: str = "1.0.0"
+    ALLOWED_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "tauri://localhost",
+        "http://tauri.localhost",
+    ]
     DB_PATH: str = str(Path(__file__).resolve().parent.parent / "data" / "copper_memory.db")
+    DATABASE_URL: str = f"sqlite:///{DB_PATH}"
+    REDIS_URL: str = "redis://localhost:6379/0"
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
 
     # Familiarity tier thresholds (per-agent invocation counts)
     AGENT_TIERS: list[tuple[int, str]] = [

@@ -1,5 +1,8 @@
 from enum import Enum
 
+CHROMA_COLLECTION_CHAT = "copper_chat_history"
+MEMORY_SEARCH_LIMIT = 5
+
 
 class AgentType(str, Enum):
     CHAT = "chat"

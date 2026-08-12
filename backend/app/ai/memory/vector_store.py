@@ -1,45 +1,55 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from app.core.logger import logger
-
-try:
-    import chromadb
-    client = chromadb.Client()
-    epistemic_collection = client.get_or_create_collection("copper_epistemic_memory")
-except Exception as e:
-    logger.warning(f"ChromaDB local vector store fallback: {e}")
-    client = None
-    epistemic_collection = None
 
 
 class VectorStore:
-    def add_memory(self, memory_id: str, content: str, metadata: Dict[str, Any]):
-        if epistemic_collection:
+    def __init__(self, collection_name: str = "copper_default"):
+        self.collection_name = collection_name
+        self.collection = None
+        try:
+            import chromadb
+            client = chromadb.Client()
+            self.collection = client.get_or_create_collection(collection_name)
+        except Exception as e:
+            logger.warning(f"ChromaDB collection '{collection_name}' fallback active: {e}")
+
+    async def add(self, text: str, metadata: Optional[Dict[str, Any]] = None) -> str:
+        import uuid
+        doc_id = str(uuid.uuid4())
+        if self.collection:
             try:
-                epistemic_collection.add(
-                    ids=[memory_id],
-                    documents=[content],
-                    metadatas=[metadata]
+                self.collection.add(
+                    ids=[doc_id],
+                    documents=[text],
+                    metadatas=[metadata or {}]
                 )
             except Exception as e:
-                logger.warning(f"Failed to add vector memory: {e}")
+                logger.warning(f"Failed vector add: {e}")
+        return doc_id
 
-    def query_memory(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        if epistemic_collection:
+    async def search(self, query: str, n_results: int = 5, where: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+        if self.collection:
             try:
-                results = epistemic_collection.query(
-                    query_texts=[query],
-                    n_results=top_k
-                )
+                kw = {"query_texts": [query], "n_results": n_results}
+                if where:
+                    kw["where"] = where
+                results = self.collection.query(**kw)
                 memories = []
                 if results and "documents" in results and results["documents"]:
                     docs = results["documents"][0]
                     metas = results["metadatas"][0] if "metadatas" in results else [{}] * len(docs)
-                    for doc, meta in zip(docs, metas):
-                        memories.append({"content": doc, **meta})
+                    dists = results["distances"][0] if "distances" in results else [0.0] * len(docs)
+                    for doc, meta, dist in zip(docs, metas, dists):
+                        memories.append({"document": doc, "metadata": meta, "distance": dist})
                 return memories
             except Exception as e:
                 logger.warning(f"Vector search failed: {e}")
         return []
 
-
-vector_store = VectorStore()
+    async def count(self) -> int:
+        if self.collection:
+            try:
+                return self.collection.count()
+            except Exception:
+                pass
+        return 0
