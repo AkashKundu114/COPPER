@@ -3,11 +3,9 @@ import { Sidebar, type NavSection } from "./components/layout/Sidebar";
 import { TopBar } from "./components/layout/TopBar";
 import { CommandPalette } from "./components/common/CommandPalette";
 import { GuardianChallengeModal, type GuardianChallengePayload } from "./components/chat/GuardianChallengeModal";
-import { NeuralBrain } from "./components/brain/NeuralBrain";
 import { ChatDock } from "./components/chat/ChatDock";
-import { SpeakingBar } from "./components/chat/SpeakingBar";
+import { MessageFeed } from "./components/chat/MessageFeed";
 import { SideDrawer } from "./components/profile/SideDrawer";
-import { EmberParticles } from "./components/effects/EmberParticles";
 import { useBrainSocket } from "./lib/useBrainSocket";
 import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
 
@@ -26,7 +24,7 @@ import { Insights } from "./pages/Insights";
 import { SecurityCenter } from "./pages/SecurityCenter";
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState<NavSection>("dashboard");
+  const [activeSection, setActiveSection] = useState<NavSection>("chat");
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -46,13 +44,8 @@ export default function App() {
   }, [refresh]);
 
   const {
-    connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send,
+    connected, thinking, activeAgent, lines, send,
   } = useBrainSocket(refresh);
-
-  const handleSelectAgent = (id: string) => {
-    setSelectedAgent(id);
-    setDrawerOpen(true);
-  };
 
   const handleToggleDrawer = () => {
     if (drawerOpen) {
@@ -69,19 +62,15 @@ export default function App() {
         return <DashboardView />;
       case "chat":
         return (
-          <div className="relative w-full h-full flex flex-col items-center justify-center">
-            <NeuralBrain
-              agentStats={agentStats}
-              thinking={thinking}
-              activeAgent={activeAgent}
-              activeEdge={activeEdge}
-              pulseSeq={pulseSeq}
-              selectedAgent={selectedAgent}
-              onSelectAgent={handleSelectAgent}
+          <div className="relative w-full h-full flex flex-col items-center">
+            <MessageFeed 
+              lines={lines} 
+              agentStats={agentStats} 
+              thinking={thinking} 
+              activeAgent={activeAgent} 
             />
-            <div className="fixed bottom-6 left-64 right-0 px-8 z-20">
-              <SpeakingBar speaking={speaking} agentId={speakingAgent} />
-              <ChatDock lines={lines} connected={connected} thinking={thinking} onSend={send} />
+            <div className="w-full max-w-4xl px-6 pb-6">
+              <ChatDock connected={connected} thinking={thinking} onSend={send} />
             </div>
           </div>
         );
@@ -113,15 +102,11 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-void flex">
-      {}
-      <EmberParticles />
-
-      {}
+    <div className="relative w-screen h-screen overflow-hidden bg-bg flex text-text">
+      
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
 
-      {}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden relative border-l border-border">
         <TopBar
           sectionTitle={activeSection.replace("-", " ")}
           profile={profile}
@@ -130,12 +115,11 @@ export default function App() {
           onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         />
 
-        <main className="flex-1 overflow-y-auto relative custom-scrollbar">
+        <main className="flex-1 overflow-hidden relative custom-scrollbar flex flex-col bg-bg">
           {renderActiveSection()}
         </main>
       </div>
 
-      {}
       <CommandPalette
         open={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}

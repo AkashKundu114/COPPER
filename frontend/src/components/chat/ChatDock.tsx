@@ -1,81 +1,53 @@
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { TIER_COLORS, AGENT_MAP } from "../../data/agents";
-import type { ChatLine } from "../../lib/useBrainSocket";
+import { useState } from "react";
+import { Paperclip, ArrowUp } from "lucide-react";
 
 interface Props {
-  lines: ChatLine[];
   connected: boolean;
   thinking: boolean;
   onSend: (message: string) => void;
 }
 
-function lineColor(agentId: string): string {
-  if (agentId === "YOU") return "#f3ece2";
-  if (agentId === "COPPER") return "#ffcb94";
-  return TIER_COLORS[AGENT_MAP[agentId]?.tier] ?? "#e0985f";
-}
-
-export function ChatDock({ lines, connected, thinking, onSend }: Props) {
+export function ChatDock({ connected, thinking, onSend }: Props) {
   const [draft, setDraft] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [lines.length]);
 
   const submit = () => {
     const msg = draft.trim();
-    if (!msg) return;
+    if (!msg || thinking) return;
     onSend(msg);
     setDraft("");
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      {lines.length > 0 && (
-        <div
-          ref={scrollRef}
-          className="mb-2 max-h-56 overflow-y-auto rounded-none border border-zinc-850 bg-void-panel px-4 py-3 space-y-2"
-        >
-          <AnimatePresence initial={false}>
-            {lines.map((line) => (
-              <motion.div
-                key={line.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex flex-col ${line.agent === "YOU" ? "items-end" : "items-start"}`}
-              >
-                <span className="font-mono text-[10px] tracking-wide opacity-60" style={{ color: lineColor(line.agent) }}>
-                  {line.agent}
-                </span>
-                <span className="text-sm text-ink-primary font-body max-w-[85%]">{line.text}</span>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
+    <div className="w-full flex items-end gap-2 bg-bg-panel border border-border rounded-2xl px-3 py-2.5 shadow-sm focus-within:border-accent transition-colors">
+      <button 
+        className="p-2 text-text-muted hover:text-text rounded-full transition-colors flex-shrink-0"
+        title="Attach file (coming soon)"
+      >
+        <Paperclip size={18} />
+      </button>
 
-      <div className="flex items-center gap-2 rounded-none border border-zinc-800 bg-void-panel px-3 py-2">
-        <span
-          className={`w-2 h-2 rounded-none flex-shrink-0 ${connected ? "bg-white" : "bg-ink-faint"}`}
-          title={connected ? "Connected" : "Reconnecting…"}
-        />
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder={thinking ? "COPPER is thinking…" : "Tell COPPER what you need…"}
-          className="flex-1 bg-transparent outline-none text-sm font-body text-ink-primary placeholder:text-ink-faint"
-        />
-        <button
-          onClick={submit}
-          disabled={!draft.trim()}
-          className="px-3 py-1.5 rounded-none border border-zinc-800 bg-void-raised hover:bg-zinc-800 text-zinc-300 text-xs font-mono tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          SEND
-        </button>
-      </div>
+      <textarea
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
+          }
+        }}
+        placeholder={thinking ? "C.O.P.P.E.R. is thinking..." : "Message C.O.P.P.E.R..."}
+        className="flex-1 bg-transparent outline-none text-[15px] text-text placeholder:text-text-muted resize-none max-h-32 min-h-[24px] py-1.5 custom-scrollbar"
+        rows={draft.split("\n").length > 1 ? Math.min(draft.split("\n").length, 5) : 1}
+      />
+
+      <button
+        onClick={submit}
+        disabled={!draft.trim() || thinking}
+        className="p-2 ml-1 rounded-full bg-text text-bg hover:bg-accent disabled:opacity-30 disabled:hover:bg-text transition-colors flex-shrink-0"
+        title={connected ? "Send message" : "Reconnecting..."}
+      >
+        <ArrowUp size={18} strokeWidth={3} />
+      </button>
     </div>
   );
 }

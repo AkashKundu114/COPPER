@@ -17,53 +17,41 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenCommandPalette,
 }) => {
   return (
-    <header className="h-14 bg-[#0d0d11]/80 backdrop-blur-md border-b border-[#b87333]/20 flex items-center justify-between px-6 z-20 select-none">
-      {}
+    <header className="h-14 bg-bg border-b border-border flex items-center justify-between px-6 z-20 select-none">
       <div className="flex items-center gap-3">
-        <h2 className="text-sm font-semibold text-white tracking-wide capitalize">{sectionTitle}</h2>
+        <h2 className="text-sm font-medium text-text tracking-tight capitalize">{sectionTitle}</h2>
       </div>
 
-      {}
       <button
         onClick={onOpenCommandPalette}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#14141a] border border-white/10 text-xs text-gray-400 hover:text-gray-200 hover:border-white/20 transition-all w-64 justify-between"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-panel border border-border text-[13px] text-text-muted hover:text-text hover:border-accent transition-colors w-64 justify-between"
       >
         <div className="flex items-center gap-2">
-          <Search size={14} className="text-gray-400" />
+          <Search size={14} className="text-text-muted" />
           <span>Search or command...</span>
         </div>
-        <kbd className="px-1.5 py-0.5 rounded bg-black/40 text-[10px] font-mono text-gray-500 border border-white/5">
+        <kbd className="px-1.5 py-0.5 rounded bg-bg text-[10px] font-mono text-text-muted border border-border">
           Ctrl+K
         </kbd>
       </button>
 
-      {}
       <div className="flex items-center gap-3">
-        {}
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-bg-panel border border-border text-text-muted text-[11px] font-medium">
           <Server size={12} />
-          <span>● Local</span>
+          <span>Local</span>
         </div>
 
-        {}
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-950/40 border border-blue-500/30 text-blue-400 text-xs font-mono">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-bg-panel border border-border text-text-muted text-[11px] font-medium">
           <Shield size={12} />
-          <span>🔒 Private</span>
+          <span>Private</span>
         </div>
 
-        {}
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#b87333]/20 border border-[#b87333]/40 text-[#ff5722] text-xs font-mono">
-          <Mic size={12} />
-          <span>🎙 Ready</span>
-        </div>
-
-        {}
         <button
           onClick={onToggleDrawer}
-          className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#14141a] border border-[#b87333]/30 hover:border-[#ff5722]/60 text-xs text-gray-200 transition-all"
+          className="flex items-center gap-2 px-3 py-1 rounded-lg bg-bg-panel border border-border hover:border-accent text-[13px] text-text-muted transition-colors"
         >
-          <User size={14} className="text-[#ff5722]" />
-          <span className="font-mono text-[11px]">{profile?.relationship_tier || "User Profile"}</span>
+          <User size={14} />
+          <span className="font-medium">{profile?.relationship_tier || "Profile"}</span>
         </button>
       </div>
     </header>
