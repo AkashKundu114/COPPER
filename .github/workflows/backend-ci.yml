@@ -35,4 +35,4 @@ jobs:
       - name: Run Tests & Coverage (Gate 3)
         run: |
           cd backend
-          pytest ../tests/backend/ -v --tb=short --cov=app
+          pytest ../tests/ -v --tb=short
