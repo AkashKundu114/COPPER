@@ -1,7 +1,7 @@
 # C.O.P.P.E.R.
 
-**Centralized Omnifunctional Personal Productivity and Execution Routine**  
-*"Autonomous, 100% Offline Personal AI Companion, Multi-Agent Orchestrator & Desktop Guardian"*
+**Centralized Omnifunctional Personal Productivity and Execution Routine**
+*A 100% offline, local-first personal AI operating system — 30 orchestrated agents, epistemic memory, a Guardian safety engine, and zero cloud egress.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
@@ -12,6 +12,18 @@
 [![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~19%2C000%20QPS-blueviolet.svg)]()
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)]()
 [![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)]()
+
+---
+
+## Why COPPER
+
+COPPER routes every request through a 30-agent orchestration layer running entirely on local hardware — no API keys, no cloud calls, no data leaving your machine unless you explicitly allow it. A Guardian engine challenges risky or off-goal actions before they execute, a Zero-Trust firewall redacts secrets and PII in real time, and an epistemic memory system builds up a genuine, decaying model of what it knows about you — all visualized through a live neural map that lights up as agents work.
+
+**In numbers:**
+- **100.0% routing accuracy** across 1,110 benchmark cases at **~19,000 QPS** (0.05ms avg latency)
+- **100.0% Guardian threat catch rate**, 0 breaches across 250 adversarial safety tests
+- **213/213 tests passing**, CodeQL security scanning on every push
+- **26 quantized local models** (Llama 3.1, Qwen2.5-Coder, DeepSeek-R1, Qwen2-VL) — zero cloud dependency by default
 
 ---
 
@@ -204,4 +216,4 @@ COPPER/
 
 ## 📜 License
 
-Distributed under the **MIT License**. See [`LICENSE`](file:///d:/C.O.P.P.E.R/LICENSE) for full details.
+   Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for full details.
