@@ -85,7 +85,6 @@ def test_build_messages_with_empty_history():
 def test_build_messages_sliding_window():
     long_history = [{"role": "user", "content": f"msg {i}"} for i in range(20)]
     messages = build_messages("System", long_history, "Latest")
-    # 1 system + 6 sliding window + 1 current = 8 messages
     assert len(messages) == 8
     assert messages[-2]["content"] == "msg 19"
     assert messages[-1]["content"] == "Latest"

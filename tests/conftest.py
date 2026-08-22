@@ -2,12 +2,10 @@ import sys
 import pytest
 from pathlib import Path
 
-# Ensure backend directory is in sys.path
 backend_dir = Path(__file__).resolve().parent.parent / "backend"
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
-# Initialize DB tables for testing
 try:
     from app.database.postgres import init_db
     init_db()

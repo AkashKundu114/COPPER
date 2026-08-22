@@ -10,7 +10,6 @@ router = APIRouter(prefix="/memory", tags=["memory"])
 @router.get("/profile")
 async def get_profile(db: Session = Depends(get_db)):
     total = db.query(ChatHistory).count()
-    # Simple placeholder logic now that we've moved to Chroma/Postgres
     return {
         "facts": [],
         "total_interactions": total,

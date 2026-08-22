@@ -12,7 +12,6 @@ class VectorStore:
 
             import chromadb
 
-            # Ensure the database is saved persistently on the D: drive inside the backend folder
             db_path = Path(__file__).parent.parent.parent.parent / "data" / "chroma"
             db_path.mkdir(parents=True, exist_ok=True)
 

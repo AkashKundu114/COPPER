@@ -179,7 +179,6 @@ export default function App() {
           if (action.toLowerCase().includes('help') || action.toLowerCase().includes('ask')) {
             setActiveSection('chat');
           } else if (action.toLowerCase().includes('snooze')) {
-            // Extract minutes, default to 15
             const match = action.match(/(\d+)/);
             const mins = match ? parseInt(match[1]) : 15;
             let duration = mins * 60;

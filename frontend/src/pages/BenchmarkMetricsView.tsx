@@ -153,7 +153,6 @@ export const BenchmarkMetricsView: React.FC = () => {
   const [liveProgress, setLiveProgress] = useState(0);
   const [liveResults, setLiveResults] = useState<{ total: number; passed: number; avgLatency: number } | null>(null);
 
-  // Real-time telemetry state
   const [isPolling, setIsPolling] = useState(true);
   const [telemetry, setTelemetry] = useState<SystemTelemetryData>({
     status: "healthy",
@@ -191,14 +190,12 @@ export const BenchmarkMetricsView: React.FC = () => {
     }
   });
 
-  // Polling hook
   useEffect(() => {
     if (!isPolling) return;
     const interval = setInterval(() => {
       fetchSystemTelemetry()
         .then(setTelemetry)
         .catch(() => {
-          // Simulation jitter if backend is warming up
           setTelemetry((prev) => ({
             ...prev,
             cpu: {

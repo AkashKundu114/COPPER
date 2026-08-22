@@ -127,7 +127,7 @@ async def test_reminder_scheduling():
 @pytest.mark.asyncio
 async def test_reminder_tasks_and_timers():
     prompts = [
-        "Add 'Review Pull Request #42' to my todo list",
+        "Add 'Review Pull Request
         "Remind me in 30 minutes to stretch and take a water break",
         "Set a countdown timer for 25 minutes for Pomodoro focus",
         "Create a recurring reminder to submit timesheets every Friday at 4pm",

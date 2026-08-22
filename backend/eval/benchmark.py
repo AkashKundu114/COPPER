@@ -80,7 +80,6 @@ async def evaluate_routing_dataset(dataset: list[dict[str, Any]]) -> dict[str, A
     total_batch_duration = time.perf_counter() - start_batch_time
     qps = total / total_batch_duration if total_batch_duration > 0 else 0.0
 
-    # Calculate Precision, Recall, F1
     per_class_metrics = {}
     macro_p, macro_r, macro_f1 = 0.0, 0.0, 0.0
     weighted_f1 = 0.0
@@ -113,7 +112,6 @@ async def evaluate_routing_dataset(dataset: list[dict[str, Any]]) -> dict[str, A
     macro_f1_score = macro_f1 / num_classes if num_classes > 0 else 0.0
     weighted_f1_score = weighted_f1 / total if total > 0 else 0.0
 
-    # Format category breakdown
     category_summary = {
         cat: {
             "accuracy": round((data["correct"] / data["total"]) * 100.0, 1),
@@ -151,10 +149,10 @@ async def evaluate_routing_dataset(dataset: list[dict[str, Any]]) -> dict[str, A
 
 async def evaluate_guardian_dataset(dataset: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(dataset)
-    tp = 0  # Expected block, correctly blocked
-    tn = 0  # Expected allow, correctly allowed
-    fp = 0  # Expected allow, falsely blocked
-    fn = 0  # Expected block, falsely allowed (Dangerous)
+    tp = 0 
+    tn = 0 
+    fp = 0 
+    fn = 0 
     latencies_ms = []
 
     for item in dataset:
@@ -211,7 +209,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     )
     lines.append("\n---\n")
 
-    # 1. Executive Summary
     lines.append("## 📊 Executive Summary Metrics\n")
     lines.append(
         "| Benchmark Suite | Total Samples | Overall Accuracy | Primary Reliability Metric | Latency (P95) | Throughput |"
@@ -225,7 +222,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     )
     lines.append("")
 
-    # 2. Latency Breakdown
     lines.append("## ⚡ Latency Profile (Sub-Millisecond Execution)")
     lines.append("| Metric | Latency (ms) | Description |")
     lines.append("| :--- | :--- | :--- |")
@@ -243,7 +239,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     )
     lines.append("")
 
-    # 3. Per-Class Precision / Recall / F1
     lines.append("## 📈 Per-Class Breakdown (Precision / Recall / F1)")
     lines.append("| Agent Category | Support (Samples) | Precision | Recall | F1-Score | Status |")
     lines.append("| :--- | :---: | :--- | :--- | :--- | :---: |")
@@ -254,7 +249,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
         )
     lines.append("")
 
-    # 4. Confusion Matrix
     lines.append("## 🔲 Confusion Matrix")
     classes = routing_res["classes"]
     header = "| Actual \\ Predicted | " + " | ".join([f"`{c}`" for c in classes]) + " |"
@@ -266,7 +260,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
         lines.append(f"| **`{actual}`** | " + " | ".join(row_vals) + " |")
     lines.append("")
 
-    # 5. Guardian Engine Details
     lines.append("## 🛡️ Guardian Safety & Alignment Verification")
     lines.append(f"- **Total Safety Test Cases:** {guardian_res['total_samples']}")
     lines.append(f"- **Safety Verification Accuracy:** **{guardian_res['accuracy_pct']}%**")
@@ -281,7 +274,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     )
     lines.append(f"- **Verification Latency:** `{guardian_res['avg_latency_ms']} ms`\n")
 
-    # Diagnostic Logs
     if routing_res["errors"]:
         lines.append("### ⚠️ Edge-Case Discrepancies")
         for err in routing_res["errors"]:
@@ -299,7 +291,6 @@ async def run_benchmark():
     print("    C.O.P.P.E.R. COMPREHENSIVE BENCHMARK & EVALUATION SUITE       ")
     print("==================================================================")
 
-    # Ingest master dataset
     routing_master = BASE_DIR / "datasets/routing/master_routing_dataset.json"
     guardian_master = BASE_DIR / "datasets/guardian/master_guardian_dataset.json"
 
@@ -331,13 +322,11 @@ async def run_benchmark():
         f"[*] Guardian Breach Risk:    {guardian_res['false_negative_rate_pct']}% (Critical Risk Breaches: {guardian_res['false_negatives']})"
     )
 
-    # Write Markdown Report
     report_md = generate_markdown_report(routing_res, guardian_res)
     report_path = BASE_DIR / "benchmark_report.md"
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report_md)
 
-    # Write Machine-Readable JSON
     metrics_json = {
         "timestamp": time.time(),
         "routing": routing_res,

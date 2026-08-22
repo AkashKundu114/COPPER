@@ -36,7 +36,6 @@ def test_audio_pipeline_silence_wav():
 
 @pytest.mark.asyncio
 async def test_audio_pipeline_end_to_end_empty():
-    # Calling process_voice_turn with empty bytes
     turn_gen = audio_pipeline.process_voice_turn(b"", session_id="test_session")
     events = []
     async for event in turn_gen:

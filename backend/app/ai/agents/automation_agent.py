@@ -37,15 +37,13 @@ class AutomationAgent(BaseAgent):
             response = await ollama_client.chat(messages, model=target_model)
             logger.info(f"Automation Step {step + 1} response length: {len(response)}")
 
-            # Look for <powershell> block
             match = re.search(r"<powershell>(.*?)</powershell>", response, re.DOTALL | re.IGNORECASE)
             if not match:
-                return response  # Done
+                return response 
 
             script = match.group(1).strip()
             messages.append({"role": "assistant", "content": response})
 
-            # Execute on host
             observation = await execute_powershell(script)
             obs_msg = f"<observation>\n{observation}\n</observation>"
             messages.append({"role": "user", "content": obs_msg})

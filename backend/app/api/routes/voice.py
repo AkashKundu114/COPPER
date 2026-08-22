@@ -109,7 +109,6 @@ async def voice_conversation(
         if len(audio_bytes) == 0:
             raise HTTPException(status_code=400, detail="Empty audio file")
 
-        # 1. Transcribe
         stt_result = await audio_pipeline.stt.transcribe(audio_bytes)
         user_text = stt_result.get("text", "")
 
@@ -120,7 +119,6 @@ async def voice_conversation(
                 "audio_base64": None,
             }
 
-        # 2. Query Chat Service
         from app.services.chat_service import chat_service
 
         agent_res = await chat_service.process_message(
@@ -129,7 +127,6 @@ async def voice_conversation(
         )
         response_text = agent_res.get("response", "")
 
-        # 3. Synthesize Audio
         tts_audio = await audio_pipeline.tts.synthesize(response_text)
         import base64
 
@@ -158,7 +155,6 @@ async def voice_websocket_stream(websocket: WebSocket):
     logger.info("Voice WebSocket connected")
     try:
         while True:
-            # Receive either binary audio chunks or text payload
             message = await websocket.receive()
             if "bytes" in message and message["bytes"]:
                 raw_audio = message["bytes"]

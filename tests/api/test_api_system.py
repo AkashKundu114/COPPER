@@ -36,7 +36,6 @@ def test_system_404_not_found():
 
 
 def test_system_405_method_not_allowed():
-    # POST to a GET-only route
     response = client.post("/health")
     assert response.status_code == 405
 

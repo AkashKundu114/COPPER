@@ -54,7 +54,6 @@ def test_tone_generator_48khz():
 
 def test_pcm_chunk_slicing():
     wav = generate_test_tone(duration=0.4, freq=440.0, rate=16000, channels=1)
-    # Header is 44 bytes, audio frames start after byte 44
     pcm_data = wav[44:]
     chunk_size = 1024
     chunks = [pcm_data[i:i + chunk_size] for i in range(0, len(pcm_data), chunk_size)]
@@ -63,7 +62,6 @@ def test_pcm_chunk_slicing():
 
 
 def test_silence_threshold_detection():
-    # Detect silence from raw PCM bytes
     silence = b"\x00\x00" * 1000
     values = struct.unpack(f"<{len(silence)//2}h", silence)
     max_amplitude = max(abs(v) for v in values)

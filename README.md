@@ -11,6 +11,7 @@
 [![Tests Passing](https://img.shields.io/badge/Tests-213%20Passed%20(100%25)-brightgreen.svg)]()
 [![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~19%2C000%20QPS-blueviolet.svg)]()
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)]()
+[![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)]()
 
 ---
 
@@ -111,6 +112,17 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 
 ## 🚀 Quick Start Guide
 
+### ⚡ Live Telemetry & Benchmarking Tab
+
+COPPER now features a dedicated **Benchmarks & Metrics** tab inside the Electron Desktop Application. This provides live 1.5-second polling of:
+- **Token Velocity**: Real-time Prompt Tokens/Sec and Generation Tokens/Sec.
+- **Hardware Thermals**: Live GPU Core, Hotspot, and CPU Package Temperatures.
+- **VRAM Monitor**: Live 8GB VRAM allocation tracking (Core, Subagent, KV Cache).
+- **System RAM**: Sub-1GB active memory footprint monitoring.
+- **Live Evaluator**: Run synthetic benchmark test cases directly from the UI with real-time accuracy scoring.
+
+### Prerequisites
+
 ### Prerequisites
 - **Python 3.11+**
 - **Node.js 20+** & **npm**
@@ -184,6 +196,7 @@ COPPER/
 │   ├── models/                    # Model organizer & integrity verifier
 │   ├── windows/                   # Windows auto-start installer & background launchers
 │   └── db/                        # Database schema initializer & seed data loader
+├── data/                          # 100% Local data persistence layer (Memory, Vectors, Voice)
 └── docs/                          # Comprehensive technical and architectural specifications
 ```
 

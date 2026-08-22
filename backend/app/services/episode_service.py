@@ -53,7 +53,7 @@ class EpisodeService:
         except Exception as e:
             logger.error(f"Failed to add episode {ep.id} to vector store: {e}")
 
-        logger.info(f"Recorded episode #{ep.id}: {context}")
+        logger.info(f"Recorded episode
         return ep
 
     async def find_similar_episodes(self, query: str, limit: int = 5) -> list[dict]:

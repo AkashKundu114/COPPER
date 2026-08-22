@@ -50,7 +50,6 @@ def seed_database():
     db = SessionLocal()
     try:
         seed_default_agents(db)
-        # Add initial audit entry
         db.add(AuditLogEntry(
             category="system_startup",
             actor="system",

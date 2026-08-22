@@ -23,7 +23,6 @@ class ResearchAgent(BaseAgent):
         )
 
     async def run(self, message: str, context: str = "") -> str:
-        # Step 1: Semantic Search local documents
         logger.info(f"Researching local documents for: {message}")
         results = await memory_manager.search_documents(message, limit=5)
 
@@ -31,7 +30,6 @@ class ResearchAgent(BaseAgent):
         if results:
             retrieved_context = "--- LOCAL DOCUMENT RESULTS ---\n"
             for res in results:
-                # Some safety checks for vector_store output structure
                 content = res.get("document", "")
                 meta = res.get("metadata", {})
                 source = meta.get("filename", "Unknown Source")
@@ -41,13 +39,12 @@ class ResearchAgent(BaseAgent):
         if not retrieved_context:
             retrieved_context = "No highly relevant local documents found for this query."
 
-        # Step 2: Feed into LLM
         messages = [
             {"role": "system", "content": SYS_PROMPT},
             {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}\n\nAdditional Context:\n{context}"},
         ]
 
-        target_model = model_manager.get_model("core_agents.reasoning")  # Use the reasoning model for research
+        target_model = model_manager.get_model("core_agents.reasoning") 
 
         response = await ollama_client.chat(messages, model=target_model)
         return response

@@ -63,7 +63,6 @@ def test_build_messages():
 
 
 def test_build_messages_truncation():
-    # Long history over 6 messages should be truncated to the last 6
     history = [{"role": "user", "content": f"msg {i}"} for i in range(12)]
     msgs = build_messages("System", history, "latest msg")
-    assert len(msgs) == 1 + 6 + 1  # 1 system + 6 history + 1 current
+    assert len(msgs) == 1 + 6 + 1 

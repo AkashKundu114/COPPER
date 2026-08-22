@@ -36,7 +36,7 @@ async def index_file(filepath: str):
                 logger.error("pypdf not installed, cannot index PDF.")
                 return
         else:
-            return  # unsupported
+            return 
 
         if not text.strip():
             return

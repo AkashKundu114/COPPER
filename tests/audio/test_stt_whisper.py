@@ -32,7 +32,7 @@ async def test_stt_transcribe_synthetic_pcm():
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(16000)
-        wf.writeframes(b"\x00\x00" * 8000)  # 0.5s silence
+        wf.writeframes(b"\x00\x00" * 8000) 
     res = await stt.transcribe(buf.getvalue())
     assert "text" in res
     assert "engine" in res

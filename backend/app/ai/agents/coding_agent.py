@@ -31,12 +31,10 @@ User: {message}"""
 
         messages = [{"role": "user", "content": prompt}]
 
-        # Simple ReAct loop (max 3 iterations)
         for step in range(3):
             try:
                 res = await ollama_client.chat(messages, agent_type=self.agent_type)
 
-                # Check if it wants to execute code
                 match = re.search(r"<execute>(.*?)</execute>", res, re.DOTALL)
                 if match:
                     code = match.group(1).strip()

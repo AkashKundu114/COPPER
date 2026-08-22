@@ -54,7 +54,6 @@ class AnomalySentinel:
         self._context_history = self._context_history[-10:]
 
     def dismiss_alert(self, alert_id: str) -> None:
-        # Dismissing suppresses it for 24 hours by default
         self.snooze_alert(alert_id, 24 * 3600)
 
     def snooze_alert(self, alert_id: str, duration_seconds: int) -> None:
@@ -173,13 +172,11 @@ class AnomalySentinel:
 
     def _check_schedule_drift(self) -> AnomalyAlert | None:
         now = time.time()
-        # Mocking an upcoming local calendar event for CV demonstration
         if not hasattr(self, "_boot_time"):
             self._boot_time = now
 
         elapsed_since_boot = now - self._boot_time
 
-        # Simulate a warning when a user is working right up to a meeting (e.g. at 10 minutes into the session)
         if 600 < elapsed_since_boot < 630:
             return AnomalyAlert(
                 alert_id="upcoming_meeting_drift",

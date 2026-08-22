@@ -23,7 +23,6 @@ def test_logger_formatter():
 
 
 def test_logger_info_call():
-    # Calling info should not throw
     logger.info("Unit test log info line")
 
 

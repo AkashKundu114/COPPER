@@ -33,9 +33,6 @@ class RoutingResult:
         return False
 
 
-# ==============================================================================
-# 🧠 Dynamic Self-Training & Online Route Memory
-# ==============================================================================
 class DynamicRoutingMemory:
     """
     Self-learning memory cache that stores verified user exemplar routes and
@@ -112,13 +109,9 @@ class DynamicRoutingMemory:
         return re.sub(r"[^\w\s]", "", text.lower()).strip()
 
 
-# Global Singleton for route memory
 routing_memory = DynamicRoutingMemory()
 
 
-# ==============================================================================
-# 🎯 Comprehensive Regex Pattern Rules
-# ==============================================================================
 KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     AgentType.CODING: [
         (
@@ -225,7 +218,6 @@ GREETING_PATTERNS = [
     r"\b(tell me a (fun thought|joke|witty remark)|sup copper|hello copper|hello there)\b",
 ]
 
-# Negative rules: Suppress false-positive overlaps
 NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
     AgentType.CODING: [
         (r"^(what is|who is|explain the history of|why was .* invented|tell me about|summarize)\b", 4.0),
@@ -275,9 +267,6 @@ def is_consequential_action(message: str) -> bool:
     return any(re.search(pattern, msg_lower) for pattern in CONSEQUENTIAL_PATTERNS)
 
 
-# ==============================================================================
-# 🚀 High-Performance Multi-Stage Router
-# ==============================================================================
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
     res = await route_message_detailed(message, use_llm=use_llm)
     return res.agent
@@ -296,7 +285,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     msg_clean = message.strip()
     msg_lower = msg_clean.lower()
 
-    # Stage 0: Check Self-Trained / Dynamic Memory Cache
     memory_match = routing_memory.find_match(msg_clean, threshold=0.90)
     if memory_match:
         learned_agent, confidence = memory_match
@@ -310,7 +298,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             is_consequential=is_consequential_action(msg_lower),
         )
 
-    # Stage 1: Fast Smalltalk / Greeting check
     for pattern in GREETING_PATTERNS:
         if re.search(pattern, msg_lower):
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -323,7 +310,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 is_consequential=False,
             )
 
-    # Stage 2: Weighted Pattern Matching with Negative Suppression
     scores: dict[AgentType, float] = dict.fromkeys(KEYWORD_RULES, 0.0)
     matched: dict[AgentType, list[str]] = {agent: [] for agent in KEYWORD_RULES}
 
@@ -333,7 +319,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 scores[agent] += weight
                 matched[agent].append(pattern)
 
-    # Apply Negative Penalties
     for agent, neg_rules in NEGATIVE_RULES.items():
         for pattern, penalty in neg_rules:
             if re.search(pattern, msg_lower):
@@ -341,14 +326,12 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
 
     consequential = is_consequential_action(msg_lower)
 
-    # Find highest scoring agent
     best_agent = max(scores, key=scores.get)
     best_score = scores[best_agent]
     total_score = sum(scores.values())
 
     confidence = round(best_score / total_score, 3) if total_score > 0 else 0.0
 
-    # Decision Threshold
     if best_score >= 1.5:
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
         return RoutingResult(
@@ -361,7 +344,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             is_consequential=consequential,
         )
 
-    # Stage 3: LLM Micro-Router Fallback if enabled
     if use_llm:
         try:
             llm_agent = await _llm_subagent_route(msg_clean)
@@ -377,7 +359,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         except Exception as e:
             logger.warning(f"LLM routing failed: {e}")
 
-    # Stage 4: Default conversational fallback
     elapsed_ms = (time.perf_counter() - start_time) * 1000.0
     return RoutingResult(
         agent=AgentType.CHAT,

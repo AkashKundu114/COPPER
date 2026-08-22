@@ -33,14 +33,12 @@ def test_validate_message_empty_string():
 
 
 def test_validate_message_max_length_bound():
-    # Exactly 20,000 characters is allowed
     message_20k = 'a' * 20000
     valid, err = validate_message(message_20k)
     assert valid is True
 
 
 def test_validate_message_exceeds_max_length():
-    # 20,001 characters should fail
     message_over = 'a' * 20001
     valid, err = validate_message(message_over)
     assert valid is False

@@ -80,7 +80,6 @@ class GuardianEngine:
             context = {}
         action_lower = proposed_action.lower()
 
-        # 1. Safety / Destructive Actions
         if context.get("is_destructive") or any(t in action_lower for t in SAFETY_TRIGGERS):
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
@@ -89,7 +88,6 @@ class GuardianEngine:
                 recommendation="Confirm explicitly before I proceed, or choose a safer alternative.",
             )
 
-        # 2. Alignment & Commitment Conflicts
         conflicts = context.get("conflicting_commitments") or []
         detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
         if conflicts or detected_conflicts:
@@ -102,7 +100,6 @@ class GuardianEngine:
                 recommendation=context.get("recommendation", "Keep existing schedule and priorities intact."),
             )
 
-        # 3. Optimization Suggestion
         suggestion = context.get("optimization_suggestion")
         if suggestion:
             return GuardianVerdict(

@@ -36,7 +36,6 @@ class ModelManager:
             if isinstance(current, dict) and "name" in current:
                 return current["name"]
 
-            # If not a dict with 'name' or path fails, return default
             logger.warning(f"Model path '{path}' not found in manifest. Using default: {default}")
             return default
 

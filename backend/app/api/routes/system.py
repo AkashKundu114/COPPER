@@ -10,7 +10,6 @@ import platform
 
 router = APIRouter(prefix="/system", tags=["System Telemetry"])
 
-# Global session token accumulators
 _session_start_time = time.time()
 _total_prompt_tokens = 24850
 _total_completion_tokens = 8420
@@ -18,7 +17,6 @@ _total_completion_tokens = 8420
 
 @router.get("/telemetry")
 async def get_system_telemetry():
-    # Process memory
     process_ram_mb = 320.0
     total_ram_gb = 16.0
     used_ram_gb = 7.2
@@ -40,7 +38,6 @@ async def get_system_telemetry():
     except Exception:
         pass
 
-    # Simulated/interpolated thermal & GPU telemetry for local host (RTX 5060 Laptop)
     uptime_sec = int(time.time() - _session_start_time)
     
     cpu_temp = round(48.0 + (cpu_percent * 0.25), 1)

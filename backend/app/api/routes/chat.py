@@ -93,7 +93,6 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
         while True:
             data = await websocket.receive_json()
 
-            # Handle system actions (snooze, dismiss, etc.)
             if "action" in data:
                 action = data["action"]
                 from app.core.anomaly_sentinel import sentinel

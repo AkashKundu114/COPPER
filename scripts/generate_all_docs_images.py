@@ -1,7 +1,7 @@
 """
 C.O.P.P.E.R. Comprehensive High-DPI Visual Diagram & Benchmark Chart Generator
 Generates crystal-clear, high-contrast, publication-quality PNG charts & architectural visuals at 300+ DPI.
-Theme: Cyberpunk / Molten Copper Dark Mode (#090d16 background, #f97316 copper, #06b6d4 cyan, #10b981 emerald, #a855f7 purple).
+Theme: Cyberpunk / Molten Copper Dark Mode (#090d16 background,
 """
 
 from pathlib import Path
@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 
-# Styling configuration
 plt.style.use('dark_background')
 plt.rcParams['font.sans-serif'] = 'Segoe UI, Helvetica, Arial, sans-serif'
 plt.rcParams['font.family'] = 'sans-serif'
@@ -27,7 +26,6 @@ def save_image(fig, filename):
     print(f"[+] Saved crystal-clear image to docs/images/: {filename}")
 
 
-# 1. Routing & Guardian Accuracy Benchmark
 def make_accuracy_benchmark():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -60,7 +58,6 @@ def make_accuracy_benchmark():
     save_image(fig, 'routing_accuracy_benchmark.png')
 
 
-# 2. Latency Percentiles Distribution
 def make_latency_percentiles():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -90,7 +87,6 @@ def make_latency_percentiles():
     save_image(fig, 'latency_percentiles.png')
 
 
-# 3. VRAM Memory Allocation Breakdown
 def make_vram_chart():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6.2), facecolor='#090d16')
     ax1.set_facecolor('#0d1322')
@@ -138,7 +134,6 @@ def make_vram_chart():
     save_image(fig, 'vram_memory_allocation.png')
 
 
-# 4. Token Generation & Processing Throughput
 def make_throughput_chart():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -167,7 +162,6 @@ def make_throughput_chart():
     save_image(fig, 'token_generation_throughput.png')
 
 
-# 5. System RAM Footprint
 def make_ram_chart():
     fig, ax = plt.subplots(figsize=(10.5, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -199,7 +193,6 @@ def make_ram_chart():
     save_image(fig, 'system_ram_footprint.png')
 
 
-# 6. Multi-Model Radar Comparison
 def make_radar_chart():
     categories = ['Code\nGeneration', 'Complex\nReasoning', 'Instruction\nFollowing', 'Latency &\nSpeed', 'Memory\nEfficiency', 'Tool\nExecution']
     N = len(categories)
@@ -236,7 +229,6 @@ def make_radar_chart():
     save_image(fig, 'model_comparison_radar.png')
 
 
-# 7. Guardian Intervention Protocol Diagram
 def make_guardian_levels_diagram():
     fig, ax = plt.subplots(figsize=(12, 6.5), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -251,16 +243,13 @@ def make_guardian_levels_diagram():
 
     for i, (title, desc, action, color) in enumerate(levels):
         y = 0.78 - i * 0.22
-        # Card background
         rect = patches.FancyBboxPatch((0.05, y), 0.9, 0.18, boxstyle="round,pad=0.02,rounding_size=0.03",
                                       facecolor='#131b2e', edgecolor=color, linewidth=1.8)
         ax.add_patch(rect)
-        # Badge
         badge = patches.FancyBboxPatch((0.08, y + 0.11), 0.26, 0.05, boxstyle="round,pad=0.01,rounding_size=0.02",
                                        facecolor=color, edgecolor='none')
         ax.add_patch(badge)
         ax.text(0.21, y + 0.135, title, fontsize=10, fontweight='bold', color='#090d16', ha='center', va='center')
-        # Description and Action
         ax.text(0.36, y + 0.135, desc, fontsize=10, fontweight='bold', color='#f8fafc', va='center')
         ax.text(0.08, y + 0.045, f"Outcome: {action}", fontsize=9.5, color='#94a3b8', va='center')
 
@@ -268,7 +257,6 @@ def make_guardian_levels_diagram():
     save_image(fig, 'guardian_intervention_levels.png')
 
 
-# 8. Data Firewall Security Pipeline
 def make_firewall_diagram():
     fig, ax = plt.subplots(figsize=(12, 6.0), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -296,7 +284,6 @@ def make_firewall_diagram():
     save_image(fig, 'data_firewall_pipeline.png')
 
 
-# 9. Epistemic Memory 3-Layer Architecture
 def make_epistemic_memory_diagram():
     fig, ax = plt.subplots(figsize=(11, 6.2), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -319,7 +306,6 @@ def make_epistemic_memory_diagram():
     save_image(fig, 'epistemic_memory_layers.png')
 
 
-# 10. Offline Audio Voice Pipeline
 def make_audio_pipeline_diagram():
     fig, ax = plt.subplots(figsize=(12, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')

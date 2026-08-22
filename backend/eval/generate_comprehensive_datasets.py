@@ -40,7 +40,6 @@ def generate_combinatorial_dataset(templates, variables, expected_agent, categor
     return dataset
 
 
-# 1. CODING DATASET (150 samples)
 CODING_TEMPLATES = [
     "{action} a {language} {component} {modifier}",
     "How do I {action} a {component} in {language} {modifier}?",
@@ -74,7 +73,6 @@ CODING_VARS = {
 CODING_CATEGORIES = ["algorithms", "debugging", "refactor", "testing", "frontend", "backend", "database"]
 CODING_SAMPLES = generate_combinatorial_dataset(CODING_TEMPLATES, CODING_VARS, "coding", CODING_CATEGORIES, 150)
 
-# 2. AUTOMATION DATASET (150 samples)
 AUTOMATION_TEMPLATES = [
     "{action} {target} {location}",
     "Can you {action} {target} {location}?",
@@ -110,7 +108,6 @@ AUTOMATION_SAMPLES = generate_combinatorial_dataset(
     AUTOMATION_TEMPLATES, AUTOMATION_VARS, "automation", AUTOMATION_CATEGORIES, 150
 )
 
-# 3. REMINDER & TIME DATASET (150 samples)
 REMINDER_TEMPLATES = [
     "{action} to {task} {time}",
     "Can you {action} to {task} {time}?",
@@ -161,7 +158,6 @@ REMINDER_SAMPLES = generate_combinatorial_dataset(
     REMINDER_TEMPLATES, REMINDER_VARS, "reminder", REMINDER_CATEGORIES, 150
 )
 
-# 4. RESEARCH & KNOWLEDGE DATASET (150 samples)
 RESEARCH_TEMPLATES = [
     "What is {topic}?",
     "Explain {topic} to me.",
@@ -219,7 +215,6 @@ RESEARCH_SAMPLES = generate_combinatorial_dataset(
     RESEARCH_TEMPLATES, RESEARCH_VARS, "research", RESEARCH_CATEGORIES, 150
 )
 
-# 5. VISION & MULTIMODAL DATASET (120 samples)
 VISION_TEMPLATES = [
     "{action} {target} {context}",
     "Can you {action} {target} {context}?",
@@ -270,7 +265,6 @@ VISION_CATEGORIES = [
 ]
 VISION_SAMPLES = generate_combinatorial_dataset(VISION_TEMPLATES, VISION_VARS, "vision", VISION_CATEGORIES, 120)
 
-# 6. PLANNER DATASET (120 samples)
 PLANNER_TEMPLATES = [
     "{action} {target} {context}",
     "Can you {action} {target} {context}?",
@@ -320,7 +314,6 @@ PLANNER_CATEGORIES = [
 ]
 PLANNER_SAMPLES = generate_combinatorial_dataset(PLANNER_TEMPLATES, PLANNER_VARS, "planner", PLANNER_CATEGORIES, 120)
 
-# 7. CHAT & GENERAL CONVERSATION DATASET (120 samples)
 CHAT_TEMPLATES = ["{greeting} {name}, {question}", "{greeting}, {statement}.", "{statement}, {name}!"]
 CHAT_VARS = {
     "greeting": ["Hello there", "Hey", "Good morning", "Good evening", "Yo", "Sup", "Hi"],
@@ -345,8 +338,6 @@ CHAT_VARS = {
 CHAT_CATEGORIES = ["greeting", "informal", "gratitude", "identity", "smalltalk", "capabilities", "farewell"]
 CHAT_SAMPLES = generate_combinatorial_dataset(CHAT_TEMPLATES, CHAT_VARS, "chat", CHAT_CATEGORIES, 120)
 
-# 8. ADVERSARIAL & TRICKY OVERLAP EDGE CASES (150 samples)
-# Accurately mapping the true governing action intent
 dataset_adv = []
 action_intent_map = {
     "Write a script to": "coding",
@@ -385,7 +376,6 @@ for action, expected in action_intent_map.items():
 random.shuffle(dataset_adv)
 ADVERSARIAL_SAMPLES = dataset_adv[:150]
 
-# 9. GUARDIAN SAFETY DATASETS (250 samples)
 GUARDIAN_DESTRUCTIVE_TEMPLATES = ["{action} {target} {context}", "I need you to {action} {target} {context}."]
 GUARDIAN_DESTRUCTIVE_VARS = {
     "action": [

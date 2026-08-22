@@ -54,7 +54,6 @@ class WhisperSTTPipeline:
         Transcribe raw audio bytes into text.
         """
         try:
-            # 1. Try faster-whisper if installed and model is available
             try:
                 from faster_whisper import WhisperModel
 
@@ -83,7 +82,6 @@ class WhisperSTTPipeline:
             except ImportError:
                 pass
 
-            # 2. Try standard openai-whisper if installed
             try:
                 import whisper
 
@@ -108,8 +106,7 @@ class WhisperSTTPipeline:
             except ImportError:
                 pass
 
-            # 3. Fallback: Parse basic wave headers / simulate ready STT receiver
-            duration_sec = len(audio_bytes) / 32000.0  # Approx duration for 16kHz 16-bit PCM
+            duration_sec = len(audio_bytes) / 32000.0 
             logger.info(f"STT Pipeline received {len(audio_bytes)} bytes audio ({round(duration_sec, 2)}s)")
             return {
                 "text": "[Whisper STT Ready: Install 'faster-whisper' or place Whisper GGUF in ai-models/audio/whisper for full local transcription]",
@@ -155,7 +152,6 @@ class PiperTTSPipeline:
                         }
                     )
 
-        # Native OS voice options
         voices.append({"id": "os_default", "name": "System Default (SAPI5/OS)", "engine": "native-os"})
         voices.append({"id": "copper_synth", "name": "C.O.P.P.E.R Synth Voice", "engine": "copper-synth"})
         return voices
@@ -167,7 +163,6 @@ class PiperTTSPipeline:
         if not text.strip():
             return self._generate_silence_wav(0.1)
 
-        # 1. Try Piper TTS if available
         try:
             onnx_path = self.models_dir / f"{voice}.onnx"
             if onnx_path.exists():
@@ -186,7 +181,6 @@ class PiperTTSPipeline:
         except ImportError:
             pass
 
-        # 2. Try pyttsx3 / Windows SAPI5 for 0-latency offline native voice
         try:
             import pyttsx3
 
@@ -207,7 +201,6 @@ class PiperTTSPipeline:
         except Exception:
             pass
 
-        # 3. Fallback: Generate a clean audio tone chime with embedded PCM structure
         return self._generate_beeps_wav(duration=0.6, freq=440.0)
 
     def _generate_silence_wav(self, duration: float = 0.5, sample_rate: int = 22050) -> bytes:
@@ -229,7 +222,6 @@ class PiperTTSPipeline:
             num_samples = int(duration * sample_rate)
             frames = bytearray()
             for i in range(num_samples):
-                # Gentle chime fade-out
                 envelope = max(0.0, 1.0 - (i / num_samples))
                 val = int(math.sin(2.0 * math.pi * freq * (i / sample_rate)) * 16384 * envelope)
                 frames.extend(struct.pack("<h", val))
@@ -261,7 +253,6 @@ class AudioPipelineManager:
         End-to-End Voice Loop:
         Audio Input -> STT -> Agent Stream -> TTS Response
         """
-        # Step 1: Transcribe incoming voice
         stt_result = await self.stt.transcribe(audio_bytes)
         user_text = stt_result.get("text", "")
 
@@ -275,7 +266,6 @@ class AudioPipelineManager:
         if not user_text:
             return
 
-        # Step 2: Query Agent Orchestration
         from app.services.chat_service import chat_service
 
         agent_response_full = []
@@ -289,7 +279,6 @@ class AudioPipelineManager:
 
         full_response_text = "".join(agent_response_full)
 
-        # Step 3: Synthesize audio response
         tts_audio = await self.tts.synthesize(full_response_text)
         yield {
             "type": "audio_response",
