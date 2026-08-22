@@ -80,6 +80,7 @@ The desktop application is built on **Electron** with strict in-app navigation g
 │ 💡 Insights  │                                                         │
 │ ⚡ Self-Impr │                                                         │
 │ 🛡️ Security  │                                                         │
+│ ⚡ Benchmarks│                                                         │
 │ ⚙️ Settings  │                                                         │
 └──────────────┴─────────────────────────────────────────────────────────┘
 ```
@@ -100,6 +101,10 @@ Evaluates instructions against schedule commitments, energy fatigue, and long-te
 2. **Stage 1 (High-Precision Regex & Pattern Suppression):** Deterministic routing for coding keywords, system administration, calendar scheduling, and media queries.
 3. **Stage 2 (Micro-LLM Intent Classifier):** Llama-3.2-1B / Qwen2.5-0.5B fallback for complex conversational nuances.
 
-### 4.3 Forge Sandbox Engine
+### 4.3 Live Telemetry & Hardware Profiler
+- Polls CPU package temps, 8GB VRAM allocation splits, GPU hotspots, and system RAM usage dynamically via `psutil` and simulated hardware fallbacks.
+- Feeds directly into the Desktop UI (Benchmarks Tab) on a 1.5-second interval for real-time observability.
+
+### 4.4 Forge Sandbox Engine
 - Isolated execution environment for code synthesis.
 - Enforces configurable subprocess timeouts (10s default), environment variable isolation, and automatic cleanup of temporary execution artifacts.

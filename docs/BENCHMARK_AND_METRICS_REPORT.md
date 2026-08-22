@@ -139,3 +139,12 @@ The distilled reasoning engine explores counter-factual trade-offs step-by-step 
 2. **Software Engineering:** `Qwen2.5-Coder-7B-Instruct` (Precise, modern, zero-syntax-error coding).
 3. **Deep Inquiry & Fact Verification:** `DeepSeek-R1-Distill-Qwen-7B` (Exhaustive causal reasoning).
 4. **Instant Intent Classification:** `DynamicRoutingMemory` + `Llama-3.2-1B` (Sub-0.05ms dispatch).
+
+
+## 📈 5. Live Hardware Telemetry & Dashboard
+
+COPPER includes a fully-integrated `psutil`-powered telemetry dashboard accessible via the **Benchmarks** tab in the Electron application. It polls the system at a configurable interval (default: `1.5s`) for:
+- **Token Velocity**: Tracks instantaneous Prompt Tokens/Sec and Generation Tokens/Sec.
+- **Thermal Monitors**: Monitors GPU Core, GPU Hotspot, and CPU Package temperatures in real-time.
+- **Memory Allocations**: Real-time breakdowns of System RAM vs VRAM usage across active Subagents, Core Models, and the KV Cache.
+- **Synthetic Evaluation**: Allows the user to execute synthetic benchmark runs dynamically from the UI, streaming results directly into the React component.

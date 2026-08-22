@@ -58,6 +58,7 @@ Instead of running a single monolithic model for all tasks, C.O.P.P.E.R. distrib
 | Micro-Agent | Model Architecture | Quantization | Size | Function |
 | :--- | :--- | :---: | :---: | :--- |
 | **`router`** | `Llama-3.2-1B-Instruct` | Q4_K_M | 770 MB | Fallback sub-40ms user intent classifier |
+| **`telemetry`** | `SmolLM2-360M-Instruct` | Q4_K_M | 258 MB | System hardware & process anomaly analysis |
 | **`guardian`** | `Llama-3.2-3B-Instruct` | Q4_K_M | 1.88 GB | Safety verification & conflict detection |
 | **`firewall`** | `Qwen2.5-0.5B-Instruct` | Q4_K_M | 379 MB | PII masking & credential filtering |
 | **`memory`** | `SmolLM2-1.7B-Instruct` | Q4_K_M | 1.00 GB | Epistemic fact & hypothesis extractor |
