@@ -17,18 +17,14 @@ plt.rcParams['axes.edgecolor'] = '#334155'
 plt.rcParams['axes.linewidth'] = 1.4
 
 DOCS_IMAGES_DIR = Path("d:/C.O.P.P.E.R/docs/images")
-ROOT_IMAGES_DIR = Path("d:/C.O.P.P.E.R/images")
-
 DOCS_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
-ROOT_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def save_image(fig, filename):
-    for d in [DOCS_IMAGES_DIR, ROOT_IMAGES_DIR]:
-        out_path = d / filename
-        fig.savefig(out_path, dpi=320, bbox_inches='tight', facecolor='#090d16')
+    out_path = DOCS_IMAGES_DIR / filename
+    fig.savefig(out_path, dpi=320, bbox_inches='tight', facecolor='#090d16')
     plt.close(fig)
-    print(f"[+] Saved crystal-clear image: {filename}")
+    print(f"[+] Saved crystal-clear image to docs/images/: {filename}")
 
 
 # 1. Routing & Guardian Accuracy Benchmark
