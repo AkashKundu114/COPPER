@@ -25,6 +25,7 @@ export type NavSection =
   | "agents"
   | "activity"
   | "insights"
+  | "benchmarks"
   | "self-improvement"
   | "security"
   | "food"
@@ -45,6 +46,7 @@ const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] = 
   { id: "agents", label: "Agent Registry", icon: Bot },
   { id: "activity", label: "Agent Activity", icon: Activity },
   { id: "insights", label: "Insights", icon: BarChart3 },
+  { id: "benchmarks", label: "Benchmarks & Metrics", icon: Activity },
   { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
   { id: "security", label: "Data Firewall", icon: ShieldCheck },
   { id: "food", label: "Food & Meals", icon: Utensils },

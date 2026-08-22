@@ -24,6 +24,7 @@ import { SettingsView } from "./pages/SettingsView";
 import { AgentRegistry } from "./pages/AgentRegistry";
 import { Insights } from "./pages/Insights";
 import { SecurityCenter } from "./pages/SecurityCenter";
+import { BenchmarkMetricsView } from "./pages/BenchmarkMetricsView";
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<NavSection>("chat");
@@ -90,6 +91,8 @@ export default function App() {
         return <ActivityView />;
       case "insights":
         return <Insights />;
+      case "benchmarks":
+        return <BenchmarkMetricsView />;
       case "self-improvement":
         return <SelfImprovementView />;
       case "security":

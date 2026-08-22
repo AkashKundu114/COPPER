@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { API_BASE } from "./api";
+import { API_BASE } from "../lib/api";
 import type { ProactiveAlert } from "../components/alerts/SpiderSenseToast";
 
 export type BrainEvent =

@@ -17,8 +17,7 @@ credentials.json
 *.db-journal
 *.db-wal
 *.db-shm
-backend/app/data/*.db
-backend/app/data/*.sqlite
+backend/data/
 postgres-data/
 dump.rdb
 redis-data/

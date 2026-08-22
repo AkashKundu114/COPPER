@@ -1,20 +1,23 @@
 from enum import Enum
-CHROMA_COLLECTION_CHAT = 'copper_chat_history'
+
+CHROMA_COLLECTION_CHAT = "copper_chat_history"
 MEMORY_SEARCH_LIMIT = 5
 
+
 class AgentType(str, Enum):
-    CHAT = 'chat'
-    CODING = 'coding'
-    AUTOMATION = 'automation'
-    REMINDER = 'reminder'
-    RESEARCH = 'research'
-    VISION = 'vision'
-    PLANNER = 'planner'
-    GUARDIAN = 'guardian'
-    BEHAVIOR = 'behavior'
-    NUTRITION = 'nutrition'
-    EVALUATOR = 'evaluator'
-    ORCHESTRATOR = 'orchestrator'
+    CHAT = "chat"
+    CODING = "coding"
+    AUTOMATION = "automation"
+    REMINDER = "reminder"
+    RESEARCH = "research"
+    VISION = "vision"
+    PLANNER = "planner"
+    GUARDIAN = "guardian"
+    BEHAVIOR = "behavior"
+    NUTRITION = "nutrition"
+    EVALUATOR = "evaluator"
+    ORCHESTRATOR = "orchestrator"
+
 
 class GuardianLevel(int, Enum):
     LEVEL_0_EXECUTE = 0
@@ -22,19 +25,22 @@ class GuardianLevel(int, Enum):
     LEVEL_2_CHALLENGE = 2
     LEVEL_3_SAFETY_BOUNDARY = 3
 
+
 class LLMProvider(str, Enum):
-    OLLAMA = 'ollama'
-    OPENAI = 'openai'
-    CLAUDE = 'claude'
-    DEEPSEEK = 'deepseek'
+    OLLAMA = "ollama"
+    OPENAI = "openai"
+    CLAUDE = "claude"
+    DEEPSEEK = "deepseek"
+
 
 class AlertSeverity(str, Enum):
-    INFO = 'info'
-    WARNING = 'warning'
-    CRITICAL = 'critical'
+    INFO = "info"
+    WARNING = "warning"
+    CRITICAL = "critical"
+
 
 class AlertMode(str, Enum):
-    NORMAL = 'normal'
-    FOCUSED = 'focused'
-    GUARDIAN = 'guardian'
-    EMERGENCY = 'emergency'
+    NORMAL = "normal"
+    FOCUSED = "focused"
+    GUARDIAN = "guardian"
+    EMERGENCY = "emergency"

@@ -1,18 +1,17 @@
-from fastapi import APIRouter, UploadFile, File, Form, Query, WebSocket, WebSocketDisconnect, HTTPException
-from fastapi.responses import Response, StreamingResponse
+from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi.responses import Response
 from pydantic import BaseModel
-from typing import Optional
-import io
-from app.services.audio_service import audio_pipeline
+
 from app.core.logger import logger
+from app.services.audio_service import audio_pipeline
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 
 
 class SynthesisRequest(BaseModel):
     text: str
-    voice: Optional[str] = "copper_synth"
-    speed: Optional[float] = 1.0
+    voice: str | None = "copper_synth"
+    speed: float | None = 1.0
 
 
 @router.get("/status")
@@ -45,7 +44,7 @@ async def list_voices():
 @router.post("/transcribe")
 async def transcribe_audio(
     file: UploadFile = File(...),
-    language: Optional[str] = Query(None, description="Optional ISO language code (e.g. 'en')"),
+    language: str | None = Query(None, description="Optional ISO language code (e.g. 'en')"),
 ):
     """
     Transcribe an uploaded audio file (WAV, MP3, WEBM, M4A) to text using Whisper.
@@ -54,7 +53,7 @@ async def transcribe_audio(
         contents = await file.read()
         if len(contents) == 0:
             raise HTTPException(status_code=400, detail="Empty audio file provided")
-        
+
         result = await audio_pipeline.stt.transcribe(
             audio_bytes=contents,
             filename=file.filename or "audio.wav",
@@ -74,13 +73,13 @@ async def synthesize_speech(request: SynthesisRequest):
     try:
         if not request.text.strip():
             raise HTTPException(status_code=400, detail="Text cannot be empty")
-        
+
         audio_bytes = await audio_pipeline.tts.synthesize(
             text=request.text,
             voice=request.voice or "copper_synth",
             speed=request.speed or 1.0,
         )
-        
+
         return Response(
             content=audio_bytes,
             media_type="audio/wav",
@@ -123,6 +122,7 @@ async def voice_conversation(
 
         # 2. Query Chat Service
         from app.services.chat_service import chat_service
+
         agent_res = await chat_service.process_message(
             session_id=session_id,
             message=user_text,
@@ -132,6 +132,7 @@ async def voice_conversation(
         # 3. Synthesize Audio
         tts_audio = await audio_pipeline.tts.synthesize(response_text)
         import base64
+
         audio_b64 = base64.b64encode(tts_audio).decode("utf-8")
 
         return {
@@ -162,12 +163,15 @@ async def voice_websocket_stream(websocket: WebSocket):
             if "bytes" in message and message["bytes"]:
                 raw_audio = message["bytes"]
                 stt_res = await audio_pipeline.stt.transcribe(raw_audio)
-                await websocket.send_json({
-                    "event": "transcription",
-                    "text": stt_res.get("text", ""),
-                })
+                await websocket.send_json(
+                    {
+                        "event": "transcription",
+                        "text": stt_res.get("text", ""),
+                    }
+                )
             elif "text" in message and message["text"]:
                 import json
+
                 data = json.loads(message["text"])
                 action = data.get("action")
                 if action == "synthesize":

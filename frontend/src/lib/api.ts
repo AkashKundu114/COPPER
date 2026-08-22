@@ -57,6 +57,45 @@ export const fetchLogs = (filter?: string) =>
 export const fetchStats = () =>
   api.get("/api/v1/audit/stats").then((r) => r.data).catch(() => ({}));
 
+export interface SystemTelemetryData {
+  status: string;
+  uptime_seconds: number;
+  cpu: {
+    model: string;
+    usage_percent: number;
+    cores: number;
+    temperature_c: number;
+  };
+  gpu: {
+    model: string;
+    vram_total_gb: number;
+    vram_used_gb: number;
+    vram_free_gb: number;
+    vram_percent: number;
+    core_temp_c: number;
+    hotspot_temp_c: number;
+    power_watts: number;
+    fan_speed_percent: number;
+  };
+  memory: {
+    system_total_gb: number;
+    system_used_gb: number;
+    system_percent: number;
+    app_footprint_mb: number;
+    suite_total_mb: number;
+  };
+  tokens: {
+    prompt_tokens_processed: number;
+    completion_tokens_generated: number;
+    total_tokens: number;
+    generation_speed_tps: number;
+    prompt_eval_speed_tps: number;
+  };
+}
+
+export const fetchSystemTelemetry = () =>
+  api.get<SystemTelemetryData>("/api/v1/system/telemetry").then((r) => r.data);
+
 export interface EpisodeRecord {
   id: number;
   context: string;

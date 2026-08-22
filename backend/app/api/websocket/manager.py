@@ -1,8 +1,9 @@
 from fastapi import WebSocket
+
 from app.core.logger import logger
 
-class ConnectionManager:
 
+class ConnectionManager:
     def __init__(self):
         self.active: list[WebSocket] = []
         self.sessions: dict[str, WebSocket] = {}
@@ -12,7 +13,7 @@ class ConnectionManager:
         self.active.append(ws)
         if session_id:
             self.sessions[session_id] = ws
-        logger.info(f'WS connected ({len(self.active)} total)')
+        logger.info(f"WS connected ({len(self.active)} total)")
 
     def disconnect(self, session_id_or_ws: str | WebSocket = None):
         if isinstance(session_id_or_ws, str):
@@ -23,7 +24,7 @@ class ConnectionManager:
             if session_id_or_ws in self.active:
                 self.active.remove(session_id_or_ws)
             self.sessions = {k: v for k, v in self.sessions.items() if v != session_id_or_ws}
-        logger.info(f'WS disconnected ({len(self.active)} total)')
+        logger.info(f"WS disconnected ({len(self.active)} total)")
 
     async def send(self, session_id: str, event: dict):
         ws = self.sessions.get(session_id)
@@ -34,13 +35,13 @@ class ConnectionManager:
                 self.disconnect(session_id)
 
     async def send_chunk(self, session_id: str, chunk: str):
-        await self.send(session_id, {'type': 'agent_speaking', 'agent': 'COPPER', 'text': chunk})
+        await self.send(session_id, {"type": "agent_speaking", "agent": "COPPER", "text": chunk})
 
     async def send_done(self, session_id: str):
-        await self.send(session_id, {'type': 'done'})
+        await self.send(session_id, {"type": "done"})
 
     async def send_error(self, session_id: str, error: str):
-        await self.send(session_id, {'type': 'error', 'message': error})
+        await self.send(session_id, {"type": "error", "message": error})
 
     async def broadcast(self, event: dict):
         dead = []
@@ -53,11 +54,12 @@ class ConnectionManager:
             self.disconnect(ws)
 
     async def broadcast_alert(self, alert):
-        event = {'type': 'proactive_intervention', **alert.to_dict()}
+        event = {"type": "proactive_intervention", **alert.to_dict()}
         await self.broadcast(event)
 
     async def push_proactive(self, event: dict):
-        event['type'] = 'proactive_intervention'
+        event["type"] = "proactive_intervention"
         await self.broadcast(event)
+
 
 manager = ConnectionManager()
