@@ -97,6 +97,16 @@ function AlertToast({ alert, onDismiss, onAction }: { alert: ProactiveAlert; onD
           <div className="flex items-center gap-2 mt-2">
             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Spider-Sense • {alert.category}</span>
           </div>
+          {config.autoDismissMs > 0 && (
+            <div className="mt-2 h-[2px] w-full bg-black/20 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: "100%" }}
+                animate={{ width: "0%" }}
+                transition={{ duration: config.autoDismissMs / 1000, ease: "linear" }}
+                className={`h-full ${config.bg.replace('/30', '')}`}
+              />
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
@@ -107,7 +117,7 @@ export function SpiderSenseToast({ alerts, onDismiss, onAction }: SpiderSenseToa
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-3 pointer-events-auto">
       <AnimatePresence mode="popLayout">
-        {alerts.map((alert) => (
+        {alerts.slice(0, 3).map((alert) => (
           <AlertToast
             key={alert.alert_id}
             alert={alert}

@@ -45,7 +45,7 @@ export default function App() {
   }, [refresh]);
 
   const {
-    connected, thinking, activeAgent, lines, send, alerts, dismissAlert,
+    connected, thinking, activeAgent, lines, send, sendSystemAction, alerts, dismissAlert,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -154,14 +154,27 @@ export default function App() {
 
       <SpiderSenseToast
         alerts={alerts}
-        onDismiss={dismissAlert}
+        onDismiss={(alertId) => {
+          dismissAlert(alertId);
+          sendSystemAction('dismiss', { alert_id: alertId });
+        }}
         onAction={(alertId, action) => {
           dismissAlert(alertId);
+          
           if (action.toLowerCase().includes('help') || action.toLowerCase().includes('ask')) {
             setActiveSection('chat');
+          } else if (action.toLowerCase().includes('snooze')) {
+            // Extract minutes, default to 15
+            const match = action.match(/(\d+)/);
+            const mins = match ? parseInt(match[1]) : 15;
+            let duration = mins * 60;
+            if (action.toLowerCase().includes('h')) duration = mins * 3600;
+            
+            sendSystemAction('snooze', { alert_id: alertId, duration });
           }
         }}
       />
     </div>
   );
 }
+

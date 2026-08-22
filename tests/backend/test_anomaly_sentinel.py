@@ -44,3 +44,16 @@ def test_alert_to_dict():
     assert d['alert_id'] == 'test'
     assert d['severity'] == 'info'
     assert d['mode'] == 'normal'
+
+def test_context_thrashing_detection():
+    s = AnomalySentinel()
+    s.record_interaction()
+    for _ in range(6):
+        s.record_context_switch()
+        time.sleep(0.01)
+    # Clear the rate limiter to ensure the alert gets through immediately
+    s._last_alert_time = 0
+    alerts = s.run_checks()
+    thrashing = [a for a in alerts if a.category == 'focus']
+    assert len(thrashing) == 1
+    assert thrashing[0].severity == AlertSeverity.WARNING

@@ -1,0 +1,53 @@
+[
+  {"prompt": "Write a python script to sort an array", "expected_agent": "coding", "category": "code_generation"},
+  {"prompt": "Can you debug this react component and fix the null error?", "expected_agent": "coding", "category": "code_debugging"},
+  {"prompt": "Refactor this module to use dependency injection and async/await", "expected_agent": "coding", "category": "code_refactor"},
+  {"prompt": "Write a unit test for this FastAPI endpoint using pytest", "expected_agent": "coding", "category": "unit_test"},
+  {"prompt": "How do I center a div with Tailwind CSS?", "expected_agent": "coding", "category": "frontend_code"},
+  {"prompt": "Help me write a regex pattern for email validation", "expected_agent": "coding", "category": "regex_coding"},
+  {"prompt": "I have an IndentationError on line 42 in my script", "expected_agent": "coding", "category": "syntax_error"},
+  {"prompt": "Generate a database migration script for Alembic", "expected_agent": "coding", "category": "db_coding"},
+  {"prompt": "Fix this TypeScript type error: Property does not exist on type", "expected_agent": "coding", "category": "type_checking"},
+  {"prompt": "Review my git commit diff before I push to main", "expected_agent": "coding", "category": "git_workflow"},
+
+  {"prompt": "Open my browser and go to youtube", "expected_agent": "automation", "category": "browser_control"},
+  {"prompt": "Click the submit button and automate the form filling", "expected_agent": "automation", "category": "ui_automation"},
+  {"prompt": "Delete the old log files in the folder", "expected_agent": "automation", "category": "file_operation"},
+  {"prompt": "Launch VSCode and open the C.O.P.P.E.R repository", "expected_agent": "automation", "category": "app_launch"},
+  {"prompt": "Terminate the background docker container on port 8000", "expected_agent": "automation", "category": "process_control"},
+  {"prompt": "Move all screenshots from Downloads to the Pictures folder", "expected_agent": "automation", "category": "file_management"},
+  {"prompt": "Restart the local redis server", "expected_agent": "automation", "category": "system_service"},
+  {"prompt": "Unzip archive.tar.gz into the build directory", "expected_agent": "automation", "category": "archive_operation"},
+  {"prompt": "Close all inactive browser tabs", "expected_agent": "automation", "category": "window_management"},
+
+  {"prompt": "Remind me to buy milk tomorrow at 5pm", "expected_agent": "reminder", "category": "time_reminder"},
+  {"prompt": "Set an alarm for 8am every weekday", "expected_agent": "reminder", "category": "recurring_alarm"},
+  {"prompt": "Schedule a meeting with the design team for next Tuesday", "expected_agent": "reminder", "category": "calendar_schedule"},
+  {"prompt": "Add 'Review PR #42' to my todo list", "expected_agent": "reminder", "category": "task_todo"},
+  {"prompt": "Remind me in 30 minutes to take a break", "expected_agent": "reminder", "category": "timer_reminder"},
+  {"prompt": "Book an appointment with the doctor on Friday at 3pm", "expected_agent": "reminder", "category": "appointment"},
+  {"prompt": "Wake me up at 6:30 tomorrow morning", "expected_agent": "reminder", "category": "alarm"},
+
+  {"prompt": "What is the history of the roman empire?", "expected_agent": "research", "category": "history_query"},
+  {"prompt": "Explain quantum mechanics and entanglement to me", "expected_agent": "research", "category": "science_explanation"},
+  {"prompt": "Summarize the latest AI news and breakthroughs in 2026", "expected_agent": "research", "category": "news_summary"},
+  {"prompt": "Compare and contrast React and Svelte performance", "expected_agent": "research", "category": "technical_comparison"},
+  {"prompt": "Who invented the transformer architecture in deep learning?", "expected_agent": "research", "category": "biography_fact"},
+  {"prompt": "What are the core differences between SQLite and PostgreSQL?", "expected_agent": "research", "category": "db_research"},
+  {"prompt": "Explain the concept of epistemic memory in cognitive science", "expected_agent": "research", "category": "concept_deep_dive"},
+  {"prompt": "Tell me about the black hole information paradox", "expected_agent": "research", "category": "astrophysics"},
+
+  {"prompt": "Extract the text from this screenshot using OCR", "expected_agent": "vision", "category": "ocr_extraction"},
+  {"prompt": "What do you see on my screen right now?", "expected_agent": "vision", "category": "screen_inspection"},
+  {"prompt": "Analyze this architecture diagram photo", "expected_agent": "vision", "category": "diagram_analysis"},
+  {"prompt": "Inspect this UI picture and tell me where the login button is", "expected_agent": "vision", "category": "ui_element_detection"},
+  {"prompt": "Read the error message shown in this screenshot", "expected_agent": "vision", "category": "visual_error_reading"},
+
+  {"prompt": "Break this big project into step-by-step milestones", "expected_agent": "planner", "category": "task_decomposition"},
+  {"prompt": "Create a project roadmap and action plan for my startup launch", "expected_agent": "planner", "category": "strategic_planning"},
+
+  {"prompt": "Hello there, how are you today?", "expected_agent": "chat", "category": "greeting"},
+  {"prompt": "Hey C.O.P.P.E.R, what's up?", "expected_agent": "chat", "category": "informal_chat"},
+  {"prompt": "Thank you for the help, that was great!", "expected_agent": "chat", "category": "politeness"},
+  {"prompt": "Good morning, hope you're ready for today", "expected_agent": "chat", "category": "greeting"}
+]

@@ -72,6 +72,18 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
     try:
         while True:
             data = await websocket.receive_json()
+            
+            # Handle system actions (snooze, dismiss, etc.)
+            if 'action' in data:
+                action = data['action']
+                from app.core.anomaly_sentinel import sentinel
+                
+                if action == 'snooze':
+                    sentinel.snooze_alert(data.get('alert_id'), int(data.get('duration', 900)))
+                elif action == 'dismiss':
+                    sentinel.dismiss_alert(data.get('alert_id'))
+                continue
+                
             message = data.get('message', '')
             provider = LLMProvider(data.get('provider', 'ollama'))
             valid, err = validate_message(message)

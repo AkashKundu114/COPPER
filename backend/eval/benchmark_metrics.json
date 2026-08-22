@@ -1,0 +1,155 @@
+{
+  "timestamp": 1787406717.8410225,
+  "routing": {
+    "total_samples": 45,
+    "correct": 45,
+    "overall_accuracy_pct": 100.0,
+    "macro_precision_pct": 100.0,
+    "macro_recall_pct": 100.0,
+    "macro_f1_score_pct": 100.0,
+    "weighted_f1_score_pct": 100.0,
+    "latency_metrics_ms": {
+      "avg": 0.105,
+      "median_p50": 0.049,
+      "p90": 0.056,
+      "p95": 0.067,
+      "p99": 2.67,
+      "min": 0.003,
+      "max": 2.67
+    },
+    "throughput_qps": 9431.0,
+    "per_class_metrics": {
+      "automation": {
+        "support": 9,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "chat": {
+        "support": 4,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "coding": {
+        "support": 10,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "planner": {
+        "support": 2,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "reminder": {
+        "support": 7,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "research": {
+        "support": 8,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      },
+      "vision": {
+        "support": 5,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
+      }
+    },
+    "confusion_matrix": {
+      "automation": {
+        "automation": 9,
+        "chat": 0,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 0,
+        "research": 0,
+        "vision": 0
+      },
+      "chat": {
+        "automation": 0,
+        "chat": 4,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 0,
+        "research": 0,
+        "vision": 0
+      },
+      "coding": {
+        "automation": 0,
+        "chat": 0,
+        "coding": 10,
+        "planner": 0,
+        "reminder": 0,
+        "research": 0,
+        "vision": 0
+      },
+      "planner": {
+        "automation": 0,
+        "chat": 0,
+        "coding": 0,
+        "planner": 2,
+        "reminder": 0,
+        "research": 0,
+        "vision": 0
+      },
+      "reminder": {
+        "automation": 0,
+        "chat": 0,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 7,
+        "research": 0,
+        "vision": 0
+      },
+      "research": {
+        "automation": 0,
+        "chat": 0,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 0,
+        "research": 8,
+        "vision": 0
+      },
+      "vision": {
+        "automation": 0,
+        "chat": 0,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 0,
+        "research": 0,
+        "vision": 5
+      }
+    },
+    "classes": [
+      "automation",
+      "chat",
+      "coding",
+      "planner",
+      "reminder",
+      "research",
+      "vision"
+    ],
+    "errors": []
+  },
+  "guardian": {
+    "total_samples": 16,
+    "accuracy_pct": 100.0,
+    "threat_detection_sensitivity_pct": 100.0,
+    "benign_specificity_pct": 100.0,
+    "precision_pct": 100.0,
+    "false_positive_rate_pct": 0.0,
+    "false_negative_rate_pct": 0.0,
+    "true_positives": 8,
+    "true_negatives": 8,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "avg_latency_ms": 0.002
+  }
+}

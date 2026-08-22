@@ -31,6 +31,7 @@ interface BrainState {
   speakingAgent: string | null;
   lines: ChatLine[];
   send: (message: string) => void;
+  sendSystemAction: (action: string, payload: Record<string, any>) => void;
   lastMemoryUpdate: BrainEvent | null;
   alerts: ProactiveAlert[];
   dismissAlert: (alertId: string) => void;
@@ -136,5 +137,25 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     setAlerts((prev) => prev.filter((a) => a.alert_id !== alertId));
   }, []);
 
-  return { connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send, lastMemoryUpdate, alerts, dismissAlert };
+  const sendSystemAction = useCallback((action: string, payload: Record<string, any>) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ action, ...payload }));
+    }
+  }, []);
+
+  return {
+    connected,
+    thinking,
+    activeAgent,
+    activeEdge,
+    pulseSeq,
+    speaking,
+    speakingAgent,
+    lines,
+    send,
+    sendSystemAction,
+    lastMemoryUpdate,
+    alerts,
+    dismissAlert,
+  };
 }

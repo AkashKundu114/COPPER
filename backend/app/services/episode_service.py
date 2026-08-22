@@ -14,13 +14,22 @@ class EpisodeService:
         db.commit()
         db.refresh(ep)
         summary = f'Context: {context}. Task: {task or "N/A"}. Problem: {problem or "N/A"}. Decision: {decision or "N/A"}. Outcome: {outcome.value if outcome else "N/A"}.'
-        await _episode_store.add(text=summary, metadata={'episode_id': ep.id, 'context': context, 'project': project or '', 'outcome': outcome.value if outcome else ''})
+        
+        try:
+            await _episode_store.add(text=summary, metadata={'episode_id': ep.id, 'context': context, 'project': project or '', 'outcome': outcome.value if outcome else ''})
+        except Exception as e:
+            logger.error(f'Failed to add episode {ep.id} to vector store: {e}')
+            
         logger.info(f'Recorded episode #{ep.id}: {context}')
         return ep
 
     async def find_similar_episodes(self, query: str, limit: int = 5) -> list[dict]:
-        results = await _episode_store.search(query, n_results=limit)
-        return [{'document': r['document'], 'metadata': r.get('metadata', {}), 'similarity': round(1 - r.get('distance', 1), 3)} for r in results if r.get('distance', 99) < 1.5]
+        try:
+            results = await _episode_store.search(query, n_results=limit)
+            return [{'document': r['document'], 'metadata': r.get('metadata', {}), 'similarity': round(1 - r.get('distance', 1), 3)} for r in results if r.get('distance', 99) < 1.5]
+        except Exception as e:
+            logger.error(f'Failed to search similar episodes in vector store: {e}')
+            return []
 
     def get_recent_episodes(self, db: Session, limit: int = 20, context: Optional[str] = None) -> list[Episode]:
         q = db.query(Episode)

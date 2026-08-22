@@ -20,7 +20,11 @@ class GuardianVerdict:
 
     def to_dict(self) -> dict:
         return {'level': int(self.level), 'level_name': self.level.name, 'reasoning': self.reasoning, 'evidence': self.evidence, 'confidence': self.confidence, 'recommendation': self.recommendation, 'requires_confirmation': self.requires_confirmation}
-SAFETY_TRIGGERS = ['rm -rf', 'format ', 'del /f', 'dd if=', 'mkfs', 'delete all', 'wipe', 'factory reset']
+SAFETY_TRIGGERS = [
+    'rm -rf', 'format ', 'del /f', 'dd if=', 'mkfs', 'delete all', 'wipe',
+    'factory reset', 'drop table', 'drop database', 'drop all', 'truncate table',
+    'destroy cluster', 'wipe all', 'del /f /q'
+]
 
 class GuardianEngine:
 
