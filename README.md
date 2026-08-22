@@ -204,4 +204,4 @@ COPPER/
 
 ## 📜 License
 
-Distributed under the **MIT License**. See [`LICENSE`](file:///d:/C.O.P.P.E.R/LICENSE) for full details.
+   Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for full details.
