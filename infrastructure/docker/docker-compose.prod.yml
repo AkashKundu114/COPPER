@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/backend/Dockerfile
+    container_name: copper-backend-prod
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../ai-models:/app/ai-models:ro
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-copper}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-copperdb}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/frontend/Dockerfile
+    container_name: copper-frontend-prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: copper-postgres-prod
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-copper}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-copperdb}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-copper} -d ${POSTGRES_DB:-copperdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: copper-redis-prod
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes:
+      - redis_prod_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  chromadb:
+    image: chromadb/chroma:0.5.0
+    container_name: copper-chromadb-prod
+    volumes:
+      - chroma_prod_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: always
+
+volumes:
+  postgres_prod_data:
+  redis_prod_data:
+  chroma_prod_data:

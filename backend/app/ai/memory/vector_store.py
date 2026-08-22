@@ -8,7 +8,13 @@ class VectorStore:
         self.collection = None
         try:
             import chromadb
-            client = chromadb.Client()
+            from pathlib import Path
+            
+            # Ensure the database is saved persistently on the D: drive inside the backend folder
+            db_path = Path(__file__).parent.parent.parent.parent / "data" / "chroma"
+            db_path.mkdir(parents=True, exist_ok=True)
+            
+            client = chromadb.PersistentClient(path=str(db_path))
             self.collection = client.get_or_create_collection(collection_name)
         except Exception as e:
             logger.warning(f"ChromaDB collection '{collection_name}' fallback active: {e}")

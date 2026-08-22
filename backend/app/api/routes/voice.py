@@ -89,6 +89,8 @@ async def synthesize_speech(request: SynthesisRequest):
                 "Content-Length": str(len(audio_bytes)),
             },
         )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"TTS synthesis error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -139,6 +141,8 @@ async def voice_conversation(
             "audio_base64": audio_b64,
             "audio_format": "audio/wav",
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Voice conversation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

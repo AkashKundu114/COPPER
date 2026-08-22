@@ -16,7 +16,7 @@ C.O.P.P.E.R. operates under a **Zero-Trust Local First Privacy Model**:
 
 ## 2. Data Firewall Architecture
 
-```
+![Zero-Trust Data Firewall Flow](../images/data_firewall_pipeline.png)
                                 +---------------------------+
                                 | User Prompt / File Input  |
                                 +-------------+-------------+

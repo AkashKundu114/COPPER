@@ -8,12 +8,7 @@ The core mission of C.O.P.P.E.R.'s **Guardian Engine** is to serve as a persiste
 
 ### The Autonomy-Friction Continuum
 
-```
-Low Friction / High Autonomy                                  High Friction / Low Autonomy
-<---------------------------------------------------------------------------------------->
-Level 0: Execute        Level 1: Nudge          Level 2: Challenge       Level 3: Boundary
-(Direct Action)         (Inline Tip)            (Interactive Modal)      (Clean Halt)
-```
+![Guardian Alignment Framework](../images/guardian_intervention_levels.png)
 
 1. **Level 0 (Direct Execution):** Standard requests aligning with short-term and long-term goals. Zero intervention.
 2. **Level 1 (Nudge / Suggestion):** Minor friction; provides an inline tip while executing the command (e.g., "Executing script. Note: Running this without tests may hide regressions.").

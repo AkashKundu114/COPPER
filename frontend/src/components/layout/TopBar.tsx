@@ -17,17 +17,17 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenCommandPalette,
 }) => {
   return (
-    <header className="h-14 bg-bg border-b border-border flex items-center justify-between px-6 z-20 select-none">
+    <header className="drag-region h-14 bg-bg border-b border-neon flex items-center justify-between px-6 z-20 select-none shadow-hud">
       <div className="flex items-center gap-3">
-        <h2 className="text-sm font-medium text-text tracking-tight capitalize">{sectionTitle}</h2>
+        <h2 className="text-sm font-medium text-accent tracking-tight capitalize glow-text">{sectionTitle}</h2>
       </div>
 
       <button
         onClick={onOpenCommandPalette}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-panel border border-border text-[13px] text-text-muted hover:text-text hover:border-accent transition-colors w-64 justify-between"
+        className="no-drag flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-panel border border-border text-[13px] text-text-muted hover:text-text hover:border-accent hover:shadow-neon transition-all w-64 justify-between"
       >
         <div className="flex items-center gap-2">
-          <Search size={14} className="text-text-muted" />
+          <Search size={14} className="text-accent" />
           <span>Search or command...</span>
         </div>
         <kbd className="px-1.5 py-0.5 rounded bg-bg text-[10px] font-mono text-text-muted border border-border">
@@ -48,7 +48,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         <button
           onClick={onToggleDrawer}
-          className="flex items-center gap-2 px-3 py-1 rounded-lg bg-bg-panel border border-border hover:border-accent text-[13px] text-text-muted transition-colors"
+          className="no-drag flex items-center gap-2 px-3 py-1 rounded-lg bg-bg-panel border border-border hover:border-accent hover:shadow-neon text-[13px] text-text-muted transition-all"
         >
           <User size={14} />
           <span className="font-medium">{profile?.relationship_tier || "Profile"}</span>

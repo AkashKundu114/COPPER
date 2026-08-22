@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar, type NavSection } from "./components/layout/Sidebar";
 import { TopBar } from "./components/layout/TopBar";
 import { CommandPalette } from "./components/common/CommandPalette";
@@ -117,7 +118,18 @@ export default function App() {
         />
 
         <main className="flex-1 overflow-hidden relative custom-scrollbar flex flex-col bg-bg">
-          {renderActiveSection()}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSection}
+              initial={{ opacity: 0, y: 10, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.99 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="flex-1 w-full h-full"
+            >
+              {renderActiveSection()}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
 

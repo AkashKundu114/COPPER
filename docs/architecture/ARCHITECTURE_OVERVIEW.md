@@ -1,68 +1,68 @@
 # C.O.P.P.E.R. Architecture Overview
 
-**Centralized Omnifunctional Personal Productivity and Execution Routine**
-*"Your Personal AI Operating System"*
+**Centralized Omnifunctional Personal Productivity and Execution Routine**  
+*"Autonomous, 100% Offline Personal AI Companion, Multi-Agent Orchestrator & Desktop Guardian"*
 
 ---
 
 ## 1. System Vision & Core Operating Principles
 
-C.O.P.P.E.R. is a persistent, adaptive, guardian-style personal AI operating environment. It operates **100% offline by default**, combining persistent user memory, daily scheduling, productivity management, coding assistance, behavioral tracking, multi-agent orchestration, and human-in-the-loop control.
+C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating environment. It operates **100% offline by default**, combining persistent user epistemic memory, intelligent scheduling, code engineering in isolated sandboxes, multimodal voice interaction, multi-agent orchestration, and human-in-the-loop control.
 
-### Core Philosophical Principles
+### Core Architectural Principles
 
-1. **Understand & Remember:** Maintains an epistemic user model (Facts, Observations, Hypotheses) with Bayesian confidence updates and evidence tracking.
-2. **Execute & Protect:** Operates locally via Ollama and pre-trained open models. Zero cloud transmission occurs unless the user explicitly enables cloud fallback.
-3. **Guardian Alignment (Levels 0–3):** Operates as a guardian, not a dictator. Evaluates prompt safety and schedule conflicts, challenging risky actions while respecting ordinary user autonomy.
-4. **State Multi-Layering:** Combines `state.json` (live session state), SQLite (persistent relational memory), and LangGraph (execution state).
-5. **Self-Healing & Evaluated Improvement:** Recovers automatically from tool failures, tracks incidents in the Security Center Audit Log, and benchmarks candidate models before deployment.
+1. **Local-First & Zero Egress:** Executes entirely on local hardware (AMD Ryzen 9 / RTX 5060) utilizing quantized GGUF & ONNX models. Zero cloud transmission occurs by default.
+2. **Multi-Tier Agent Hierarchy:** Routes queries through sub-millisecond intent classifiers to 4 heavy core models (7B–8B), 2 multimodal vision models (2B/7B), and 14 specialized micro-subagents (360M–3B).
+3. **Guardian Alignment (Levels 0–3):** Evaluates prompt safety, commitment conflicts, and destructive triggers prior to execution, protecting user goals while preserving autonomy.
+4. **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive credentials (`sk-`, `sk-proj-`), JWT tokens, SSNs, credit cards, emails, and private IP addresses.
+5. **Continuous Dynamic Routing Memory:** Self-training token-similarity memory cache (`DynamicRoutingMemory`) providing sub-0.05ms dispatch for known and evolving user intents.
 
 ---
 
-## 2. High-Level System Architecture
+## 2. System Architecture Diagram
 
 ```
-                                  +-----------------------+
-                                  |   Tauri Desktop /     |
-                                  |   React Web Frontend  |
-                                  +-----------+-----------+
-                                              |
-                                   REST / WebSockets
-                                              v
-+-----------------------------------------------------------------------------------+
-| FASTAPI BACKEND (Python 3.11+ / Local-First)                                       |
-|                                                                                   |
-|  +-------------------+      +--------------------+      +----------------------+  |
-|  | Agent Router      | ---> | Guardian Engine    | ---> | Data Firewall        |  |
-|  | (Pre-trained Pool)|      | (Levels 0 - 3)     |      | (PII Redaction)      |  |
-|  +-------------------+      +--------------------+      +----------+-----------+  |
-|                                                                    |              |
-|  +-----------------------------------------------------------------+              |
-|  v                                                                                |
-|  +-------------------+      +--------------------+      +----------------------+  |
-|  | Agent Orchestrator| ---> | Self-Healing Loop  | ---> | Pre-Trained Models   |  |
-|  | (30 Specialized)  |      | (Fallback & Retry) |      | (Ollama / Local LLM) |  |
-|  +---------+---------+      +--------------------+      +----------+-----------+  |
-|            |                                                       |              |
-|            v                                                       |              |
-|  +-------------------+                                             |              |
-|  | Epistemic Learner |                                             |              |
-|  | & Fact Engine     |                                             |              |
-|  +---------+---------+                                             |              |
-+------------|-------------------------------------------------------|--------------+
-             |                                                       |
-             v                                                       v
-+------------------------+  +----------------------+  +-----------------------------+
-| SQLite Persistence     |  | Redis Cache & PubSub |  | ChromaDB Vector Store       |
-| (state.json + 14 DBs)  |  | (Session & Events)   |  | (Local Embedding Index)     |
-+------------------------+  +----------------------+  +-----------------------------+
+                                  ┌───────────────────────────┐
+                                  │  Electron Desktop App     │
+                                  │  (React 19 + Tailwind CSS)│
+                                  └─────────────┬─────────────┘
+                                                │
+                                    REST API / WebSockets
+                                                ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│ FASTAPI BACKEND (Python 3.11+ / 100% Local Execution)                                       │
+│                                                                                             │
+│  ┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐  │
+│  │ Cascaded Agent Router   │ ──> │ Guardian Safety Engine │ ──> │ Zero-Trust Firewall    │  │
+│  │ (Stage 0 Memory -> 1B)  │     │ (Levels 0 - 3 Checks)  │     │ (PII & Secret Redact)  │  │
+│  └────────────┬────────────┘     └────────────────────────┘     └───────────┬────────────┘  │
+│               │                                                             │               │
+│               └──────────────────────────────┬──────────────────────────────┘               │
+│                                              ▼                                              │
+│  ┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐  │
+│  │ AXIS Software Engineer  │ ──> │ Forge Sandbox Engine   │ ──> │ Local AI Model Pool    │  │
+│  │ (Coding Agent)          │     │ (Isolated Execution)   │     │ (26 GGUF / ONNX Models)│  │
+│  └────────────┬────────────┘     └────────────────────────┘     └───────────┬────────────┘  │
+│               │                                                             │               │
+│               ▼                                                             ▼               │
+│  ┌─────────────────────────┐                                    ┌────────────────────────┐  │
+│  │ Epistemic Fact Engine   │                                    │ Offline Audio Pipeline │  │
+│  │ (Memory & Context)      │                                    │ (Whisper STT / Piper)  │  │
+│  └────────────┬────────────┘                                    └────────────────────────┘  │
+└───────────────┼─────────────────────────────────────────────────────────────┼───────────────┘
+                │                                                             │
+                ▼                                                             ▼
+┌────────────────────────────────┐ ┌───────────────────────────────┐ ┌────────────────────────┐
+│ PostgreSQL / SQLite Database   │ │ Redis Pub/Sub & Session Cache │ │ ChromaDB Vector Index  │
+│ (Audit Logs, Episodes, History)│ │ (6379 / Memory LRU)           │ │ (8192-Token Embeddings)│
+└────────────────────────────────┘ └───────────────────────────────┘ └────────────────────────┘
 ```
 
 ---
 
 ## 3. Desktop Application Navigation Architecture
 
-The desktop application UI is structured around a persistent 13-section left sidebar:
+The desktop application is built on **Electron** with strict in-app navigation guards (no external browser escapes) and a persistent 13-section sidebar:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -90,37 +90,16 @@ The desktop application UI is structured around a persistent 13-section left sid
 
 ### 4.1 Guardian Engine & Disagreement Protocol
 Evaluates instructions against schedule commitments, energy fatigue, and long-term user goals:
-- **Level 0 (Execute):** Direct task execution.
-- **Level 1 (Suggest):** Inline optimization tips.
-- **Level 2 (Challenge):** Interactive `GuardianChallengeModal` presenting clear reasons, evidence bullet points, confidence level, recommendation, and options ([Follow recommendation], [Proceed anyway], [Discuss]).
-- **Level 3 (Safety Boundary):** Clean halt with limitation explanation and safe alternatives.
+- **Level 0 (Execute):** Direct task execution for safe, non-destructive read actions.
+- **Level 1 (Suggest):** Inline optimization tips (e.g. recommending vectorized operations or indexed queries).
+- **Level 2 (Challenge):** Interactive modal presenting clear reasons, evidence points, and risk assessments for commitment conflicts.
+- **Level 3 (Safety Boundary):** Strict block on irreversible operations (`rm -rf`, raw disk partitioning, database deletion) requiring explicit case-sensitive confirmation.
 
-### 4.2 Zero-Trust Data Firewall
-- **100% Offline Default:** Prevents unauthorized network egress.
-- **PII Detection:** Scans outgoing prompts for API keys (`sk-••••`), SSNs, credit cards, emails, and private source code.
-- **Token Anonymization:** Replaces detected entities with synthetic tokens (`[REDACTED_API_KEY_1]`).
+### 4.2 Cascaded Multi-Tier Router
+1. **Stage 0 (Exact & Token Similarity Memory):** Instant retrieval (< 0.05ms) from dynamically cached exemplars.
+2. **Stage 1 (High-Precision Regex & Pattern Suppression):** Deterministic routing for coding keywords, system administration, calendar scheduling, and media queries.
+3. **Stage 2 (Micro-LLM Intent Classifier):** Llama-3.2-1B / Qwen2.5-0.5B fallback for complex conversational nuances.
 
-### 4.3 Epistemic Memory Engine
-Categorizes user knowledge into three confidence tiers:
-- **Fact ($C \ge 0.85$):** Verified explicit truths.
-- **Observation ($0.50 \le C < 0.85$):** Derived from repeated behavior.
-- **Hypothesis ($0.10 \le C < 0.50$):** Tentative pattern inferences.
-
-### 4.4 State Management Layers
-1. `state.json`: Human-readable live session state.
-2. `SQLite`: Persistent relational database storing `users`, `goals`, `projects`, `tasks`, `schedules`, `memories`, `conversations`, `experiences`, `agent_runs`, `tool_calls`, `evaluations`, `agent_versions`, `incidents`, `training_examples`.
-3. `LangGraph State`: Dynamic execution graph state.
-
----
-
-## 5. Technology Stack Summary
-
-| Layer | Selected Technology | Offline Capability |
-| :--- | :--- | :--- |
-| **Backend Framework** | Python 3.11+ / FastAPI / LangGraph | 100% Local / Offline |
-| **Database & State** | SQLite (`copper_memory.db`) + `state.json` | 100% Local / Offline |
-| **Vector Engine** | ChromaDB (In-Process) | 100% Local / Offline |
-| **Cache & PubSub** | Redis 7 | 100% Local / Offline |
-| **LLM Inference** | Ollama (Llama 3.1 8B, Qwen 2.5 Coder, Mistral 7B) | 100% Local / Offline |
-| **Frontend UI** | React 18 / TypeScript / Vite / Tailwind | 100% Local / Offline |
-| **Desktop Shell** | Tauri v2 (Rust desktop wrapper) | 100% Local / Offline |
+### 4.3 Forge Sandbox Engine
+- Isolated execution environment for code synthesis.
+- Enforces configurable subprocess timeouts (10s default), environment variable isolation, and automatic cleanup of temporary execution artifacts.

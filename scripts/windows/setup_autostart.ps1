@@ -1,6 +1,6 @@
 # ==============================================================================
-# COPPER — Windows Startup Installer Script
-# Configures COPPER AI Guardian Standalone Desktop App to start automatically on Windows boot
+# C.O.P.P.E.R. — Windows Desktop Auto-Start Installer
+# Configures the Electron Desktop Application to automatically launch on PC boot
 # ==============================================================================
 
 $copperRoot = "D:\C.O.P.P.E.R"
@@ -8,20 +8,15 @@ $startupFolder = [System.IO.Path]::Combine($env:APPDATA, "Microsoft\Windows\Star
 $vbsPath = [System.IO.Path]::Combine($copperRoot, "scripts\windows\launch_copper.vbs")
 $shortcutPath = [System.IO.Path]::Combine($startupFolder, "COPPER AI Guardian.lnk")
 
-# 1. Create launch_copper.vbs background runner for Standalone Desktop App Window
-$cmdBackend = 'cmd /c "cd /d D:\C.O.P.P.E.R\backend & python -m uvicorn app.main:app --host 127.0.0.1 --port 8000"'
-$cmdFrontend = 'cmd /c "cd /d D:\C.O.P.P.E.R\frontend & npm run dev"'
-$cmdAppWindow = 'cmd /c "start msedge --app=http://localhost:5173 --window-name=""COPPER AI Guardian"""'
+Write-Host "==================================================================" -ForegroundColor Cyan
+Write-Host "       CONFIGURING C.O.P.P.E.R. ELECTRON DESKTOP AUTO-START       " -ForegroundColor Green
+Write-Host "==================================================================" -ForegroundColor Cyan
 
-$vbsContent = "Set WshShell = CreateObject(`"WScript.Shell`")" + "`r`n" +
-              "WshShell.Run `"$cmdBackend`", 0, False" + "`r`n" +
-              "WScript.Sleep 2000" + "`r`n" +
-              "WshShell.Run `"$cmdFrontend`", 0, False" + "`r`n" +
-              "WScript.Sleep 1500" + "`r`n" +
-              "WshShell.Run `"$cmdAppWindow`", 0, False"
-
-[System.IO.File]::WriteAllText($vbsPath, $vbsContent)
-Write-Host "[OK] Created standalone background launcher VBS: $vbsPath"
+# 1. Verify VBS Launcher
+if (-not (Test-Path $vbsPath)) {
+    Write-Host "[-] Error: launch_copper.vbs not found at $vbsPath" -ForegroundColor Red
+    exit 1
+}
 
 # 2. Create Windows Startup Folder Shortcut
 $WshShell = New-Object -ComObject WScript.Shell
@@ -29,14 +24,31 @@ $Shortcut = $WshShell.CreateShortcut($shortcutPath)
 $Shortcut.TargetPath = "wscript.exe"
 $Shortcut.Arguments = "`"$vbsPath`""
 $Shortcut.WorkingDirectory = $copperRoot
-$Shortcut.Description = "COPPER Personal AI Guardian Operating System"
+$Shortcut.Description = "COPPER Autonomous AI Desktop Guardian"
 $Shortcut.Save()
 
-Write-Host "[OK] Created Windows Startup Shortcut: $shortcutPath"
+Write-Host "[+] Created Startup Shortcut: $shortcutPath" -ForegroundColor Green
 
-# 3. Register in Windows Registry CurrentVersion\Run
+# 3. Register in Windows Registry (HKCU Run Key) for instantaneous startup
 $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-Set-ItemProperty -Path $registryPath -Name "COPPER_Guardian" -Value "wscript.exe `"$vbsPath`""
-Write-Host "[OK] Registered Windows Registry Startup Key: COPPER_Guardian"
+Set-ItemProperty -Path $registryPath -Name "COPPER_Desktop_Guardian" -Value "wscript.exe `"$vbsPath`""
+Write-Host "[+] Registered Windows Registry Run Key: COPPER_Desktop_Guardian" -ForegroundColor Green
 
-Write-Host "SUCCESS: COPPER Standalone Desktop Application is configured to auto-start on Windows startup!"
+# 4. Create Task Scheduler Logon Task for seamless background execution
+$taskName = "COPPER_Desktop_AutoLaunch"
+$action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "`"$vbsPath`"" -WorkingDirectory $copperRoot
+$trigger = New-ScheduledTaskTrigger -AtLogOn
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit 0
+
+try {
+    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Description "Auto-starts COPPER Electron Desktop App on Windows login" | Out-Null
+    Write-Host "[+] Registered Windows Task Scheduler Logon Task: $taskName" -ForegroundColor Green
+} catch {
+    Write-Host "[*] Task Scheduler registration skipped (admin rights optional, registry & startup folder active)" -ForegroundColor Yellow
+}
+
+Write-Host "`n==================================================================" -ForegroundColor Cyan
+Write-Host "[SUCCESS] C.O.P.P.E.R. Electron Desktop App is set to auto-start on PC boot!" -ForegroundColor Green
+Write-Host "[INFO] Nothing will open in web browsers. All interactions stay inside Electron." -ForegroundColor Cyan
+Write-Host "==================================================================" -ForegroundColor Cyan

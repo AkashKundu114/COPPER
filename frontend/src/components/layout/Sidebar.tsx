@@ -55,17 +55,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
   return (
     <aside className="w-64 h-screen bg-bg flex flex-col justify-between p-4 z-30 select-none">
       <div>
-        <div className="flex items-center gap-3 px-3 py-4 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-text text-bg flex items-center justify-center font-bold text-sm">
+        <div className="drag-region flex items-center gap-3 px-3 py-4 mb-4">
+          <div className="w-8 h-8 rounded-lg bg-accent text-bg shadow-neon flex items-center justify-center font-bold text-sm">
             C
           </div>
           <div>
-            <h1 className="font-semibold text-[15px] tracking-tight">C.O.P.P.E.R.</h1>
+            <h1 className="font-semibold text-[15px] tracking-tight glow-text text-accent">C.O.P.P.E.R.</h1>
             <p className="text-[11px] text-text-muted">Personal AI OS</p>
           </div>
         </div>
 
-        <nav className="space-y-0.5 overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar pr-1">
+        <nav className="no-drag space-y-0.5 overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar pr-1">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -73,13 +73,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
               <button
                 key={item.id}
                 onClick={() => onSelectSection(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-bg-raised text-text shadow-sm"
-                    : "text-text-muted hover:text-text hover:bg-bg-panel"
+                    ? "bg-bg-raised text-accent shadow-hud border border-neon"
+                    : "text-text-muted hover:text-accent hover:bg-bg-panel hover:shadow-hud"
                 }`}
               >
-                <Icon className={`w-[18px] h-[18px] ${isActive ? "text-text" : "text-text-muted"}`} />
+                <Icon className={`w-[18px] h-[18px] ${isActive ? "text-accent" : "text-text-muted"}`} />
                 <span>{item.label}</span>
               </button>
             );

@@ -1,4 +1,5 @@
-env
+# Environment & Secrets
+.env
 .env.*
 !.env.example
 *.pem
@@ -9,6 +10,7 @@ env
 secrets.yaml
 credentials.json
 
+# Local Databases & State
 *.db
 *.sqlite
 *.sqlite3
@@ -21,7 +23,9 @@ postgres-data/
 dump.rdb
 redis-data/
 
+# Model Binaries & Quantized Weights (Exclude massive binaries from Git, preserve manifest)
 ai-models/
+!ai-models/models_manifest.json
 models/
 *.gguf
 *.bin
@@ -31,6 +35,7 @@ chromadb/
 chromadb_data/
 *.parquet
 
+# Python Caches & Build
 __pycache__/
 *.py[cod]
 *$py.class
@@ -63,7 +68,7 @@ env.bak/
 venv.bak/
 backend/.venv/
 
-# Testing & Linting Caches
+# Testing & Coverage
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -74,19 +79,20 @@ nosetests.xml
 coverage.xml
 *.cover
 
+# Node & Frontend Build
 node_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/build/
+frontend/dist-electron/
 .npm
 .eslintcache
 .stylelintcache
 .vite/
 frontend/.vite/
 
-src-tauri/target/
-frontend/src-tauri/target/
-
+# Sandboxes & Temp
+sandbox/temp_exec.py
 logs/
 *.log
 npm-debug.log*
@@ -99,6 +105,7 @@ temp/
 scratch/
 .tmp/
 
+# IDE & OS Specific
 .vscode/
 !.vscode/settings.json
 !.vscode/tasks.json

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: copper-config
+  namespace: copper
+data:
+  APP_ENV: "production"
+  DEBUG: "false"
+  POSTGRES_HOST: "postgres"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "copperdb"
+  POSTGRES_USER: "copper"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  CHROMA_HOST: "chromadb"
+  CHROMA_PORT: "8000"
+  OLLAMA_HOST: "http://ollama:11434"

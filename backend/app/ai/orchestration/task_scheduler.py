@@ -1,8 +1,16 @@
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
+try:
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    from apscheduler.triggers.interval import IntervalTrigger
+    APSCHEDULER_AVAILABLE = True
+except ImportError:
+    AsyncIOScheduler = None
+    IntervalTrigger = None
+    APSCHEDULER_AVAILABLE = False
+
 from app.core.anomaly_sentinel import sentinel
 from app.core.logger import logger
-_scheduler: AsyncIOScheduler | None = None
+
+_scheduler = None
 
 async def _spider_sense_check():
     try:
@@ -16,6 +24,10 @@ async def _spider_sense_check():
 
 def start_scheduler():
     global _scheduler
+    if not APSCHEDULER_AVAILABLE:
+        logger.warning('APScheduler not installed, skipping background anomaly scheduler.')
+        return
+
     _scheduler = AsyncIOScheduler()
     _scheduler.add_job(_spider_sense_check, IntervalTrigger(seconds=30), id='spider_sense', name='Spider-Sense Anomaly Sentinel', replace_existing=True)
     try:

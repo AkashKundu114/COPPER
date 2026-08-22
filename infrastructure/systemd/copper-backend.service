@@ -1,0 +1,23 @@
+[Unit]
+Description=C.O.P.P.E.R. Autonomous AI Assistant & Guardian Backend
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=copper
+Group=copper
+WorkingDirectory=/opt/copper/backend
+Environment="PATH=/opt/copper/.venv/bin:/usr/local/bin:/usr/bin"
+EnvironmentFile=/etc/copper/copper.env
+ExecStart=/opt/copper/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+Restart=always
+RestartSec=5s
+LimitNOFILE=65535
+
+# Sandboxing & Security Hardening
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

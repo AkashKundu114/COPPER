@@ -1,95 +1,83 @@
-# C.O.P.P.E.R. Pre-Trained Model Selection & Agent Mapping Strategy
+# Model Selection & Orchestration Topology
+
+## 🧠 Local Model Architecture Strategy
+
+**C.O.P.P.E.R.** is engineered for high-performance offline inference on modern consumer hardware (AMD Ryzen 9 / NVIDIA RTX 5060 Laptop GPU with 8GB VRAM). 
+
+Instead of running a single monolithic model for all tasks, C.O.P.P.E.R. distributes responsibilities across a **tiered model hierarchy** totaling **26 quantized artifacts (39.50 GB)**.
 
 ---
 
-## 1. Architectural Model Strategy Shift
+## 📋 Full Model Manifest & Tier Distribution
 
-Rather than requiring custom LoRA fine-tuning for all 30 individual agents (which incurs high compute, VRAM management overhead, and training complexity), **C.O.P.P.E.R.** utilizes a **Pre-Trained Model Pool Architecture**.
-
-All 30 specialized agents + COPPER Orchestrator are mapped onto **8 high-capability pre-trained foundational models** (local Ollama engines + zero-trust cloud fallbacks). Specialized agent behaviors, personas, and payload schemas are enforced via dynamic system prompt injection and structured JSON output constraints.
-
-```
-+-----------------------------------------------------------------------------------+
-|                           AGENT ROUTER & ORCHESTRATOR                             |
-+-----------------------------------------------------------------------------------+
-                                         |
-            +----------------------------+----------------------------+
-            | (Local First Inference)                                 | (Cloud Fallback)
-            v                                                         v
-+----------------------------------------+               +--------------------------+
-| 5-6 LOCAL PRE-TRAINED MODELS (OLLAMA)  |               | 2-3 CLOUD MODELS (API)   |
-| 1. Llama 3.1 8B (General & Guardian)   |               | 1. GPT-4o-mini           |
-| 2. Qwen 2.5 Coder 14B/32B (Coding)     |               | 2. Claude 3.5 Sonnet     |
-| 3. Mistral 7B v0.3 (Planning & Memory) |               |                          |
-| 4. DeepSeek Coder V2/R1 (Math/Logic)   |               | (Passed via Zero-Trust   |
-| 5. Qwen2-VL 7B (Vision & Inspection)   |               |  Data Firewall)          |
-| 6. Whisper / Piper (Audio & Speech)    |               |                          |
-+----------------------------------------+               +--------------------------+
-```
-
----
-
-## 2. Pre-Trained Model Pool Specification
-
-| Model Pool ID | Pre-Trained Base Model | Deployment Provider | Quantization | Primary Capabilities |
-| :--- | :--- | :--- | :--- | :--- |
-| **Model 1: Core Reasoning** | **Llama 3.1 8B Instruct** | Local / Ollama | `Q4_K_M` | General conversation, Guardian Level evaluation, agent routing. |
-| **Model 2: Code Synthesis** | **Qwen 2.5 Coder 14B** | Local / Ollama | `Q4_K_M` | Multi-language code synthesis, refactoring, script execution. |
-| **Model 3: Planning & Memory**| **Mistral 7B Instruct v0.3**| Local / Ollama | `Q4_K_M` | Epistemic memory extraction, structured JSON schema parsing, schedule planning. |
-| **Model 4: Logic & Math** | **DeepSeek Coder V2 / R1** | Local / Ollama | `Q4_K_M` | Complex algorithms, data analysis, deep mathematical logic. |
-| **Model 5: Visual Analysis**| **Qwen2-VL 7B / LLaVA 1.6**| Local / Ollama | `Q4_K_M` | Multimodal vision, screenshot analysis, layout inspection. |
-| **Model 6: Audio & Speech** | **Whisper (STT) + Piper (TTS)**| Local Native / C++| N/A | Speech-to-text transcription & equalizer timing simulation. |
-| **Model 7: Fast Cloud** | **GPT-4o-mini** | Cloud API (OpenAI) | N/A | Fast cloud research fallback (via Data Firewall). |
-| **Model 8: Deep Research** | **Claude 3.5 Sonnet** | Cloud API (Anthropic)| N/A | Multi-file codebase refactoring & long-context research fallback. |
-
----
-
-## 3. Agent-to-Model Mapping Matrix
-
-The 30 domain agents + COPPER Core are mapped onto the 8 pre-trained model pools:
-
-| Model Pool | Primary Model Name | Assigned Agents & Personas |
-| :--- | :--- | :--- |
-| **1. Core Reasoning** | `llama3.1:8b` | `COPPER` (Orchestrator), `WARDEN` (Security), `AEGIS` (Guardian), `ATLAS` (Task Core), `DIRECTOR` (Workflow). |
-| **2. Code Synthesis** | `qwen2.5-coder:14b` | `AXIS` (Primary Code), `CRUCIBLE` (Refactoring), `FORGE` (Build Systems), `GLITCH` (Debugging), `TENSOR` (ML Ops). |
-| **3. Planning & Memory** | `mistral:7b-instruct` | `CHRONOS` (Schedule), `MNEMONIC` (Memory), `SYNAPSE` (Learning), `LEDGER` (Finance), `PIVOT` (Routines). |
-| **4. Logic & Math** | `deepseek-coder:6.7b` | `QUANTA` (Data Analytics), `CYPHER` (Crypto/Security), `PRISM` (Logic Engine), `GOLIATH` (Big Data). |
-| **5. Visual Analysis** | `qwen2-vl:7b` | `IRIS` (Vision Inspection), `SPECTRE` (UI Inspector), `RENDER` (Design Layout). |
-| **6. Audio & Speech** | `whisper-base` | `ECHO` (Voice Transcriber), `SIREN` (Audio Alerts), `SONAR` (Speech Audio). |
-| **7. Fast Cloud** | `gpt-4o-mini` | `HERMES` (Web Search), `BEACON` (Notifications), `PROXY` (API Middleware), `PORTAL` (Integrations). |
-| **8. Deep Research** | `claude-3-5-sonnet` | `VANGUARD` (Architecture Review), `OMNI` (Deep Research), `RAPTOR` (Static Analysis), `VAULT` (Compliance). |
-
----
-
-## 4. System Prompt Injection & Persona Steering
-
-Since agents share base pre-trained model weights, persona specialization is achieved through **Dynamic System Prompt Injection**:
-
-```python
-def build_agent_prompt(agent_id: str, user_prompt: str, epistemic_context: str) -> list[dict]:
-    agent_spec = AGENT_REGISTRY.get(agent_id)
-    
-    system_instruction = f"""You are {agent_spec['name']}, a specialized agent within the C.O.P.P.E.R. system.
-    
-Role: {agent_spec['description']}
-Persona Guidance: {agent_spec['system_prompt']}
-
-Known User Context:
-{epistemic_context}
-
-Respond cleanly adhering strictly to your persona while completing the user's task."""
-
-    return [
-        {"role": "system", "content": system_instruction},
-        {"role": "user", "content": user_prompt}
-    ]
+![Multi-Model Capability Comparison](../images/model_comparison_radar.png)
+![Inference Speed & Token Throughput](../images/token_generation_throughput.png)
+                                  ┌────────────────────────┐
+                                  │   Incoming User Turn   │
+                                  └───────────┬────────────┘
+                                              │
+                                  ┌───────────▼────────────┐
+                                  │ Router (Llama-3.2-1B)  │
+                                  └───────────┬────────────┘
+         ┌──────────────────┬─────────────────┼─────────────────┬──────────────────┐
+         │                  │                 │                 │                  │
+┌────────▼────────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌────────▼────────┐
+│   Chat / Core   │ │ AXIS (Coding) │ │  Automation   │ │   Research    │ │  Vision Primary  │
+│ Llama-3.1 8B    │ │ Qwen2.5 7B    │ │  Mistral 7B   │ │ DeepSeek-R1 7B│ │ Qwen2-VL 7B      │
+└────────┬────────┘ └───────┬───────┘ └───────┬───────┘ └───────┬───────┘ └────────┬─────────┘
+         │                  │                 │                 │                  │
+         └──────────────────┴────────┬────────┴─────────────────┴──────────────────┘
+                                     │
+                   ┌─────────────────▼─────────────────┐
+                   │   14 SPECIALIZED MICRO-SUBAGENTS  │
+                   └───────────────────────────────────┘
 ```
 
+### 1. Primary Core Models (7B – 8B Heavyweights)
+
+| Model Name | Role | File Path | Quantization | Size | VRAM Budget |
+| :--- | :--- | :--- | :---: | :---: | :---: |
+| **`Meta-Llama-3.1-8B-Instruct`** | Primary Chat & Conversational Companion | `core/` | Q4_K_M | 4.58 GB | ~4.8 GB |
+| **`Qwen2.5-Coder-7B-Instruct`** | Software Engineering & Sandbox Code Gen | `core/` | Q4_K_M | 4.36 GB | ~4.6 GB |
+| **`Mistral-7B-Instruct-v0.3`** | Desktop OS Automation & Execution | `core/` | Q4_K_M | 4.07 GB | ~4.3 GB |
+| **`DeepSeek-R1-Distill-Qwen-7B`** | Deep Reasoning & Research Synthesis | `core/` | Q4_K_M | 4.36 GB | ~4.6 GB |
+
 ---
 
-## 5. Benefits of the Pre-Trained Model Strategy
+### 2. Multimodal Vision Models (2B & 7B)
 
-1. **Zero Fine-Tuning Compute Cost:** Eliminates GPU rental costs and hours of LoRA training runs.
-2. **Immediate Out-of-the-Box Deployment:** Users pull 2-3 standard Ollama models (`llama3.1:8b`, `qwen2.5-coder:14b`) and run immediately.
-3. **State-of-the-Art Weights:** Leverages continuous improvements from top-tier AI labs (Meta, Alibaba, Anthropic, DeepSeek).
-4. **VRAM Optimization:** Sharing base models across agent pools keeps VRAM usage under 16GB-24GB on local hardware.
+| Model Name | Role | File Path | Quantization | Size | Purpose |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **`Qwen2-VL-7B-Instruct`** | High-Res Vision & Diagram Reasoner | `vision/` | Q4_K_M | 4.36 GB | Full screenshot parsing, UI layout analysis, architectural diagrams |
+| **`Qwen2-VL-2B-Instruct`** | Rapid UI Bounding Box & OCR Tagger | `vision/` | Q4_K_M | 940 MB | Fast OCR extraction and button coordinate localization |
+
+---
+
+### 3. Specialized Micro-Subagents (360M – 3B)
+
+| Micro-Agent | Model Architecture | Quantization | Size | Function |
+| :--- | :--- | :---: | :---: | :--- |
+| **`router`** | `Llama-3.2-1B-Instruct` | Q4_K_M | 770 MB | Fallback sub-40ms user intent classifier |
+| **`guardian`** | `Llama-3.2-3B-Instruct` | Q4_K_M | 1.88 GB | Safety verification & conflict detection |
+| **`firewall`** | `Qwen2.5-0.5B-Instruct` | Q4_K_M | 379 MB | PII masking & credential filtering |
+| **`memory`** | `SmolLM2-1.7B-Instruct` | Q4_K_M | 1.00 GB | Epistemic fact & hypothesis extractor |
+| **`summarizer`** | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 940 MB | Context window chunk compression |
+| **`coding_linter`** | `Qwen2.5-Coder-0.5B-Instruct` | Q4_K_M | 379 MB | Instant AST syntax error detection |
+| **`coding_micro`** | `Qwen2.5-Coder-1.5B-Instruct` | Q4_K_M | 940 MB | Unit test & docstring generation |
+| **`shell_safety`** | `Qwen2.5-Coder-3B-Instruct` | Q4_K_M | 1.80 GB | Shell command flag validator |
+| **`diagnostics`** | `DeepSeek-R1-Distill-1.5B` | Q4_K_M | 1.04 GB | Stack trace analysis & self-healing |
+| **`schema`** | `gemma-2-2b-it` | Q4_K_M | 1.59 GB | JSON schema normalizer |
+| **`sql`** | `granite-3.1-2b-instruct` | Q4_K_M | 1.44 GB | Parameterized SQL query generator |
+| **`git`** | `SmolLM2-360M-Instruct` | Q4_K_M | 258 MB | Git diff analyzer & commit author |
+| **`planner`** | `Falcon3-3B-Instruct` | Q4_K_M | 1.87 GB | Goal decomposer & milestone roadmap |
+| **`search`** | `Qwen2.5-3B-Instruct` | Q4_K_M | 1.80 GB | Search query optimizer & verifier |
+
+---
+
+### 4. Audio & Vector Embeddings
+
+| Purpose | Model / Engine | Quantization / Format | Size |
+| :--- | :--- | :---: | :---: |
+| **Vector Memory** | `nomic-embed-text-v1.5` | Q4_K_M (8192 context) | 80 MB |
+| **Speech-to-Text** | Whisper (`tiny.en`, `base.en`, `small`) | GGML Binary | 680 MB total |
+| **Text-to-Speech** | Piper ONNX (`amy`, `ryan`) | ONNX Float16 | 120 MB total |

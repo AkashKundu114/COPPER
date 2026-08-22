@@ -1,77 +1,602 @@
 [
   {
-    "prompt": "Extract the text from this screenshot using OCR",
+    "prompt": "Please extract the text from this circuit board picture using OCR.",
     "expected_agent": "vision",
     "category": "ocr"
   },
   {
-    "prompt": "What do you see on my screen right now?",
-    "expected_agent": "vision",
-    "category": "screen_inspection"
-  },
-  {
-    "prompt": "Analyze this architecture diagram photo and explain the data flow",
-    "expected_agent": "vision",
-    "category": "diagram"
-  },
-  {
-    "prompt": "Inspect this UI picture and tell me where the submit button is located",
-    "expected_agent": "vision",
-    "category": "ui_detection"
-  },
-  {
-    "prompt": "Read the error message shown in this screenshot image",
-    "expected_agent": "vision",
-    "category": "error_ocr"
-  },
-  {
-    "prompt": "Describe the objects and colors in this uploaded image",
-    "expected_agent": "vision",
-    "category": "image_captioning"
-  },
-  {
-    "prompt": "Find the bounding box coordinates of the logo in this screenshot",
-    "expected_agent": "vision",
-    "category": "object_localization"
-  },
-  {
-    "prompt": "Can you inspect this chart image and tell me the highest data point?",
-    "expected_agent": "vision",
-    "category": "chart_reading"
-  },
-  {
-    "prompt": "Look at this UI mockup photo and give me accessibility feedback",
-    "expected_agent": "vision",
-    "category": "ui_review"
-  },
-  {
-    "prompt": "Extract the table rows from this scanned PDF receipt image",
+    "prompt": "Please read the error message in this uploaded image and tell me where the submit button is.",
     "expected_agent": "vision",
     "category": "document_ocr"
   },
   {
-    "prompt": "What icon is displayed in the bottom right corner of this screenshot?",
-    "expected_agent": "vision",
-    "category": "ui_element"
-  },
-  {
-    "prompt": "Look at this circuit board picture and identify any disconnected traces",
+    "prompt": "Can you read the error message in this circuit board picture and give me accessibility feedback?",
     "expected_agent": "vision",
     "category": "inspection"
   },
   {
-    "prompt": "Read the handwritten math formula in this picture",
-    "expected_agent": "vision",
-    "category": "handwriting"
-  },
-  {
-    "prompt": "Analyze this webpage screenshot and check if the buttons are aligned",
-    "expected_agent": "vision",
-    "category": "layout_check"
-  },
-  {
-    "prompt": "Is there any text visible in this blurred image capture?",
+    "prompt": "inspect this uploaded image and describe the objects and colors",
     "expected_agent": "vision",
     "category": "ocr"
+  },
+  {
+    "prompt": "describe this chart image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this architecture diagram and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please read the error message in this uploaded image using OCR.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this uploaded image and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please inspect this screenshot and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please inspect this chart image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this scanned PDF receipt and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "check the alignment of my screen right now and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in my screen right now and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you read the error message in this scanned PDF receipt and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this UI picture using OCR.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of my screen right now and describe what is visible",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you extract the text from this scanned PDF receipt and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please read the error message in this scanned PDF receipt and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you inspect this scanned PDF receipt using OCR?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of my screen right now and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this architecture diagram and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you analyze this uploaded image using OCR?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this circuit board picture using OCR.",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Please extract the text from this chart image and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Please read the error message in this screenshot using OCR.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you describe this blurred image and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please describe this circuit board picture and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "extract the text from this UI picture using OCR",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "check the alignment of this scanned PDF receipt and describe what is visible",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you read the error message in my screen right now and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you analyze this chart image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please analyze this screenshot and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of my screen right now and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this scanned PDF receipt and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this circuit board picture and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this blurred image and identify disconnected traces.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this circuit board picture and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in this architecture diagram using OCR",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this screenshot using OCR?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "inspect this circuit board picture and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please read the error message in this architecture diagram and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you read the error message in this blurred image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this architecture diagram using OCR.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you read the error message in my screen right now and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this UI picture and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "extract the text from this blurred image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "analyze this circuit board picture and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "describe this uploaded image using OCR",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Please extract the text from this scanned PDF receipt and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Can you analyze this circuit board picture and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "inspect this scanned PDF receipt and describe what is visible",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "check the alignment of this chart image and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please describe this architecture diagram and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please read the error message in my screen right now and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you extract the text from this screenshot and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you inspect this blurred image and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of this screenshot using OCR",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "check the alignment of this uploaded image and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "read the error message in this circuit board picture and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "analyze this blurred image and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Can you extract the text from this UI picture and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this architecture diagram and tell me where the submit button is?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "check the alignment of this architecture diagram and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "extract the text from this UI picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this circuit board picture and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this scanned PDF receipt and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "read the error message in this scanned PDF receipt using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this chart image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you read the error message in this circuit board picture using OCR?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please inspect this circuit board picture and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please check the alignment of this blurred image and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "analyze this scanned PDF receipt using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this UI picture and describe what is visible",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please extract the text from this scanned PDF receipt using OCR.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "read the error message in this chart image and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Can you extract the text from this chart image and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please describe my screen right now and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "read the error message in this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "extract the text from this screenshot and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you describe this chart image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you check the alignment of this chart image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "describe this screenshot using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this architecture diagram and describe what is visible",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please inspect this uploaded image and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "read the error message in my screen right now and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Can you analyze this scanned PDF receipt and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please inspect this blurred image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "describe this screenshot and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "read the error message in this uploaded image and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "analyze this circuit board picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of my screen right now and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you inspect this circuit board picture and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of this scanned PDF receipt and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please read the error message in this screenshot and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in this circuit board picture and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you inspect this screenshot and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this scanned PDF receipt and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you read the error message in this uploaded image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "analyze this screenshot and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this uploaded image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "extract the text from this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "describe this architecture diagram and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this chart image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "check the alignment of this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Can you describe my screen right now and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this blurred image and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please analyze this UI picture and identify disconnected traces.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you describe my screen right now and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this UI picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Please extract the text from this chart image and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you extract the text from this uploaded image and tell me where the submit button is?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you inspect this circuit board picture and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you read the error message in this UI picture using OCR?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Please describe this scanned PDF receipt and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this blurred image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please inspect my screen right now using OCR.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please inspect this chart image and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
   }
 ]

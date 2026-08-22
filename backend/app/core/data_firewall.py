@@ -13,7 +13,18 @@ class FirewallResult:
     redacted_text: str
     classification: DataClass
     redaction_count: int
-_PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [(re.compile('sk-[a-zA-Z0-9]{20,}'), 'sk-•••REDACTED•••', DataClass.SECRET), (re.compile('(?i)\\b(api[_-]?key|access[_-]?token|secret[_-]?key)\\s*[:=]\\s*\\S+'), '•••CREDENTIAL_REDACTED•••', DataClass.SECRET), (re.compile('(?i)\\bAuthorization:\\s*Bearer\\s+\\S+'), 'Authorization: Bearer •••REDACTED•••', DataClass.SECRET), (re.compile('\\b[\\w.+-]+@[\\w-]+\\.[\\w.-]+\\b'), '•••EMAIL_REDACTED•••', DataClass.SENSITIVE), (re.compile('\\b(?:\\+?\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b'), '•••PHONE_REDACTED•••', DataClass.SENSITIVE), (re.compile('\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b'), '•••IP_REDACTED•••', DataClass.SENSITIVE), (re.compile('(?:/home/|/Users/|C:\\\\Users\\\\)[\\w.\\\\/ -]+'), '•••PATH_REDACTED•••', DataClass.PERSONAL), (re.compile('\\b\\d{3}-\\d{2}-\\d{4}\\b'), '•••SSN_REDACTED•••', DataClass.SENSITIVE), (re.compile('\\b(?:\\d[ -]*?){13,19}\\b'), '•••CREDIT_CARD_REDACTED•••', DataClass.SENSITIVE)]
+
+_PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
+    (re.compile(r'sk-[a-zA-Z0-9_\-]{20,}'), 'sk-•••REDACTED•••', DataClass.SECRET),
+    (re.compile(r'(?i)\b(api[_-]?key|access[_-]?token|secret[_-]?key)\s*[:=]\s*\S+'), '•••CREDENTIAL_REDACTED•••', DataClass.SECRET),
+    (re.compile(r'(?i)\bAuthorization:\s*Bearer\s+\S+'), 'Authorization: Bearer •••REDACTED•••', DataClass.SECRET),
+    (re.compile(r'\b[\w.+-]+@[\w-]+\.[\w.-]+\b'), '•••EMAIL_REDACTED•••', DataClass.SENSITIVE),
+    (re.compile(r'\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b'), '•••PHONE_REDACTED•••', DataClass.SENSITIVE),
+    (re.compile(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'), '•••IP_REDACTED•••', DataClass.SENSITIVE),
+    (re.compile(r'(?:/home/|/Users/|C:\\Users\\)[\w.\\/ -]+'), '•••PATH_REDACTED•••', DataClass.PERSONAL),
+    (re.compile(r'\b\d{3}-\d{2}-\d{4}\b'), '•••SSN_REDACTED•••', DataClass.SENSITIVE),
+    (re.compile(r'\b(?:\d[ -]*?){13,19}\b'), '•••CREDIT_CARD_REDACTED•••', DataClass.SENSITIVE)
+]
 
 def classify_and_redact(text: str) -> FirewallResult:
     severity_order = [DataClass.PUBLIC, DataClass.PERSONAL, DataClass.SENSITIVE, DataClass.SECRET]

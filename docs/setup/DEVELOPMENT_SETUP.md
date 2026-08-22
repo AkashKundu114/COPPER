@@ -1,116 +1,93 @@
-# C.O.P.P.E.R. Local Development & Setup Guide
+# C.O.P.P.E.R. Development Setup Guide
+
+This guide walks you through setting up a complete local development environment for **C.O.P.P.E.R.** on Windows, macOS, or Linux.
 
 ---
 
-## 1. Prerequisites & System Requirements
+## 🛠️ System Prerequisites
 
-Before setting up C.O.P.P.E.R., ensure your system meets the following requirements:
-
-### Hardware Requirements
-- **CPU:** 4-core x64 / ARM64 processor (Intel i5/i7/i9, AMD Ryzen, Apple M-Series).
-- **RAM:** Minimum 16 GB (32 GB recommended for running 14B local models).
-- **GPU:** Optional but strongly recommended (NVIDIA GPU with 8GB+ VRAM, or Apple Silicon unified memory).
-- **Storage:** 20 GB free disk space.
-
-### Software Prerequisites
-- **Git** 2.30+
-- **Python** 3.11+
-- **Node.js** 18+ & **npm** 9+
-- **Docker Desktop** (with Docker Compose v2+)
-- **Ollama** (for running local LLMs)
-- **Rust Toolchain** (optional, required only for building Tauri desktop app binaries)
+- **Operating System:** Windows 10/11, macOS 12+, or Ubuntu 22.04+
+- **Python:** 3.11 or higher
+- **Node.js:** 20+ LTS & npm 9+
+- **Hardware Recommended:** NVIDIA RTX GPU with 8GB+ VRAM (or modern Apple Silicon / AMD APU)
+- **Disk Space:** ~45 GB for full 26-model GGUF & ONNX offline suite
 
 ---
 
-## 2. Step-by-Step Installation
+## 🚀 Step-by-Step Local Setup
 
-### Step 1: Clone the Repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/AkashKundu114/COPPER.git
 cd COPPER
 ```
 
-### Step 2: Start Supporting Services via Docker Compose
-Launch PostgreSQL, Redis, ChromaDB, and Ollama containers:
-
+### 2. Configure Python Virtual Environment
 ```bash
-docker-compose up -d postgres redis chromadb ollama
+# Create virtual environment
+python -m venv .venv
+
+# Activate environment:
+# Windows (PowerShell):
+.\.venv\Scripts\Activate.ps1
+# Windows (CMD):
+.\.venv\Scripts\activate.bat
+# macOS / Linux:
+source .venv/bin/activate
+
+# Install Python backend dependencies
+pip install -r backend/requirements.txt
 ```
 
-Verify all containers are healthy:
+### 3. Initialize Database Schema
 ```bash
-docker-compose ps
+python scripts/db/init_db.py
+python scripts/db/seed_data.py
 ```
 
-### Step 3: Pull Local LLM Models via Ollama
-Pull the default local models for general reasoning and code synthesis:
-
+### 4. Install Frontend Dependencies
 ```bash
-ollama pull llama3.1:8b
-ollama pull qwen2.5-coder:7b
+cd frontend
+npm install
+cd ..
 ```
-
-### Step 4: Backend Setup (Python FastAPI)
-
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows PowerShell:
-   .\venv\Scripts\Activate.ps1
-   # On Linux/macOS:
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run Alembic migrations:
-   ```bash
-   alembic upgrade head
-   ```
-5. Start the FastAPI backend server:
-   ```bash
-   uvicorn app.main:app --reload --port 8000
-   ```
-   The backend API documentation will be available at `http://localhost:8000/docs`.
-
-### Step 5: Frontend Setup (React / TypeScript / Vite)
-
-1. Open a new terminal window and navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install npm dependencies:
-   ```bash
-   npm install
-   ```
-3. Copy environment configuration:
-   ```bash
-   cp .env.example .env
-   ```
-4. Launch Vite development server:
-   ```bash
-   npm run dev
-   ```
-5. Open your browser and navigate to `http://localhost:5173`.
 
 ---
 
-## 3. Running as Desktop App via Tauri (Optional)
+## 🖥️ Running the Application
 
-To run C.O.P.P.E.R. inside the native Tauri desktop shell:
+### Option A: 1-Click Launch (Windows Dev Environment)
+```powershell
+.\scripts\dev\start_dev.bat
+```
+*Launches the FastAPI backend on port 8000 and opens the Electron Standalone Desktop application.*
 
+### Option B: Manual Multi-Terminal Startup
+
+**Terminal 1 — FastAPI Backend:**
+```bash
+python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
+```
+
+**Terminal 2 — Electron Desktop App:**
 ```bash
 cd frontend
-npm run tauri dev
+npm run desktop
 ```
 
-To build a standalone production desktop executable:
+---
+
+## 🧪 Quality Gates & Test Suites
+
+Always run the full test and benchmark suite before submitting PRs:
+
 ```bash
-npm run tauri build
+# 1. Run all 213 Pytest Unit & Integration Tests
+python -m pytest tests/ -v
+
+# 2. Run the 1,360-case Intent Routing & Guardian Benchmark
+python backend/eval/benchmark.py
+
+# 3. Verify Local Model Artifacts
+python scripts/models/verify_models.py
 ```
-The output installers (`.exe`, `.msi`, `.dmg`, or `.AppImage`) will be placed in `frontend/src-tauri/target/release/bundle/`.

@@ -18,9 +18,9 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
   };
 
   return (
-    <div className="w-full flex items-end gap-2 bg-bg-panel border border-border rounded-2xl px-3 py-2.5 shadow-sm focus-within:border-accent transition-colors">
+    <div className={`w-full flex items-end gap-2 bg-bg-panel border rounded-2xl px-3 py-2.5 shadow-sm transition-all duration-300 ${thinking ? 'border-accent shadow-neon animate-pulse-glow' : 'border-border focus-within:border-accent hover:shadow-hud'}`}>
       <button 
-        className="p-2 text-text-muted hover:text-text rounded-full transition-colors flex-shrink-0"
+        className="p-2 text-accent hover:text-accent-hover rounded-full transition-colors flex-shrink-0"
         title="Attach file (coming soon)"
       >
         <Paperclip size={18} />
@@ -43,7 +43,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
       <button
         onClick={submit}
         disabled={!draft.trim() || thinking}
-        className="p-2 ml-1 rounded-full bg-text text-bg hover:bg-accent disabled:opacity-30 disabled:hover:bg-text transition-colors flex-shrink-0"
+        className="p-2 ml-1 rounded-full bg-accent text-bg hover:bg-accent-hover hover:shadow-neon disabled:opacity-30 disabled:hover:bg-accent disabled:shadow-none transition-all flex-shrink-0"
         title={connected ? "Send message" : "Reconnecting..."}
       >
         <ArrowUp size={18} strokeWidth={3} />

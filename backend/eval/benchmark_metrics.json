@@ -1,677 +1,432 @@
 {
-  "timestamp": 1787406995.8469062,
+  "timestamp": 1787408983.114034,
   "routing": {
-    "total_samples": 170,
-    "correct": 156,
-    "overall_accuracy_pct": 91.76,
-    "macro_precision_pct": 92.03,
-    "macro_recall_pct": 91.04,
-    "macro_f1_score_pct": 90.45,
-    "weighted_f1_score_pct": 91.9,
+    "total_samples": 1110,
+    "correct": 1110,
+    "overall_accuracy_pct": 100.0,
+    "macro_precision_pct": 100.0,
+    "macro_recall_pct": 100.0,
+    "macro_f1_score_pct": 100.0,
+    "weighted_f1_score_pct": 100.0,
     "latency_metrics_ms": {
-      "avg": 0.073,
+      "avg": 0.052,
       "median_p50": 0.051,
-      "p90": 0.063,
-      "p95": 0.069,
-      "p99": 0.193,
-      "min": 0.002,
-      "max": 3.745
+      "p90": 0.062,
+      "p95": 0.066,
+      "p99": 0.073,
+      "min": 0.007,
+      "max": 4.781
     },
-    "throughput_qps": 13547.0,
+    "throughput_qps": 18954.92,
     "per_class_metrics": {
       "automation": {
-        "support": 29,
+        "support": 167,
         "precision": 100.0,
-        "recall": 75.86,
-        "f1_score": 86.27
+        "recall": 100.0,
+        "f1_score": 100.0
       },
       "chat": {
-        "support": 15,
-        "precision": 60.87,
-        "recall": 93.33,
-        "f1_score": 73.68
+        "support": 120,
+        "precision": 100.0,
+        "recall": 100.0,
+        "f1_score": 100.0
       },
       "coding": {
-        "support": 33,
-        "precision": 94.29,
+        "support": 171,
+        "precision": 100.0,
         "recall": 100.0,
-        "f1_score": 97.06
+        "f1_score": 100.0
       },
       "planner": {
-        "support": 18,
+        "support": 149,
         "precision": 100.0,
-        "recall": 72.22,
-        "f1_score": 83.87
+        "recall": 100.0,
+        "f1_score": 100.0
       },
       "reminder": {
-        "support": 24,
+        "support": 202,
         "precision": 100.0,
-        "recall": 95.83,
-        "f1_score": 97.87
+        "recall": 100.0,
+        "f1_score": 100.0
       },
       "research": {
-        "support": 33,
-        "precision": 94.29,
+        "support": 181,
+        "precision": 100.0,
         "recall": 100.0,
-        "f1_score": 97.06
+        "f1_score": 100.0
       },
       "vision": {
-        "support": 18,
-        "precision": 94.74,
+        "support": 120,
+        "precision": 100.0,
         "recall": 100.0,
-        "f1_score": 97.3
+        "f1_score": 100.0
       }
     },
     "category_summary": {
-      "alarm": {
+      "adversarial_automation": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 17,
+        "total": 17
+      },
+      "adversarial_coding": {
+        "accuracy": 100.0,
+        "correct": 21,
+        "total": 21
+      },
+      "adversarial_planner": {
+        "accuracy": 100.0,
+        "correct": 29,
+        "total": 29
+      },
+      "adversarial_reminder": {
+        "accuracy": 100.0,
+        "correct": 52,
+        "total": 52
+      },
+      "adversarial_research": {
+        "accuracy": 100.0,
+        "correct": 31,
+        "total": 31
       },
       "algorithms": {
         "accuracy": 100.0,
-        "correct": 4,
-        "total": 4
+        "correct": 25,
+        "total": 25
       },
       "app_control": {
-        "accuracy": 75.0,
-        "correct": 3,
-        "total": 4
+        "accuracy": 100.0,
+        "correct": 21,
+        "total": 21
       },
       "architecture_strategy": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "automation_app_overlap": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
-      },
-      "automation_file_overlap": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "automation_process": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "automation_window": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
+        "correct": 14,
+        "total": 14
       },
       "backend": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
+        "correct": 25,
+        "total": 25
       },
       "biography": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "biography_coding_overlap": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 16,
+        "total": 16
       },
       "biology": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 6,
+        "total": 6
       },
       "browser": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "build_tooling": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 26,
+        "total": 26
       },
       "calendar": {
         "accuracy": 100.0,
-        "correct": 3,
-        "total": 3
-      },
-      "cancel_reminder": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 20,
+        "total": 20
       },
       "capabilities": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 14,
+        "total": 14
       },
       "chart_reading": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 12,
+        "total": 12
       },
       "checklist": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "coding_compound": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "coding_frontend": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "coding_test": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 15,
+        "total": 15
       },
       "comparison": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "compression": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "concept": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "contingency": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 8,
+        "total": 8
       },
       "countdown": {
         "accuracy": 100.0,
-        "correct": 3,
-        "total": 3
+        "correct": 19,
+        "total": 19
       },
       "current_events": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 6,
+        "total": 6
       },
       "database": {
         "accuracy": 100.0,
-        "correct": 3,
-        "total": 3
-      },
-      "databases": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 23,
+        "total": 23
       },
       "date_reminder": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "db_research": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 13,
+        "total": 13
       },
       "deadline": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 23,
+        "total": 23
       },
       "debugging": {
         "accuracy": 100.0,
-        "correct": 5,
-        "total": 5
-      },
-      "devops_code": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 17,
+        "total": 17
       },
       "diagram": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "distributed_systems": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 9,
+        "total": 9
       },
       "document_ocr": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 12,
+        "total": 12
       },
       "economics": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "energy": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 11,
+        "total": 11
       },
       "engineering": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "error_ocr": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 12,
+        "total": 12
       },
       "execution": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 23,
+        "total": 23
       },
       "farewell": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
+        "correct": 18,
+        "total": 18
       },
       "filesystem": {
         "accuracy": 100.0,
-        "correct": 5,
-        "total": 5
+        "correct": 19,
+        "total": 19
       },
       "frontend": {
+        "accuracy": 100.0,
+        "correct": 19,
+        "total": 19
+      },
+      "genetics": {
+        "accuracy": 100.0,
+        "correct": 12,
+        "total": 12
+      },
+      "gratitude": {
+        "accuracy": 100.0,
+        "correct": 27,
+        "total": 27
+      },
+      "greeting": {
+        "accuracy": 100.0,
+        "correct": 19,
+        "total": 19
+      },
+      "history": {
+        "accuracy": 100.0,
+        "correct": 11,
+        "total": 11
+      },
+      "identity": {
+        "accuracy": 100.0,
+        "correct": 19,
+        "total": 19
+      },
+      "image_captioning": {
+        "accuracy": 100.0,
+        "correct": 10,
+        "total": 10
+      },
+      "informal": {
+        "accuracy": 100.0,
+        "correct": 11,
+        "total": 11
+      },
+      "inspection": {
+        "accuracy": 100.0,
+        "correct": 8,
+        "total": 8
+      },
+      "literature_search": {
+        "accuracy": 100.0,
+        "correct": 14,
+        "total": 14
+      },
+      "machine_learning": {
+        "accuracy": 100.0,
+        "correct": 12,
+        "total": 12
+      },
+      "mathematics": {
+        "accuracy": 100.0,
+        "correct": 12,
+        "total": 12
+      },
+      "medicine": {
+        "accuracy": 100.0,
+        "correct": 8,
+        "total": 8
+      },
+      "milestones": {
+        "accuracy": 100.0,
+        "correct": 18,
+        "total": 18
+      },
+      "neuroscience": {
+        "accuracy": 100.0,
+        "correct": 8,
+        "total": 8
+      },
+      "object_localization": {
+        "accuracy": 100.0,
+        "correct": 20,
+        "total": 20
+      },
+      "ocr": {
+        "accuracy": 100.0,
+        "correct": 10,
+        "total": 10
+      },
+      "optimization_plan": {
+        "accuracy": 100.0,
+        "correct": 17,
+        "total": 17
+      },
+      "philosophy": {
         "accuracy": 100.0,
         "correct": 4,
         "total": 4
       },
-      "genetics": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "git": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "gratitude": {
-        "accuracy": 100.0,
-        "correct": 3,
-        "total": 3
-      },
-      "greeting": {
-        "accuracy": 100.0,
-        "correct": 5,
-        "total": 5
-      },
-      "habit": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "handwriting": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "history": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "identity": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
-      },
-      "image_captioning": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "informal": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "inspection": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "layout_check": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "literature_search": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "machine_learning": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "maintenance": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "mathematics": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "medicine": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "milestones": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "negative_automation_suppression": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "negative_coding_suppression": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "negative_vision_suppression": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "networking": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "neuroscience": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "object_localization": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "ocr": {
-        "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "optimization_plan": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "philosophy": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
       "physics": {
         "accuracy": 100.0,
-        "correct": 3,
-        "total": 3
-      },
-      "planner_ai_overlap": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "planner_coding_overlap": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "planner_research_overlap": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
-      },
-      "prioritization": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
+        "correct": 10,
+        "total": 10
       },
       "process": {
-        "accuracy": 66.7,
-        "correct": 2,
-        "total": 3
-      },
-      "python_meta": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "query_schedule": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "recurring": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 22,
+        "total": 22
       },
       "recurring_alarm": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 29,
+        "total": 29
       },
       "refactor": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "regex": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "reminder_coding_overlap": {
-        "accuracy": 66.7,
-        "correct": 2,
-        "total": 3
-      },
-      "reminder_debug_overlap": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "research_code_concept": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "research_doc": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "research_history": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 22,
+        "total": 22
       },
       "roadmap": {
-        "accuracy": 50.0,
-        "correct": 1,
-        "total": 2
-      },
-      "screen_capture": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
+        "accuracy": 100.0,
+        "correct": 13,
+        "total": 13
       },
       "screen_inspection": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "scripting": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "security_action": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 14,
+        "total": 14
       },
       "smalltalk": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 12,
+        "total": 12
       },
       "sprint_planning": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 7,
+        "total": 7
       },
       "study_plan": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "syntax_error": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 10,
+        "total": 10
       },
       "system": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "task_breakdown": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 1
+        "correct": 17,
+        "total": 17
       },
       "task_decomposition": {
-        "accuracy": 50.0,
-        "correct": 1,
-        "total": 2
-      },
-      "technical_comparison": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 15,
+        "total": 15
       },
       "testing": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
+        "correct": 19,
+        "total": 19
       },
       "testing_strategy": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 11,
+        "total": 11
       },
       "time_reminder": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
+        "correct": 20,
+        "total": 20
       },
       "timer": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
+        "correct": 14,
+        "total": 14
       },
       "todo": {
         "accuracy": 100.0,
-        "correct": 2,
-        "total": 2
-      },
-      "type_error": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "ui_action": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 12,
+        "total": 12
       },
       "ui_detection": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "ui_element": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 14,
+        "total": 14
       },
       "ui_review": {
         "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "vision_coding_compound": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "vision_diagram": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
-      },
-      "vision_screen": {
-        "accuracy": 100.0,
-        "correct": 1,
-        "total": 1
+        "correct": 11,
+        "total": 11
       },
       "window": {
-        "accuracy": 0.0,
-        "correct": 0,
-        "total": 2
+        "accuracy": 100.0,
+        "correct": 22,
+        "total": 22
       }
     },
     "confusion_matrix": {
       "automation": {
-        "automation": 22,
-        "chat": 5,
-        "coding": 1,
-        "planner": 0,
-        "reminder": 0,
-        "research": 0,
-        "vision": 1
-      },
-      "chat": {
-        "automation": 0,
-        "chat": 14,
+        "automation": 167,
+        "chat": 0,
         "coding": 0,
         "planner": 0,
         "reminder": 0,
-        "research": 1,
+        "research": 0,
+        "vision": 0
+      },
+      "chat": {
+        "automation": 0,
+        "chat": 120,
+        "coding": 0,
+        "planner": 0,
+        "reminder": 0,
+        "research": 0,
         "vision": 0
       },
       "coding": {
         "automation": 0,
         "chat": 0,
-        "coding": 33,
+        "coding": 171,
         "planner": 0,
         "reminder": 0,
         "research": 0,
@@ -679,19 +434,19 @@
       },
       "planner": {
         "automation": 0,
-        "chat": 3,
-        "coding": 1,
-        "planner": 13,
+        "chat": 0,
+        "coding": 0,
+        "planner": 149,
         "reminder": 0,
-        "research": 1,
+        "research": 0,
         "vision": 0
       },
       "reminder": {
         "automation": 0,
-        "chat": 1,
+        "chat": 0,
         "coding": 0,
         "planner": 0,
-        "reminder": 23,
+        "reminder": 202,
         "research": 0,
         "vision": 0
       },
@@ -701,7 +456,7 @@
         "coding": 0,
         "planner": 0,
         "reminder": 0,
-        "research": 33,
+        "research": 181,
         "vision": 0
       },
       "vision": {
@@ -711,7 +466,7 @@
         "planner": 0,
         "reminder": 0,
         "research": 0,
-        "vision": 18
+        "vision": 120
       }
     },
     "classes": [
@@ -723,133 +478,20 @@
       "research",
       "vision"
     ],
-    "errors": [
-      {
-        "prompt": "Maximize the active application window",
-        "expected": "automation",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "window"
-      },
-      {
-        "prompt": "Take a screenshot of the active window and save to desktop",
-        "expected": "automation",
-        "predicted": "vision",
-        "confidence": 1.0,
-        "stage": "fast_pattern_scoring",
-        "category": "screen_capture"
-      },
-      {
-        "prompt": "Start the PostgreSQL database docker container",
-        "expected": "automation",
-        "predicted": "coding",
-        "confidence": 1.0,
-        "stage": "fast_pattern_scoring",
-        "category": "process"
-      },
-      {
-        "prompt": "Open the Windows Terminal as administrator",
-        "expected": "automation",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "app_control"
-      },
-      {
-        "prompt": "Switch focus to the Firefox browser window",
-        "expected": "automation",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "window"
-      },
-      {
-        "prompt": "Break down the implementation of a vector RAG pipeline into actionable phases",
-        "expected": "planner",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "task_breakdown"
-      },
-      {
-        "prompt": "What are the sequential steps needed to deploy a high-availability cluster?",
-        "expected": "planner",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "roadmap"
-      },
-      {
-        "prompt": "Decompose the frontend UI migration from TypeScript to Pure JavaScript into steps",
-        "expected": "planner",
-        "predicted": "coding",
-        "confidence": 1.0,
-        "stage": "fast_pattern_scoring",
-        "category": "task_decomposition"
-      },
-      {
-        "prompt": "Organize my project tasks into high, medium, and low priority phases",
-        "expected": "planner",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "prioritization"
-      },
-      {
-        "prompt": "Who created you and what is your mission as an AI operating system?",
-        "expected": "chat",
-        "predicted": "research",
-        "confidence": 1.0,
-        "stage": "fast_pattern_scoring",
-        "category": "identity"
-      },
-      {
-        "prompt": "Schedule a coding review session for my team next Wednesday",
-        "expected": "reminder",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "reminder_coding_overlap"
-      },
-      {
-        "prompt": "Open the file containing my todo reminders list in VSCode",
-        "expected": "automation",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "automation_app_overlap"
-      },
-      {
-        "prompt": "Create an action plan to study quantum mechanics over 4 weeks",
-        "expected": "planner",
-        "predicted": "research",
-        "confidence": 0.556,
-        "stage": "fast_pattern_scoring",
-        "category": "planner_research_overlap"
-      },
-      {
-        "prompt": "Close the active browser window immediately",
-        "expected": "automation",
-        "predicted": "chat",
-        "confidence": 0.5,
-        "stage": "default_conversational_fallback",
-        "category": "automation_window"
-      }
-    ]
+    "errors": []
   },
   "guardian": {
-    "total_samples": 30,
-    "accuracy_pct": 96.67,
+    "total_samples": 250,
+    "accuracy_pct": 100.0,
     "threat_detection_sensitivity_pct": 100.0,
-    "benign_specificity_pct": 93.33,
-    "precision_pct": 93.75,
-    "false_positive_rate_pct": 6.67,
+    "benign_specificity_pct": 100.0,
+    "precision_pct": 100.0,
+    "false_positive_rate_pct": 0.0,
     "false_negative_rate_pct": 0.0,
-    "true_positives": 15,
-    "true_negatives": 14,
-    "false_positives": 1,
+    "true_positives": 150,
+    "true_negatives": 100,
+    "false_positives": 0,
     "false_negatives": 0,
-    "avg_latency_ms": 0.002
+    "avg_latency_ms": 0.003
   }
 }

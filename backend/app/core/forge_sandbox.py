@@ -10,7 +10,7 @@ class ForgeSandbox:
     def __init__(self):
         os.makedirs(SANDBOX_DIR, exist_ok=True)
         
-    def run_python_code(self, code: str) -> dict:
+    def run_python_code(self, code: str, timeout: int = 10) -> dict:
         script_path = SANDBOX_DIR / "temp_exec.py"
         try:
             with open(script_path, "w", encoding="utf-8") as f:
@@ -20,7 +20,7 @@ class ForgeSandbox:
                 [sys.executable, str(script_path)],
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=timeout,
                 cwd=str(SANDBOX_DIR)
             )
             return {
@@ -33,7 +33,7 @@ class ForgeSandbox:
             logger.warning("Forge Sandbox execution timed out.")
             return {
                 "stdout": "",
-                "stderr": "Execution timed out after 10 seconds.",
+                "stderr": f"Execution timed out after {timeout} seconds.",
                 "exit_code": 124,
                 "error": "TimeoutExpired"
             }

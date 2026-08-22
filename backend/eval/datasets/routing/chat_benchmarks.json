@@ -1,76 +1,601 @@
 [
   {
-    "prompt": "Hello there, how are you today?",
-    "expected_agent": "chat",
-    "category": "greeting"
-  },
-  {
-    "prompt": "Hey C.O.P.P.E.R, what's up?",
-    "expected_agent": "chat",
-    "category": "informal"
-  },
-  {
-    "prompt": "Thank you so much for the assistance, that was very helpful!",
-    "expected_agent": "chat",
-    "category": "gratitude"
-  },
-  {
-    "prompt": "Good morning, hope you are ready for some work today",
-    "expected_agent": "chat",
-    "category": "greeting"
-  },
-  {
-    "prompt": "Nice to meet you, COPPER",
-    "expected_agent": "chat",
-    "category": "greeting"
-  },
-  {
-    "prompt": "Who created you and what is your mission as an AI operating system?",
+    "prompt": "Good evening, I appreciate your assistance.",
     "expected_agent": "chat",
     "category": "identity"
   },
   {
-    "prompt": "Tell me a fun thought or witty remark",
-    "expected_agent": "chat",
-    "category": "smalltalk"
-  },
-  {
-    "prompt": "Good evening! Hope things are running smoothly",
-    "expected_agent": "chat",
-    "category": "greeting"
-  },
-  {
-    "prompt": "Thanks for the quick response",
-    "expected_agent": "chat",
-    "category": "gratitude"
-  },
-  {
-    "prompt": "Yo what can you help me with today?",
+    "prompt": "Sup, thanks for the quick response.",
     "expected_agent": "chat",
     "category": "capabilities"
   },
   {
-    "prompt": "Have a wonderful weekend ahead!",
-    "expected_agent": "chat",
-    "category": "farewell"
-  },
-  {
-    "prompt": "I appreciate your assistance on this project",
+    "prompt": "thank you so much for the assistance, mate!",
     "expected_agent": "chat",
     "category": "gratitude"
   },
   {
-    "prompt": "Hello world, testing the assistant connection",
+    "prompt": "Hello there, tell me a fun thought.",
     "expected_agent": "chat",
-    "category": "greeting"
+    "category": "smalltalk"
   },
   {
-    "prompt": "Sup copper, feeling energized today?",
+    "prompt": "goodbye for now, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "I appreciate your assistance, AI!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Sup COPPER, feeling energized today?",
     "expected_agent": "chat",
     "category": "informal"
   },
   {
-    "prompt": "Goodbye for now, talk to you later!",
+    "prompt": "Hello there assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Sup, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "thank you so much for the assistance, buddy!",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "I appreciate your assistance, mate!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hey friend, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "nice to meet you, friend!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "nice to meet you, COPPER!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Sup AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hey assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hey, I appreciate your assistance.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Sup, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "tell me a fun thought, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "thanks for the quick response, buddy!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hello there, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, mate!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there COPPER, how are you today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "tell me a fun thought, buddy!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "goodbye for now, buddy!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Yo, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, AI!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "nice to meet you, buddy!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "thank you so much for the assistance, assistant!",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Yo buddy, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Yo friend, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning friend, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning COPPER, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hello there buddy, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hello there, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Hey buddy, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning buddy, what's up?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, friend!",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey assistant, how are you today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hi, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Good evening COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good evening friend, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Sup, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "goodbye for now, assistant!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Sup mate, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good evening buddy, how are you today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good morning, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good morning mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Yo, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Hi, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Sup, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "tell me a fun thought, COPPER!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Good morning, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey mate, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there mate, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hi friend, what's up?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Yo mate, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hello there assistant, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening AI, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning AI, what's up?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "goodbye for now, COPPER!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "thank you so much for the assistance, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Good evening mate, what's up?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hey mate, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good morning, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hey, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi assistant, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Sup friend, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good evening buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there AI, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening AI, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "thanks for the quick response, AI!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there mate, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi buddy, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "nice to meet you, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "tell me a fun thought, assistant!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "nice to meet you, assistant!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening COPPER, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hi, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Sup assistant, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hi COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, COPPER!",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi friend, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo assistant, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hi, I appreciate your assistance.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hi buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, assistant!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there friend, what's up?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "thanks for the quick response, assistant!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "nice to meet you, mate!",
     "expected_agent": "chat",
     "category": "farewell"
   }

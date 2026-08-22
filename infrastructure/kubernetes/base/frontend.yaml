@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: copper-frontend
+  namespace: copper
+  labels:
+    app: copper-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: copper-frontend
+  template:
+    metadata:
+      labels:
+        app: copper-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/copper/frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: copper
+spec:
+  selector:
+    app: copper-frontend
+  ports:
+    - port: 80
+      targetPort: 80

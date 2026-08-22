@@ -1,852 +1,5552 @@
 [
   {
-    "prompt": "Write a python script to sort an array using quicksort",
-    "expected_agent": "coding",
-    "category": "algorithms"
-  },
-  {
-    "prompt": "Can you debug this react component and fix the null pointer exception?",
-    "expected_agent": "coding",
-    "category": "debugging"
-  },
-  {
-    "prompt": "Refactor this module to use dependency injection and async/await",
+    "prompt": "write a SQL function with dependency injection",
     "expected_agent": "coding",
     "category": "refactor"
   },
   {
-    "prompt": "Write a unit test for this FastAPI endpoint using pytest and testclient",
+    "prompt": "refactor a C++ algorithm to sort an array",
     "expected_agent": "coding",
     "category": "testing"
   },
   {
-    "prompt": "How do I center a div with Tailwind CSS grid and flexbox?",
-    "expected_agent": "coding",
-    "category": "frontend"
-  },
-  {
-    "prompt": "Help me write a regex pattern for strict email and domain validation",
-    "expected_agent": "coding",
-    "category": "regex"
-  },
-  {
-    "prompt": "I have an IndentationError on line 42 in my python script",
-    "expected_agent": "coding",
-    "category": "syntax_error"
-  },
-  {
-    "prompt": "Generate a database migration script for Alembic and SQLAlchemy",
+    "prompt": "Can you optimize this Rust function with dependency injection?",
     "expected_agent": "coding",
     "category": "database"
   },
   {
-    "prompt": "Fix this TypeScript type error: Property does not exist on type 'UserProps'",
+    "prompt": "test a SQL function to fix the null pointer exception",
     "expected_agent": "coding",
-    "category": "type_error"
+    "category": "refactor"
   },
   {
-    "prompt": "Review my git commit diff before I push to main branch",
+    "prompt": "I need help to write a class with dependency injection using C++.",
     "expected_agent": "coding",
-    "category": "git"
+    "category": "database"
   },
   {
-    "prompt": "Implement a binary search tree in C++ with insert and delete operations",
+    "prompt": "How do I optimize a function in C++ with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I optimize a algorithm in TypeScript with comprehensive unit tests?",
     "expected_agent": "coding",
     "category": "algorithms"
   },
   {
-    "prompt": "Why is my useEffect hook causing an infinite re-render loop in React?",
+    "prompt": "I need help to write a algorithm to fix the null pointer exception using SQL.",
     "expected_agent": "coding",
     "category": "debugging"
   },
   {
-    "prompt": "Write a Dockerfile multi-stage build for a Rust backend application",
+    "prompt": "Can you implement this SQL class using async/await?",
     "expected_agent": "coding",
-    "category": "devops_code"
+    "category": "frontend"
   },
   {
-    "prompt": "Create an async websocket handler in FastAPI for real-time streaming",
+    "prompt": "I need help to refactor a class to improve performance using Python.",
     "expected_agent": "coding",
-    "category": "backend"
+    "category": "refactor"
   },
   {
-    "prompt": "Write a bash script to parse JSON logs and extract error counts with jq",
+    "prompt": "I need help to implement a REST endpoint to fix the null pointer exception using TypeScript.",
     "expected_agent": "coding",
-    "category": "scripting"
+    "category": "algorithms"
   },
   {
-    "prompt": "How do I mock an external HTTP API request using pytest-mock?",
+    "prompt": "optimize a SQL script using async/await",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "create the module with dependency injection in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to test a script to fix the null pointer exception using C++.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "optimize the React component with dependency injection in my Java project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to refactor a module with comprehensive unit tests using SQL.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "refactor the REST endpoint to fix the null pointer exception in my C++ project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you review this TypeScript script with comprehensive unit tests?",
     "expected_agent": "coding",
     "category": "testing"
   },
   {
-    "prompt": "Implement a LRU cache with O(1) get and put in Python",
-    "expected_agent": "coding",
-    "category": "algorithms"
-  },
-  {
-    "prompt": "Fix the CORS header configuration in my Express.js server",
+    "prompt": "Can you refactor this TypeScript module with comprehensive unit tests?",
     "expected_agent": "coding",
     "category": "backend"
   },
   {
-    "prompt": "Write a CSS animation for a pulsing glowing button state",
+    "prompt": "refactor a SQL module with dependency injection",
     "expected_agent": "coding",
-    "category": "frontend"
+    "category": "backend"
   },
   {
-    "prompt": "How to handle database connection pooling in SQLAlchemy async engine?",
-    "expected_agent": "coding",
-    "category": "database"
-  },
-  {
-    "prompt": "Debug this IndexError: list index out of range in Python loop",
-    "expected_agent": "coding",
-    "category": "debugging"
-  },
-  {
-    "prompt": "Create a custom Zustand store for managing dark mode and user auth state",
-    "expected_agent": "coding",
-    "category": "frontend"
-  },
-  {
-    "prompt": "Write a recursive function to flatten a deeply nested JSON object",
+    "prompt": "How do I implement a REST endpoint in Rust for real-time streaming?",
     "expected_agent": "coding",
     "category": "algorithms"
   },
   {
-    "prompt": "Explain the error: segmentation fault (core dumped) in my C program and fix it",
-    "expected_agent": "coding",
-    "category": "debugging"
-  },
-  {
-    "prompt": "Write a SQL query using window functions (ROW_NUMBER and PARTITION BY)",
+    "prompt": "Can you implement this JavaScript script with comprehensive unit tests?",
     "expected_agent": "coding",
     "category": "database"
   },
   {
-    "prompt": "How to resolve a git merge conflict in yarn.lock file?",
+    "prompt": "How do I refactor a class in TypeScript with comprehensive unit tests?",
     "expected_agent": "coding",
-    "category": "git"
+    "category": "backend"
   },
   {
-    "prompt": "Write a Python decorator to measure and log function execution time",
+    "prompt": "implement the module to fix the null pointer exception in my TypeScript project.",
     "expected_agent": "coding",
-    "category": "python_meta"
+    "category": "backend"
   },
   {
-    "prompt": "Implement a debounce utility function in vanilla TypeScript",
+    "prompt": "debug a TypeScript script with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I debug a class in C++ to sort an array?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "implement the algorithm with dependency injection in my Rust project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I test a module in Python with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you review this SQL database schema with dependency injection?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I write a function in Java to sort an array?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test a TypeScript REST endpoint to fix the null pointer exception",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I review a class in Python using async/await?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I debug a algorithm in C++ to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "refactor the database schema to improve performance in my SQL project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "debug the React component to improve performance in my Go project.",
     "expected_agent": "coding",
     "category": "frontend"
   },
   {
-    "prompt": "Compile this Rust crate to WebAssembly using wasm-pack",
+    "prompt": "I need help to create a REST endpoint with dependency injection using Rust.",
     "expected_agent": "coding",
-    "category": "build_tooling"
+    "category": "backend"
   },
   {
-    "prompt": "Fix this memory leak caused by uncleaned event listeners in DOM",
+    "prompt": "implement a Java algorithm to sort an array",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to create a React component with comprehensive unit tests using TypeScript.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to optimize a algorithm to improve performance using SQL.",
     "expected_agent": "coding",
     "category": "debugging"
   },
   {
-    "prompt": "Open my browser and go to youtube.com",
-    "expected_agent": "automation",
-    "category": "browser"
+    "prompt": "I need help to refactor a script to improve performance using SQL.",
+    "expected_agent": "coding",
+    "category": "frontend"
   },
   {
-    "prompt": "Click the submit button and automate the login form filling",
-    "expected_agent": "automation",
-    "category": "ui_action"
+    "prompt": "refactor a SQL function with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "backend"
   },
   {
-    "prompt": "Delete the old log files in the temp folder",
-    "expected_agent": "automation",
-    "category": "filesystem"
+    "prompt": "How do I refactor a database schema in SQL for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
   },
   {
-    "prompt": "Launch VSCode and open the COPPER project repository",
-    "expected_agent": "automation",
-    "category": "app_control"
+    "prompt": "Can you implement this Python REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "database"
   },
   {
-    "prompt": "Terminate the background docker container running on port 8000",
-    "expected_agent": "automation",
-    "category": "process"
+    "prompt": "test a SQL React component to improve performance",
+    "expected_agent": "coding",
+    "category": "frontend"
   },
   {
-    "prompt": "Move all screenshots from Downloads to the Pictures folder",
-    "expected_agent": "automation",
-    "category": "filesystem"
+    "prompt": "test the class using async/await in my C++ project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
   },
   {
-    "prompt": "Restart the local redis server service",
-    "expected_agent": "automation",
-    "category": "system"
+    "prompt": "How do I write a module in SQL with dependency injection?",
+    "expected_agent": "coding",
+    "category": "debugging"
   },
   {
-    "prompt": "Unzip archive.tar.gz into the build directory",
-    "expected_agent": "automation",
-    "category": "compression"
+    "prompt": "I need help to review a React component to improve performance using SQL.",
+    "expected_agent": "coding",
+    "category": "refactor"
   },
   {
-    "prompt": "Close all inactive browser tabs in Google Chrome",
-    "expected_agent": "automation",
-    "category": "browser"
+    "prompt": "Can you review this Go module to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
   },
   {
-    "prompt": "Kill the runaway python process with PID 14220",
-    "expected_agent": "automation",
-    "category": "process"
+    "prompt": "Can you debug this Go module with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "debugging"
   },
   {
-    "prompt": "Organize my desktop by sorting icons and files by extension",
-    "expected_agent": "automation",
-    "category": "filesystem"
+    "prompt": "How do I test a React component in TypeScript to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
   },
   {
-    "prompt": "Launch Spotify and play my coding focus playlist",
-    "expected_agent": "automation",
-    "category": "app_control"
+    "prompt": "How do I implement a module in Rust using async/await?",
+    "expected_agent": "coding",
+    "category": "database"
   },
   {
-    "prompt": "Copy the latest database backup to the external drive",
-    "expected_agent": "automation",
-    "category": "filesystem"
+    "prompt": "debug the class with comprehensive unit tests in my C++ project.",
+    "expected_agent": "coding",
+    "category": "testing"
   },
   {
-    "prompt": "Maximize the active application window",
+    "prompt": "debug the React component to improve performance in my SQL project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I test a algorithm in Python to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you optimize this SQL class to sort an array?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "implement the module to sort an array in my C++ project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I optimize a module in Go using async/await?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you optimize this TypeScript function to improve performance?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you write this JavaScript REST endpoint with dependency injection?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "test a Go database schema using async/await",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I test a class in Go to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "create a SQL database schema to improve performance",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "test a Java database schema with dependency injection",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "optimize the module for real-time streaming in my TypeScript project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "write the database schema for real-time streaming in my SQL project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "optimize the module to improve performance in my C++ project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "How do I optimize a module in C++ with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "create the module to fix the null pointer exception in my Java project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you test this Go function with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I debug a REST endpoint in Python to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "refactor a JavaScript algorithm to fix the null pointer exception",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I implement a database schema in C++ for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "write the database schema for real-time streaming in my Rust project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "create a TypeScript database schema to sort an array",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to optimize a algorithm for real-time streaming using Python.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to review a function to fix the null pointer exception using JavaScript.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "create a Python REST endpoint to sort an array",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I optimize a REST endpoint in Python to sort an array?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I test a module in Rust to improve performance?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test the database schema to fix the null pointer exception in my C++ project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I implement a database schema in Rust to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "implement the algorithm using async/await in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "refactor the database schema to fix the null pointer exception in my Go project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "How do I implement a React component in JavaScript to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "review the algorithm to improve performance in my Python project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I write a script in SQL to sort an array?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I optimize a database schema in Java for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "create a Rust class to sort an array",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "I need help to create a script using async/await using JavaScript.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "refactor a Java REST endpoint with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I review a function in C++ to improve performance?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "write the React component to improve performance in my C++ project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I optimize a algorithm in Rust for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you create this C++ REST endpoint to improve performance?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you implement this TypeScript REST endpoint for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "I need help to review a database schema with dependency injection using Go.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I review a React component in Python with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you write this JavaScript script using async/await?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "write a Python REST endpoint with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "create a Python algorithm using async/await",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "write the algorithm to fix the null pointer exception in my Python project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to refactor a database schema with dependency injection using JavaScript.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "Can you optimize this Java class using async/await?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "I need help to implement a class using async/await using JavaScript.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you review this Java REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "test the script for real-time streaming in my Python project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "review a Python database schema with dependency injection",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to write a function to improve performance using Rust.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you optimize this Java module to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to optimize a database schema to sort an array using C++.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "debug a Rust function for real-time streaming",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "review the function using async/await in my Go project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "review the REST endpoint to fix the null pointer exception in my Go project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Can you optimize this Go class with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to implement a class with dependency injection using SQL.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I debug a React component in Python using async/await?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "I need help to debug a script using async/await using Java.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "debug the script with dependency injection in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "review a Go class with dependency injection",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to optimize a database schema with comprehensive unit tests using TypeScript.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I test a database schema in SQL to sort an array?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you create this Go React component to sort an array?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "implement a TypeScript function to fix the null pointer exception",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "refactor the script to sort an array in my Java project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Can you optimize this SQL function to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you write this C++ algorithm to sort an array?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "debug the module to fix the null pointer exception in my Python project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "debug a C++ database schema with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I review a REST endpoint in TypeScript using async/await?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to debug a database schema with comprehensive unit tests using Python.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "create a JavaScript React component with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "optimize the class for real-time streaming in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I write a React component in Python to improve performance?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test the class using async/await in my Python project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I implement a class in C++ with dependency injection?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "optimize a C++ React component using async/await",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I implement a database schema in Python using async/await?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you test this Rust REST endpoint with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "How do I test a algorithm in C++ with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to optimize a algorithm to sort an array using TypeScript.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you optimize this Go algorithm to improve performance?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to debug a module for real-time streaming using Rust.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "review a Go class using async/await",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "review the React component with dependency injection in my TypeScript project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you debug this Go database schema with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I refactor a module in TypeScript to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I create a algorithm in SQL to sort an array?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "optimize a SQL script with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to debug a module to improve performance using Rust.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to refactor a class to improve performance using Rust.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "I want you to restart my music player in the downloads folder right now.",
     "expected_agent": "automation",
     "category": "window"
   },
   {
-    "prompt": "Take a screenshot of the active window and save to desktop",
+    "prompt": "I want you to terminate the database container on my desktop right now.",
     "expected_agent": "automation",
-    "category": "screen_capture"
+    "category": "browser"
   },
   {
-    "prompt": "Empty the recycle bin and clean up temporary files",
+    "prompt": "delete the temp directory immediately and confirm when done.",
     "expected_agent": "automation",
-    "category": "maintenance"
+    "category": "window"
   },
   {
-    "prompt": "Mute system audio and set volume to 50%",
+    "prompt": "restart the background process on my desktop and confirm when done.",
     "expected_agent": "automation",
-    "category": "system"
+    "category": "process"
   },
   {
-    "prompt": "Execute the build script compile_assets.bat",
+    "prompt": "Please copy my music player to the external drive.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "I want you to copy my music player from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "maximize the background process on port 8000",
     "expected_agent": "automation",
     "category": "execution"
   },
   {
-    "prompt": "Rename all .jpeg files in this folder to .jpg",
-    "expected_agent": "automation",
-    "category": "filesystem"
-  },
-  {
-    "prompt": "Start the PostgreSQL database docker container",
-    "expected_agent": "automation",
-    "category": "process"
-  },
-  {
-    "prompt": "Open the Windows Terminal as administrator",
-    "expected_agent": "automation",
-    "category": "app_control"
-  },
-  {
-    "prompt": "Lock the workstation screen immediately",
-    "expected_agent": "automation",
-    "category": "security_action"
-  },
-  {
-    "prompt": "Compress the entire logs directory into logs_backup.zip",
-    "expected_agent": "automation",
-    "category": "compression"
-  },
-  {
-    "prompt": "Switch focus to the Firefox browser window",
+    "prompt": "delete all log files on my desktop and confirm when done.",
     "expected_agent": "automation",
     "category": "window"
   },
   {
-    "prompt": "Launch the Calculator application",
+    "prompt": "Please launch all log files on my desktop.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "move the VSCode application in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please minimize the active window in the downloads folder.",
     "expected_agent": "automation",
     "category": "app_control"
   },
   {
-    "prompt": "Remind me to buy milk tomorrow at 5pm",
-    "expected_agent": "reminder",
-    "category": "time_reminder"
+    "prompt": "Please open the database container immediately.",
+    "expected_agent": "automation",
+    "category": "browser"
   },
   {
-    "prompt": "Set an alarm for 8am every weekday morning",
+    "prompt": "restart my music player in the background",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "delete the background process in the background",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "close the database container to the external drive",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you terminate my browser to the external drive?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "move the database container to the external drive",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "move my music player from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to restart my music player on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "minimize my browser on my desktop",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to terminate the active window on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please open the VSCode application in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please close the database container on port 8000.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to minimize my browser in the background right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to delete all log files in the background right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please open my music player from the system tray.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "close the VSCode application to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "close the database container from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please minimize the background process in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "delete the database container immediately",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "minimize my browser immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please move the database container immediately.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to copy my music player in the background right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please launch the background process in the background.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please open the temp directory from the system tray.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Please close the background process in the background.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "maximize my browser on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "delete all log files immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "restart all log files on port 8000",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "move the VSCode application on port 8000",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you open my browser on my desktop?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "terminate the background process in the downloads folder",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "delete the temp directory on port 8000",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you launch the active window on port 8000?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to maximize the active window to the external drive right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to close my browser immediately right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you maximize my browser on port 8000?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "delete the temp directory on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "maximize the background process from the system tray",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please minimize my browser to the external drive.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "I want you to open the VSCode application on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "terminate all log files in the downloads folder",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "restart the terminal from the system tray",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to launch the database container immediately right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "restart my music player from the system tray",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you move the terminal in the background?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to move my browser on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "close the VSCode application on port 8000",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you restart the database container from the system tray?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you open all log files on port 8000?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "restart the database container immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "delete the background process on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "terminate the database container to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to terminate the database container on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you open the active window on my desktop?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please close the background process immediately.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to close all log files in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "copy my browser from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you delete all log files to the external drive?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "delete my browser in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "open my browser in the downloads folder",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "open the terminal in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you move the active window in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you launch my browser in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "close my music player immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Please copy the VSCode application to the external drive.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please move the background process in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you restart all log files immediately?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "close my music player in the background",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to minimize the VSCode application on my desktop right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "I want you to restart the database container in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "move the VSCode application on my desktop",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to terminate the active window immediately right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please delete the database container on my desktop.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "maximize the background process in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you restart the VSCode application immediately?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "move my music player to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "minimize the terminal to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "copy the temp directory immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "minimize all log files immediately",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you terminate the temp directory on my desktop?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to minimize the VSCode application from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please open the database container in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to move all log files on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please move the background process on my desktop.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you launch all log files to the external drive?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "open all log files in the downloads folder",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "move the database container in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "launch the database container from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to copy my browser in the background right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "maximize the database container in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "terminate the terminal to the external drive",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to copy the database container from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "close the terminal on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to minimize all log files on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please copy the terminal on port 8000.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "open the VSCode application from the system tray",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to open all log files immediately right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please maximize the temp directory in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "launch my music player in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to move the VSCode application immediately right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please copy the active window in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to open the database container to the external drive right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you terminate all log files to the external drive?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "copy the background process on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to move the terminal to the external drive right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "move all log files in the background",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please terminate my music player in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you copy the active window in the background?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "close my browser to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "terminate the temp directory to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you restart the active window in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to launch my browser from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "open the database container in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "minimize the VSCode application to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "maximize the terminal on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you minimize the background process immediately?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "I want you to delete the background process in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please open the VSCode application immediately.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please launch my music player on port 8000.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "delete all log files from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "move my music player in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "maximize the active window on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you minimize my browser in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "copy all log files to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "move all log files to the external drive",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you minimize the VSCode application in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "close the terminal on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to copy my music player in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "open the temp directory on port 8000",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "maximize my music player in the downloads folder",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you launch the background process immediately?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please maximize the terminal on port 8000.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you minimize the temp directory immediately?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "open the background process in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "move my music player on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please terminate the temp directory immediately.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please launch the terminal from the system tray.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "minimize the database container in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you open my browser immediately?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please add a todo to submit the quarterly report in 1 hour.",
     "expected_agent": "reminder",
     "category": "recurring_alarm"
   },
   {
-    "prompt": "Schedule a meeting with the design team for next Tuesday at 2pm",
+    "prompt": "set an alarm to buy groceries in 30 minutes",
     "expected_agent": "reminder",
     "category": "calendar"
   },
   {
-    "prompt": "Add 'Review Pull Request #42' to my todo list",
+    "prompt": "Please set a timer to take a break on October 15th.",
     "expected_agent": "reminder",
-    "category": "todo"
+    "category": "recurring_alarm"
   },
   {
-    "prompt": "Remind me in 30 minutes to stretch and take a water break",
-    "expected_agent": "reminder",
-    "category": "countdown"
-  },
-  {
-    "prompt": "Book an appointment with Dr. Smith on Friday at 3:30pm",
-    "expected_agent": "reminder",
-    "category": "calendar"
-  },
-  {
-    "prompt": "Wake me up at 6:30 tomorrow morning with an alarm",
-    "expected_agent": "reminder",
-    "category": "alarm"
-  },
-  {
-    "prompt": "Set a countdown timer for 25 minutes for Pomodoro focus",
+    "prompt": "create a calendar event for take a break on October 15th.",
     "expected_agent": "reminder",
     "category": "timer"
   },
   {
-    "prompt": "Create a recurring reminder to submit timesheets every Friday at 4pm",
+    "prompt": "Please set an alarm to take a break in 30 minutes.",
     "expected_agent": "reminder",
-    "category": "recurring"
+    "category": "calendar"
   },
   {
-    "prompt": "Add a task deadline for the quarterly report due next Monday",
+    "prompt": "Please remind me to renew vehicle registration every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "set an alarm to drink water every weekday morning",
     "expected_agent": "reminder",
     "category": "deadline"
   },
   {
-    "prompt": "Remind me tonight at 9pm to call Mom",
-    "expected_agent": "reminder",
-    "category": "time_reminder"
-  },
-  {
-    "prompt": "What are my upcoming scheduled tasks and reminders for today?",
-    "expected_agent": "reminder",
-    "category": "query_schedule"
-  },
-  {
-    "prompt": "Cancel my 3pm reminder for today",
-    "expected_agent": "reminder",
-    "category": "cancel_reminder"
-  },
-  {
-    "prompt": "Add 'Pay electric utility bill' to my financial todos due on the 1st",
-    "expected_agent": "reminder",
-    "category": "todo"
-  },
-  {
-    "prompt": "Set a reminder for the team standup in 10 minutes",
-    "expected_agent": "reminder",
-    "category": "countdown"
-  },
-  {
-    "prompt": "Remind me on October 15th to renew my vehicle registration",
-    "expected_agent": "reminder",
-    "category": "date_reminder"
-  },
-  {
-    "prompt": "Create a daily habit reminder to meditate every morning at 7am",
-    "expected_agent": "reminder",
-    "category": "habit"
-  },
-  {
-    "prompt": "Set a timer for 12 minutes for the pasta",
+    "prompt": "remind me for review the pull request every weekday morning.",
     "expected_agent": "reminder",
     "category": "timer"
   },
   {
-    "prompt": "Schedule a retrospective calendar event for Friday afternoon",
+    "prompt": "Can you remind me to submit the quarterly report next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "set a timer for submit the quarterly report next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "schedule a notification to attend the team meeting every weekday morning",
     "expected_agent": "reminder",
     "category": "calendar"
   },
   {
-    "prompt": "Remind me to check on the background model download in 1 hour",
+    "prompt": "create a calendar event to drink water next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Can you add a todo to review the pull request tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "schedule a notification to call mom next Tuesday at 2pm",
     "expected_agent": "reminder",
     "category": "countdown"
   },
   {
-    "prompt": "What is the history of the Roman Empire and why did it fall?",
-    "expected_agent": "research",
-    "category": "history"
+    "prompt": "Can you add a todo to call mom in 1 hour?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
   },
   {
-    "prompt": "Explain quantum mechanics and wave-particle duality to me",
-    "expected_agent": "research",
-    "category": "physics"
+    "prompt": "schedule a notification for submit the quarterly report tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
   },
   {
-    "prompt": "Summarize the latest AI news and breakthroughs in 2026",
-    "expected_agent": "research",
-    "category": "current_events"
+    "prompt": "Can you remind me to renew vehicle registration tonight at 9pm?",
+    "expected_agent": "reminder",
+    "category": "countdown"
   },
   {
-    "prompt": "Compare and contrast React, Vue, and Svelte in architecture and speed",
-    "expected_agent": "research",
-    "category": "comparison"
+    "prompt": "remind me for review the pull request in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
   },
   {
-    "prompt": "Who invented the transformer neural network architecture in deep learning?",
-    "expected_agent": "research",
-    "category": "biography"
+    "prompt": "Please set a timer to buy groceries next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "countdown"
   },
   {
-    "prompt": "What are the core differences between SQLite and PostgreSQL databases?",
-    "expected_agent": "research",
-    "category": "technical_comparison"
+    "prompt": "create a calendar event for attend the team meeting in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
   },
   {
-    "prompt": "Explain the concept of epistemic memory in cognitive neuroscience",
-    "expected_agent": "research",
-    "category": "concept"
+    "prompt": "set a timer for take a break in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "calendar"
   },
   {
-    "prompt": "Tell me about the black hole information paradox and Hawking radiation",
-    "expected_agent": "research",
-    "category": "physics"
+    "prompt": "Can you set an alarm to call mom next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
   },
   {
-    "prompt": "How does RNA polymerase synthesize mRNA during transcription?",
-    "expected_agent": "research",
-    "category": "biology"
+    "prompt": "Can you create a calendar event to attend the team meeting on October 15th?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
   },
   {
-    "prompt": "Investigate the economic causes of the 2008 financial crisis",
+    "prompt": "remind me to submit the quarterly report every weekday morning",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Please create a calendar event to wake up next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please set a timer to renew vehicle registration in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "set an alarm for renew vehicle registration next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "create a calendar event to buy groceries next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Can you create a calendar event to call mom in 30 minutes?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "schedule a notification for take a break in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "schedule a notification to drink water next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Please create a calendar event to take a break tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Can you remind me to buy groceries next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Please set an alarm to submit the quarterly report on October 15th.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Can you add a todo to buy groceries every weekday morning?",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Can you set an alarm to review the pull request next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Can you schedule a notification to buy groceries next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please set a timer to buy groceries in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Can you remind me to review the pull request tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "create a calendar event to wake up in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "create a calendar event to drink water every weekday morning",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "add a todo to buy groceries tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "set a timer for submit the quarterly report in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "schedule a notification for review the pull request next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Can you set a timer to renew vehicle registration next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please schedule a notification to attend the team meeting tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Can you set an alarm to call mom on October 15th?",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Can you add a todo to call mom on October 15th?",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "set an alarm for wake up on October 15th.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "create a calendar event for review the pull request tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Please set an alarm to submit the quarterly report in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "set an alarm to wake up next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "schedule a notification for take a break on October 15th.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Can you remind me to attend the team meeting every weekday morning?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you schedule a notification to wake up tonight at 9pm?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please remind me to wake up in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Please set an alarm to take a break next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Please set an alarm to attend the team meeting tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "set a timer for drink water on October 15th.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you add a todo to submit the quarterly report tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "remind me for buy groceries tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Can you schedule a notification to review the pull request in 30 minutes?",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "schedule a notification for drink water in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "set a timer for call mom in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "create a calendar event to call mom in 1 hour",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "create a calendar event for renew vehicle registration every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Please schedule a notification to drink water on October 15th.",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Please set a timer to drink water tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "add a todo for renew vehicle registration next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Can you schedule a notification to wake up tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Please remind me to renew vehicle registration in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "remind me for buy groceries in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "set a timer for buy groceries tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "set an alarm to call mom in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you schedule a notification to renew vehicle registration in 1 hour?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you add a todo to attend the team meeting tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Please add a todo to submit the quarterly report tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Please set a timer to wake up on October 15th.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Can you add a todo to review the pull request tonight at 9pm?",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "schedule a notification for take a break every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "set an alarm for buy groceries every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Can you set an alarm to drink water on October 15th?",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "set an alarm for review the pull request every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "set an alarm for review the pull request in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you create a calendar event to take a break tonight at 9pm?",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "schedule a notification for call mom every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Can you set an alarm to submit the quarterly report tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "set a timer to call mom tonight at 9pm",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "create a calendar event to attend the team meeting in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Can you add a todo to take a break on October 15th?",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you add a todo to drink water tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "remind me to review the pull request tonight at 9pm",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "add a todo to take a break tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please set a timer to call mom in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Please set an alarm to attend the team meeting tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Can you remind me to review the pull request on October 15th?",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "create a calendar event for wake up on October 15th.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Can you set an alarm to attend the team meeting in 30 minutes?",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Please add a todo to drink water tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "create a calendar event to submit the quarterly report tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "remind me for wake up tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "schedule a notification to wake up in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "create a calendar event to renew vehicle registration in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "schedule a notification to submit the quarterly report every weekday morning",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Please set an alarm to renew vehicle registration in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Can you schedule a notification to submit the quarterly report on October 15th?",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "remind me to call mom in 1 hour",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Please create a calendar event to renew vehicle registration in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Please set an alarm to attend the team meeting on October 15th.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Can you set an alarm to call mom every weekday morning?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please set an alarm to review the pull request tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "add a todo for call mom tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "schedule a notification to attend the team meeting in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Can you set a timer to review the pull request tomorrow at 5pm?",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "add a todo for review the pull request every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "add a todo for attend the team meeting tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "set an alarm to take a break every weekday morning",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "create a calendar event to buy groceries tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Please remind me to wake up every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "create a calendar event for review the pull request on October 15th.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Can you set an alarm to drink water next Tuesday at 2pm?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "remind me for wake up next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Please schedule a notification to wake up next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "set a timer for call mom next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "add a todo to take a break next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "set a timer to attend the team meeting next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "remind me for take a break in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "remind me to buy groceries in 1 hour",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "schedule a notification to take a break next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "remind me to attend the team meeting tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "set an alarm for buy groceries next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "create a calendar event to buy groceries on October 15th",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please set a timer to call mom every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Please remind me to review the pull request next Tuesday at 2pm.",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Can you add a todo to attend the team meeting on October 15th?",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "create a calendar event to buy groceries every weekday morning",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "set a timer for attend the team meeting tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "add a todo to renew vehicle registration in 1 hour",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "add a todo for buy groceries tonight at 9pm.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Please schedule a notification to renew vehicle registration on October 15th.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "schedule a notification for call mom in 1 hour.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Can you set a timer to drink water every weekday morning?",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "schedule a notification to buy groceries in 30 minutes",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "set an alarm for wake up tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Please create a calendar event to drink water tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Please set a timer to submit the quarterly report tomorrow at 5pm.",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Please schedule a notification to buy groceries on October 15th.",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Please add a todo to attend the team meeting in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Please set a timer to renew vehicle registration every weekday morning.",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "set a timer for attend the team meeting in 30 minutes.",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Summarize the stages of sleep.",
     "expected_agent": "research",
     "category": "economics"
   },
   {
-    "prompt": "What is the difference between supervised and self-supervised learning?",
+    "prompt": "Tell me about the CRISPR-Cas9 mechanism.",
     "expected_agent": "research",
     "category": "machine_learning"
   },
   {
-    "prompt": "Explain the Byzantine Generals Problem in distributed consensus systems",
-    "expected_agent": "research",
-    "category": "distributed_systems"
-  },
-  {
-    "prompt": "Summarize the philosophy of Stoicism as taught by Marcus Aurelius",
-    "expected_agent": "research",
-    "category": "philosophy"
-  },
-  {
-    "prompt": "How do lithium-ion solid-state batteries differ from traditional liquid batteries?",
-    "expected_agent": "research",
-    "category": "engineering"
-  },
-  {
-    "prompt": "What are the fundamental postulates of Einstein's special theory of relativity?",
+    "prompt": "What is how the human immune system works?",
     "expected_agent": "research",
     "category": "physics"
   },
   {
-    "prompt": "Explain the difference between TCP and UDP network transport protocols",
-    "expected_agent": "research",
-    "category": "networking"
-  },
-  {
-    "prompt": "Tell me about the Voynich manuscript and theories about its origin",
-    "expected_agent": "research",
-    "category": "history"
-  },
-  {
-    "prompt": "What are the environmental trade-offs between solar and nuclear power?",
-    "expected_agent": "research",
-    "category": "energy"
-  },
-  {
-    "prompt": "Explain how the human immune system produces antibodies against antigens",
-    "expected_agent": "research",
-    "category": "medicine"
-  },
-  {
-    "prompt": "Search the web for recent peer-reviewed papers on room-temperature superconductivity",
-    "expected_agent": "research",
-    "category": "literature_search"
-  },
-  {
-    "prompt": "What is G\u00f6del's Incompleteness Theorem in formal mathematical logic?",
-    "expected_agent": "research",
-    "category": "mathematics"
-  },
-  {
-    "prompt": "How does the CRISPR-Cas9 gene editing mechanism work at the molecular level?",
-    "expected_agent": "research",
-    "category": "genetics"
-  },
-  {
-    "prompt": "Explain the CAP theorem and trade-offs in distributed databases",
-    "expected_agent": "research",
-    "category": "databases"
-  },
-  {
-    "prompt": "Who was Alan Turing and what was the significance of the Universal Turing Machine?",
-    "expected_agent": "research",
-    "category": "biography"
-  },
-  {
-    "prompt": "What are the stages of sleep and the role of REM sleep in memory consolidation?",
+    "prompt": "Search the web for the differences between React and Vue.",
     "expected_agent": "research",
     "category": "neuroscience"
   },
   {
-    "prompt": "Extract the text from this screenshot using OCR",
+    "prompt": "Tell me about the history of the Roman Empire.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Tell me about the differences between SQLite and PostgreSQL.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain G\u00f6del's Incompleteness Theorem to me.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What is the philosophy of Stoicism?",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about Alan Turing's life.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Summarize wave-particle duality.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for TCP vs UDP protocols.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Summarize solar vs nuclear power.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain Einstein's special theory of relativity to me.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Summarize the transformer neural network architecture.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "What is epistemic memory?",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is the Byzantine Generals Problem?",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What is the latest AI news?",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for the CAP theorem.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Summarize the black hole information paradox.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "What is supervised vs self-supervised learning?",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is lithium-ion solid-state batteries?",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Summarize the Voynich manuscript.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Tell me about how RNA polymerase works.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Summarize the 2008 financial crisis.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What is supervised vs self-supervised learning? please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Explain the black hole information paradox to me. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about the history of the Roman Empire. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "What is G\u00f6del's Incompleteness Theorem? please",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize the Voynich manuscript. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Summarize the 2008 financial crisis. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for epistemic memory. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Tell me about the Byzantine Generals Problem. please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain the CRISPR-Cas9 mechanism to me. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "What is the 2008 financial crisis? please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for the history of the Roman Empire. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about Einstein's special theory of relativity. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Summarize the differences between SQLite and PostgreSQL. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "What is Alan Turing's life? please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Tell me about the CRISPR-Cas9 mechanism. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain the differences between React and Vue to me. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for the differences between React and Vue. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Search the web for TCP vs UDP protocols. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is the CRISPR-Cas9 mechanism? please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is wave-particle duality? please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain lithium-ion solid-state batteries to me. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for the CAP theorem. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the Voynich manuscript. please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Tell me about the stages of sleep. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Explain quantum mechanics to me. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? please",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Summarize the transformer neural network architecture. please",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Explain Einstein's special theory of relativity to me. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain the transformer neural network architecture to me. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "What is how the human immune system works? please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is the black hole information paradox? please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Tell me about quantum mechanics. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Tell me about G\u00f6del's Incompleteness Theorem. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the black hole information paradox. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain the differences between SQLite and PostgreSQL to me. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Search the web for wave-particle duality. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Explain the stages of sleep to me. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What is the stages of sleep? please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "What is solar vs nuclear power? please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for G\u00f6del's Incompleteness Theorem. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about how RNA polymerase works. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain the history of the Roman Empire to me. please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Explain G\u00f6del's Incompleteness Theorem to me. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Explain how RNA polymerase works to me. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is how RNA polymerase works? please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Tell me about epistemic memory. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Search the web for the philosophy of Stoicism. please",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Tell me about the latest AI news. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for how the human immune system works. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Summarize the differences between React and Vue. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is the latest AI news? please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Summarize Alan Turing's life. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "What is Einstein's special theory of relativity? please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for Alan Turing's life. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain the philosophy of Stoicism to me. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about TCP vs UDP protocols. please",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "What is lithium-ion solid-state batteries? please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for Einstein's special theory of relativity. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for supervised vs self-supervised learning. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is TCP vs UDP protocols? please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Tell me about supervised vs self-supervised learning. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Explain the latest AI news to me. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Tell me about solar vs nuclear power. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize the CRISPR-Cas9 mechanism. please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Summarize wave-particle duality. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Summarize the black hole information paradox. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Summarize supervised vs self-supervised learning. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about how the human immune system works. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about the Voynich manuscript. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain solar vs nuclear power to me. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Tell me about the black hole information paradox. please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Explain TCP vs UDP protocols to me. please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Summarize the latest AI news. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Summarize lithium-ion solid-state batteries. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Tell me about the transformer neural network architecture. please",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "What is the Byzantine Generals Problem? please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Summarize how RNA polymerase works. please",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Search the web for the CRISPR-Cas9 mechanism. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Summarize the CAP theorem. please",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize Einstein's special theory of relativity. please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize epistemic memory. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about wave-particle duality. please",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Tell me about the CAP theorem. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Tell me about lithium-ion solid-state batteries. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for how RNA polymerase works. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Summarize the stages of sleep. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Summarize TCP vs UDP protocols. please",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about Alan Turing's life. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for solar vs nuclear power. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Summarize quantum mechanics. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize the Byzantine Generals Problem. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is epistemic memory? please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Summarize how the human immune system works. please",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. please",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Tell me about the differences between SQLite and PostgreSQL. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Summarize G\u00f6del's Incompleteness Theorem. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "What is the Voynich manuscript? please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about the differences between React and Vue. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize the history of the Roman Empire. please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Tell me about the 2008 financial crisis. please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Explain the Byzantine Generals Problem to me. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about the philosophy of Stoicism. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Explain supervised vs self-supervised learning to me. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "What is the philosophy of Stoicism? please",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Search the web for the differences between SQLite and PostgreSQL. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Explain the CAP theorem to me. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is the differences between React and Vue? please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for the transformer neural network architecture. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the Byzantine Generals Problem. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain wave-particle duality to me. please",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What is quantum mechanics? please",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for the 2008 financial crisis. please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for lithium-ion solid-state batteries. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. please",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "What is the differences between SQLite and PostgreSQL? please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain the 2008 financial crisis to me. please",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Explain Alan Turing's life to me. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Explain how the human immune system works to me. please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is the history of the Roman Empire? please",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Search the web for the latest AI news. please",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Search the web for the stages of sleep. please",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Summarize solar vs nuclear power. please",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is the CAP theorem? please",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain epistemic memory to me. please",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Please extract the text from this circuit board picture using OCR.",
     "expected_agent": "vision",
     "category": "ocr"
   },
   {
-    "prompt": "What do you see on my screen right now?",
-    "expected_agent": "vision",
-    "category": "screen_inspection"
-  },
-  {
-    "prompt": "Analyze this architecture diagram photo and explain the data flow",
-    "expected_agent": "vision",
-    "category": "diagram"
-  },
-  {
-    "prompt": "Inspect this UI picture and tell me where the submit button is located",
-    "expected_agent": "vision",
-    "category": "ui_detection"
-  },
-  {
-    "prompt": "Read the error message shown in this screenshot image",
-    "expected_agent": "vision",
-    "category": "error_ocr"
-  },
-  {
-    "prompt": "Describe the objects and colors in this uploaded image",
-    "expected_agent": "vision",
-    "category": "image_captioning"
-  },
-  {
-    "prompt": "Find the bounding box coordinates of the logo in this screenshot",
-    "expected_agent": "vision",
-    "category": "object_localization"
-  },
-  {
-    "prompt": "Can you inspect this chart image and tell me the highest data point?",
-    "expected_agent": "vision",
-    "category": "chart_reading"
-  },
-  {
-    "prompt": "Look at this UI mockup photo and give me accessibility feedback",
-    "expected_agent": "vision",
-    "category": "ui_review"
-  },
-  {
-    "prompt": "Extract the table rows from this scanned PDF receipt image",
+    "prompt": "Please read the error message in this uploaded image and tell me where the submit button is.",
     "expected_agent": "vision",
     "category": "document_ocr"
   },
   {
-    "prompt": "What icon is displayed in the bottom right corner of this screenshot?",
-    "expected_agent": "vision",
-    "category": "ui_element"
-  },
-  {
-    "prompt": "Look at this circuit board picture and identify any disconnected traces",
+    "prompt": "Can you read the error message in this circuit board picture and give me accessibility feedback?",
     "expected_agent": "vision",
     "category": "inspection"
   },
   {
-    "prompt": "Read the handwritten math formula in this picture",
-    "expected_agent": "vision",
-    "category": "handwriting"
-  },
-  {
-    "prompt": "Analyze this webpage screenshot and check if the buttons are aligned",
-    "expected_agent": "vision",
-    "category": "layout_check"
-  },
-  {
-    "prompt": "Is there any text visible in this blurred image capture?",
+    "prompt": "inspect this uploaded image and describe the objects and colors",
     "expected_agent": "vision",
     "category": "ocr"
   },
   {
-    "prompt": "Break this big project into step-by-step milestones and deadlines",
-    "expected_agent": "planner",
-    "category": "milestones"
+    "prompt": "describe this chart image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "ui_review"
   },
   {
-    "prompt": "Create a project roadmap and strategic action plan for my app launch",
-    "expected_agent": "planner",
-    "category": "roadmap"
+    "prompt": "Can you find the bounding box coordinates of this architecture diagram and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
   },
   {
-    "prompt": "Decompose this complex multi-agent system migration task into a step-by-step plan",
-    "expected_agent": "planner",
-    "category": "task_decomposition"
+    "prompt": "Please read the error message in this uploaded image using OCR.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
   },
   {
-    "prompt": "Help me plan a 4-week sprint roadmap for my engineering team",
-    "expected_agent": "planner",
-    "category": "sprint_planning"
+    "prompt": "Can you find the bounding box coordinates of this uploaded image and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
   },
   {
-    "prompt": "Create a step-by-step study schedule for preparing for the AWS exam in 30 days",
-    "expected_agent": "planner",
-    "category": "study_plan"
+    "prompt": "Please inspect this screenshot and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
   },
   {
-    "prompt": "Structure an execution strategy for rewriting our monolith to microservices",
-    "expected_agent": "planner",
-    "category": "architecture_strategy"
+    "prompt": "Please inspect this chart image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
   },
   {
-    "prompt": "Build a step-by-step checklist for releasing COPPER v1.0 to production",
-    "expected_agent": "planner",
-    "category": "checklist"
+    "prompt": "find the bounding box coordinates of this scanned PDF receipt and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "image_captioning"
   },
   {
-    "prompt": "Create an action plan to optimize our local database query latency",
+    "prompt": "check the alignment of my screen right now and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in my screen right now and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you read the error message in this scanned PDF receipt and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this UI picture using OCR.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of my screen right now and describe what is visible",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you extract the text from this scanned PDF receipt and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please read the error message in this scanned PDF receipt and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you inspect this scanned PDF receipt using OCR?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of my screen right now and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this architecture diagram and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you analyze this uploaded image using OCR?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this circuit board picture using OCR.",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Please extract the text from this chart image and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Please read the error message in this screenshot using OCR.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you describe this blurred image and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please describe this circuit board picture and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "extract the text from this UI picture using OCR",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "check the alignment of this scanned PDF receipt and describe what is visible",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you read the error message in my screen right now and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you analyze this chart image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please analyze this screenshot and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of my screen right now and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this scanned PDF receipt and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this circuit board picture and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this blurred image and identify disconnected traces.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this circuit board picture and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in this architecture diagram using OCR",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this screenshot using OCR?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "inspect this circuit board picture and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please read the error message in this architecture diagram and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you read the error message in this blurred image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this architecture diagram using OCR.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you read the error message in my screen right now and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this UI picture and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "extract the text from this blurred image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "analyze this circuit board picture and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "describe this uploaded image using OCR",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Please extract the text from this scanned PDF receipt and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Can you analyze this circuit board picture and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "inspect this scanned PDF receipt and describe what is visible",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "check the alignment of this chart image and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please describe this architecture diagram and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please read the error message in my screen right now and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you extract the text from this screenshot and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you inspect this blurred image and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of this screenshot using OCR",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "check the alignment of this uploaded image and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "read the error message in this circuit board picture and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "analyze this blurred image and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Can you extract the text from this UI picture and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this architecture diagram and tell me where the submit button is?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "check the alignment of this architecture diagram and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "extract the text from this UI picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this circuit board picture and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this scanned PDF receipt and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "read the error message in this scanned PDF receipt using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please check the alignment of this chart image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Can you read the error message in this circuit board picture using OCR?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please inspect this circuit board picture and describe what is visible.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please check the alignment of this blurred image and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "analyze this scanned PDF receipt using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this UI picture and describe what is visible",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please extract the text from this scanned PDF receipt using OCR.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "read the error message in this chart image and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Can you extract the text from this chart image and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please describe my screen right now and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "read the error message in this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "extract the text from this screenshot and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you describe this chart image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you check the alignment of this chart image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "describe this screenshot using OCR",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "analyze this architecture diagram and describe what is visible",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please inspect this uploaded image and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "read the error message in my screen right now and describe the objects and colors",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "Can you analyze this scanned PDF receipt and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Please inspect this blurred image and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "describe this screenshot and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "read the error message in this uploaded image and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "analyze this circuit board picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of my screen right now and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Can you inspect this circuit board picture and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "check the alignment of this scanned PDF receipt and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Please read the error message in this screenshot and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "read the error message in this circuit board picture and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you inspect this screenshot and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this scanned PDF receipt and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you read the error message in this uploaded image and describe what is visible?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "analyze this screenshot and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this uploaded image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "extract the text from this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "describe this architecture diagram and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this chart image and tell me where the submit button is",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "check the alignment of this UI picture and identify disconnected traces",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please inspect this scanned PDF receipt and describe the objects and colors.",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Can you describe my screen right now and describe the objects and colors?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please find the bounding box coordinates of this blurred image and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Please analyze this UI picture and identify disconnected traces.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you describe my screen right now and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "find the bounding box coordinates of this UI picture and tell me the highest data point",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Please extract the text from this chart image and give me accessibility feedback.",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Can you extract the text from this uploaded image and tell me where the submit button is?",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Can you inspect this circuit board picture and identify disconnected traces?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Can you read the error message in this UI picture using OCR?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Please describe this scanned PDF receipt and tell me the highest data point.",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Can you find the bounding box coordinates of this blurred image and give me accessibility feedback?",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Please inspect my screen right now using OCR.",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Please inspect this chart image and tell me where the submit button is.",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "Help me formulate a strategy for this complex migration task to optimize performance.",
     "expected_agent": "planner",
     "category": "optimization_plan"
   },
   {
-    "prompt": "Break down the implementation of a vector RAG pipeline into actionable phases",
-    "expected_agent": "planner",
-    "category": "task_breakdown"
-  },
-  {
-    "prompt": "Plan our team's disaster recovery drill step-by-step",
-    "expected_agent": "planner",
-    "category": "contingency"
-  },
-  {
-    "prompt": "What are the sequential steps needed to deploy a high-availability cluster?",
-    "expected_agent": "planner",
-    "category": "roadmap"
-  },
-  {
-    "prompt": "Create a quarterly milestone roadmap for open-source community growth",
+    "prompt": "Can you structure an execution strategy for my app launch into high, medium, and low priority phases?",
     "expected_agent": "planner",
     "category": "milestones"
   },
   {
-    "prompt": "Decompose the frontend UI migration from TypeScript to Pure JavaScript into steps",
+    "prompt": "Can you organize my app launch into step-by-step milestones?",
     "expected_agent": "planner",
     "category": "task_decomposition"
   },
   {
-    "prompt": "Formulate a step-by-step strategy for conducting user acceptance testing",
+    "prompt": "Can you decompose a 4-week sprint for my engineering team?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Help me plan a 4-week sprint in 30 days.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me formulate a strategy for this big project into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "plan our disaster recovery drill for high-availability",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Can you decompose this complex migration task for my engineering team?",
     "expected_agent": "planner",
     "category": "testing_strategy"
   },
   {
-    "prompt": "Organize my project tasks into high, medium, and low priority phases",
+    "prompt": "build a checklist for our disaster recovery drill for my engineering team",
     "expected_agent": "planner",
-    "category": "prioritization"
+    "category": "roadmap"
   },
   {
-    "prompt": "Hello there, how are you today?",
-    "expected_agent": "chat",
-    "category": "greeting"
+    "prompt": "Help me plan our disaster recovery drill into actionable phases.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
   },
   {
-    "prompt": "Hey C.O.P.P.E.R, what's up?",
-    "expected_agent": "chat",
-    "category": "informal"
+    "prompt": "Can you build a checklist for my app launch into actionable phases?",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
   },
   {
-    "prompt": "Thank you so much for the assistance, that was very helpful!",
-    "expected_agent": "chat",
-    "category": "gratitude"
+    "prompt": "Help me create a project roadmap for a study schedule into actionable phases.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
   },
   {
-    "prompt": "Good morning, hope you are ready for some work today",
-    "expected_agent": "chat",
-    "category": "greeting"
+    "prompt": "Help me decompose this complex migration task in 30 days.",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
   },
   {
-    "prompt": "Nice to meet you, COPPER",
-    "expected_agent": "chat",
-    "category": "greeting"
+    "prompt": "Can you build a checklist for our disaster recovery drill in 30 days?",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
   },
   {
-    "prompt": "Who created you and what is your mission as an AI operating system?",
+    "prompt": "Help me build a checklist for releasing COPPER v1.0 to optimize performance.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Can you plan a study schedule for high-availability?",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "formulate a strategy for this big project into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Help me organize this big project into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Help me plan my app launch for high-availability.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me decompose this complex migration task to optimize performance.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "decompose releasing COPPER v1.0 into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Can you create a project roadmap for our disaster recovery drill into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Help me formulate a strategy for a 4-week sprint in 30 days.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Can you build a checklist for a study schedule into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Help me break down releasing COPPER v1.0 for high-availability.",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Can you organize releasing COPPER v1.0 into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "decompose our disaster recovery drill for high-availability",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Can you plan rewriting our monolith to microservices for high-availability?",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "organize releasing COPPER v1.0 for high-availability",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "build a checklist for releasing COPPER v1.0 for high-availability",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "decompose a 4-week sprint in 30 days",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Help me organize this complex migration task into step-by-step milestones.",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Can you organize this complex migration task to optimize performance?",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "plan a 4-week sprint for high-availability",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "formulate a strategy for our disaster recovery drill into high, medium, and low priority phases",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Can you structure an execution strategy for my app launch for my engineering team?",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Help me create a project roadmap for releasing COPPER v1.0 into step-by-step milestones.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Help me formulate a strategy for this complex migration task into actionable phases.",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Can you structure an execution strategy for this complex migration task into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "plan a study schedule in 30 days",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you organize this big project for my engineering team?",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "organize our disaster recovery drill into actionable phases",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Help me create a project roadmap for rewriting our monolith to microservices for my engineering team.",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Help me create a project roadmap for our disaster recovery drill into step-by-step milestones.",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "break down releasing COPPER v1.0 to optimize performance",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you plan this big project in 30 days?",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Help me decompose my app launch for my engineering team.",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Help me decompose this complex migration task into actionable phases.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Can you break down our disaster recovery drill for high-availability?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "build a checklist for a study schedule into high, medium, and low priority phases",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Can you break down this complex migration task for high-availability?",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you formulate a strategy for a 4-week sprint into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Help me formulate a strategy for our disaster recovery drill into step-by-step milestones.",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Can you structure an execution strategy for a study schedule into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Can you formulate a strategy for releasing COPPER v1.0 for my engineering team?",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "plan releasing COPPER v1.0 into high, medium, and low priority phases",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "plan releasing COPPER v1.0 into actionable phases",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you create a project roadmap for my app launch in 30 days?",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Help me organize my app launch in 30 days.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "build a checklist for this big project to optimize performance",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Help me decompose a study schedule into actionable phases.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Can you create a project roadmap for my app launch to optimize performance?",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "create a project roadmap for a study schedule into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Can you create a project roadmap for a 4-week sprint into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Help me build a checklist for this complex migration task into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Help me structure an execution strategy for our disaster recovery drill for high-availability.",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Help me break down my app launch into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me create a project roadmap for this big project into actionable phases.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "plan this complex migration task into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Help me plan this complex migration task for my engineering team.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me build a checklist for my app launch for my engineering team.",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Help me organize my app launch for my engineering team.",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "create a project roadmap for a study schedule in 30 days",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Help me plan my app launch into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Can you build a checklist for rewriting our monolith to microservices into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "formulate a strategy for my app launch to optimize performance",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Can you break down a 4-week sprint in 30 days?",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "formulate a strategy for a study schedule into actionable phases",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me build a checklist for a 4-week sprint for high-availability.",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Can you create a project roadmap for this complex migration task into actionable phases?",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Can you organize a 4-week sprint into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Help me create a project roadmap for our disaster recovery drill to optimize performance.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Can you build a checklist for releasing COPPER v1.0 for my engineering team?",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "structure an execution strategy for this big project into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Help me plan a study schedule into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "decompose rewriting our monolith to microservices into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Can you structure an execution strategy for releasing COPPER v1.0 into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "create a project roadmap for a 4-week sprint to optimize performance",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "build a checklist for my app launch in 30 days",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Help me build a checklist for releasing COPPER v1.0 into high, medium, and low priority phases.",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "plan this complex migration task in 30 days",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you formulate a strategy for this complex migration task for my engineering team?",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Can you plan a 4-week sprint into actionable phases?",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "build a checklist for this big project into actionable phases",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "decompose releasing COPPER v1.0 into high, medium, and low priority phases",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me decompose releasing COPPER v1.0 for high-availability.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "create a project roadmap for my app launch into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Help me formulate a strategy for this complex migration task in 30 days.",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "organize this complex migration task for high-availability",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Help me break down a study schedule into actionable phases.",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "create a project roadmap for a study schedule for high-availability",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "formulate a strategy for this big project for my engineering team",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "build a checklist for a 4-week sprint for my engineering team",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "break down a study schedule in 30 days",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Can you decompose rewriting our monolith to microservices into actionable phases?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Can you break down this complex migration task into step-by-step milestones?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Help me organize a study schedule for my engineering team.",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Can you formulate a strategy for releasing COPPER v1.0 for high-availability?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Can you organize this complex migration task in 30 days?",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "decompose our disaster recovery drill for my engineering team",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "create a project roadmap for this complex migration task to optimize performance",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "structure an execution strategy for a study schedule to optimize performance",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Help me plan this big project into actionable phases.",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Can you build a checklist for rewriting our monolith to microservices in 30 days?",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "organize releasing COPPER v1.0 into actionable phases",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "build a checklist for releasing COPPER v1.0 into actionable phases",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Help me break down rewriting our monolith to microservices in 30 days.",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Can you structure an execution strategy for this big project into high, medium, and low priority phases?",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you build a checklist for a study schedule into actionable phases?",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Can you plan releasing COPPER v1.0 for my engineering team?",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Good evening, I appreciate your assistance.",
     "expected_agent": "chat",
     "category": "identity"
   },
   {
-    "prompt": "Tell me a fun thought or witty remark",
-    "expected_agent": "chat",
-    "category": "smalltalk"
-  },
-  {
-    "prompt": "Good evening! Hope things are running smoothly",
-    "expected_agent": "chat",
-    "category": "greeting"
-  },
-  {
-    "prompt": "Thanks for the quick response",
-    "expected_agent": "chat",
-    "category": "gratitude"
-  },
-  {
-    "prompt": "Yo what can you help me with today?",
+    "prompt": "Sup, thanks for the quick response.",
     "expected_agent": "chat",
     "category": "capabilities"
   },
   {
-    "prompt": "Have a wonderful weekend ahead!",
-    "expected_agent": "chat",
-    "category": "farewell"
-  },
-  {
-    "prompt": "I appreciate your assistance on this project",
+    "prompt": "thank you so much for the assistance, mate!",
     "expected_agent": "chat",
     "category": "gratitude"
   },
   {
-    "prompt": "Hello world, testing the assistant connection",
+    "prompt": "Hello there, tell me a fun thought.",
     "expected_agent": "chat",
-    "category": "greeting"
+    "category": "smalltalk"
   },
   {
-    "prompt": "Sup copper, feeling energized today?",
-    "expected_agent": "chat",
-    "category": "informal"
-  },
-  {
-    "prompt": "Goodbye for now, talk to you later!",
+    "prompt": "goodbye for now, AI!",
     "expected_agent": "chat",
     "category": "farewell"
   },
   {
-    "prompt": "What is Python and why was it created?",
-    "expected_agent": "research",
-    "category": "negative_coding_suppression"
+    "prompt": "I appreciate your assistance, AI!",
+    "expected_agent": "chat",
+    "category": "gratitude"
   },
   {
-    "prompt": "Remind me to write code tomorrow morning",
+    "prompt": "Sup COPPER, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Hello there assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Sup, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "thank you so much for the assistance, buddy!",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "I appreciate your assistance, mate!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hey friend, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "nice to meet you, friend!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "nice to meet you, COPPER!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Sup AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hey assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hey, I appreciate your assistance.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Sup, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "tell me a fun thought, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "thanks for the quick response, buddy!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hello there, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, mate!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there COPPER, how are you today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "tell me a fun thought, buddy!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "goodbye for now, buddy!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Yo, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, AI!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "nice to meet you, buddy!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "thank you so much for the assistance, assistant!",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Yo buddy, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Yo friend, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning friend, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning COPPER, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hello there buddy, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hello there, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Hey buddy, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning buddy, what's up?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, friend!",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey assistant, how are you today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hi, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Good evening COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good evening friend, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Sup, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "goodbye for now, assistant!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Sup mate, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good evening buddy, how are you today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good morning, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good morning mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hey, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Yo, tell me a fun thought.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Hi, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Sup, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "tell me a fun thought, COPPER!",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Good morning, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey mate, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo, have a wonderful weekend ahead.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there mate, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hi friend, what's up?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Yo mate, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Hello there assistant, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening AI, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning AI, what's up?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening mate, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "goodbye for now, COPPER!",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "thank you so much for the assistance, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Good evening mate, what's up?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hey mate, what's up?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good morning, thank you so much for the assistance.",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Good morning, nice to meet you.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hey, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi assistant, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Sup friend, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Good evening buddy, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hello there, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there AI, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening AI, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Good evening, goodbye for now.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "thanks for the quick response, AI!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello there mate, what's up?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hi buddy, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "nice to meet you, AI!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "tell me a fun thought, assistant!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Yo AI, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "nice to meet you, assistant!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good evening COPPER, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hi, thanks for the quick response.",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Sup assistant, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Hi COPPER, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, COPPER!",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Good morning assistant, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Hi friend, how are you today?",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo assistant, what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hi, I appreciate your assistance.",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hey COPPER, what's up?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Hi buddy, are you ready for some work today?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "have a wonderful weekend ahead, assistant!",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hello there friend, what's up?",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "thanks for the quick response, assistant!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "nice to meet you, mate!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "Schedule a time to study the Roman Empire and move it to downloads",
     "expected_agent": "reminder",
-    "category": "reminder_coding_overlap"
+    "category": "adversarial_reminder"
   },
   {
-    "prompt": "Explain the history of computer automation and robotics",
-    "expected_agent": "research",
-    "category": "negative_automation_suppression"
-  },
-  {
-    "prompt": "Write a python script that sends an automated reminder to my calendar",
-    "expected_agent": "coding",
-    "category": "coding_compound"
-  },
-  {
-    "prompt": "Can you explain how screen OCR algorithms detect text in images?",
-    "expected_agent": "research",
-    "category": "negative_vision_suppression"
-  },
-  {
-    "prompt": "What is a database index and how does B-Tree search work?",
-    "expected_agent": "research",
-    "category": "db_research"
-  },
-  {
-    "prompt": "Delete the file named 'code_backup.py' from my desktop",
-    "expected_agent": "automation",
-    "category": "automation_file_overlap"
-  },
-  {
-    "prompt": "Schedule a coding review session for my team next Wednesday",
-    "expected_agent": "reminder",
-    "category": "reminder_coding_overlap"
-  },
-  {
-    "prompt": "Read the error message in this screenshot and fix the code",
-    "expected_agent": "vision",
-    "category": "vision_coding_compound"
-  },
-  {
-    "prompt": "Break this refactoring task into step-by-step milestones",
+    "prompt": "Plan a roadmap for research the Linux kernel and open VSCode",
     "expected_agent": "planner",
-    "category": "planner_coding_overlap"
+    "category": "adversarial_planner"
   },
   {
-    "prompt": "What is the difference between async and multithreading in Python?",
-    "expected_agent": "research",
-    "category": "research_code_concept"
-  },
-  {
-    "prompt": "Open the file containing my todo reminders list in VSCode",
-    "expected_agent": "automation",
-    "category": "automation_app_overlap"
-  },
-  {
-    "prompt": "Create an action plan to study quantum mechanics over 4 weeks",
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture with clear milestones",
     "expected_agent": "planner",
-    "category": "planner_research_overlap"
+    "category": "adversarial_planner"
   },
   {
-    "prompt": "Who is Guido van Rossum and what programming language did he author?",
+    "prompt": "Explain how to write unit tests with clear milestones",
     "expected_agent": "research",
-    "category": "biography_coding_overlap"
+    "category": "adversarial_research"
   },
   {
-    "prompt": "Fix this CSS styling bug so the login form aligns horizontally",
-    "expected_agent": "coding",
-    "category": "coding_frontend"
+    "prompt": "Explain how to study the Roman Empire in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
   },
   {
-    "prompt": "Close the active browser window immediately",
-    "expected_agent": "automation",
-    "category": "automation_window"
-  },
-  {
-    "prompt": "Remind me in 15 minutes that my code compilation should be finished",
+    "prompt": "Schedule a time to read the text in this screenshot with clear milestones",
     "expected_agent": "reminder",
-    "category": "reminder_coding_overlap"
+    "category": "adversarial_reminder"
   },
   {
-    "prompt": "Summarize this research paper PDF stored in my downloads folder",
-    "expected_agent": "research",
-    "category": "research_doc"
-  },
-  {
-    "prompt": "Inspect this diagram image and extract the component names",
-    "expected_agent": "vision",
-    "category": "vision_diagram"
-  },
-  {
-    "prompt": "Set an alarm for 7am to debug the production server issue",
+    "prompt": "Schedule a time to inspect this diagram of our architecture in a 4-week sprint",
     "expected_agent": "reminder",
-    "category": "reminder_debug_overlap"
+    "category": "adversarial_reminder"
   },
   {
-    "prompt": "Write a unit test for my user registration function in TypeScript",
-    "expected_agent": "coding",
-    "category": "coding_test"
+    "prompt": "Schedule a time to study the Roman Empire and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
   },
   {
-    "prompt": "Tell me about the origins of the Linux operating system kernel",
-    "expected_agent": "research",
-    "category": "research_history"
-  },
-  {
-    "prompt": "Terminate all zombie node.js processes on the machine",
-    "expected_agent": "automation",
-    "category": "automation_process"
-  },
-  {
-    "prompt": "Create a roadmap for training our custom 3B sub-agent model",
+    "prompt": "Plan a roadmap for refactor the UI and close all windows",
     "expected_agent": "planner",
-    "category": "planner_ai_overlap"
+    "category": "adversarial_planner"
   },
   {
-    "prompt": "What do you see in the screenshot I just took?",
-    "expected_agent": "vision",
-    "category": "vision_screen"
+    "prompt": "Schedule a time to fix the CSS styling in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to refactor the UI with clear milestones",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to inspect this diagram of our architecture and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to research the Linux kernel and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to write unit tests and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to write unit tests and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to refactor the UI step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to fix the CSS styling and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to refactor the UI in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot with clear milestones",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to fix the CSS styling and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for read the text in this screenshot with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about fix the CSS styling and move it to downloads",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Delete the file about inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Write a script to study the Roman Empire in a 4-week sprint",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Remind me to inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to fix the CSS styling in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to fix the CSS styling with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for research the Linux kernel step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to research the Linux kernel with clear milestones",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to inspect this diagram of our architecture and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to debug the python app with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to study the Roman Empire and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot step-by-step",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to debug the python app and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to fix the CSS styling and move it to downloads",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for fix the CSS styling and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for refactor the UI step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to research the Linux kernel and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to debug the python app and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for write unit tests and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about debug the python app and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to refactor the UI and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to debug the python app step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to write unit tests in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to write unit tests in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for fix the CSS styling with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to write unit tests step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for refactor the UI in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about learn quantum mechanics step-by-step",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Delete the file about study the Roman Empire and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to refactor the UI and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to fix the CSS styling step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to fix the CSS styling and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Remind me to learn quantum mechanics and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to refactor the UI with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to research the Linux kernel with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to study the Roman Empire step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire and close all windows",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Remind me to write unit tests and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about refactor the UI in a 4-week sprint",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to study the Roman Empire with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about learn quantum mechanics and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to inspect this diagram of our architecture and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for read the text in this screenshot and open VSCode",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to research the Linux kernel and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for learn quantum mechanics and open VSCode",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Remind me to learn quantum mechanics step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for research the Linux kernel with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot and close all windows",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to research the Linux kernel with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about fix the CSS styling and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Remind me to read the text in this screenshot and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to inspect this diagram of our architecture in a 4-week sprint",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to fix the CSS styling with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to write unit tests and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to debug the python app and close all windows",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to debug the python app with clear milestones",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for write unit tests and close all windows",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to fix the CSS styling step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for learn quantum mechanics and close all windows",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to write unit tests step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to study the Roman Empire step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Delete the file about inspect this diagram of our architecture and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Write a script to refactor the UI step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Schedule a time to study the Roman Empire and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to fix the CSS styling with clear milestones",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to study the Roman Empire and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for research the Linux kernel and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to study the Roman Empire step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to write unit tests and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for fix the CSS styling step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Write a script to refactor the UI and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Delete the file about write unit tests and move it to downloads",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Remind me to read the text in this screenshot step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about write unit tests in a 4-week sprint",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Plan a roadmap for refactor the UI with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Write a script to refactor the UI and move it to downloads",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for learn quantum mechanics and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to research the Linux kernel and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for write unit tests in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Write a script to debug the python app and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Remind me to debug the python app and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to refactor the UI and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for debug the python app and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Write a script to research the Linux kernel step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for read the text in this screenshot in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Write a script to debug the python app step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Delete the file about debug the python app in a 4-week sprint",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Plan a roadmap for read the text in this screenshot and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Remind me to fix the CSS styling and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to learn quantum mechanics and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Delete the file about refactor the UI with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to refactor the UI step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to debug the python app in a 4-week sprint",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
   }
 ]

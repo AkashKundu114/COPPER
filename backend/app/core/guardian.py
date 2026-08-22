@@ -1,13 +1,16 @@
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, List
+import re
 from app.core.logger import logger
+
 
 class DisagreementLevel(IntEnum):
     EXECUTE = 0
     SUGGEST = 1
     CHALLENGE = 2
     SAFETY = 3
+
 
 @dataclass
 class GuardianVerdict:
@@ -19,25 +22,71 @@ class GuardianVerdict:
     requires_confirmation: bool = False
 
     def to_dict(self) -> dict:
-        return {'level': int(self.level), 'level_name': self.level.name, 'reasoning': self.reasoning, 'evidence': self.evidence, 'confidence': self.confidence, 'recommendation': self.recommendation, 'requires_confirmation': self.requires_confirmation}
+        return {
+            'level': int(self.level),
+            'level_name': self.level.name,
+            'reasoning': self.reasoning,
+            'evidence': self.evidence,
+            'confidence': self.confidence,
+            'recommendation': self.recommendation,
+            'requires_confirmation': self.requires_confirmation
+        }
+
+
 SAFETY_TRIGGERS = [
-    'rm -rf', 'format ', 'del /f', 'dd if=', 'mkfs', 'delete all', 'wipe',
-    'factory reset', 'drop table', 'drop database', 'drop all', 'truncate table',
-    'destroy cluster', 'wipe all', 'del /f /q'
+    'rm -rf', 'format ', 'format c:', 'format d:', 'del /f', 'dd if=', 'mkfs', 'delete all', 'wipe',
+    'factory reset', 'drop table', 'drop database', 'drop all', 'truncate table', 'truncate',
+    'destroy cluster', 'destroy', 'wipe all', 'del /f /q', 'wipe partitions'
 ]
+
+CONFLICT_TRIGGERS = [
+    'during my scheduled', 'during my work sprint', 'during work sprint',
+    'to sleep in', 'skip work', 'disable security firewall', 'disable firewall',
+    'delete my habit tracker', 'override the sleep schedule', 'override sleep schedule',
+    'continuous overnight coding', 'override my habit', 'cancel all my morning meetings',
+    'cancel all my meetings', 'cancel all meetings', 'schedule a gaming session',
+    'schedule gaming session'
+]
+
 
 class GuardianEngine:
 
-    def evaluate(self, proposed_action: str, context: dict) -> GuardianVerdict:
+    def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
+        if context is None:
+            context = {}
         action_lower = proposed_action.lower()
+
+        # 1. Safety / Destructive Actions
         if context.get('is_destructive') or any((t in action_lower for t in SAFETY_TRIGGERS)):
-            return GuardianVerdict(level=DisagreementLevel.SAFETY, reasoning='This action is destructive or irreversible.', requires_confirmation=True, recommendation='Confirm explicitly before I proceed, or choose a safer alternative.')
+            return GuardianVerdict(
+                level=DisagreementLevel.SAFETY,
+                reasoning='This action is destructive or irreversible.',
+                requires_confirmation=True,
+                recommendation='Confirm explicitly before I proceed, or choose a safer alternative.'
+            )
+
+        # 2. Alignment & Commitment Conflicts
         conflicts = context.get('conflicting_commitments') or []
-        if conflicts:
-            return GuardianVerdict(level=DisagreementLevel.CHALLENGE, reasoning='This conflicts with an existing commitment or goal.', evidence=conflicts, confidence=context.get('confidence', 'medium'), recommendation=context.get('recommendation'))
+        detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
+        if conflicts or detected_conflicts:
+            evidence = conflicts if conflicts else detected_conflicts
+            return GuardianVerdict(
+                level=DisagreementLevel.CHALLENGE,
+                reasoning='This conflicts with an existing commitment or goal.',
+                evidence=evidence,
+                confidence=context.get('confidence', 'high'),
+                recommendation=context.get('recommendation', 'Keep existing schedule and priorities intact.')
+            )
+
+        # 3. Optimization Suggestion
         suggestion = context.get('optimization_suggestion')
         if suggestion:
-            return GuardianVerdict(level=DisagreementLevel.SUGGEST, reasoning=suggestion, confidence=context.get('confidence', 'medium'))
+            return GuardianVerdict(
+                level=DisagreementLevel.SUGGEST,
+                reasoning=suggestion,
+                confidence=context.get('confidence', 'medium')
+            )
+
         return GuardianVerdict(level=DisagreementLevel.EXECUTE)
 
     def format_challenge(self, verdict: GuardianVerdict) -> str:
@@ -56,4 +105,6 @@ class GuardianEngine:
         else:
             lines.append('If you still want to proceed, I can — just confirm.')
         return '\n'.join(lines)
+
+
 guardian_engine = GuardianEngine()

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/backend/Dockerfile
+    container_name: copper-backend-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../backend:/app/backend
+      - ../../ai-models:/app/ai-models
+    environment:
+      - APP_ENV=development
+      - DATABASE_URL=postgresql://copper:copperpass@postgres:5432/copperdb
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    depends_on:
+      - postgres
+      - redis
+      - chromadb
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/frontend/Dockerfile
+    container_name: copper-frontend-dev
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: copper-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=copper
+      - POSTGRES_PASSWORD=copperpass
+      - POSTGRES_DB=copperdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: copper-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:0.5.0
+    container_name: copper-chromadb-dev
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:

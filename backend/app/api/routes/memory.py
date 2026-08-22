@@ -1,16 +1,26 @@
-from fastapi import APIRouter
-from app.memory import db, learner
-from app.data.agents import AGENTS
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from app.database.postgres import get_db
+from app.database.models.history import ChatHistory
+from app.ai.memory.memory_manager import memory_manager
+
 router = APIRouter(prefix='/memory', tags=['memory'])
 
 @router.get('/profile')
-async def get_profile():
-    total = db.total_interactions()
-    agent_mem = db.get_all_agent_memory()
-    most_used = max(agent_mem.items(), key=lambda kv: kv[1]['times_invoked'], default=(None, None))
-    return {'facts': db.get_profile(), 'total_interactions': total, 'relationship_tier': learner.relationship_tier(total), 'most_used_agent': most_used[0], 'agents_met': len(agent_mem), 'agents_total': len(AGENTS)}
+async def get_profile(db: Session = Depends(get_db)):
+    total = db.query(ChatHistory).count()
+    # Simple placeholder logic now that we've moved to Chroma/Postgres
+    return {
+        'facts': [],
+        'total_interactions': total,
+        'relationship_tier': 'Trusted Partner' if total > 20 else 'Acquaintance',
+        'most_used_agent': 'OMNI',
+        'agents_met': 3,
+        'agents_total': 5
+    }
 
 @router.post('/reset')
-async def reset_profile():
-    db.reset_profile()
+async def reset_profile(db: Session = Depends(get_db)):
+    db.query(ChatHistory).delete()
+    db.commit()
     return {'reset': True}
