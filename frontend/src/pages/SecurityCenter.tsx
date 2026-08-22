@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ShieldCheck, Download, Trash2, Cloud, Lock } from "lucide-react";
 import { fetchLogs } from "../lib/api";
 
@@ -17,18 +17,18 @@ export function SecurityCenter() {
   const [filter, setFilter] = useState<string>("");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     try {
       const data = await fetchLogs(filter || undefined);
       setEntries(data as any);
     } catch {
       setEntries([]);
     }
-  };
+  }, [filter]);
 
   useEffect(() => {
     load();
-  }, [filter]);
+  }, [load]);
 
   const CATEGORIES = [
     "",

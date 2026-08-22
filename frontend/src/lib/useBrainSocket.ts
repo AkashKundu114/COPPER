@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { API_BASE } from "./api";
+import type { ProactiveAlert } from "../components/alerts/SpiderSenseToast";
 
 export type BrainEvent =
   | { type: "copper_thinking" }
@@ -8,7 +9,8 @@ export type BrainEvent =
   | { type: "agent_active"; agent: string }
   | { type: "agent_speaking"; agent: string; text: string }
   | { type: "memory_update"; profile_delta: { key: string; value: string }[]; agent: string; familiarity: number; tier: string; glow?: number }
-  | { type: "done" };
+  | { type: "done" }
+  | { type: "proactive_intervention"; alert_id: string; severity: "info" | "warning" | "critical"; category: string; title: string; message: string; mode: string; suggested_actions: string[] };
 
 export interface ChatLine {
   id: string;
@@ -16,6 +18,8 @@ export interface ChatLine {
   text: string;
   timestamp: number;
 }
+
+export type BrainLine = ChatLine;
 
 interface BrainState {
   connected: boolean;
@@ -28,13 +32,15 @@ interface BrainState {
   lines: ChatLine[];
   send: (message: string) => void;
   lastMemoryUpdate: BrainEvent | null;
+  alerts: ProactiveAlert[];
+  dismissAlert: (alertId: string) => void;
 }
 
 function estimateSpeakingDuration(text: string): number {
   return Math.min(5000, Math.max(900, text.length * 45));
 }
 
-const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/chat/ws";
+const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/v1/chat/ws";
 
 export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [connected, setConnected] = useState(false);
@@ -49,6 +55,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const speakingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [alerts, setAlerts] = useState<ProactiveAlert[]>([]);
 
   const connect = useCallback(() => {
     const ws = new WebSocket(WS_URL);
@@ -94,6 +101,12 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           setLastMemoryUpdate(event);
           onProfileChange?.();
           break;
+        case "proactive_intervention":
+          setAlerts((prev) => {
+            if (prev.some((a) => a.alert_id === event.alert_id)) return prev;
+            return [...prev, { alert_id: event.alert_id, severity: event.severity, category: event.category, title: event.title, message: event.message, mode: event.mode, suggested_actions: event.suggested_actions }];
+          });
+          break;
         case "done":
           setThinking(false);
           setActiveEdge(null);
@@ -119,5 +132,9 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     }
   }, []);
 
-  return { connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send, lastMemoryUpdate };
+  const dismissAlert = useCallback((alertId: string) => {
+    setAlerts((prev) => prev.filter((a) => a.alert_id !== alertId));
+  }, []);
+
+  return { connected, thinking, activeAgent, activeEdge, pulseSeq, speaking, speakingAgent, lines, send, lastMemoryUpdate, alerts, dismissAlert };
 }

@@ -8,6 +8,7 @@ import { MessageFeed } from "./components/chat/MessageFeed";
 import { SideDrawer } from "./components/profile/SideDrawer";
 import { useBrainSocket } from "./lib/useBrainSocket";
 import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
+import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 
 import { DashboardView } from "./pages/DashboardView";
 import { TodayView } from "./pages/TodayView";
@@ -44,7 +45,7 @@ export default function App() {
   }, [refresh]);
 
   const {
-    connected, thinking, activeAgent, lines, send,
+    connected, thinking, activeAgent, lines, send, alerts, dismissAlert,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -148,6 +149,17 @@ export default function App() {
         onProfileReset={() => {
           refresh();
           setSelectedAgent(null);
+        }}
+      />
+
+      <SpiderSenseToast
+        alerts={alerts}
+        onDismiss={dismissAlert}
+        onAction={(alertId, action) => {
+          dismissAlert(alertId);
+          if (action.toLowerCase().includes('help') || action.toLowerCase().includes('ask')) {
+            setActiveSection('chat');
+          }
         }}
       />
     </div>

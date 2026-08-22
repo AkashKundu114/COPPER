@@ -1,5 +1,5 @@
 import React from "react";
-import { Mic, Shield, Server, Search, User } from "lucide-react";
+import { Shield, Server, Search, User } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
 
 interface TopBarProps {

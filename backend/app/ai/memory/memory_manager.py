@@ -26,6 +26,14 @@ class MemoryManager:
         context_parts = [r['document'] for r in results if r['distance'] < 1.2]
         return '\n\n'.join(context_parts[:3])
 
+    async def get_relevant_memories(self, query: str, limit: int = MEMORY_SEARCH_LIMIT) -> list[dict]:
+        results = await self.chat_store.search(query, n_results=limit)
+        memories = []
+        for r in results:
+            if r.get('distance', 99) < 1.5:
+                memories.append({'content': r['document'], 'memory_type': r.get('metadata', {}).get('type', 'observation'), 'distance': r.get('distance', 0)})
+        return memories
+
     async def save_document(self, content: str, source: str, metadata: dict=None) -> str:
         meta = {'source': source, 'type': 'document'}
         if metadata:

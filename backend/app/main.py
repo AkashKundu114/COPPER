@@ -7,7 +7,7 @@ from app.core.logger import logger
 from app.database.postgres import init_db
 from app.database.redis_client import redis_close
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
-from app.api.routes import chat, voice, memory, reminders, automation, vision, guardian, agents, audit
+from app.api.routes import chat, voice, memory, reminders, automation, vision, guardian, agents, audit, episodes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,6 +34,7 @@ app.include_router(vision.router, prefix='/api/v1')
 app.include_router(guardian.router, prefix='/api/v1')
 app.include_router(agents.router, prefix='/api/v1')
 app.include_router(audit.router, prefix='/api/v1')
+app.include_router(episodes.router, prefix='/api/v1')
 
 @app.get('/')
 async def root():

@@ -33,8 +33,8 @@ async def send_message(req: ChatRequest, db: Session=Depends(get_db)):
     session_id = req.session_id or generate_session_id()
     try:
         result = await chat_service.process_message(session_id, req.message, req.provider, db=db)
-        for role, content in [('user', req.message), ('assistant', result['response'])]:
-            db.add(ChatHistory(session_id=session_id, role=role, content=content, agent_type=str(result.get('agent_type', 'chat'))))
+        for sender, message in [('user', req.message), ('assistant', result['response'])]:
+            db.add(ChatHistory(session_id=session_id, sender=sender, message=message))
         db.commit()
         return ChatResponse(response=result['response'], agent_type=str(result['agent_type']), session_id=session_id, guardian_verdict=result.get('guardian_verdict'))
     except Exception as e:

@@ -22,4 +22,5 @@ def init_db():
     import app.database.models.agent_registry
     import app.database.models.audit_log
     import app.database.models.memory_v2
+    import app.database.models.episode
     Base.metadata.create_all(bind=engine)

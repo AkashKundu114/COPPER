@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import { type BrainLine } from "../../lib/useBrainSocket";
+import { type ChatLine } from "../../lib/useBrainSocket";
 import { type AgentStats } from "../../lib/api";
 import { Bot, User } from "lucide-react";
 
 interface MessageFeedProps {
-  lines: BrainLine[];
+  lines: ChatLine[];
   agentStats: Record<string, AgentStats>;
   thinking: boolean;
   activeAgent: string | null;
@@ -22,11 +22,11 @@ export function MessageFeed({ lines, agentStats, thinking, activeAgent }: Messag
   return (
     <div ref={feedRef} className="flex-1 w-full max-w-4xl mx-auto overflow-y-auto px-6 py-8 space-y-8 custom-scrollbar">
       {lines.map((line, i) => {
-        const isUser = line.source === "user";
-        const agentName = line.agent_id ? (agentStats[line.agent_id]?.name || line.agent_id) : "C.O.P.P.E.R.";
+        const isUser = line.agent === "YOU" || line.agent === "user";
+        const agentName = line.agent && line.agent !== "YOU" ? (agentStats[line.agent]?.name || line.agent) : "C.O.P.P.E.R.";
         
         return (
-          <div key={i} className={`flex gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} animate-slide-up`}>
+          <div key={line.id || i} className={`flex gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} animate-slide-up`}>
             <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser ? "bg-bg-raised text-text" : "bg-bg-panel border border-border text-accent"}`}>
               {isUser ? <User size={16} /> : <Bot size={16} />}
             </div>
@@ -37,7 +37,7 @@ export function MessageFeed({ lines, agentStats, thinking, activeAgent }: Messag
               </span>
               <div className={`px-4 py-3 rounded-2xl ${isUser ? "bg-bg-raised text-text" : "bg-bg-panel border border-border text-text"}`}>
                 <p className="whitespace-pre-wrap leading-relaxed text-sm">
-                  {line.content}
+                  {line.text}
                 </p>
               </div>
             </div>

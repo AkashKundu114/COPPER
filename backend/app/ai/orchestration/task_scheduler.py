@@ -1,33 +1,32 @@
-import asyncio
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from app.core.anomaly_sentinel import sentinel
 from app.core.logger import logger
-_scheduler_task = None
-_running = False
+_scheduler: AsyncIOScheduler | None = None
 
-async def _background_scheduler_loop():
-    global _running
-    logger.info('COPPER background task scheduler started')
-    while _running:
-        try:
-            await asyncio.sleep(60)
-        except asyncio.CancelledError:
-            break
-        except Exception as e:
-            logger.error(f'Error in background task scheduler: {e}')
-            await asyncio.sleep(10)
+async def _spider_sense_check():
+    try:
+        alerts = sentinel.run_checks()
+        if alerts:
+            from app.api.websocket.manager import manager
+            for alert in alerts:
+                await manager.broadcast_alert(alert)
+    except Exception as e:
+        logger.error(f'Spider-Sense check failed: {e}')
 
 def start_scheduler():
-    global _scheduler_task, _running
-    _running = True
+    global _scheduler
+    _scheduler = AsyncIOScheduler()
+    _scheduler.add_job(_spider_sense_check, IntervalTrigger(seconds=30), id='spider_sense', name='Spider-Sense Anomaly Sentinel', replace_existing=True)
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            _scheduler_task = loop.create_task(_background_scheduler_loop())
+        _scheduler.start()
+        logger.info('Spider-Sense Anomaly Sentinel started (30s interval)')
     except Exception as e:
-        logger.warning(f'Background task scheduler deferred: {e}')
+        logger.warning(f'Scheduler start deferred: {e}')
 
 def stop_scheduler():
-    global _scheduler_task, _running
-    _running = False
-    if _scheduler_task:
-        _scheduler_task.cancel()
-        logger.info('COPPER background task scheduler stopped')
+    global _scheduler
+    if _scheduler:
+        _scheduler.shutdown(wait=False)
+        logger.info('Spider-Sense Anomaly Sentinel stopped')
+        _scheduler = None

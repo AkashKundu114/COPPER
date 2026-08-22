@@ -27,3 +27,14 @@ class LLMProvider(str, Enum):
     OPENAI = 'openai'
     CLAUDE = 'claude'
     DEEPSEEK = 'deepseek'
+
+class AlertSeverity(str, Enum):
+    INFO = 'info'
+    WARNING = 'warning'
+    CRITICAL = 'critical'
+
+class AlertMode(str, Enum):
+    NORMAL = 'normal'
+    FOCUSED = 'focused'
+    GUARDIAN = 'guardian'
+    EMERGENCY = 'emergency'
