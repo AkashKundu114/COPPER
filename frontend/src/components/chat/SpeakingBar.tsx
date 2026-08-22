@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { AGENT_MAP, TIER_COLORS } from "../../data/agents";
+import { AGENT_MAP, TIER_COLORS } from "../../constants/agents";
 
 interface Props {
   speaking: boolean;

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { type ChatLine } from "../../lib/useBrainSocket";
+import { type ChatLine } from "../../hooks/useBrainSocket";
 import { type AgentStats } from "../../lib/api";
 import { Bot, User } from "lucide-react";
 

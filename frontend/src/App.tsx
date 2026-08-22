@@ -7,7 +7,7 @@ import { GuardianChallengeModal, type GuardianChallengePayload } from "./compone
 import { ChatDock } from "./components/chat/ChatDock";
 import { MessageFeed } from "./components/chat/MessageFeed";
 import { SideDrawer } from "./components/profile/SideDrawer";
-import { useBrainSocket } from "./lib/useBrainSocket";
+import { useBrainSocket } from "./hooks/useBrainSocket";
 import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 

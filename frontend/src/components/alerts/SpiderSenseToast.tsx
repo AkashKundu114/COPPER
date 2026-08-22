@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, Info, ShieldAlert, X } from "lucide-react";
-import { playAlertSound } from "../../lib/alertSound";
+import { playAlertSound } from "../../utils/alertSound";
 
 export interface ProactiveAlert {
   alert_id: string;

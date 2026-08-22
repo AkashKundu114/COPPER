@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Brain, Trash2 } from "lucide-react";
-import { AGENT_MAP, TIER_COLORS, TIER_LABELS } from "../../data/agents";
+import { AGENT_MAP, TIER_COLORS, TIER_LABELS } from "../../constants/agents";
 import { fetchAgentHistory, resetProfile, type ProfileResponse, type AgentStats, type InteractionRecord } from "../../lib/api";
 
 interface Props {

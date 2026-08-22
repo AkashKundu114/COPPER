@@ -1,5 +1,5 @@
 
-import { AGENTS, TIER_ORDER, type Tier } from "../data/agents";
+import { AGENTS, TIER_ORDER, type Tier } from "../constants/agents";
 
 export const VIEWBOX = 1000;
 export const CENTER = VIEWBOX / 2;
