@@ -1,7 +1,7 @@
 # C.O.P.P.E.R.
 
 **Centralized Omnifunctional Personal Productivity and Execution Routine**
-*A 100% offline, local-first personal AI operating system — 30 orchestrated agents, epistemic memory, a Guardian safety engine, and zero cloud egress.*
+*A 100% offline, local-first personal AI operating system - 30 orchestrated agents, epistemic memory, a Guardian safety engine, and zero cloud egress.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
