@@ -1,0 +1,152 @@
+[
+  {
+    "prompt": "Write a python script to sort an array using quicksort",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you debug this react component and fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Refactor this module to use dependency injection and async/await",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Write a unit test for this FastAPI endpoint using pytest and testclient",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I center a div with Tailwind CSS grid and flexbox?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Help me write a regex pattern for strict email and domain validation",
+    "expected_agent": "coding",
+    "category": "regex"
+  },
+  {
+    "prompt": "I have an IndentationError on line 42 in my python script",
+    "expected_agent": "coding",
+    "category": "syntax_error"
+  },
+  {
+    "prompt": "Generate a database migration script for Alembic and SQLAlchemy",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "Fix this TypeScript type error: Property does not exist on type 'UserProps'",
+    "expected_agent": "coding",
+    "category": "type_error"
+  },
+  {
+    "prompt": "Review my git commit diff before I push to main branch",
+    "expected_agent": "coding",
+    "category": "git"
+  },
+  {
+    "prompt": "Implement a binary search tree in C++ with insert and delete operations",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Why is my useEffect hook causing an infinite re-render loop in React?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Write a Dockerfile multi-stage build for a Rust backend application",
+    "expected_agent": "coding",
+    "category": "devops_code"
+  },
+  {
+    "prompt": "Create an async websocket handler in FastAPI for real-time streaming",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Write a bash script to parse JSON logs and extract error counts with jq",
+    "expected_agent": "coding",
+    "category": "scripting"
+  },
+  {
+    "prompt": "How do I mock an external HTTP API request using pytest-mock?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Implement a LRU cache with O(1) get and put in Python",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Fix the CORS header configuration in my Express.js server",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Write a CSS animation for a pulsing glowing button state",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How to handle database connection pooling in SQLAlchemy async engine?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "Debug this IndexError: list index out of range in Python loop",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Create a custom Zustand store for managing dark mode and user auth state",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Write a recursive function to flatten a deeply nested JSON object",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Explain the error: segmentation fault (core dumped) in my C program and fix it",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Write a SQL query using window functions (ROW_NUMBER and PARTITION BY)",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How to resolve a git merge conflict in yarn.lock file?",
+    "expected_agent": "coding",
+    "category": "git"
+  },
+  {
+    "prompt": "Write a Python decorator to measure and log function execution time",
+    "expected_agent": "coding",
+    "category": "python_meta"
+  },
+  {
+    "prompt": "Implement a debounce utility function in vanilla TypeScript",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Compile this Rust crate to WebAssembly using wasm-pack",
+    "expected_agent": "coding",
+    "category": "build_tooling"
+  },
+  {
+    "prompt": "Fix this memory leak caused by uncleaned event listeners in DOM",
+    "expected_agent": "coding",
+    "category": "debugging"
+  }
+]

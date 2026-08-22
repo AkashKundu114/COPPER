@@ -1,0 +1,127 @@
+[
+  {
+    "prompt": "What is Python and why was it created?",
+    "expected_agent": "research",
+    "category": "negative_coding_suppression"
+  },
+  {
+    "prompt": "Remind me to write code tomorrow morning",
+    "expected_agent": "reminder",
+    "category": "reminder_coding_overlap"
+  },
+  {
+    "prompt": "Explain the history of computer automation and robotics",
+    "expected_agent": "research",
+    "category": "negative_automation_suppression"
+  },
+  {
+    "prompt": "Write a python script that sends an automated reminder to my calendar",
+    "expected_agent": "coding",
+    "category": "coding_compound"
+  },
+  {
+    "prompt": "Can you explain how screen OCR algorithms detect text in images?",
+    "expected_agent": "research",
+    "category": "negative_vision_suppression"
+  },
+  {
+    "prompt": "What is a database index and how does B-Tree search work?",
+    "expected_agent": "research",
+    "category": "db_research"
+  },
+  {
+    "prompt": "Delete the file named 'code_backup.py' from my desktop",
+    "expected_agent": "automation",
+    "category": "automation_file_overlap"
+  },
+  {
+    "prompt": "Schedule a coding review session for my team next Wednesday",
+    "expected_agent": "reminder",
+    "category": "reminder_coding_overlap"
+  },
+  {
+    "prompt": "Read the error message in this screenshot and fix the code",
+    "expected_agent": "vision",
+    "category": "vision_coding_compound"
+  },
+  {
+    "prompt": "Break this refactoring task into step-by-step milestones",
+    "expected_agent": "planner",
+    "category": "planner_coding_overlap"
+  },
+  {
+    "prompt": "What is the difference between async and multithreading in Python?",
+    "expected_agent": "research",
+    "category": "research_code_concept"
+  },
+  {
+    "prompt": "Open the file containing my todo reminders list in VSCode",
+    "expected_agent": "automation",
+    "category": "automation_app_overlap"
+  },
+  {
+    "prompt": "Create an action plan to study quantum mechanics over 4 weeks",
+    "expected_agent": "planner",
+    "category": "planner_research_overlap"
+  },
+  {
+    "prompt": "Who is Guido van Rossum and what programming language did he author?",
+    "expected_agent": "research",
+    "category": "biography_coding_overlap"
+  },
+  {
+    "prompt": "Fix this CSS styling bug so the login form aligns horizontally",
+    "expected_agent": "coding",
+    "category": "coding_frontend"
+  },
+  {
+    "prompt": "Close the active browser window immediately",
+    "expected_agent": "automation",
+    "category": "automation_window"
+  },
+  {
+    "prompt": "Remind me in 15 minutes that my code compilation should be finished",
+    "expected_agent": "reminder",
+    "category": "reminder_coding_overlap"
+  },
+  {
+    "prompt": "Summarize this research paper PDF stored in my downloads folder",
+    "expected_agent": "research",
+    "category": "research_doc"
+  },
+  {
+    "prompt": "Inspect this diagram image and extract the component names",
+    "expected_agent": "vision",
+    "category": "vision_diagram"
+  },
+  {
+    "prompt": "Set an alarm for 7am to debug the production server issue",
+    "expected_agent": "reminder",
+    "category": "reminder_debug_overlap"
+  },
+  {
+    "prompt": "Write a unit test for my user registration function in TypeScript",
+    "expected_agent": "coding",
+    "category": "coding_test"
+  },
+  {
+    "prompt": "Tell me about the origins of the Linux operating system kernel",
+    "expected_agent": "research",
+    "category": "research_history"
+  },
+  {
+    "prompt": "Terminate all zombie node.js processes on the machine",
+    "expected_agent": "automation",
+    "category": "automation_process"
+  },
+  {
+    "prompt": "Create a roadmap for training our custom 3B sub-agent model",
+    "expected_agent": "planner",
+    "category": "planner_ai_overlap"
+  },
+  {
+    "prompt": "What do you see in the screenshot I just took?",
+    "expected_agent": "vision",
+    "category": "vision_screen"
+  }
+]

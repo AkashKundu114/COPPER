@@ -1,0 +1,102 @@
+[
+  {
+    "prompt": "Remind me to buy milk tomorrow at 5pm",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "Set an alarm for 8am every weekday morning",
+    "expected_agent": "reminder",
+    "category": "recurring_alarm"
+  },
+  {
+    "prompt": "Schedule a meeting with the design team for next Tuesday at 2pm",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Add 'Review Pull Request #42' to my todo list",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Remind me in 30 minutes to stretch and take a water break",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Book an appointment with Dr. Smith on Friday at 3:30pm",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Wake me up at 6:30 tomorrow morning with an alarm",
+    "expected_agent": "reminder",
+    "category": "alarm"
+  },
+  {
+    "prompt": "Set a countdown timer for 25 minutes for Pomodoro focus",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Create a recurring reminder to submit timesheets every Friday at 4pm",
+    "expected_agent": "reminder",
+    "category": "recurring"
+  },
+  {
+    "prompt": "Add a task deadline for the quarterly report due next Monday",
+    "expected_agent": "reminder",
+    "category": "deadline"
+  },
+  {
+    "prompt": "Remind me tonight at 9pm to call Mom",
+    "expected_agent": "reminder",
+    "category": "time_reminder"
+  },
+  {
+    "prompt": "What are my upcoming scheduled tasks and reminders for today?",
+    "expected_agent": "reminder",
+    "category": "query_schedule"
+  },
+  {
+    "prompt": "Cancel my 3pm reminder for today",
+    "expected_agent": "reminder",
+    "category": "cancel_reminder"
+  },
+  {
+    "prompt": "Add 'Pay electric utility bill' to my financial todos due on the 1st",
+    "expected_agent": "reminder",
+    "category": "todo"
+  },
+  {
+    "prompt": "Set a reminder for the team standup in 10 minutes",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  },
+  {
+    "prompt": "Remind me on October 15th to renew my vehicle registration",
+    "expected_agent": "reminder",
+    "category": "date_reminder"
+  },
+  {
+    "prompt": "Create a daily habit reminder to meditate every morning at 7am",
+    "expected_agent": "reminder",
+    "category": "habit"
+  },
+  {
+    "prompt": "Set a timer for 12 minutes for the pasta",
+    "expected_agent": "reminder",
+    "category": "timer"
+  },
+  {
+    "prompt": "Schedule a retrospective calendar event for Friday afternoon",
+    "expected_agent": "reminder",
+    "category": "calendar"
+  },
+  {
+    "prompt": "Remind me to check on the background model download in 1 hour",
+    "expected_agent": "reminder",
+    "category": "countdown"
+  }
+]

@@ -1,0 +1,77 @@
+[
+  {
+    "prompt": "Extract the text from this screenshot using OCR",
+    "expected_agent": "vision",
+    "category": "ocr"
+  },
+  {
+    "prompt": "What do you see on my screen right now?",
+    "expected_agent": "vision",
+    "category": "screen_inspection"
+  },
+  {
+    "prompt": "Analyze this architecture diagram photo and explain the data flow",
+    "expected_agent": "vision",
+    "category": "diagram"
+  },
+  {
+    "prompt": "Inspect this UI picture and tell me where the submit button is located",
+    "expected_agent": "vision",
+    "category": "ui_detection"
+  },
+  {
+    "prompt": "Read the error message shown in this screenshot image",
+    "expected_agent": "vision",
+    "category": "error_ocr"
+  },
+  {
+    "prompt": "Describe the objects and colors in this uploaded image",
+    "expected_agent": "vision",
+    "category": "image_captioning"
+  },
+  {
+    "prompt": "Find the bounding box coordinates of the logo in this screenshot",
+    "expected_agent": "vision",
+    "category": "object_localization"
+  },
+  {
+    "prompt": "Can you inspect this chart image and tell me the highest data point?",
+    "expected_agent": "vision",
+    "category": "chart_reading"
+  },
+  {
+    "prompt": "Look at this UI mockup photo and give me accessibility feedback",
+    "expected_agent": "vision",
+    "category": "ui_review"
+  },
+  {
+    "prompt": "Extract the table rows from this scanned PDF receipt image",
+    "expected_agent": "vision",
+    "category": "document_ocr"
+  },
+  {
+    "prompt": "What icon is displayed in the bottom right corner of this screenshot?",
+    "expected_agent": "vision",
+    "category": "ui_element"
+  },
+  {
+    "prompt": "Look at this circuit board picture and identify any disconnected traces",
+    "expected_agent": "vision",
+    "category": "inspection"
+  },
+  {
+    "prompt": "Read the handwritten math formula in this picture",
+    "expected_agent": "vision",
+    "category": "handwriting"
+  },
+  {
+    "prompt": "Analyze this webpage screenshot and check if the buttons are aligned",
+    "expected_agent": "vision",
+    "category": "layout_check"
+  },
+  {
+    "prompt": "Is there any text visible in this blurred image capture?",
+    "expected_agent": "vision",
+    "category": "ocr"
+  }
+]

@@ -1,0 +1,77 @@
+[
+  {
+    "prompt": "Break this big project into step-by-step milestones and deadlines",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Create a project roadmap and strategic action plan for my app launch",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Decompose this complex multi-agent system migration task into a step-by-step plan",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Help me plan a 4-week sprint roadmap for my engineering team",
+    "expected_agent": "planner",
+    "category": "sprint_planning"
+  },
+  {
+    "prompt": "Create a step-by-step study schedule for preparing for the AWS exam in 30 days",
+    "expected_agent": "planner",
+    "category": "study_plan"
+  },
+  {
+    "prompt": "Structure an execution strategy for rewriting our monolith to microservices",
+    "expected_agent": "planner",
+    "category": "architecture_strategy"
+  },
+  {
+    "prompt": "Build a step-by-step checklist for releasing COPPER v1.0 to production",
+    "expected_agent": "planner",
+    "category": "checklist"
+  },
+  {
+    "prompt": "Create an action plan to optimize our local database query latency",
+    "expected_agent": "planner",
+    "category": "optimization_plan"
+  },
+  {
+    "prompt": "Break down the implementation of a vector RAG pipeline into actionable phases",
+    "expected_agent": "planner",
+    "category": "task_breakdown"
+  },
+  {
+    "prompt": "Plan our team's disaster recovery drill step-by-step",
+    "expected_agent": "planner",
+    "category": "contingency"
+  },
+  {
+    "prompt": "What are the sequential steps needed to deploy a high-availability cluster?",
+    "expected_agent": "planner",
+    "category": "roadmap"
+  },
+  {
+    "prompt": "Create a quarterly milestone roadmap for open-source community growth",
+    "expected_agent": "planner",
+    "category": "milestones"
+  },
+  {
+    "prompt": "Decompose the frontend UI migration from TypeScript to Pure JavaScript into steps",
+    "expected_agent": "planner",
+    "category": "task_decomposition"
+  },
+  {
+    "prompt": "Formulate a step-by-step strategy for conducting user acceptance testing",
+    "expected_agent": "planner",
+    "category": "testing_strategy"
+  },
+  {
+    "prompt": "Organize my project tasks into high, medium, and low priority phases",
+    "expected_agent": "planner",
+    "category": "prioritization"
+  }
+]

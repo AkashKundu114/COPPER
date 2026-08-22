@@ -1,0 +1,77 @@
+[
+  {
+    "prompt": "Hello there, how are you today?",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Hey C.O.P.P.E.R, what's up?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Thank you so much for the assistance, that was very helpful!",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Good morning, hope you are ready for some work today",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Nice to meet you, COPPER",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Who created you and what is your mission as an AI operating system?",
+    "expected_agent": "chat",
+    "category": "identity"
+  },
+  {
+    "prompt": "Tell me a fun thought or witty remark",
+    "expected_agent": "chat",
+    "category": "smalltalk"
+  },
+  {
+    "prompt": "Good evening! Hope things are running smoothly",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Thanks for the quick response",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Yo what can you help me with today?",
+    "expected_agent": "chat",
+    "category": "capabilities"
+  },
+  {
+    "prompt": "Have a wonderful weekend ahead!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  },
+  {
+    "prompt": "I appreciate your assistance on this project",
+    "expected_agent": "chat",
+    "category": "gratitude"
+  },
+  {
+    "prompt": "Hello world, testing the assistant connection",
+    "expected_agent": "chat",
+    "category": "greeting"
+  },
+  {
+    "prompt": "Sup copper, feeling energized today?",
+    "expected_agent": "chat",
+    "category": "informal"
+  },
+  {
+    "prompt": "Goodbye for now, talk to you later!",
+    "expected_agent": "chat",
+    "category": "farewell"
+  }
+]

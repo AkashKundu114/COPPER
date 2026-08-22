@@ -1,0 +1,127 @@
+[
+  {
+    "prompt": "What is the history of the Roman Empire and why did it fall?",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Explain quantum mechanics and wave-particle duality to me",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Summarize the latest AI news and breakthroughs in 2026",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Compare and contrast React, Vue, and Svelte in architecture and speed",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Who invented the transformer neural network architecture in deep learning?",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What are the core differences between SQLite and PostgreSQL databases?",
+    "expected_agent": "research",
+    "category": "technical_comparison"
+  },
+  {
+    "prompt": "Explain the concept of epistemic memory in cognitive neuroscience",
+    "expected_agent": "research",
+    "category": "concept"
+  },
+  {
+    "prompt": "Tell me about the black hole information paradox and Hawking radiation",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "How does RNA polymerase synthesize mRNA during transcription?",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Investigate the economic causes of the 2008 financial crisis",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "What is the difference between supervised and self-supervised learning?",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain the Byzantine Generals Problem in distributed consensus systems",
+    "expected_agent": "research",
+    "category": "distributed_systems"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism as taught by Marcus Aurelius",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "How do lithium-ion solid-state batteries differ from traditional liquid batteries?",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What are the fundamental postulates of Einstein's special theory of relativity?",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Explain the difference between TCP and UDP network transport protocols",
+    "expected_agent": "research",
+    "category": "networking"
+  },
+  {
+    "prompt": "Tell me about the Voynich manuscript and theories about its origin",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What are the environmental trade-offs between solar and nuclear power?",
+    "expected_agent": "research",
+    "category": "energy"
+  },
+  {
+    "prompt": "Explain how the human immune system produces antibodies against antigens",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Search the web for recent peer-reviewed papers on room-temperature superconductivity",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "What is G\u00f6del's Incompleteness Theorem in formal mathematical logic?",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "How does the CRISPR-Cas9 gene editing mechanism work at the molecular level?",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Explain the CAP theorem and trade-offs in distributed databases",
+    "expected_agent": "research",
+    "category": "databases"
+  },
+  {
+    "prompt": "Who was Alan Turing and what was the significance of the Universal Turing Machine?",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What are the stages of sleep and the role of REM sleep in memory consolidation?",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  }
+]

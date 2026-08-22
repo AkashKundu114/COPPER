@@ -32,47 +32,47 @@ class RoutingResult:
 # Weighted keyword maps with explicit intent categories
 KEYWORD_RULES: Dict[AgentType, List[Tuple[str, float]]] = {
     AgentType.CODING: [
-        (r'\b(write|create|implement|fix|refactor|debug|compile|review)\s+.*(code|function|script|class|module|algorithm|program|app|test|api|endpoint|dependency injection|async/await)\b', 3.5),
-        (r'\b(python|javascript|typescript|rust|c\+\+|golang|html|css|sql|react|fastapi|docker|git|bash|powershell|tailwind)\b', 2.0),
-        (r'\b(syntax error|type error|stack trace|null pointer|exception|traceback|indentationerror|segfault|typeerror|property does not exist)\b', 3.0),
-        (r'\b(unit test|pytest|jest|mock|coverage|lint|oxlint|ruff|black)\b', 2.5),
-        (r'\b(pull request|git commit|merge conflict|rebase|git push)\b', 2.5),
-        (r'\b(center a div|regex|regex pattern|sql query|orm|database migration|alembic)\b', 2.5),
-        (r'\b(refactor|dependency injection|async/await|data structure|sorting algorithm)\b', 2.5),
-        (r'\b(code|function|debug|compile|algorithm)\b', 1.0),
+        (r'\b(write|create|implement|fix|refactor|debug|compile|review)\s+.*(code|function|script|class|module|algorithm|program|app|test|api|endpoint|dependency injection|async/await|tree|store|zustand|hook|useeffect|cors|middleware|decorator|debounce)\b', 3.5),
+        (r'\b(python|javascript|typescript|rust|c\+\+|golang|html|css|sql|react|fastapi|docker|git|bash|powershell|tailwind|sqlalchemy|express|vue|svelte|zustand|wasm)\b', 2.0),
+        (r'\b(syntax error|type error|stack trace|null pointer|exception|traceback|indentationerror|segfault|segmentation fault|typeerror|property does not exist|memory leak|indexerror|cors header|connection pooling)\b', 3.0),
+        (r'\b(unit test|pytest|jest|mock|coverage|lint|oxlint|ruff|black|pytest-mock)\b', 2.5),
+        (r'\b(pull request|git commit|merge conflict|rebase|git push|git merge)\b', 2.5),
+        (r'\b(center a div|regex|regex pattern|sql query|orm|database migration|alembic|window functions|partition by|lru cache|binary search tree)\b', 2.5),
+        (r'\b(refactor|dependency injection|async/await|data structure|sorting algorithm|quicksort|infinite re-render)\b', 2.5),
+        (r'\b(code|function|debug|compile|algorithm|segmentation fault)\b', 1.5),
     ],
     AgentType.AUTOMATION: [
-        (r'\b(open|launch|start|close|kill|terminate|restart)\s+(my\s+|the\s+|all\s+)?(browser|chrome|firefox|terminal|window|tabs|app|application|vscode|spotify|calculator|redis|server|container|docker container)\b', 3.5),
+        (r'\b(open|launch|start|close|kill|terminate|restart|maximize|minimize|switch focus)\s+(my\s+|the\s+|all\s+)?(browser|chrome|firefox|terminal|window|tabs|app|application|vscode|spotify|calculator|redis|server|container|docker container|process|workstation)\b', 3.5),
         (r'\b(click|press|type|drag|scroll|mouse|keyboard|automate|form filling)\b', 2.5),
-        (r'\b(delete|move|copy|rename|organize|unzip|archive|tar\.gz|extract)\s+.*(file|files|folder|directory|logs|screenshots|downloads|pictures)\b', 3.0),
-        (r'\b(restart|terminate|kill|run command|execute script|launch docker|system reboot)\b', 2.5),
-        (r'\b(unzip|tar\.gz|zip|archive|move all|delete the|close all)\b', 2.5),
-        (r'\b(automation|automate|macro|hotkey|clipboard|tabs)\b', 1.5),
+        (r'\b(delete|move|copy|rename|organize|unzip|archive|tar\.gz|extract|empty|clean up)\s+.*(file|files|folder|directory|logs|screenshots|downloads|pictures|recycle bin|backup|temp files)\b', 3.0),
+        (r'\b(restart|terminate|kill|run command|execute script|launch docker|system reboot|mute system audio|lock the workstation|take a screenshot and save)\b', 2.5),
+        (r'\b(unzip|tar\.gz|zip|archive|move all|delete the|close all|empty the recycle bin|mute system|set volume|compile_assets\.bat|execute the build script)\b', 2.5),
+        (r'\b(automation|automate|macro|hotkey|clipboard|tabs|workstation screen)\b', 1.5),
     ],
     AgentType.REMINDER: [
-        (r'\b(remind me to|set a reminder|create a reminder|remind me at|remind me tomorrow|remind me in)\b', 3.5),
-        (r'\b(set (an )?alarm|wake me up at|wake me up|countdown for|timer for)\b', 3.5),
-        (r'\b(schedule a meeting|add to calendar|book an appointment|create event)\b', 3.5),
-        (r'\b(todo list|add to todo|my tasks|task deadline|due tomorrow|due at)\b', 3.0),
-        (r'\b(every day at|weekly on|daily at|recurring alarm|remind)\b', 2.0),
+        (r'\b(remind me to|set a reminder|create a reminder|remind me at|remind me tomorrow|remind me in|create a recurring reminder|habit reminder)\b', 3.5),
+        (r'\b(set (an )?alarm|wake me up at|wake me up|countdown for|timer for|pomodoro)\b', 3.5),
+        (r'\b(schedule a meeting|add to calendar|book an appointment|create event|retrospective calendar event|calendar event)\b', 3.5),
+        (r'\b(todo list|add to todo|my tasks|task deadline|due tomorrow|due at|upcoming scheduled tasks|upcoming tasks|cancel my .* reminder|due on the)\b', 3.0),
+        (r'\b(every day at|weekly on|daily at|recurring alarm|remind|reminders for today|timesheets every)\b', 2.0),
     ],
     AgentType.RESEARCH: [
-        (r'\b(what is the history of|who invented|explain the concept of|how does .* work|tell me about)\b', 3.5),
-        (r'\b(summarize the latest|search the web for|find research papers on|literature review|explain)\b', 3.0),
-        (r'\b(compare and contrast|what are the (core )?differences between|deep dive into|investigate|differences between)\b', 3.5),
-        (r'\b(quantum mechanics|astrophysics|black hole|history|biography|philosophy|theory|paradox)\b', 2.5),
-        (r'\b(what is|who is|why is|explain|summarize|news on|research)\b', 1.5),
+        (r'\b(what is the history of|who invented|explain the concept of|how does .* work|tell me about|how does .* differ|differ from)\b', 3.5),
+        (r'\b(summarize the latest|search the web for|find research papers on|literature review|explain|investigate the economic|trade-offs between)\b', 3.0),
+        (r'\b(compare and contrast|what are the (core )?differences between|deep dive into|investigate|differences between|how do .* differ from)\b', 3.5),
+        (r'\b(quantum mechanics|astrophysics|black hole|history|biography|philosophy|theory|paradox|rna polymerase|crispr|superconductivity|gödel|alan turing|byzantine generals|stoicism|solid-state|relativity|tcp and udp|cap theorem|rem sleep)\b', 2.5),
+        (r'\b(what is|who is|who was|why is|explain|summarize|news on|research|speed of light)\b', 1.5),
     ],
     AgentType.VISION: [
-        (r'\b(what is on my screen|describe this screenshot|read text from this image|ocr|read the error message)\b', 3.5),
-        (r'\b(look at this image|inspect this picture|analyze this photo|what do you see|diagram photo)\b', 3.5),
-        (r'\b(screenshot|image|photo|picture|diagram|ui capture|webcam)\b', 2.5),
-        (r'\b(bounding box|detect objects|find button in image|visual inspection|ui picture)\b', 3.0),
+        (r'\b(what is on my screen|describe this screenshot|read text from this image|ocr|read the error message|scanned pdf receipt|circuit board picture)\b', 3.5),
+        (r'\b(look at this image|inspect this picture|analyze this photo|what do you see|diagram photo|chart image|ui mockup photo|webpage screenshot)\b', 3.5),
+        (r'\b(screenshot|image|photo|picture|diagram|ui capture|webcam|bounding box coordinates)\b', 2.5),
+        (r'\b(bounding box|detect objects|find button in image|visual inspection|ui picture|extract the table rows|handwritten math)\b', 3.0),
     ],
     AgentType.PLANNER: [
-        (r'\b(break this .* into (step-by-step )?(steps|milestones)|create a plan for|project roadmap|milestone plan|decompose task)\b', 3.5),
-        (r'\b(step-by-step guide|action plan|strategy for|organize my project|strategic planning)\b', 3.0),
-        (r'\b(plan|roadmap|milestones|action plan)\b', 1.5),
+        (r'\b(break this .* into (step-by-step )?(steps|milestones|phases)|create a plan for|project roadmap|milestone plan|decompose task|decompose this)\b', 3.5),
+        (r'\b(step-by-step (guide|action plan|strategy|checklist|study schedule)|strategic planning|execution strategy|quarterly milestone roadmap)\b', 3.0),
+        (r'\b(plan|roadmap|milestones|action plan|prioritize.*phases|sprint roadmap)\b', 2.0),
     ],
 }
 
@@ -212,7 +212,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     )
 
 
-async def _llm_route(message: str) -> AgentType:
+async def _llm_subagent_route(message: str) -> AgentType:
     from app.ai.llm.prompt_manager import ROUTING_PROMPT
     from app.ai.llm.ollama_client import ollama_client
     from app.ai.llm.model_manager import model_manager
