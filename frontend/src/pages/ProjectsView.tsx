@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FolderKanban, Plus, Trash2, CheckCircle2, AlertTriangle, ShieldAlert, X } from "lucide-react";
+import {
+  FolderKanban,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldAlert,
+  X,
+} from "lucide-react";
 
 export interface ProjectItem {
   id: string;
@@ -16,24 +24,28 @@ export const ProjectsView: React.FC = () => {
   const [projects, setProjects] = useState<ProjectItem[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [
-        {
-          id: "p1",
-          name: "C.O.P.P.E.R. Core Architecture",
-          health: "healthy",
-          reason: "All 30 local agent workflows and offline telemetry pipelines active.",
-          completedTasks: 18,
-          totalTasks: 20
-        },
-        {
-          id: "p2",
-          name: "Personal Knowledge Graph",
-          health: "healthy",
-          reason: "Local SQLite memory vectors & relationship tier tracking synchronized.",
-          completedTasks: 8,
-          totalTasks: 10
-        }
-      ];
+      return saved
+        ? JSON.parse(saved)
+        : [
+            {
+              id: "p1",
+              name: "C.O.P.P.E.R. Core Architecture",
+              health: "healthy",
+              reason:
+                "All 30 local agent workflows and offline telemetry pipelines active.",
+              completedTasks: 18,
+              totalTasks: 20,
+            },
+            {
+              id: "p2",
+              name: "Personal Knowledge Graph",
+              health: "healthy",
+              reason:
+                "Local SQLite memory vectors & relationship tier tracking synchronized.",
+              completedTasks: 8,
+              totalTasks: 10,
+            },
+          ];
     } catch {
       return [];
     }
@@ -64,7 +76,7 @@ export const ProjectsView: React.FC = () => {
       reason: reason.trim() || "Project milestone tracking active.",
       health,
       completedTasks: Number(completedTasks) || 0,
-      totalTasks: Math.max(1, Number(totalTasks) || 1)
+      totalTasks: Math.max(1, Number(totalTasks) || 1),
     };
 
     setProjects((prev) => [newProject, ...prev]);
@@ -81,9 +93,9 @@ export const ProjectsView: React.FC = () => {
         return {
           ...p,
           completedTasks: nextDone,
-          health: nextDone === p.totalTasks ? "completed" : p.health
+          health: nextDone === p.totalTasks ? "completed" : p.health,
         };
-      })
+      }),
     );
   };
 
@@ -95,8 +107,12 @@ export const ProjectsView: React.FC = () => {
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Project Center</h1>
-          <p className="text-xs text-slate-400 font-mono">Overview of active projects, task completion, and health indicators</p>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Project Center
+          </h1>
+          <p className="text-xs text-slate-400 font-mono">
+            Overview of active projects, task completion, and health indicators
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -110,14 +126,21 @@ export const ProjectsView: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {projects.length === 0 ? (
           <div className="col-span-2 p-12 text-center text-xs text-slate-500 font-mono bg-slate-900/60 rounded-2xl border border-slate-800 space-y-2">
-            <p className="font-semibold text-slate-300">No active projects yet.</p>
+            <p className="font-semibold text-slate-300">
+              No active projects yet.
+            </p>
             <p>Click "+ New Project" to organize your high-level milestones.</p>
           </div>
         ) : (
           projects.map((proj) => {
-            const pct = Math.round((proj.completedTasks / Math.max(1, proj.totalTasks)) * 100);
+            const pct = Math.round(
+              (proj.completedTasks / Math.max(1, proj.totalTasks)) * 100,
+            );
             return (
-              <div key={proj.id} className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-sm hover:border-slate-700 transition-all flex flex-col justify-between">
+              <div
+                key={proj.id}
+                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-sm hover:border-slate-700 transition-all flex flex-col justify-between"
+              >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2 font-bold text-sm text-white">
@@ -145,14 +168,20 @@ export const ProjectsView: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 font-mono leading-relaxed">{proj.reason}</p>
+                  <p className="text-xs text-slate-400 font-mono leading-relaxed">
+                    {proj.reason}
+                  </p>
                 </div>
 
                 <div className="space-y-2 pt-2 border-t border-slate-800/60">
                   <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-slate-400">Progress: <strong className="text-white">{pct}%</strong></span>
+                    <span className="text-slate-400">
+                      Progress: <strong className="text-white">{pct}%</strong>
+                    </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-400">{proj.completedTasks} / {proj.totalTasks} Tasks</span>
+                      <span className="text-slate-400">
+                        {proj.completedTasks} / {proj.totalTasks} Tasks
+                      </span>
                       <button
                         onClick={() => incrementTask(proj.id)}
                         disabled={proj.completedTasks >= proj.totalTasks}
@@ -190,15 +219,22 @@ export const ProjectsView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in font-mono text-xs">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white">Create New Project</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+              <h3 className="font-bold text-sm text-white">
+                Create New Project
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleCreateProject} className="space-y-3.5">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Project Name</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Project Name
+                </label>
                 <input
                   type="text"
                   required
@@ -210,7 +246,9 @@ export const ProjectsView: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Description / Goal</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Description / Goal
+                </label>
                 <textarea
                   placeholder="e.g. Local OCR and multimodal screen interpretation."
                   value={reason}
@@ -221,7 +259,9 @@ export const ProjectsView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Health Status</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Health Status
+                  </label>
                   <select
                     value={health}
                     onChange={(e) => setHealth(e.target.value as any)}
@@ -234,7 +274,9 @@ export const ProjectsView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Total Target Tasks</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Total Target Tasks
+                  </label>
                   <input
                     type="number"
                     min="1"

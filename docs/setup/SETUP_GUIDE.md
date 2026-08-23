@@ -144,7 +144,9 @@ load on top of the base model with `peft`:
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-base = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.3", device_map="auto")
+base = AutoModelForCausalLM.from_pretrained(
+    "mistralai/Mistral-7B-Instruct-v0.3", device_map="auto"
+)
 model = PeftModel.from_pretrained(base, "./axis-lora/final_adapter")
 tokenizer = AutoTokenizer.from_pretrained("./axis-lora/final_adapter")
 ```
@@ -169,7 +171,9 @@ from peft import PeftModel
 test_record = json.loads(open("dataset/AXIS/axis_test.jsonl").readline())
 system_msg, user_msg = test_record["messages"][0], test_record["messages"][1]
 
-base = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.3", device_map="auto")
+base = AutoModelForCausalLM.from_pretrained(
+    "mistralai/Mistral-7B-Instruct-v0.3", device_map="auto"
+)
 model = PeftModel.from_pretrained(base, "./axis-lora/final_adapter")
 tokenizer = AutoTokenizer.from_pretrained("./axis-lora/final_adapter")
 
@@ -195,9 +199,12 @@ AGENT_CONFIGS["YOURAGENT"] = {
     "role": "the ... agent of COPPER. You ...",
     "personality": "...",
     "payload_fields": "action, field_a, field_b",
-    "intents": ["Do {task} for me", "..."],        # 6-10 templates
+    "intents": ["Do {task} for me", "..."],  # 6-10 templates
     "dialogue": ["In-character reaction 1", "..."],  # 5-8 lines
-    "payload_fn": lambda slots, text, rng: {"action": "...", "field_a": slots.get("task")},
+    "payload_fn": lambda slots, text, rng: {
+        "action": "...",
+        "field_a": slots.get("task"),
+    },
 }
 # and add it to MODEL_MAP with its tier
 ```

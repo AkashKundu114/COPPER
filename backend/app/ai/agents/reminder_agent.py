@@ -13,6 +13,7 @@ When the user asks to set an alarm, reminder, or schedule a task:
 4. Always state the exact Target Time and Remaining Time accurately.
 """
 
+
 class ReminderAgent(BaseAgent):
     def __init__(self):
         super().__init__(
@@ -62,5 +63,6 @@ class ReminderAgent(BaseAgent):
         target_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
         async for chunk in ollama_client.stream_chat(messages, model=target_model):
             yield chunk
+
 
 reminder_agent = ReminderAgent()

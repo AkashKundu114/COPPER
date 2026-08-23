@@ -14,17 +14,20 @@ from app.utils.validators import validate_message
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
+
 class ChatRequest(BaseModel):
     message: str
     session_id: str | None = None
     provider: LLMProvider = LLMProvider.OLLAMA
     stream: bool = False
 
+
 class ChatResponse(BaseModel):
     response: str
     agent_type: str
     session_id: str
     guardian_verdict: dict | None = None
+
 
 @router.post("/message", response_model=ChatResponse)
 async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
@@ -47,6 +50,7 @@ async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
         logger.error(f"Chat endpoint error: {e}")
         raise HTTPException(status_code=500, detail="AI service error")
 
+
 @router.get("/stream")
 async def stream_message(message: str, session_id: str | None = None, provider: LLMProvider = LLMProvider.OLLAMA):
     valid, err = validate_message(message)
@@ -61,6 +65,7 @@ async def stream_message(message: str, session_id: str | None = None, provider: 
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
+
 @router.get("/history/{session_id}")
 async def get_history(session_id: str, db: Session = Depends(get_db)):
     records = (
@@ -72,12 +77,14 @@ async def get_history(session_id: str, db: Session = Depends(get_db)):
     )
     return [r.to_dict() for r in records]
 
+
 @router.delete("/history/{session_id}")
 async def clear_history(session_id: str, db: Session = Depends(get_db)):
     await chat_service.clear_history(session_id)
     db.query(ChatHistory).filter(ChatHistory.session_id == session_id).delete()
     db.commit()
     return {"message": "History cleared"}
+
 
 @router.websocket("/ws/{session_id}")
 async def websocket_chat(websocket: WebSocket, session_id: str):
@@ -115,8 +122,9 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                     import base64
 
                     from app.services.audio_service import audio_pipeline
+
                     audio_bytes = await audio_pipeline.tts.synthesize(complete_text)
-                    audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
+                    audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
                     await manager.send(session_id, {"type": "audio_playback", "audio_base64": audio_b64})
                 except Exception as e:
                     logger.error(f"TTS websocket error: {e}")

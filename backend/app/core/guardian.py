@@ -8,6 +8,7 @@ class DisagreementLevel(IntEnum):
     CHALLENGE = 2
     SAFETY = 3
 
+
 @dataclass
 class GuardianVerdict:
     level: DisagreementLevel
@@ -27,6 +28,7 @@ class GuardianVerdict:
             "recommendation": self.recommendation,
             "requires_confirmation": self.requires_confirmation,
         }
+
 
 SAFETY_TRIGGERS = [
     "rm -rf",
@@ -70,6 +72,7 @@ CONFLICT_TRIGGERS = [
     "schedule a gaming session",
     "schedule gaming session",
 ]
+
 
 class GuardianEngine:
     def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
@@ -121,5 +124,6 @@ class GuardianEngine:
         else:
             lines.append("If you still want to proceed, I can — just confirm.")
         return "\n".join(lines)
+
 
 guardian_engine = GuardianEngine()

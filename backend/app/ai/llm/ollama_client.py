@@ -101,4 +101,5 @@ class OllamaClient:
             logger.warning(f"Ollama stream error: {e}")
             yield f"Cannot reach local Ollama server at {self.base_url}. Please start Ollama to chat with C.O.P.P.E.R."
 
+
 ollama_client = OllamaClient()

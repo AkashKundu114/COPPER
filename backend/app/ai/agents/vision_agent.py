@@ -10,4 +10,5 @@ class VisionAgent(BaseAgent):
             description="Analyzes screenshots, UI layouts, images, and visual content.",
         )
 
+
 vision_agent = VisionAgent()

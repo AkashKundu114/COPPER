@@ -49,4 +49,5 @@ class GuardianService:
         )
         db.commit()
 
+
 guardian_service = GuardianService()

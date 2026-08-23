@@ -14,9 +14,12 @@ class ContextEngine:
         try:
             epistemic_memories = await memory_manager.get_relevant_memories(message)
             if epistemic_memories:
-                epistemic_parts.append("\n• Dynamically Retrieved Context:\n" + "\n".join(
-                    [f"- [{m.get('memory_type', 'fact').upper()}] {m.get('content')}" for m in epistemic_memories]
-                ))
+                epistemic_parts.append(
+                    "\n• Dynamically Retrieved Context:\n"
+                    + "\n".join(
+                        [f"- [{m.get('memory_type', 'fact').upper()}] {m.get('content')}" for m in epistemic_memories]
+                    )
+                )
         except Exception as e:
             logger.warning(f"Memory context retrieval fallback: {e}")
 
@@ -35,5 +38,6 @@ class ContextEngine:
         if session_id in persistent_memory.sessions:
             persistent_memory.sessions.pop(session_id, None)
             persistent_memory._save_sessions()
+
 
 context_engine = ContextEngine()

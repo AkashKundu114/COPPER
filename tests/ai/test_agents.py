@@ -1,18 +1,18 @@
 import pytest
-from app.core.constants import AgentType, LLMProvider
+from app.ai.agents.automation_agent import AutomationAgent
 from app.ai.agents.base import BaseAgent
 from app.ai.agents.coding_agent import CodingAgent
-from app.ai.agents.automation_agent import AutomationAgent
 from app.ai.agents.reminder_agent import ReminderAgent
 from app.ai.agents.research_agent import ResearchAgent
 from app.ai.agents.vision_agent import VisionAgent
+from app.core.constants import AgentType, LLMProvider
 
 
 def test_base_agent_initialization():
     agent = BaseAgent(
         agent_type=AgentType.CHAT,
         name="Chat Core",
-        description="General conversational agent"
+        description="General conversational agent",
     )
     assert agent.agent_type == AgentType.CHAT
     assert agent.name == "Chat Core"
@@ -58,7 +58,7 @@ async def test_agent_fallback_execution():
         message="Hello testing",
         history=[],
         memory_context="Context notes",
-        provider=LLMProvider.OLLAMA
+        provider=LLMProvider.OLLAMA,
     )
     assert isinstance(response, str)
     assert len(response) > 0
@@ -71,7 +71,7 @@ async def test_agent_streaming_generator():
         message="Explain relativity",
         history=[],
         memory_context="",
-        provider=LLMProvider.OLLAMA
+        provider=LLMProvider.OLLAMA,
     )
     chunks = []
     async for chunk in stream:

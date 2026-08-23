@@ -61,4 +61,5 @@ class ConnectionManager:
         event["type"] = "proactive_intervention"
         await self.broadcast(event)
 
+
 manager = ConnectionManager()

@@ -12,4 +12,5 @@ def get_logger(name: str = "copper") -> logging.Logger:
     logger.addHandler(handler)
     return logger
 
+
 logger = get_logger()

@@ -11,20 +11,18 @@ PROFILE_FILE = PROFILES_DIR / "active_user.json"
 SESSIONS_FILE = DATA_DIR / "sessions_history.json"
 
 DEFAULT_PROFILE = {
-  "user_name": "Akash Kundu",
-  "role": "Software Engineer & Full-Stack Developer",
-  "facts": [
-    "User name is Akash Kundu",
-    "Role & Work: Software Engineer & Developer working on Python, TypeScript, and AI operating systems",
-    "Hardware: Windows 11 with NVIDIA RTX 5060 Laptop GPU (8GB VRAM) and AMD Ryzen 9 8940HX",
-    "Privacy: 100% local, air-gapped model execution via Ollama",
-    "Preferences: Dark cyber-HUD, structured formatting, type-safe architecture"
-  ],
-  "preferences": {
-    "voice": "en-US-AvaNeural",
-    "theme": "dark"
-  }
+    "user_name": "Akash Kundu",
+    "role": "Software Engineer & Full-Stack Developer",
+    "facts": [
+        "User name is Akash Kundu",
+        "Role & Work: Software Engineer & Developer working on Python, TypeScript, and AI operating systems",
+        "Hardware: Windows 11 with NVIDIA RTX 5060 Laptop GPU (8GB VRAM) and AMD Ryzen 9 8940HX",
+        "Privacy: 100% local, air-gapped model execution via Ollama",
+        "Preferences: Dark cyber-HUD, structured formatting, type-safe architecture",
+    ],
+    "preferences": {"voice": "en-US-AvaNeural", "theme": "dark"},
 }
+
 
 class PersistentMemoryStore:
     def __init__(self):
@@ -38,12 +36,26 @@ class PersistentMemoryStore:
                 with open(PROFILE_FILE, encoding="utf-8") as f:
                     data = json.load(f)
                     name = data.get("user_name", "")
-                    if not name or len(name) < 3 or name.lower() in ["f", "who am i", "whats my name", "dude", "clear vram"]:
+                    if (
+                        not name
+                        or len(name) < 3
+                        or name.lower() in ["f", "who am i", "whats my name", "dude", "clear vram"]
+                    ):
                         data["user_name"] = "Akash Kundu"
                     data.setdefault("role", "Software Engineer & Full-Stack Developer")
                     data["facts"] = [
-                        f for f in data.get("facts", [])
-                        if not any(bad in f.lower() for bad in ["who am i", "whats my name", "user name is f", "user name is dude", "user name is clear"])
+                        f
+                        for f in data.get("facts", [])
+                        if not any(
+                            bad in f.lower()
+                            for bad in [
+                                "who am i",
+                                "whats my name",
+                                "user name is f",
+                                "user name is dude",
+                                "user name is clear",
+                            ]
+                        )
                     ]
                     if "User name is Akash Kundu" not in data["facts"]:
                         data["facts"].insert(0, "User name is Akash Kundu")
@@ -84,7 +96,18 @@ class PersistentMemoryStore:
         if not clean_name or len(clean_name) < 2:
             return
         # Block single chars or commands from becoming names
-        if len(clean_name) <= 2 or clean_name.lower() in ["f", "gf", "who am i", "whats my name", "what do i do", "how to", "dude", "clear", "clear vram", "unload"]:
+        if len(clean_name) <= 2 or clean_name.lower() in [
+            "f",
+            "gf",
+            "who am i",
+            "whats my name",
+            "what do i do",
+            "how to",
+            "dude",
+            "clear",
+            "clear vram",
+            "unload",
+        ]:
             return
 
         self.profile["user_name"] = clean_name
@@ -109,23 +132,61 @@ class PersistentMemoryStore:
         lower = text.lower()
 
         # Strict ignore for questions, single letters, short words, commands
-        if "?" in text or len(text) < 4 or any(lower.startswith(q) for q in ["what", "who", "where", "when", "why", "how", "is", "are", "can", "could", "do", "tell", "i mean", "did i"]):
+        if (
+            "?" in text
+            or len(text) < 4
+            or any(
+                lower.startswith(q)
+                for q in [
+                    "what",
+                    "who",
+                    "where",
+                    "when",
+                    "why",
+                    "how",
+                    "is",
+                    "are",
+                    "can",
+                    "could",
+                    "do",
+                    "tell",
+                    "i mean",
+                    "did i",
+                ]
+            )
+        ):
             return
 
         # ONLY recognize explicit name introductions (e.g. "My name is Akash", "Call me Akash Kundu")
-        name_match = (
-            re.search(r"\b(?:my name is|call me|name's|name is)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\b", text)
-            or re.search(r"^(?:I am|I'm)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)$", text)
-        )
+        name_match = re.search(
+            r"\b(?:my name is|call me|name's|name is)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\b", text
+        ) or re.search(r"^(?:I am|I'm)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)$", text)
         if name_match:
             detected = name_match.group(1).strip()
-            blacklist = {"here", "sorry", "asking", "fine", "ready", "thinking", "sure", "testing", "tired", "back", "good", "happy", "dude", "clear"}
+            blacklist = {
+                "here",
+                "sorry",
+                "asking",
+                "fine",
+                "ready",
+                "thinking",
+                "sure",
+                "testing",
+                "tired",
+                "back",
+                "good",
+                "happy",
+                "dude",
+                "clear",
+            }
             if detected.lower() not in blacklist and len(detected) >= 3:
                 self.set_user_name(detected)
                 return
 
         # Explicit memory commands (e.g. "remember that I prefer dark mode")
-        remember_match = re.search(r"\b(?:remember that|note that|don't forget that|keep in mind that)\s+(.*)", text, re.IGNORECASE)
+        remember_match = re.search(
+            r"\b(?:remember that|note that|don't forget that|keep in mind that)\s+(.*)", text, re.IGNORECASE
+        )
         if remember_match:
             fact = remember_match.group(1).strip()
             self.add_fact(fact)
@@ -157,5 +218,6 @@ class PersistentMemoryStore:
             f"  2. When asked 'what do I do' or about their profession, refer to their role as {role} and their engineering/software work on C.O.P.P.E.R.\n"
             f"  3. NEVER refer to the user as single letters or commands like 'f' or 'clear vram'."
         )
+
 
 persistent_memory = PersistentMemoryStore()

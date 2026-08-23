@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Tag, CheckCircle2, Circle, Trash2, X, Clock } from "lucide-react";
+import {
+  Plus,
+  Tag,
+  CheckCircle2,
+  Circle,
+  Trash2,
+  X,
+  Clock,
+} from "lucide-react";
 
 export type TaskStatus = "inbox" | "planned" | "active" | "completed";
 
@@ -65,8 +73,8 @@ export const TasksView: React.FC = () => {
       prev.map((t) =>
         t.id === id
           ? { ...t, status: t.status === "completed" ? "active" : "completed" }
-          : t
-      )
+          : t,
+      ),
     );
   };
 
@@ -74,9 +82,10 @@ export const TasksView: React.FC = () => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const filteredTasks = activeFilter === "all"
-    ? tasks
-    : tasks.filter((t) => t.status === activeFilter);
+  const filteredTasks =
+    activeFilter === "all"
+      ? tasks
+      : tasks.filter((t) => t.status === activeFilter);
 
   const statuses: TaskStatus[] = ["inbox", "planned", "active", "completed"];
 
@@ -85,8 +94,12 @@ export const TasksView: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Task Manager</h1>
-          <p className="text-xs text-slate-400 font-mono">Organize tasks, workflows, and milestones</p>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Task Manager
+          </h1>
+          <p className="text-xs text-slate-400 font-mono">
+            Organize tasks, workflows, and milestones
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -127,8 +140,12 @@ export const TasksView: React.FC = () => {
       {/* Tasks List */}
       {filteredTasks.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-          <p className="text-sm font-semibold text-slate-300">No tasks in this view</p>
-          <p className="text-xs text-slate-500 font-mono">Click "+ New Task" above to add your first task.</p>
+          <p className="text-sm font-semibold text-slate-300">
+            No tasks in this view
+          </p>
+          <p className="text-xs text-slate-500 font-mono">
+            Click "+ New Task" above to add your first task.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -153,7 +170,9 @@ export const TasksView: React.FC = () => {
                   )}
                 </button>
                 <div className="flex-1 space-y-1">
-                  <p className={`text-sm font-medium text-white ${task.status === "completed" ? "line-through text-slate-400" : ""}`}>
+                  <p
+                    className={`text-sm font-medium text-white ${task.status === "completed" ? "line-through text-slate-400" : ""}`}
+                  >
                     {task.title}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
@@ -170,8 +189,8 @@ export const TasksView: React.FC = () => {
                         task.priority === "high"
                           ? "bg-rose-950 text-rose-400 border border-rose-800/40"
                           : task.priority === "medium"
-                          ? "bg-amber-950 text-amber-400 border border-amber-800/40"
-                          : "bg-slate-800 text-slate-300"
+                            ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                            : "bg-slate-800 text-slate-300"
                       }`}
                     >
                       {task.priority}
@@ -197,14 +216,19 @@ export const TasksView: React.FC = () => {
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
               <h3 className="font-bold text-sm text-white">Create New Task</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleCreateTask} className="space-y-3.5">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Task Title</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Task Title
+                </label>
                 <input
                   type="text"
                   required
@@ -217,7 +241,9 @@ export const TasksView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Project</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Project
+                  </label>
                   <input
                     type="text"
                     value={project}
@@ -226,7 +252,9 @@ export const TasksView: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Estimated Duration</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Estimated Duration
+                  </label>
                   <input
                     type="text"
                     value={duration}
@@ -238,7 +266,9 @@ export const TasksView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Priority</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Priority
+                  </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
@@ -250,7 +280,9 @@ export const TasksView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Initial Status</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Initial Status
+                  </label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}

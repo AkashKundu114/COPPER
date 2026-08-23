@@ -7,10 +7,12 @@ from app.services.audio_service import audio_pipeline
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 
+
 class SynthesisRequest(BaseModel):
     text: str
     voice: str | None = "en_US-amy-medium"
     speed: float | None = 1.0
+
 
 @router.get("/status")
 async def voice_status():
@@ -18,6 +20,7 @@ async def voice_status():
     Get the health, discovered models, and capabilities of the audio pipelines.
     """
     return audio_pipeline.get_status()
+
 
 @router.get("/models")
 async def list_audio_models():
@@ -29,12 +32,14 @@ async def list_audio_models():
         "tts_voices": audio_pipeline.tts.list_available_voices(),
     }
 
+
 @router.get("/voices")
 async def list_voices():
     """
     List available Text-To-Speech voices.
     """
     return {"voices": audio_pipeline.tts.list_available_voices()}
+
 
 @router.post("/transcribe")
 async def transcribe_audio(
@@ -58,6 +63,7 @@ async def transcribe_audio(
     except Exception as e:
         logger.error(f"Failed to transcribe audio: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/synthesize")
 @router.post("/speak")
@@ -88,6 +94,7 @@ async def synthesize_speech(request: SynthesisRequest):
     except Exception as e:
         logger.error(f"TTS synthesis error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/conversation")
 async def voice_conversation(
@@ -138,6 +145,7 @@ async def voice_conversation(
     except Exception as e:
         logger.error(f"Voice conversation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.websocket("/stream")
 async def voice_websocket_stream(websocket: WebSocket):

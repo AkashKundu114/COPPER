@@ -1,14 +1,14 @@
-import os
 from pathlib import Path
+
 from app.core.config import Settings, settings
 
 
 def test_config_app_name():
-    assert settings.APP_NAME == 'COPPER'
+    assert settings.APP_NAME == "COPPER"
 
 
 def test_config_version():
-    assert settings.APP_VERSION == '1.0.0'
+    assert settings.APP_VERSION == "1.0.0"
 
 
 def test_config_agent_tiers_count():
@@ -16,8 +16,8 @@ def test_config_agent_tiers_count():
 
 
 def test_config_agent_tiers_bounds():
-    assert settings.AGENT_TIERS[0][1] == 'Stranger'
-    assert settings.AGENT_TIERS[-1][1] == 'Inner Circle'
+    assert settings.AGENT_TIERS[0][1] == "Stranger"
+    assert settings.AGENT_TIERS[-1][1] == "Inner Circle"
 
 
 def test_config_audio_models_dir():

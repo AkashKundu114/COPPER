@@ -8,10 +8,26 @@ export type BrainEvent =
   | { type: "edge_pulse"; from: string; to: string }
   | { type: "agent_active"; agent: string }
   | { type: "agent_speaking"; agent: string; text: string }
-  | { type: "memory_update"; profile_delta: { key: string; value: string }[]; agent: string; familiarity: number; tier: string; glow?: number }
+  | {
+      type: "memory_update";
+      profile_delta: { key: string; value: string }[];
+      agent: string;
+      familiarity: number;
+      tier: string;
+      glow?: number;
+    }
   | { type: "done" }
   | { type: "audio_playback"; audio_base64: string }
-  | { type: "proactive_intervention"; alert_id: string; severity: "info" | "warning" | "critical"; category: string; title: string; message: string; mode: string; suggested_actions: string[] };
+  | {
+      type: "proactive_intervention";
+      alert_id: string;
+      severity: "info" | "warning" | "critical";
+      category: string;
+      title: string;
+      message: string;
+      mode: string;
+      suggested_actions: string[];
+    };
 
 export interface ChatLine {
   id: string;
@@ -48,15 +64,24 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [connected, setConnected] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
-  const [activeEdge, setActiveEdge] = useState<{ from: string; to: string } | null>(null);
+  const [activeEdge, setActiveEdge] = useState<{
+    from: string;
+    to: string;
+  } | null>(null);
   const [pulseSeq, setPulseSeq] = useState(0);
   const [lines, setLines] = useState<ChatLine[]>([]);
-  const [lastMemoryUpdate, setLastMemoryUpdate] = useState<BrainEvent | null>(null);
+  const [lastMemoryUpdate, setLastMemoryUpdate] = useState<BrainEvent | null>(
+    null,
+  );
   const [speaking, setSpeaking] = useState(false);
   const [speakingAgent, setSpeakingAgent] = useState<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const speakingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const speakingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
   const [alerts, setAlerts] = useState<ProactiveAlert[]>([]);
 
   const audioQueue = useRef<string[]>([]);
@@ -69,25 +94,25 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
       setSpeaking(false);
       return;
     }
-    
+
     isPlayingAudio.current = true;
     setSpeaking(true);
     const base64 = audioQueue.current.shift()!;
-    
+
     try {
       const audio = new Audio("data:audio/wav;base64," + base64);
       currentAudio.current = audio;
-      
+
       audio.onended = () => {
         playNextAudio();
       };
-      
+
       audio.onerror = (e) => {
         console.error("Audio playback error", e);
         playNextAudio();
       };
-      
-      audio.play().catch(e => {
+
+      audio.play().catch((e) => {
         console.error("Failed to play audio", e);
         playNextAudio();
       });
@@ -133,20 +158,29 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           setLines((prev) => {
             const last = prev[prev.length - 1];
             // If the last line is from the same agent and is a stream, append to it
-            if (last && last.agent === event.agent && last.id.startsWith("stream-")) {
+            if (
+              last &&
+              last.agent === event.agent &&
+              last.id.startsWith("stream-")
+            ) {
               return [
                 ...prev.slice(0, -1),
-                { ...last, text: last.text + event.text }
+                { ...last, text: last.text + event.text },
               ];
             }
             // Otherwise, start a new stream bubble
             return [
               ...prev,
-              { id: `stream-${Date.now()}`, agent: event.agent, text: event.text, timestamp: Date.now() }
+              {
+                id: `stream-${Date.now()}`,
+                agent: event.agent,
+                text: event.text,
+                timestamp: Date.now(),
+              },
             ];
           });
           setSpeakingAgent(event.agent);
-          
+
           if (!isPlayingAudio.current) {
             setSpeaking(true);
             clearTimeout(speakingTimer.current);
@@ -162,7 +196,18 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
         case "proactive_intervention":
           setAlerts((prev) => {
             if (prev.some((a) => a.alert_id === event.alert_id)) return prev;
-            return [...prev, { alert_id: event.alert_id, severity: event.severity, category: event.category, title: event.title, message: event.message, mode: event.mode, suggested_actions: event.suggested_actions }];
+            return [
+              ...prev,
+              {
+                alert_id: event.alert_id,
+                severity: event.severity,
+                category: event.category,
+                title: event.title,
+                message: event.message,
+                mode: event.mode,
+                suggested_actions: event.suggested_actions,
+              },
+            ];
           });
           break;
         case "audio_playback":
@@ -195,7 +240,15 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   }, [connect]);
 
   const send = useCallback((message: string, mode: string = "auto") => {
-    setLines((prev) => [...prev, { id: `${Date.now()}-user`, agent: "YOU", text: message, timestamp: Date.now() }]);
+    setLines((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}-user`,
+        agent: "YOU",
+        text: message,
+        timestamp: Date.now(),
+      },
+    ]);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ message, mode }));
     }
@@ -205,11 +258,14 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     setAlerts((prev) => prev.filter((a) => a.alert_id !== alertId));
   }, []);
 
-  const sendSystemAction = useCallback((action: string, payload: Record<string, any>) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ action, ...payload }));
-    }
-  }, []);
+  const sendSystemAction = useCallback(
+    (action: string, payload: Record<string, any>) => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({ action, ...payload }));
+      }
+    },
+    [],
+  );
 
   return {
     connected,

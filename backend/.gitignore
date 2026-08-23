@@ -1,6 +1,29 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.py[cod]
+
+# Virtual environments
 .venv/
 venv/
+
+# Local databases
 app/data/*.db
+data/
+
+# Environment
 .env
+
+# Sandbox temp execution
+sandbox/
+
+# Eval outputs (regenerated on demand)
+eval/benchmark_metrics.json
+eval/benchmark_report.md
+eval/datasets/
+
+# Caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/

@@ -60,7 +60,7 @@ NEW_AGENT = {
     "description": "Optimizes SQL queries, manages migrations, and designs schemas.",
     "system_prompt": "You are a specialized Database Architect agent...",
     "routing_keywords": ["sql", "database", "schema", "postgres", "migration", "query"],
-    "color": "#F59E0B"
+    "color": "#F59E0B",
 }
 ```
 
@@ -69,6 +69,7 @@ Inherit from `BaseAgent` in `backend/app/ai/agents/database_architect.py`:
 
 ```python
 from app.ai.agents.base import BaseAgent
+
 
 class DatabaseArchitectAgent(BaseAgent):
     async def execute(self, prompt: str, context: dict) -> str:
@@ -86,7 +87,7 @@ In `backend/app/ai/memory/learner.py`, add custom regex patterns or heuristics t
 FACT_PATTERNS = [
     (r"I prefer (?P<fact>.*)", "preference", 0.75),
     (r"I am working on (?P<fact>.*)", "project", 0.85),
-    (r"My schedule is (?P<fact>.*)", "habit", 0.80)
+    (r"My schedule is (?P<fact>.*)", "habit", 0.80),
 ]
 ```
 

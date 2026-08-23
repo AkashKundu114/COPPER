@@ -155,17 +155,21 @@ with open("datasets/model2_code_engineering.jsonl") as f:
             obj = json.loads(line.strip())
             msgs = obj.get("messages", [])
             if len(msgs) < 2:
-                issues.append(f"Line {i+1}: Less than 2 messages")
+                issues.append(f"Line {i + 1}: Less than 2 messages")
             assistant_msgs = [m for m in msgs if m["role"] == "assistant"]
             for msg in assistant_msgs:
-                if "[DIALOGUE]" not in msg["content"] and "[TECHNICAL_PAYLOAD]" not in msg["content"]:
-                    issues.append(f"Line {i+1}: Missing output format blocks")
+                if (
+                    "[DIALOGUE]" not in msg["content"]
+                    and "[TECHNICAL_PAYLOAD]" not in msg["content"]
+                ):
+                    issues.append(f"Line {i + 1}: Missing output format blocks")
         except json.JSONDecodeError as e:
-            issues.append(f"Line {i+1}: Invalid JSON — {e}")
+            issues.append(f"Line {i + 1}: Invalid JSON — {e}")
 
 if issues:
     print(f"Found {len(issues)} issues:")
-    for issue in issues: print(f"  - {issue}")
+    for issue in issues:
+        print(f"  - {issue}")
 else:
     print("Dataset validation passed")
 ```
@@ -264,12 +268,12 @@ In your engine configuration (`state.json` or `config.py`), update the MODEL_MAP
 
 ```python
 MODEL_MAP = {
-    "MODEL_1_CORE":   "copper-model1-core",    # Your fine-tuned model
-    "MODEL_2_CODE":   "copper-model2-code",    # Your fine-tuned model
-    "MODEL_3_OS":     "copper-model3-os",      # Your fine-tuned model
+    "MODEL_1_CORE": "copper-model1-core",  # Your fine-tuned model
+    "MODEL_2_CODE": "copper-model2-code",  # Your fine-tuned model
+    "MODEL_3_OS": "copper-model3-os",  # Your fine-tuned model
     "MODEL_4_VISION": "copper-model4-vision",  # Your fine-tuned model
-    "MODEL_5_WEB":    "copper-model5-web",     # Your fine-tuned model
-    "MODEL_6_AUDIO":  None,                    # CPU-bound, no Ollama
+    "MODEL_5_WEB": "copper-model5-web",  # Your fine-tuned model
+    "MODEL_6_AUDIO": None,  # CPU-bound, no Ollama
 }
 ```
 

@@ -1,30 +1,29 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const fs = require('fs');
-const { spawn } = require('child_process');
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const fs = require("fs");
+const { spawn } = require("child_process");
 
 let mainWindow = null;
 let backendProcess = null;
 
 function getPythonExecutable(rootDir) {
   const candidates = [
-    path.join(rootDir, '.venv', 'Scripts', 'python.exe'),
-    path.join(rootDir, 'venv', 'Scripts', 'python.exe'),
-    path.join(rootDir, '.venv', 'bin', 'python'),
-    path.join(rootDir, 'venv', 'bin', 'python'),
+    path.join(rootDir, ".venv", "Scripts", "python.exe"),
+    path.join(rootDir, "venv", "Scripts", "python.exe"),
+    path.join(rootDir, ".venv", "bin", "python"),
+    path.join(rootDir, "venv", "bin", "python"),
   ];
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
-  return 'python';
+  return "python";
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
-
+  app.on("second-instance", () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
@@ -33,12 +32,12 @@ if (!gotTheLock) {
 }
 
 function configureAutoStart() {
-  if (process.platform === 'win32') {
+  if (process.platform === "win32") {
     app.setLoginItemSettings({
       openAtLogin: true,
       openAsHidden: false,
       path: process.execPath,
-      args: ['--autostart']
+      args: ["--autostart"],
     });
   }
 }
@@ -50,74 +49,79 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 700,
     show: false,
-    backgroundColor: '#020617',
+    backgroundColor: "#020617",
     autoHideMenuBar: true,
-    titleBarStyle: 'hidden',
+    titleBarStyle: "hidden",
     titleBarOverlay: {
-      color: '#020617',
-      symbolColor: '#94a3b8',
-      height: 56
+      color: "#020617",
+      symbolColor: "#94a3b8",
+      height: 56,
     },
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       webviewTag: false,
-      spellcheck: false
-    }
+      spellcheck: false,
+    },
   });
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-
-    if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) {
+    if (
+      url.startsWith("http://localhost") ||
+      url.startsWith("http://127.0.0.1")
+    ) {
       mainWindow.loadURL(url);
     }
-    return { action: 'deny' };
+    return { action: "deny" };
   });
 
-  mainWindow.webContents.on('will-navigate', (event, url) => {
-    const isLocal = url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1') || url.startsWith('file://');
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    const isLocal =
+      url.startsWith("http://localhost") ||
+      url.startsWith("http://127.0.0.1") ||
+      url.startsWith("file://");
     if (!isLocal) {
       event.preventDefault(); // Block external URL navigation completely
     }
   });
 
-  const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+  const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
 
   if (isDev) {
-    mainWindow.loadURL('http://localhost:5173');
+    mainWindow.loadURL("http://localhost:5173");
   } else {
-    mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, "dist", "index.html"));
   }
 
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.once("ready-to-show", () => {
     mainWindow.show();
     mainWindow.focus();
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
 
-const net = require('net');
+const net = require("net");
 
 function isPortOpen(port) {
   return new Promise((resolve) => {
     const socket = new net.Socket();
     socket.setTimeout(400);
-    socket.on('connect', () => {
+    socket.on("connect", () => {
       socket.destroy();
       resolve(true);
     });
-    socket.on('timeout', () => {
+    socket.on("timeout", () => {
       socket.destroy();
       resolve(false);
     });
-    socket.on('error', () => {
+    socket.on("error", () => {
       socket.destroy();
       resolve(false);
     });
-    socket.connect(port, '127.0.0.1');
+    socket.connect(port, "127.0.0.1");
   });
 }
 
@@ -125,26 +129,43 @@ async function startBackend() {
   const open = await isPortOpen(8000);
   if (open) return true;
 
-  const rootDir = path.resolve(__dirname, '..');
+  const rootDir = path.resolve(__dirname, "..");
 
   try {
     const pythonExec = getPythonExecutable(rootDir);
 
-    backendProcess = spawn(pythonExec, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'backend', '--host', '127.0.0.1', '--port', '8000', '--reload'], {
-      cwd: rootDir,
-      detached: true,
-      stdio: 'ignore',
-      shell: false
-    });
-    backendProcess.on('error', (err) => {
-      console.error('Backend process error:', err);
+    backendProcess = spawn(
+      pythonExec,
+      [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--app-dir",
+        "backend",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--reload",
+      ],
+      {
+        cwd: rootDir,
+        detached: true,
+        stdio: "ignore",
+        shell: false,
+      },
+    );
+    backendProcess.on("error", (err) => {
+      console.error("Backend process error:", err);
       backendProcess = null;
     });
-    backendProcess.on('exit', () => { backendProcess = null; });
+    backendProcess.on("exit", () => {
+      backendProcess = null;
+    });
     backendProcess.unref();
     return true;
   } catch (err) {
-    console.error('Failed to spawn background backend process:', err);
+    console.error("Failed to spawn background backend process:", err);
     return false;
   }
 }
@@ -152,50 +173,50 @@ async function startBackend() {
 async function stopBackend() {
   if (backendProcess) {
     try {
-      if (process.platform === 'win32') {
-        spawn('taskkill', ['/pid', backendProcess.pid, '/f', '/t']);
+      if (process.platform === "win32") {
+        spawn("taskkill", ["/pid", backendProcess.pid, "/f", "/t"]);
       } else {
         backendProcess.kill();
       }
-    } catch(err) {
-      console.error('Failed to stop backend:', err);
+    } catch (err) {
+      console.error("Failed to stop backend:", err);
     }
     backendProcess = null;
   }
 
-  if (process.platform === 'win32') {
+  if (process.platform === "win32") {
     try {
-      const { execSync } = require('child_process');
+      const { execSync } = require("child_process");
       const cmd = `powershell -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }"`;
-      execSync(cmd, { stdio: 'ignore' });
-    } catch(e) {}
+      execSync(cmd, { stdio: "ignore" });
+    } catch (e) {}
   }
   return true;
 }
 
-ipcMain.handle('get-backend-status', async () => {
+ipcMain.handle("get-backend-status", async () => {
   if (backendProcess !== null && !backendProcess.killed) return true;
   return await isPortOpen(8000);
 });
 
-ipcMain.handle('start-backend', async () => await startBackend());
-ipcMain.handle('stop-backend', async () => await stopBackend());
+ipcMain.handle("start-backend", async () => await startBackend());
+ipcMain.handle("stop-backend", async () => await stopBackend());
 
 app.whenReady().then(() => {
   configureAutoStart();
   createWindow();
 
-  app.on('activate', function () {
+  app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
-app.on('will-quit', () => {
+app.on("will-quit", () => {
   stopBackend();
 });
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", function () {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });

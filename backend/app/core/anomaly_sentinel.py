@@ -26,6 +26,7 @@ class AnomalyAlert:
             "suggested_actions": self.suggested_actions,
         }
 
+
 class AnomalySentinel:
     def __init__(self):
         self._error_log: list[dict] = []
@@ -187,5 +188,6 @@ class AnomalySentinel:
                 suggested_actions=["Save & Close", "I'm ready", "Snooze 2m"],
             )
         return None
+
 
 sentinel = AnomalySentinel()

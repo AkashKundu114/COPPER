@@ -18,10 +18,16 @@ export function CalendarWidget() {
     <div className="rounded-none border border-zinc-800 bg-void-panel px-4 py-3 min-w-[190px]">
       <div className="flex items-baseline justify-between mb-2">
         <div>
-          <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider">{month}</p>
-          <p className="font-display font-semibold text-xl text-white leading-tight">{weekday}</p>
+          <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider">
+            {month}
+          </p>
+          <p className="font-display font-semibold text-xl text-white leading-tight">
+            {weekday}
+          </p>
         </div>
-        <span className="font-display font-bold text-2xl text-zinc-100">{date}</span>
+        <span className="font-display font-bold text-2xl text-zinc-100">
+          {date}
+        </span>
       </div>
       <div className="flex justify-between gap-1">
         {week.map((d, i) => {
@@ -33,8 +39,12 @@ export function CalendarWidget() {
                 isToday ? "bg-zinc-800" : ""
               }`}
             >
-              <span className="font-mono text-[9px] text-ink-faint">{DAY_LABELS[i]}</span>
-              <span className={`text-xs ${isToday ? "text-white font-semibold" : "text-ink-secondary"}`}>
+              <span className="font-mono text-[9px] text-ink-faint">
+                {DAY_LABELS[i]}
+              </span>
+              <span
+                className={`text-xs ${isToday ? "text-white font-semibold" : "text-ink-secondary"}`}
+              >
                 {d.getDate()}
               </span>
             </div>

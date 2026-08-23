@@ -6,7 +6,9 @@ from app.core.logger import logger
 
 
 class LangchainManager:
-    async def ainvoke(self, messages: list[dict[str, str]], provider: LLMProvider = LLMProvider.OLLAMA, model: str | None = None) -> str:
+    async def ainvoke(
+        self, messages: list[dict[str, str]], provider: LLMProvider = LLMProvider.OLLAMA, model: str | None = None
+    ) -> str:
         try:
             return await ollama_client.chat(messages, model=model)
         except Exception as e:
@@ -22,5 +24,6 @@ class LangchainManager:
         except Exception as e:
             logger.warning(f"LangchainManager stream fallback: {e}")
             yield "Cannot reach local LLM server. Please ensure Ollama is running."
+
 
 langchain_manager = LangchainManager()

@@ -1,5 +1,5 @@
 import pytest
-from app.ai.memory.context_engine import context_engine, ContextEngine
+from app.ai.memory.context_engine import ContextEngine, context_engine
 
 
 def test_context_engine_instance():

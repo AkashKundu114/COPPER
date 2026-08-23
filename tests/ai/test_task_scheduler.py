@@ -1,9 +1,9 @@
 import pytest
 from app.ai.orchestration.task_scheduler import (
+    APSCHEDULER_AVAILABLE,
+    _spider_sense_check,
     start_scheduler,
     stop_scheduler,
-    _spider_sense_check,
-    APSCHEDULER_AVAILABLE
 )
 
 

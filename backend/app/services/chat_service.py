@@ -28,6 +28,7 @@ AGENT_MAP = {
     AgentType.IMAGE: image_agent,
 }
 
+
 class ChatService:
     async def process_message(
         self,
@@ -83,8 +84,18 @@ class ChatService:
 
         # Intercept unload VRAM requests explicitly before hitting LLMs
         lowered = message.strip().lower()
-        if lowered in ["unload model", "unload models", "unload ur pre-loaed model", "unload your models", "unload pre-loaded model", "clear vram", "free memory", "unload"]:
+        if lowered in [
+            "unload model",
+            "unload models",
+            "unload ur pre-loaed model",
+            "unload your models",
+            "unload pre-loaded model",
+            "clear vram",
+            "free memory",
+            "unload",
+        ]:
             from app.ai.llm.ollama_client import ollama_client
+
             yield "Unloading AI models from GPU VRAM to free system memory...\n\n"
             result = await ollama_client.unload_all_models()
             yield result
@@ -146,6 +157,7 @@ class ChatService:
             # Record genuine token metrics
             try:
                 from app.api.routes.system import record_token_usage
+
                 prompt_toks = max(1, int(len(message.split()) * 1.3))
                 comp_toks = max(1, int(len(complete.split()) * 1.3))
                 duration = time.time() - start_time
@@ -168,5 +180,6 @@ class ChatService:
         return {
             "is_destructive": agent_type == AgentType.AUTOMATION and any(m in msg_lower for m in destructive_markers)
         }
+
 
 chat_service = ChatService()

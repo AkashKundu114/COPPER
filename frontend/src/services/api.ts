@@ -14,7 +14,7 @@ api.interceptors.response.use(
     const msg = err.response?.data?.detail || err.message || "Request failed";
     console.error("[API Error]", msg);
     return Promise.reject(new Error(msg));
-  }
+  },
 );
 
 export const chatAPI = {
@@ -34,7 +34,9 @@ export const voiceAPI = {
     const fd = new FormData();
     fd.append("audio", audioBlob, "recording.wav");
     if (language) fd.append("language", language);
-    return api.post("/voice/transcribe", fd, { headers: { "Content-Type": "multipart/form-data" } });
+    return api.post("/voice/transcribe", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
 
   synthesize: async (text: string, voice?: string): Promise<string> => {
@@ -52,10 +54,12 @@ export const voiceAPI = {
 };
 
 export const memoryAPI = {
-  search: (query: string, limit = 10) => api.post("/memory/search", { query, limit }),
+  search: (query: string, limit = 10) =>
+    api.post("/memory/search", { query, limit }),
   add: (key: string, content: string, source = "manual") =>
     api.post("/memory/add", { key, content, source }),
-  getAll: (skip = 0, limit = 50) => api.get(`/memory/all?skip=${skip}&limit=${limit}`),
+  getAll: (skip = 0, limit = 50) =>
+    api.get(`/memory/all?skip=${skip}&limit=${limit}`),
   delete: (id: number) => api.delete(`/memory/${id}`),
   getStats: () => api.get("/memory/stats"),
 };
@@ -71,10 +75,13 @@ export const remindersAPI = {
 export const automationAPI = {
   getStats: () => api.get("/automation/system/stats"),
   getProcesses: () => api.get("/automation/system/processes"),
-  runCommand: (command: string) => api.post("/automation/system/command", { command }),
-  launchApp: (app_name: string) => api.post("/automation/app/launch", { app_name }),
+  runCommand: (command: string) =>
+    api.post("/automation/system/command", { command }),
+  launchApp: (app_name: string) =>
+    api.post("/automation/app/launch", { app_name }),
   openUrl: (url: string) => api.post("/automation/app/url", { url }),
-  browseDirectory: (path: string) => api.get(`/automation/files/browse?path=${encodeURIComponent(path)}`),
+  browseDirectory: (path: string) =>
+    api.get(`/automation/files/browse?path=${encodeURIComponent(path)}`),
   organizeFiles: (source: string, destination: string) =>
     api.post("/automation/files/organize", { source, destination }),
 };
@@ -84,18 +91,28 @@ export const visionAPI = {
     const fd = new FormData();
     fd.append("image", imageBlob);
     if (prompt) fd.append("prompt", prompt);
-    return api.post("/vision/analyze", fd, { headers: { "Content-Type": "multipart/form-data" } });
+    return api.post("/vision/analyze", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
-  captureScreen: () => api.get("/vision/screen/capture", { responseType: "blob" }),
+  captureScreen: () =>
+    api.get("/vision/screen/capture", { responseType: "blob" }),
   analyzeScreen: (prompt?: string) =>
-    api.get(`/vision/screen/analyze${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`),
+    api.get(
+      `/vision/screen/analyze${prompt ? `?prompt=${encodeURIComponent(prompt)}` : ""}`,
+    ),
 };
 
 export const guardianAPI = {
-  acknowledge: (sessionId: string, decision: "follow" | "proceed" | "discuss") =>
-    api.post("/guardian/acknowledge", { session_id: sessionId, decision }),
+  acknowledge: (
+    sessionId: string,
+    decision: "follow" | "proceed" | "discuss",
+  ) => api.post("/guardian/acknowledge", { session_id: sessionId, decision }),
   confirmSafetyAction: (sessionId: string, confirmationText: string) =>
-    api.post("/guardian/confirm", { session_id: sessionId, confirmation_text: confirmationText }),
+    api.post("/guardian/confirm", {
+      session_id: sessionId,
+      confirmation_text: confirmationText,
+    }),
 };
 
 export const agentRegistryAPI = {
@@ -111,9 +128,12 @@ export const agentRegistryAPI = {
 
 export const auditAPI = {
   list: (category?: string, limit = 100) =>
-    api.get(`/audit/${category ? `?category=${category}&limit=${limit}` : `?limit=${limit}`}`),
+    api.get(
+      `/audit/${category ? `?category=${category}&limit=${limit}` : `?limit=${limit}`}`,
+    ),
   exportData: () => api.get("/audit/export", { responseType: "blob" }),
-  deleteAllData: (confirm: boolean) => api.post("/audit/delete-all", { confirm }),
+  deleteAllData: (confirm: boolean) =>
+    api.post("/audit/delete-all", { confirm }),
 };
 
 export default api;

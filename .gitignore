@@ -1,4 +1,8 @@
-# Environment & Secrets
+# ==============================================================================
+# COPPER — Root .gitignore
+# ==============================================================================
+
+# ── Environment & Secrets ─────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
@@ -9,8 +13,9 @@
 *.p12
 secrets.yaml
 credentials.json
+service-account*.json
 
-# Local Databases & State
+# ── Local Databases & Persistence ─────────────────────────────────────────────
 *.db
 *.sqlite
 *.sqlite3
@@ -19,10 +24,20 @@ credentials.json
 *.db-shm
 backend/data/
 postgres-data/
-dump.rdb
 redis-data/
+dump.rdb
 
-# Model Binaries & Quantized Weights (Exclude massive binaries from Git, preserve manifest)
+# ── Runtime Data (user-generated, never committed) ────────────────────────────
+data/audio/
+data/conversations/
+data/logs/
+data/memory/
+data/reminders/
+data/screenshots/
+data/vector/
+data/user_profile.json
+
+# ── Model Binaries & Quantized Weights ────────────────────────────────────────
 ai-models/
 !ai-models/models_manifest.json
 models/
@@ -30,11 +45,16 @@ models/
 *.bin
 *.safetensors
 *.onnx
+*.pt
+*.pth
+*.h5
+
+# ── Vector / Embedding Stores ─────────────────────────────────────────────────
 chromadb/
 chromadb_data/
 *.parquet
 
-# Python Caches & Build
+# ── Python Caches & Build ─────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -58,7 +78,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual Environments
+# ── Virtual Environments ──────────────────────────────────────────────────────
 venv/
 .venv/
 env/
@@ -67,7 +87,7 @@ env.bak/
 venv.bak/
 backend/.venv/
 
-# Testing & Coverage
+# ── Testing & Coverage ────────────────────────────────────────────────────────
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -77,8 +97,15 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
+*.lcov
+.nyc_output/
 
-# Node & Frontend Build
+# ── Benchmark / Eval Outputs ──────────────────────────────────────────────────
+backend/eval/benchmark_metrics.json
+backend/eval/benchmark_report.md
+backend/eval/datasets/
+
+# ── Node & Frontend Build ─────────────────────────────────────────────────────
 node_modules/
 frontend/node_modules/
 frontend/dist/
@@ -87,11 +114,20 @@ frontend/dist-electron/
 .npm
 .eslintcache
 .stylelintcache
+.oxlintcache
 .vite/
 frontend/.vite/
+*.tsbuildinfo
 
-# Sandboxes & Temp
-sandbox/temp_exec.py
+# ── Electron Builder Output ───────────────────────────────────────────────────
+frontend/dist-electron/
+
+# ── Tauri Build Target ────────────────────────────────────────────────────────
+src-tauri/target/
+
+# ── Sandboxes & Temp ──────────────────────────────────────────────────────────
+sandbox/
+backend/sandbox/
 logs/
 *.log
 npm-debug.log*
@@ -104,7 +140,7 @@ temp/
 scratch/
 .tmp/
 
-# IDE & OS Specific
+# ── IDE & Editor ──────────────────────────────────────────────────────────────
 .vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -114,6 +150,9 @@ scratch/
 *.swp
 *.swo
 *~
+*.bak
+
+# ── OS Metadata ───────────────────────────────────────────────────────────────
 .DS_Store
 .DS_Store?
 ._*

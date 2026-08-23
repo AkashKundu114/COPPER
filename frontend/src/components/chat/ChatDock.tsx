@@ -9,7 +9,7 @@ import {
   ChevronUp,
   CornerDownLeft,
   Loader2,
-  Eye
+  Eye,
 } from "lucide-react";
 import { Brain, BookOpen, Zap } from "lucide-react";
 import { API_BASE } from "../../lib/api";
@@ -36,7 +36,7 @@ const COGNITIVE_MODES = [
     badge: "Autonomous",
     icon: Sparkles,
     desc: "Autonomous Guardian router dynamically coordinating all 30 local agent specialists.",
-    agents: "Guardian · Master Router · Dispatcher"
+    agents: "Guardian · Master Router · Dispatcher",
   },
   {
     id: "reasoning",
@@ -44,7 +44,7 @@ const COGNITIVE_MODES = [
     badge: "Complex & Thinking",
     icon: Brain,
     desc: "Chain-of-thought with live collapsible thinking breakdown for complex logic, math, & strategy.",
-    agents: "Cognitive Reasoner · Logic Validator · Solver"
+    agents: "Cognitive Reasoner · Logic Validator · Solver",
   },
   {
     id: "coding",
@@ -52,7 +52,7 @@ const COGNITIVE_MODES = [
     badge: "Code & Dev",
     icon: FileCode,
     desc: "Full-stack code synthesis, multi-file architecture, edge-case testing, and syntax optimization.",
-    agents: "Code Engineer · Refactor Specialist · Auditor"
+    agents: "Code Engineer · Refactor Specialist · Auditor",
   },
   {
     id: "research",
@@ -60,7 +60,7 @@ const COGNITIVE_MODES = [
     badge: "Synthesis Tier",
     icon: BookOpen,
     desc: "Epistemic fact-checking, document decomposition, cross-analysis, and evidence generation.",
-    agents: "Document Analyst · Fact Synthesizer"
+    agents: "Document Analyst · Fact Synthesizer",
   },
   {
     id: "fast",
@@ -68,8 +68,8 @@ const COGNITIVE_MODES = [
     badge: "Speed Tier",
     icon: Zap,
     desc: "Zero-latency, direct, concise responses with minimal compute overhead.",
-    agents: "Fast Responder · Executive Assistant"
-  }
+    agents: "Fast Responder · Executive Assistant",
+  },
 ];
 
 export function ChatDock({ connected, thinking, onSend }: Props) {
@@ -80,7 +80,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState(COGNITIVE_MODES[0]);
   const [previewFile, setPreviewFile] = useState<AttachedFile | null>(null);
-  
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -115,9 +115,12 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
   const submit = () => {
     let fullMsg = draft.trim();
     if (attachedFiles.length > 0) {
-      const fileBlocks = attachedFiles.map(
-        (f) => `\n\n--- Attached File: ${f.name} ---\n\`\`\`\n${f.content}\n\`\`\``
-      ).join("");
+      const fileBlocks = attachedFiles
+        .map(
+          (f) =>
+            `\n\n--- Attached File: ${f.name} ---\n\`\`\`\n${f.content}\n\`\`\``,
+        )
+        .join("");
       fullMsg = fullMsg ? `${fullMsg}\n${fileBlocks}` : fileBlocks.trim();
     }
 
@@ -138,9 +141,35 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
     Array.from(files).forEach((file) => {
       const ext = file.name.split(".").pop()?.toLowerCase() || "";
       const textExtensions = [
-        "txt", "csv", "tsv", "json", "py", "js", "ts", "tsx", "jsx", "html",
-        "css", "sql", "md", "yaml", "yml", "xml", "log", "env", "ini", "sh",
-        "bat", "ps1", "c", "cpp", "h", "hpp", "rs", "go", "java"
+        "txt",
+        "csv",
+        "tsv",
+        "json",
+        "py",
+        "js",
+        "ts",
+        "tsx",
+        "jsx",
+        "html",
+        "css",
+        "sql",
+        "md",
+        "yaml",
+        "yml",
+        "xml",
+        "log",
+        "env",
+        "ini",
+        "sh",
+        "bat",
+        "ps1",
+        "c",
+        "cpp",
+        "h",
+        "hpp",
+        "rs",
+        "go",
+        "java",
       ];
 
       const isKnownText = textExtensions.includes(ext);
@@ -150,14 +179,19 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
 
       const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
       const sizeKb = (file.size / 1024).toFixed(1);
-      const displaySize = file.size > 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
+      const displaySize =
+        file.size > 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
 
       const reader = new FileReader();
       reader.onload = (event) => {
         let rawText = (event.target?.result as string) || "";
 
         // Detect unprintable binary bytes (null bytes or corrupted characters)
-        const isBinary = !isKnownText && (rawText.includes("\0") || rawText.includes("\ufffd") || (rawText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g)?.length || 0) > 10);
+        const isBinary =
+          !isKnownText &&
+          (rawText.includes("\0") ||
+            rawText.includes("\ufffd") ||
+            (rawText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g)?.length || 0) > 10);
 
         let formattedText = "";
         let lineCount = rawText.split("\n").length;
@@ -180,8 +214,8 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
             type: ext ? `.${ext.toUpperCase()}` : "FILE",
             content: formattedText,
             rawPreview: rawText,
-            lineCount: lineCount
-          }
+            lineCount: lineCount,
+          },
         ]);
       };
       reader.readAsText(blob);
@@ -292,25 +326,38 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-transparent"
                   }`}
                 >
-                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
+                  <div
+                    className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}
+                  >
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[12px] text-white font-sans">{m.name}</span>
-                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
-                        m.id === "reasoning" ? "bg-purple-950 text-purple-400 border border-purple-800/40" :
-                        m.id === "coding" ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40" :
-                        m.id === "research" ? "bg-amber-950 text-amber-400 border border-amber-800/40" :
-                        m.id === "fast" ? "bg-rose-950 text-rose-400 border border-rose-800/40" :
-                        "bg-sky-950 text-sky-400 border border-sky-800/40"
-                      }`}>
+                      <span className="font-bold text-[12px] text-white font-sans">
+                        {m.name}
+                      </span>
+                      <span
+                        className={`px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
+                          m.id === "reasoning"
+                            ? "bg-purple-950 text-purple-400 border border-purple-800/40"
+                            : m.id === "coding"
+                              ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
+                              : m.id === "research"
+                                ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                                : m.id === "fast"
+                                  ? "bg-rose-950 text-rose-400 border border-rose-800/40"
+                                  : "bg-sky-950 text-sky-400 border border-sky-800/40"
+                        }`}
+                      >
                         {m.badge}
                       </span>
                     </div>
-                    <div className="text-[10.5px] text-slate-400 mt-0.5 leading-snug">{m.desc}</div>
+                    <div className="text-[10.5px] text-slate-400 mt-0.5 leading-snug">
+                      {m.desc}
+                    </div>
                     <div className="text-[9.5px] text-slate-500 mt-1 font-mono">
-                      Subagents: <span className="text-slate-300">{m.agents}</span>
+                      Subagents:{" "}
+                      <span className="text-slate-300">{m.agents}</span>
                     </div>
                   </div>
                 </button>
@@ -328,11 +375,15 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
             <div className="flex items-center justify-between px-5 py-3.5 bg-slate-950 border-b border-border">
               <div className="flex items-center gap-2.5">
                 <FileCode size={18} className="text-accent" />
-                <span className="font-bold text-sm text-white">{previewFile.name}</span>
+                <span className="font-bold text-sm text-white">
+                  {previewFile.name}
+                </span>
                 <span className="px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-semibold">
                   {previewFile.type}
                 </span>
-                <span className="text-slate-400 text-[11px]">({previewFile.size})</span>
+                <span className="text-slate-400 text-[11px]">
+                  ({previewFile.size})
+                </span>
               </div>
               <button
                 onClick={() => setPreviewFile(null)}
@@ -372,8 +423,13 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
               className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-accent/50 text-xs font-mono text-cyan-300 shadow-sm transition-all cursor-pointer group"
               onClick={() => setPreviewFile(file)}
             >
-              <FileCode size={14} className="text-accent group-hover:scale-110 transition-transform" />
-              <span className="max-w-[160px] truncate group-hover:text-white transition-colors">{file.name}</span>
+              <FileCode
+                size={14}
+                className="text-accent group-hover:scale-110 transition-transform"
+              />
+              <span className="max-w-[160px] truncate group-hover:text-white transition-colors">
+                {file.name}
+              </span>
               <span className="text-[10px] text-text-muted">({file.size})</span>
               <button
                 type="button"
@@ -408,8 +464,8 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
           thinking
             ? "border-accent shadow-neon animate-pulse-glow"
             : isRecording
-            ? "border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] bg-rose-950/10"
-            : "border-border/80 focus-within:border-accent/80 hover:border-border focus-within:shadow-[0_0_20px_rgba(14,165,233,0.15)]"
+              ? "border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] bg-rose-950/10"
+              : "border-border/80 focus-within:border-accent/80 hover:border-border focus-within:shadow-[0_0_20px_rgba(14,165,233,0.15)]"
         }`}
       >
         {/* Active Recording State Banner */}
@@ -436,7 +492,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                   style={{
                     height: `${h}%`,
                     animationDuration: `${0.4 + (i % 3) * 0.2}s`,
-                    animationDelay: `${i * 0.08}s`
+                    animationDelay: `${i * 0.08}s`,
                   }}
                 />
               ))}
@@ -485,7 +541,10 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 >
                   <selectedModel.icon size={13} className="text-accent" />
                   <span>{selectedModel.name}</span>
-                  <ChevronUp size={12} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
+                  <ChevronUp
+                    size={12}
+                    className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {/* File Attachment Button */}
@@ -521,7 +580,9 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 <button
                   type="button"
                   onClick={submit}
-                  disabled={(!draft.trim() && attachedFiles.length === 0) || thinking}
+                  disabled={
+                    (!draft.trim() && attachedFiles.length === 0) || thinking
+                  }
                   className="p-2 rounded-xl bg-accent text-bg hover:bg-accent-hover hover:shadow-neon disabled:opacity-20 disabled:hover:bg-accent disabled:shadow-none transition-all duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
                   title={connected ? "Send message" : "Reconnecting..."}
                 >

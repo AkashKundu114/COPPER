@@ -13,6 +13,7 @@ from app.core.logger import logger
 
 _scheduler = None
 
+
 async def _spider_sense_check():
     try:
         alerts = sentinel.run_checks()
@@ -23,6 +24,7 @@ async def _spider_sense_check():
                 await manager.broadcast_alert(alert)
     except Exception as e:
         logger.error(f"Spider-Sense check failed: {e}")
+
 
 def start_scheduler():
     global _scheduler
@@ -43,6 +45,7 @@ def start_scheduler():
         logger.info("Spider-Sense Anomaly Sentinel started (30s interval)")
     except Exception as e:
         logger.warning(f"Scheduler start deferred: {e}")
+
 
 def stop_scheduler():
     global _scheduler

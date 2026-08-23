@@ -11,8 +11,8 @@ BACKEND_DIR = ROOT_DIR / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database.postgres import init_db, engine
-from app.core.logger import logger
+from app.database.postgres import engine, init_db
+
 
 def run_init():
     print("=" * 66)
@@ -28,6 +28,7 @@ def run_init():
         print(f"[-] Database initialization failed: {e}")
         print("=" * 66)
         return False
+
 
 if __name__ == "__main__":
     run_init()

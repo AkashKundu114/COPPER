@@ -34,23 +34,28 @@ export function WeatherWidget() {
       async ({ coords }) => {
         try {
           const res = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,weathercode`
+            `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,weathercode`,
           );
           const data = await res.json();
-          setWeather({ temp: Math.round(data.current.temperature_2m), code: data.current.weathercode });
+          setWeather({
+            temp: Math.round(data.current.temperature_2m),
+            code: data.current.weathercode,
+          });
           setStatus("ok");
         } catch {
           setStatus("denied");
         }
       },
       () => setStatus("denied"),
-      { timeout: 5000 }
+      { timeout: 5000 },
     );
   }, []);
 
   return (
     <div className="rounded-none border border-zinc-800 bg-void-panel px-4 py-3 min-w-[150px]">
-      {status === "loading" && <p className="text-xs text-ink-faint font-mono">Locating…</p>}
+      {status === "loading" && (
+        <p className="text-xs text-ink-faint font-mono">Locating…</p>
+      )}
       {status === "denied" && (
         <div className="flex items-center gap-2 text-ink-faint">
           <MapPinOff size={16} />
@@ -61,8 +66,12 @@ export function WeatherWidget() {
         <div className="flex items-center gap-3">
           <WeatherIcon code={weather.code} />
           <div>
-            <p className="font-display font-semibold text-xl text-white leading-none">{weather.temp}°</p>
-            <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider mt-1">{label(weather.code)}</p>
+            <p className="font-display font-semibold text-xl text-white leading-none">
+              {weather.temp}°
+            </p>
+            <p className="font-mono text-[10px] text-ink-faint uppercase tracking-wider mt-1">
+              {label(weather.code)}
+            </p>
           </div>
         </div>
       )}

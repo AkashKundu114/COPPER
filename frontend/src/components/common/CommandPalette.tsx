@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Search, Brain, Shield, Calendar, Bot, CheckSquare, Settings } from "lucide-react";
+import {
+  Search,
+  Brain,
+  Shield,
+  Calendar,
+  Bot,
+  CheckSquare,
+  Settings,
+} from "lucide-react";
 import type { NavSection } from "../layout/Sidebar";
 
 interface CommandPaletteProps {
@@ -33,13 +41,41 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!open) return null;
 
   const commands = [
-    { label: "Ask COPPER Assistant", section: "chat" as NavSection, icon: Brain },
-    { label: "Open Schedule & Today View", section: "today" as NavSection, icon: Calendar },
-    { label: "Create / View Tasks", section: "tasks" as NavSection, icon: CheckSquare },
-    { label: "Open Memory Center", section: "memory" as NavSection, icon: Brain },
-    { label: "Manage Agent Registry", section: "agents" as NavSection, icon: Bot },
-    { label: "Open Security Center", section: "security" as NavSection, icon: Shield },
-    { label: "Settings & Developer Mode", section: "settings" as NavSection, icon: Settings },
+    {
+      label: "Ask COPPER Assistant",
+      section: "chat" as NavSection,
+      icon: Brain,
+    },
+    {
+      label: "Open Schedule & Today View",
+      section: "today" as NavSection,
+      icon: Calendar,
+    },
+    {
+      label: "Create / View Tasks",
+      section: "tasks" as NavSection,
+      icon: CheckSquare,
+    },
+    {
+      label: "Open Memory Center",
+      section: "memory" as NavSection,
+      icon: Brain,
+    },
+    {
+      label: "Manage Agent Registry",
+      section: "agents" as NavSection,
+      icon: Bot,
+    },
+    {
+      label: "Open Security Center",
+      section: "security" as NavSection,
+      icon: Shield,
+    },
+    {
+      label: "Settings & Developer Mode",
+      section: "settings" as NavSection,
+      icon: Settings,
+    },
   ].filter((c) => c.label.toLowerCase().includes(query.toLowerCase()));
 
   return (
@@ -76,7 +112,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-gray-300 hover:bg-[#b87333]/20 hover:text-white transition-all text-left group"
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={16} className="text-gray-400 group-hover:text-[#ff5722]" />
+                    <Icon
+                      size={16}
+                      className="text-gray-400 group-hover:text-[#ff5722]"
+                    />
                     <span>{cmd.label}</span>
                   </div>
                   <span className="text-[10px] text-gray-500 font-mono uppercase tracking-wider">

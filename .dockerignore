@@ -1,66 +1,105 @@
 # ==============================================================================
-# COPPER — Root Docker Ignore Specification
-# Prevents sensitive local memory, models, and build artifacts from entering Docker build context
+# COPPER — .dockerignore
+# Keeps the Docker build context small and free of secrets / large binaries
 # ==============================================================================
 
-# Version Control
+# ── Version Control ───────────────────────────────────────────────────────────
 .git
 .gitignore
+.gitattributes
 .github
 
-# Environment & Secrets
+# ── Environment & Secrets ─────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 *.pem
 *.key
+*.crt
+*.pfx
+*.p12
 secrets.yaml
+credentials.json
+service-account*.json
 
-# Local Persistence & Data
+# ── Local Databases & Persistence ─────────────────────────────────────────────
 *.db
 *.sqlite
 *.sqlite3
-backend/app/data/*.db
+backend/data/
 postgres-data/
 redis-data/
 dump.rdb
 
-# AI Models & Vector Databases
+# ── Runtime Data ──────────────────────────────────────────────────────────────
+data/
+
+# ── AI Models & Vector Stores ─────────────────────────────────────────────────
 ai-models/
 models/
 *.gguf
 *.bin
 *.safetensors
+*.onnx
+*.pt
+*.pth
+*.h5
 chromadb/
 chromadb_data/
+*.parquet
 
-# Dependencies & Build Outputs
+# ── Dependencies & Build Outputs ──────────────────────────────────────────────
 node_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/build/
+frontend/dist-electron/
 src-tauri/target/
 __pycache__/
 *.pyc
 *.pyo
+*.py[cod]
 backend/.venv/
 .venv/
 venv/
+
+# ── Testing & QA ──────────────────────────────────────────────────────────────
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
+*.lcov
+.nyc_output/
+tests/
+backend/eval/
 
-# Logs & Temporary Data
+# ── Logs & Temporary ──────────────────────────────────────────────────────────
 logs/
 *.log
 tmp/
 temp/
 scratch/
+sandbox/
+backend/sandbox/
 
-# Documentation & IDE
+# ── Documentation & Community ─────────────────────────────────────────────────
 docs/
+*.md
+!requirements.txt
+
+# ── IDE & OS Metadata ─────────────────────────────────────────────────────────
 .vscode/
 .idea/
-README.md
-CHANGELOG.md
-ISSUES.md
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Infrastructure (not needed inside containers) ─────────────────────────────
+infrastructure/
+docker-compose*.yml
+scripts/
+conftest.py
+index_docs.py

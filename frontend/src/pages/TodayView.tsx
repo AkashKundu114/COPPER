@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Clock, Plus, Trash2, CheckCircle2, Circle, X, Sparkles } from "lucide-react";
+import {
+  Clock,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  Circle,
+  X,
+  Sparkles,
+} from "lucide-react";
 
 interface ScheduleEvent {
   id: string;
@@ -16,11 +24,31 @@ export const TodayView: React.FC = () => {
   const [events, setEvents] = useState<ScheduleEvent[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [
-        { id: "e1", time: "09:00 AM", title: "Morning Standup & Task Alignment", category: "Meeting", completed: true },
-        { id: "e2", time: "11:00 AM", title: "Deep Work: Core Architecture Coding", category: "Focus", completed: false },
-        { id: "e3", time: "02:30 PM", title: "AI Model & Benchmark Review", category: "Review", completed: false }
-      ];
+      return saved
+        ? JSON.parse(saved)
+        : [
+            {
+              id: "e1",
+              time: "09:00 AM",
+              title: "Morning Standup & Task Alignment",
+              category: "Meeting",
+              completed: true,
+            },
+            {
+              id: "e2",
+              time: "11:00 AM",
+              title: "Deep Work: Core Architecture Coding",
+              category: "Focus",
+              completed: false,
+            },
+            {
+              id: "e3",
+              time: "02:30 PM",
+              title: "AI Model & Benchmark Review",
+              category: "Review",
+              completed: false,
+            },
+          ];
     } catch {
       return [];
     }
@@ -48,7 +76,7 @@ export const TodayView: React.FC = () => {
       time: time.trim() || "12:00 PM",
       title: title.trim(),
       category,
-      completed: false
+      completed: false,
     };
 
     setEvents((prev) => [...prev, newEvent]);
@@ -58,7 +86,7 @@ export const TodayView: React.FC = () => {
 
   const toggleEvent = (id: string) => {
     setEvents((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, completed: !e.completed } : e))
+      prev.map((e) => (e.id === id ? { ...e, completed: !e.completed } : e)),
     );
   };
 
@@ -70,7 +98,7 @@ export const TodayView: React.FC = () => {
     weekday: "long",
     month: "long",
     day: "numeric",
-    year: "numeric"
+    year: "numeric",
   });
 
   return (
@@ -78,7 +106,9 @@ export const TodayView: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Schedule & Today Overview</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Schedule & Today Overview
+          </h1>
           <p className="text-xs text-slate-400 font-mono">{todayDate}</p>
         </div>
         <div className="flex items-center gap-3">
@@ -114,9 +144,12 @@ export const TodayView: React.FC = () => {
             <Sparkles size={16} />
           </div>
           <div>
-            <p className="font-semibold text-white">Smart Schedule Optimizer Active</p>
+            <p className="font-semibold text-white">
+              Smart Schedule Optimizer Active
+            </p>
             <p className="text-slate-400 text-[11px]">
-              {events.filter((e) => !e.completed).length} pending events scheduled for today. Optimal focus window: 11:00 AM – 1:00 PM.
+              {events.filter((e) => !e.completed).length} pending events
+              scheduled for today. Optimal focus window: 11:00 AM – 1:00 PM.
             </p>
           </div>
         </div>
@@ -129,9 +162,15 @@ export const TodayView: React.FC = () => {
       <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider">
-            {activeTab === "day" ? "Today's Timeline" : activeTab === "week" ? "This Week's Plan" : "Monthly Calendar Agenda"}
+            {activeTab === "day"
+              ? "Today's Timeline"
+              : activeTab === "week"
+                ? "This Week's Plan"
+                : "Monthly Calendar Agenda"}
           </h3>
-          <span className="text-[11px] font-mono text-slate-500">{events.length} Items</span>
+          <span className="text-[11px] font-mono text-slate-500">
+            {events.length} Items
+          </span>
         </div>
 
         {events.length === 0 ? (
@@ -170,16 +209,18 @@ export const TodayView: React.FC = () => {
                           event.category === "Focus"
                             ? "bg-purple-950 text-purple-400 border border-purple-800/40"
                             : event.category === "Meeting"
-                            ? "bg-blue-950 text-blue-400 border border-blue-800/40"
-                            : event.category === "Review"
-                            ? "bg-amber-950 text-amber-400 border border-amber-800/40"
-                            : "bg-slate-800 text-slate-300"
+                              ? "bg-blue-950 text-blue-400 border border-blue-800/40"
+                              : event.category === "Review"
+                                ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                                : "bg-slate-800 text-slate-300"
                         }`}
                       >
                         {event.category}
                       </span>
                     </div>
-                    <p className={`text-sm font-medium text-white mt-0.5 ${event.completed ? "line-through text-slate-400" : ""}`}>
+                    <p
+                      className={`text-sm font-medium text-white mt-0.5 ${event.completed ? "line-through text-slate-400" : ""}`}
+                    >
                       {event.title}
                     </p>
                   </div>
@@ -202,15 +243,22 @@ export const TodayView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in font-mono text-xs">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white">Add Schedule Event</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+              <h3 className="font-bold text-sm text-white">
+                Add Schedule Event
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleCreateEvent} className="space-y-3.5">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Event / Milestone Title</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Event / Milestone Title
+                </label>
                 <input
                   type="text"
                   required
@@ -223,7 +271,9 @@ export const TodayView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Time</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Time
+                  </label>
                   <input
                     type="text"
                     value={time}
@@ -233,7 +283,9 @@ export const TodayView: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Category</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Category
+                  </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}

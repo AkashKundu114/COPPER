@@ -6,6 +6,7 @@ from app.core.logger import logger
 
 REMINDERS_FILE = Path(__file__).parent.parent.parent / "data" / "reminders.json"
 
+
 def get_current_temporal_context() -> str:
     now = datetime.now().astimezone()
     date_str = now.strftime("%A, %B %d, %Y")
@@ -21,6 +22,7 @@ def get_current_temporal_context() -> str:
         f"• CRITICAL: Base all duration, alarm, task scheduling, and time calculations strictly on this live clock."
     )
 
+
 def load_reminders() -> list[dict]:
     try:
         if REMINDERS_FILE.exists():
@@ -29,6 +31,7 @@ def load_reminders() -> list[dict]:
     except Exception as e:
         logger.warning(f"Error loading reminders: {e}")
     return []
+
 
 def save_reminder(title: str, target_time_str: str, duration_mins: int = 0) -> dict:
     REMINDERS_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -39,7 +42,7 @@ def save_reminder(title: str, target_time_str: str, duration_mins: int = 0) -> d
         "target_time": target_time_str,
         "duration_mins": duration_mins,
         "created_at": datetime.now().isoformat(),
-        "status": "active"
+        "status": "active",
     }
     reminders.append(item)
     try:

@@ -1,6 +1,5 @@
-import pytest
-from fastapi.testclient import TestClient
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -43,7 +42,10 @@ def test_system_405_method_not_allowed():
 def test_system_cors_headers():
     response = client.options(
         "/api/v1/voice/status",
-        headers={"Origin": "http://localhost:5173", "Access-Control-Request-Method": "GET"}
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+        },
     )
     assert response.status_code == 200
     assert "access-control-allow-origin" in response.headers

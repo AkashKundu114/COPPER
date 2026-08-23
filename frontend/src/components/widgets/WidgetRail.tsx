@@ -27,11 +27,21 @@ export function WidgetRail({ connected, agentsMet, agentsTotal }: Props) {
       animate="show"
       className="fixed top-20 left-6 z-20 flex flex-col gap-3 pointer-events-none"
     >
-      <motion.div variants={item} className="pointer-events-auto"><ClockWidget /></motion.div>
-      <motion.div variants={item} className="pointer-events-auto"><CalendarWidget /></motion.div>
-      <motion.div variants={item} className="pointer-events-auto"><WeatherWidget /></motion.div>
       <motion.div variants={item} className="pointer-events-auto">
-        <NetworkWidget connected={connected} agentsMet={agentsMet} agentsTotal={agentsTotal} />
+        <ClockWidget />
+      </motion.div>
+      <motion.div variants={item} className="pointer-events-auto">
+        <CalendarWidget />
+      </motion.div>
+      <motion.div variants={item} className="pointer-events-auto">
+        <WeatherWidget />
+      </motion.div>
+      <motion.div variants={item} className="pointer-events-auto">
+        <NetworkWidget
+          connected={connected}
+          agentsMet={agentsMet}
+          agentsTotal={agentsTotal}
+        />
       </motion.div>
     </motion.div>
   );

@@ -1,12 +1,11 @@
-import pytest
 import time
+
+import pytest
 from app.ai.orchestration.agent_router import (
-    route_message_detailed,
-    route_message,
     is_consequential_action,
-    routing_memory,
     learn_user_correction,
-    RoutingResult
+    route_message,
+    route_message_detailed,
 )
 from app.core.constants import AgentType
 
@@ -20,7 +19,7 @@ async def test_smalltalk_greetings():
         "Good evening, hope you are ready for work",
         "Yo assistant, sup",
         "Thank you so much for the assistance",
-        "Goodbye for now, talk to you later!"
+        "Goodbye for now, talk to you later!",
     ]
     for g in greetings:
         res = await route_message_detailed(g)
@@ -244,17 +243,21 @@ async def test_negative_keyword_suppression():
     res2 = await route_message_detailed("Remind me to write code tomorrow morning")
     assert res2.agent == AgentType.REMINDER
 
-    res3 = await route_message_detailed("Delete the file about quantum mechanics from my desktop")
+    res3 = await route_message_detailed(
+        "Delete the file about quantum mechanics from my desktop"
+    )
     assert res3.agent == AgentType.AUTOMATION
 
-    res4 = await route_message_detailed("Plan a roadmap for refactoring our React app in a 4-week sprint")
+    res4 = await route_message_detailed(
+        "Plan a roadmap for refactoring our React app in a 4-week sprint"
+    )
     assert res4.agent == AgentType.PLANNER
 
 
 @pytest.mark.asyncio
 async def test_dynamic_self_training_memory():
     unique_prompt = f"Zylophone unmapped input action string {time.time_ns()}"
-    
+
     res_before = await route_message_detailed(unique_prompt)
     assert res_before.route_stage == "default_conversational_fallback"
 
@@ -270,7 +273,9 @@ async def test_dynamic_self_training_memory():
 async def test_router_performance_and_latency():
     start = time.perf_counter()
     for _ in range(100):
-        await route_message_detailed("Write a python script to parse JSON logs with regex")
+        await route_message_detailed(
+            "Write a python script to parse JSON logs with regex"
+        )
     total_time = (time.perf_counter() - start) * 1000.0
     avg_latency = total_time / 100.0
     assert avg_latency < 1.0

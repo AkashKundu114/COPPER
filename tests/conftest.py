@@ -1,6 +1,7 @@
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 backend_dir = Path(__file__).resolve().parent.parent / "backend"
 if str(backend_dir) not in sys.path:
@@ -8,6 +9,7 @@ if str(backend_dir) not in sys.path:
 
 try:
     from app.database.postgres import init_db
+
     init_db()
 except Exception:
     pass
@@ -16,7 +18,7 @@ except Exception:
 @pytest.fixture(scope="session")
 def db_session():
     """Mock or session fixture for database operations."""
-    return None
+    return
 
 
 @pytest.fixture

@@ -12,11 +12,51 @@ interface LocalAgent {
 }
 
 const DEFAULT_AGENTS: LocalAgent[] = [
-  { id: "chat", name: "Primary Conversation Companion", model: "llama3.1:8b", tier: "General Core", status: "active", invocations: 42, lastActive: "Just now" },
-  { id: "coding", name: "Software Engineer & Architect", model: "qwen2.5-coder:7b", tier: "Deep Technical", status: "active", invocations: 68, lastActive: "2m ago" },
-  { id: "reasoning", name: "Chain-of-Thought Reasoner", model: "deepseek-r1:7b", tier: "Logic & Math", status: "active", invocations: 29, lastActive: "15m ago" },
-  { id: "fast", name: "Rapid Reflex Dispatcher", model: "llama3.2:3b", tier: "Speed Tier", status: "active", invocations: 94, lastActive: "Just now" },
-  { id: "automation", name: "OS & System Automation", model: "mistral:7b", tier: "Action Engine", status: "active", invocations: 16, lastActive: "1h ago" }
+  {
+    id: "chat",
+    name: "Primary Conversation Companion",
+    model: "llama3.1:8b",
+    tier: "General Core",
+    status: "active",
+    invocations: 42,
+    lastActive: "Just now",
+  },
+  {
+    id: "coding",
+    name: "Software Engineer & Architect",
+    model: "qwen2.5-coder:7b",
+    tier: "Deep Technical",
+    status: "active",
+    invocations: 68,
+    lastActive: "2m ago",
+  },
+  {
+    id: "reasoning",
+    name: "Chain-of-Thought Reasoner",
+    model: "deepseek-r1:7b",
+    tier: "Logic & Math",
+    status: "active",
+    invocations: 29,
+    lastActive: "15m ago",
+  },
+  {
+    id: "fast",
+    name: "Rapid Reflex Dispatcher",
+    model: "llama3.2:3b",
+    tier: "Speed Tier",
+    status: "active",
+    invocations: 94,
+    lastActive: "Just now",
+  },
+  {
+    id: "automation",
+    name: "OS & System Automation",
+    model: "mistral:7b",
+    tier: "Action Engine",
+    status: "active",
+    invocations: 16,
+    lastActive: "1h ago",
+  },
 ];
 
 export function AgentRegistry() {
@@ -29,8 +69,8 @@ export function AgentRegistry() {
       prev.map((a) =>
         a.id === id
           ? { ...a, status: a.status === "active" ? "inactive" : "active" }
-          : a
-      )
+          : a,
+      ),
     );
   };
 
@@ -39,9 +79,13 @@ export function AgentRegistry() {
     setPingResult(null);
     setTimeout(() => {
       setTestingId(null);
-      setPingResult(`Inference Test: Model '${agent.model}' responded in 142ms on local RTX 5060 GPU.`);
+      setPingResult(
+        `Inference Test: Model '${agent.model}' responded in 142ms on local RTX 5060 GPU.`,
+      );
       setAgents((prev) =>
-        prev.map((a) => (a.id === agent.id ? { ...a, invocations: a.invocations + 1 } : a))
+        prev.map((a) =>
+          a.id === agent.id ? { ...a, invocations: a.invocations + 1 } : a,
+        ),
       );
     }, 800);
   };
@@ -52,10 +96,13 @@ export function AgentRegistry() {
         <div>
           <div className="flex items-center gap-2">
             <Cpu size={20} className="text-sky-400" />
-            <h1 className="text-xl font-bold text-white tracking-tight font-sans">Agent & Model Registry</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight font-sans">
+              Agent & Model Registry
+            </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Local models wired into C.O.P.P.E.R. runtime with hot-swapping and execution metrics
+            Local models wired into C.O.P.P.E.R. runtime with hot-swapping and
+            execution metrics
           </p>
         </div>
       </div>
@@ -67,7 +114,10 @@ export function AgentRegistry() {
             <CheckCircle2 size={16} />
             <span>{pingResult}</span>
           </div>
-          <button onClick={() => setPingResult(null)} className="text-emerald-400 hover:text-white text-[11px]">
+          <button
+            onClick={() => setPingResult(null)}
+            className="text-emerald-400 hover:text-white text-[11px]"
+          >
             Dismiss
           </button>
         </div>
@@ -87,8 +137,12 @@ export function AgentRegistry() {
             <div className="space-y-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-bold text-white text-sm font-sans">{a.name}</h3>
-                  <span className="text-[11px] text-sky-400 font-semibold">{a.model}</span>
+                  <h3 className="font-bold text-white text-sm font-sans">
+                    {a.name}
+                  </h3>
+                  <span className="text-[11px] text-sky-400 font-semibold">
+                    {a.model}
+                  </span>
                 </div>
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 ${
@@ -97,14 +151,21 @@ export function AgentRegistry() {
                       : "bg-slate-800 text-slate-400"
                   }`}
                 >
-                  <span className={`w-1.5 h-1.5 rounded-full ${a.status === "active" ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`} />
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${a.status === "active" ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`}
+                  />
                   {a.status}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 text-slate-400">
-                <div>Tier: <strong className="text-slate-200">{a.tier}</strong></div>
-                <div>Invocations: <strong className="text-white">{a.invocations}</strong></div>
+                <div>
+                  Tier: <strong className="text-slate-200">{a.tier}</strong>
+                </div>
+                <div>
+                  Invocations:{" "}
+                  <strong className="text-white">{a.invocations}</strong>
+                </div>
               </div>
             </div>
 

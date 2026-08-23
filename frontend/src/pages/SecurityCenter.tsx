@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { ShieldCheck, Lock, Download, ShieldAlert, CheckCircle2 } from "lucide-react";
+import {
+  ShieldCheck,
+  Lock,
+  Download,
+  ShieldAlert,
+  CheckCircle2,
+} from "lucide-react";
 
 export function SecurityCenter() {
   const [firewallToggles, setFirewallToggles] = useState({
     localOnly: true,
     piiMasking: true,
     guardianAlignment: true,
-    diskVectorEncryption: true
+    diskVectorEncryption: true,
   });
 
   const [toast, setToast] = useState<string | null>(null);
@@ -26,10 +32,12 @@ export function SecurityCenter() {
       egress_policy: "Strict Localhost 127.0.0.1",
       cloud_calls: 0,
       pii_leaks_prevented: 14,
-      offline_integrity: "100% Verified"
+      offline_integrity: "100% Verified",
     };
 
-    const blob = new Blob([JSON.stringify(logData, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(logData, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -44,10 +52,13 @@ export function SecurityCenter() {
         <div>
           <div className="flex items-center gap-2">
             <ShieldCheck size={20} className="text-emerald-400" />
-            <h1 className="text-xl font-bold text-white tracking-tight font-sans">Data Firewall & Security Center</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight font-sans">
+              Data Firewall & Security Center
+            </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Zero-leak local firewall rules, PII redaction engines, and air-gapped protection
+            Zero-leak local firewall rules, PII redaction engines, and
+            air-gapped protection
           </p>
         </div>
         <button
@@ -65,7 +76,10 @@ export function SecurityCenter() {
             <CheckCircle2 size={16} />
             <span>{toast}</span>
           </div>
-          <button onClick={() => setToast(null)} className="text-emerald-400 hover:text-white text-[11px]">
+          <button
+            onClick={() => setToast(null)}
+            className="text-emerald-400 hover:text-white text-[11px]"
+          >
             Dismiss
           </button>
         </div>
@@ -78,8 +92,12 @@ export function SecurityCenter() {
             <Lock size={20} />
           </div>
           <div>
-            <p className="text-sm font-bold text-white font-sans">100% Air-Gapped Local Execution</p>
-            <p className="text-slate-400 text-[11px]">All prompt completions stay on your local disk & GPU</p>
+            <p className="text-sm font-bold text-white font-sans">
+              100% Air-Gapped Local Execution
+            </p>
+            <p className="text-slate-400 text-[11px]">
+              All prompt completions stay on your local disk & GPU
+            </p>
           </div>
         </div>
 
@@ -88,20 +106,31 @@ export function SecurityCenter() {
             <ShieldAlert size={20} />
           </div>
           <div>
-            <p className="text-sm font-bold text-white font-sans">Zero Outbound Telemetry</p>
-            <p className="text-slate-400 text-[11px]">Zero remote analytics, ads, or data tracking servers</p>
+            <p className="text-sm font-bold text-white font-sans">
+              Zero Outbound Telemetry
+            </p>
+            <p className="text-slate-400 text-[11px]">
+              Zero remote analytics, ads, or data tracking servers
+            </p>
           </div>
         </div>
       </div>
 
       {/* Firewall Rules Toggles */}
       <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Firewall Egress & Security Controls</h3>
+        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          Firewall Egress & Security Controls
+        </h3>
         <div className="space-y-3">
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
             <div>
-              <p className="font-bold text-white font-sans text-xs">Strict Localhost Egress Lock</p>
-              <p className="text-slate-400 text-[11px]">Block all HTTP outbound sockets except 127.0.0.1 (Ollama & Uvicorn)</p>
+              <p className="font-bold text-white font-sans text-xs">
+                Strict Localhost Egress Lock
+              </p>
+              <p className="text-slate-400 text-[11px]">
+                Block all HTTP outbound sockets except 127.0.0.1 (Ollama &
+                Uvicorn)
+              </p>
             </div>
             <button
               onClick={() => toggleSwitch("localOnly")}
@@ -119,8 +148,13 @@ export function SecurityCenter() {
 
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
             <div>
-              <p className="font-bold text-white font-sans text-xs">Automated PII & Secret Redaction</p>
-              <p className="text-slate-400 text-[11px]">Automatically mask credit cards, API keys, and passwords in memory</p>
+              <p className="font-bold text-white font-sans text-xs">
+                Automated PII & Secret Redaction
+              </p>
+              <p className="text-slate-400 text-[11px]">
+                Automatically mask credit cards, API keys, and passwords in
+                memory
+              </p>
             </div>
             <button
               onClick={() => toggleSwitch("piiMasking")}
@@ -138,18 +172,27 @@ export function SecurityCenter() {
 
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
             <div>
-              <p className="font-bold text-white font-sans text-xs">Guardian Level 0 Safety Alignment</p>
-              <p className="text-slate-400 text-[11px]">Prevent accidental file system destruction and unsafe shell injection</p>
+              <p className="font-bold text-white font-sans text-xs">
+                Guardian Level 0 Safety Alignment
+              </p>
+              <p className="text-slate-400 text-[11px]">
+                Prevent accidental file system destruction and unsafe shell
+                injection
+              </p>
             </div>
             <button
               onClick={() => toggleSwitch("guardianAlignment")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                firewallToggles.guardianAlignment ? "bg-emerald-500" : "bg-slate-700"
+                firewallToggles.guardianAlignment
+                  ? "bg-emerald-500"
+                  : "bg-slate-700"
               }`}
             >
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                  firewallToggles.guardianAlignment ? "translate-x-6" : "translate-x-0"
+                  firewallToggles.guardianAlignment
+                    ? "translate-x-6"
+                    : "translate-x-0"
                 }`}
               />
             </button>

@@ -36,24 +36,28 @@ interface SidebarProps {
   onSelectSection: (section: NavSection) => void;
 }
 
-const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "chat", label: "Conversation", icon: MessageSquare },
-  { id: "today", label: "Today / Schedule", icon: Calendar },
-  { id: "tasks", label: "Tasks", icon: CheckSquare },
-  { id: "projects", label: "Projects", icon: FolderKanban },
-  { id: "memory", label: "Memory Center", icon: Brain },
-  { id: "agents", label: "Agent Registry", icon: Bot },
-  { id: "activity", label: "Agent Activity", icon: Activity },
-  { id: "insights", label: "Insights", icon: BarChart3 },
-  { id: "benchmarks", label: "Benchmarks & Metrics", icon: Activity },
-  { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
-  { id: "security", label: "Data Firewall", icon: ShieldCheck },
-  { id: "food", label: "Food & Meals", icon: Utensils },
-  { id: "settings", label: "Settings", icon: Settings },
-];
+const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] =
+  [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "chat", label: "Conversation", icon: MessageSquare },
+    { id: "today", label: "Today / Schedule", icon: Calendar },
+    { id: "tasks", label: "Tasks", icon: CheckSquare },
+    { id: "projects", label: "Projects", icon: FolderKanban },
+    { id: "memory", label: "Memory Center", icon: Brain },
+    { id: "agents", label: "Agent Registry", icon: Bot },
+    { id: "activity", label: "Agent Activity", icon: Activity },
+    { id: "insights", label: "Insights", icon: BarChart3 },
+    { id: "benchmarks", label: "Benchmarks & Metrics", icon: Activity },
+    { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
+    { id: "security", label: "Data Firewall", icon: ShieldCheck },
+    { id: "food", label: "Food & Meals", icon: Utensils },
+    { id: "settings", label: "Settings", icon: Settings },
+  ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  activeSection,
+  onSelectSection,
+}) => {
   return (
     <aside className="w-64 h-screen bg-bg flex flex-col justify-between p-4 z-30 select-none">
       <div>
@@ -62,7 +66,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
             C
           </div>
           <div>
-            <h1 className="font-semibold text-[15px] tracking-tight glow-text text-accent">C.O.P.P.E.R.</h1>
+            <h1 className="font-semibold text-[15px] tracking-tight glow-text text-accent">
+              C.O.P.P.E.R.
+            </h1>
             <p className="text-[11px] text-text-muted">Personal AI OS</p>
           </div>
         </div>
@@ -81,7 +87,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
                     : "text-text-muted hover:text-accent hover:bg-bg-panel hover:shadow-hud"
                 }`}
               >
-                <Icon className={`w-[18px] h-[18px] ${isActive ? "text-accent" : "text-text-muted"}`} />
+                <Icon
+                  className={`w-[18px] h-[18px] ${isActive ? "text-accent" : "text-text-muted"}`}
+                />
                 <span>{item.label}</span>
               </button>
             );

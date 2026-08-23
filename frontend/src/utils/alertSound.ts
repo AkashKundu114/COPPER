@@ -6,7 +6,9 @@ export function toggleAlertMute(): boolean {
   return isMuted;
 }
 
-export function playAlertSound(severity: "info" | "warning" | "critical" = "warning"): void {
+export function playAlertSound(
+  severity: "info" | "warning" | "critical" = "warning",
+): void {
   if (isMuted) return;
 
   try {
@@ -34,12 +36,14 @@ export function playAlertSound(severity: "info" | "warning" | "critical" = "warn
     const duration = severity === "critical" ? 0.6 : 0.3;
     gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.05);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioCtx.currentTime + duration,
+    );
 
     osc1.start(audioCtx.currentTime);
     osc2.start(audioCtx.currentTime);
     osc1.stop(audioCtx.currentTime + duration);
     osc2.stop(audioCtx.currentTime + duration);
-  } catch {
-  }
+  } catch {}
 }

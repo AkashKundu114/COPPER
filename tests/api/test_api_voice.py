@@ -1,6 +1,5 @@
-import pytest
-from fastapi.testclient import TestClient
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -32,7 +31,7 @@ def test_voice_voices():
 def test_voice_synthesize_success():
     response = client.post(
         "/api/v1/voice/synthesize",
-        json={"text": "Voice test speech audio", "voice": "copper_synth", "speed": 1.0}
+        json={"text": "Voice test speech audio", "voice": "copper_synth", "speed": 1.0},
     )
     assert response.status_code == 200
     assert response.headers["content-type"] == "audio/wav"
@@ -42,14 +41,13 @@ def test_voice_synthesize_success():
 def test_voice_synthesize_empty_text():
     response = client.post(
         "/api/v1/voice/synthesize",
-        json={"text": "", "voice": "copper_synth", "speed": 1.0}
+        json={"text": "", "voice": "copper_synth", "speed": 1.0},
     )
     assert response.status_code == 400
 
 
 def test_voice_transcribe_empty_file():
     response = client.post(
-        "/api/v1/voice/transcribe",
-        files={"audio": ("empty.wav", b"", "audio/wav")}
+        "/api/v1/voice/transcribe", files={"audio": ("empty.wav", b"", "audio/wav")}
     )
     assert response.status_code in [200, 400, 422]

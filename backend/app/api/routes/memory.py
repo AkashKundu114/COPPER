@@ -6,6 +6,7 @@ from app.database.postgres import get_db
 
 router = APIRouter(prefix="/memory", tags=["memory"])
 
+
 @router.get("/profile")
 async def get_profile(db: Session = Depends(get_db)):
     total = db.query(ChatHistory).count()
@@ -17,6 +18,7 @@ async def get_profile(db: Session = Depends(get_db)):
         "agents_met": 3,
         "agents_total": 5,
     }
+
 
 @router.post("/reset")
 async def reset_profile(db: Session = Depends(get_db)):

@@ -1,7 +1,8 @@
-import pytest
 import io
 import wave
-from app.services.audio_service import audio_pipeline, AudioPipelineManager
+
+import pytest
+from app.services.audio_service import AudioPipelineManager, audio_pipeline
 
 
 def test_audio_pipeline_manager_initialization():
@@ -28,10 +29,9 @@ def test_audio_pipeline_tts_wav_validity():
 def test_audio_pipeline_silence_wav():
     buf = audio_pipeline.tts._generate_silence_wav(duration=0.1)
     assert len(buf) > 44
-    with io.BytesIO(buf) as bio:
-        with wave.open(bio, "rb") as wf:
-            assert wf.getnchannels() == 1
-            assert wf.getframerate() == 22050
+    with io.BytesIO(buf) as bio, wave.open(bio, "rb") as wf:
+        assert wf.getnchannels() == 1
+        assert wf.getframerate() == 22050
 
 
 @pytest.mark.asyncio

@@ -7,6 +7,7 @@ from app.database.models.episode import Episode, EpisodeOutcome
 
 _episode_store = VectorStore("copper_episodes")
 
+
 class EpisodeService:
     async def record_episode(
         self,
@@ -79,5 +80,6 @@ class EpisodeService:
 
     def get_episode_by_id(self, db: Session, episode_id: int) -> Episode | None:
         return db.query(Episode).filter(Episode.id == episode_id).first()
+
 
 episode_service = EpisodeService()

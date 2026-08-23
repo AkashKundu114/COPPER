@@ -17,8 +17,13 @@ const BAR_PROFILES = Array.from({ length: BAR_COUNT }, (_, i) => ({
 
 export function SpeakingBar({ speaking, agentId }: Props) {
   const meta = agentId ? AGENT_MAP[agentId] : null;
-  const color = agentId === "COPPER" ? "#ffcb94" : meta ? TIER_COLORS[meta.tier] : "#e0985f";
-  const label = agentId === "COPPER" ? "COPPER" : meta?.name ?? "COPPER";
+  const color =
+    agentId === "COPPER"
+      ? "#ffcb94"
+      : meta
+        ? TIER_COLORS[meta.tier]
+        : "#e0985f";
+  const label = agentId === "COPPER" ? "COPPER" : (meta?.name ?? "COPPER");
 
   return (
     <AnimatePresence>
@@ -30,7 +35,10 @@ export function SpeakingBar({ speaking, agentId }: Props) {
           transition={{ type: "spring", damping: 22, stiffness: 260 }}
           className="w-full max-w-2xl mx-auto mb-2 rounded-none border border-zinc-800 bg-void-panel px-4 py-2.5 flex items-center gap-3"
         >
-          <span className="w-2 h-2 rounded-none flex-shrink-0 animate-pulse" style={{ background: color }} />
+          <span
+            className="w-2 h-2 rounded-none flex-shrink-0 animate-pulse"
+            style={{ background: color }}
+          />
           <span className="font-mono text-[10px] tracking-wider text-ink-secondary flex-shrink-0">
             {label} SPEAKING
           </span>
@@ -41,7 +49,12 @@ export function SpeakingBar({ speaking, agentId }: Props) {
                 className="w-[3px] rounded-none"
                 style={{ background: color }}
                 animate={{ height: [p.minH, p.maxH, p.minH] }}
-                transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: p.duration,
+                  delay: p.delay,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
             ))}
           </div>

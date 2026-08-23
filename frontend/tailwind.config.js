@@ -1,6 +1,6 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -22,12 +22,12 @@ export default {
           DEFAULT: "#0ea5e9", // Sky 500
           hover: "#38bdf8", // Sky 400
           copper: "#14b8a6", // Teal 500 (kept variable name 'copper' for compatibility)
-        }
+        },
       },
       boxShadow: {
-        'neon': '0 0 15px rgba(14, 165, 233, 0.4)',
-        'neon-copper': '0 0 15px rgba(20, 184, 166, 0.4)',
-        'hud': 'inset 0 0 20px rgba(14, 165, 233, 0.05)',
+        neon: "0 0 15px rgba(14, 165, 233, 0.4)",
+        "neon-copper": "0 0 15px rgba(20, 184, 166, 0.4)",
+        hud: "inset 0 0 20px rgba(14, 165, 233, 0.05)",
       },
       fontFamily: {
         display: ["Inter", "system-ui", "sans-serif"],
@@ -41,9 +41,15 @@ export default {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 15px rgba(14, 165, 233, 0.4)", borderColor: "rgba(14, 165, 233, 0.5)" },
-          "50%": { boxShadow: "0 0 2px rgba(14, 165, 233, 0.1)", borderColor: "#1e293b" },
-        }
+          "0%, 100%": {
+            boxShadow: "0 0 15px rgba(14, 165, 233, 0.4)",
+            borderColor: "rgba(14, 165, 233, 0.5)",
+          },
+          "50%": {
+            boxShadow: "0 0 2px rgba(14, 165, 233, 0.1)",
+            borderColor: "#1e293b",
+          },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.3s ease-out",

@@ -14,6 +14,7 @@ def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[st
         start += chunk_size - overlap
     return chunks
 
+
 async def index_file(filepath: str):
     ext = Path(filepath).suffix.lower()
     text = ""
@@ -51,6 +52,7 @@ async def index_file(filepath: str):
 
     except Exception as e:
         logger.error(f"Failed to index {filepath}: {e}")
+
 
 async def index_directory(directory_path: str, extensions: list[str] = None):
     if not extensions:

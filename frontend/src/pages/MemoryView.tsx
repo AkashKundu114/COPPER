@@ -14,10 +14,46 @@ export interface EpistemicMemoryItem {
 const STORAGE_KEY = "copper_memories_data";
 
 const DEFAULT_MEMORIES: EpistemicMemoryItem[] = [
-  { id: "m1", type: "fact", category: "Hardware Specs", content: "Windows 11 with NVIDIA RTX 5060 Laptop GPU (8GB VRAM) and AMD Ryzen 9 8940HX.", confidence: 0.99, evidenceCount: 30, lastConfirmed: "Today" },
-  { id: "m2", type: "fact", category: "Privacy Constraint", content: "Default to 100% offline local model execution via Ollama. No remote telemetry.", confidence: 1.0, evidenceCount: 45, lastConfirmed: "Today" },
-  { id: "m3", type: "observation", category: "Working Habit", content: "User works on full-stack TypeScript, React, and Python AI architectures.", confidence: 0.92, evidenceCount: 18, lastConfirmed: "Today" },
-  { id: "m4", type: "hypothesis", category: "UI Preference", content: "User prefers dark glassmorphism cyber-HUD with rich formatted typography and timestamps.", confidence: 0.88, evidenceCount: 12, lastConfirmed: "Today" }
+  {
+    id: "m1",
+    type: "fact",
+    category: "Hardware Specs",
+    content:
+      "Windows 11 with NVIDIA RTX 5060 Laptop GPU (8GB VRAM) and AMD Ryzen 9 8940HX.",
+    confidence: 0.99,
+    evidenceCount: 30,
+    lastConfirmed: "Today",
+  },
+  {
+    id: "m2",
+    type: "fact",
+    category: "Privacy Constraint",
+    content:
+      "Default to 100% offline local model execution via Ollama. No remote telemetry.",
+    confidence: 1.0,
+    evidenceCount: 45,
+    lastConfirmed: "Today",
+  },
+  {
+    id: "m3",
+    type: "observation",
+    category: "Working Habit",
+    content:
+      "User works on full-stack TypeScript, React, and Python AI architectures.",
+    confidence: 0.92,
+    evidenceCount: 18,
+    lastConfirmed: "Today",
+  },
+  {
+    id: "m4",
+    type: "hypothesis",
+    category: "UI Preference",
+    content:
+      "User prefers dark glassmorphism cyber-HUD with rich formatted typography and timestamps.",
+    confidence: 0.88,
+    evidenceCount: 12,
+    lastConfirmed: "Today",
+  },
 ];
 
 export const MemoryView: React.FC = () => {
@@ -31,7 +67,9 @@ export const MemoryView: React.FC = () => {
   });
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeType, setActiveType] = useState<"all" | "fact" | "observation" | "hypothesis">("all");
+  const [activeType, setActiveType] = useState<
+    "all" | "fact" | "observation" | "hypothesis"
+  >("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [category, setCategory] = useState("User Preference");
   const [type, setType] = useState<EpistemicMemoryItem["type"]>("fact");
@@ -57,7 +95,7 @@ export const MemoryView: React.FC = () => {
       content: content.trim(),
       confidence: confidence / 100,
       evidenceCount: 1,
-      lastConfirmed: "Just now"
+      lastConfirmed: "Just now",
     };
 
     setMemories((prev) => [newMemory, ...prev]);
@@ -81,8 +119,13 @@ export const MemoryView: React.FC = () => {
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight font-sans">Epistemic Memory Center</h1>
-          <p className="text-xs text-slate-400">Facts (Confidence ≥ 85%), Observations (50% to 85%), and Hypotheses (10% to 50%)</p>
+          <h1 className="text-xl font-bold text-white tracking-tight font-sans">
+            Epistemic Memory Center
+          </h1>
+          <p className="text-xs text-slate-400">
+            Facts (Confidence ≥ 85%), Observations (50% to 85%), and Hypotheses
+            (10% to 50%)
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -116,7 +159,11 @@ export const MemoryView: React.FC = () => {
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              {t} ({t === "all" ? memories.length : memories.filter((m) => m.type === t).length})
+              {t} (
+              {t === "all"
+                ? memories.length
+                : memories.filter((m) => m.type === t).length}
+              )
             </button>
           ))}
         </div>
@@ -130,7 +177,10 @@ export const MemoryView: React.FC = () => {
           </div>
         ) : (
           filtered.map((mem) => (
-            <div key={mem.id} className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 hover:border-slate-700 transition-all shadow-sm">
+            <div
+              key={mem.id}
+              className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 hover:border-slate-700 transition-all shadow-sm"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span
@@ -138,23 +188,37 @@ export const MemoryView: React.FC = () => {
                       mem.type === "fact"
                         ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
                         : mem.type === "observation"
-                        ? "bg-blue-950 text-blue-400 border border-blue-800/40"
-                        : "bg-amber-950 text-amber-400 border border-amber-800/40"
+                          ? "bg-blue-950 text-blue-400 border border-blue-800/40"
+                          : "bg-amber-950 text-amber-400 border border-amber-800/40"
                     }`}
                   >
                     {mem.type}
                   </span>
-                  <span className="text-slate-400 font-semibold">{mem.category}</span>
+                  <span className="text-slate-400 font-semibold">
+                    {mem.category}
+                  </span>
                 </div>
-                <span className="text-[10px] text-slate-500">Last confirmed: {mem.lastConfirmed}</span>
+                <span className="text-[10px] text-slate-500">
+                  Last confirmed: {mem.lastConfirmed}
+                </span>
               </div>
 
-              <p className="text-xs text-white leading-relaxed font-sans">{mem.content}</p>
+              <p className="text-xs text-white leading-relaxed font-sans">
+                {mem.content}
+              </p>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px]">
                 <div className="flex gap-4 text-slate-400">
-                  <span>Confidence: <strong className="text-white">{Math.round(mem.confidence * 100)}%</strong></span>
-                  <span>Evidence: <strong className="text-white">{mem.evidenceCount}x</strong></span>
+                  <span>
+                    Confidence:{" "}
+                    <strong className="text-white">
+                      {Math.round(mem.confidence * 100)}%
+                    </strong>
+                  </span>
+                  <span>
+                    Evidence:{" "}
+                    <strong className="text-white">{mem.evidenceCount}x</strong>
+                  </span>
                 </div>
                 <button
                   onClick={() => handleForget(mem.id)}
@@ -175,15 +239,22 @@ export const MemoryView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in text-xs">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white">Add Memory Rule / Fact</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+              <h3 className="font-bold text-sm text-white">
+                Add Memory Rule / Fact
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleAddMemory} className="space-y-3.5">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Category</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Category
+                </label>
                 <input
                   type="text"
                   required
@@ -195,7 +266,9 @@ export const MemoryView: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Memory Content / Statement</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Memory Content / Statement
+                </label>
                 <textarea
                   required
                   placeholder="e.g. Always generate concise Python code with type annotations."
@@ -207,7 +280,9 @@ export const MemoryView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Memory Type</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Memory Type
+                  </label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as any)}
@@ -219,7 +294,9 @@ export const MemoryView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Confidence ({confidence}%)</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Confidence ({confidence}%)
+                  </label>
                   <input
                     type="range"
                     min="10"

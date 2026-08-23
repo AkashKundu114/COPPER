@@ -1,11 +1,10 @@
-import pytest
-from app.core.constants import AgentType
 from app.ai.llm.prompt_manager import (
-    ROUTING_PROMPT,
     BASE_COPPER_SYSTEM_PROMPT,
+    ROUTING_PROMPT,
+    build_messages,
     get_system_prompt,
-    build_messages
 )
+from app.core.constants import AgentType
 
 
 def test_base_copper_prompt_personality():
@@ -16,8 +15,14 @@ def test_base_copper_prompt_personality():
 
 def test_routing_prompt_contains_all_agents():
     for agent in [
-        "chat", "coding", "automation", "reminder",
-        "research", "vision", "planner", "guardian"
+        "chat",
+        "coding",
+        "automation",
+        "reminder",
+        "research",
+        "vision",
+        "planner",
+        "guardian",
     ]:
         assert agent in ROUTING_PROMPT
 
@@ -29,7 +34,9 @@ def test_system_prompt_for_chat_agent():
 
 
 def test_system_prompt_for_coding_agent():
-    prompt = get_system_prompt(AgentType.CODING, memory_context="Preferred language: Rust")
+    prompt = get_system_prompt(
+        AgentType.CODING, memory_context="Preferred language: Rust"
+    )
     assert "Agent Role: CODING" in prompt
     assert "User Epistemic Context" in prompt
     assert "Preferred language: Rust" in prompt
@@ -64,7 +71,7 @@ def test_build_messages_structure():
     sys_prompt = "You are a test agent."
     history = [
         {"role": "user", "content": "Ping"},
-        {"role": "assistant", "content": "Pong"}
+        {"role": "assistant", "content": "Pong"},
     ]
     current = "Are you active?"
     messages = build_messages(sys_prompt, history, current)

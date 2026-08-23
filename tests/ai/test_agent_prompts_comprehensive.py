@@ -1,6 +1,5 @@
-import pytest
+from app.ai.llm.prompt_manager import build_messages, get_system_prompt
 from app.core.constants import AgentType
-from app.ai.llm.prompt_manager import get_system_prompt, build_messages
 
 
 def test_prompt_chat_agent():

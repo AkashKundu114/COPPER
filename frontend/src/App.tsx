@@ -3,12 +3,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar, type NavSection } from "./components/layout/Sidebar";
 import { TopBar } from "./components/layout/TopBar";
 import { CommandPalette } from "./components/common/CommandPalette";
-import { GuardianChallengeModal, type GuardianChallengePayload } from "./components/chat/GuardianChallengeModal";
+import {
+  GuardianChallengeModal,
+  type GuardianChallengePayload,
+} from "./components/chat/GuardianChallengeModal";
 import { ChatDock } from "./components/chat/ChatDock";
 import { MessageFeed } from "./components/chat/MessageFeed";
 import { SideDrawer } from "./components/profile/SideDrawer";
 import { useBrainSocket } from "./hooks/useBrainSocket";
-import { fetchAgents, fetchProfile, type AgentStats, type ProfileResponse } from "./lib/api";
+import {
+  fetchAgents,
+  fetchProfile,
+  type AgentStats,
+  type ProfileResponse,
+} from "./lib/api";
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 
 import { DashboardView } from "./pages/DashboardView";
@@ -33,13 +41,18 @@ export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const [guardianChallenge, setGuardianChallenge] = useState<GuardianChallengePayload | null>(null);
+  const [guardianChallenge, setGuardianChallenge] =
+    useState<GuardianChallengePayload | null>(null);
 
   const refresh = useCallback(() => {
     fetchAgents()
-      .then((list) => setAgentStats(Object.fromEntries(list.map((a) => [a.id, a]))))
+      .then((list) =>
+        setAgentStats(Object.fromEntries(list.map((a) => [a.id, a]))),
+      )
       .catch(() => {});
-    fetchProfile().then(setProfile).catch(() => {});
+    fetchProfile()
+      .then(setProfile)
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -47,7 +60,14 @@ export default function App() {
   }, [refresh]);
 
   const {
-    connected, thinking, activeAgent, lines, send, sendSystemAction, alerts, dismissAlert,
+    connected,
+    thinking,
+    activeAgent,
+    lines,
+    send,
+    sendSystemAction,
+    alerts,
+    dismissAlert,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -66,14 +86,18 @@ export default function App() {
       case "chat":
         return (
           <div className="relative w-full h-full flex flex-col items-center">
-            <MessageFeed 
-              lines={lines} 
-              agentStats={agentStats} 
-              thinking={thinking} 
-              activeAgent={activeAgent} 
+            <MessageFeed
+              lines={lines}
+              agentStats={agentStats}
+              thinking={thinking}
+              activeAgent={activeAgent}
             />
             <div className="w-full max-w-4xl px-6 pb-6">
-              <ChatDock connected={connected} thinking={thinking} onSend={send} />
+              <ChatDock
+                connected={connected}
+                thinking={thinking}
+                onSend={send}
+              />
             </div>
           </div>
         );
@@ -108,8 +132,10 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg flex text-text">
-
-      <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
+      <Sidebar
+        activeSection={activeSection}
+        onSelectSection={setActiveSection}
+      />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative border-l border-border">
         <TopBar
@@ -171,24 +197,26 @@ export default function App() {
         alerts={alerts}
         onDismiss={(alertId) => {
           dismissAlert(alertId);
-          sendSystemAction('dismiss', { alert_id: alertId });
+          sendSystemAction("dismiss", { alert_id: alertId });
         }}
         onAction={(alertId, action) => {
           dismissAlert(alertId);
 
-          if (action.toLowerCase().includes('help') || action.toLowerCase().includes('ask')) {
-            setActiveSection('chat');
-          } else if (action.toLowerCase().includes('snooze')) {
+          if (
+            action.toLowerCase().includes("help") ||
+            action.toLowerCase().includes("ask")
+          ) {
+            setActiveSection("chat");
+          } else if (action.toLowerCase().includes("snooze")) {
             const match = action.match(/(\d+)/);
             const mins = match ? parseInt(match[1]) : 15;
             let duration = mins * 60;
-            if (action.toLowerCase().includes('h')) duration = mins * 3600;
+            if (action.toLowerCase().includes("h")) duration = mins * 3600;
 
-            sendSystemAction('snooze', { alert_id: alertId, duration });
+            sendSystemAction("snooze", { alert_id: alertId, duration });
           }
         }}
       />
     </div>
   );
 }
-

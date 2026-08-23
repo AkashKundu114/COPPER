@@ -46,7 +46,15 @@ const SEVERITY_CONFIG = {
   },
 };
 
-function AlertToast({ alert, onDismiss, onAction }: { alert: ProactiveAlert; onDismiss: () => void; onAction: (action: string) => void }) {
+function AlertToast({
+  alert,
+  onDismiss,
+  onAction,
+}: {
+  alert: ProactiveAlert;
+  onDismiss: () => void;
+  onAction: (action: string) => void;
+}) {
   const config = SEVERITY_CONFIG[alert.severity] || SEVERITY_CONFIG.info;
   const Icon = config.icon;
 
@@ -75,12 +83,19 @@ function AlertToast({ alert, onDismiss, onAction }: { alert: ProactiveAlert; onD
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h4 className={`text-sm font-semibold ${config.titleColor}`}>{alert.title}</h4>
-            <button onClick={onDismiss} className="text-gray-500 hover:text-gray-300 transition-colors flex-shrink-0">
+            <h4 className={`text-sm font-semibold ${config.titleColor}`}>
+              {alert.title}
+            </h4>
+            <button
+              onClick={onDismiss}
+              className="text-gray-500 hover:text-gray-300 transition-colors flex-shrink-0"
+            >
               <X size={14} />
             </button>
           </div>
-          <p className="text-xs text-gray-300 mt-1 leading-relaxed">{alert.message}</p>
+          <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+            {alert.message}
+          </p>
           {alert.suggested_actions.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {alert.suggested_actions.map((action) => (
@@ -95,15 +110,20 @@ function AlertToast({ alert, onDismiss, onAction }: { alert: ProactiveAlert; onD
             </div>
           )}
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Spider-Sense • {alert.category}</span>
+            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
+              Spider-Sense • {alert.category}
+            </span>
           </div>
           {config.autoDismissMs > 0 && (
             <div className="mt-2 h-[2px] w-full bg-black/20 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: "100%" }}
                 animate={{ width: "0%" }}
-                transition={{ duration: config.autoDismissMs / 1000, ease: "linear" }}
-                className={`h-full ${config.bg.replace('/30', '')}`}
+                transition={{
+                  duration: config.autoDismissMs / 1000,
+                  ease: "linear",
+                }}
+                className={`h-full ${config.bg.replace("/30", "")}`}
               />
             </div>
           )}
@@ -113,7 +133,11 @@ function AlertToast({ alert, onDismiss, onAction }: { alert: ProactiveAlert; onD
   );
 }
 
-export function SpiderSenseToast({ alerts, onDismiss, onAction }: SpiderSenseToastProps) {
+export function SpiderSenseToast({
+  alerts,
+  onDismiss,
+  onAction,
+}: SpiderSenseToastProps) {
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-3 pointer-events-auto">
       <AnimatePresence mode="popLayout">

@@ -72,6 +72,7 @@ class WhisperSTTPipeline:
                 "engine": "stt-error",
             }
 
+
 class PiperTTSPipeline:
     """
     High-fidelity Neural & Offline Text-To-Speech Pipeline.

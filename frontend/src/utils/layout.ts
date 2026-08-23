@@ -1,4 +1,3 @@
-
 import { AGENTS, TIER_ORDER, type Tier } from "../constants/agents";
 
 export const VIEWBOX = 1000;
@@ -47,11 +46,11 @@ export interface OrbitParams {
 
 export function computeOrbit(agentId: string, tier: Tier): OrbitParams {
   const h = hashStr(agentId);
-  const jitter = 1 + (((h % 100) / 100) - 0.5) * 0.3; 
+  const jitter = 1 + ((h % 100) / 100 - 0.5) * 0.3;
   return {
     durationSec: RING_ORBIT_SECONDS[tier] * jitter,
     direction: h % 2 === 0 ? "normal" : "reverse",
-    delaySec: -((h >> 4) % 400) / 10, 
+    delaySec: -((h >> 4) % 400) / 10,
   };
 }
 
@@ -75,7 +74,7 @@ export function computeLayout(): Record<string, NodePosition> {
     tierAgents.forEach((agent, i) => {
       const h = hashStr(agent.id);
       const jitterAngle = ((h % 100) / 100 - 0.5) * (360 / n) * 0.28;
-      const jitterRadius = ((h >> 8) % 100) / 100 * 16 - 8;
+      const jitterRadius = (((h >> 8) % 100) / 100) * 16 - 8;
 
       const angleDeg = (360 / n) * i + offset + jitterAngle;
       const radius = baseRadius + jitterRadius;

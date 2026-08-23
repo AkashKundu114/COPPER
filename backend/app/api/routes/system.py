@@ -20,6 +20,7 @@ _total_completion_tokens = 0
 _last_gen_speed = 0.0
 _last_prompt_eval_speed = 0.0
 
+
 def record_token_usage(prompt_tokens: int, completion_tokens: int, duration_sec: float = 0.0):
     global _total_prompt_tokens, _total_completion_tokens, _last_gen_speed, _last_prompt_eval_speed
     _total_prompt_tokens += prompt_tokens
@@ -28,8 +29,10 @@ def record_token_usage(prompt_tokens: int, completion_tokens: int, duration_sec:
         _last_gen_speed = round(completion_tokens / duration_sec, 1)
         _last_prompt_eval_speed = round(prompt_tokens / max(0.1, duration_sec * 0.2), 1)
 
+
 class FILETIME(ctypes.Structure):
     _fields_ = [("dwLowDateTime", ctypes.c_ulong), ("dwHighDateTime", ctypes.c_ulong)]
+
 
 def _get_cpu_usage_and_info():
     model = "CPU"
@@ -42,8 +45,10 @@ def _get_cpu_usage_and_info():
         model = platform.processor() or "AMD/Intel x64"
 
     try:
+
         def to_int(ft):
             return (ft.dwHighDateTime << 32) + ft.dwLowDateTime
+
         idle, kernel, user = FILETIME(), FILETIME(), FILETIME()
         ctypes.windll.kernel32.GetSystemTimes(ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user))
         i1, k1, u1 = to_int(idle), to_int(kernel), to_int(user)
@@ -61,6 +66,7 @@ def _get_cpu_usage_and_info():
 
     return model, cores, cpu_percent
 
+
 def _get_ram_info():
     class MEMORYSTATUSEX(ctypes.Structure):
         _fields_ = [
@@ -74,6 +80,7 @@ def _get_ram_info():
             ("ullAvailVirtual", ctypes.c_ulonglong),
             ("sullAvailExtendedVirtual", ctypes.c_ulonglong),
         ]
+
     try:
         stat = MEMORYSTATUSEX()
         stat.dwLength = ctypes.sizeof(stat)
@@ -84,12 +91,13 @@ def _get_ram_info():
     except Exception:
         return 16.0, 4.0, 25.0
 
+
 def _get_nvidia_gpu_info():
     try:
         cmd = [
             "nvidia-smi",
             "--query-gpu=name,memory.total,memory.used,memory.free,temperature.gpu,power.draw,fan.speed",
-            "--format=csv,noheader,nounits"
+            "--format=csv,noheader,nounits",
         ]
         flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
         res = subprocess.run(cmd, capture_output=True, text=True, timeout=1.5, creationflags=flags)
@@ -113,7 +121,7 @@ def _get_nvidia_gpu_info():
                     "core_temp_c": round(temp_c, 1),
                     "hotspot_temp_c": round(temp_c + 5.0, 1),
                     "power_watts": round(power_w, 1),
-                    "fan_speed_percent": fan_pct
+                    "fan_speed_percent": fan_pct,
                 }
     except Exception:
         pass
@@ -126,8 +134,9 @@ def _get_nvidia_gpu_info():
         "core_temp_c": 40.0,
         "hotspot_temp_c": 45.0,
         "power_watts": 0.0,
-        "fan_speed_percent": 0
+        "fan_speed_percent": 0,
     }
+
 
 @router.get("/telemetry")
 async def get_system_telemetry():
@@ -140,6 +149,7 @@ async def get_system_telemetry():
     process_ram_mb = 180.0
     try:
         import psutil
+
         proc = psutil.Process(os.getpid())
         process_ram_mb = round(proc.memory_info().rss / (1024 * 1024), 1)
     except Exception:
@@ -152,7 +162,7 @@ async def get_system_telemetry():
             "model": cpu_model,
             "usage_percent": cpu_percent,
             "cores": cpu_cores,
-            "temperature_c": round(42.0 + (cpu_percent * 0.2), 1)
+            "temperature_c": round(42.0 + (cpu_percent * 0.2), 1),
         },
         "gpu": gpu_info,
         "memory": {
@@ -160,14 +170,13 @@ async def get_system_telemetry():
             "system_used_gb": ram_used_gb,
             "system_percent": ram_percent,
             "app_footprint_mb": process_ram_mb,
-            "suite_total_mb": round(process_ram_mb + 240.0, 1)
+            "suite_total_mb": round(process_ram_mb + 240.0, 1),
         },
         "tokens": {
             "prompt_tokens_processed": _total_prompt_tokens,
             "completion_tokens_generated": _total_completion_tokens,
             "total_tokens": _total_prompt_tokens + _total_completion_tokens,
             "generation_speed_tps": _last_gen_speed,
-            "prompt_eval_speed_tps": _last_prompt_eval_speed
-        }
+            "prompt_eval_speed_tps": _last_prompt_eval_speed,
+        },
     }
-

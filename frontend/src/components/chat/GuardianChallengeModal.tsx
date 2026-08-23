@@ -1,5 +1,10 @@
 import React from "react";
-import { ShieldAlert, CheckCircle2, XCircle, MessageSquare } from "lucide-react";
+import {
+  ShieldAlert,
+  CheckCircle2,
+  XCircle,
+  MessageSquare,
+} from "lucide-react";
 
 export interface GuardianChallengePayload {
   level: number;
@@ -36,7 +41,9 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
             <h3 className="text-sm font-bold text-amber-400 uppercase tracking-wider font-mono">
               COPPER Recommends Against This
             </h3>
-            <p className="text-xs text-gray-400">Guardian Level 2 Conflict Challenge</p>
+            <p className="text-xs text-gray-400">
+              Guardian Level 2 Conflict Challenge
+            </p>
           </div>
         </div>
 
@@ -46,7 +53,9 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
 
           {payload.evidence && payload.evidence.length > 0 && (
             <div className="space-y-1 bg-white/5 p-3 rounded-lg border border-white/5 font-mono text-[11px]">
-              <span className="text-gray-400 font-semibold block mb-1">Evidence:</span>
+              <span className="text-gray-400 font-semibold block mb-1">
+                Evidence:
+              </span>
               {payload.evidence.map((ev, i) => (
                 <div key={i} className="flex items-center gap-2 text-gray-300">
                   <span className="text-amber-400">•</span>
@@ -57,11 +66,16 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
           )}
 
           <div className="flex items-center justify-between text-[11px] font-mono pt-1 text-gray-400">
-            <span>Confidence: <strong className="text-amber-400">{payload.confidence}</strong></span>
+            <span>
+              Confidence:{" "}
+              <strong className="text-amber-400">{payload.confidence}</strong>
+            </span>
           </div>
 
           <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-lg text-amber-200">
-            <strong className="block text-[11px] uppercase tracking-wide text-amber-400 mb-0.5">Recommendation:</strong>
+            <strong className="block text-[11px] uppercase tracking-wide text-amber-400 mb-0.5">
+              Recommendation:
+            </strong>
             {payload.recommendation}
           </div>
         </div>

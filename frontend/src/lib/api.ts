@@ -45,17 +45,30 @@ export interface ProfileResponse {
   agents_total: number;
 }
 
-export const fetchAgents = () => api.get<AgentStats[]>("/api/v1/agents").then((r) => r.data);
+export const fetchAgents = () =>
+  api.get<AgentStats[]>("/api/v1/agents").then((r) => r.data);
 export const fetchAgentHistory = (id: string, limit = 20) =>
-  api.get<InteractionRecord[]>(`/api/v1/agents/${id}/history`, { params: { limit } }).then((r) => r.data);
-export const fetchProfile = () => api.get<ProfileResponse>("/api/v1/memory/profile").then((r) => r.data);
-export const resetProfile = () => api.post("/api/v1/memory/reset").then((r) => r.data);
+  api
+    .get<InteractionRecord[]>(`/api/v1/agents/${id}/history`, {
+      params: { limit },
+    })
+    .then((r) => r.data);
+export const fetchProfile = () =>
+  api.get<ProfileResponse>("/api/v1/memory/profile").then((r) => r.data);
+export const resetProfile = () =>
+  api.post("/api/v1/memory/reset").then((r) => r.data);
 export const sendMessage = (message: string) =>
   api.post("/api/v1/chat/message", { message }).then((r) => r.data);
 export const fetchLogs = (filter?: string) =>
-  api.get("/api/v1/audit/logs", { params: { filter } }).then((r) => r.data).catch(() => []);
+  api
+    .get("/api/v1/audit/logs", { params: { filter } })
+    .then((r) => r.data)
+    .catch(() => []);
 export const fetchStats = () =>
-  api.get("/api/v1/audit/stats").then((r) => r.data).catch(() => ({}));
+  api
+    .get("/api/v1/audit/stats")
+    .then((r) => r.data)
+    .catch(() => ({}));
 
 export interface SystemTelemetryData {
   status: string;
@@ -112,8 +125,67 @@ export interface EpisodeRecord {
 }
 
 export const fetchEpisodes = (context?: string, limit = 20) =>
-  api.get<EpisodeRecord[]>("/api/v1/episodes", { params: { context, limit } }).then((r) => r.data);
+  api
+    .get<EpisodeRecord[]>("/api/v1/episodes", { params: { context, limit } })
+    .then((r) => r.data);
 export const fetchEpisodeById = (id: number) =>
   api.get<EpisodeRecord>(`/api/v1/episodes/${id}`).then((r) => r.data);
 export const searchSimilarEpisodes = (query: string, limit = 5) =>
-  api.get("/api/v1/episodes/similar", { params: { query, limit } }).then((r) => r.data);
+  api
+    .get("/api/v1/episodes/similar", { params: { query, limit } })
+    .then((r) => r.data);
+
+export interface DocumentPage {
+  page_number: number;
+  text: string;
+  word_count: number;
+  char_count: number;
+}
+
+export interface ParsedDocument {
+  filename: string;
+  extension: string;
+  category: string;
+  size_bytes: number;
+  size_formatted: string;
+  page_count: number;
+  line_count: number;
+  word_count: number;
+  char_count: number;
+  estimated_tokens: number;
+  indexed_chunks: number;
+  pages: DocumentPage[];
+  full_text: string;
+  preview_text: string;
+  structured_data?: {
+    headers?: string[];
+    preview_rows?: string[][];
+    total_rows?: number;
+    column_count?: number;
+    is_array?: boolean;
+    is_object?: boolean;
+    top_level_keys?: string[];
+    item_count?: number;
+  } | null;
+  error?: string | null;
+  status: "success" | "partial" | "error";
+}
+
+export const parseDocumentFile = async (
+  file: File,
+  indexToMemory: boolean = true,
+): Promise<ParsedDocument> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("index_to_memory", String(indexToMemory));
+  const res = await api.post<ParsedDocument>(
+    "/api/v1/documents/parse",
+    formData,
+  );
+  return res.data;
+};
+
+export const searchDocuments = async (query: string, limit = 5) => {
+  const res = await api.post("/api/v1/documents/search", { query, limit });
+  return res.data;
+};

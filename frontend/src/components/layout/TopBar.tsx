@@ -19,7 +19,9 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header className="drag-region h-14 bg-bg border-b border-neon flex items-center justify-between px-6 z-20 select-none shadow-hud">
       <div className="flex items-center gap-3">
-        <h2 className="text-sm font-medium text-accent tracking-tight capitalize glow-text">{sectionTitle}</h2>
+        <h2 className="text-sm font-medium text-accent tracking-tight capitalize glow-text">
+          {sectionTitle}
+        </h2>
       </div>
 
       <button
@@ -51,7 +53,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="no-drag flex items-center gap-2 px-3 py-1 rounded-lg bg-bg-panel border border-border hover:border-accent hover:shadow-neon text-[13px] text-text-muted transition-all"
         >
           <User size={14} />
-          <span className="font-medium">{profile?.relationship_tier || "Profile"}</span>
+          <span className="font-medium">
+            {profile?.relationship_tier || "Profile"}
+          </span>
         </button>
       </div>
     </header>

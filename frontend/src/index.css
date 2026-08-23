@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   background: #020617;
@@ -12,29 +16,61 @@ html, body, #root {
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
-  background-image: linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(
+    rgba(14, 165, 233, 0.03) 1px,
+    transparent 1px
+  );
   background-size: 100% 4px;
 }
 
-.drag-region { -webkit-app-region: drag; user-select: none; }
-.no-drag { -webkit-app-region: no-drag; }
+.drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
+}
 
 .glow-text {
   text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #334155; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
 
-::selection { background: rgba(14, 165, 233, 0.3); color: #ffffff; }
+::selection {
+  background: rgba(14, 165, 233, 0.3);
+  color: #ffffff;
+}
 
-textarea, input { outline: none !important; }
-textarea:focus, textarea:focus-visible, input:focus, input:focus-visible { outline: none !important; box-shadow: none !important; }
+textarea,
+input {
+  outline: none !important;
+}
+textarea:focus,
+textarea:focus-visible,
+input:focus,
+input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

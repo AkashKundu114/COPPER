@@ -12,6 +12,7 @@ When answering document or knowledge questions, utilize the retrieved document e
 Be concise, accurate, and highly analytical.
 """
 
+
 class ResearchAgent(BaseAgent):
     def __init__(self):
         super().__init__(
@@ -84,5 +85,6 @@ class ResearchAgent(BaseAgent):
         target_model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
         async for chunk in ollama_client.stream_chat(messages, model=target_model):
             yield chunk
+
 
 research_agent = ResearchAgent()

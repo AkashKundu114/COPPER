@@ -5,7 +5,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
-from app.api.routes import agents, audit, automation, chat, episodes, guardian, memory, reminders, system, vision, voice
+from app.api.routes import (
+    agents,
+    audit,
+    automation,
+    chat,
+    documents,
+    episodes,
+    guardian,
+    memory,
+    reminders,
+    system,
+    vision,
+    voice,
+)
 from app.core.config import settings
 from app.core.logger import logger
 from app.database.postgres import init_db
@@ -25,6 +38,7 @@ async def lifespan(app: FastAPI):
     stop_scheduler()
     await redis_close()
     logger.info("COPPER backend shutdown complete")
+
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -50,11 +64,14 @@ app.include_router(guardian.router, prefix="/api/v1")
 app.include_router(agents.router, prefix="/api/v1")
 app.include_router(audit.router, prefix="/api/v1")
 app.include_router(episodes.router, prefix="/api/v1")
+app.include_router(documents.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
+
 
 @app.get("/")
 async def root():
     return {"name": settings.APP_NAME, "version": settings.APP_VERSION, "status": "online"}
+
 
 @app.get("/health")
 async def health():

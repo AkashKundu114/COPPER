@@ -7,6 +7,7 @@ down_revision = "0001_initial"
 branch_labels = None
 depends_on = None
 
+
 def upgrade():
     op.create_table(
         "user_memories_v2",
@@ -58,6 +59,7 @@ def upgrade():
         sa.Column("metadata", sa.JSON, nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
+
 
 def downgrade():
     op.drop_table("audit_log")

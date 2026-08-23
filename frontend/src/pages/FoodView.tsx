@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Trash2, CheckCircle2, Circle, Utensils, ShoppingBag, Flame, X } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  CheckCircle2,
+  Circle,
+  Utensils,
+  ShoppingBag,
+  Flame,
+  X,
+} from "lucide-react";
 
 interface MealEntry {
   id: string;
@@ -21,11 +30,28 @@ export const FoodView: React.FC = () => {
   const [meals, setMeals] = useState<MealEntry[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_MEALS);
-      return saved ? JSON.parse(saved) : [
-        { id: "m1", name: "Oatmeal with Blueberries & Whey", type: "Breakfast", calories: 420 },
-        { id: "m2", name: "Paneer Tikka Roll with Mint Chutney", type: "Lunch", calories: 580 },
-        { id: "m3", name: "Grilled Veggie Salad & Quinoa", type: "Dinner", calories: 450 }
-      ];
+      return saved
+        ? JSON.parse(saved)
+        : [
+            {
+              id: "m1",
+              name: "Oatmeal with Blueberries & Whey",
+              type: "Breakfast",
+              calories: 420,
+            },
+            {
+              id: "m2",
+              name: "Paneer Tikka Roll with Mint Chutney",
+              type: "Lunch",
+              calories: 580,
+            },
+            {
+              id: "m3",
+              name: "Grilled Veggie Salad & Quinoa",
+              type: "Dinner",
+              calories: 450,
+            },
+          ];
     } catch {
       return [];
     }
@@ -34,12 +60,18 @@ export const FoodView: React.FC = () => {
   const [groceries, setGroceries] = useState<GroceryItem[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_GROCERIES);
-      return saved ? JSON.parse(saved) : [
-        { id: "g1", name: "Paneer (Indian Cheese)", completed: true },
-        { id: "g2", name: "Fresh Cilantro & Green Onions", completed: true },
-        { id: "g3", name: "Whole Wheat Wraps", completed: false },
-        { id: "g4", name: "Greek Yogurt & Almond Milk", completed: false }
-      ];
+      return saved
+        ? JSON.parse(saved)
+        : [
+            { id: "g1", name: "Paneer (Indian Cheese)", completed: true },
+            {
+              id: "g2",
+              name: "Fresh Cilantro & Green Onions",
+              completed: true,
+            },
+            { id: "g3", name: "Whole Wheat Wraps", completed: false },
+            { id: "g4", name: "Greek Yogurt & Almond Milk", completed: false },
+          ];
     } catch {
       return [];
     }
@@ -69,7 +101,7 @@ export const FoodView: React.FC = () => {
       id: `meal-${Date.now()}`,
       name: mealName.trim(),
       type: mealType,
-      calories: Number(mealCalories) || 0
+      calories: Number(mealCalories) || 0,
     };
 
     setMeals((prev) => [...prev, newMeal]);
@@ -88,7 +120,7 @@ export const FoodView: React.FC = () => {
     const newItem: GroceryItem = {
       id: `groc-${Date.now()}`,
       name: newGroceryName.trim(),
-      completed: false
+      completed: false,
     };
 
     setGroceries((prev) => [...prev, newItem]);
@@ -97,7 +129,7 @@ export const FoodView: React.FC = () => {
 
   const toggleGrocery = (id: string) => {
     setGroceries((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, completed: !g.completed } : g))
+      prev.map((g) => (g.id === id ? { ...g, completed: !g.completed } : g)),
     );
   };
 
@@ -107,15 +139,22 @@ export const FoodView: React.FC = () => {
 
   const totalCalories = meals.reduce((acc, m) => acc + m.calories, 0);
   const calorieTarget = 2200;
-  const caloriePct = Math.min(100, Math.round((totalCalories / calorieTarget) * 100));
+  const caloriePct = Math.min(
+    100,
+    Math.round((totalCalories / calorieTarget) * 100),
+  );
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight font-sans">Food & Nutrition Organizer</h1>
-          <p className="text-xs text-slate-400">Meal logs, calorie tracking, and grocery checklists</p>
+          <h1 className="text-xl font-bold text-white tracking-tight font-sans">
+            Food & Nutrition Organizer
+          </h1>
+          <p className="text-xs text-slate-400">
+            Meal logs, calorie tracking, and grocery checklists
+          </p>
         </div>
         <button
           onClick={() => setIsMealModalOpen(true)}
@@ -134,7 +173,8 @@ export const FoodView: React.FC = () => {
             <span>Today's Energy Balance</span>
           </div>
           <span className="text-slate-400">
-            <strong className="text-white">{totalCalories}</strong> / {calorieTarget} kcal ({caloriePct}%)
+            <strong className="text-white">{totalCalories}</strong> /{" "}
+            {calorieTarget} kcal ({caloriePct}%)
           </span>
         </div>
         <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
@@ -157,11 +197,15 @@ export const FoodView: React.FC = () => {
                 <Utensils size={16} className="text-sky-400" />
                 <span>Today's Meal Log</span>
               </div>
-              <span className="text-slate-500 text-[11px]">{meals.length} Meals</span>
+              <span className="text-slate-500 text-[11px]">
+                {meals.length} Meals
+              </span>
             </div>
 
             {meals.length === 0 ? (
-              <div className="p-8 text-center text-slate-500">No meals logged yet today.</div>
+              <div className="p-8 text-center text-slate-500">
+                No meals logged yet today.
+              </div>
             ) : (
               <div className="space-y-2.5">
                 {meals.map((m) => (
@@ -170,11 +214,17 @@ export const FoodView: React.FC = () => {
                     className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between hover:border-slate-700 transition-all"
                   >
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-sky-400 block">{m.type}</span>
-                      <span className="text-xs text-white font-medium font-sans">{m.name}</span>
+                      <span className="text-[10px] uppercase font-bold text-sky-400 block">
+                        {m.type}
+                      </span>
+                      <span className="text-xs text-white font-medium font-sans">
+                        {m.name}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-400 font-bold">{m.calories} kcal</span>
+                      <span className="text-slate-400 font-bold">
+                        {m.calories} kcal
+                      </span>
                       <button
                         onClick={() => deleteMeal(m.id)}
                         className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
@@ -197,7 +247,8 @@ export const FoodView: React.FC = () => {
               <span>Grocery Checklist</span>
             </div>
             <span className="text-slate-500 text-[11px]">
-              {groceries.filter((g) => g.completed).length} / {groceries.length} Done
+              {groceries.filter((g) => g.completed).length} / {groceries.length}{" "}
+              Done
             </span>
           </div>
 
@@ -236,7 +287,9 @@ export const FoodView: React.FC = () => {
                   ) : (
                     <Circle size={16} className="text-slate-500" />
                   )}
-                  <span className={`text-xs font-sans ${item.completed ? "line-through text-slate-500" : "text-white"}`}>
+                  <span
+                    className={`text-xs font-sans ${item.completed ? "line-through text-slate-500" : "text-white"}`}
+                  >
                     {item.name}
                   </span>
                 </div>
@@ -257,15 +310,22 @@ export const FoodView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in text-xs">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white font-sans">Log Food / Meal</h3>
-              <button onClick={() => setIsMealModalOpen(false)} className="text-slate-400 hover:text-white">
+              <h3 className="font-bold text-sm text-white font-sans">
+                Log Food / Meal
+              </h3>
+              <button
+                onClick={() => setIsMealModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleAddMeal} className="space-y-3.5">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Meal / Food Description</label>
+                <label className="text-[11px] text-slate-400 block mb-1">
+                  Meal / Food Description
+                </label>
                 <input
                   type="text"
                   required
@@ -278,7 +338,9 @@ export const FoodView: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Meal Type</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Meal Type
+                  </label>
                   <select
                     value={mealType}
                     onChange={(e) => setMealType(e.target.value as any)}
@@ -291,7 +353,9 @@ export const FoodView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">Calories (kcal)</label>
+                  <label className="text-[11px] text-slate-400 block mb-1">
+                    Calories (kcal)
+                  </label>
                   <input
                     type="number"
                     min="0"
