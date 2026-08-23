@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile for C.O.P.P.E.R. Vite React Frontend
-FROM node:20-alpine AS build
+FROM node:26-alpine AS build
 
 WORKDIR /app
 
