@@ -41,7 +41,7 @@ function estimateSpeakingDuration(text: string): number {
   return Math.min(5000, Math.max(900, text.length * 45));
 }
 
-const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/v1/chat/ws";
+const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/v1/chat/ws/default";
 
 export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [connected, setConnected] = useState(false);

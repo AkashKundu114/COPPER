@@ -9,7 +9,7 @@ router = APIRouter(prefix="/voice", tags=["voice"])
 
 class SynthesisRequest(BaseModel):
     text: str
-    voice: str | None = "copper_synth"
+    voice: str | None = "en_US-amy-medium"
     speed: float | None = 1.0
 
 @router.get("/status")

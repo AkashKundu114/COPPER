@@ -154,7 +154,7 @@ class PiperTTSPipeline:
         voices.append({"id": "copper_synth", "name": "C.O.P.P.E.R Synth Voice", "engine": "copper-synth"})
         return voices
 
-    async def synthesize(self, text: str, voice: str = "copper_synth", speed: float = 1.0) -> bytes:
+    async def synthesize(self, text: str, voice: str = "en_US-amy-medium", speed: float = 1.0) -> bytes:
         """
         Synthesize text into WAV audio bytes.
         """
@@ -183,6 +183,14 @@ class PiperTTSPipeline:
             import pyttsx3
 
             engine = pyttsx3.init()
+            
+            # Select a female voice by default
+            voices = engine.getProperty("voices")
+            for v in voices:
+                if "zira" in v.name.lower() or "female" in v.name.lower() or "hazel" in v.name.lower():
+                    engine.setProperty("voice", v.id)
+                    break
+                    
             if speed != 1.0:
                 current_rate = engine.getProperty("rate")
                 engine.setProperty("rate", int(current_rate * speed))
