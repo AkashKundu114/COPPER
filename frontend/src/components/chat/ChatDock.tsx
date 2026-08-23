@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Paperclip, ArrowUp, Mic, MicOff } from "lucide-react";
+import { API_BASE } from "../../lib/api";
 
 interface Props {
   connected: boolean;
@@ -10,6 +11,8 @@ interface Props {
 export function ChatDock({ connected, thinking, onSend }: Props) {
   const [draft, setDraft] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<BlobPart[]>([]);
 
   const submit = () => {
     const msg = draft.trim();
@@ -18,9 +21,58 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
     setDraft("");
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
+        stream.getTracks().forEach((t) => t.stop());
+        
+        const formData = new FormData();
+        formData.append("file", audioBlob, "voice.webm");
+
+        try {
+          const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          if (data.text) {
+            onSend(data.text);
+          }
+        } catch (e) {
+          console.error("Voice transcription error", e);
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+    } catch (e) {
+      console.error("Mic access denied", e);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
   const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // TODO: Implement MediaRecorder and WebSocket streaming to /api/v1/voice/stream
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
   };
 
   return (

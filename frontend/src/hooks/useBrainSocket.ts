@@ -10,6 +10,7 @@ export type BrainEvent =
   | { type: "agent_speaking"; agent: string; text: string }
   | { type: "memory_update"; profile_delta: { key: string; value: string }[]; agent: string; familiarity: number; tier: string; glow?: number }
   | { type: "done" }
+  | { type: "audio_playback"; audio_base64: string }
   | { type: "proactive_intervention"; alert_id: string; severity: "info" | "warning" | "critical"; category: string; title: string; message: string; mode: string; suggested_actions: string[] };
 
 export interface ChatLine {
@@ -89,10 +90,21 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           setActiveAgent(event.agent);
           break;
         case "agent_speaking":
-          setLines((prev) => [
-            ...prev,
-            { id: `${Date.now()}-${Math.random()}`, agent: event.agent, text: event.text, timestamp: Date.now() },
-          ]);
+          setLines((prev) => {
+            const last = prev[prev.length - 1];
+            // If the last line is from the same agent and is a stream, append to it
+            if (last && last.agent === event.agent && last.id.startsWith("stream-")) {
+              return [
+                ...prev.slice(0, -1),
+                { ...last, text: last.text + event.text }
+              ];
+            }
+            // Otherwise, start a new stream bubble
+            return [
+              ...prev,
+              { id: `stream-${Date.now()}`, agent: event.agent, text: event.text, timestamp: Date.now() }
+            ];
+          });
           setSpeakingAgent(event.agent);
           setSpeaking(true);
           clearTimeout(speakingTimer.current);
@@ -107,6 +119,14 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
             if (prev.some((a) => a.alert_id === event.alert_id)) return prev;
             return [...prev, { alert_id: event.alert_id, severity: event.severity, category: event.category, title: event.title, message: event.message, mode: event.mode, suggested_actions: event.suggested_actions }];
           });
+          break;
+        case "audio_playback":
+          try {
+            const audio = new Audio("data:audio/wav;base64," + event.audio_base64);
+            audio.play();
+          } catch (e) {
+            console.error("Failed to play audio", e);
+          }
           break;
         case "done":
           setThinking(false);

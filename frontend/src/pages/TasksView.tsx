@@ -12,13 +12,7 @@ interface TaskItem {
   status: TaskStatus;
 }
 
-const INITIAL_TASKS: TaskItem[] = [
-  { id: "1", title: "Map Ollama local models in pre-trained router", project: "COPPER Core", priority: "high", duration: "90 min", status: "active" },
-  { id: "2", title: "Run Alembic DB migration on memory_v2 schema", project: "Database Engine", priority: "high", duration: "45 min", status: "planned" },
-  { id: "3", title: "Validate Tauri desktop bundle on Windows x64", project: "Tauri Shell", priority: "medium", duration: "60 min", status: "inbox" },
-  { id: "4", title: "Fix SVG label rotation math in NeuralBrain component", project: "UI System", priority: "medium", duration: "30 min", status: "completed" },
-  { id: "5", title: "Setup PII redaction rules for Zero-Trust Firewall", project: "Data Firewall", priority: "high", duration: "60 min", status: "blocked" },
-];
+const INITIAL_TASKS: TaskItem[] = [];
 
 export const TasksView: React.FC = () => {
   const statuses: TaskStatus[] = ["inbox", "planned", "active", "blocked", "completed", "archived"];
