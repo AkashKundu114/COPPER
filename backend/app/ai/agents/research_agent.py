@@ -46,9 +46,10 @@ class ResearchAgent(BaseAgent):
         if not retrieved_context:
             retrieved_context = "No highly relevant local documents found for this query."
 
+        system_content = f"{SYS_PROMPT}\n\n{memory_context}" if memory_context else SYS_PROMPT
         messages = [
-            {"role": "system", "content": SYS_PROMPT},
-            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}\n\nAdditional Context:\n{memory_context}"},
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}"},
         ]
 
         target_model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
@@ -76,9 +77,10 @@ class ResearchAgent(BaseAgent):
                 if content:
                     retrieved_context += f"Source: {source}\n{content}\n\n"
 
+        system_content = f"{SYS_PROMPT}\n\n{memory_context}" if memory_context else SYS_PROMPT
         messages = [
-            {"role": "system", "content": SYS_PROMPT},
-            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}\n\nAdditional Context:\n{memory_context}"},
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}"},
         ]
         target_model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
         async for chunk in ollama_client.stream_chat(messages, model=target_model):
