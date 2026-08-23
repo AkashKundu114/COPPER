@@ -149,6 +149,10 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.REMINDER: [
         (
+            r"\b(what time is it|current time|current date|what is the time|what is the date|what is today's date|what day is today|tell me the time|whats the time|what is the current time)\b",
+            7.0,
+        ),
+        (
             r"\b(remind me\s+(to|for|at|in|tomorrow|on|tonight)|set a reminder|create a reminder|create a recurring reminder|habit reminder)\b",
             5.0,
         ),
