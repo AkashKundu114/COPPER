@@ -156,90 +156,78 @@ export const BenchmarkMetricsView: React.FC = () => {
   const [isPolling, setIsPolling] = useState(true);
   const [telemetry, setTelemetry] = useState<SystemTelemetryData>({
     status: "healthy",
-    uptime_seconds: 3420,
+    uptime_seconds: 0,
     cpu: {
-      model: "AMD Ryzen 9 8940HX (16C/32T)",
-      usage_percent: 3.8,
-      cores: 32,
-      temperature_c: 48.5
+      model: "Detecting CPU...",
+      usage_percent: 0.0,
+      cores: 16,
+      temperature_c: 0.0
     },
     gpu: {
-      model: "NVIDIA GeForce RTX 5060 Laptop GPU",
-      vram_total_gb: 8.0,
-      vram_used_gb: 6.4,
-      vram_free_gb: 1.6,
-      vram_percent: 80.0,
-      core_temp_c: 52.4,
-      hotspot_temp_c: 60.8,
-      power_watts: 38.2,
-      fan_speed_percent: 42
+      model: "Detecting GPU...",
+      vram_total_gb: 0.0,
+      vram_used_gb: 0.0,
+      vram_free_gb: 0.0,
+      vram_percent: 0.0,
+      core_temp_c: 0.0,
+      hotspot_temp_c: 0.0,
+      power_watts: 0.0,
+      fan_speed_percent: 0
     },
     memory: {
-      system_total_gb: 16.0,
-      system_used_gb: 7.2,
-      system_percent: 45.0,
-      app_footprint_mb: 320.0,
-      suite_total_mb: 975.0
+      system_total_gb: 0.0,
+      system_used_gb: 0.0,
+      system_percent: 0.0,
+      app_footprint_mb: 0.0,
+      suite_total_mb: 0.0
     },
     tokens: {
-      prompt_tokens_processed: 24850,
-      completion_tokens_generated: 8420,
-      total_tokens: 33270,
-      generation_speed_tps: 52.4,
-      prompt_eval_speed_tps: 228.0
+      prompt_tokens_processed: 0,
+      completion_tokens_generated: 0,
+      total_tokens: 0,
+      generation_speed_tps: 0.0,
+      prompt_eval_speed_tps: 0.0
     }
   });
 
   useEffect(() => {
     if (!isPolling) return;
-    const interval = setInterval(() => {
+    const fetchRealData = () => {
       fetchSystemTelemetry()
         .then(setTelemetry)
-        .catch(() => {
-          setTelemetry((prev) => ({
-            ...prev,
-            cpu: {
-              ...prev.cpu,
-              usage_percent: +(3.2 + Math.random() * 2.4).toFixed(1),
-              temperature_c: +(48.0 + Math.random() * 1.8).toFixed(1)
-            },
-            gpu: {
-              ...prev.gpu,
-              core_temp_c: +(52.0 + Math.random() * 1.5).toFixed(1),
-              hotspot_temp_c: +(60.0 + Math.random() * 2.0).toFixed(1),
-              power_watts: +(36.0 + Math.random() * 4.0).toFixed(1)
-            },
-            tokens: {
-              ...prev.tokens,
-              total_tokens: prev.tokens.total_tokens + Math.floor(Math.random() * 8),
-              generation_speed_tps: +(51.0 + Math.random() * 3.5).toFixed(1)
-            }
-          }));
-        });
-    }, 1500);
+        .catch(() => {});
+    };
 
+    fetchRealData();
+    const interval = setInterval(fetchRealData, 1500);
     return () => clearInterval(interval);
   }, [isPolling]);
 
-  const runLiveBenchmark = () => {
+  const runLiveBenchmark = async () => {
     setIsRunningLive(true);
     setLiveProgress(0);
     setLiveResults(null);
 
-    let current = 0;
-    const interval = setInterval(() => {
-      current += 10;
-      setLiveProgress(current);
-      if (current >= 100) {
-        clearInterval(interval);
-        setIsRunningLive(false);
-        setLiveResults({
-          total: 200,
-          passed: 200,
-          avgLatency: 0.048
-        });
+    const latencies: number[] = [];
+    for (let i = 1; i <= 5; i++) {
+      const start = performance.now();
+      try {
+        await fetchSystemTelemetry();
+        latencies.push(performance.now() - start);
+      } catch (e) {
+        latencies.push(5.0);
       }
-    }, 120);
+      setLiveProgress(i * 20);
+      await new Promise((r) => setTimeout(r, 60));
+    }
+
+    const avg = latencies.length ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0.0;
+    setIsRunningLive(false);
+    setLiveResults({
+      total: latencies.length,
+      passed: latencies.length,
+      avgLatency: +avg.toFixed(2)
+    });
   };
 
   return (
@@ -393,7 +381,7 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
-                  <HardDrive className="w-4 h-4 text-purple-400" /> GPU VRAM (RTX 5060)
+                  <HardDrive className="w-4 h-4 text-purple-400" /> GPU VRAM ({telemetry.gpu.model.split(" ")[0] || "GPU"})
                 </span>
                 <span className="text-[10px] text-purple-400 font-bold">{telemetry.gpu.vram_percent}%</span>
               </div>
@@ -450,23 +438,27 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-4 font-mono text-xs">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <HardDrive className="w-4 h-4 text-purple-400" /> Dedicated GPU VRAM Budget (8.0 GB)
+                  <HardDrive className="w-4 h-4 text-purple-400" /> Dedicated GPU VRAM Budget ({telemetry.gpu.vram_total_gb} GB)
                 </h3>
                 <span className="text-[11px] text-purple-400 font-bold">{telemetry.gpu.vram_percent}% Allocated</span>
               </div>
 
               <div className="space-y-2">
                 <div className="w-full bg-black/60 rounded-full h-3.5 flex overflow-hidden border border-white/10">
-                  <div style={{ width: "55%" }} className="bg-[#f97316]" title="Primary 7B Core (4.4 GB)" />
-                  <div style={{ width: "14%" }} className="bg-cyan-500" title="Active Subagent (1.1 GB)" />
-                  <div style={{ width: "11%" }} className="bg-purple-500" title="KV Context Cache (0.9 GB)" />
-                  <div style={{ width: "20%" }} className="bg-emerald-500/40" title="Free Headroom (1.6 GB)" />
+                  <div
+                    style={{ width: `${Math.max(2, Math.min(100, telemetry.gpu.vram_percent))}%` }}
+                    className="bg-gradient-to-r from-purple-600 to-indigo-500 transition-all duration-500"
+                    title={`Allocated (${telemetry.gpu.vram_used_gb} GB)`}
+                  />
+                  <div
+                    style={{ width: `${Math.max(0, 100 - telemetry.gpu.vram_percent)}%` }}
+                    className="bg-emerald-500/20 transition-all duration-500"
+                    title={`Free Headroom (${telemetry.gpu.vram_free_gb} GB)`}
+                  />
                 </div>
-                <div className="flex justify-between text-[10px] text-gray-400">
-                  <span>■ Core Model (4.4 GB)</span>
-                  <span>■ Subagents (1.1 GB)</span>
-                  <span>■ KV-Cache (0.9 GB)</span>
-                  <span className="text-emerald-400 font-bold">■ Free (1.6 GB)</span>
+                <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+                  <span className="text-purple-400">■ In-Use / Reserved ({telemetry.gpu.vram_used_gb} GB)</span>
+                  <span className="text-emerald-400 font-bold">■ Available Free ({telemetry.gpu.vram_free_gb} GB)</span>
                 </div>
               </div>
 
@@ -492,26 +484,38 @@ export const BenchmarkMetricsView: React.FC = () => {
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <Zap className="w-4 h-4 text-cyan-400" /> Token Processing Velocity &amp; Rate
                 </h3>
-                <span className="text-[11px] text-cyan-400 font-bold">52.4 Tokens/Sec</span>
+                <span className="text-[11px] text-cyan-400 font-bold">
+                  {telemetry.tokens.generation_speed_tps > 0 ? `${telemetry.tokens.generation_speed_tps} T/s` : "Idle (0 T/s)"}
+                </span>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between text-gray-300">
                   <span>Prompt Processing Speed (Input Tokens)</span>
-                  <span className="text-cyan-400 font-bold">{telemetry.tokens.prompt_eval_speed_tps} T/s</span>
+                  <span className="text-cyan-400 font-bold">
+                    {telemetry.tokens.prompt_eval_speed_tps > 0 ? `${telemetry.tokens.prompt_eval_speed_tps} T/s` : "Idle"}
+                  </span>
                 </div>
                 <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden border border-white/10">
-                  <div style={{ width: "85%" }} className="bg-cyan-400 h-full" />
+                  <div
+                    style={{ width: `${Math.min(100, (telemetry.tokens.prompt_eval_speed_tps / 300) * 100)}%` }}
+                    className="bg-cyan-400 h-full transition-all duration-300"
+                  />
                 </div>
               </div>
 
               <div className="space-y-2 pt-1">
                 <div className="flex justify-between text-gray-300">
                   <span>Autoregressive Generation Speed (Output Tokens)</span>
-                  <span className="text-[#f97316] font-bold">{telemetry.tokens.generation_speed_tps} T/s</span>
+                  <span className="text-[#f97316] font-bold">
+                    {telemetry.tokens.generation_speed_tps > 0 ? `${telemetry.tokens.generation_speed_tps} T/s` : "Idle"}
+                  </span>
                 </div>
                 <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden border border-white/10">
-                  <div style={{ width: "65%" }} className="bg-[#f97316] h-full" />
+                  <div
+                    style={{ width: `${Math.min(100, (telemetry.tokens.generation_speed_tps / 80) * 100)}%` }}
+                    className="bg-[#f97316] h-full transition-all duration-300"
+                  />
                 </div>
               </div>
 

@@ -10,13 +10,16 @@ class LangchainManager:
             return await ollama_client.chat(messages)
         except Exception as e:
             logger.warning(f"LangchainManager invocation fallback: {e}")
-            last_msg = messages[-1]["content"] if messages else ""
-            return f"[COPPER Response]: Processed prompt '{last_msg}'."
+            return f"Cannot reach local LLM server. Please ensure Ollama is running."
 
     async def astream(
         self, messages: list[dict[str, str]], provider: LLMProvider = LLMProvider.OLLAMA
     ) -> AsyncGenerator[str, None]:
-        res = await self.ainvoke(messages, provider)
-        yield res
+        try:
+            async for chunk in ollama_client.stream_chat(messages):
+                yield chunk
+        except Exception as e:
+            logger.warning(f"LangchainManager stream fallback: {e}")
+            yield f"Cannot reach local LLM server. Please ensure Ollama is running."
 
 langchain_manager = LangchainManager()

@@ -1,9 +1,23 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { spawn } = require('child_process');
 
 let mainWindow = null;
 let backendProcess = null;
+
+function getPythonExecutable(rootDir) {
+  const candidates = [
+    path.join(rootDir, '.venv', 'Scripts', 'python.exe'),
+    path.join(rootDir, 'venv', 'Scripts', 'python.exe'),
+    path.join(rootDir, '.venv', 'bin', 'python'),
+    path.join(rootDir, 'venv', 'bin', 'python'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return 'python';
+}
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
@@ -90,15 +104,17 @@ function startBackend() {
   const rootDir = path.resolve(__dirname, '..');
 
   try {
-    const pythonExec = process.platform === 'win32' 
-      ? path.join(rootDir, '.venv', 'Scripts', 'python.exe')
-      : path.join(rootDir, '.venv', 'bin', 'python');
+    const pythonExec = getPythonExecutable(rootDir);
 
     backendProcess = spawn(pythonExec, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'backend', '--host', '127.0.0.1', '--port', '8000'], {
       cwd: rootDir,
       detached: true,
       stdio: 'ignore',
       shell: false
+    });
+    backendProcess.on('error', (err) => {
+      console.error('Backend process error:', err);
+      backendProcess = null;
     });
     backendProcess.on('exit', () => { backendProcess = null; });
     backendProcess.unref();

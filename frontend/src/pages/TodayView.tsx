@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AlertCircle } from "lucide-react";
 
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
