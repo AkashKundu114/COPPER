@@ -1,6 +1,6 @@
 # Model Selection & Orchestration Topology
 
-## 🧠 Local Model Architecture Strategy
+## Local Model Architecture Strategy
 
 **C.O.P.P.E.R.** is engineered for high-performance offline inference on modern consumer hardware (AMD Ryzen 9 / NVIDIA RTX 5060 Laptop GPU with 8GB VRAM). 
 
@@ -8,7 +8,7 @@ Instead of running a single monolithic model for all tasks, C.O.P.P.E.R. distrib
 
 ---
 
-## 📋 Full Model Manifest & Tier Distribution
+## Full Model Manifest & Tier Distribution
 
 ![Multi-Model Capability Comparison](../images/model_comparison_radar.png)
 ![Inference Speed & Token Throughput](../images/token_generation_throughput.png)

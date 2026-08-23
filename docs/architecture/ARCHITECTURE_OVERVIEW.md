@@ -66,22 +66,22 @@ The desktop application is built on **Electron** with strict in-app navigation g
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ COPPER                       ● Local   🔒 Private   🎙 Ready  [Profile]│
+│ COPPER                       ● Local     Private      Ready  [Profile] │
 ├──────────────┬─────────────────────────────────────────────────────────┤
-│ ❖ Logo       │                                                         │
-│ 📊 Dashboard │                                                         │
-│ 💬 Chat      │                    MAIN WORKSPACE                       │
-│ 📅 Today     │                                                         │
-│ ☑ Tasks      │    (Interactive Views: Neural Brain Ganglia Map,        │
-│ 📁 Projects  │     Schedule Timeline, Memory Inspector, Security       │
-│ 🧠 Memory    │     Center Audit Log, Self-Improvement Benchmark)      │
-│ 🤖 Agents    │                                                         │
-│ 📈 Activity  │                                                         │
-│ 💡 Insights  │                                                         │
-│ ⚡ Self-Impr │                                                         │
-│ 🛡️ Security  │                                                         │
-│ ⚡ Benchmarks│                                                         │
-│ ⚙️ Settings  │                                                         │
+│ Logo         │                                                         │
+│ Dashboard    │                                                         │
+│ Chat         │                    MAIN WORKSPACE                       │
+│ Today        │                                                         │
+│ Tasks        │    (Interactive Views: Neural Brain Ganglia Map,        │
+│ Projects     │     Schedule Timeline, Memory Inspector, Security       │
+│ Memory       │     Center Audit Log, Self-Improvement Benchmark)       │
+│ Agents       │                                                         │
+│ Activity     │                                                         │
+│ Insights     │                                                         │
+│ Self-Impr    │                                                         │
+│ Security     │                                                         │
+│ Benchmarks   │                                                         │
+│ Settings     │                                                         │
 └──────────────┴─────────────────────────────────────────────────────────┘
 ```
 

@@ -4,7 +4,7 @@ This directory serves as the **100% local, zero-cloud-egress data persistence la
 
 ---
 
-## 📂 Directory Layout & Data Classification
+## Directory Layout & Data Classification
 
 ```
 data/
@@ -25,7 +25,7 @@ data/
 
 ---
 
-## 🛡️ Security, Privacy & Retention Policies
+## Security, Privacy & Retention Policies
 
 | Directory | Data Type | Classification | Retention / Decay Policy |
 | :--- | :--- | :--- | :--- |
@@ -39,5 +39,5 @@ data/
 
 ---
 
-## 🔒 Zero-Cloud-Egress Guarantee
+## Zero-Cloud-Egress Guarantee
 All files residing in `data/` are stored strictly on the local machine and excluded from Git tracking via [`.gitignore`](../.gitignore) to ensure personal data is never inadvertently pushed to public repositories.

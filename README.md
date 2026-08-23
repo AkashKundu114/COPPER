@@ -34,7 +34,7 @@ COPPER routes every request through a 30-agent orchestration layer running entir
 - **Sub-Millisecond Multi-Stage Router (< 0.05ms):** Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)**.
 - **Guardian Safety & Alignment Engine:** 4-level disagreement protocol (Execute, Suggest, Challenge, Safety Boundary) evaluating user prompts against destructive triggers (`rm -rf`, raw disk formats, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
 - **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive PII (OpenAI `sk-` / `sk-proj-` tokens, Bearer headers, SSNs, credit cards, emails, IP addresses, file paths).
-- **🎙️ Offline Multimodal Voice Pipeline:** Real-time speech transcription via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with zero internet dependency.
+- **Offline Multimodal Voice Pipeline:** Real-time speech transcription via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with zero internet dependency.
 - **3-Layer Epistemic Memory:** Persistent storage of user facts, preferences, and hypotheses integrating SQLite state with ChromaDB semantic vector embeddings (`nomic-embed-text-v1.5`).
 - **Native Desktop Application:** Standalone Electron desktop app with single-instance locking, in-app navigation constraints (no external browser popups), and seamless Windows startup auto-launch.
 
@@ -104,13 +104,13 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 
 | Evaluation Metric | Measured Result | Benchmark Standard | Status |
 | :--- | :---: | :---: | :---: |
-| **Agent Routing Accuracy** | **100.0%** (1,110 / 1,110) | $\ge 98.0\%$ | 🟢 Verified |
-| **Routing Weighted F1 Score** | **100.0%** | $\ge 98.0\%$ | 🟢 Verified |
-| **Average Routing Latency** | **0.052 ms** (P95: 0.066 ms) | $< 1.0\text{ ms}$ | 🟢 Verified |
-| **Routing Throughput** | **18,954 QPS** | $> 10,000\text{ QPS}$ | 🟢 Verified |
-| **Guardian Threat Catch Rate** | **100.0%** (250 / 250) | $\ge 99.0\%$ | 🟢 Verified |
-| **Critical Security Breaches** | **0 Breaches** (0.0% Risk) | $0\text{ Breaches}$ | 🟢 Verified |
-| **Pytest Suite Pass Rate** | **213 / 213 (100%)** | $100\%$ | 🟢 Verified |
+| **Agent Routing Accuracy** | **100.0%** (1,110 / 1,110) | $\ge 98.0\%$ | Pass |
+| **Routing Weighted F1 Score** | **100.0%** | $\ge 98.0\%$ | Pass |
+| **Average Routing Latency** | **0.052 ms** (P95: 0.066 ms) | $< 1.0\text{ ms}$ | Pass |
+| **Routing Throughput** | **18,954 QPS** | $> 10,000\text{ QPS}$ | Pass |
+| **Guardian Threat Catch Rate** | **100.0%** (250 / 250) | $\ge 99.0\%$ | Pass |
+| **Critical Security Breaches** | **0 Breaches** (0.0% Risk) | $0\text{ Breaches}$ | Pass |
+| **Pytest Suite Pass Rate** | **213 / 213 (100%)** | $100\%$ | Pass |
 
 | Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 - 8GB) |
 | :--- | :--- |
@@ -132,8 +132,6 @@ COPPER now features a dedicated **Benchmarks & Metrics** tab inside the Electron
 - **VRAM Monitor**: Live 8GB VRAM allocation tracking (Core, Subagent, KV Cache).
 - **System RAM**: Sub-1GB active memory footprint monitoring.
 - **Live Evaluator**: Run synthetic benchmark test cases directly from the UI with real-time accuracy scoring.
-
-### Prerequisites
 
 ### Prerequisites
 - **Python 3.11+**

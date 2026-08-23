@@ -15,6 +15,7 @@ C.O.P.P.E.R. solves this through an **Epistemic Memory Framework** based on Baye
 ## 2. Epistemic Classification Hierarchy
 
 ![Epistemic Memory Architecture](../images/epistemic_memory_layers.png)
+```text
                             +-----------------------------------+
                             |    Raw Input Dialogue / Action    |
                             +-----------------+-----------------+

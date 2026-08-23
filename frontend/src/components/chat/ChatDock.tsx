@@ -401,147 +401,121 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
         </div>
       )}
 
-      {/* Main Glassmorphism Input Capsule */}
-      <div
-        className={`w-full flex flex-col rounded-2xl bg-bg-panel/90 backdrop-blur-xl border transition-all duration-300 shadow-lg ${
-          thinking
-            ? "border-accent shadow-neon animate-pulse-glow"
-            : isRecording
-            ? "border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] bg-rose-950/10"
-            : "border-border/80 focus-within:border-accent/80 hover:border-border focus-within:shadow-[0_0_20px_rgba(14,165,233,0.15)]"
-        }`}
-      >
-        {/* Active Recording State Banner */}
-        {isRecording ? (
-          <div className="flex items-center justify-between px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
-              <div className="flex flex-col">
+      {/* Main Antigravity-Style Input Capsule */}
+      <div className="w-full flex flex-col items-center">
+        <div
+          className={`w-full flex flex-row items-end rounded-3xl bg-[#212121] transition-all duration-300 shadow-sm border border-white/5 py-1 px-2 ${
+            thinking
+              ? "border-sky-500/30"
+              : "focus-within:border-white/10"
+          }`}
+        >
+          {isRecording ? (
+            <div className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
+              <div className="flex items-center gap-3">
+                <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
                 <span className="text-sm font-semibold text-rose-400 font-mono">
-                  Listening to Voice Input...
-                </span>
-                <span className="text-xs text-text-muted font-mono">
-                  Duration: {formatTimer(recordDuration)} | Whisper STT Ready
+                  Listening... {formatTimer(recordDuration)}
                 </span>
               </div>
+              <button
+                onClick={stopRecording}
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-500 hover:bg-rose-600 text-white transition-all"
+              >
+                <div className="w-3 h-3 bg-white rounded-sm" />
+              </button>
             </div>
+          ) : (
+            <>
+              {/* Plus Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading || thinking}
+                className="p-2 mb-1 rounded-full text-zinc-400 hover:text-white transition-all flex-shrink-0"
+                title="Attach Documents"
+              >
+                {isUploading ? (
+                  <Loader2 size={20} className="animate-spin text-zinc-400" />
+                ) : (
+                  <div className="w-5 h-5 flex items-center justify-center text-xl font-light pb-1">+</div>
+                )}
+              </button>
 
-            {/* Live pulsating audio wave bars */}
-            <div className="flex items-center gap-1.5 h-6">
-              {[40, 70, 95, 60, 85, 50, 90, 65, 45].map((h, i) => (
-                <span
-                  key={i}
-                  className="w-1 bg-rose-500 rounded-full animate-pulse"
-                  style={{
-                    height: `${h}%`,
-                    animationDuration: `${0.4 + (i % 3) * 0.2}s`,
-                    animationDelay: `${i * 0.08}s`
+              {/* Input Text Area */}
+              <div className="flex-1 py-3 px-2">
+                <textarea
+                  ref={textareaRef}
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      submit();
+                    }
                   }}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={stopRecording}
-              className="px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-mono text-xs font-bold shadow-lg transition-all"
-            >
-              Finish &amp; Transcribe
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Input Text Area */}
-            <div className="px-4 pt-3.5 pb-1">
-              <textarea
-                ref={textareaRef}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    submit();
+                  placeholder={
+                    thinking
+                      ? "Thinking..."
+                      : isUploading
+                      ? "Uploading..."
+                      : "Ask anything, @ to mention, / for actions"
                   }
-                }}
-                placeholder={
-                  thinking
-                    ? "C.O.P.P.E.R. is processing..."
-                    : isUploading
-                    ? "Parsing document and extracting text..."
-                    : "Message C.O.P.P.E.R. or attach files (.pdf, .csv, .json, .py, .md)..."
-                }
-                disabled={thinking || isUploading}
-                className="w-full bg-transparent outline-none border-none border-0 ring-0 shadow-none focus:outline-none focus:ring-0 focus:border-none focus-visible:outline-none focus-visible:ring-0 text-[14.5px] leading-relaxed text-text placeholder:text-text-muted/60 resize-none max-h-48 min-h-[38px] custom-scrollbar"
-                rows={1}
-              />
-            </div>
-
-            {/* Bottom Actions Toolbar */}
-            <div className="flex items-center justify-between px-3 pb-2.5 pt-1 border-t border-white/[0.04]">
-              <div className="flex items-center gap-1.5">
-                {/* Model Pill Button */}
-                <button
-                  type="button"
-                  onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-raised/80 hover:bg-bg-raised border border-border/50 text-[11px] font-mono text-accent font-medium transition-all"
-                >
-                  <selectedModel.icon size={13} className="text-accent" />
-                  <span>{selectedModel.name}</span>
-                  <ChevronUp size={12} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-
-                {/* File / Document Attachment Button */}
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading || thinking}
-                  className="flex items-center gap-1 px-2 py-1 text-text-muted hover:text-accent hover:bg-accent/10 rounded-lg transition-all text-xs font-mono disabled:opacity-30 cursor-pointer"
-                  title="Attach Documents (.pdf, .csv, .tsv, .json, .py, .ts, .md, .txt, .sql, etc.)"
-                >
-                  {isUploading ? (
-                    <Loader2 size={15} className="animate-spin text-sky-400" />
-                  ) : (
-                    <Paperclip size={15} />
-                  )}
-                  <span className="hidden sm:inline">Attach Doc</span>
-                </button>
-              </div>
-
-              {/* Right Side: Microphone & Send Button */}
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-text-muted/50 font-mono hidden sm:inline-flex items-center gap-1">
-                  <span>Enter</span>
-                  <CornerDownLeft size={10} />
-                </span>
-
-                {/* Voice Input Button */}
-                <button
-                  type="button"
-                  onClick={toggleRecording}
                   disabled={thinking || isUploading}
-                  className="p-2 rounded-xl text-accent hover:text-white hover:bg-accent/20 transition-all disabled:opacity-30"
-                  title="Speak with Voice"
-                >
-                  <Mic size={17} />
-                </button>
-
-                {/* Send Button */}
-                <button
-                  type="button"
-                  onClick={submit}
-                  disabled={(!draft.trim() && attachedDocs.length === 0) || thinking || isUploading}
-                  className="p-2 rounded-xl bg-accent text-bg hover:bg-accent-hover hover:shadow-neon disabled:opacity-20 disabled:hover:bg-accent disabled:shadow-none transition-all duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
-                  title={connected ? "Send message" : "Reconnecting..."}
-                >
-                  {thinking ? (
-                    <Loader2 size={16} className="animate-spin text-bg" />
-                  ) : (
-                    <ArrowUp size={16} strokeWidth={2.5} />
-                  )}
-                </button>
+                  className="w-full bg-transparent outline-none border-none text-[15px] leading-relaxed text-[#e2e2e2] placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block"
+                  rows={1}
+                />
               </div>
-            </div>
-          </>
-        )}
+
+              {/* Right Side Buttons */}
+              <div className="flex items-center gap-1 mb-1.5 pr-1">
+                {!draft.trim() && attachedDocs.length === 0 && !thinking && (
+                  <button
+                    type="button"
+                    onClick={toggleRecording}
+                    className="p-2 rounded-full text-zinc-400 hover:text-white transition-all"
+                  >
+                    <Mic size={18} />
+                  </button>
+                )}
+
+                {(draft.trim() || attachedDocs.length > 0) && !thinking && (
+                  <button
+                    type="button"
+                    onClick={submit}
+                    disabled={isUploading}
+                    className="w-8 h-8 rounded-full bg-white text-black hover:bg-zinc-200 transition-all flex items-center justify-center disabled:opacity-50"
+                  >
+                    <ArrowUp size={18} strokeWidth={2.5} />
+                  </button>
+                )}
+
+                {thinking && (
+                  <button
+                    type="button"
+                    className="w-8 h-8 rounded-full bg-[#3f3f3f] text-rose-400 hover:bg-[#4f4f4f] hover:text-rose-300 transition-all flex items-center justify-center"
+                    title="Stop generation"
+                  >
+                    <div className="w-3 h-3 bg-rose-400 rounded-sm" />
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Bottom Model Selector Pill */}
+        <div className="flex w-full justify-start mt-3 px-2">
+           <button
+             type="button"
+             onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+             className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/5 text-[12px] text-zinc-400 transition-all"
+           >
+             <span className="font-light">+</span>
+             <span className="font-medium">{selectedModel.name}</span>
+             <ChevronUp size={14} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
+           </button>
+        </div>
       </div>
     </div>
   );

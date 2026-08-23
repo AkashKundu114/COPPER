@@ -4,13 +4,13 @@ Tailored for laptops with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9 8940HX**
 
 ---
 
-## 🎯 Hardware Memory Strategy
+## Hardware Memory Strategy
 
 With **8GB VRAM**, each Q4_K_M quantized model takes **~3.8 GB to 4.7 GB VRAM**, allowing every model to fit **100% inside GPU VRAM** with 3GB+ headroom for KV-cache context windows. Ollama switches active models in $< 1$ second automatically.
 
 ---
 
-## 🚀 Copy & Paste Terminal Pull Commands
+## Copy & Paste Terminal Pull Commands
 
 Run these 3 commands in your terminal for the optimal 8GB VRAM setup:
 
@@ -27,7 +27,7 @@ ollama pull mistral:7b-instruct
 
 ---
 
-## 📋 Q4_K_M Model Allocation for RTX 5060 8GB VRAM
+## Q4_K_M Model Allocation for RTX 5060 8GB VRAM
 
 | Model Pull Command | Q4 VRAM Size | Expected Speed (RTX 5060) | Assigned Sub-Agents & Roles |
 | :--- | :--- | :--- | :--- |
@@ -39,7 +39,7 @@ ollama pull mistral:7b-instruct
 
 ---
 
-## ⚙️ Recommended Ollama Environment Settings
+## Recommended Ollama Environment Settings
 
 To maximize RTX 5060 GPU utilization and prevent VRAM unloading latency, set this environment variable in your terminal or Windows System Environment Variables:
 

@@ -53,7 +53,7 @@ Evaluates user instructions against schedule commitments, fatigue, and long-term
 ## 4. Voice Privacy & Interaction Specifications
 
 - **Voice Controls:** Push-to-talk, click-to-speak, recording state (`Ready`, `Listening...`, `Processing...`, `Speaking...`, `Paused`).
-- **Privacy Rule:** Microphone requires explicit user permission; top bar displays `🎙 Ready` or active recording pulse. Never record silently.
+- **Privacy Rule:** Microphone requires explicit user permission; top bar displays `Ready` or active recording pulse. Never record silently.
 - **Output Toggles:** Switch between `Text only`, `Voice only`, and `Text + Voice`.
 
 ---

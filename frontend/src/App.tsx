@@ -131,36 +131,39 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-bg flex text-text">
-      <Sidebar
-        activeSection={activeSection}
-        onSelectSection={setActiveSection}
-      />
-
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative border-l border-border">
-        <TopBar
-          sectionTitle={activeSection.replace("-", " ")}
-          profile={profile}
-          drawerOpen={drawerOpen}
-          onToggleDrawer={handleToggleDrawer}
-          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-        />
-
-        <main className="flex-1 overflow-hidden relative custom-scrollbar flex flex-col bg-bg">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeSection}
-              initial={{ opacity: 0, y: 10, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.99 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="flex-1 w-full h-full"
-            >
-              {renderActiveSection()}
-            </motion.div>
-          </AnimatePresence>
-        </main>
-      </div>
+    <div className="relative w-screen h-screen overflow-hidden flex text-[#e2e2e2]" style={{ background: '#18181a' }}>
+      <main className="flex-1 overflow-hidden relative flex flex-col">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1 w-full h-full flex flex-col"
+          >
+            {activeSection === "chat" ? (
+              <div className="relative w-full h-full flex flex-col items-center justify-between">
+                <MessageFeed
+                  lines={lines}
+                  agentStats={agentStats}
+                  thinking={thinking}
+                  activeAgent={activeAgent}
+                />
+                <div className="w-full max-w-[850px] px-4 pb-6 mt-auto">
+                  <ChatDock
+                    connected={connected}
+                    thinking={thinking}
+                    onSend={send}
+                  />
+                </div>
+              </div>
+            ) : (
+              renderActiveSection()
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
       <CommandPalette
         open={commandPaletteOpen}

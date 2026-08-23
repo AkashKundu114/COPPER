@@ -1,23 +1,23 @@
 # Security Policy
 
-## 🔒 Security Overview & Threat Model
+## Security Overview & Threat Model
 
 **C.O.P.P.E.R.** is engineered with a **local-first, zero-cloud-egress** security model. All AI models, vector embeddings, episodic memories, and execution sandboxes reside strictly within the user's host environment.
 
 ---
 
-## 🛡️ Supported Versions
+## Supported Versions
 
 We provide security updates and patches for the following versions:
 
 | Version | Supported | Notes |
 | :--- | :---: | :--- |
-| **`1.0.x`** | ✅ | **Active Support (Current Release)** |
-| `< 1.0.0` | ❌ | Deprecated pre-release builds |
+| **`1.0.x`** | Yes | **Active Support (Current Release)** |
+| `< 1.0.0` | No | Deprecated pre-release builds |
 
 ---
 
-## 🚨 Reporting a Vulnerability
+## Reporting a Vulnerability
 
 We take the security of C.O.P.P.E.R. seriously. If you discover a security vulnerability or bypass in the **Guardian Safety Engine**, **Data Firewall**, or **Forge Code Sandbox**, please follow this responsible disclosure procedure:
 
@@ -31,14 +31,14 @@ We take the security of C.O.P.P.E.R. seriously. If you discover a security vulne
    - Potential impact (e.g., sandbox escape, PII leakage, Guardian override).
    - Any proposed remediation or mitigation.
 
-### ⏱️ Response Timelines
+### Response Timelines
 - **Initial Acknowledgment:** Within **24 hours**.
 - **Assessment & Triage:** Within **48 hours**.
 - **Fix & Patch Release:** Within **7 business days** for high-severity issues.
 
 ---
 
-## 🛡️ Core Security Mechanisms
+## Core Security Mechanisms
 
 ### 1. Zero-Trust Data Firewall
 - Every inbound and outbound prompt is inspected by the regex-based `DataFirewall` prior to LLM inference or persistence.

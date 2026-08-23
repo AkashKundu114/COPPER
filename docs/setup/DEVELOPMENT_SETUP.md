@@ -4,7 +4,7 @@ This guide walks you through setting up a complete local development environment
 
 ---
 
-## 🛠️ System Prerequisites
+## System Prerequisites
 
 - **Operating System:** Windows 10/11, macOS 12+, or Ubuntu 22.04+
 - **Python:** 3.11 or higher
@@ -14,7 +14,7 @@ This guide walks you through setting up a complete local development environment
 
 ---
 
-## 🚀 Step-by-Step Local Setup
+## Step-by-Step Local Setup
 
 ### 1. Clone the Repository
 ```bash
@@ -54,7 +54,7 @@ cd ..
 
 ---
 
-## 🖥️ Running the Application
+## Running the Application
 
 ### Option A: 1-Click Launch (Windows Dev Environment)
 ```powershell
@@ -77,7 +77,7 @@ npm run desktop
 
 ---
 
-## 🧪 Quality Gates & Test Suites
+## Quality Gates & Test Suites
 
 Always run the full test and benchmark suite before submitting PRs:
 

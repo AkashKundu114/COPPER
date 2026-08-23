@@ -21,21 +21,21 @@ COPPER features a responsive, keyboard-friendly desktop application layout:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ COPPER                       ● Local   🔒 Private   🎙 Ready  [Profile]│
+│ COPPER                       Local   Private   Ready  [Profile]        │
 ├──────────────┬─────────────────────────────────────────────────────────┤
-│ ❖ Logo       │                                                         │
-│ 📊 Dashboard │                                                         │
-│ 💬 Chat      │                     MAIN WORKSPACE                      │
-│ 📅 Today     │                                                         │
-│ ☑ Tasks      │    - Dashboard / Today Overview / Focus Session         │
-│ 📁 Projects  │    - Hybrid Text + Voice Chat & Equalizer Bar           │
-│ 🧠 Memory    │    - Epistemic Memory Center & Consent                  │
-│ 🤖 Agents    │    - Agent Registry & Hot-Swap Manager                  │
-│ 📈 Activity  │    - Security Center & Zero-Trust Data Firewall         │
-│ 💡 Insights  │    - Self-Healing & Self-Improvement Dashboards         │
-│ ⚡ Self-Impr │    - Coding Workspace & Terminal Safety Review          │
-│ 🛡️ Security  │                                                         │
-│ ⚙️ Settings  │                                                         │
+│ Logo         │                                                         │
+│ Dashboard    │                                                         │
+│ Chat         │                     MAIN WORKSPACE                      │
+│ Today        │                                                         │
+│ Tasks        │    - Dashboard / Today Overview / Focus Session         │
+│ Projects     │    - Hybrid Text + Voice Chat & Equalizer Bar           │
+│ Memory       │    - Epistemic Memory Center & Consent                  │
+│ Agents       │    - Agent Registry & Hot-Swap Manager                  │
+│ Activity     │    - Security Center & Zero-Trust Data Firewall         │
+│ Insights     │    - Self-Healing & Self-Improvement Dashboards         │
+│ Self-Impr    │    - Coding Workspace & Terminal Safety Review          │
+│ Security     │                                                         │
+│ Settings     │                                                         │
 └──────────────┴─────────────────────────────────────────────────────────┘
 ```
 
@@ -61,18 +61,18 @@ COPPER features a responsive, keyboard-friendly desktop application layout:
 - **Left:** Section title / breadcrumb.
 - **Center:** Processing indicator & active agent state.
 - **Right:**
-  - Model Mode: `● Local` (Green) or `☁ Cloud` (Blue, when cloud fallback enabled).
-  - Privacy Status: `🔒 Private` (Local encryption active).
-  - Voice Status: `🎙 Ready` / `🎙 Listening...` / `🎙 Speaking...`.
+  - Model Mode: `Local` (Green) or `Cloud` (Blue, when cloud fallback enabled).
+  - Privacy Status: `Private` (Local encryption active).
+  - Voice Status: `Ready` / `Listening...` / `Speaking...`.
   - Profile & Notifications.
 
 ---
 
 ## 4. Voice Interaction & Privacy UI
 
-- **Voice Controls:** `[ + ] [ Text input... ] [ 🎙 ] [ Send ]`
+- **Voice Controls:** `[ + ] [ Text input... ] [ Mic ] [ Send ]`
 - **Voice States:** `Ready`, `Listening...`, `Processing...`, `Speaking...`, `Paused`.
-- **Playback Controls:** `▶ Play`, `⏸ Pause`, `■ Stop`.
+- **Playback Controls:** `Play`, `Pause`, `Stop`.
 - **Output Toggles:** Switch seamlessly between `Text only`, `Voice only`, `Text + Voice`.
 - **Privacy Rule:** Microphone requires explicit consent; visual mic indicator is active whenever audio recording is engaged.
 
@@ -84,7 +84,7 @@ When COPPER challenges a user decision (Level 2 Challenge):
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ ⚠ COPPER RECOMMENDS AGAINST THIS                                       │
+│ COPPER RECOMMENDS AGAINST THIS                                         │
 │                                                                        │
 │ I disagree with this plan because it conflicts with tomorrow's         │
 │ interview deadline.                                                    │
@@ -97,7 +97,7 @@ When COPPER challenges a user decision (Level 2 Challenge):
 │ Confidence: High (92%)                                                 │
 │ Recommendation: Complete preparation tasks first.                      │
 │                                                                        │
-│ [ Follow COPPER's Recommendation ]  [ Proceed Anyway ]  [ Discuss ]   │
+│ [ Follow COPPER's Recommendation ]  [ Proceed Anyway ]  [ Discuss ]    │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -113,7 +113,7 @@ When COPPER challenges a user decision (Level 2 Challenge):
 - **Destructive Commands:** Displays Command, Target, Expected Effect, Risk, and explicit confirmation dialog.
 
 ### Tool Execution Progress Bar
-- Displays collapsible activity (`✓ Read schedule` $\rightarrow$ `✓ Checked priorities` $\rightarrow$ `→ Updating tasks`).
+- Displays collapsible activity (`[Done] Read schedule` -> `[Done] Checked priorities` -> `-> Updating tasks`).
 - Secrets (API keys, passwords, tokens) automatically masked (`sk-••••••••`).
 
 ---

@@ -4,12 +4,12 @@
 
 ## 1. Phase Execution Timeline
 
-```
+```text
 +-----------------------------------------------------------------------------------+
 | PHASE 1: CORE ENGINE & RECONCILIATION (Q3 2026) - [COMPLETED]                     |
 | - Fast-API Backend Architecture & SQLite/Postgres DB Models                       |
 | - 30-Agent Radial Neural Visualizer UI with Molten Copper Theme                   |
-| - Epistemic Learner (Fact/Observation/Hypothesis Classification)                 |
+| - Epistemic Learner (Fact/Observation/Hypothesis Classification)                  |
 +-----------------------------------------------------------------------------------+
                                         |
                                         v
@@ -22,7 +22,7 @@
                                         |
                                         v
 +-----------------------------------------------------------------------------------+
-| PHASE 3: MULTI-DEVICE SYNC & CUSTOM LOCAL FINE-TUNING (Q1 2027)                  |
+| PHASE 3: MULTI-DEVICE SYNC & CUSTOM LOCAL FINE-TUNING (Q1 2027)                   |
 | - End-to-Encrypted User-Owned Epistemic Memory Sync                               |
 | - Fine-tuned LoRA Models (Unsloth + Ollama integration)                           |
 | - Native Mobile Companion App (iOS & Android)                                     |

@@ -4,7 +4,7 @@ Welcome to the C.O.P.P.E.R. Issue Tracker guide. We appreciate your help in maki
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 1. [Code of Conduct & Expectations](#1-code-of-conduct--expectations)
 2. [Before Submitting an Issue](#2-before-submitting-an-issue)
 3. [Reporting Bugs (Production Standard)](#3-reporting-bugs-production-standard)

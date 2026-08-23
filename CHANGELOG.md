@@ -22,13 +22,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 > **Accomplished** a production-ready CI/CD and security baseline **as measured by** passing a strict Red Team security audit and zero build failures on main, **by implementing** Microsoft code quality practices, a robust Pytest suite, and expanding the Zero-Trust Data Firewall.
 
 ### Added
-- 🧪 **Comprehensive Test Suite:** Added backend test coverage for Data Firewall, Guardian, Self-Healing, and Validators using `pytest`.
-- 🏗️ **Automated Quality Gates:** Integrated `ruff` (Python) and `oxlint` with strict `tsc` checks into GitHub Actions CI workflows.
-- 📜 **PR Template:** Enforced the Google XYZ formula for all open-source contributions.
+- **Comprehensive Test Suite:** Added backend test coverage for Data Firewall, Guardian, Self-Healing, and Validators using `pytest`.
+- **Automated Quality Gates:** Integrated `ruff` (Python) and `oxlint` with strict `tsc` checks into GitHub Actions CI workflows.
+- **PR Template:** Enforced the Google XYZ formula for all open-source contributions.
 
 ### Changed
-- 📖 **Documentation:** Rewrote `README.md` and `CHANGELOG.md` using the Google XYZ impact formula to clearly communicate architectural value.
-- 🛡️ **Data Firewall:** Upgraded the PII redaction engine to identify and scrub **Social Security Numbers (SSNs)** and **Credit Card numbers** before external egress.
+- **Documentation:** Rewrote `README.md` and `CHANGELOG.md` using the Google XYZ impact formula to clearly communicate architectural value.
+- **Data Firewall:** Upgraded the PII redaction engine to identify and scrub **Social Security Numbers (SSNs)** and **Credit Card numbers** before external egress.
 
 ### Fixed
 - **Routing & Validation:** Fixed a critical return-type mismatch in `validators.py` and a double `/api` prefix in `memory.py`.
@@ -44,15 +44,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 This major release consolidates five architectural passes, resolving legacy single-agent local specs into a persistent, 30-agent, guardian-aligned personal AI assistant.
 
 ### Added
-- 🛡️ **Guardian Alignment Framework (Levels 0–3):** Evaluates user instructions against routines, energy fatigue, and long-term goals. Introduces `GuardianChallengeModal` for Level 2 interactive challenges and Level 3 safety boundaries.
-- 🔒 **Zero-Trust Data Firewall:** Built-in scanner in `backend/app/core/data_firewall.py` detecting PII (API keys, SSNs, credit cards, emails). Anonymizes sensitive data into synthetic session tokens before sending payloads to cloud LLM providers.
-- 💡 **Epistemic Memory Engine V2 (`memory_v2`):** Classifies user facts into Facts ($C \ge 0.85$), Observations ($0.50 \le C < 0.85$), and Hypotheses ($0.10 \le C < 0.50$). Implements Bayesian belief updates and temporal decay math:
+- **Guardian Alignment Framework (Levels 0–3):** Evaluates user instructions against routines, energy fatigue, and long-term goals. Introduces `GuardianChallengeModal` for Level 2 interactive challenges and Level 3 safety boundaries.
+- **Zero-Trust Data Firewall:** Built-in scanner in `backend/app/core/data_firewall.py` detecting PII (API keys, SSNs, credit cards, emails). Anonymizes sensitive data into synthetic session tokens before sending payloads to cloud LLM providers.
+- **Epistemic Memory Engine V2 (`memory_v2`):** Classifies user facts into Facts ($C \ge 0.85$), Observations ($0.50 \le C < 0.85$), and Hypotheses ($0.10 \le C < 0.50$). Implements Bayesian belief updates and temporal decay math:
   $$C(t) = C_0 \cdot e^{-\lambda_T \cdot \Delta t}$$
-- ⚡ **30-Agent Radial Visualizer (`NeuralBrain.tsx`):** Interactive SVG ganglia map with 4 orbital tiers, real-time edge pulse animations, and deterministic 30-node spacing.
-- 🔊 **Speaking Bar & Widget Rail:** Dynamic equalizer bar synchronizing text-to-speech timing, alongside always-on Clock, Weather, Calendar, and Network widgets.
-- 🔄 **Self-Healing Execution Loop (`self_healing.py`):** Automated 3-stage retry and secondary tool/model fallback engine for failed agent tasks.
-- 📜 **Security Center & Audit Log (`audit_log`):** Human-readable event trail with one-click encrypted JSON data export and instant permanent purge (`delete-all`).
-- 📁 **Comprehensive Documentation Suite in `docs/`:**
+- **30-Agent Radial Visualizer (`NeuralBrain.tsx`):** Interactive SVG ganglia map with 4 orbital tiers, real-time edge pulse animations, and deterministic 30-node spacing.
+- **Speaking Bar & Widget Rail:** Dynamic equalizer bar synchronizing text-to-speech timing, alongside always-on Clock, Weather, Calendar, and Network widgets.
+- **Self-Healing Execution Loop (`self_healing.py`):** Automated 3-stage retry and secondary tool/model fallback engine for failed agent tasks.
+- **Security Center & Audit Log (`audit_log`):** Human-readable event trail with one-click encrypted JSON data export and instant permanent purge (`delete-all`).
+- **Comprehensive Documentation Suite in `docs/`:**
   - `docs/architecture/`: `ARCHITECTURE_OVERVIEW.md`, `BACKEND_SCHEMA.md`, `DATA_FIREWALL_AND_SECURITY.md`
   - `docs/technical/`: `TRD.md`, `IMPLEMENTATION_GUIDE.md`, `MODEL_SELECTION.md`
   - `docs/research/`: `PRD.md`, `EPISTEMIC_MEMORY_RESEARCH.md`, `GUARDIAN_INTERVENTION_RESEARCH.md`

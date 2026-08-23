@@ -4,7 +4,7 @@ Welcome to the official technical documentation and architectural reference for 
 
 ---
 
-## 🖼️ Visual Architecture & Benchmark Gallery
+## Visual Architecture & Benchmark Gallery
 
 ![System Performance & Safety](images/routing_accuracy_benchmark.png)
 
@@ -16,7 +16,7 @@ Welcome to the official technical documentation and architectural reference for 
 
 ---
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ```
 docs/
@@ -46,12 +46,12 @@ docs/
 
 ---
 
-## 🔗 Key Document Links
+## Key Document Links
 
-- 📊 **[Comprehensive Benchmark & Multi-Model Report](BENCHMARK_AND_METRICS_REPORT.md)**
-- 📐 **[Architecture Overview](architecture/ARCHITECTURE_OVERVIEW.md)**
-- 🔒 **[Data Firewall & Security](architecture/DATA_FIREWALL_AND_SECURITY.md)**
-- 🧠 **[Model Selection Strategy](technical/MODEL_SELECTION.md)**
-- 💡 **[Epistemic Memory Research](research/EPISTEMIC_MEMORY_RESEARCH.md)**
-- 🛡️ **[Guardian Intervention Research](research/GUARDIAN_INTERVENTION_RESEARCH.md)**
-- 🚀 **[Development Setup Guide](setup/DEVELOPMENT_SETUP.md)**
+- **[Comprehensive Benchmark & Multi-Model Report](BENCHMARK_AND_METRICS_REPORT.md)**
+- **[Architecture Overview](architecture/ARCHITECTURE_OVERVIEW.md)**
+- **[Data Firewall & Security](architecture/DATA_FIREWALL_AND_SECURITY.md)**
+- **[Model Selection Strategy](technical/MODEL_SELECTION.md)**
+- **[Epistemic Memory Research](research/EPISTEMIC_MEMORY_RESEARCH.md)**
+- **[Guardian Intervention Research](research/GUARDIAN_INTERVENTION_RESEARCH.md)**
+- **[Development Setup Guide](setup/DEVELOPMENT_SETUP.md)**

@@ -114,7 +114,7 @@ export function MessageFeed({
   return (
     <div
       ref={feedRef}
-      className="flex-1 w-full max-w-4xl mx-auto overflow-y-auto px-6 py-8 space-y-8 custom-scrollbar"
+      className="flex-1 w-full max-w-[850px] mx-auto overflow-y-auto px-4 py-8 space-y-6 custom-scrollbar"
     >
       {selectedDoc && (
         <DocumentReaderModal
@@ -125,99 +125,64 @@ export function MessageFeed({
 
       {lines.map((line, i) => {
         const isUser = line.agent === "YOU" || line.agent === "user";
-        const agentName =
-          line.agent && line.agent !== "YOU"
-            ? agentStats[line.agent]?.name || line.agent
-            : "C.O.P.P.E.R.";
-
         const { cleanText, attachments } = isUser ? parseAttachments(line.text) : { cleanText: line.text, attachments: [] };
 
-        return (
-          <div
-            key={line.id || i}
-            className={`flex gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} animate-slide-up`}
-          >
-            <div
-              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser ? "bg-bg-raised text-text" : "bg-bg-panel border border-border text-accent"}`}
-            >
-              {isUser ? <User size={16} /> : <Bot size={16} />}
-            </div>
-
-            <div
-              className={`flex flex-col max-w-[85%] ${isUser ? "items-end" : "items-start"}`}
-            >
-              <div
-                className={`flex items-center gap-2 mb-1 px-1.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}
-              >
-                <span className="text-xs text-text-muted font-medium">
-                  {isUser ? "You" : agentName}
-                </span>
-                <span className="text-[10px] text-text-muted/60 font-mono">
-                  {formatTime(line.timestamp)}
-                </span>
-              </div>
-
-              <div
-                className={`px-5 py-4 rounded-2xl shadow-sm ${isUser ? "bg-bg-raised text-text border border-border/50" : "bg-bg-panel border border-border text-text"}`}
-              >
-                {isUser ? (
-                  <div className="space-y-3">
-                    {/* Render Document Attachment Badges */}
-                    {attachments.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-0.5">
-                        {attachments.map((att, idx) => {
-                          const Icon = getDocIcon(att.filename);
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => openAttachmentReader(att)}
-                              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-sky-400/80 text-xs font-mono text-cyan-300 shadow-sm transition-all cursor-pointer group"
-                              title="Click to Open Document Reader"
-                            >
-                              <Icon size={14} className="text-sky-400 group-hover:scale-110 transition-transform" />
-                              <span className="font-bold text-white group-hover:text-sky-300 transition-colors">
-                                {att.filename}
-                              </span>
-                              <span className="text-[10px] text-slate-400 flex items-center gap-1 ml-1 bg-slate-800 px-1.5 py-0.5 rounded">
-                                <Eye size={10} />
-                                <span>Preview</span>
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    {cleanText && (
-                      <p className="whitespace-pre-wrap leading-relaxed text-sm">
-                        {cleanText}
-                      </p>
-                    )}
+        if (isUser) {
+          return (
+            <div key={line.id || i} className="flex justify-end w-full animate-slide-up mb-8 mt-4">
+              <div className="bg-[#212121] text-[#e2e2e2] px-4 py-3 rounded-2xl max-w-[85%] border border-white/5 shadow-sm text-[15px] font-light leading-relaxed">
+                {attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {attachments.map((att, idx) => {
+                      const Icon = getDocIcon(att.filename);
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => openAttachmentReader(att)}
+                          className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#333] hover:bg-[#444] text-[11px] font-mono transition-all"
+                        >
+                          <Icon size={12} className="text-zinc-400" />
+                          <span>{att.filename}</span>
+                        </button>
+                      );
+                    })}
                   </div>
-                ) : (
-                  <MarkdownContent content={line.text} />
                 )}
+                {cleanText}
               </div>
+            </div>
+          );
+        }
+
+        // System/Agent message
+        return (
+          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-[#e2e2e2]">
+            <div className="w-full markdown-body">
+              <MarkdownContent content={cleanText} />
             </div>
           </div>
         );
       })}
 
       {thinking && activeAgent && (
-        <div className="flex gap-4 flex-row animate-slide-up">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-bg-panel border border-border text-accent flex items-center justify-center">
-            <Bot size={16} className="animate-pulse" />
-          </div>
-          <div className="flex flex-col max-w-[80%] items-start">
-            <span className="text-xs text-text-muted mb-1 font-medium px-1">
-              {agentStats[activeAgent]?.name || activeAgent}
-            </span>
-            <div className="px-4 py-3 rounded-2xl bg-bg-panel border border-border text-text flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: "0ms" }}></span>
-              <span className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: "150ms" }}></span>
-              <span className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: "300ms" }}></span>
-            </div>
-          </div>
+        <div className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-4">
+           {/* Mocking the thought process UI for the requested style */}
+           <div className="flex items-center gap-2 text-sm">
+             <span>Thought process active...</span>
+           </div>
+           <div className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-[#1a1a1c]">
+             <div className="w-4 h-4 rounded-full border border-zinc-600 flex items-center justify-center">
+               <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-pulse" />
+             </div>
+             <div className="flex flex-col">
+               <span className="text-[13px] text-white">
+                 {agentStats[activeAgent]?.name || activeAgent}
+               </span>
+               <span className="text-[11px] text-zinc-500">
+                 Executing subagent tasks...
+               </span>
+             </div>
+           </div>
         </div>
       )}
     </div>

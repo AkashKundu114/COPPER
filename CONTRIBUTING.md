@@ -4,13 +4,13 @@ Thank you for your interest in contributing to **C.O.P.P.E.R.**! We welcome cont
 
 ---
 
-## 🏛️ Code of Conduct
+## Code of Conduct
 
 This project adheres to the [Contributor Covenant v2.1](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
 
 ---
 
-## 📋 Microsoft Engineering & Code Review Practices
+## Microsoft Engineering & Code Review Practices
 
 We adhere to the following principles across our codebase:
 
@@ -32,7 +32,7 @@ Structure your pull request summary using Google's XYZ impact framework:
 
 ---
 
-## 🛠️ Development Setup & Quality Gates
+## Development Setup & Quality Gates
 
 ### 1. Prerequisites
 - **Python:** 3.11+ (Strict typing with `mypy` / `typing`)
@@ -62,7 +62,7 @@ cd ..
 
 ---
 
-## 🧪 Quality Gate Verification
+## Quality Gate Verification
 
 Before opening a pull request, you **MUST** pass all quality gates locally:
 
@@ -79,7 +79,7 @@ python scripts/models/verify_models.py
 
 ---
 
-## 🔄 Pull Request Workflow
+## Pull Request Workflow
 
 1. **Fork the repository** and create your branch from `main`:
    ```bash

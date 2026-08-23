@@ -4,7 +4,7 @@ Welcome to the C.O.P.P.E.R. support page! Here is how to get help, find answers,
 
 ---
 
-## 🔍 How to Get Help
+## How to Get Help
 
 ### 1. Check Documentation & FAQs
 Before opening an issue, check the comprehensive documentation in [`docs/`](docs/README.md):
@@ -19,5 +19,5 @@ If you encounter a bug or have a feature request:
 
 ---
 
-## 🔒 Security Vulnerabilities
+## Security Vulnerabilities
 If your issue involves a security vulnerability or bypass, please follow our [Security Policy](SECURITY.md) and do not open a public issue.
