@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Paperclip, ArrowUp } from "lucide-react";
+import { Paperclip, ArrowUp, Mic, MicOff } from "lucide-react";
 
 interface Props {
   connected: boolean;
@@ -9,12 +9,18 @@ interface Props {
 
 export function ChatDock({ connected, thinking, onSend }: Props) {
   const [draft, setDraft] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
 
   const submit = () => {
     const msg = draft.trim();
     if (!msg || thinking) return;
     onSend(msg);
     setDraft("");
+  };
+
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+    // TODO: Implement MediaRecorder and WebSocket streaming to /api/v1/voice/stream
   };
 
   return (
@@ -35,14 +41,23 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
             submit();
           }
         }}
-        placeholder={thinking ? "C.O.P.P.E.R. is thinking..." : "Message C.O.P.P.E.R..."}
+        placeholder={thinking ? "C.O.P.P.E.R. is thinking..." : isRecording ? "Listening..." : "Message C.O.P.P.E.R..."}
         className="flex-1 bg-transparent outline-none text-[15px] text-text placeholder:text-text-muted resize-none max-h-32 min-h-[24px] py-1.5 custom-scrollbar"
         rows={draft.split("\n").length > 1 ? Math.min(draft.split("\n").length, 5) : 1}
+        disabled={isRecording}
       />
 
       <button
+        onClick={toggleRecording}
+        className={`p-2 ml-1 rounded-full transition-all flex-shrink-0 ${isRecording ? 'bg-red-500/20 text-red-500 animate-pulse' : 'text-accent hover:bg-accent/10 hover:text-accent-hover'}`}
+        title={isRecording ? "Stop recording" : "Voice input"}
+      >
+        {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
+      </button>
+
+      <button
         onClick={submit}
-        disabled={!draft.trim() || thinking}
+        disabled={!draft.trim() || thinking || isRecording}
         className="p-2 ml-1 rounded-full bg-accent text-bg hover:bg-accent-hover hover:shadow-neon disabled:opacity-30 disabled:hover:bg-accent disabled:shadow-none transition-all flex-shrink-0"
         title={connected ? "Send message" : "Reconnecting..."}
       >
