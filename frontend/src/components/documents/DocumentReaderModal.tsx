@@ -101,7 +101,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
     if (!isPdf || document.pages.length === 0) return document.full_text;
     const page = document.pages.find((p) => p.page_number === selectedPage);
     return page ? page.text : document.pages[0]?.text || "";
-  }, [isPdf, document.pages, selectedPage]);
+  }, [isPdf, document.pages, document.full_text, selectedPage]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in">

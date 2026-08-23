@@ -5,14 +5,20 @@ import {
   Mic,
   Sparkles,
   FileCode,
+  FileText,
+  Table,
+  Braces,
+  BookOpen,
   X,
   ChevronUp,
   CornerDownLeft,
   Loader2,
   Eye,
+  Brain,
+  Zap
 } from "lucide-react";
-import { Brain, BookOpen, Zap } from "lucide-react";
-import { API_BASE } from "../../lib/api";
+import { API_BASE, parseDocumentFile, type ParsedDocument } from "../../lib/api";
+import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 
 interface Props {
   connected: boolean;
@@ -20,13 +26,10 @@ interface Props {
   onSend: (message: string, mode?: string) => void;
 }
 
-interface AttachedFile {
-  name: string;
-  size: string;
-  type: string;
-  content: string;
-  rawPreview?: string;
-  lineCount?: number;
+export interface AttachedDocState {
+  file: File;
+  parsed: ParsedDocument;
+  isParsing?: boolean;
 }
 
 const COGNITIVE_MODES = [
@@ -36,7 +39,7 @@ const COGNITIVE_MODES = [
     badge: "Autonomous",
     icon: Sparkles,
     desc: "Autonomous Guardian router dynamically coordinating all 30 local agent specialists.",
-    agents: "Guardian · Master Router · Dispatcher",
+    agents: "Guardian · Master Router · Dispatcher"
   },
   {
     id: "reasoning",
@@ -44,7 +47,7 @@ const COGNITIVE_MODES = [
     badge: "Complex & Thinking",
     icon: Brain,
     desc: "Chain-of-thought with live collapsible thinking breakdown for complex logic, math, & strategy.",
-    agents: "Cognitive Reasoner · Logic Validator · Solver",
+    agents: "Cognitive Reasoner · Logic Validator · Solver"
   },
   {
     id: "coding",
@@ -52,7 +55,7 @@ const COGNITIVE_MODES = [
     badge: "Code & Dev",
     icon: FileCode,
     desc: "Full-stack code synthesis, multi-file architecture, edge-case testing, and syntax optimization.",
-    agents: "Code Engineer · Refactor Specialist · Auditor",
+    agents: "Code Engineer · Refactor Specialist · Auditor"
   },
   {
     id: "research",
@@ -60,7 +63,7 @@ const COGNITIVE_MODES = [
     badge: "Synthesis Tier",
     icon: BookOpen,
     desc: "Epistemic fact-checking, document decomposition, cross-analysis, and evidence generation.",
-    agents: "Document Analyst · Fact Synthesizer",
+    agents: "Document Analyst · Fact Synthesizer"
   },
   {
     id: "fast",
@@ -68,19 +71,20 @@ const COGNITIVE_MODES = [
     badge: "Speed Tier",
     icon: Zap,
     desc: "Zero-latency, direct, concise responses with minimal compute overhead.",
-    agents: "Fast Responder · Executive Assistant",
-  },
+    agents: "Fast Responder · Executive Assistant"
+  }
 ];
 
 export function ChatDock({ connected, thinking, onSend }: Props) {
   const [draft, setDraft] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
-  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const [attachedDocs, setAttachedDocs] = useState<AttachedDocState[]>([]);
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState(COGNITIVE_MODES[0]);
-  const [previewFile, setPreviewFile] = useState<AttachedFile | null>(null);
-
+  const [previewDoc, setPreviewDoc] = useState<ParsedDocument | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -114,120 +118,84 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
 
   const submit = () => {
     let fullMsg = draft.trim();
-    if (attachedFiles.length > 0) {
-      const fileBlocks = attachedFiles
-        .map(
-          (f) =>
-            `\n\n--- Attached File: ${f.name} ---\n\`\`\`\n${f.content}\n\`\`\``,
-        )
-        .join("");
+    if (attachedDocs.length > 0) {
+      const fileBlocks = attachedDocs.map((doc) => {
+        const p = doc.parsed;
+        return `\n\n--- Attached File: ${p.filename} (${p.category}, ${p.size_formatted}) ---\n\`\`\`${p.extension || "text"}\n${p.full_text}\n\`\`\``;
+      }).join("");
       fullMsg = fullMsg ? `${fullMsg}\n${fileBlocks}` : fileBlocks.trim();
     }
 
-    if (!fullMsg || thinking || isRecording) return;
+    if (!fullMsg || thinking || isRecording || isUploading) return;
 
     onSend(fullMsg, selectedModel.id);
     setDraft("");
-    setAttachedFiles([]);
+    setAttachedDocs([]);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    Array.from(files).forEach((file) => {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "";
-      const textExtensions = [
-        "txt",
-        "csv",
-        "tsv",
-        "json",
-        "py",
-        "js",
-        "ts",
-        "tsx",
-        "jsx",
-        "html",
-        "css",
-        "sql",
-        "md",
-        "yaml",
-        "yml",
-        "xml",
-        "log",
-        "env",
-        "ini",
-        "sh",
-        "bat",
-        "ps1",
-        "c",
-        "cpp",
-        "h",
-        "hpp",
-        "rs",
-        "go",
-        "java",
-      ];
+    setIsUploading(true);
+    const newDocPromises = Array.from(files).map(async (file): Promise<AttachedDocState> => {
+      try {
+        const parsed = await parseDocumentFile(file, true);
+        return { file, parsed, isParsing: false };
+      } catch (err) {
+        console.warn("Backend parsing error, creating client document fallback:", err);
+        const ext = file.name.split(".").pop()?.toLowerCase() || "";
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        const sizeKb = (file.size / 1024).toFixed(1);
+        const size_formatted = file.size > 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
 
-      const isKnownText = textExtensions.includes(ext);
-      const isLarge = file.size > 50 * 1024; // > 50 KB
-      const sliceSize = isLarge ? 50 * 1024 : file.size; // Read up to 50 KB
-      const blob = file.slice(0, sliceSize);
-
-      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-      const sizeKb = (file.size / 1024).toFixed(1);
-      const displaySize =
-        file.size > 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        let rawText = (event.target?.result as string) || "";
-
-        // Detect unprintable binary bytes (null bytes or corrupted characters)
-        const isBinary =
-          !isKnownText &&
-          (rawText.includes("\0") ||
-            rawText.includes("\ufffd") ||
-            (rawText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g)?.length || 0) > 10);
-
-        let formattedText = "";
-        let lineCount = rawText.split("\n").length;
-
-        if (isBinary) {
-          formattedText = `[Attached Document: ${file.name} (${displaySize})]\n[File Type: .${ext.toUpperCase()} Binary Document/Archive]\nNote: This file is binary encoded. For deep code/data inspection, please upload plain text, CSV, JSON, Markdown, or code files.`;
-        } else if (isLarge) {
-          const lines = rawText.split("\n");
-          const preview = lines.slice(0, 100).join("\n");
-          formattedText = `[Attached Large Dataset/File: ${file.name} (${displaySize})]\n[Structure Preview & Sample Data (First 100 lines)]:\n${preview}\n\n[... End of sample preview. Total file size: ${displaySize} ...]`;
-        } else {
-          formattedText = rawText;
+        let rawText = "";
+        try {
+          rawText = await file.text();
+        } catch {
+          rawText = `[Binary / Document File: ${file.name}]`;
         }
 
-        setAttachedFiles((prev) => [
-          ...prev,
-          {
-            name: file.name,
-            size: displaySize,
-            type: ext ? `.${ext.toUpperCase()}` : "FILE",
-            content: formattedText,
-            rawPreview: rawText,
-            lineCount: lineCount,
-          },
-        ]);
-      };
-      reader.readAsText(blob);
+        const lines = rawText.split("\n");
+        const fallbackParsed: ParsedDocument = {
+          filename: file.name,
+          extension: ext,
+          category: ext.toUpperCase() + " Document",
+          size_bytes: file.size,
+          size_formatted,
+          page_count: 1,
+          line_count: lines.length,
+          word_count: rawText.split(/\s+/).filter(Boolean).length,
+          char_count: rawText.length,
+          estimated_tokens: Math.max(1, Math.floor(rawText.length / 4)),
+          indexed_chunks: 0,
+          pages: [{ page_number: 1, text: rawText, word_count: rawText.split(/\s+/).filter(Boolean).length, char_count: rawText.length }],
+          full_text: rawText,
+          preview_text: rawText.slice(0, 500),
+          status: "partial"
+        };
+        return { file, parsed: fallbackParsed, isParsing: false };
+      }
     });
 
-    e.target.value = "";
+    try {
+      const results = await Promise.all(newDocPromises);
+      setAttachedDocs((prev) => [...prev, ...results]);
+    } catch (error) {
+      console.error("File upload error:", error);
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
+    }
   };
 
   const removeFile = (index: number) => {
-    setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
-    if (previewFile && attachedFiles[index]?.name === previewFile.name) {
-      setPreviewFile(null);
+    setAttachedDocs((prev) => prev.filter((_, i) => i !== index));
+    if (previewDoc && attachedDocs[index]?.parsed.filename === previewDoc.filename) {
+      setPreviewDoc(null);
     }
   };
 
@@ -291,6 +259,16 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
     return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
+  const getDocIcon = (ext: string) => {
+    if (ext === "pdf") return BookOpen;
+    if (ext === "csv" || ext === "tsv") return Table;
+    if (ext === "json") return Braces;
+    if (["py", "js", "ts", "tsx", "jsx", "html", "css", "sql", "rs", "go", "java", "c", "cpp"].includes(ext)) {
+      return FileCode;
+    }
+    return FileText;
+  };
+
   return (
     <div className="w-full relative flex flex-col gap-2 select-none">
       {/* Hidden File Input */}
@@ -326,38 +304,25 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-transparent"
                   }`}
                 >
-                  <div
-                    className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}
-                  >
+                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[12px] text-white font-sans">
-                        {m.name}
-                      </span>
-                      <span
-                        className={`px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
-                          m.id === "reasoning"
-                            ? "bg-purple-950 text-purple-400 border border-purple-800/40"
-                            : m.id === "coding"
-                              ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
-                              : m.id === "research"
-                                ? "bg-amber-950 text-amber-400 border border-amber-800/40"
-                                : m.id === "fast"
-                                  ? "bg-rose-950 text-rose-400 border border-rose-800/40"
-                                  : "bg-sky-950 text-sky-400 border border-sky-800/40"
-                        }`}
-                      >
+                      <span className="font-bold text-[12px] text-white font-sans">{m.name}</span>
+                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
+                        m.id === "reasoning" ? "bg-purple-950 text-purple-400 border border-purple-800/40" :
+                        m.id === "coding" ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40" :
+                        m.id === "research" ? "bg-amber-950 text-amber-400 border border-amber-800/40" :
+                        m.id === "fast" ? "bg-rose-950 text-rose-400 border border-rose-800/40" :
+                        "bg-sky-950 text-sky-400 border border-sky-800/40"
+                      }`}>
                         {m.badge}
                       </span>
                     </div>
-                    <div className="text-[10.5px] text-slate-400 mt-0.5 leading-snug">
-                      {m.desc}
-                    </div>
+                    <div className="text-[10.5px] text-slate-400 mt-0.5 leading-snug">{m.desc}</div>
                     <div className="text-[9.5px] text-slate-500 mt-1 font-mono">
-                      Subagents:{" "}
-                      <span className="text-slate-300">{m.agents}</span>
+                      Subagents: <span className="text-slate-300">{m.agents}</span>
                     </div>
                   </div>
                 </button>
@@ -367,94 +332,72 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
         </div>
       )}
 
-      {/* Interactive File Preview Modal */}
-      {previewFile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-2xl max-h-[80vh] flex flex-col rounded-2xl bg-slate-900 border border-border shadow-2xl overflow-hidden font-mono text-xs text-slate-200">
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3.5 bg-slate-950 border-b border-border">
-              <div className="flex items-center gap-2.5">
-                <FileCode size={18} className="text-accent" />
-                <span className="font-bold text-sm text-white">
-                  {previewFile.name}
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-semibold">
-                  {previewFile.type}
-                </span>
-                <span className="text-slate-400 text-[11px]">
-                  ({previewFile.size})
-                </span>
-              </div>
-              <button
-                onClick={() => setPreviewFile(null)}
-                className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Content Preview Box */}
-            <div className="flex-1 p-4 overflow-y-auto custom-scrollbar bg-slate-950/60 font-mono text-xs leading-relaxed text-slate-300">
-              <pre className="whitespace-pre-wrap select-text">
-                {previewFile.content}
-              </pre>
-            </div>
-
-            {/* Footer */}
-            <div className="flex items-center justify-between px-5 py-3 bg-slate-950/90 border-t border-border text-[11px] text-slate-400">
-              <span>Ready for local AI analysis</span>
-              <button
-                onClick={() => setPreviewFile(null)}
-                className="px-4 py-1.5 rounded-xl bg-accent text-bg font-bold hover:bg-accent-hover transition-colors"
-              >
-                Close Preview
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Interactive Full Document Reader & Inspector Modal */}
+      {previewDoc && (
+        <DocumentReaderModal
+          document={previewDoc}
+          onClose={() => setPreviewDoc(null)}
+          onAskAI={(prompt) => {
+            setPreviewDoc(null);
+            onSend(prompt, selectedModel.id);
+          }}
+        />
       )}
 
-      {/* Attached Files Preview Chips Bar */}
-      {attachedFiles.length > 0 && (
-        <div className="flex flex-wrap gap-2 px-2 animate-slide-up">
-          {attachedFiles.map((file, idx) => (
-            <div
-              key={idx}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-accent/50 text-xs font-mono text-cyan-300 shadow-sm transition-all cursor-pointer group"
-              onClick={() => setPreviewFile(file)}
-            >
-              <FileCode
-                size={14}
-                className="text-accent group-hover:scale-110 transition-transform"
-              />
-              <span className="max-w-[160px] truncate group-hover:text-white transition-colors">
-                {file.name}
-              </span>
-              <span className="text-[10px] text-text-muted">({file.size})</span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPreviewFile(file);
-                }}
-                className="p-0.5 hover:text-accent rounded transition-colors text-slate-400"
-                title="Preview File"
+      {/* Attached Files & Documents Chips Bar */}
+      {(attachedDocs.length > 0 || isUploading) && (
+        <div className="flex flex-wrap items-center gap-2 px-2 animate-slide-up">
+          {attachedDocs.map((doc, idx) => {
+            const Icon = getDocIcon(doc.parsed.extension);
+            return (
+              <div
+                key={idx}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-sky-500/50 text-xs font-mono text-cyan-300 shadow-sm transition-all cursor-pointer group"
+                onClick={() => setPreviewDoc(doc.parsed)}
+                title="Click to Open Document Reader & Preview"
               >
-                <Eye size={12} />
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFile(idx);
-                }}
-                className="p-0.5 hover:bg-slate-800 rounded-full text-text-muted hover:text-rose-400 transition-colors ml-1"
-                title="Remove File"
-              >
-                <X size={12} />
-              </button>
+                <Icon size={14} className="text-sky-400 group-hover:scale-110 transition-transform flex-shrink-0" />
+                <span className="max-w-[160px] truncate group-hover:text-white transition-colors font-medium">
+                  {doc.parsed.filename}
+                </span>
+                <span className="text-[10px] text-slate-400">({doc.parsed.size_formatted})</span>
+                {doc.parsed.page_count > 1 && (
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-800/40">
+                    {doc.parsed.page_count}p
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewDoc(doc.parsed);
+                  }}
+                  className="p-1 hover:bg-slate-800 hover:text-sky-400 rounded-lg text-slate-400 transition-colors ml-0.5"
+                  title="Open Document Reader"
+                >
+                  <Eye size={13} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(idx);
+                  }}
+                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-500 hover:text-rose-400 transition-colors"
+                  title="Remove Document"
+                >
+                  <X size={13} />
+                </button>
+              </div>
+            );
+          })}
+
+          {isUploading && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-950/40 border border-sky-500/40 text-xs font-mono text-sky-400 animate-pulse">
+              <Loader2 size={13} className="animate-spin" />
+              <span>Parsing document & extracting text...</span>
             </div>
-          ))}
+          )}
         </div>
       )}
 
@@ -464,8 +407,8 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
           thinking
             ? "border-accent shadow-neon animate-pulse-glow"
             : isRecording
-              ? "border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] bg-rose-950/10"
-              : "border-border/80 focus-within:border-accent/80 hover:border-border focus-within:shadow-[0_0_20px_rgba(14,165,233,0.15)]"
+            ? "border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] bg-rose-950/10"
+            : "border-border/80 focus-within:border-accent/80 hover:border-border focus-within:shadow-[0_0_20px_rgba(14,165,233,0.15)]"
         }`}
       >
         {/* Active Recording State Banner */}
@@ -492,7 +435,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                   style={{
                     height: `${h}%`,
                     animationDuration: `${0.4 + (i % 3) * 0.2}s`,
-                    animationDelay: `${i * 0.08}s`,
+                    animationDelay: `${i * 0.08}s`
                   }}
                 />
               ))}
@@ -522,9 +465,11 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 placeholder={
                   thinking
                     ? "C.O.P.P.E.R. is processing..."
-                    : "Message C.O.P.P.E.R. (Enter to send, Shift+Enter for new line)..."
+                    : isUploading
+                    ? "Parsing document and extracting text..."
+                    : "Message C.O.P.P.E.R. or attach files (.pdf, .csv, .json, .py, .md)..."
                 }
-                disabled={thinking}
+                disabled={thinking || isUploading}
                 className="w-full bg-transparent outline-none border-none border-0 ring-0 shadow-none focus:outline-none focus:ring-0 focus:border-none focus-visible:outline-none focus-visible:ring-0 text-[14.5px] leading-relaxed text-text placeholder:text-text-muted/60 resize-none max-h-48 min-h-[38px] custom-scrollbar"
                 rows={1}
               />
@@ -541,20 +486,23 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 >
                   <selectedModel.icon size={13} className="text-accent" />
                   <span>{selectedModel.name}</span>
-                  <ChevronUp
-                    size={12}
-                    className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`}
-                  />
+                  <ChevronUp size={12} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
 
-                {/* File Attachment Button */}
+                {/* File / Document Attachment Button */}
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-1.5 text-text-muted hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
-                  title="Attach file (.txt, .py, .js, .json, .csv, .md)"
+                  disabled={isUploading || thinking}
+                  className="flex items-center gap-1 px-2 py-1 text-text-muted hover:text-accent hover:bg-accent/10 rounded-lg transition-all text-xs font-mono disabled:opacity-30 cursor-pointer"
+                  title="Attach Documents (.pdf, .csv, .tsv, .json, .py, .ts, .md, .txt, .sql, etc.)"
                 >
-                  <Paperclip size={16} />
+                  {isUploading ? (
+                    <Loader2 size={15} className="animate-spin text-sky-400" />
+                  ) : (
+                    <Paperclip size={15} />
+                  )}
+                  <span className="hidden sm:inline">Attach Doc</span>
                 </button>
               </div>
 
@@ -569,7 +517,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 <button
                   type="button"
                   onClick={toggleRecording}
-                  disabled={thinking}
+                  disabled={thinking || isUploading}
                   className="p-2 rounded-xl text-accent hover:text-white hover:bg-accent/20 transition-all disabled:opacity-30"
                   title="Speak with Voice"
                 >
@@ -580,9 +528,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                 <button
                   type="button"
                   onClick={submit}
-                  disabled={
-                    (!draft.trim() && attachedFiles.length === 0) || thinking
-                  }
+                  disabled={(!draft.trim() && attachedDocs.length === 0) || thinking || isUploading}
                   className="p-2 rounded-xl bg-accent text-bg hover:bg-accent-hover hover:shadow-neon disabled:opacity-20 disabled:hover:bg-accent disabled:shadow-none transition-all duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
                   title={connected ? "Send message" : "Reconnecting..."}
                 >

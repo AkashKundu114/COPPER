@@ -40,7 +40,7 @@ data/user_profile.json
 # ── Model Binaries & Quantized Weights ────────────────────────────────────────
 ai-models/
 !ai-models/models_manifest.json
-models/
+/models/
 *.gguf
 *.bin
 *.safetensors
@@ -66,8 +66,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
