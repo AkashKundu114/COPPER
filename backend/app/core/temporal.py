@@ -1,6 +1,7 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
+
 from app.core.logger import logger
 
 REMINDERS_FILE = Path(__file__).parent.parent.parent / "data" / "reminders.json"
@@ -23,7 +24,7 @@ def get_current_temporal_context() -> str:
 def load_reminders() -> list[dict]:
     try:
         if REMINDERS_FILE.exists():
-            with open(REMINDERS_FILE, "r", encoding="utf-8") as f:
+            with open(REMINDERS_FILE, encoding="utf-8") as f:
                 return json.load(f)
     except Exception as e:
         logger.warning(f"Error loading reminders: {e}")

@@ -1,11 +1,13 @@
 import json
 from collections.abc import AsyncGenerator
+
 import httpx
 
 from app.ai.llm.model_manager import model_manager
 from app.core.config import settings
 from app.core.constants import AgentType
 from app.core.logger import logger
+
 
 class OllamaClient:
     def __init__(self):
@@ -19,6 +21,29 @@ class OllamaClient:
                 return res.status_code == 200
         except Exception:
             return False
+
+    async def unload_all_models(self) -> str:
+        """
+        Force Ollama to unload all models from VRAM immediately.
+        """
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                res = await client.get(f"{self.base_url}/api/ps")
+                if res.status_code == 200:
+                    loaded = res.json().get("models", [])
+                    if not loaded:
+                        return "No models were currently loaded in VRAM."
+
+                    unloaded_count = 0
+                    for m in loaded:
+                        model_name = m.get("name")
+                        if model_name:
+                            await client.post(f"{self.base_url}/api/chat", json={"model": model_name, "keep_alive": 0})
+                            unloaded_count += 1
+                    return f"Successfully unloaded {unloaded_count} model(s) from VRAM."
+                return f"Failed to get loaded models: HTTP {res.status_code}"
+        except Exception as e:
+            return f"Error connecting to Ollama to unload models: {e}"
 
     def select_model(self, agent_type: AgentType | None = None, requested_model: str | None = None) -> str:
         if requested_model:

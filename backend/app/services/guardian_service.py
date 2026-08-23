@@ -5,6 +5,7 @@ from app.core.guardian import DisagreementLevel, GuardianVerdict, guardian_engin
 from app.core.logger import logger
 from app.database.models.audit_log import AuditLogEntry
 
+
 class GuardianService:
     async def evaluate_action(
         self, proposed_action: str, context: dict, db: Session, session_id: str | None = None, actor: str = "system"

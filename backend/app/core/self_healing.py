@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core.logger import logger
 
+
 @dataclass
 class RecoveryAttempt:
     strategy: str

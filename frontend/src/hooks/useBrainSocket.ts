@@ -59,6 +59,44 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const speakingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [alerts, setAlerts] = useState<ProactiveAlert[]>([]);
 
+  const audioQueue = useRef<string[]>([]);
+  const isPlayingAudio = useRef<boolean>(false);
+  const currentAudio = useRef<HTMLAudioElement | null>(null);
+
+  const playNextAudio = useCallback(() => {
+    if (audioQueue.current.length === 0) {
+      isPlayingAudio.current = false;
+      setSpeaking(false);
+      return;
+    }
+    
+    isPlayingAudio.current = true;
+    setSpeaking(true);
+    const base64 = audioQueue.current.shift()!;
+    
+    try {
+      const audio = new Audio("data:audio/wav;base64," + base64);
+      currentAudio.current = audio;
+      
+      audio.onended = () => {
+        playNextAudio();
+      };
+      
+      audio.onerror = (e) => {
+        console.error("Audio playback error", e);
+        playNextAudio();
+      };
+      
+      audio.play().catch(e => {
+        console.error("Failed to play audio", e);
+        playNextAudio();
+      });
+    } catch (e) {
+      console.error("Failed to initialize audio", e);
+      playNextAudio();
+    }
+  }, []);
+
   const connect = useCallback(() => {
     const ws = new WebSocket(WS_URL);
     wsRef.current = ws;
@@ -77,8 +115,10 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           setThinking(true);
           setActiveAgent(null);
           setActiveEdge(null);
-          setSpeaking(false);
-          clearTimeout(speakingTimer.current);
+          if (!isPlayingAudio.current) {
+            setSpeaking(false);
+            clearTimeout(speakingTimer.current);
+          }
           break;
         case "route_decision":
           break;
@@ -106,9 +146,14 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
             ];
           });
           setSpeakingAgent(event.agent);
-          setSpeaking(true);
-          clearTimeout(speakingTimer.current);
-          speakingTimer.current = setTimeout(() => setSpeaking(false), estimateSpeakingDuration(event.text));
+          
+          if (!isPlayingAudio.current) {
+            setSpeaking(true);
+            clearTimeout(speakingTimer.current);
+            speakingTimer.current = setTimeout(() => {
+              if (!isPlayingAudio.current) setSpeaking(false);
+            }, estimateSpeakingDuration(event.text));
+          }
           break;
         case "memory_update":
           setLastMemoryUpdate(event);
@@ -121,11 +166,10 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           });
           break;
         case "audio_playback":
-          try {
-            const audio = new Audio("data:audio/wav;base64," + event.audio_base64);
-            audio.play();
-          } catch (e) {
-            console.error("Failed to play audio", e);
+          audioQueue.current.push(event.audio_base64);
+          if (!isPlayingAudio.current) {
+            clearTimeout(speakingTimer.current);
+            playNextAudio();
           }
           break;
         case "done":
@@ -135,13 +179,17 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           break;
       }
     };
-  }, [onProfileChange]);
+  }, [onProfileChange, playNextAudio]);
 
   useEffect(() => {
     connect();
     return () => {
       clearTimeout(reconnectTimer.current);
       clearTimeout(speakingTimer.current);
+      if (currentAudio.current) {
+        currentAudio.current.pause();
+        currentAudio.current = null;
+      }
       wsRef.current?.close();
     };
   }, [connect]);

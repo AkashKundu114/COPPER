@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from app.core.constants import AlertMode, AlertSeverity
 from app.core.logger import logger
 
+
 @dataclass
 class AnomalyAlert:
     alert_id: str

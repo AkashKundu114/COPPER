@@ -4,6 +4,7 @@ from pathlib import Path
 from app.ai.memory.memory_manager import memory_manager
 from app.core.logger import logger
 
+
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
     chunks = []
     start = 0
@@ -34,7 +35,7 @@ async def index_file(filepath: str):
                 logger.error("pypdf not installed, cannot index PDF.")
                 return
         else:
-            return 
+            return
 
         if not text.strip():
             return

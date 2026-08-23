@@ -4,7 +4,7 @@ import { API_BASE } from "../lib/api";
 
 export const SettingsView: React.FC = () => {
   const [backendRunning, setBackendRunning] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState("en_US-amy-medium");
+  const [selectedVoice, setSelectedVoice] = useState("en-US-AvaNeural");
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -135,17 +135,18 @@ export const SettingsView: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { id: "en_US-amy-medium", name: "Amy (Female - Default)", tag: "Natural & Clear" },
-              { id: "en_US-lessac-medium", name: "Lessac (Female)", tag: "Warm & Expressive" },
-              { id: "en_US-danny-low", name: "Danny (Male)", tag: "Deep & Calm" }
+              { id: "en-US-AvaNeural", name: "Ava (Neural Female)", tag: "Ultra Realistic & Fluent" },
+              { id: "en-US-JennyNeural", name: "Jenny (Neural Female)", tag: "Warm & Expressive" },
+              { id: "zira", name: "Zira (Windows Native)", tag: "100% Offline Native" },
+              { id: "david", name: "David (Windows Native)", tag: "100% Offline Native Male" }
             ].map((v) => (
               <button
                 key={v.id}
                 onClick={() => {
                   setSelectedVoice(v.id);
-                  setToast(`Default voice set to ${v.name}`);
+                  setToast(`Voice set to ${v.name}`);
                 }}
                 className={`p-3.5 rounded-xl border text-left transition-all ${
                   selectedVoice === v.id

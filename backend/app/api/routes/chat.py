@@ -108,12 +108,13 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
             async for chunk in chat_service.stream_message(session_id, message, provider, mode=mode):
                 await manager.send_chunk(session_id, chunk)
                 full_response.append(chunk)
-            
+
             complete_text = "".join(full_response)
             if complete_text.strip():
                 try:
-                    from app.services.audio_service import audio_pipeline
                     import base64
+
+                    from app.services.audio_service import audio_pipeline
                     audio_bytes = await audio_pipeline.tts.synthesize(complete_text)
                     audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
                     await manager.send(session_id, {"type": "audio_playback", "audio_base64": audio_b64})

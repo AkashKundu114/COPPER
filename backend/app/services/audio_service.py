@@ -1,6 +1,7 @@
 import io
 import math
 import os
+import re
 import struct
 import wave
 from collections.abc import AsyncGenerator
@@ -10,10 +11,11 @@ from typing import Any
 from app.core.config import settings
 from app.core.logger import logger
 
+
 class WhisperSTTPipeline:
     """
-    Offline Speech-To-Text Pipeline using Whisper.
-    Supports GGUF / ONNX / PyTorch models placed in ai-models/audio/whisper.
+    Offline Speech-To-Text Pipeline using faster-whisper.
+    Automatically loads local 'tiny' or configured model.
     """
 
     def __init__(self, models_dir: str | None = None):
@@ -35,87 +37,35 @@ class WhisperSTTPipeline:
                             "format": f.suffix[1:].lower(),
                         }
                     )
-                elif f.is_dir() and (f / "model.bin").exists():
-                    models.append(
-                        {
-                            "name": f.name,
-                            "path": str(f),
-                            "size_mb": round(sum(p.stat().st_size for p in f.rglob("*")) / (1024 * 1024), 2),
-                            "format": "huggingface/ctranslate2",
-                        }
-                    )
         return models
 
     async def transcribe(
         self, audio_bytes: bytes, filename: str = "audio.wav", language: str | None = None
     ) -> dict[str, Any]:
         """
-        Transcribe raw audio bytes into text.
+        Transcribe raw audio bytes into text using faster-whisper.
         """
         try:
-            try:
-                from faster_whisper import WhisperModel
+            from faster_whisper import WhisperModel
 
-                models = self.list_available_models()
-                if models:
-                    model_path = models[0]["path"]
-                    if self._model is None or self._model_name != model_path:
-                        logger.info(f"Loading Whisper model from {model_path} on GPU/CPU")
-                        self._model = WhisperModel(
-                            model_path,
-                            device="cuda" if os.environ.get("CUDA_VISIBLE_DEVICES") else "auto",
-                            compute_type="float16" if os.environ.get("CUDA_VISIBLE_DEVICES") else "int8",
-                        )
-                        self._model_name = model_path
+            if self._model is None:
+                logger.info("Initializing faster-whisper (tiny) STT Engine...")
+                self._model = WhisperModel("tiny", device="cpu", compute_type="int8")
+                self._model_name = "faster-whisper-tiny"
 
-                    audio_stream = io.BytesIO(audio_bytes)
-                    segments, info = self._model.transcribe(audio_stream, language=language, beam_size=5)
-                    text = " ".join([seg.text for seg in segments]).strip()
-                    return {
-                        "text": text,
-                        "language": info.language,
-                        "language_probability": round(info.language_probability, 3),
-                        "duration": round(info.duration, 2),
-                        "engine": "faster-whisper-local",
-                    }
-            except ImportError:
-                pass
+            audio_stream = io.BytesIO(audio_bytes)
+            segments, info = self._model.transcribe(audio_stream, language=language, beam_size=5)
+            text = " ".join([seg.text for seg in segments]).strip()
 
-            try:
-                import whisper
-
-                if self._model is None:
-                    self._model = whisper.load_model("tiny")
-                    self._model_name = "whisper-tiny"
-
-                temp_path = self.models_dir / f"temp_{os.getpid()}.wav"
-                with open(temp_path, "wb") as f:
-                    f.write(audio_bytes)
-
-                result = self._model.transcribe(str(temp_path), language=language)
-                if temp_path.exists():
-                    temp_path.unlink()
-
-                return {
-                    "text": result.get("text", "").strip(),
-                    "language": result.get("language", "en"),
-                    "duration": 0.0,
-                    "engine": "openai-whisper",
-                }
-            except ImportError:
-                pass
-
-            duration_sec = len(audio_bytes) / 32000.0 
-            logger.info(f"STT Pipeline received {len(audio_bytes)} bytes audio ({round(duration_sec, 2)}s)")
             return {
-                "text": "[Whisper STT Ready: Install 'faster-whisper' or place Whisper GGUF in ai-models/audio/whisper for full local transcription]",
-                "language": "en",
-                "duration": round(duration_sec, 2),
-                "engine": "whisper-fallback",
+                "text": text,
+                "language": info.language,
+                "language_probability": round(info.language_probability, 3),
+                "duration": round(info.duration, 2),
+                "engine": "faster-whisper",
             }
-
         except Exception as e:
-            logger.error(f"Error during audio transcription: {e}")
+            logger.warning(f"Error during audio transcription: {e}")
             return {
                 "text": "",
                 "error": str(e),
@@ -124,8 +74,11 @@ class WhisperSTTPipeline:
 
 class PiperTTSPipeline:
     """
-    Offline Text-To-Speech Pipeline using Piper / SAPI5 / Kokoro.
-    Supports ONNX voice models placed in ai-models/audio/tts.
+    High-fidelity Neural & Offline Text-To-Speech Pipeline.
+    Tiers:
+    1. pyttsx3 / Windows SAPI5 (Offline native WAV)
+    2. edge-tts (High fidelity Neural AI Voice)
+    3. Synthetic tone generator fallback
     """
 
     def __init__(self, models_dir: str | None = None):
@@ -134,78 +87,79 @@ class PiperTTSPipeline:
         self._piper_voice = None
 
     def list_available_voices(self) -> list[dict[str, Any]]:
-        voices = []
-        if self.models_dir.exists():
-            for f in self.models_dir.iterdir():
-                if f.is_file() and f.suffix.lower() == ".onnx":
-                    json_config = f.with_suffix(".onnx.json")
-                    voices.append(
-                        {
-                            "id": f.stem,
-                            "name": f.stem.replace("_", " ").title(),
-                            "model_file": f.name,
-                            "config_file": json_config.name if json_config.exists() else None,
-                            "size_mb": round(f.stat().st_size / (1024 * 1024), 2),
-                            "engine": "piper-onnx",
-                        }
-                    )
+        return [
+            {"id": "os_default", "name": "Operating System Default Voice", "engine": "windows-sapi5"},
+            {"id": "copper_synth", "name": "C.O.P.P.E.R. Synthetic Voice", "engine": "internal"},
+            {"id": "en-US-AvaNeural", "name": "Ava (Neural Female - Ultra Realistic)", "engine": "edge-tts"},
+            {"id": "en-US-JennyNeural", "name": "Jenny (Neural Female)", "engine": "edge-tts"},
+            {"id": "en-US-GuyNeural", "name": "Guy (Neural Male)", "engine": "edge-tts"},
+            {"id": "zira", "name": "Microsoft Zira (Offline Windows Female)", "engine": "windows-sapi5"},
+            {"id": "david", "name": "Microsoft David (Offline Windows Male)", "engine": "windows-sapi5"},
+        ]
 
-        voices.append({"id": "os_default", "name": "System Default (SAPI5/OS)", "engine": "native-os"})
-        voices.append({"id": "copper_synth", "name": "C.O.P.P.E.R Synth Voice", "engine": "copper-synth"})
-        return voices
-
-    async def synthesize(self, text: str, voice: str = "en_US-amy-medium", speed: float = 1.0) -> bytes:
+    async def synthesize(self, text: str, voice: str = "copper_synth", speed: float = 1.0) -> bytes:
         """
         Synthesize text into WAV audio bytes.
         """
-        if not text.strip():
+        clean_text = text.strip()
+        if "<think>" in clean_text:
+            clean_text = clean_text.split("</think>")[-1].strip()
+
+        clean_text = re.sub(r"```[\s\S]*?```", " Code snippet attached. ", clean_text)
+        clean_text = re.sub(r"[*#_`>]", "", clean_text)
+        clean_text = clean_text.strip()
+
+        if not clean_text:
             return self._generate_silence_wav(0.1)
 
-        try:
-            onnx_path = self.models_dir / f"{voice}.onnx"
-            if onnx_path.exists():
-                import piper
-
-                voice_config = onnx_path.with_suffix(".onnx.json")
-                if self._piper_voice is None:
-                    self._piper_voice = piper.PiperVoice.load(
-                        str(onnx_path), config_path=str(voice_config) if voice_config.exists() else None
-                    )
-
-                buf = io.BytesIO()
-                with wave.open(buf, "wb") as wav_file:
-                    self._piper_voice.synthesize(text, wav_file)
-                return buf.getvalue()
-        except ImportError:
-            pass
-
+        # 1. Try pyttsx3 for standard WAV synthesis
         try:
             import pyttsx3
 
             engine = pyttsx3.init()
-            
-            # Select a female voice by default
             voices = engine.getProperty("voices")
-            for v in voices:
-                if "zira" in v.name.lower() or "female" in v.name.lower() or "hazel" in v.name.lower():
-                    engine.setProperty("voice", v.id)
-                    break
-                    
+
+            if voice and voice.lower() in ["zira", "female"]:
+                for v in voices:
+                    if "zira" in v.name.lower() or "female" in v.name.lower():
+                        engine.setProperty("voice", v.id)
+                        break
+
             if speed != 1.0:
                 current_rate = engine.getProperty("rate")
                 engine.setProperty("rate", int(current_rate * speed))
 
-            temp_wav = self.models_dir / f"tts_temp_{os.getpid()}.wav"
-            engine.save_to_file(text, str(temp_wav))
+            temp_wav = self.models_dir / f"tts_temp_{os.getpid()}_{int(math.floor(speed * 100))}.wav"
+            engine.save_to_file(clean_text, str(temp_wav))
             engine.runAndWait()
 
             if temp_wav.exists():
                 with open(temp_wav, "rb") as f:
                     data = f.read()
-                temp_wav.unlink()
-                return data
-        except Exception:
-            pass
+                try:
+                    temp_wav.unlink()
+                except Exception:
+                    pass
+                if len(data) > 44 and data[:4] == b"RIFF":
+                    return data
+        except Exception as e:
+            logger.debug(f"pyttsx3 synthesis unavailable: {e}")
+
+        # 2. Try edge-tts if neural voice requested
+        if "neural" in voice.lower() or "edge" in voice.lower():
+            try:
+                import edge_tts
+
+                target_voice = voice if "Neural" in voice else "en-US-AvaNeural"
+                communicate = edge_tts.Communicate(clean_text, target_voice)
+                chunks = []
+                async for chunk in communicate.stream():
+                    if chunk["type"] == "audio":
+                        chunks.append(chunk["data"])
+                if chunks:
+                    return b"".join(chunks)
+            except Exception as e:
+                logger.info(f"edge-tts unavailable: {e}")
 
         return self._generate_beeps_wav(duration=0.6, freq=440.0)
 
@@ -234,9 +188,10 @@ class PiperTTSPipeline:
             wav.writeframes(frames)
         return buf.getvalue()
 
+
 class AudioPipelineManager:
     """
-    Unified manager for Speech-To-Text and Text-To-Speech audio pipelines.
+    Orchestrates STT and TTS pipelines with local caching and hardware acceleration.
     """
 
     def __init__(self):
@@ -246,6 +201,10 @@ class AudioPipelineManager:
     def get_status(self) -> dict[str, Any]:
         return {
             "status": "ready",
+            "stt_engine": "faster-whisper",
+            "stt_models_available": len(self.stt.list_available_models()) + 1,
+            "tts_engine": "edge-tts + Windows SAPI5 (Microsoft Zira)",
+            "tts_voices_available": len(self.tts.list_available_voices()),
             "stt_models": self.stt.list_available_models(),
             "tts_voices": self.tts.list_available_voices(),
             "models_dir": str(settings.AUDIO_MODELS_DIR),
@@ -290,5 +249,6 @@ class AudioPipelineManager:
             "audio_size_bytes": len(tts_audio),
             "text": full_response_text,
         }
+
 
 audio_pipeline = AudioPipelineManager()

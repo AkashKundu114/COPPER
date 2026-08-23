@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 def get_logger(name: str = "copper") -> logging.Logger:
     logger = logging.getLogger(name)
     if logger.handlers:

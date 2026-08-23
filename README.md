@@ -27,20 +27,20 @@ COPPER routes every request through a 30-agent orchestration layer running entir
 
 ---
 
-## 🌟 Executive Summary & Key Highlights
+## Executive Summary & Key Highlights
 
 > **Engineered** a persistent, privacy-preserving personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, **by architecting** a multi-tier agent orchestration framework across 26 quantized local models (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`), achieving **sub-millisecond routing (0.05ms)**, **100% Guardian threat sensitivity**, and autonomous self-healing.
 
-- **⚡ Sub-Millisecond Multi-Stage Router (< 0.05ms):** Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)**.
-- **🛡️ Guardian Safety & Alignment Engine:** 4-level disagreement protocol (Execute, Suggest, Challenge, Safety Boundary) evaluating user prompts against destructive triggers (`rm -rf`, raw disk formats, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
-- **🔒 Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive PII (OpenAI `sk-` / `sk-proj-` tokens, Bearer headers, SSNs, credit cards, emails, IP addresses, file paths).
+- **Sub-Millisecond Multi-Stage Router (< 0.05ms):** Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)**.
+- **Guardian Safety & Alignment Engine:** 4-level disagreement protocol (Execute, Suggest, Challenge, Safety Boundary) evaluating user prompts against destructive triggers (`rm -rf`, raw disk formats, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
+- **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive PII (OpenAI `sk-` / `sk-proj-` tokens, Bearer headers, SSNs, credit cards, emails, IP addresses, file paths).
 - **🎙️ Offline Multimodal Voice Pipeline:** Real-time speech transcription via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with zero internet dependency.
-- **🧠 3-Layer Epistemic Memory:** Persistent storage of user facts, preferences, and hypotheses integrating SQLite state with ChromaDB semantic vector embeddings (`nomic-embed-text-v1.5`).
-- **💻 Native Desktop Application:** Standalone Electron desktop app with single-instance locking, in-app navigation constraints (no external browser popups), and seamless Windows startup auto-launch.
+- **3-Layer Epistemic Memory:** Persistent storage of user facts, preferences, and hypotheses integrating SQLite state with ChromaDB semantic vector embeddings (`nomic-embed-text-v1.5`).
+- **Native Desktop Application:** Standalone Electron desktop app with single-instance locking, in-app navigation constraints (no external browser popups), and seamless Windows startup auto-launch.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```text
                                   ┌───────────────────────────┐
@@ -81,7 +81,7 @@ COPPER routes every request through a 30-agent orchestration layer running entir
 
 ---
 
-## 🤖 Model & Subagent Topology (26 Artifacts / 39.5 GB)
+## Model & Subagent Topology (26 Artifacts / 39.5 GB)
 
 | Tier | Model Architecture | Quantization | Size | Core Specialization |
 | :--- | :--- | :---: | :---: | :--- |
@@ -96,7 +96,7 @@ COPPER routes every request through a 30-agent orchestration layer running entir
 
 ---
 
-## 📊 Comprehensive Benchmark Results
+## Comprehensive Benchmark Results
 
 ![Routing & Guardian Benchmark](docs/images/routing_accuracy_benchmark.png)
 
@@ -122,9 +122,9 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
-### ⚡ Live Telemetry & Benchmarking Tab
+### Live Telemetry & Benchmarking Tab
 
 COPPER now features a dedicated **Benchmarks & Metrics** tab inside the Electron Desktop Application. This provides live 1.5-second polling of:
 - **Token Velocity**: Real-time Prompt Tokens/Sec and Generation Tokens/Sec.
@@ -178,7 +178,7 @@ npm run desktop
 
 ---
 
-## 📁 Repository Directory Structure
+## Repository Directory Structure
 
 ```
 COPPER/
@@ -214,6 +214,6 @@ COPPER/
 
 ---
 
-## 📜 License
+## License
 
    Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for full details.

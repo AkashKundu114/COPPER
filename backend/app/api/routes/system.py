@@ -3,13 +3,14 @@ C.O.P.P.E.R. Real System Telemetry & Hardware Resource API
 Queries live hardware metrics: CPU %, Host RAM, NVIDIA GPU VRAM, Temperatures, and Token counters.
 """
 
-from fastapi import APIRouter
-import time
-import os
 import ctypes
-import subprocess
-import winreg
+import os
 import platform
+import subprocess
+import time
+import winreg
+
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/system", tags=["System Telemetry"])
 

@@ -1,6 +1,7 @@
 from app.ai.agents.base import BaseAgent
 from app.core.constants import AgentType
 
+
 class VisionAgent(BaseAgent):
     def __init__(self):
         super().__init__(

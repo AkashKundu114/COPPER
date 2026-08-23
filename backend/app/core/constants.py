@@ -10,6 +10,7 @@ class AgentType(str, Enum):
     REMINDER = "reminder"
     RESEARCH = "research"
     VISION = "vision"
+    IMAGE = "image"
     PLANNER = "planner"
     GUARDIAN = "guardian"
     BEHAVIOR = "behavior"

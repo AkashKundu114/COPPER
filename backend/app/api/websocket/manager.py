@@ -2,6 +2,7 @@ from fastapi import WebSocket
 
 from app.core.logger import logger
 
+
 class ConnectionManager:
     def __init__(self):
         self.active: list[WebSocket] = []

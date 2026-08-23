@@ -1,14 +1,15 @@
 from app.ai.memory.memory_manager import memory_manager
 from app.ai.memory.persistent_memory import persistent_memory
-from app.core.temporal import get_current_temporal_context
 from app.core.logger import logger
+from app.core.temporal import get_current_temporal_context
+
 
 class ContextEngine:
     async def build_context(self, session_id: str, message: str) -> tuple[list[dict[str, str]], str]:
         history = persistent_memory.get_history(session_id)
         temporal_snippet = get_current_temporal_context()
         profile_snippet = persistent_memory.get_memory_prompt_snippet()
-        
+
         epistemic_parts = [temporal_snippet, profile_snippet]
         try:
             epistemic_memories = await memory_manager.get_relevant_memories(message)

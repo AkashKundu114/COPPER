@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.ai.agents.automation_agent import automation_agent
 from app.ai.agents.coding_agent import coding_agent
+from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
@@ -24,6 +25,7 @@ AGENT_MAP = {
     AgentType.REMINDER: reminder_agent,
     AgentType.RESEARCH: research_agent,
     AgentType.VISION: vision_agent,
+    AgentType.IMAGE: image_agent,
 }
 
 class ChatService:
@@ -78,6 +80,16 @@ class ChatService:
         history, memory_context = await context_engine.build_context(session_id, message)
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
+
+        # Intercept unload VRAM requests explicitly before hitting LLMs
+        lowered = message.strip().lower()
+        if lowered in ["unload model", "unload models", "unload ur pre-loaed model", "unload your models", "unload pre-loaded model", "clear vram", "free memory", "unload"]:
+            from app.ai.llm.ollama_client import ollama_client
+            yield "Unloading AI models from GPU VRAM to free system memory...\n\n"
+            result = await ollama_client.unload_all_models()
+            yield result
+            return
+
         start_time = time.time()
         full_response = []
         try:
@@ -108,14 +120,20 @@ class ChatService:
             elif mode == "fast":
                 system = (
                     "You are C.O.P.P.E.R. in Instant Reflex Mode. "
-                    f"Provide rapid, concise, high-precision answers with zero unnecessary verbosity.{ctx_snippet}"
+                    f"Provide highly concise, extremely fast, and direct answers without any filler or markdown fluff.{ctx_snippet}"
                 )
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="llama3.1:8b")
             elif agent and hasattr(agent, "stream"):
                 gen = agent.stream(message, history, memory_context, provider)
             else:
-                system = get_system_prompt(AgentType.CHAT, memory_context)
+                system = (
+                    "You are C.O.P.P.E.R. (Centralized Omnifunctional Personal Productivity and Execution Routine), "
+                    "a highly capable AI operating system. "
+                    f"Always respond in a direct, structured, and professional manner.{ctx_snippet}\n"
+                    "CRITICAL INSTRUCTION: You are a text-based AI. You DO NOT have the ability to generate, render, or create images. "
+                    "If the user asks you to generate an image or picture, explicitly state that you do not have an image generation module installed."
+                )
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider)
             async for chunk in gen:
@@ -124,7 +142,7 @@ class ChatService:
             complete = "".join(full_response)
             await context_engine.append_message(session_id, "assistant", complete)
             await memory_manager.save_interaction(session_id, message, complete, agent_type)
-            
+
             # Record genuine token metrics
             try:
                 from app.api.routes.system import record_token_usage

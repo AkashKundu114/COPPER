@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from enum import IntEnum
 
+
 class DisagreementLevel(IntEnum):
     EXECUTE = 0
     SUGGEST = 1

@@ -2,8 +2,7 @@ from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.core.constants import AgentType, LLMProvider
-from app.core.logger import logger
-from app.core.temporal import get_current_temporal_context, save_reminder
+from app.core.temporal import get_current_temporal_context
 
 SYS_PROMPT = """You are CHRONOS, the Schedule, Alarm, and Task Planner Agent for C.O.P.P.E.R.
 You have real-time live clock awareness and schedule precision.

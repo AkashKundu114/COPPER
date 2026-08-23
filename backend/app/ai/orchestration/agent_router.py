@@ -199,6 +199,16 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             3.0,
         ),
     ],
+    AgentType.IMAGE: [
+        (
+            r"\b(generate an image|create an image|draw an image|draw a picture|make a photo|generate a photo|create a picture|draw a|draw me a)\b",
+            6.0,
+        ),
+        (
+            r"\b(generate|create|draw|make).*\b(image|picture|photo|painting|wallpaper|art|drawing)\b",
+            4.0,
+        )
+    ],
     AgentType.PLANNER: [
         (
             r"\b(break (down|this).*into|create a (project\s+)?roadmap|decompose|plan|structure an execution strategy|build a checklist|formulate a strategy|organize.*phases|step-by-step (milestones|phases|steps|checklist|action plan|strategy|study schedule))\b",

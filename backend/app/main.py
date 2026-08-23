@@ -11,6 +11,7 @@ from app.core.logger import logger
 from app.database.postgres import init_db
 from app.database.redis_client import redis_close
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")

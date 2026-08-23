@@ -60,6 +60,7 @@ async def transcribe_audio(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/synthesize")
+@router.post("/speak")
 async def synthesize_speech(request: SynthesisRequest):
     """
     Synthesize text into WAV audio stream.
