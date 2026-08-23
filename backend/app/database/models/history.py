@@ -1,7 +1,10 @@
 import uuid
-from datetime import datetime, timezone
-from sqlalchemy import Column, String, Text, DateTime
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, String, Text
+
 from app.database.postgres import Base
+
 
 class ChatHistory(Base):
     __tablename__ = 'chat_history'
@@ -9,4 +12,4 @@ class ChatHistory(Base):
     session_id = Column(String(64), nullable=False, index=True)
     sender = Column(String(16), nullable=False)
     message = Column(Text, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))

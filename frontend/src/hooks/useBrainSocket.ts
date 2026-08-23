@@ -52,6 +52,7 @@ interface BrainState {
   lastMemoryUpdate: BrainEvent | null;
   alerts: ProactiveAlert[];
   dismissAlert: (alertId: string) => void;
+  stopAudio: () => void;
 }
 
 function estimateSpeakingDuration(text: string): number {
@@ -120,6 +121,16 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
       console.error("Failed to initialize audio", e);
       playNextAudio();
     }
+  }, []);
+
+  const stopAudio = useCallback(() => {
+    if (currentAudio.current) {
+      currentAudio.current.pause();
+      currentAudio.current = null;
+    }
+    audioQueue.current = [];
+    isPlayingAudio.current = false;
+    setSpeaking(false);
   }, []);
 
   const connect = useCallback(() => {
@@ -281,5 +292,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     lastMemoryUpdate,
     alerts,
     dismissAlert,
+    stopAudio,
   };
 }

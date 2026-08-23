@@ -1,7 +1,10 @@
 from enum import Enum as PyEnum
-from sqlalchemy import Column, Integer, String, Text, DateTime, Float, Enum, JSON
+
+from sqlalchemy import JSON, Column, DateTime, Enum, Float, Integer, String, Text
 from sqlalchemy.sql import func
+
 from app.database.postgres import Base
+
 
 class MemoryType(str, PyEnum):
     FACT = 'fact'

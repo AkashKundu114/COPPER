@@ -1,7 +1,10 @@
 from enum import Enum as PyEnum
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, JSON, Enum
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, Float, Integer, String
 from sqlalchemy.sql import func
+
 from app.database.postgres import Base
+
 
 class AgentStatus(str, PyEnum):
     ACTIVE = 'active'

@@ -68,6 +68,8 @@ export default function App() {
     sendSystemAction,
     alerts,
     dismissAlert,
+    stopAudio,
+    speaking,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -96,7 +98,9 @@ export default function App() {
               <ChatDock
                 connected={connected}
                 thinking={thinking}
+                speaking={speaking}
                 onSend={send}
+                onStop={stopAudio}
               />
             </div>
           </div>
@@ -131,8 +135,16 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden flex text-[#e2e2e2]" style={{ background: '#18181a' }}>
+    <div className="relative w-screen h-screen overflow-hidden flex bg-bg text-text">
+      <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
       <main className="flex-1 overflow-hidden relative flex flex-col">
+        <TopBar
+          sectionTitle={activeSection}
+          profile={profile}
+          drawerOpen={drawerOpen}
+          onToggleDrawer={handleToggleDrawer}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        />
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
@@ -154,7 +166,9 @@ export default function App() {
                   <ChatDock
                     connected={connected}
                     thinking={thinking}
+                    speaking={speaking}
                     onSend={send}
+                    onStop={stopAudio}
                   />
                 </div>
               </div>

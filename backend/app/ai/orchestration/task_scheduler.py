@@ -50,6 +50,7 @@ def start_scheduler():
 def stop_scheduler():
     global _scheduler
     if _scheduler:
-        _scheduler.shutdown(wait=False)
+        if _scheduler.running:
+            _scheduler.shutdown(wait=False)
         logger.info("Spider-Sense Anomaly Sentinel stopped")
         _scheduler = None

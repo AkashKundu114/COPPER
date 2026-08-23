@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Paperclip,
   ArrowUp,
   Mic,
   Sparkles,
@@ -11,7 +10,6 @@ import {
   BookOpen,
   X,
   ChevronUp,
-  CornerDownLeft,
   Loader2,
   Eye,
   Brain,
@@ -23,7 +21,9 @@ import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 interface Props {
   connected: boolean;
   thinking: boolean;
+  speaking?: boolean;
   onSend: (message: string, mode?: string) => void;
+  onStop?: () => void;
 }
 
 export interface AttachedDocState {
@@ -75,7 +75,7 @@ const COGNITIVE_MODES = [
   }
 ];
 
-export function ChatDock({ connected, thinking, onSend }: Props) {
+export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
   const [draft, setDraft] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
@@ -127,6 +127,10 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
     }
 
     if (!fullMsg || thinking || isRecording || isUploading) return;
+
+    if (speaking && onStop) {
+      onStop();
+    }
 
     onSend(fullMsg, selectedModel.id);
     setDraft("");
@@ -224,7 +228,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
           });
           const data = await res.json();
           if (data.text) {
-            onSend(data.text);
+            setDraft((prev) => (prev ? prev + " " + data.text : data.text));
           }
         } catch (e) {
           console.error("Voice transcription error", e);
@@ -404,10 +408,10 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
       {/* Main Antigravity-Style Input Capsule */}
       <div className="w-full flex flex-col items-center">
         <div
-          className={`w-full flex flex-row items-end rounded-3xl bg-[#212121] transition-all duration-300 shadow-sm border border-white/5 py-1 px-2 ${
+          className={`w-full flex flex-row items-end rounded-3xl bg-white/10 backdrop-blur-lg transition-all duration-300 shadow-sm border border-border py-1 px-2 ${
             thinking
               ? "border-sky-500/30"
-              : "focus-within:border-white/10"
+              : "focus-within:border-accent/50"
           }`}
         >
           {isRecording ? (
@@ -462,7 +466,7 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                       : "Ask anything, @ to mention, / for actions"
                   }
                   disabled={thinking || isUploading}
-                  className="w-full bg-transparent outline-none border-none text-[15px] leading-relaxed text-[#e2e2e2] placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block"
+                  className="w-full bg-transparent outline-none border-none text-[15px] leading-relaxed text-text placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block"
                   rows={1}
                 />
               </div>
@@ -490,9 +494,10 @@ export function ChatDock({ connected, thinking, onSend }: Props) {
                   </button>
                 )}
 
-                {thinking && (
+                {(thinking || speaking) && (
                   <button
                     type="button"
+                    onClick={onStop}
                     className="w-8 h-8 rounded-full bg-[#3f3f3f] text-rose-400 hover:bg-[#4f4f4f] hover:text-rose-300 transition-all flex items-center justify-center"
                     title="Stop generation"
                   >

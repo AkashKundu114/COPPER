@@ -5,34 +5,52 @@ export default {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#020617", // slate-950
-          panel: "#0f172a", // slate-900
-          raised: "#1e293b", // slate-800
+          DEFAULT: "#000000",
+          panel: "#111111",
+          raised: "#1a1a1a",
         },
         border: {
-          DEFAULT: "#1e293b", // slate-800
-          subtle: "#0f172a", // slate-900
-          neon: "rgba(14, 165, 233, 0.5)", // Sky 500
+          DEFAULT: "#333333",
+          subtle: "#222222",
+          neon: "transparent",
         },
         text: {
-          DEFAULT: "#f8fafc", // slate-50
-          muted: "#94a3b8", // slate-400
+          DEFAULT: "#ffffff",
+          muted: "#888888",
         },
         accent: {
-          DEFAULT: "#0ea5e9", // Sky 500
-          hover: "#38bdf8", // Sky 400
-          copper: "#14b8a6", // Teal 500 (kept variable name 'copper' for compatibility)
+          DEFAULT: "#e60000", // Swiss red
+          hover: "#ff1a1a",
+          copper: "#e60000",
         },
       },
+      borderRadius: {
+        'none': '0',
+        'sm': '0',
+        DEFAULT: '0',
+        'md': '0',
+        'lg': '0',
+        'xl': '0',
+        '2xl': '0',
+        '3xl': '0',
+        'full': '0',
+      },
       boxShadow: {
-        neon: "0 0 15px rgba(14, 165, 233, 0.4)",
-        "neon-copper": "0 0 15px rgba(20, 184, 166, 0.4)",
-        hud: "inset 0 0 20px rgba(14, 165, 233, 0.05)",
+        'sm': 'none',
+        DEFAULT: 'none',
+        'md': 'none',
+        'lg': 'none',
+        'xl': 'none',
+        '2xl': 'none',
+        'inner': 'none',
+        neon: "none",
+        "neon-copper": "none",
+        hud: "none",
       },
       fontFamily: {
-        display: ["Inter", "system-ui", "sans-serif"],
-        body: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "IBM Plex Mono", "monospace"],
+        display: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        body: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        mono: ["Courier New", "Courier", "monospace"],
       },
       keyframes: {
         "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
@@ -40,21 +58,10 @@ export default {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        "pulse-glow": {
-          "0%, 100%": {
-            boxShadow: "0 0 15px rgba(14, 165, 233, 0.4)",
-            borderColor: "rgba(14, 165, 233, 0.5)",
-          },
-          "50%": {
-            boxShadow: "0 0 2px rgba(14, 165, 233, 0.1)",
-            borderColor: "#1e293b",
-          },
-        },
       },
       animation: {
-        "fade-in": "fade-in 0.3s ease-out",
-        "slide-up": "slide-up 0.3s ease-out",
-        "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "fade-in": "fade-in 0.2s ease-out",
+        "slide-up": "slide-up 0.2s ease-out",
       },
     },
   },

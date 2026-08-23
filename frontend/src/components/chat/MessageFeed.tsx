@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { type ChatLine } from "../../hooks/useBrainSocket";
 import { type AgentStats, type ParsedDocument } from "../../lib/api";
-import { Bot, User, FileText, BookOpen, FileCode, Table, Braces, Eye } from "lucide-react";
+import { FileText, BookOpen, FileCode, Table, Braces } from "lucide-react";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 
@@ -12,11 +12,7 @@ interface MessageFeedProps {
   activeAgent: string | null;
 }
 
-function formatTime(ts?: number) {
-  if (!ts) return "";
-  const d = new Date(ts);
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
+
 
 interface ParsedAttachment {
   filename: string;
@@ -130,7 +126,7 @@ export function MessageFeed({
         if (isUser) {
           return (
             <div key={line.id || i} className="flex justify-end w-full animate-slide-up mb-8 mt-4">
-              <div className="bg-[#212121] text-[#e2e2e2] px-4 py-3 rounded-2xl max-w-[85%] border border-white/5 shadow-sm text-[15px] font-light leading-relaxed">
+              <div className="bg-white/10 backdrop-blur-md text-text px-4 py-3 rounded-2xl max-w-[85%] border border-border shadow-sm text-[15px] font-light leading-relaxed">
                 {attachments.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-2">
                     {attachments.map((att, idx) => {
@@ -156,7 +152,7 @@ export function MessageFeed({
 
         // System/Agent message
         return (
-          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-[#e2e2e2]">
+          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text">
             <div className="w-full markdown-body">
               <MarkdownContent content={cleanText} />
             </div>
@@ -170,7 +166,7 @@ export function MessageFeed({
            <div className="flex items-center gap-2 text-sm">
              <span>Thought process active...</span>
            </div>
-           <div className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-[#1a1a1c]">
+           <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-white/5 backdrop-blur-md">
              <div className="w-4 h-4 rounded-full border border-zinc-600 flex items-center justify-center">
                <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-pulse" />
              </div>

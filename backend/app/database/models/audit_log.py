@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
+from sqlalchemy import JSON, Column, DateTime, Integer, String, Text
 from sqlalchemy.sql import func
+
 from app.database.postgres import Base
+
 CATEGORY_CHOICES = ('agent_activated', 'agent_replaced', 'agent_rolled_back', 'tool_executed', 'external_api_accessed', 'memory_created', 'memory_deleted', 'memory_rejected', 'data_export_requested', 'data_deleted', 'security_setting_changed', 'guardian_challenge', 'guardian_safety_block')
 
 class AuditLogEntry(Base):

@@ -59,7 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectSection,
 }) => {
   return (
-    <aside className="w-64 h-screen bg-bg flex flex-col justify-between p-4 z-30 select-none">
+    <aside className="w-64 h-screen bg-black/40 backdrop-blur-xl border-r border-border flex flex-col justify-between p-4 z-30 select-none">
       <div>
         <div className="drag-region flex items-center gap-3 px-3 py-4 mb-4">
           <div className="w-8 h-8 rounded-lg bg-accent text-bg shadow-neon flex items-center justify-center font-bold text-sm">
@@ -83,8 +83,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onSelectSection(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-bg-raised text-accent shadow-hud border border-neon"
-                    : "text-text-muted hover:text-accent hover:bg-bg-panel hover:shadow-hud"
+                    ? "bg-white/10 text-accent shadow-hud border border-accent backdrop-blur-md"
+                    : "text-text-muted hover:text-accent hover:bg-white/5 hover:shadow-hud"
                 }`}
               >
                 <Icon
