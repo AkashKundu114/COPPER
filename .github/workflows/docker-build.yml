@@ -78,7 +78,7 @@ jobs:
 
       - name: Scan image with Trivy
         if: github.event_name != 'pull_request'
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:sha-${{ github.sha }}
           format: sarif
@@ -138,7 +138,7 @@ jobs:
 
       - name: Scan image with Trivy
         if: github.event_name != 'pull_request'
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:sha-${{ github.sha }}
           format: sarif
