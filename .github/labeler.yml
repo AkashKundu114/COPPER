@@ -1,0 +1,30 @@
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'backend/**'
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'frontend/**'
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: 'infrastructure/**'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: 'docs/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'backend/requirements.txt'
+          - 'frontend/package.json'
+          - 'frontend/package-lock.json'

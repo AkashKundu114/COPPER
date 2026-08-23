@@ -1,0 +1,62 @@
+name: PR Checks
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  conventional-title:
+    name: Validate PR Title (Conventional Commits)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          subjectPattern: ^(?![A-Z]).+$
+          subjectPatternError: |
+            The PR title's subject should start with a lowercase letter.
+
+  size-label:
+    name: Label PR by Size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: codelytv/pr-size-labeler@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          xs_label: 'size/xs'
+          xs_max_size: 20
+          s_label: 'size/s'
+          s_max_size: 100
+          m_label: 'size/m'
+          m_max_size: 400
+          l_label: 'size/l'
+          l_max_size: 1000
+          xl_label: 'size/xl'
+          fail_if_xl: false
+
+  path-label:
+    name: Label PR by Changed Paths
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml

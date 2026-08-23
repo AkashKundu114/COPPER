@@ -1,12 +1,13 @@
-name: "CodeQL Advanced Security Analysis"
+name: CodeQL Advanced Security Analysis
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: ["main", "develop"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '0 6 * * 1' # Runs weekly on Mondays at 06:00 UTC
+    - cron: '0 6 * * 1' # Weekly on Mondays at 06:00 UTC
+  workflow_dispatch:
 
 permissions:
   actions: read

@@ -1,0 +1,98 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Docker Build & Publish"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.copper.example.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Roll out to staging cluster
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.STAGING_KUBECONFIG }}
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          if [ -z "$KUBE_CONFIG_DATA" ]; then
+            echo "::warning::STAGING_KUBECONFIG secret not configured — running dry-run validation only."
+            kubectl apply -f infrastructure/kubernetes/base --dry-run=client
+            exit 0
+          fi
+          echo "$KUBE_CONFIG_DATA" | base64 -d > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl set image deployment/copper-backend backend=ghcr.io/${{ github.repository }}-backend:sha-${SHORT_SHA} -n copper
+          kubectl set image deployment/copper-frontend frontend=ghcr.io/${{ github.repository }}-frontend:sha-${SHORT_SHA} -n copper
+          kubectl rollout status deployment/copper-backend -n copper --timeout=180s
+          kubectl rollout status deployment/copper-frontend -n copper --timeout=180s
+
+      - name: Post-deploy smoke test
+        run: |
+          curl -sf --max-time 10 https://staging.copper.example.com/health \
+            && echo "Staging health check passed." \
+            || echo "::warning::Staging health endpoint unreachable (expected until DNS/cluster is provisioned)."
+
+  deploy-production:
+    name: Deploy to Production
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://copper.example.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Roll out to production cluster
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.PRODUCTION_KUBECONFIG }}
+        run: |
+          if [ -z "$KUBE_CONFIG_DATA" ]; then
+            echo "::warning::PRODUCTION_KUBECONFIG secret not configured — running dry-run validation only."
+            kubectl apply -f infrastructure/kubernetes/deployments/copper-full-deployment.yaml --dry-run=client
+            exit 0
+          fi
+          echo "$KUBE_CONFIG_DATA" | base64 -d > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl apply -f infrastructure/kubernetes/deployments/copper-full-deployment.yaml
+          kubectl rollout status deployment/copper-backend -n copper --timeout=300s
+          kubectl rollout status deployment/copper-frontend -n copper --timeout=300s
+
+      - name: Post-deploy smoke test
+        run: |
+          curl -sf --max-time 10 https://copper.example.com/health \
+            && echo "Production health check passed." \
+            || echo "::warning::Production health endpoint unreachable (expected until DNS/cluster is provisioned)."

@@ -1,0 +1,18 @@
+# C.O.P.P.E.R. Code Ownership
+# These owners are automatically requested for review when matching files change.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+*                               @AkashKundu114
+
+/backend/                       @AkashKundu114
+/backend/app/core/guardian.py   @AkashKundu114
+/backend/app/core/data_firewall.py @AkashKundu114
+
+/frontend/                      @AkashKundu114
+
+/infrastructure/                @AkashKundu114
+/.github/                       @AkashKundu114
+
+SECURITY.md                     @AkashKundu114
+/.github/workflows/security-scan.yml @AkashKundu114
+/.github/workflows/deploy.yml   @AkashKundu114
