@@ -24,13 +24,13 @@ export function MessageFeed({ lines, agentStats, thinking, activeAgent }: Messag
       {lines.map((line, i) => {
         const isUser = line.agent === "YOU" || line.agent === "user";
         const agentName = line.agent && line.agent !== "YOU" ? (agentStats[line.agent]?.name || line.agent) : "C.O.P.P.E.R.";
-        
+
         return (
           <div key={line.id || i} className={`flex gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} animate-slide-up`}>
             <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser ? "bg-bg-raised text-text" : "bg-bg-panel border border-border text-accent"}`}>
               {isUser ? <User size={16} /> : <Bot size={16} />}
             </div>
-            
+
             <div className={`flex flex-col max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
               <span className="text-xs text-text-muted mb-1 font-medium px-1">
                 {isUser ? "You" : agentName}

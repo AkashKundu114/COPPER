@@ -9,7 +9,6 @@ from app.core.logger import logger
 
 LEARNED_ROUTES_FILE = Path(__file__).parent / "learned_routes.json"
 
-
 @dataclass
 class RoutingResult:
     agent: AgentType
@@ -31,7 +30,6 @@ class RoutingResult:
         if isinstance(other, RoutingResult):
             return self.agent == other.agent
         return False
-
 
 class DynamicRoutingMemory:
     """
@@ -108,9 +106,7 @@ class DynamicRoutingMemory:
     def _normalize(text: str) -> str:
         return re.sub(r"[^\w\s]", "", text.lower()).strip()
 
-
 routing_memory = DynamicRoutingMemory()
-
 
 KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     AgentType.CODING: [
@@ -261,16 +257,13 @@ CONSEQUENTIAL_PATTERNS = [
     r"(send\s+email\s+to|transfer\s+funds|cancel\s+subscription)",
 ]
 
-
 def is_consequential_action(message: str) -> bool:
     msg_lower = message.lower()
     return any(re.search(pattern, msg_lower) for pattern in CONSEQUENTIAL_PATTERNS)
 
-
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
     res = await route_message_detailed(message, use_llm=use_llm)
     return res.agent
-
 
 async def route_message_detailed(message: str, use_llm: bool = False) -> RoutingResult:
     """
@@ -369,7 +362,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         is_consequential=consequential,
     )
 
-
 async def _llm_subagent_route(message: str) -> AgentType:
     from app.ai.llm.model_manager import model_manager
     from app.ai.llm.ollama_client import ollama_client
@@ -384,7 +376,6 @@ async def _llm_subagent_route(message: str) -> AgentType:
         return AgentType(result)
     except ValueError:
         return AgentType.CHAT
-
 
 def learn_user_correction(prompt: str, agent: AgentType):
     """Public helper for self-training online routes from user feedback."""

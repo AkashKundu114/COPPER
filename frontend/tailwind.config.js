@@ -1,33 +1,33 @@
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src*.{js,ts,jsx,tsx}"],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#09090b", // true black/zinc-950 for deeper OS feel
-          panel: "#18181b", // zinc-900
-          raised: "#27272a", // zinc-800
+          DEFAULT: "#020617", // slate-950
+          panel: "#0f172a", // slate-900
+          raised: "#1e293b", // slate-800
         },
         border: {
-          DEFAULT: "#27272a",
-          subtle: "#18181b",
-          neon: "rgba(6, 182, 212, 0.5)", // Cyan border
+          DEFAULT: "#1e293b", // slate-800
+          subtle: "#0f172a", // slate-900
+          neon: "rgba(14, 165, 233, 0.5)", // Sky 500
         },
         text: {
-          DEFAULT: "#fafafa",
-          muted: "#a1a1aa",
+          DEFAULT: "#f8fafc", // slate-50
+          muted: "#94a3b8", // slate-400
         },
         accent: {
-          DEFAULT: "#06b6d4", // Cyan 500
-          hover: "#22d3ee", // Cyan 400
-          copper: "#f59e0b", // Amber 500
+          DEFAULT: "#0ea5e9", // Sky 500
+          hover: "#38bdf8", // Sky 400
+          copper: "#14b8a6", // Teal 500 (kept variable name 'copper' for compatibility)
         }
       },
       boxShadow: {
-        'neon': '0 0 15px rgba(6, 182, 212, 0.4)',
-        'neon-copper': '0 0 15px rgba(245, 158, 11, 0.4)',
-        'hud': 'inset 0 0 20px rgba(6, 182, 212, 0.05)',
+        'neon': '0 0 15px rgba(14, 165, 233, 0.4)',
+        'neon-copper': '0 0 15px rgba(20, 184, 166, 0.4)',
+        'hud': 'inset 0 0 20px rgba(14, 165, 233, 0.05)',
       },
       fontFamily: {
         display: ["Inter", "system-ui", "sans-serif"],
@@ -41,8 +41,8 @@ export default {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 15px rgba(6, 182, 212, 0.4)", borderColor: "rgba(6, 182, 212, 0.5)" },
-          "50%": { boxShadow: "0 0 2px rgba(6, 182, 212, 0.1)", borderColor: "#27272a" },
+          "0%, 100%": { boxShadow: "0 0 15px rgba(14, 165, 233, 0.4)", borderColor: "rgba(14, 165, 233, 0.5)" },
+          "50%": { boxShadow: "0 0 2px rgba(14, 165, 233, 0.1)", borderColor: "#1e293b" },
         }
       },
       animation: {

@@ -14,7 +14,6 @@ _session_start_time = time.time()
 _total_prompt_tokens = 24850
 _total_completion_tokens = 8420
 
-
 @router.get("/telemetry")
 async def get_system_telemetry():
     process_ram_mb = 320.0
@@ -28,7 +27,7 @@ async def get_system_telemetry():
         import psutil
         proc = psutil.Process(os.getpid())
         process_ram_mb = round(proc.memory_info().rss / (1024 * 1024), 1)
-        
+
         vm = psutil.virtual_memory()
         total_ram_gb = round(vm.total / (1024 ** 3), 1)
         used_ram_gb = round(vm.used / (1024 ** 3), 1)
@@ -39,12 +38,12 @@ async def get_system_telemetry():
         pass
 
     uptime_sec = int(time.time() - _session_start_time)
-    
+
     cpu_temp = round(48.0 + (cpu_percent * 0.25), 1)
     gpu_temp = round(52.0 + (cpu_percent * 0.18), 1)
     gpu_hotspot_temp = round(gpu_temp + 8.5, 1)
     gpu_power_watts = round(35.0 + (cpu_percent * 0.45), 1)
-    
+
     vram_total_gb = 8.0
     vram_used_gb = 6.4
     vram_free_gb = round(vram_total_gb - vram_used_gb, 1)

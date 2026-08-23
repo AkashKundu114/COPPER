@@ -10,7 +10,6 @@ from typing import Any
 from app.core.config import settings
 from app.core.logger import logger
 
-
 class WhisperSTTPipeline:
     """
     Offline Speech-To-Text Pipeline using Whisper.
@@ -123,7 +122,6 @@ class WhisperSTTPipeline:
                 "engine": "stt-error",
             }
 
-
 class PiperTTSPipeline:
     """
     Offline Text-To-Speech Pipeline using Piper / SAPI5 / Kokoro.
@@ -228,7 +226,6 @@ class PiperTTSPipeline:
             wav.writeframes(frames)
         return buf.getvalue()
 
-
 class AudioPipelineManager:
     """
     Unified manager for Speech-To-Text and Text-To-Speech audio pipelines.
@@ -285,6 +282,5 @@ class AudioPipelineManager:
             "audio_size_bytes": len(tts_audio),
             "text": full_response_text,
         }
-
 
 audio_pipeline = AudioPipelineManager()

@@ -7,13 +7,11 @@ from sqlalchemy.orm import Session
 
 from app.core.logger import logger
 
-
 @dataclass
 class RecoveryAttempt:
     strategy: str
     succeeded: bool
     error: str | None = None
-
 
 @dataclass
 class ResilientResult:
@@ -21,7 +19,6 @@ class ResilientResult:
     result: Any = None
     attempts: list[RecoveryAttempt] = field(default_factory=list)
     final_error: str | None = None
-
 
 async def resilient_call(
     primary: Callable[[], Awaitable[Any]],
@@ -60,7 +57,6 @@ async def resilient_call(
     final_error = attempts[-1].error if attempts else "unknown error"
     _log_incident(db, session_id, actor, incident_label, attempts, recovered=False)
     return ResilientResult(success=False, attempts=attempts, final_error=final_error)
-
 
 def _log_incident(
     db: Session | None, session_id: str | None, actor: str, label: str, attempts: list[RecoveryAttempt], recovered: bool

@@ -7,7 +7,6 @@ from app.core.logger import logger
 
 SANDBOX_DIR = Path(__file__).parent.parent.parent / "sandbox"
 
-
 class ForgeSandbox:
     def __init__(self):
         os.makedirs(SANDBOX_DIR, exist_ok=True)
@@ -43,6 +42,5 @@ class ForgeSandbox:
                     os.remove(script_path)
                 except OSError:
                     pass
-
 
 forge_sandbox = ForgeSandbox()

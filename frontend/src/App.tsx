@@ -108,7 +108,7 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg flex text-text">
-      
+
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative border-l border-border">
@@ -175,7 +175,7 @@ export default function App() {
         }}
         onAction={(alertId, action) => {
           dismissAlert(alertId);
-          
+
           if (action.toLowerCase().includes('help') || action.toLowerCase().includes('ask')) {
             setActiveSection('chat');
           } else if (action.toLowerCase().includes('snooze')) {
@@ -183,7 +183,7 @@ export default function App() {
             const mins = match ? parseInt(match[1]) : 15;
             let duration = mins * 60;
             if (action.toLowerCase().includes('h')) duration = mins * 3600;
-            
+
             sendSystemAction('snooze', { alert_id: alertId, duration });
           }
         }}

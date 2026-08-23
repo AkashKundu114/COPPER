@@ -5,7 +5,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent / "datasets"
 
-
 def generate_combinatorial_dataset(templates, variables, expected_agent, categories, count):
     dataset = []
     generated = set()
@@ -38,7 +37,6 @@ def generate_combinatorial_dataset(templates, variables, expected_agent, categor
             dataset.append({"prompt": prompt, "expected_agent": expected_agent, "category": random.choice(categories)})
 
     return dataset
-
 
 CODING_TEMPLATES = [
     "{action} a {language} {component} {modifier}",
@@ -498,13 +496,11 @@ for d in GUARDIAN_CONFLICTS:
     d["expected_action"] = d.pop("expected_agent")
     d["risk"] = d.pop("category")
 
-
 def write_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
     print(f"[+] Wrote {len(data)} test cases to {path}")
-
 
 def main():
     print("Generating comprehensive, accurately-labeled test datasets for C.O.P.P.E.R...")
@@ -542,7 +538,6 @@ def main():
     print(
         f"\n[OK] Successfully created all categorized datasets! Total Routing Samples: {len(all_routing)} | Total Guardian Samples: {len(all_guardian)}"
     )
-
 
 if __name__ == "__main__":
     main()

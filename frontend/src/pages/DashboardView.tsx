@@ -11,7 +11,7 @@ import {
 export const DashboardView: React.FC = () => {
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-gray-200 select-none pb-12">
-      {/* Welcome & System Status Banner */}
+      {}
       <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141b2d] via-[#1a1512] to-[#090d16] border border-[#f97316]/30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#f97316]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -44,9 +44,9 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Top 3 Focus Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Schedule */}
+        {}
         <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-bold text-white">
@@ -80,7 +80,7 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
-        {/* Priority Commitment */}
+        {}
         <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-bold text-white">
@@ -102,7 +102,7 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
-        {/* Proactive Recommendation */}
+        {}
         <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-400">
             <span className="flex items-center gap-1.5 font-bold text-white">
@@ -124,7 +124,7 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Real-Time Telemetry & Hardware Section */}
+      {}
       <div className="p-6 rounded-2xl bg-bg-panel border border-border space-y-4 shadow-hud">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">

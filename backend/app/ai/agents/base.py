@@ -3,7 +3,6 @@ from collections.abc import AsyncGenerator
 from app.core.constants import AgentType, LLMProvider
 from app.core.logger import logger
 
-
 class BaseAgent:
     def __init__(self, agent_type: AgentType, name: str, description: str):
         self.agent_type = agent_type

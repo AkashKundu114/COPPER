@@ -13,14 +13,12 @@ sys.path.insert(0, str(BASE_DIR.parent))
 from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
 from app.core.guardian import DisagreementLevel, guardian_engine
 
-
 def calculate_percentile(data: list[float], p: float) -> float:
     if not data:
         return 0.0
     sorted_data = sorted(data)
     idx = int(math.ceil(len(sorted_data) * p)) - 1
     return sorted_data[max(0, min(idx, len(sorted_data) - 1))]
-
 
 async def evaluate_routing_dataset(dataset: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(dataset)
@@ -146,7 +144,6 @@ async def evaluate_routing_dataset(dataset: list[dict[str, Any]]) -> dict[str, A
         "errors": errors,
     }
 
-
 async def evaluate_guardian_dataset(dataset: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(dataset)
     tp = 0 
@@ -199,7 +196,6 @@ async def evaluate_guardian_dataset(dataset: list[dict[str, Any]]) -> dict[str, 
         "false_negatives": fn,
         "avg_latency_ms": round(sum(latencies_ms) / len(latencies_ms), 3),
     }
-
 
 def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str, Any]) -> str:
     lines = []
@@ -285,7 +281,6 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
 
     return "\n".join(lines)
 
-
 async def run_benchmark():
     print("==================================================================")
     print("    C.O.P.P.E.R. COMPREHENSIVE BENCHMARK & EVALUATION SUITE       ")
@@ -339,7 +334,6 @@ async def run_benchmark():
     print(f"\n[+] Full Markdown report generated: {report_path}")
     print(f"[+] Structured metrics exported:     {metrics_path}")
     print("==================================================================")
-
 
 if __name__ == "__main__":
     asyncio.run(run_benchmark())

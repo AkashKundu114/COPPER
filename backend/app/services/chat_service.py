@@ -25,7 +25,6 @@ AGENT_MAP = {
     AgentType.VISION: vision_agent,
 }
 
-
 class ChatService:
     async def process_message(
         self,
@@ -108,6 +107,5 @@ class ChatService:
         return {
             "is_destructive": agent_type == AgentType.AUTOMATION and any(m in msg_lower for m in destructive_markers)
         }
-
 
 chat_service = ChatService()

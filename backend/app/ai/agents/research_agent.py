@@ -13,7 +13,6 @@ Always cite the source filename if you use it (e.g., "[Source: notes.md]").
 Be concise, accurate, and highly analytical.
 """
 
-
 class ResearchAgent(BaseAgent):
     def __init__(self):
         super().__init__(
@@ -48,6 +47,5 @@ class ResearchAgent(BaseAgent):
 
         response = await ollama_client.chat(messages, model=target_model)
         return response
-
 
 research_agent = ResearchAgent()

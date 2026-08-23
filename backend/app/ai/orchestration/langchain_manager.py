@@ -4,7 +4,6 @@ from app.ai.llm.ollama_client import ollama_client
 from app.core.constants import LLMProvider
 from app.core.logger import logger
 
-
 class LangchainManager:
     async def ainvoke(self, messages: list[dict[str, str]], provider: LLMProvider = LLMProvider.OLLAMA) -> str:
         try:
@@ -19,6 +18,5 @@ class LangchainManager:
     ) -> AsyncGenerator[str, None]:
         res = await self.ainvoke(messages, provider)
         yield res
-
 
 langchain_manager = LangchainManager()

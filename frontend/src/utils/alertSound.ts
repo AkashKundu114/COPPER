@@ -13,21 +13,21 @@ export function playAlertSound(severity: "info" | "warning" | "critical" = "warn
     if (!audioCtx) {
       audioCtx = new AudioContext();
     }
-    
+
     const osc1 = audioCtx.createOscillator();
     const osc2 = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
-    
+
     osc1.connect(gainNode);
     osc2.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
     const freqMap = { info: 587.33, warning: 659.25, critical: 880 };
     const baseFreq = freqMap[severity];
-    
+
     osc1.type = severity === "critical" ? "sawtooth" : "sine";
     osc2.type = "sine";
-    
+
     osc1.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
     osc2.frequency.setValueAtTime(baseFreq * 1.01, audioCtx.currentTime);
 

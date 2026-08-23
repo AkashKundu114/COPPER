@@ -2,7 +2,6 @@ import asyncio
 
 from app.core.logger import logger
 
-
 async def execute_powershell(command: str, timeout: int = 30) -> str:
     """Executes a PowerShell command directly on the host OS."""
     try:

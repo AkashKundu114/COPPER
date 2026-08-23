@@ -1,17 +1,16 @@
-const { app, BrowserWindow, shell, ipcMain, Tray, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow = null;
 let backendProcess = null;
 
-// Enforce Single Instance Lock
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    // Focus the existing window if user attempts to launch a second one
+
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
@@ -19,7 +18,6 @@ if (!gotTheLock) {
   });
 }
 
-// Automatically configure Windows auto-start on login
 function configureAutoStart() {
   if (process.platform === 'win32') {
     app.setLoginItemSettings({
@@ -54,9 +52,8 @@ function createWindow() {
     }
   });
 
-  // Strict Navigation Control: Prevent ANY link from opening an external web browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    // Block opening external browser window - stay 100% inside electron app
+
     if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) {
       mainWindow.loadURL(url);
     }
@@ -88,24 +85,52 @@ function createWindow() {
   });
 }
 
-// Start Backend if not already active
-function ensureBackendRunning() {
+function startBackend() {
+  if (backendProcess && !backendProcess.killed) return true;
   const rootDir = path.resolve(__dirname, '..');
-  const backendDir = path.join(rootDir, 'backend');
-  
-  // Launch Python backend process in detached background mode
+
   try {
-    backendProcess = spawn('python', ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
-      cwd: backendDir,
+    const pythonExec = process.platform === 'win32' 
+      ? path.join(rootDir, '.venv', 'Scripts', 'python.exe')
+      : path.join(rootDir, '.venv', 'bin', 'python');
+
+    backendProcess = spawn(pythonExec, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'backend', '--host', '127.0.0.1', '--port', '8000'], {
+      cwd: rootDir,
       detached: true,
       stdio: 'ignore',
-      shell: true
+      shell: false
     });
+    backendProcess.on('exit', () => { backendProcess = null; });
     backendProcess.unref();
+    return true;
   } catch (err) {
     console.error('Failed to spawn background backend process:', err);
+    return false;
   }
 }
+
+function stopBackend() {
+  if (backendProcess) {
+    try {
+      if (process.platform === 'win32') {
+        spawn('taskkill', ['/pid', backendProcess.pid, '/f', '/t']);
+      } else {
+        backendProcess.kill();
+      }
+      backendProcess = null;
+    } catch(err) {
+      console.error('Failed to stop backend:', err);
+    }
+  }
+  return true;
+}
+
+ipcMain.handle('get-backend-status', () => {
+  return backendProcess !== null && !backendProcess.killed;
+});
+
+ipcMain.handle('start-backend', () => startBackend());
+ipcMain.handle('stop-backend', () => stopBackend());
 
 app.whenReady().then(() => {
   configureAutoStart();
@@ -114,6 +139,10 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+});
+
+app.on('will-quit', () => {
+  stopBackend();
 });
 
 app.on('window-all-closed', function () {

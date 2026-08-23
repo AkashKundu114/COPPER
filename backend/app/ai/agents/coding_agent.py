@@ -6,7 +6,6 @@ from app.core.constants import AgentType, LLMProvider
 from app.core.forge_sandbox import forge_sandbox
 from app.core.logger import logger
 
-
 class CodingAgent(BaseAgent):
     def __init__(self):
         super().__init__(
@@ -52,6 +51,5 @@ User: {message}"""
                 return f"[{self.name} Error]: {e}"
 
         return res
-
 
 coding_agent = CodingAgent()

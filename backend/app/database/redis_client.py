@@ -10,10 +10,8 @@ try:
 except Exception as e:
     logger.warning(f"Redis client disabled or unavailable (local memory fallback active): {e}")
 
-
 async def get_redis():
     return redis_client
-
 
 async def redis_close():
     if redis_client:

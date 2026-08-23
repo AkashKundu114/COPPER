@@ -11,7 +11,6 @@ from app.database.models.memory_v2 import MEMORY_PRIORITY, MemoryStatus, MemoryT
 chat_store = VectorStore(CHROMA_COLLECTION_CHAT)
 doc_store = VectorStore("copper_documents")
 
-
 class MemoryManager:
     def __init__(self):
         self.chat_store = chat_store
@@ -134,6 +133,5 @@ class MemoryManager:
                 m.supersedes_id = winner.id
         db.commit()
         return winner
-
 
 memory_manager = MemoryManager()

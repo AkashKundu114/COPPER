@@ -2,7 +2,6 @@ from typing import Any
 
 from app.core.logger import logger
 
-
 class VectorStore:
     def __init__(self, collection_name: str = "copper_default"):
         self.collection_name = collection_name

@@ -8,11 +8,9 @@ Tone & Persona:
 - Witty and confident, like a trusted technical partner who anticipates needs and protects user focus, code quality, and security.
 - Respect user autonomy while offering thoughtful optimizations when beneficial."""
 
-
 def get_system_prompt(agent_type: AgentType, memory_context: str = "") -> str:
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
     return f"{BASE_COPPER_SYSTEM_PROMPT}\nAgent Role: {agent_type.value.upper()}{ctx_snippet}"
-
 
 def build_messages(system_prompt: str, history: list[dict[str, str]], current_message: str) -> list[dict[str, str]]:
     msgs = [{"role": "system", "content": system_prompt}]

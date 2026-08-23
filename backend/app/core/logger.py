@@ -1,7 +1,6 @@
 import logging
 import sys
 
-
 def get_logger(name: str = "copper") -> logging.Logger:
     logger = logging.getLogger(name)
     if logger.handlers:
@@ -11,6 +10,5 @@ def get_logger(name: str = "copper") -> logging.Logger:
     handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)-7s | %(message)s", "%H:%M:%S"))
     logger.addHandler(handler)
     return logger
-
 
 logger = get_logger()

@@ -18,13 +18,11 @@ plt.rcParams['axes.linewidth'] = 1.4
 DOCS_IMAGES_DIR = Path("d:/C.O.P.P.E.R/docs/images")
 DOCS_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-
 def save_image(fig, filename):
     out_path = DOCS_IMAGES_DIR / filename
     fig.savefig(out_path, dpi=320, bbox_inches='tight', facecolor='#090d16')
     plt.close(fig)
     print(f"[+] Saved crystal-clear image to docs/images/: {filename}")
-
 
 def make_accuracy_benchmark():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
@@ -57,7 +55,6 @@ def make_accuracy_benchmark():
 
     save_image(fig, 'routing_accuracy_benchmark.png')
 
-
 def make_latency_percentiles():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -85,7 +82,6 @@ def make_latency_percentiles():
     ax.grid(axis='y', linestyle='--', alpha=0.25, color='#64748b')
 
     save_image(fig, 'latency_percentiles.png')
-
 
 def make_vram_chart():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6.2), facecolor='#090d16')
@@ -133,7 +129,6 @@ def make_vram_chart():
 
     save_image(fig, 'vram_memory_allocation.png')
 
-
 def make_throughput_chart():
     fig, ax = plt.subplots(figsize=(11, 5.8), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -160,7 +155,6 @@ def make_throughput_chart():
         ax.text(bar.get_x() + bar.get_width()/2., h + 15, f'{h} T/s', ha='center', va='bottom', fontsize=9, fontweight='bold', color='#f8fafc')
 
     save_image(fig, 'token_generation_throughput.png')
-
 
 def make_ram_chart():
     fig, ax = plt.subplots(figsize=(10.5, 5.8), facecolor='#090d16')
@@ -191,7 +185,6 @@ def make_ram_chart():
             ax.text(bar.get_x() + bar.get_width()/2., h + 70, f'{h} MB', ha='center', va='bottom', fontsize=10, fontweight='bold', color='#f8fafc')
 
     save_image(fig, 'system_ram_footprint.png')
-
 
 def make_radar_chart():
     categories = ['Code\nGeneration', 'Complex\nReasoning', 'Instruction\nFollowing', 'Latency &\nSpeed', 'Memory\nEfficiency', 'Tool\nExecution']
@@ -228,7 +221,6 @@ def make_radar_chart():
 
     save_image(fig, 'model_comparison_radar.png')
 
-
 def make_guardian_levels_diagram():
     fig, ax = plt.subplots(figsize=(12, 6.5), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -256,7 +248,6 @@ def make_guardian_levels_diagram():
     ax.set_title('C.O.P.P.E.R. 4-Tier Guardian Alignment & Disagreement Protocol', fontsize=14, fontweight='bold', color='#f8fafc', pad=15)
     save_image(fig, 'guardian_intervention_levels.png')
 
-
 def make_firewall_diagram():
     fig, ax = plt.subplots(figsize=(12, 6.0), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -283,7 +274,6 @@ def make_firewall_diagram():
     ax.set_title('Zero-Trust Data Firewall & PII Sanitization Flow', fontsize=14, fontweight='bold', color='#f8fafc', pad=20)
     save_image(fig, 'data_firewall_pipeline.png')
 
-
 def make_epistemic_memory_diagram():
     fig, ax = plt.subplots(figsize=(11, 6.2), facecolor='#090d16')
     ax.set_facecolor('#0d1322')
@@ -304,7 +294,6 @@ def make_epistemic_memory_diagram():
 
     ax.set_title('3-Layer Epistemic Memory Architecture (Facts, Observations, Hypotheses)', fontsize=14, fontweight='bold', color='#f8fafc', pad=15)
     save_image(fig, 'epistemic_memory_layers.png')
-
 
 def make_audio_pipeline_diagram():
     fig, ax = plt.subplots(figsize=(12, 5.8), facecolor='#090d16')
@@ -331,7 +320,6 @@ def make_audio_pipeline_diagram():
 
     ax.set_title('Offline Multimodal Voice Pipeline (Whisper STT -> LLM -> Piper TTS)', fontsize=14, fontweight='bold', color='#f8fafc', pad=20)
     save_image(fig, 'audio_voice_pipeline.png')
-
 
 if __name__ == '__main__':
     print("=" * 66)

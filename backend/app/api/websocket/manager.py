@@ -2,7 +2,6 @@ from fastapi import WebSocket
 
 from app.core.logger import logger
 
-
 class ConnectionManager:
     def __init__(self):
         self.active: list[WebSocket] = []
@@ -60,6 +59,5 @@ class ConnectionManager:
     async def push_proactive(self, event: dict):
         event["type"] = "proactive_intervention"
         await self.broadcast(event)
-
 
 manager = ConnectionManager()

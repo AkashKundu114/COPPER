@@ -43,7 +43,7 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
         {}
         <div className="space-y-2 text-xs text-gray-300 leading-relaxed">
           <p className="font-medium text-white">{payload.reasoning}</p>
-          
+
           {payload.evidence && payload.evidence.length > 0 && (
             <div className="space-y-1 bg-white/5 p-3 rounded-lg border border-white/5 font-mono text-[11px]">
               <span className="text-gray-400 font-semibold block mb-1">Evidence:</span>

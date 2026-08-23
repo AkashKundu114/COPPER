@@ -10,14 +10,11 @@ from app.services.guardian_service import guardian_service
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
-
 class ActivateRequest(BaseModel):
     version_id: int
 
-
 class HealthCheckRequest(BaseModel):
     version_id: int
-
 
 @router.get("/")
 async def list_agents(db: Session = Depends(get_db)):
@@ -26,14 +23,12 @@ async def list_agents(db: Session = Depends(get_db)):
         return [a.to_dict() for a in current]
     return [a.to_dict() for a in db.query(AgentVersion).all()]
 
-
 @router.get("/{agent_id}/versions")
 async def get_versions(agent_id: str, db: Session = Depends(get_db)):
     versions = (
         db.query(AgentVersion).filter(AgentVersion.agent_id == agent_id).order_by(AgentVersion.created_at.desc()).all()
     )
     return [v.to_dict() for v in versions]
-
 
 @router.post("/{agent_id}/health-check")
 async def health_check(agent_id: str, req: HealthCheckRequest, db: Session = Depends(get_db)):
@@ -42,7 +37,6 @@ async def health_check(agent_id: str, req: HealthCheckRequest, db: Session = Dep
         raise HTTPException(status_code=404, detail="Version not found")
     passed = version.status != AgentStatus.DISABLED
     return {"passed": passed, "agent_id": agent_id, "version_id": req.version_id}
-
 
 @router.post("/{agent_id}/activate")
 async def activate(agent_id: str, req: ActivateRequest, db: Session = Depends(get_db)):
@@ -63,7 +57,6 @@ async def activate(agent_id: str, req: ActivateRequest, db: Session = Depends(ge
         summary=f"Activated {agent_id} v{candidate.version} (from v{(current.version if current else 'none')})",
     )
     return candidate.to_dict()
-
 
 @router.post("/{agent_id}/rollback")
 async def rollback(agent_id: str, db: Session = Depends(get_db)):
@@ -90,7 +83,6 @@ async def rollback(agent_id: str, db: Session = Depends(get_db)):
         summary=f"Rolled back {agent_id} from v{(current.version if current else '?')} to v{previous.version}",
     )
     return previous.to_dict()
-
 
 @router.post("/{agent_id}/disable")
 async def disable(agent_id: str, db: Session = Depends(get_db)):

@@ -11,7 +11,6 @@ from app.core.logger import logger
 from app.database.postgres import init_db
 from app.database.redis_client import redis_close
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
@@ -25,7 +24,6 @@ async def lifespan(app: FastAPI):
     stop_scheduler()
     await redis_close()
     logger.info("COPPER backend shutdown complete")
-
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -53,11 +51,9 @@ app.include_router(audit.router, prefix="/api/v1")
 app.include_router(episodes.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 
-
 @app.get("/")
 async def root():
     return {"name": settings.APP_NAME, "version": settings.APP_VERSION, "status": "online"}
-
 
 @app.get("/health")
 async def health():

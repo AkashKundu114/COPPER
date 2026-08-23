@@ -13,10 +13,8 @@ from app.database.postgres import get_db
 
 router = APIRouter(prefix="/audit", tags=["audit"])
 
-
 class DeleteAllRequest(BaseModel):
     confirm: bool
-
 
 @router.get("/")
 async def list_audit(category: str | None = None, limit: int = 100, db: Session = Depends(get_db)):
@@ -25,7 +23,6 @@ async def list_audit(category: str | None = None, limit: int = 100, db: Session 
         q = q.filter(AuditLogEntry.category == category)
     entries = q.order_by(AuditLogEntry.created_at.desc()).limit(limit).all()
     return [e.to_dict() for e in entries]
-
 
 @router.get("/export")
 async def export_data(db: Session = Depends(get_db)):
@@ -40,7 +37,6 @@ async def export_data(db: Session = Depends(get_db)):
         media_type="application/json",
         headers={"Content-Disposition": "attachment; filename=copper-data-export.json"},
     )
-
 
 @router.post("/delete-all")
 async def delete_all_data(req: DeleteAllRequest, db: Session = Depends(get_db)):

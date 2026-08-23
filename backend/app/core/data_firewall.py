@@ -2,20 +2,17 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 
-
 class DataClass(str, Enum):
     PUBLIC = "public"
     PERSONAL = "personal"
     SENSITIVE = "sensitive"
     SECRET = "secret"
 
-
 @dataclass
 class FirewallResult:
     redacted_text: str
     classification: DataClass
     redaction_count: int
-
 
 _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
     (re.compile(r"sk-[a-zA-Z0-9_\-]{20,}"), "sk-•••REDACTED•••", DataClass.SECRET),
@@ -37,7 +34,6 @@ _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
     (re.compile(r"\b(?:\d[ -]*?){13,19}\b"), "•••CREDIT_CARD_REDACTED•••", DataClass.SENSITIVE),
 ]
 
-
 def classify_and_redact(text: str) -> FirewallResult:
     severity_order = [DataClass.PUBLIC, DataClass.PERSONAL, DataClass.SENSITIVE, DataClass.SECRET]
     worst = DataClass.PUBLIC
@@ -50,7 +46,6 @@ def classify_and_redact(text: str) -> FirewallResult:
             if severity_order.index(classification) > severity_order.index(worst):
                 worst = classification
     return FirewallResult(redacted_text=result_text, classification=worst, redaction_count=redaction_count)
-
 
 def redact(text: str) -> str:
     return classify_and_redact(text).redacted_text

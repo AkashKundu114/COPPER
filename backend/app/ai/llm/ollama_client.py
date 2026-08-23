@@ -5,7 +5,6 @@ from app.core.config import settings
 from app.core.constants import AgentType
 from app.core.logger import logger
 
-
 class OllamaClient:
     def __init__(self):
         self.base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
@@ -53,6 +52,5 @@ class OllamaClient:
         except Exception as e:
             logger.warning(f"Ollama connection error: {e}")
             return f"[Local Offline Engine]: Processed prompt using '{target_model}' fallback."
-
 
 ollama_client = OllamaClient()

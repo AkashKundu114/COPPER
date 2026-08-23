@@ -3,7 +3,6 @@ from app.core.logger import logger
 
 _session_history: dict[str, list[dict[str, str]]] = {}
 
-
 class ContextEngine:
     async def build_context(self, session_id: str, message: str) -> tuple[list[dict[str, str]], str]:
         history = _session_history.get(session_id, [])
@@ -27,6 +26,5 @@ class ContextEngine:
 
     async def clear_session(self, session_id: str):
         _session_history.pop(session_id, None)
-
 
 context_engine = ContextEngine()

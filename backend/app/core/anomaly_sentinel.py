@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from app.core.constants import AlertMode, AlertSeverity
 from app.core.logger import logger
 
-
 @dataclass
 class AnomalyAlert:
     alert_id: str
@@ -25,7 +24,6 @@ class AnomalyAlert:
             "mode": self.mode.value,
             "suggested_actions": self.suggested_actions,
         }
-
 
 class AnomalySentinel:
     def __init__(self):
@@ -188,6 +186,5 @@ class AnomalySentinel:
                 suggested_actions=["Save & Close", "I'm ready", "Snooze 2m"],
             )
         return None
-
 
 sentinel = AnomalySentinel()

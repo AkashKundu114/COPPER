@@ -16,7 +16,6 @@ Always explain briefly what you did.
 Do NOT ask for permission, just execute the requested action.
 """
 
-
 class AutomationAgent(BaseAgent):
     def __init__(self):
         super().__init__(
@@ -49,6 +48,5 @@ class AutomationAgent(BaseAgent):
             messages.append({"role": "user", "content": obs_msg})
 
         return response
-
 
 automation_agent = AutomationAgent()

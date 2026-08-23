@@ -16,7 +16,6 @@ from app.database.postgres import SessionLocal, init_db
 from app.database.models.agent_registry import AgentVersion, AgentStatus
 from app.database.models.audit_log import AuditLogEntry
 
-
 def seed_default_agents(db):
     agents = [
         ("chat", "Chat Agent", "General conversational companion and assistance", "1.0.0"),
@@ -41,7 +40,6 @@ def seed_default_agents(db):
             db.add(av)
             print(f"[+] Registered default agent: {name} (v{ver})")
 
-
 def seed_database():
     print("=" * 66)
     print("           C.O.P.P.E.R. DATABASE SEED DATA INGESTION")
@@ -63,7 +61,6 @@ def seed_database():
         print(f"[-] Seed error: {e}")
     finally:
         db.close()
-
 
 if __name__ == "__main__":
     seed_database()

@@ -9,7 +9,6 @@ from app.core.logger import logger
 
 _client: AsyncOpenAI | None = None
 
-
 def get_openai_client() -> AsyncOpenAI:
     global _client
     if _client is None:
@@ -17,7 +16,6 @@ def get_openai_client() -> AsyncOpenAI:
             raise ValueError("OPENAI_API_KEY not configured")
         _client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
     return _client
-
 
 def _firewall_messages(messages: list[dict]) -> tuple[list[dict], int, str]:
     cleaned = []
@@ -32,7 +30,6 @@ def _firewall_messages(messages: list[dict]) -> tuple[list[dict], int, str]:
             worst = r.classification.value
     return (cleaned, total_redactions, worst)
 
-
 def _log_external_access(db: Session | None, session_id: str | None, summary: str) -> None:
     if db is None:
         return
@@ -46,7 +43,6 @@ def _log_external_access(db: Session | None, session_id: str | None, summary: st
         session_id=session_id,
         scope="cloud",
     )
-
 
 async def openai_chat(
     messages: list[dict],
@@ -70,7 +66,6 @@ async def openai_chat(
     except Exception as e:
         logger.error(f"OpenAI chat error: {e}")
         raise
-
 
 async def openai_stream_chat(
     messages: list[dict],
@@ -97,7 +92,6 @@ async def openai_stream_chat(
         logger.error(f"OpenAI stream error: {e}")
         raise
 
-
 async def openai_transcribe(
     audio_bytes: bytes, filename: str = "audio.wav", db: Session | None = None, session_id: str | None = None
 ) -> str:
@@ -113,7 +107,6 @@ async def openai_transcribe(
     except Exception as e:
         logger.error(f"OpenAI transcribe error: {e}")
         raise
-
 
 async def openai_tts(text: str, voice: str = None, db: Session | None = None, session_id: str | None = None) -> bytes:
     client = get_openai_client()

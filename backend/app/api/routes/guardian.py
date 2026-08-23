@@ -7,16 +7,13 @@ from app.services.guardian_service import guardian_service
 
 router = APIRouter(prefix="/guardian", tags=["guardian"])
 
-
 class AcknowledgeRequest(BaseModel):
     session_id: str
     decision: str
 
-
 class ConfirmRequest(BaseModel):
     session_id: str
     confirmation_text: str
-
 
 @router.post("/acknowledge")
 async def acknowledge(req: AcknowledgeRequest, db: Session = Depends(get_db)):
@@ -30,7 +27,6 @@ async def acknowledge(req: AcknowledgeRequest, db: Session = Depends(get_db)):
         session_id=req.session_id,
     )
     return {"acknowledged": True, "decision": req.decision}
-
 
 @router.post("/confirm")
 async def confirm_safety_action(req: ConfirmRequest, db: Session = Depends(get_db)):

@@ -5,7 +5,6 @@ from app.core.logger import logger
 
 MANIFEST_PATH = Path(__file__).parent.parent.parent.parent.parent / "ai-models" / "models_manifest.json"
 
-
 class ModelManager:
     def __init__(self):
         self.manifest = {}
@@ -42,6 +41,5 @@ class ModelManager:
         except Exception as e:
             logger.error(f"Error resolving model path '{path}': {e}")
             return default
-
 
 model_manager = ModelManager()

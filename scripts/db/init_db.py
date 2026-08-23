@@ -14,7 +14,6 @@ if str(BACKEND_DIR) not in sys.path:
 from app.database.postgres import init_db, engine
 from app.core.logger import logger
 
-
 def run_init():
     print("=" * 66)
     print("           C.O.P.P.E.R. DATABASE SCHEMA INITIALIZATION")
@@ -29,7 +28,6 @@ def run_init():
         print(f"[-] Database initialization failed: {e}")
         print("=" * 66)
         return False
-
 
 if __name__ == "__main__":
     run_init()

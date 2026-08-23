@@ -4,7 +4,6 @@ from pathlib import Path
 from app.ai.memory.memory_manager import memory_manager
 from app.core.logger import logger
 
-
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
     chunks = []
     start = 0
@@ -13,7 +12,6 @@ def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[st
         chunks.append(text[start:end])
         start += chunk_size - overlap
     return chunks
-
 
 async def index_file(filepath: str):
     ext = Path(filepath).suffix.lower()
@@ -52,7 +50,6 @@ async def index_file(filepath: str):
 
     except Exception as e:
         logger.error(f"Failed to index {filepath}: {e}")
-
 
 async def index_directory(directory_path: str, extensions: list[str] = None):
     if not extensions:
