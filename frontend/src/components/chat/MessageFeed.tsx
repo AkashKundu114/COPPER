@@ -2,12 +2,19 @@ import { useEffect, useRef } from "react";
 import { type ChatLine } from "../../hooks/useBrainSocket";
 import { type AgentStats } from "../../lib/api";
 import { Bot, User } from "lucide-react";
+import { MarkdownContent } from "./MarkdownContent";
 
 interface MessageFeedProps {
   lines: ChatLine[];
   agentStats: Record<string, AgentStats>;
   thinking: boolean;
   activeAgent: string | null;
+}
+
+function formatTime(ts?: number) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
 export function MessageFeed({ lines, agentStats, thinking, activeAgent }: MessageFeedProps) {
@@ -31,14 +38,23 @@ export function MessageFeed({ lines, agentStats, thinking, activeAgent }: Messag
               {isUser ? <User size={16} /> : <Bot size={16} />}
             </div>
 
-            <div className={`flex flex-col max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
-              <span className="text-xs text-text-muted mb-1 font-medium px-1">
-                {isUser ? "You" : agentName}
-              </span>
-              <div className={`px-4 py-3 rounded-2xl ${isUser ? "bg-bg-raised text-text" : "bg-bg-panel border border-border text-text"}`}>
-                <p className="whitespace-pre-wrap leading-relaxed text-sm">
-                  {line.text}
-                </p>
+            <div className={`flex flex-col max-w-[85%] ${isUser ? "items-end" : "items-start"}`}>
+              <div className={`flex items-center gap-2 mb-1 px-1.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+                <span className="text-xs text-text-muted font-medium">
+                  {isUser ? "You" : agentName}
+                </span>
+                <span className="text-[10px] text-text-muted/60 font-mono">
+                  {formatTime(line.timestamp)}
+                </span>
+              </div>
+              <div className={`px-5 py-4 rounded-2xl shadow-sm ${isUser ? "bg-bg-raised text-text border border-border/50" : "bg-bg-panel border border-border text-text"}`}>
+                {isUser ? (
+                  <p className="whitespace-pre-wrap leading-relaxed text-sm">
+                    {line.text}
+                  </p>
+                ) : (
+                  <MarkdownContent content={line.text} />
+                )}
               </div>
             </div>
           </div>

@@ -1,43 +1,271 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Clock, Plus, Trash2, CheckCircle2, Circle, X, Sparkles } from "lucide-react";
+
+interface ScheduleEvent {
+  id: string;
+  time: string;
+  title: string;
+  category: "Focus" | "Meeting" | "Break" | "Review";
+  completed: boolean;
+}
+
+const STORAGE_KEY = "copper_schedule_events";
 
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
+  const [events, setEvents] = useState<ScheduleEvent[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [
+        { id: "e1", time: "09:00 AM", title: "Morning Standup & Task Alignment", category: "Meeting", completed: true },
+        { id: "e2", time: "11:00 AM", title: "Deep Work: Core Architecture Coding", category: "Focus", completed: false },
+        { id: "e3", time: "02:30 PM", title: "AI Model & Benchmark Review", category: "Review", completed: false }
+      ];
+    } catch {
+      return [];
+    }
+  });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [time, setTime] = useState("10:00 AM");
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<ScheduleEvent["category"]>("Focus");
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [events]);
+
+  const handleCreateEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+
+    const newEvent: ScheduleEvent = {
+      id: `event-${Date.now()}`,
+      time: time.trim() || "12:00 PM",
+      title: title.trim(),
+      category,
+      completed: false
+    };
+
+    setEvents((prev) => [...prev, newEvent]);
+    setTitle("");
+    setIsModalOpen(false);
+  };
+
+  const toggleEvent = (id: string) => {
+    setEvents((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, completed: !e.completed } : e))
+    );
+  };
+
+  const deleteEvent = (id: string) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const todayDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto text-gray-200 select-none">
-      {}
+    <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">Schedule & Today Overview</h1>
-          <p className="text-xs text-gray-400 font-mono">Day, Week, and Month planning views</p>
+          <p className="text-xs text-slate-400 font-mono">{todayDate}</p>
         </div>
-        <div className="flex gap-1 p-1 bg-[#14141a] rounded-lg border border-white/10 text-xs font-mono">
-          {(["day", "week", "month"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1 rounded capitalize transition-all ${
-                activeTab === tab ? "bg-[#b87333]/30 text-[#ff5722] border border-[#ff5722]/40" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono">
+            {(["day", "week", "month"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-3 py-1 rounded-lg capitalize transition-all ${
+                  activeTab === tab
+                    ? "bg-sky-500/20 text-sky-400 border border-sky-500/40"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+          >
+            <Plus size={14} strokeWidth={2.5} />
+            <span>Add Event</span>
+          </button>
         </div>
       </div>
 
-      {/* Empty State for Recommendations */}
-      <div className="p-4 rounded-xl bg-[#14141a] border border-white/5 text-xs text-center text-gray-500 font-mono">
-        No active recommendations from C.O.P.P.E.R. at this time.
+      {/* AI Proactive Recommendation Banner */}
+      <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            <Sparkles size={16} />
+          </div>
+          <div>
+            <p className="font-semibold text-white">Smart Schedule Optimizer Active</p>
+            <p className="text-slate-400 text-[11px]">
+              {events.filter((e) => !e.completed).length} pending events scheduled for today. Optimal focus window: 11:00 AM – 1:00 PM.
+            </p>
+          </div>
+        </div>
+        <span className="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-bold border border-emerald-800/40">
+          On Track
+        </span>
       </div>
 
-      {/* Empty State for Timeline */}
-      <div className="p-5 rounded-xl bg-[#14141a] border border-white/10 space-y-4">
-        <h3 className="text-xs font-mono font-semibold text-gray-400 uppercase tracking-wider">Today's Timeline</h3>
-        <div className="flex flex-col items-center justify-center p-8 text-gray-500 font-mono text-xs">
-          <p>Your schedule is clear for today.</p>
+      {/* Timeline Section */}
+      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider">
+            {activeTab === "day" ? "Today's Timeline" : activeTab === "week" ? "This Week's Plan" : "Monthly Calendar Agenda"}
+          </h3>
+          <span className="text-[11px] font-mono text-slate-500">{events.length} Items</span>
         </div>
+
+        {events.length === 0 ? (
+          <div className="p-12 text-center text-xs text-slate-500 font-mono">
+            No events scheduled. Click "+ Add Event" to plan your day.
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
+                  event.completed
+                    ? "bg-slate-950/40 border-slate-900 opacity-50"
+                    : "bg-slate-950/80 border-slate-800/80 hover:border-slate-700 shadow-sm"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => toggleEvent(event.id)}
+                    className="text-slate-400 hover:text-sky-400 transition-colors"
+                  >
+                    {event.completed ? (
+                      <CheckCircle2 size={18} className="text-emerald-400" />
+                    ) : (
+                      <Circle size={18} />
+                    )}
+                  </button>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1">
+                        <Clock size={11} /> {event.time}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
+                          event.category === "Focus"
+                            ? "bg-purple-950 text-purple-400 border border-purple-800/40"
+                            : event.category === "Meeting"
+                            ? "bg-blue-950 text-blue-400 border border-blue-800/40"
+                            : event.category === "Review"
+                            ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                            : "bg-slate-800 text-slate-300"
+                        }`}
+                      >
+                        {event.category}
+                      </span>
+                    </div>
+                    <p className={`text-sm font-medium text-white mt-0.5 ${event.completed ? "line-through text-slate-400" : ""}`}>
+                      {event.title}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => deleteEvent(event.id)}
+                  className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition-colors"
+                  title="Delete event"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Add Event Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in font-mono text-xs">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 className="font-bold text-sm text-white">Add Schedule Event</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+                <X size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateEvent} className="space-y-3.5">
+              <div>
+                <label className="text-[11px] text-slate-400 block mb-1">Event / Milestone Title</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Deep Work Session..."
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] text-slate-400 block mb-1">Time</label>
+                  <input
+                    type="text"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    placeholder="e.g. 10:30 AM"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] text-slate-400 block mb-1">Category</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as any)}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  >
+                    <option value="Focus">Focus</option>
+                    <option value="Meeting">Meeting</option>
+                    <option value="Review">Review</option>
+                    <option value="Break">Break</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-3 py-1.5 rounded-xl hover:bg-slate-800 text-slate-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                >
+                  Save Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

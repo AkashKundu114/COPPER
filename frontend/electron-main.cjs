@@ -50,13 +50,13 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 700,
     show: false,
-    backgroundColor: '#090d16',
+    backgroundColor: '#020617',
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#090d16',
+      color: '#020617',
       symbolColor: '#94a3b8',
-      height: 36
+      height: 56
     },
     webPreferences: {
       nodeIntegration: true,
@@ -99,14 +99,38 @@ function createWindow() {
   });
 }
 
-function startBackend() {
-  if (backendProcess && !backendProcess.killed) return true;
+const net = require('net');
+
+function isPortOpen(port) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    socket.setTimeout(400);
+    socket.on('connect', () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on('timeout', () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.on('error', () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.connect(port, '127.0.0.1');
+  });
+}
+
+async function startBackend() {
+  const open = await isPortOpen(8000);
+  if (open) return true;
+
   const rootDir = path.resolve(__dirname, '..');
 
   try {
     const pythonExec = getPythonExecutable(rootDir);
 
-    backendProcess = spawn(pythonExec, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'backend', '--host', '127.0.0.1', '--port', '8000'], {
+    backendProcess = spawn(pythonExec, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'backend', '--host', '127.0.0.1', '--port', '8000', '--reload'], {
       cwd: rootDir,
       detached: true,
       stdio: 'ignore',
@@ -125,7 +149,7 @@ function startBackend() {
   }
 }
 
-function stopBackend() {
+async function stopBackend() {
   if (backendProcess) {
     try {
       if (process.platform === 'win32') {
@@ -133,20 +157,29 @@ function stopBackend() {
       } else {
         backendProcess.kill();
       }
-      backendProcess = null;
     } catch(err) {
       console.error('Failed to stop backend:', err);
     }
+    backendProcess = null;
+  }
+
+  if (process.platform === 'win32') {
+    try {
+      const { execSync } = require('child_process');
+      const cmd = `powershell -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }"`;
+      execSync(cmd, { stdio: 'ignore' });
+    } catch(e) {}
   }
   return true;
 }
 
-ipcMain.handle('get-backend-status', () => {
-  return backendProcess !== null && !backendProcess.killed;
+ipcMain.handle('get-backend-status', async () => {
+  if (backendProcess !== null && !backendProcess.killed) return true;
+  return await isPortOpen(8000);
 });
 
-ipcMain.handle('start-backend', () => startBackend());
-ipcMain.handle('stop-backend', () => stopBackend());
+ipcMain.handle('start-backend', async () => await startBackend());
+ipcMain.handle('stop-backend', async () => await stopBackend());
 
 app.whenReady().then(() => {
   configureAutoStart();

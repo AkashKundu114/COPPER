@@ -1,30 +1,36 @@
 from app.ai.memory.memory_manager import memory_manager
+from app.ai.memory.persistent_memory import persistent_memory
 from app.core.logger import logger
-
-_session_history: dict[str, list[dict[str, str]]] = {}
 
 class ContextEngine:
     async def build_context(self, session_id: str, message: str) -> tuple[list[dict[str, str]], str]:
-        history = _session_history.get(session_id, [])
+        history = persistent_memory.get_history(session_id)
+        profile_snippet = persistent_memory.get_memory_prompt_snippet()
+        
+        epistemic_parts = [profile_snippet]
         try:
             epistemic_memories = await memory_manager.get_relevant_memories(message)
-            memory_text = "\n".join(
-                [f"- [{m.get('memory_type', 'fact').upper()}] {m.get('content')}" for m in epistemic_memories]
-            )
+            if epistemic_memories:
+                epistemic_parts.append("\n• Dynamically Retrieved Context:\n" + "\n".join(
+                    [f"- [{m.get('memory_type', 'fact').upper()}] {m.get('content')}" for m in epistemic_memories]
+                ))
         except Exception as e:
             logger.warning(f"Memory context retrieval fallback: {e}")
-            memory_text = ""
+
+        memory_text = "\n\n".join(epistemic_parts)
         return (history, memory_text)
 
     async def append_message(self, session_id: str, role: str, content: str):
-        if session_id not in _session_history:
-            _session_history[session_id] = []
-        _session_history[session_id].append({"role": role, "content": content})
+        persistent_memory.append_message(session_id, role, content)
+        if role == "user":
+            persistent_memory.extract_and_store_facts(content)
 
     async def get_history(self, session_id: str) -> list[dict[str, str]]:
-        return _session_history.get(session_id, [])
+        return persistent_memory.get_history(session_id)
 
     async def clear_session(self, session_id: str):
-        _session_history.pop(session_id, None)
+        if session_id in persistent_memory.sessions:
+            persistent_memory.sessions.pop(session_id, None)
+            persistent_memory._save_sessions()
 
 context_engine = ContextEngine()

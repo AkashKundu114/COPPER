@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Server, Terminal, Power } from "lucide-react";
+import { Power, Volume2, HardDrive, CheckCircle2, Play } from "lucide-react";
+import { API_BASE } from "../lib/api";
 
 export const SettingsView: React.FC = () => {
-  const [devMode, setDevMode] = useState(true);
   const [backendRunning, setBackendRunning] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState("en_US-amy-medium");
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     try {
       if ((window as any).require) {
         const { ipcRenderer } = (window as any).require("electron");
         ipcRenderer.invoke("get-backend-status").then(setBackendRunning);
+      } else {
+        // In browser dev mode, check port 8000 via fetch
+        fetch(`${API_BASE}/api/v1/system/telemetry`)
+          .then((res) => setBackendRunning(res.ok))
+          .catch(() => setBackendRunning(false));
       }
-    } catch (e) {
-      console.warn("Not in Electron environment");
+    } catch {
+      setBackendRunning(false);
     }
   }, []);
 
@@ -23,9 +31,11 @@ export const SettingsView: React.FC = () => {
         if (backendRunning) {
           await ipcRenderer.invoke("stop-backend");
           setBackendRunning(false);
+          setToast("Python Backend Server stopped.");
         } else {
           await ipcRenderer.invoke("start-backend");
           setBackendRunning(true);
+          setToast("Python Backend Server started.");
         }
       }
     } catch (e) {
@@ -33,21 +43,63 @@ export const SettingsView: React.FC = () => {
     }
   };
 
+  const testVoiceSample = async () => {
+    setIsPlayingVoice(true);
+    setToast("Synthesizing female voice sample with Piper ONNX...");
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/voice/speak`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: "Hello! I am C.O.P.P.E.R., your local offline AI operating system.",
+          voice: selectedVoice
+        })
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onended = () => setIsPlayingVoice(false);
+        audio.play();
+      } else {
+        setIsPlayingVoice(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setIsPlayingVoice(false);
+    }
+  };
+
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none">
-      <div>
-        <h1 className="text-xl font-bold text-white tracking-tight">System Settings</h1>
-        <p className="text-xs text-slate-400 font-mono">Preferences, local LLM endpoints, privacy firewall, and developer options</p>
+    <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white tracking-tight font-sans">System Settings</h1>
+          <p className="text-xs text-slate-400 mt-1">Local endpoints, female voice synthesis, model storage paths, and runtime toggles</p>
+        </div>
       </div>
 
+      {toast && (
+        <div className="p-3.5 rounded-xl bg-sky-950/60 border border-sky-500/40 text-sky-300 flex items-center justify-between animate-fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 size={16} />
+            <span>{toast}</span>
+          </div>
+          <button onClick={() => setToast(null)} className="text-sky-400 hover:text-white text-[11px]">
+            Dismiss
+          </button>
+        </div>
+      )}
+
       <div className="space-y-4">
-        {}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between font-mono text-xs">
+        {/* Backend Toggle */}
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between shadow-sm">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-white font-bold">
-              <Power size={16} className={backendRunning ? "text-sky-500" : "text-slate-500"} /> Python Backend Server
+            <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+              <Power size={17} className={backendRunning ? "text-sky-400" : "text-slate-500"} />
+              <span>Python Backend Server (FastAPI + Uvicorn)</span>
             </div>
-            <p className="text-[11px] text-slate-400">Controls the standalone backend process for chat and orchestration.</p>
+            <p className="text-[11px] text-slate-400">Controls the standalone backend runtime on port 8000 with WatchFiles live-reload.</p>
           </div>
           <button
             onClick={toggleBackend}
@@ -63,51 +115,67 @@ export const SettingsView: React.FC = () => {
           </button>
         </div>
 
-        {}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3 font-mono text-xs">
-          <div className="flex items-center gap-2 text-white font-bold">
-            <Server size={16} className="text-teal-500" /> Local Ollama Model Server
+        {/* Voice Preference */}
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+                <Volume2 size={17} className="text-emerald-400" />
+                <span>Text-To-Speech (TTS) Voice Engine</span>
+              </div>
+              <p className="text-[11px] text-slate-400">High-fidelity local neural voice synthesis powered by Piper ONNX.</p>
+            </div>
+            <button
+              onClick={testVoiceSample}
+              disabled={isPlayingVoice}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold transition-all disabled:opacity-40"
+            >
+              <Play size={13} />
+              <span>{isPlayingVoice ? "Playing Voice..." : "Test Voice"}</span>
+            </button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-slate-400 text-[10px] block mb-1">Ollama Base URL</label>
-              <input
-                type="text"
-                defaultValue="http://localhost:11434"
-                className="w-full px-3 py-1.5 rounded bg-slate-950 border border-slate-800 text-white font-mono"
-              />
-            </div>
-            <div>
-              <label className="text-slate-400 text-[10px] block mb-1">Default Model Pool</label>
-              <select className="w-full px-3 py-1.5 rounded bg-slate-950 border border-slate-800 text-white font-mono">
-                <option>llama3.1:8b (General Reasoning)</option>
-                <option>qwen2.5-coder:7b (Code Synthesis)</option>
-                <option>mistral:7b-instruct (Fast Chat)</option>
-              </select>
-            </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { id: "en_US-amy-medium", name: "Amy (Female - Default)", tag: "Natural & Clear" },
+              { id: "en_US-lessac-medium", name: "Lessac (Female)", tag: "Warm & Expressive" },
+              { id: "en_US-danny-low", name: "Danny (Male)", tag: "Deep & Calm" }
+            ].map((v) => (
+              <button
+                key={v.id}
+                onClick={() => {
+                  setSelectedVoice(v.id);
+                  setToast(`Default voice set to ${v.name}`);
+                }}
+                className={`p-3.5 rounded-xl border text-left transition-all ${
+                  selectedVoice === v.id
+                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/50 shadow-sm"
+                    : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                }`}
+              >
+                <p className="font-bold text-white font-sans text-xs">{v.name}</p>
+                <p className="text-[10px] text-slate-500 mt-1">{v.tag}</p>
+              </button>
+            ))}
           </div>
         </div>
 
-        {}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between font-mono text-xs">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-white font-bold">
-              <Terminal size={16} className="text-sky-500" /> Developer Mode
-            </div>
-            <p className="text-[11px] text-slate-400">Expose raw JSON state, prompt logs, and step execution timing.</p>
+        {/* Model Storage Directory */}
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-sm">
+          <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+            <HardDrive size={17} className="text-sky-400" />
+            <span>Local Weights & Storage Paths</span>
           </div>
-          <button
-            onClick={() => setDevMode(!devMode)}
-            className={`w-12 h-6 rounded-full p-1 transition-colors ${
-              devMode ? "bg-sky-500" : "bg-slate-700"
-            }`}
-          >
-            <div
-              className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                devMode ? "translate-x-6" : "translate-x-0"
-              }`}
-            />
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-slate-500 text-[10px] uppercase font-bold">Ollama Model Blobs</span>
+              <p className="text-white text-xs font-mono mt-0.5">D:\blobs</p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-slate-500 text-[10px] uppercase font-bold">Local App & Vectors</span>
+              <p className="text-white text-xs font-mono mt-0.5">D:\C.O.P.P.E.R</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

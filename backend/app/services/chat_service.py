@@ -72,15 +72,47 @@ class ChatService:
             raise
 
     async def stream_message(
-        self, session_id: str, message: str, provider: LLMProvider = LLMProvider.OLLAMA
+        self, session_id: str, message: str, provider: LLMProvider = LLMProvider.OLLAMA, mode: str = "auto"
     ) -> AsyncGenerator[str, None]:
         agent_type = await route_message(message)
         history, memory_context = await context_engine.build_context(session_id, message)
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
         start_time = time.time()
+        full_response = []
         try:
-            if agent and hasattr(agent, "stream"):
+            ctx_snippet = f"\n\n{memory_context}" if memory_context else ""
+            if mode == "reasoning":
+                system = (
+                    "You are C.O.P.P.E.R. operating in Deep Cognitive (Complex Thinking) Mode. "
+                    "Before providing your final response, you MUST conduct a comprehensive step-by-step reasoning process enclosed strictly inside <think>...</think> tags. "
+                    "In your thought process: 1. Deconstruct the question, 2. Evaluate constraints and edge cases, 3. Validate logic step-by-step. "
+                    f"After </think>, deliver your polished, clear, and structured final answer.{ctx_snippet}"
+                )
+                messages = build_messages(system, history, message)
+                gen = langchain_manager.astream(messages, provider, model="deepseek-r1:7b")
+            elif mode == "coding":
+                system = (
+                    "You are C.O.P.P.E.R. in Software Architect & Engineering Mode. "
+                    f"Provide production-ready, clean, well-tested code, system architectures, and type-safe solutions.{ctx_snippet}"
+                )
+                messages = build_messages(system, history, message)
+                gen = langchain_manager.astream(messages, provider, model="qwen2.5-coder:7b")
+            elif mode == "research":
+                system = (
+                    "You are C.O.P.P.E.R. in Deep Research & Synthesis Mode. "
+                    f"Perform structured analysis, synthesize complex information, identify core facts, and deliver organized evidence-backed reports.{ctx_snippet}"
+                )
+                messages = build_messages(system, history, message)
+                gen = langchain_manager.astream(messages, provider, model="mistral:7b")
+            elif mode == "fast":
+                system = (
+                    "You are C.O.P.P.E.R. in Instant Reflex Mode. "
+                    f"Provide rapid, concise, high-precision answers with zero unnecessary verbosity.{ctx_snippet}"
+                )
+                messages = build_messages(system, history, message)
+                gen = langchain_manager.astream(messages, provider, model="llama3.1:8b")
+            elif agent and hasattr(agent, "stream"):
                 gen = agent.stream(message, history, memory_context, provider)
             else:
                 system = get_system_prompt(AgentType.CHAT, memory_context)

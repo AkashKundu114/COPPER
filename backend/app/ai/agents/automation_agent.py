@@ -3,7 +3,7 @@ import re
 from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
-from app.core.constants import AgentType
+from app.core.constants import AgentType, LLMProvider
 from app.core.logger import logger
 from app.core.os_executor import execute_powershell
 
@@ -24,13 +24,21 @@ class AutomationAgent(BaseAgent):
             description="Executes CLI automation, file organization, and desktop tool runs.",
         )
 
-    async def run(self, message: str, context: str = "") -> str:
+    async def run(
+        self,
+        message: str,
+        history: list = None,
+        memory_context: str = "",
+        provider: LLMProvider = LLMProvider.OLLAMA,
+        *args,
+        **kwargs,
+    ) -> str:
         messages = [
             {"role": "system", "content": SYS_PROMPT},
-            {"role": "user", "content": f"Context:\n{context}\n\nTask: {message}"},
+            {"role": "user", "content": f"Context:\n{memory_context}\n\nTask: {message}"},
         ]
 
-        target_model = model_manager.get_model("core_agents.automation")
+        target_model = model_manager.get_model("core_agents.automation", "mistral:7b")
 
         for step in range(3):
             response = await ollama_client.chat(messages, model=target_model)
@@ -38,7 +46,7 @@ class AutomationAgent(BaseAgent):
 
             match = re.search(r"<powershell>(.*?)</powershell>", response, re.DOTALL | re.IGNORECASE)
             if not match:
-                return response 
+                return response
 
             script = match.group(1).strip()
             messages.append({"role": "assistant", "content": response})
@@ -48,5 +56,22 @@ class AutomationAgent(BaseAgent):
             messages.append({"role": "user", "content": obs_msg})
 
         return response
+
+    async def stream(
+        self,
+        message: str,
+        history: list = None,
+        memory_context: str = "",
+        provider: LLMProvider = LLMProvider.OLLAMA,
+        *args,
+        **kwargs,
+    ):
+        messages = [
+            {"role": "system", "content": SYS_PROMPT},
+            {"role": "user", "content": f"Context:\n{memory_context}\n\nTask: {message}"},
+        ]
+        target_model = model_manager.get_model("core_agents.automation", "mistral:7b")
+        async for chunk in ollama_client.stream_chat(messages, model=target_model):
+            yield chunk
 
 automation_agent = AutomationAgent()

@@ -97,6 +97,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 continue
 
             message = data.get("message", "")
+            mode = data.get("mode", "auto")
             provider = LLMProvider(data.get("provider", "ollama"))
             valid, err = validate_message(message)
             if not valid:
@@ -104,7 +105,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 continue
             await manager.send(session_id, {"type": "thinking", "agent_type": ""})
             full_response = []
-            async for chunk in chat_service.stream_message(session_id, message, provider):
+            async for chunk in chat_service.stream_message(session_id, message, provider, mode=mode):
                 await manager.send_chunk(session_id, chunk)
                 full_response.append(chunk)
             
