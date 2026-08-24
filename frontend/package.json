@@ -36,7 +36,7 @@
     "oxlint": "^1.79.0",
     "typescript": "~7.0.2",
     "vite": "^8.2.2",
-    "wait-on": "^8.0.2"
+    "wait-on": "^9.1.0"
   },
   "build": {
     "appId": "com.copper.ai",
