@@ -18,6 +18,7 @@ import {
 export type NavSection =
   | "dashboard"
   | "chat"
+  | "voice"
   | "today"
   | "tasks"
   | "projects"
@@ -40,6 +41,7 @@ const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] =
   [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "chat", label: "Conversation", icon: MessageSquare },
+    { id: "voice", label: "E.V.E. Voice", icon: Sparkles },
     { id: "today", label: "Today / Schedule", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckSquare },
     { id: "projects", label: "Projects", icon: FolderKanban },

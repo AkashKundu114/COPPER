@@ -20,6 +20,7 @@ import {
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 
 import { DashboardView } from "./pages/DashboardView";
+import { EVEView } from "./pages/EVEView";
 import { TodayView } from "./pages/TodayView";
 import { TasksView } from "./pages/TasksView";
 import { ProjectsView } from "./pages/ProjectsView";
@@ -104,6 +105,17 @@ export default function App() {
               />
             </div>
           </div>
+        );
+      case "voice":
+        return (
+          <EVEView
+            lines={lines}
+            thinking={thinking}
+            speaking={speaking}
+            connected={connected}
+            onSend={send}
+            stopAudio={stopAudio}
+          />
         );
       case "today":
         return <TodayView />;

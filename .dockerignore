@@ -35,7 +35,6 @@ dump.rdb
 data/
 
 # ── AI Models & Vector Stores ─────────────────────────────────────────────────
-ai-models/
 models/
 *.gguf
 *.bin
@@ -98,7 +97,6 @@ Thumbs.db
 desktop.ini
 
 # ── Infrastructure (not needed inside containers) ─────────────────────────────
-infrastructure/
 docker-compose*.yml
 scripts/
 conftest.py

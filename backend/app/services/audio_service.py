@@ -98,7 +98,7 @@ class PiperTTSPipeline:
             {"id": "david", "name": "Microsoft David (Offline Windows Male)", "engine": "windows-sapi5"},
         ]
 
-    async def synthesize(self, text: str, voice: str = "copper_synth", speed: float = 1.0) -> bytes:
+    async def synthesize(self, text: str, voice: str = "en-US-AvaNeural", speed: float = 1.0) -> bytes:
         """
         Synthesize text into WAV audio bytes.
         """
