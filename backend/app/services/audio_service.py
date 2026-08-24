@@ -113,7 +113,23 @@ class PiperTTSPipeline:
         if not clean_text:
             return self._generate_silence_wav(0.1)
 
-        # 1. Try pyttsx3 for standard WAV synthesis
+        # 1. Try edge-tts if neural voice requested
+        if "neural" in voice.lower() or "edge" in voice.lower():
+            try:
+                import edge_tts
+
+                target_voice = voice if "Neural" in voice else "en-US-AvaNeural"
+                communicate = edge_tts.Communicate(clean_text, target_voice)
+                chunks = []
+                async for chunk in communicate.stream():
+                    if chunk["type"] == "audio":
+                        chunks.append(chunk["data"])
+                if chunks:
+                    return b"".join(chunks)
+            except Exception as e:
+                logger.info(f"edge-tts unavailable: {e}")
+
+        # 2. Try pyttsx3 for standard WAV synthesis or fallback
         try:
             import pyttsx3
 
@@ -145,22 +161,6 @@ class PiperTTSPipeline:
                     return data
         except Exception as e:
             logger.debug(f"pyttsx3 synthesis unavailable: {e}")
-
-        # 2. Try edge-tts if neural voice requested
-        if "neural" in voice.lower() or "edge" in voice.lower():
-            try:
-                import edge_tts
-
-                target_voice = voice if "Neural" in voice else "en-US-AvaNeural"
-                communicate = edge_tts.Communicate(clean_text, target_voice)
-                chunks = []
-                async for chunk in communicate.stream():
-                    if chunk["type"] == "audio":
-                        chunks.append(chunk["data"])
-                if chunks:
-                    return b"".join(chunks)
-            except Exception as e:
-                logger.info(f"edge-tts unavailable: {e}")
 
         return self._generate_beeps_wav(duration=0.6, freq=440.0)
 
