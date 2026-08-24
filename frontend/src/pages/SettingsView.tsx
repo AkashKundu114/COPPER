@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Power, Volume2, HardDrive, CheckCircle2, Play } from "lucide-react";
+import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic } from "lucide-react";
 import { API_BASE } from "../lib/api";
 
 export const SettingsView: React.FC = () => {
   const [backendRunning, setBackendRunning] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("en-US-AvaNeural");
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [continuousVoice, setContinuousVoice] = useState(
+    () => localStorage.getItem("copper_continuous_voice") === "true"
+  );
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -124,6 +127,36 @@ export const SettingsView: React.FC = () => {
             <div
               className={`w-4 h-4 rounded-full bg-white transition-transform ${
                 backendRunning ? "translate-x-6" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Continuous Voice Toggle */}
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between shadow-sm">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+              <Mic size={17} className={continuousVoice ? "text-purple-400" : "text-slate-500"} />
+              <span>E.V.E. Hands-Free Mode (Continuous Voice)</span>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              Voice assistant listens continuously without needing to press the mic button. Interrupt E.V.E. by speaking.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              const newVal = !continuousVoice;
+              setContinuousVoice(newVal);
+              localStorage.setItem("copper_continuous_voice", String(newVal));
+              setToast(newVal ? "Hands-Free Mode Enabled" : "Hands-Free Mode Disabled");
+            }}
+            className={`w-12 h-6 rounded-full p-1 transition-colors ${
+              continuousVoice ? "bg-purple-500" : "bg-slate-700"
+            }`}
+          >
+            <div
+              className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                continuousVoice ? "translate-x-6" : "translate-x-0"
               }`}
             />
           </button>

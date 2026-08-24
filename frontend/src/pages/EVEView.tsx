@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Mic, Square, Loader2 } from "lucide-react";
 import { type ChatLine } from "../hooks/useBrainSocket";
@@ -17,6 +17,122 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
+  
+  // Refs for VAD closures
+  const speakingRef = useRef(speaking);
+  const onSendRef = useRef(onSend);
+  const stopAudioRef = useRef(stopAudio);
+
+  useEffect(() => {
+    speakingRef.current = speaking;
+    onSendRef.current = onSend;
+    stopAudioRef.current = stopAudio;
+  }, [speaking, onSend, stopAudio]);
+
+  useEffect(() => {
+    const isContinuousMode = localStorage.getItem("copper_continuous_voice") === "true";
+    if (!isContinuousMode) return;
+
+    let audioContext: AudioContext;
+    let analyser: AnalyserNode;
+    let microphone: MediaStreamAudioSourceNode;
+    let stream: MediaStream;
+    let animationFrame: number;
+    let isCurrentlyRecording = false;
+    let silenceStart = 0;
+    
+    let recorder: MediaRecorder;
+    let chunks: BlobPart[] = [];
+
+    const initVAD = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
+        });
+        audioContext = new AudioContext();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 512;
+        analyser.minDecibels = -70; // Sensible threshold
+        
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        
+        const checkVolume = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+          }
+          const average = sum / bufferLength;
+          
+          // Threshold logic
+          if (average > 15) { // User is speaking
+            if (!isCurrentlyRecording) {
+              if (speakingRef.current) stopAudioRef.current(); // Interrupt E.V.E.
+              
+              isCurrentlyRecording = true;
+              setIsRecording(true);
+              recorder = new MediaRecorder(stream);
+              chunks = [];
+              
+              recorder.ondataavailable = (e) => {
+                if (e.data.size > 0) chunks.push(e.data);
+              };
+              
+              recorder.onstop = async () => {
+                const audioBlob = new Blob(chunks, { type: "audio/webm" });
+                const formData = new FormData();
+                formData.append("file", audioBlob, "voice.webm");
+                
+                try {
+                  const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+                    method: "POST",
+                    body: formData,
+                  });
+                  const data = await res.json();
+                  if (data.text && data.text.trim().length > 0) {
+                    onSendRef.current(data.text);
+                  }
+                } catch (e) {
+                  console.error("VAD STT error", e);
+                }
+              };
+              recorder.start();
+            }
+            silenceStart = 0; // Reset silence timer
+          } else {
+            if (isCurrentlyRecording) {
+              if (silenceStart === 0) silenceStart = performance.now();
+              else if (performance.now() - silenceStart > 1500) { // 1.5s of silence = stop talking
+                isCurrentlyRecording = false;
+                setIsRecording(false);
+                recorder.stop();
+              }
+            }
+          }
+          animationFrame = requestAnimationFrame(checkVolume);
+        };
+        
+        checkVolume();
+      } catch (e) {
+        console.error("VAD init failed", e);
+      }
+    };
+    
+    initVAD();
+    
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      if (audioContext) audioContext.close();
+      if (isCurrentlyRecording && recorder) {
+        recorder.stop();
+      }
+    };
+  }, []);
 
   const startRecording = async () => {
     try {
