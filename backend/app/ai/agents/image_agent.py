@@ -66,8 +66,8 @@ class ImageAgent(BaseAgent):
             prompt = "a futuristic cyber city"
 
         safe_prompt = urllib.parse.quote(prompt)
-        # Using Pollinations AI for free, fast, high-quality SDXL generation
-        api_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1024&height=1024&nologo=true"
+        # Using Pollinations AI for free, fast, high-quality Flux Realism generation
+        api_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?width=1024&height=1024&nologo=true&model=flux-realism&enhance=true"
 
         return (
             f"🎨 **Generated Image for:** `{prompt}`\n\n"
