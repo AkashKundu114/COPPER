@@ -182,7 +182,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
         parts.push(
           <code
             key={key++}
-            className="px-1.5 py-0.5 rounded bg-slate-900 text-cyan-300 font-mono text-xs border border-slate-700/60"
+            className="px-1.5 py-0.5 rounded bg-slate-900 text-accent-300 font-mono text-xs border border-slate-700/60"
           >
             {codeMatch[1]}
           </code>,
@@ -319,7 +319,7 @@ const ThinkingProcessBlock: React.FC<{
     <div
       className={`rounded-xl overflow-hidden border shadow-sm mb-3.5 font-mono text-xs transition-all ${
         isStreaming
-          ? "bg-slate-950/80 border-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+          ? "bg-slate-950/80 border-accent-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
           : "bg-slate-950/60 border-slate-800/80"
       }`}
     >
@@ -328,11 +328,11 @@ const ThinkingProcessBlock: React.FC<{
         className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-900/70 hover:bg-slate-900 border-b border-slate-800/50 text-slate-400 hover:text-slate-200 transition-all cursor-pointer select-none"
       >
         <div className="flex items-center gap-2.5">
-          <div className="p-1 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+          <div className="p-1 rounded-lg bg-accent-500/10 text-accent-400 border border-accent-500/20">
             <Brain
               size={14}
               className={
-                isStreaming ? "animate-pulse text-sky-400" : "text-sky-400"
+                isStreaming ? "animate-pulse text-accent-400" : "text-accent-400"
               }
             />
           </div>
@@ -345,7 +345,7 @@ const ThinkingProcessBlock: React.FC<{
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-1 ml-2">
-            <span className="px-1.5 py-0.2 rounded bg-sky-950 text-sky-400 border border-sky-800/40 text-[9.5px]">
+            <span className="px-1.5 py-0.2 rounded bg-accent-950 text-accent-400 border border-accent-800/40 text-[9.5px]">
               Cognitive Reasoner
             </span>
             <span className="px-1.5 py-0.2 rounded bg-purple-950 text-purple-400 border border-purple-800/40 text-[9.5px]">
@@ -362,7 +362,7 @@ const ThinkingProcessBlock: React.FC<{
             title="Copy thought steps"
           >
             {copied ? (
-              <Check size={12} className="text-emerald-400" />
+              <Check size={12} className="text-verdigris-400" />
             ) : (
               <Copy size={12} />
             )}
@@ -373,7 +373,7 @@ const ThinkingProcessBlock: React.FC<{
       </div>
 
       {expanded && (
-        <div className="p-3.5 text-slate-400 bg-slate-950/40 italic font-mono text-[11.5px] leading-relaxed border-l-2 border-sky-500/70 pl-4 max-h-96 overflow-y-auto custom-scrollbar whitespace-pre-wrap">
+        <div className="p-3.5 text-slate-400 bg-slate-950/40 italic font-mono text-[11.5px] leading-relaxed border-l-2 border-accent-500/70 pl-4 max-h-96 overflow-y-auto custom-scrollbar whitespace-pre-wrap">
           {thought}
         </div>
       )}
@@ -396,7 +396,7 @@ const CodeBlock: React.FC<{ code: string; lang?: string }> = ({
   return (
     <div className="rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md my-3 font-mono text-xs">
       <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 text-[11px] text-slate-400">
-        <span className="text-cyan-400 font-semibold uppercase tracking-wider">
+        <span className="text-accent-400 font-semibold uppercase tracking-wider">
           {lang || "code"}
         </span>
         <button
@@ -404,7 +404,7 @@ const CodeBlock: React.FC<{ code: string; lang?: string }> = ({
           className="flex items-center gap-1 hover:text-white transition-colors px-2 py-0.5 rounded hover:bg-slate-800"
         >
           {copied ? (
-            <Check size={12} className="text-emerald-400" />
+            <Check size={12} className="text-verdigris-400" />
           ) : (
             <Copy size={12} />
           )}

@@ -42,7 +42,7 @@ export const SelfImprovementView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Sparkles size={20} className="text-sky-400" />
+            <Sparkles size={20} className="text-accent-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
               Self-Improvement & Benchmark Center
             </h1>
@@ -56,14 +56,14 @@ export const SelfImprovementView: React.FC = () => {
 
       {/* Benchmark Banner */}
       {benchmarkStatus && (
-        <div className="p-4 rounded-xl bg-sky-950/60 border border-sky-500/40 text-sky-300 flex items-center justify-between animate-fade-in">
+        <div className="p-4 rounded-xl bg-accent-950/60 border border-accent-500/40 text-accent-300 flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2.5">
             <CheckCircle2 size={16} />
             <span>{benchmarkStatus}</span>
           </div>
           <button
             onClick={() => setBenchmarkStatus(null)}
-            className="text-sky-400 hover:text-white"
+            className="text-accent-400 hover:text-white"
           >
             Dismiss
           </button>
@@ -81,7 +81,7 @@ export const SelfImprovementView: React.FC = () => {
               Comparing Llama 3.1 8B vs Qwen 2.5 Coder 7B against local baseline
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold border border-emerald-800/40 flex items-center gap-1.5">
+          <span className="px-3 py-1 rounded-full bg-verdigris-950 text-verdigris-400 text-xs font-bold border border-verdigris-800/40 flex items-center gap-1.5">
             <ShieldCheck size={13} /> Candidate Ready
           </span>
         </div>
@@ -91,7 +91,7 @@ export const SelfImprovementView: React.FC = () => {
             <span className="text-slate-500 text-[10px] uppercase font-bold">
               Task Success
             </span>
-            <p className="text-xl font-bold text-emerald-400 font-sans">
+            <p className="text-xl font-bold text-verdigris-400 font-sans">
               {metrics.successRate}
             </p>
             <p className="text-[10px] text-slate-500">Autonomous reasoning</p>
@@ -101,7 +101,7 @@ export const SelfImprovementView: React.FC = () => {
             <span className="text-slate-500 text-[10px] uppercase font-bold">
               Schedule Realism
             </span>
-            <p className="text-xl font-bold text-emerald-400 font-sans">
+            <p className="text-xl font-bold text-verdigris-400 font-sans">
               {metrics.scheduleAccuracy}
             </p>
             <p className="text-[10px] text-slate-500">Task time alignment</p>
@@ -111,7 +111,7 @@ export const SelfImprovementView: React.FC = () => {
             <span className="text-slate-500 text-[10px] uppercase font-bold">
               Latency Delta
             </span>
-            <p className="text-xl font-bold text-emerald-400 font-sans">
+            <p className="text-xl font-bold text-verdigris-400 font-sans">
               {metrics.latencyReduction}
             </p>
             <p className="text-[10px] text-slate-500">Faster TTFT on GPU</p>
@@ -121,7 +121,7 @@ export const SelfImprovementView: React.FC = () => {
             <span className="text-slate-500 text-[10px] uppercase font-bold">
               Safety Regression
             </span>
-            <p className="text-xl font-bold text-sky-400 font-sans">
+            <p className="text-xl font-bold text-accent-400 font-sans">
               {metrics.safetyRegression}
             </p>
             <p className="text-[10px] text-slate-500">0 adversarial leaks</p>
@@ -132,7 +132,7 @@ export const SelfImprovementView: React.FC = () => {
           <button
             onClick={handleRunBenchmark}
             disabled={isRunningBenchmark}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold transition-all shadow-md shadow-sky-500/20 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold transition-all shadow-md shadow-accent-500/20 disabled:opacity-50"
           >
             <Play size={14} />
             <span>

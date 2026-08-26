@@ -95,7 +95,7 @@ export function AgentRegistry() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Cpu size={20} className="text-sky-400" />
+            <Cpu size={20} className="text-accent-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
               Agent & Model Registry
             </h1>
@@ -109,14 +109,14 @@ export function AgentRegistry() {
 
       {/* Ping Result Banner */}
       {pingResult && (
-        <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 flex items-center justify-between animate-fade-in">
+        <div className="p-3.5 rounded-xl bg-verdigris-950/60 border border-verdigris-500/40 text-verdigris-300 flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={16} />
             <span>{pingResult}</span>
           </div>
           <button
             onClick={() => setPingResult(null)}
-            className="text-emerald-400 hover:text-white text-[11px]"
+            className="text-verdigris-400 hover:text-white text-[11px]"
           >
             Dismiss
           </button>
@@ -140,19 +140,19 @@ export function AgentRegistry() {
                   <h3 className="font-bold text-white text-sm font-sans">
                     {a.name}
                   </h3>
-                  <span className="text-[11px] text-sky-400 font-semibold">
+                  <span className="text-[11px] text-accent-400 font-semibold">
                     {a.model}
                   </span>
                 </div>
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 ${
                     a.status === "active"
-                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
+                      ? "bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40"
                       : "bg-slate-800 text-slate-400"
                   }`}
                 >
                   <span
-                    className={`w-1.5 h-1.5 rounded-full ${a.status === "active" ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`}
+                    className={`w-1.5 h-1.5 rounded-full ${a.status === "active" ? "bg-verdigris-400 animate-pulse" : "bg-slate-500"}`}
                   />
                   {a.status}
                 </span>
@@ -173,7 +173,7 @@ export function AgentRegistry() {
               <button
                 onClick={() => handleTestPing(a)}
                 disabled={testingId === a.id || a.status !== "active"}
-                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 border border-sky-500/40 font-bold transition-all disabled:opacity-30"
+                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-accent-500/20 hover:bg-accent-500/30 text-accent-400 border border-accent-500/40 font-bold transition-all disabled:opacity-30"
               >
                 <Play size={12} />
                 <span>{testingId === a.id ? "Pinging..." : "Test Ping"}</span>
@@ -184,7 +184,7 @@ export function AgentRegistry() {
                 className={`px-3 py-1.5 rounded-xl border font-bold transition-all ${
                   a.status === "active"
                     ? "bg-slate-800 text-slate-300 hover:text-white border-slate-700"
-                    : "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30"
+                    : "bg-verdigris-500/20 text-verdigris-400 border-verdigris-500/40 hover:bg-verdigris-500/30"
                 }`}
               >
                 <Power size={13} />

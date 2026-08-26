@@ -119,7 +119,7 @@ export const TodayView: React.FC = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-1 rounded-lg capitalize transition-all ${
                   activeTab === tab
-                    ? "bg-sky-500/20 text-sky-400 border border-sky-500/40"
+                    ? "bg-accent-500/20 text-accent-400 border border-accent-500/40"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -129,7 +129,7 @@ export const TodayView: React.FC = () => {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
           >
             <Plus size={14} strokeWidth={2.5} />
             <span>Add Event</span>
@@ -140,7 +140,7 @@ export const TodayView: React.FC = () => {
       {/* AI Proactive Recommendation Banner */}
       <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+          <div className="p-2 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
             <Sparkles size={16} />
           </div>
           <div>
@@ -153,7 +153,7 @@ export const TodayView: React.FC = () => {
             </p>
           </div>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-bold border border-emerald-800/40">
+        <span className="px-2.5 py-1 rounded-full bg-verdigris-950 text-verdigris-400 text-[10px] font-bold border border-verdigris-800/40">
           On Track
         </span>
       </div>
@@ -191,17 +191,17 @@ export const TodayView: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => toggleEvent(event.id)}
-                    className="text-slate-400 hover:text-sky-400 transition-colors"
+                    className="text-slate-400 hover:text-accent-400 transition-colors"
                   >
                     {event.completed ? (
-                      <CheckCircle2 size={18} className="text-emerald-400" />
+                      <CheckCircle2 size={18} className="text-verdigris-400" />
                     ) : (
                       <Circle size={18} />
                     )}
                   </button>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1">
+                      <span className="text-xs font-mono font-bold text-accent-400 flex items-center gap-1">
                         <Clock size={11} /> {event.time}
                       </span>
                       <span
@@ -211,7 +211,7 @@ export const TodayView: React.FC = () => {
                             : event.category === "Meeting"
                               ? "bg-blue-950 text-blue-400 border border-blue-800/40"
                               : event.category === "Review"
-                                ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                                ? "bg-molten-950 text-molten-400 border border-molten-800/40"
                                 : "bg-slate-800 text-slate-300"
                         }`}
                       >
@@ -227,7 +227,7 @@ export const TodayView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => deleteEvent(event.id)}
-                  className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition-colors"
+                  className="p-1.5 text-slate-500 hover:text-danger-400 rounded-lg hover:bg-slate-800 transition-colors"
                   title="Delete event"
                 >
                   <Trash2 size={14} />
@@ -265,7 +265,7 @@ export const TodayView: React.FC = () => {
                   placeholder="e.g. Deep Work Session..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                 />
               </div>
 
@@ -279,7 +279,7 @@ export const TodayView: React.FC = () => {
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                     placeholder="e.g. 10:30 AM"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   />
                 </div>
                 <div>
@@ -289,7 +289,7 @@ export const TodayView: React.FC = () => {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="Focus">Focus</option>
                     <option value="Meeting">Meeting</option>
@@ -309,7 +309,7 @@ export const TodayView: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Save Event
                 </button>

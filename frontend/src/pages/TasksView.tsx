@@ -103,7 +103,7 @@ export const TasksView: React.FC = () => {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
         >
           <Plus size={15} strokeWidth={2.5} />
           <span>New Task</span>
@@ -116,7 +116,7 @@ export const TasksView: React.FC = () => {
           onClick={() => setActiveFilter("all")}
           className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
             activeFilter === "all"
-              ? "bg-sky-500/20 text-sky-400 border border-sky-500/40"
+              ? "bg-accent-500/20 text-accent-400 border border-accent-500/40"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -128,7 +128,7 @@ export const TasksView: React.FC = () => {
             onClick={() => setActiveFilter(st)}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
               activeFilter === st
-                ? "bg-sky-500/20 text-sky-400 border border-sky-500/40"
+                ? "bg-accent-500/20 text-accent-400 border border-accent-500/40"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -161,10 +161,10 @@ export const TasksView: React.FC = () => {
               <div className="flex items-start gap-3">
                 <button
                   onClick={() => toggleTaskStatus(task.id)}
-                  className="mt-0.5 text-slate-400 hover:text-sky-400 transition-colors flex-shrink-0"
+                  className="mt-0.5 text-slate-400 hover:text-accent-400 transition-colors flex-shrink-0"
                 >
                   {task.status === "completed" ? (
-                    <CheckCircle2 size={18} className="text-emerald-400" />
+                    <CheckCircle2 size={18} className="text-verdigris-400" />
                   ) : (
                     <Circle size={18} />
                   )}
@@ -176,7 +176,7 @@ export const TasksView: React.FC = () => {
                     {task.title}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
-                    <span className="flex items-center gap-1 text-sky-400">
+                    <span className="flex items-center gap-1 text-accent-400">
                       <Tag size={11} /> {task.project}
                     </span>
                     <span>•</span>
@@ -187,9 +187,9 @@ export const TasksView: React.FC = () => {
                     <span
                       className={`px-1.5 py-0.2 rounded text-[10px] font-semibold uppercase ${
                         task.priority === "high"
-                          ? "bg-rose-950 text-rose-400 border border-rose-800/40"
+                          ? "bg-danger-950 text-danger-400 border border-danger-800/40"
                           : task.priority === "medium"
-                            ? "bg-amber-950 text-amber-400 border border-amber-800/40"
+                            ? "bg-molten-950 text-molten-400 border border-molten-800/40"
                             : "bg-slate-800 text-slate-300"
                       }`}
                     >
@@ -199,7 +199,7 @@ export const TasksView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => deleteTask(task.id)}
-                  className="p-1 text-slate-500 hover:text-rose-400 transition-colors rounded-lg hover:bg-slate-800"
+                  className="p-1 text-slate-500 hover:text-danger-400 transition-colors rounded-lg hover:bg-slate-800"
                   title="Delete task"
                 >
                   <Trash2 size={15} />
@@ -235,7 +235,7 @@ export const TasksView: React.FC = () => {
                   placeholder="e.g. Implement user auth flow..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                 />
               </div>
 
@@ -248,7 +248,7 @@ export const TasksView: React.FC = () => {
                     type="text"
                     value={project}
                     onChange={(e) => setProject(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   />
                 </div>
                 <div>
@@ -259,7 +259,7 @@ export const TasksView: React.FC = () => {
                     type="text"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   />
                 </div>
               </div>
@@ -272,7 +272,7 @@ export const TasksView: React.FC = () => {
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -286,7 +286,7 @@ export const TasksView: React.FC = () => {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="inbox">Inbox</option>
                     <option value="planned">Planned</option>
@@ -305,7 +305,7 @@ export const TasksView: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Create Task
                 </button>

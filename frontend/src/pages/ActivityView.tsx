@@ -71,7 +71,7 @@ export const ActivityView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Activity size={20} className="text-sky-400" />
+            <Activity size={20} className="text-accent-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
               Agent Activity Panel
             </h1>
@@ -106,7 +106,7 @@ export const ActivityView: React.FC = () => {
             onClick={() => setFilter(cat)}
             className={`px-3 py-1.5 rounded-lg capitalize transition-all ${
               filter === cat
-                ? "bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold"
+                ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -121,25 +121,25 @@ export const ActivityView: React.FC = () => {
           Active Execution Pipeline
         </h3>
         <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2.5">
-          <div className="flex items-center gap-3 text-emerald-400">
+          <div className="flex items-center gap-3 text-verdigris-400">
             <CheckCircle size={15} />
             <span>
               Orchestrator → Autonomous Routing (Active Model: Qwen 2.5 Coder /
               Llama 3.1)
             </span>
           </div>
-          <div className="flex items-center gap-3 text-emerald-400">
+          <div className="flex items-center gap-3 text-verdigris-400">
             <CheckCircle size={15} />
             <span>Guardian Alignment Engine (Level 0 - Permitted)</span>
           </div>
-          <div className="flex items-center gap-3 text-emerald-400">
+          <div className="flex items-center gap-3 text-verdigris-400">
             <CheckCircle size={15} />
             <span>
               Data Firewall Egress Check (0 PII Leaks - Localhost 127.0.0.1
               Only)
             </span>
           </div>
-          <div className="flex items-center gap-3 text-emerald-400">
+          <div className="flex items-center gap-3 text-verdigris-400">
             <CheckCircle size={15} />
             <span>
               Hardware Accelerated Inference (NVIDIA RTX 5060 VRAM Active)
@@ -164,7 +164,7 @@ export const ActivityView: React.FC = () => {
               className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex items-start justify-between gap-3 hover:border-slate-700 transition-all"
             >
               <div className="flex items-start gap-3">
-                <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20 mt-0.5">
+                <div className="p-1.5 rounded-lg bg-accent-500/10 text-accent-400 border border-accent-500/20 mt-0.5">
                   <Terminal size={14} />
                 </div>
                 <div>
@@ -172,7 +172,7 @@ export const ActivityView: React.FC = () => {
                     <span className="font-bold text-white font-sans text-xs">
                       {log.title}
                     </span>
-                    <span className="px-2 py-0.2 rounded text-[10px] bg-slate-800 text-sky-400 font-bold uppercase">
+                    <span className="px-2 py-0.2 rounded text-[10px] bg-slate-800 text-accent-400 font-bold uppercase">
                       {log.category}
                     </span>
                   </div>

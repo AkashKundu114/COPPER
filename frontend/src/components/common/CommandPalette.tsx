@@ -80,19 +80,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-24 select-none">
-      <div className="w-full max-w-xl bg-[#0d0d11] border border-[#b87333]/40 rounded-xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-xl bg-bg-panel border border-accent/30 rounded-xl shadow-xl overflow-hidden">
         {}
-        <div className="flex items-center px-4 py-3 border-b border-white/10 gap-3">
-          <Search size={18} className="text-[#ff5722]" />
+        <div className="flex items-center px-4 py-3 border-b border-border gap-3">
+          <Search size={18} className="text-molten" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command or search section..."
             autoFocus
-            className="w-full bg-transparent border-none outline-none text-white text-sm placeholder-gray-500 font-mono"
+            className="w-full bg-transparent border-none outline-none text-text text-sm placeholder-text-muted font-mono"
           />
-          <kbd className="px-2 py-0.5 rounded bg-white/5 text-[10px] text-gray-400 border border-white/10 font-mono">
+          <kbd className="px-2 py-0.5 rounded bg-bg text-[10px] text-text-muted border border-border font-mono">
             ESC
           </kbd>
         </div>
@@ -109,23 +109,23 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     onSelectSection(cmd.section);
                     onClose();
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-gray-300 hover:bg-[#b87333]/20 hover:text-white transition-all text-left group"
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-text-muted hover:bg-accent/15 hover:text-text transition-all text-left group"
                 >
                   <div className="flex items-center gap-3">
                     <Icon
                       size={16}
-                      className="text-gray-400 group-hover:text-[#ff5722]"
+                      className="text-text-muted group-hover:text-molten"
                     />
                     <span>{cmd.label}</span>
                   </div>
-                  <span className="text-[10px] text-gray-500 font-mono uppercase tracking-wider">
+                  <span className="text-[10px] text-text-muted font-mono uppercase tracking-wider">
                     {cmd.section}
                   </span>
                 </button>
               );
             })
           ) : (
-            <div className="p-4 text-center text-xs text-gray-500 font-mono">
+            <div className="p-4 text-center text-xs text-text-muted font-mono">
               No matching commands found.
             </div>
           )}

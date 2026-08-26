@@ -289,7 +289,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
         <div className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-2.5 z-50 animate-slide-up font-mono text-xs">
           <div className="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800 flex items-center justify-between">
             <span>Cognitive Intelligence Mode</span>
-            <span className="text-sky-400">5 Active Squads</span>
+            <span className="text-accent-400">5 Active Squads</span>
           </div>
           <div className="space-y-1.5 mt-2 max-h-80 overflow-y-auto custom-scrollbar">
             {COGNITIVE_MODES.map((m) => {
@@ -304,11 +304,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                   }}
                   className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all ${
                     isSelected
-                      ? "bg-sky-500/15 text-sky-400 border border-sky-500/40 shadow-sm"
+                      ? "bg-accent-500/15 text-accent-400 border border-accent-500/40 shadow-sm"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-transparent"
                   }`}
                 >
-                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
+                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-accent-500/20 text-accent-400" : "bg-slate-800 text-slate-400"}`}>
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -316,10 +316,10 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                       <span className="font-bold text-[12px] text-white font-sans">{m.name}</span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
                         m.id === "reasoning" ? "bg-purple-950 text-purple-400 border border-purple-800/40" :
-                        m.id === "coding" ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40" :
-                        m.id === "research" ? "bg-amber-950 text-amber-400 border border-amber-800/40" :
-                        m.id === "fast" ? "bg-rose-950 text-rose-400 border border-rose-800/40" :
-                        "bg-sky-950 text-sky-400 border border-sky-800/40"
+                        m.id === "coding" ? "bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40" :
+                        m.id === "research" ? "bg-molten-950 text-molten-400 border border-molten-800/40" :
+                        m.id === "fast" ? "bg-danger-950 text-danger-400 border border-danger-800/40" :
+                        "bg-accent-950 text-accent-400 border border-accent-800/40"
                       }`}>
                         {m.badge}
                       </span>
@@ -356,11 +356,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
             return (
               <div
                 key={idx}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-sky-500/50 text-xs font-mono text-cyan-300 shadow-sm transition-all cursor-pointer group"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-accent-500/50 text-xs font-mono text-accent-300 shadow-sm transition-all cursor-pointer group"
                 onClick={() => setPreviewDoc(doc.parsed)}
                 title="Click to Open Document Reader & Preview"
               >
-                <Icon size={14} className="text-sky-400 group-hover:scale-110 transition-transform flex-shrink-0" />
+                <Icon size={14} className="text-accent-400 group-hover:scale-110 transition-transform flex-shrink-0" />
                 <span className="max-w-[160px] truncate group-hover:text-white transition-colors font-medium">
                   {doc.parsed.filename}
                 </span>
@@ -376,7 +376,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                     e.stopPropagation();
                     setPreviewDoc(doc.parsed);
                   }}
-                  className="p-1 hover:bg-slate-800 hover:text-sky-400 rounded-lg text-slate-400 transition-colors ml-0.5"
+                  className="p-1 hover:bg-slate-800 hover:text-accent-400 rounded-lg text-slate-400 transition-colors ml-0.5"
                   title="Open Document Reader"
                 >
                   <Eye size={13} />
@@ -387,7 +387,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                     e.stopPropagation();
                     removeFile(idx);
                   }}
-                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-500 hover:text-rose-400 transition-colors"
+                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-500 hover:text-danger-400 transition-colors"
                   title="Remove Document"
                 >
                   <X size={13} />
@@ -397,7 +397,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
           })}
 
           {isUploading && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-950/40 border border-sky-500/40 text-xs font-mono text-sky-400 animate-pulse">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-950/40 border border-accent-500/40 text-xs font-mono text-accent-400 animate-pulse">
               <Loader2 size={13} className="animate-spin" />
               <span>Parsing document & extracting text...</span>
             </div>
@@ -410,21 +410,21 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
         <div
           className={`w-full flex flex-row items-end rounded-3xl bg-white/10 backdrop-blur-lg transition-all duration-300 shadow-sm border border-border py-1 px-2 ${
             thinking
-              ? "border-sky-500/30"
+              ? "border-accent-500/30"
               : "focus-within:border-accent/50"
           }`}
         >
           {isRecording ? (
             <div className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
               <div className="flex items-center gap-3">
-                <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
-                <span className="text-sm font-semibold text-rose-400 font-mono">
+                <span className="w-3 h-3 rounded-full bg-danger-500 animate-ping" />
+                <span className="text-sm font-semibold text-danger-400 font-mono">
                   Listening... {formatTimer(recordDuration)}
                 </span>
               </div>
               <button
                 onClick={stopRecording}
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-500 hover:bg-rose-600 text-white transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all"
               >
                 <div className="w-3 h-3 bg-white rounded-sm" />
               </button>
@@ -498,10 +498,10 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                   <button
                     type="button"
                     onClick={onStop}
-                    className="w-8 h-8 rounded-full bg-[#3f3f3f] text-rose-400 hover:bg-[#4f4f4f] hover:text-rose-300 transition-all flex items-center justify-center"
+                    className="w-8 h-8 rounded-full bg-[#3f3f3f] text-danger-400 hover:bg-[#4f4f4f] hover:text-danger-300 transition-all flex items-center justify-center"
                     title="Stop generation"
                   >
-                    <div className="w-3 h-3 bg-rose-400 rounded-sm" />
+                    <div className="w-3 h-3 bg-danger-400 rounded-sm" />
                   </button>
                 )}
               </div>

@@ -18,7 +18,6 @@ import {
 export type NavSection =
   | "dashboard"
   | "chat"
-  | "voice"
   | "today"
   | "tasks"
   | "projects"
@@ -41,7 +40,6 @@ const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] =
   [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "chat", label: "Conversation", icon: MessageSquare },
-    { id: "voice", label: "E.V.E. Voice", icon: Sparkles },
     { id: "today", label: "Today / Schedule", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckSquare },
     { id: "projects", label: "Projects", icon: FolderKanban },
@@ -61,17 +59,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectSection,
 }) => {
   return (
-    <aside className="w-64 h-screen bg-black/40 backdrop-blur-xl border-r border-border flex flex-col justify-between p-4 z-30 select-none">
+    <aside className="w-64 h-screen bg-bg-panel border-r border-border flex flex-col justify-between p-4 z-30 select-none">
       <div>
         <div className="drag-region flex items-center gap-3 px-3 py-4 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-accent text-bg shadow-neon flex items-center justify-center font-bold text-sm">
+          <div className="notch-corner w-8 h-8 bg-accent text-bg flex items-center justify-center font-display font-bold text-sm shadow-sm">
             C
           </div>
           <div>
-            <h1 className="font-semibold text-[15px] tracking-tight glow-text text-accent">
+            <h1 className="font-display font-semibold text-[15px] tracking-tight text-text">
               C.O.P.P.E.R.
             </h1>
-            <p className="text-[11px] text-text-muted">Personal AI OS</p>
+            <p className="text-[11px] text-text-muted font-mono">
+              Personal AI OS
+            </p>
           </div>
         </div>
 
@@ -85,12 +85,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onSelectSection(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-white/10 text-accent shadow-hud border border-accent backdrop-blur-md"
-                    : "text-text-muted hover:text-accent hover:bg-white/5 hover:shadow-hud"
+                    ? "copper-trace bg-bg-raised text-accent border border-border-strong shadow-sm"
+                    : "text-text-muted border border-transparent hover:text-text hover:bg-bg-raised/60"
                 }`}
               >
                 <Icon
-                  className={`w-[18px] h-[18px] ${isActive ? "text-accent" : "text-text-muted"}`}
+                  className={`w-[18px] h-[18px] flex-shrink-0 ${isActive ? "text-accent" : "text-text-muted"}`}
                 />
                 <span>{item.label}</span>
               </button>
@@ -99,9 +99,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      <div className="p-3 rounded-lg bg-bg-panel border border-border flex items-center justify-between">
+      <div className="p-3 rounded-lg bg-bg-raised border border-border flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <span className="w-2 h-2 rounded-full bg-verdigris shadow-[0_0_6px_rgba(95,168,143,0.5)]" />
           <span className="text-xs font-medium text-text">100% Offline</span>
         </div>
       </div>

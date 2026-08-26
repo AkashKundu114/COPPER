@@ -116,7 +116,7 @@ export const ProjectsView: React.FC = () => {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
         >
           <Plus size={15} strokeWidth={2.5} />
           <span>New Project</span>
@@ -144,21 +144,21 @@ export const ProjectsView: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2 font-bold text-sm text-white">
-                      <FolderKanban size={17} className="text-sky-400" />
+                      <FolderKanban size={17} className="text-accent-400" />
                       <span>{proj.name}</span>
                     </div>
                     {proj.health === "healthy" && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800/40 font-mono font-semibold flex items-center gap-1">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40 font-mono font-semibold flex items-center gap-1">
                         <CheckCircle2 size={11} /> Healthy
                       </span>
                     )}
                     {proj.health === "at_risk" && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-950 text-amber-400 border border-amber-800/40 font-mono font-semibold flex items-center gap-1">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-molten-950 text-molten-400 border border-molten-800/40 font-mono font-semibold flex items-center gap-1">
                         <AlertTriangle size={11} /> At Risk
                       </span>
                     )}
                     {proj.health === "blocked" && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-rose-950 text-rose-400 border border-rose-800/40 font-mono font-semibold flex items-center gap-1">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-danger-950 text-danger-400 border border-danger-800/40 font-mono font-semibold flex items-center gap-1">
                         <ShieldAlert size={11} /> Blocked
                       </span>
                     )}
@@ -185,7 +185,7 @@ export const ProjectsView: React.FC = () => {
                       <button
                         onClick={() => incrementTask(proj.id)}
                         disabled={proj.completedTasks >= proj.totalTasks}
-                        className="px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 border border-sky-500/40 text-[10px] disabled:opacity-30"
+                        className="px-2 py-0.5 rounded bg-accent-500/20 hover:bg-accent-500/30 text-accent-400 border border-accent-500/40 text-[10px] disabled:opacity-30"
                       >
                         +1 Task
                       </button>
@@ -194,7 +194,7 @@ export const ProjectsView: React.FC = () => {
                   <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
                     <div
                       className={`h-full transition-all duration-300 ${
-                        pct === 100 ? "bg-emerald-400" : "bg-sky-500"
+                        pct === 100 ? "bg-verdigris-400" : "bg-accent-500"
                       }`}
                       style={{ width: `${pct}%` }}
                     />
@@ -202,7 +202,7 @@ export const ProjectsView: React.FC = () => {
                   <div className="flex justify-end pt-1">
                     <button
                       onClick={() => deleteProject(proj.id)}
-                      className="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors text-[11px] flex items-center gap-1 font-mono"
+                      className="text-slate-500 hover:text-danger-400 p-1 rounded transition-colors text-[11px] flex items-center gap-1 font-mono"
                     >
                       <Trash2 size={12} /> Delete
                     </button>
@@ -241,7 +241,7 @@ export const ProjectsView: React.FC = () => {
                   placeholder="e.g. Vision AI Integration..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                 />
               </div>
 
@@ -253,7 +253,7 @@ export const ProjectsView: React.FC = () => {
                   placeholder="e.g. Local OCR and multimodal screen interpretation."
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500 resize-none h-16"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500 resize-none h-16"
                 />
               </div>
 
@@ -265,7 +265,7 @@ export const ProjectsView: React.FC = () => {
                   <select
                     value={health}
                     onChange={(e) => setHealth(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="healthy">Healthy</option>
                     <option value="at_risk">At Risk</option>
@@ -282,7 +282,7 @@ export const ProjectsView: React.FC = () => {
                     min="1"
                     value={totalTasks}
                     onChange={(e) => setTotalTasks(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   />
                 </div>
               </div>
@@ -297,7 +297,7 @@ export const ProjectsView: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Save Project
                 </button>

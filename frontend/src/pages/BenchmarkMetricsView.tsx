@@ -262,21 +262,21 @@ export const BenchmarkMetricsView: React.FC = () => {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141b2d] via-[#1a1512] to-[#090d16] border border-[#f97316]/30 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f97316]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141b2d] via-[#1a1512] to-[#090d16] border border-[#C97C4C]/30 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#C97C4C]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#f97316]/20 text-[#f97316] border border-[#f97316]/40 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#f97316] animate-ping" />
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#C97C4C] animate-ping" />
                 LIVE HARDWARE TELEMETRY
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-500/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-accent-950 text-accent-400 border border-accent-500/30">
                 RTX 5060 (8GB VRAM)
               </span>
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-              <BarChart2 className="w-6 h-6 text-[#f97316]" /> Live System
+              <BarChart2 className="w-6 h-6 text-[#C97C4C]" /> Live System
               Telemetry, VRAM & Token Usage
             </h1>
             <p className="text-xs text-gray-400 font-mono mt-1">
@@ -289,7 +289,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               onClick={() => setIsPolling(!isPolling)}
               className={`px-3 py-2 rounded-xl font-mono text-xs font-bold flex items-center gap-1.5 transition-all border ${
                 isPolling
-                  ? "bg-emerald-950/60 text-emerald-300 border-emerald-500/40 hover:bg-emerald-900/60"
+                  ? "bg-verdigris-950/60 text-verdigris-300 border-verdigris-500/40 hover:bg-verdigris-900/60"
                   : "bg-gray-800 text-gray-400 border-gray-700 hover:bg-gray-700"
               }`}
             >
@@ -305,7 +305,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               className={`px-4 py-2 rounded-xl font-mono text-xs font-bold flex items-center gap-2 transition-all shadow-lg ${
                 isRunningLive
                   ? "bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-700"
-                  : "bg-gradient-to-r from-[#f97316] to-[#ea580c] hover:from-[#fb923c] hover:to-[#f97316] text-white shadow-[#f97316]/25 border border-[#f97316]/60 cursor-pointer"
+                  : "bg-gradient-to-r from-[#C97C4C] to-[#AD6339] hover:from-[#DB9563] hover:to-[#C97C4C] text-white shadow-[#C97C4C]/25 border border-[#C97C4C]/60 cursor-pointer"
               }`}
             >
               <Play
@@ -323,7 +323,7 @@ export const BenchmarkMetricsView: React.FC = () => {
           <div className="mt-4 pt-3 border-t border-white/10">
             <div className="w-full bg-black/50 rounded-full h-2 overflow-hidden border border-white/10">
               <motion.div
-                className="bg-gradient-to-r from-cyan-500 to-[#f97316] h-full"
+                className="bg-gradient-to-r from-accent-500 to-[#C97C4C] h-full"
                 style={{ width: `${liveProgress}%` }}
                 transition={{ duration: 0.1 }}
               />
@@ -335,14 +335,14 @@ export const BenchmarkMetricsView: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center justify-between"
+            className="mt-4 p-3 rounded-xl bg-verdigris-950/40 border border-verdigris-500/40 text-verdigris-300 text-xs font-mono flex items-center justify-between"
           >
             <span className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-verdigris-400" />
               Live Evaluation Passed: {liveResults.passed} / {liveResults.total}{" "}
               test cases (100.0% Accuracy)
             </span>
-            <span className="text-emerald-400 font-bold">
+            <span className="text-verdigris-400 font-bold">
               Avg Latency: {liveResults.avgLatency} ms
             </span>
           </motion.div>
@@ -355,11 +355,11 @@ export const BenchmarkMetricsView: React.FC = () => {
           onClick={() => setActiveTab("live-telemetry")}
           className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
             activeTab === "live-telemetry"
-              ? "bg-[#f97316]/20 text-[#f97316] border border-[#f97316]/40 shadow-sm"
+              ? "bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 shadow-sm"
               : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
           }`}
         >
-          <Activity className="w-3.5 h-3.5 text-[#f97316]" /> Live Hardware
+          <Activity className="w-3.5 h-3.5 text-[#C97C4C]" /> Live Hardware
           &amp; Tokens
         </button>
         <button
@@ -403,9 +403,9 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
-                  <Sparkles className="w-4 h-4 text-cyan-400" /> Token Velocity
+                  <Sparkles className="w-4 h-4 text-accent-400" /> Token Velocity
                 </span>
-                <span className="text-[10px] text-cyan-400 font-bold">
+                <span className="text-[10px] text-accent-400 font-bold">
                   {telemetry.tokens.generation_speed_tps} T/s
                 </span>
               </div>
@@ -420,7 +420,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   Prompt:{" "}
                   {telemetry.tokens.prompt_tokens_processed.toLocaleString()}
                 </span>
-                <span className="text-cyan-400">
+                <span className="text-accent-400">
                   Gen:{" "}
                   {telemetry.tokens.completion_tokens_generated.toLocaleString()}
                 </span>
@@ -443,7 +443,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   {telemetry.gpu.vram_used_gb} / {telemetry.gpu.vram_total_gb}{" "}
                   GB
                 </span>
-                <span className="text-xs text-emerald-400">
+                <span className="text-xs text-verdigris-400">
                   {telemetry.gpu.vram_free_gb} GB Free
                 </span>
               </div>
@@ -457,10 +457,10 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
-                  <Thermometer className="w-4 h-4 text-[#f97316]" /> Thermals
+                  <Thermometer className="w-4 h-4 text-[#C97C4C]" /> Thermals
                   &amp; Core
                 </span>
-                <span className="text-[10px] text-emerald-400 font-bold">
+                <span className="text-[10px] text-verdigris-400 font-bold">
                   Optimal
                 </span>
               </div>
@@ -468,13 +468,13 @@ export const BenchmarkMetricsView: React.FC = () => {
                 <span className="text-2xl font-bold text-white">
                   {telemetry.gpu.core_temp_c}°C
                 </span>
-                <span className="text-xs text-[#f97316]">
+                <span className="text-xs text-[#C97C4C]">
                   Hotspot: {telemetry.gpu.hotspot_temp_c}°C
                 </span>
               </div>
               <div className="flex justify-between text-[10px] text-gray-400 pt-1 border-t border-white/5">
                 <span>CPU Temp: {telemetry.cpu.temperature_c}°C</span>
-                <span className="text-emerald-400">0 Throttling</span>
+                <span className="text-verdigris-400">0 Throttling</span>
               </div>
             </div>
 
@@ -482,10 +482,10 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
-                  <Cpu className="w-4 h-4 text-emerald-400" /> Host CPU &amp;
+                  <Cpu className="w-4 h-4 text-verdigris-400" /> Host CPU &amp;
                   RAM
                 </span>
-                <span className="text-[10px] text-emerald-400 font-bold">
+                <span className="text-[10px] text-verdigris-400 font-bold">
                   {telemetry.cpu.usage_percent}% CPU
                 </span>
               </div>
@@ -493,7 +493,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                 <span className="text-2xl font-bold text-white">
                   {telemetry.memory.suite_total_mb} MB
                 </span>
-                <span className="text-xs text-cyan-400">
+                <span className="text-xs text-accent-400">
                   C.O.P.P.E.R. Suite
                 </span>
               </div>
@@ -534,7 +534,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                     style={{
                       width: `${Math.max(0, 100 - telemetry.gpu.vram_percent)}%`,
                     }}
-                    className="bg-emerald-500/20 transition-all duration-500"
+                    className="bg-verdigris-500/20 transition-all duration-500"
                     title={`Free Headroom (${telemetry.gpu.vram_free_gb} GB)`}
                   />
                 </div>
@@ -542,7 +542,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   <span className="text-purple-400">
                     ■ In-Use / Reserved ({telemetry.gpu.vram_used_gb} GB)
                   </span>
-                  <span className="text-emerald-400 font-bold">
+                  <span className="text-verdigris-400 font-bold">
                     ■ Available Free ({telemetry.gpu.vram_free_gb} GB)
                   </span>
                 </div>
@@ -561,7 +561,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   <span className="text-[10px] text-gray-400 block">
                     Hotspot Temp
                   </span>
-                  <span className="text-xs font-bold text-[#f97316]">
+                  <span className="text-xs font-bold text-[#C97C4C]">
                     {telemetry.gpu.hotspot_temp_c}°C
                   </span>
                 </div>
@@ -569,7 +569,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   <span className="text-[10px] text-gray-400 block">
                     Power Draw
                   </span>
-                  <span className="text-xs font-bold text-cyan-400">
+                  <span className="text-xs font-bold text-accent-400">
                     {telemetry.gpu.power_watts} W
                   </span>
                 </div>
@@ -580,10 +580,10 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-4 font-mono text-xs">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-cyan-400" /> Token Processing
+                  <Zap className="w-4 h-4 text-accent-400" /> Token Processing
                   Velocity &amp; Rate
                 </h3>
-                <span className="text-[11px] text-cyan-400 font-bold">
+                <span className="text-[11px] text-accent-400 font-bold">
                   {telemetry.tokens.generation_speed_tps > 0
                     ? `${telemetry.tokens.generation_speed_tps} T/s`
                     : "Idle (0 T/s)"}
@@ -593,7 +593,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-gray-300">
                   <span>Prompt Processing Speed (Input Tokens)</span>
-                  <span className="text-cyan-400 font-bold">
+                  <span className="text-accent-400 font-bold">
                     {telemetry.tokens.prompt_eval_speed_tps > 0
                       ? `${telemetry.tokens.prompt_eval_speed_tps} T/s`
                       : "Idle"}
@@ -604,7 +604,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                     style={{
                       width: `${Math.min(100, (telemetry.tokens.prompt_eval_speed_tps / 300) * 100)}%`,
                     }}
-                    className="bg-cyan-400 h-full transition-all duration-300"
+                    className="bg-accent-400 h-full transition-all duration-300"
                   />
                 </div>
               </div>
@@ -612,7 +612,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               <div className="space-y-2 pt-1">
                 <div className="flex justify-between text-gray-300">
                   <span>Autoregressive Generation Speed (Output Tokens)</span>
-                  <span className="text-[#f97316] font-bold">
+                  <span className="text-[#C97C4C] font-bold">
                     {telemetry.tokens.generation_speed_tps > 0
                       ? `${telemetry.tokens.generation_speed_tps} T/s`
                       : "Idle"}
@@ -623,7 +623,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                     style={{
                       width: `${Math.min(100, (telemetry.tokens.generation_speed_tps / 80) * 100)}%`,
                     }}
-                    className="bg-[#f97316] h-full transition-all duration-300"
+                    className="bg-[#C97C4C] h-full transition-all duration-300"
                   />
                 </div>
               </div>
@@ -641,7 +641,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   <span className="text-[10px] text-gray-400 block">
                     Generated Tokens (Output)
                   </span>
-                  <span className="text-xs font-bold text-cyan-400">
+                  <span className="text-xs font-bold text-accent-400">
                     {telemetry.tokens.completion_tokens_generated.toLocaleString()}
                   </span>
                 </div>
@@ -658,15 +658,15 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-medium text-white">
-                  <Zap className="w-4 h-4 text-[#f97316]" /> Routing Accuracy
+                  <Zap className="w-4 h-4 text-[#C97C4C]" /> Routing Accuracy
                 </span>
-                <span className="text-[10px] text-emerald-400 font-bold">
+                <span className="text-[10px] text-verdigris-400 font-bold">
                   1,110 Samples
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-white">100.0%</span>
-                <span className="text-xs text-[#f97316]">F1: 100.0%</span>
+                <span className="text-xs text-[#C97C4C]">F1: 100.0%</span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
                 Dynamic memory + regex pre-filter + 1B classifier.
@@ -676,16 +676,16 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-medium text-white">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> Guardian
+                  <ShieldCheck className="w-4 h-4 text-verdigris-400" /> Guardian
                   Safety
                 </span>
-                <span className="text-[10px] text-emerald-400 font-bold">
+                <span className="text-[10px] text-verdigris-400 font-bold">
                   0 Risk
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-white">100.0%</span>
-                <span className="text-xs text-emerald-400">0 Breaches</span>
+                <span className="text-xs text-verdigris-400">0 Breaches</span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
                 250 adversarial test cases completely intercepted.
@@ -695,15 +695,15 @@ export const BenchmarkMetricsView: React.FC = () => {
             <div className="p-4 rounded-xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-medium text-white">
-                  <Activity className="w-4 h-4 text-cyan-400" /> Routing Latency
+                  <Activity className="w-4 h-4 text-accent-400" /> Routing Latency
                 </span>
-                <span className="text-[10px] text-cyan-400 font-bold">
+                <span className="text-[10px] text-accent-400 font-bold">
                   P95: 0.066ms
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-white">0.052 ms</span>
-                <span className="text-xs text-cyan-400">~18,950 QPS</span>
+                <span className="text-xs text-accent-400">~18,950 QPS</span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
                 Sub-millisecond instant dispatch across all cores.
@@ -721,7 +721,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </div>
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-white">6.4 GB</span>
-                <span className="text-xs text-emerald-400">1.6 GB Free</span>
+                <span className="text-xs text-verdigris-400">1.6 GB Free</span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
                 4.4GB Core 7B + 1.1GB Subagent + 0.9GB Context.
@@ -739,7 +739,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               Comparing 7 candidate models across inference throughput, VRAM
               budget, and coding/reasoning capabilities.
             </p>
-            <span className="text-xs font-mono text-[#f97316]">
+            <span className="text-xs font-mono text-[#C97C4C]">
               Hardware: RTX 5060 Laptop (8GB VRAM)
             </span>
           </div>
@@ -766,25 +766,25 @@ export const BenchmarkMetricsView: React.FC = () => {
                   >
                     <td className="p-3.5 font-bold text-white flex items-center gap-1.5">
                       {m.recommended && (
-                        <Award className="w-3.5 h-3.5 text-[#f97316]" />
+                        <Award className="w-3.5 h-3.5 text-[#C97C4C]" />
                       )}
                       {m.name}
                     </td>
                     <td className="p-3.5 text-gray-300">{m.size}</td>
                     <td className="p-3.5 text-purple-300">{m.vram}</td>
-                    <td className="p-3.5 text-cyan-300 font-semibold">
+                    <td className="p-3.5 text-accent-300 font-semibold">
                       {m.speed}
                     </td>
                     <td className="p-3.5">
                       <span
-                        className={`px-2 py-0.5 rounded font-bold ${m.codingScore >= 9.0 ? "bg-emerald-950 text-emerald-300" : "bg-gray-800 text-gray-300"}`}
+                        className={`px-2 py-0.5 rounded font-bold ${m.codingScore >= 9.0 ? "bg-verdigris-950 text-verdigris-300" : "bg-gray-800 text-gray-300"}`}
                       >
                         {m.codingScore} / 10
                       </span>
                     </td>
                     <td className="p-3.5">
                       <span
-                        className={`px-2 py-0.5 rounded font-bold ${m.reasoningScore >= 9.0 ? "bg-emerald-950 text-emerald-300" : "bg-gray-800 text-gray-300"}`}
+                        className={`px-2 py-0.5 rounded font-bold ${m.reasoningScore >= 9.0 ? "bg-verdigris-950 text-verdigris-300" : "bg-gray-800 text-gray-300"}`}
                       >
                         {m.reasoningScore} / 10
                       </span>
@@ -794,7 +794,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                     </td>
                     <td className="p-3.5">
                       {m.recommended ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#f97316]/20 text-[#f97316] border border-[#f97316]/40 font-bold">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 font-bold">
                           Active Core
                         </span>
                       ) : (
@@ -826,7 +826,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   onClick={() => setSelectedPrompt(pt)}
                   className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                     isSelected
-                      ? "bg-[#f97316]/10 border-[#f97316] text-white shadow-hud"
+                      ? "bg-[#C97C4C]/10 border-[#C97C4C] text-white shadow-hud"
                       : "bg-bg-panel border-border text-gray-300 hover:bg-white/5"
                   }`}
                 >
@@ -836,7 +836,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                   <p className="text-[11px] text-gray-400 line-clamp-2">
                     {pt.prompt}
                   </p>
-                  <div className="mt-2 flex items-center justify-between text-[10px] font-mono text-[#f97316]">
+                  <div className="mt-2 flex items-center justify-between text-[10px] font-mono text-[#C97C4C]">
                     <span>Winner: {pt.winner.split("-")[0]}</span>
                     <span>Time: {pt.timeTaken}</span>
                   </div>
@@ -847,7 +847,7 @@ export const BenchmarkMetricsView: React.FC = () => {
 
           <div className="lg:col-span-2 p-6 rounded-2xl bg-bg-panel border border-border space-y-4">
             <div>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#f97316]/20 text-[#f97316] border border-[#f97316]/40 font-bold">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 font-bold">
                 QUALITATIVE EVALUATION
               </span>
               <h2 className="text-lg font-bold text-white mt-1">
@@ -862,11 +862,11 @@ export const BenchmarkMetricsView: React.FC = () => {
 
             <div className="p-4 rounded-xl bg-[#10b981]/10 border border-[#10b981]/30 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-emerald-400 flex items-center gap-1.5 font-mono">
-                  <Award className="w-4 h-4 text-emerald-400" /> Optimal Model:{" "}
+                <span className="font-bold text-xs text-verdigris-400 flex items-center gap-1.5 font-mono">
+                  <Award className="w-4 h-4 text-verdigris-400" /> Optimal Model:{" "}
                   {selectedPrompt.winner}
                 </span>
-                <span className="font-mono text-xs text-emerald-300 font-bold">
+                <span className="font-mono text-xs text-verdigris-300 font-bold">
                   Latency: {selectedPrompt.timeTaken}
                 </span>
               </div>
@@ -887,7 +887,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                       className="p-2.5 rounded-lg bg-black/30 border border-white/5 flex justify-between items-center"
                     >
                       <span className="text-gray-300">{modelName}</span>
-                      <span className="font-bold text-cyan-400">{score}</span>
+                      <span className="font-bold text-accent-400">{score}</span>
                     </div>
                   ),
                 )}

@@ -88,14 +88,14 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {toast && (
-        <div className="p-3.5 rounded-xl bg-sky-950/60 border border-sky-500/40 text-sky-300 flex items-center justify-between animate-fade-in">
+        <div className="p-3.5 rounded-xl bg-accent-950/60 border border-accent-500/40 text-accent-300 flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={16} />
             <span>{toast}</span>
           </div>
           <button
             onClick={() => setToast(null)}
-            className="text-sky-400 hover:text-white text-[11px]"
+            className="text-accent-400 hover:text-white text-[11px]"
           >
             Dismiss
           </button>
@@ -109,7 +109,7 @@ export const SettingsView: React.FC = () => {
             <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
               <Power
                 size={17}
-                className={backendRunning ? "text-sky-400" : "text-slate-500"}
+                className={backendRunning ? "text-accent-400" : "text-slate-500"}
               />
               <span>Python Backend Server (FastAPI + Uvicorn)</span>
             </div>
@@ -121,7 +121,7 @@ export const SettingsView: React.FC = () => {
           <button
             onClick={toggleBackend}
             className={`w-12 h-6 rounded-full p-1 transition-colors ${
-              backendRunning ? "bg-sky-500" : "bg-slate-700"
+              backendRunning ? "bg-accent-500" : "bg-slate-700"
             }`}
           >
             <div
@@ -167,7 +167,7 @@ export const SettingsView: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-                <Volume2 size={17} className="text-emerald-400" />
+                <Volume2 size={17} className="text-verdigris-400" />
                 <span>Text-To-Speech (TTS) Voice Engine</span>
               </div>
               <p className="text-[11px] text-slate-400">
@@ -178,7 +178,7 @@ export const SettingsView: React.FC = () => {
             <button
               onClick={testVoiceSample}
               disabled={isPlayingVoice}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold transition-all disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-verdigris-500/20 hover:bg-verdigris-500/30 text-verdigris-400 border border-verdigris-500/40 font-bold transition-all disabled:opacity-40"
             >
               <Play size={13} />
               <span>{isPlayingVoice ? "Playing Voice..." : "Test Voice"}</span>
@@ -216,7 +216,7 @@ export const SettingsView: React.FC = () => {
                 }}
                 className={`p-3.5 rounded-xl border text-left transition-all ${
                   selectedVoice === v.id
-                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/50 shadow-sm"
+                    ? "bg-verdigris-500/15 text-verdigris-400 border-verdigris-500/50 shadow-sm"
                     : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
                 }`}
               >
@@ -232,7 +232,7 @@ export const SettingsView: React.FC = () => {
         {/* Model Storage Directory */}
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-sm">
           <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-            <HardDrive size={17} className="text-sky-400" />
+            <HardDrive size={17} className="text-accent-400" />
             <span>Local Weights & Storage Paths</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

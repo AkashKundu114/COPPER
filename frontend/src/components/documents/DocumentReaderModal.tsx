@@ -109,19 +109,19 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
         {/* Header Bar */}
         <div className="flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-slate-800">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/30 flex-shrink-0">
-              <DocIcon size={22} className="text-sky-400" />
+            <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/30 flex-shrink-0">
+              <DocIcon size={22} className="text-accent-400" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="font-bold text-base text-white tracking-tight truncate max-w-md" title={document.filename}>
                   {document.filename}
                 </h2>
-                <span className="px-2 py-0.5 rounded-md bg-sky-950 text-sky-400 border border-sky-800/50 text-[10px] font-mono font-bold uppercase">
+                <span className="px-2 py-0.5 rounded-md bg-accent-950 text-accent-400 border border-accent-800/50 text-[10px] font-mono font-bold uppercase">
                   {document.extension || "DOC"}
                 </span>
                 {document.indexed_chunks > 0 && (
-                  <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800/50 text-[10px] font-mono">
+                  <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md bg-verdigris-950 text-verdigris-400 border border-verdigris-800/50 text-[10px] font-mono">
                     AI Indexed ({document.indexed_chunks} chunks)
                   </span>
                 )}
@@ -136,7 +136,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             {onAskAI && (
               <button
                 onClick={handleSummarizeWithAI}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-slate-950 font-bold text-xs shadow-md shadow-sky-500/20 transition-all cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-accent-500 to-indigo-500 hover:from-accent-400 hover:to-indigo-400 text-slate-950 font-bold text-xs shadow-md shadow-accent-500/20 transition-all cursor-pointer"
                 title="Ask C.O.P.P.E.R. to summarize this document"
               >
                 <Sparkles size={14} />
@@ -149,7 +149,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
               title="Copy Document Text"
             >
-              {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+              {copied ? <Check size={16} className="text-verdigris-400" /> : <Copy size={16} />}
             </button>
 
             <button
@@ -177,7 +177,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               onClick={() => setActiveTab("reader")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 activeTab === "reader"
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold"
+                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
@@ -189,7 +189,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               onClick={() => setActiveTab("search")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 activeTab === "search"
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold"
+                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
@@ -201,7 +201,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               onClick={() => setActiveTab("analytics")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 activeTab === "analytics"
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold"
+                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
@@ -213,7 +213,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               onClick={() => setActiveTab("raw")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 activeTab === "raw"
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold"
+                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
               }`}
             >
@@ -258,12 +258,12 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                     <span>
                       Table: {document.structured_data.total_rows} rows · {document.structured_data.column_count} columns
                     </span>
-                    <span className="text-sky-400">Showing first 50 rows</span>
+                    <span className="text-accent-400">Showing first 50 rows</span>
                   </div>
                   <div className="overflow-x-auto custom-scrollbar">
                     <table className="w-full text-left text-xs font-mono border-collapse">
                       <thead>
-                        <tr className="bg-slate-800/80 text-sky-300 border-b border-slate-700">
+                        <tr className="bg-slate-800/80 text-accent-300 border-b border-slate-700">
                           {document.structured_data.headers.map((h: string, idx: number) => (
                             <th key={idx} className="p-3 font-semibold whitespace-nowrap">
                               {h}
@@ -291,7 +291,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               {isPdf && (
                 <div className="p-8 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-4 font-serif text-[14.5px] leading-relaxed text-slate-200">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-800 font-sans text-xs font-mono text-slate-400">
-                    <span className="text-sky-400 font-bold uppercase">Page {selectedPage} of {document.pages.length}</span>
+                    <span className="text-accent-400 font-bold uppercase">Page {selectedPage} of {document.pages.length}</span>
                     <span>{document.pages[selectedPage - 1]?.word_count || 0} words on page</span>
                   </div>
                   <div className="whitespace-pre-wrap select-text font-mono text-xs leading-relaxed">
@@ -304,7 +304,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               {!isTable && !isPdf && (
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden font-mono text-xs">
                   <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-[11px] text-slate-400">
-                    <span className="uppercase text-sky-400 font-bold">{document.extension} Document View</span>
+                    <span className="uppercase text-accent-400 font-bold">{document.extension} Document View</span>
                     <span>{document.line_count} total lines</span>
                   </div>
                   <div className="p-4 flex gap-4 overflow-x-auto custom-scrollbar select-text leading-relaxed">
@@ -334,14 +334,14 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   placeholder="Search keywords or phrases in document..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-sky-500 text-sm shadow-inner"
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-accent-500 text-sm shadow-inner"
                   autoFocus
                 />
               </div>
 
               {searchQuery.trim() && (
                 <div className="text-xs text-slate-400 px-1">
-                  Found <strong className="text-sky-400">{searchMatches.length}</strong> matching lines:
+                  Found <strong className="text-accent-400">{searchMatches.length}</strong> matching lines:
                 </div>
               )}
 
@@ -354,9 +354,9 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   searchMatches.map((m, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 hover:border-sky-500/40 flex items-start gap-3 transition-colors"
+                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 hover:border-accent-500/40 flex items-start gap-3 transition-colors"
                     >
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-sky-400 text-[11px] font-bold">
+                      <span className="px-2 py-0.5 rounded bg-slate-800 text-accent-400 text-[11px] font-bold">
                         L{m.lineNumber}
                       </span>
                       <p className="text-slate-200 select-text flex-1 whitespace-pre-wrap">
@@ -379,7 +379,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
                   <div className="text-[11px] text-slate-400 uppercase">Characters</div>
-                  <div className="text-xl font-bold text-sky-400 font-sans">{document.char_count.toLocaleString()}</div>
+                  <div className="text-xl font-bold text-accent-400 font-sans">{document.char_count.toLocaleString()}</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
                   <div className="text-[11px] text-slate-400 uppercase">Lines / Pages</div>
@@ -389,13 +389,13 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
                   <div className="text-[11px] text-slate-400 uppercase">Est. Tokens</div>
-                  <div className="text-xl font-bold text-emerald-400 font-sans">{document.estimated_tokens.toLocaleString()}</div>
+                  <div className="text-xl font-bold text-verdigris-400 font-sans">{document.estimated_tokens.toLocaleString()}</div>
                 </div>
               </div>
 
               <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
                 <h3 className="font-bold text-sm text-white font-sans flex items-center gap-2">
-                  <Sparkles size={16} className="text-sky-400" />
+                  <Sparkles size={16} className="text-accent-400" />
                   <span>Document Metadata & AI Ingestion</span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300">
@@ -405,7 +405,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   </div>
                   <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
                     <span className="text-slate-500 block text-[10px]">CATEGORY</span>
-                    <span className="text-sky-400 font-bold">{document.category}</span>
+                    <span className="text-accent-400 font-bold">{document.category}</span>
                   </div>
                   <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
                     <span className="text-slate-500 block text-[10px]">FILE SIZE</span>
@@ -413,7 +413,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   </div>
                   <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
                     <span className="text-slate-500 block text-[10px]">CHROMA RAG INDEX</span>
-                    <span className="text-emerald-400 font-bold">
+                    <span className="text-verdigris-400 font-bold">
                       {document.indexed_chunks > 0 ? `Ready (${document.indexed_chunks} chunks)` : "Not indexed"}
                     </span>
                   </div>
@@ -433,7 +433,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
         {/* Footer Bar */}
         <div className="flex items-center justify-between px-6 py-3 bg-slate-950 border-t border-slate-800 text-xs font-mono text-slate-400">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-verdigris-400 animate-pulse" />
             <span>Document Parsed & Ready for C.O.P.P.E.R. Execution</span>
           </div>
           <button

@@ -51,7 +51,7 @@ export function SecurityCenter() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-emerald-400" />
+            <ShieldCheck size={20} className="text-verdigris-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
               Data Firewall & Security Center
             </h1>
@@ -63,7 +63,7 @@ export function SecurityCenter() {
         </div>
         <button
           onClick={exportAuditLog}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sky-400 hover:text-white font-bold transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-accent-400 hover:text-white font-bold transition-all"
         >
           <Download size={14} />
           <span>Export Audit Log</span>
@@ -71,14 +71,14 @@ export function SecurityCenter() {
       </div>
 
       {toast && (
-        <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 flex items-center justify-between animate-fade-in">
+        <div className="p-3.5 rounded-xl bg-verdigris-950/60 border border-verdigris-500/40 text-verdigris-300 flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={16} />
             <span>{toast}</span>
           </div>
           <button
             onClick={() => setToast(null)}
-            className="text-emerald-400 hover:text-white text-[11px]"
+            className="text-verdigris-400 hover:text-white text-[11px]"
           >
             Dismiss
           </button>
@@ -88,7 +88,7 @@ export function SecurityCenter() {
       {/* Top 2 Core Status Badges */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-3.5 shadow-sm">
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <div className="p-2.5 rounded-xl bg-verdigris-500/10 text-verdigris-400 border border-verdigris-500/20">
             <Lock size={20} />
           </div>
           <div>
@@ -102,7 +102,7 @@ export function SecurityCenter() {
         </div>
 
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-3.5 shadow-sm">
-          <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+          <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
             <ShieldAlert size={20} />
           </div>
           <div>
@@ -135,7 +135,7 @@ export function SecurityCenter() {
             <button
               onClick={() => toggleSwitch("localOnly")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                firewallToggles.localOnly ? "bg-emerald-500" : "bg-slate-700"
+                firewallToggles.localOnly ? "bg-verdigris-500" : "bg-slate-700"
               }`}
             >
               <div
@@ -159,7 +159,7 @@ export function SecurityCenter() {
             <button
               onClick={() => toggleSwitch("piiMasking")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                firewallToggles.piiMasking ? "bg-emerald-500" : "bg-slate-700"
+                firewallToggles.piiMasking ? "bg-verdigris-500" : "bg-slate-700"
               }`}
             >
               <div
@@ -184,7 +184,7 @@ export function SecurityCenter() {
               onClick={() => toggleSwitch("guardianAlignment")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
                 firewallToggles.guardianAlignment
-                  ? "bg-emerald-500"
+                  ? "bg-verdigris-500"
                   : "bg-slate-700"
               }`}
             >

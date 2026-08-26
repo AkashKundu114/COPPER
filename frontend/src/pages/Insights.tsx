@@ -51,7 +51,7 @@ export function Insights() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <TrendingUp size={20} className="text-sky-400" />
+            <TrendingUp size={20} className="text-accent-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
               Productivity & System Insights
             </h1>
@@ -78,7 +78,7 @@ export function Insights() {
                 {m.value}
               </span>
               <span
-                className={`text-[11px] font-bold ${m.positive ? "text-emerald-400" : "text-rose-400"}`}
+                className={`text-[11px] font-bold ${m.positive ? "text-verdigris-400" : "text-danger-400"}`}
               >
                 {m.change}
               </span>
@@ -100,10 +100,10 @@ export function Insights() {
                 <span className="text-white">
                   Qwen 2.5 Coder 7B (Coding & Technical)
                 </span>
-                <span className="text-sky-400 font-bold">52%</span>
+                <span className="text-accent-400 font-bold">52%</span>
               </div>
               <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                <div className="h-full bg-sky-500" style={{ width: "52%" }} />
+                <div className="h-full bg-accent-500" style={{ width: "52%" }} />
               </div>
             </div>
 
@@ -112,10 +112,10 @@ export function Insights() {
                 <span className="text-white">
                   Llama 3.1 8B (General Conversation)
                 </span>
-                <span className="text-sky-400 font-bold">30%</span>
+                <span className="text-accent-400 font-bold">30%</span>
               </div>
               <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                <div className="h-full bg-sky-500" style={{ width: "30%" }} />
+                <div className="h-full bg-accent-500" style={{ width: "30%" }} />
               </div>
             </div>
 
@@ -124,10 +124,10 @@ export function Insights() {
                 <span className="text-white">
                   DeepSeek R1 7B (Reasoning & Math)
                 </span>
-                <span className="text-sky-400 font-bold">18%</span>
+                <span className="text-accent-400 font-bold">18%</span>
               </div>
               <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                <div className="h-full bg-sky-500" style={{ width: "18%" }} />
+                <div className="h-full bg-accent-500" style={{ width: "18%" }} />
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ export function Insights() {
           </h3>
           <div className="space-y-2.5">
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
-              <CheckCircle size={15} className="text-emerald-400 mt-0.5" />
+              <CheckCircle size={15} className="text-verdigris-400 mt-0.5" />
               <div>
                 <p className="text-white font-sans text-xs font-semibold">
                   High Engineering Throughput
@@ -151,7 +151,7 @@ export function Insights() {
               </div>
             </div>
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
-              <CheckCircle size={15} className="text-emerald-400 mt-0.5" />
+              <CheckCircle size={15} className="text-verdigris-400 mt-0.5" />
               <div>
                 <p className="text-white font-sans text-xs font-semibold">
                   Zero Cloud Dependency

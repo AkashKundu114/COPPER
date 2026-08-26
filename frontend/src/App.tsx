@@ -20,7 +20,6 @@ import {
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 
 import { DashboardView } from "./pages/DashboardView";
-import { EVEView } from "./pages/EVEView";
 import { TodayView } from "./pages/TodayView";
 import { TasksView } from "./pages/TasksView";
 import { ProjectsView } from "./pages/ProjectsView";
@@ -106,17 +105,6 @@ export default function App() {
             </div>
           </div>
         );
-      case "voice":
-        return (
-          <EVEView
-            lines={lines}
-            thinking={thinking}
-            speaking={speaking}
-            connected={connected}
-            onSend={send}
-            stopAudio={stopAudio}
-          />
-        );
       case "today":
         return <TodayView />;
       case "tasks":
@@ -147,7 +135,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden flex bg-bg text-text">
+    <div className="relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body">
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
       <main className="flex-1 overflow-hidden relative flex flex-col">
         <TopBar

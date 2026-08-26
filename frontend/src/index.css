@@ -10,14 +10,21 @@ body,
 #root {
   height: 100%;
   margin: 0;
-  background-color: #050505;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center center;
-  color: #ffffff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #0b0c0e;
+  /* Faint warm vignette from the top (like light catching a copper panel)
+     over a near-invisible scanline texture — restrained, no grid/glow. */
+  background-image:
+    radial-gradient(ellipse 70% 45% at 50% -12%, rgba(201, 124, 76, 0.07), transparent 60%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.012) 0px,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-attachment: fixed;
+  color: #ededea;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
@@ -42,15 +49,15 @@ body,
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333333;
-  border-radius: 0;
+  background: #34383f;
+  border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #c97c4c;
 }
 
 ::selection {
-  background: rgba(14, 165, 233, 0.3);
+  background: rgba(201, 124, 76, 0.35);
   color: #ffffff;
 }
 
@@ -66,6 +73,32 @@ input:focus-visible {
   box-shadow: none !important;
 }
 
+/* ── Signature element ──────────────────────────────────────────────────
+   "Copper trace": a thin current running along an element's top edge.
+   Apply ONLY to states that represent something actually live — a focused
+   input, the active nav item, a streaming response — never as decoration. */
+.copper-trace {
+  position: relative;
+}
+.copper-trace::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c97c4c, #ff7a45, #c97c4c, transparent);
+  background-size: 200% 100%;
+  opacity: 0.9;
+  animation: trace 2.4s linear infinite;
+}
+
+/* Small machined corner-notch, used on the wordmark and a few signature
+   surfaces instead of a plain rounded/square badge. */
+.notch-corner {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -73,5 +106,8 @@ input:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .copper-trace::before {
+    animation: none;
   }
 }

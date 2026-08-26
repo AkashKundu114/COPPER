@@ -129,7 +129,7 @@ export const MemoryView: React.FC = () => {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
         >
           <Plus size={15} strokeWidth={2.5} />
           <span>Add Memory Fact</span>
@@ -145,7 +145,7 @@ export const MemoryView: React.FC = () => {
             placeholder="Search learned memories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-sky-500"
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-accent-500"
           />
         </div>
         <div className="flex gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800 w-full sm:w-auto">
@@ -155,7 +155,7 @@ export const MemoryView: React.FC = () => {
               onClick={() => setActiveType(t)}
               className={`px-3 py-1.5 rounded-lg capitalize transition-all ${
                 activeType === t
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/40"
+                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -186,10 +186,10 @@ export const MemoryView: React.FC = () => {
                   <span
                     className={`px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px] ${
                       mem.type === "fact"
-                        ? "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
+                        ? "bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40"
                         : mem.type === "observation"
                           ? "bg-blue-950 text-blue-400 border border-blue-800/40"
-                          : "bg-amber-950 text-amber-400 border border-amber-800/40"
+                          : "bg-molten-950 text-molten-400 border border-molten-800/40"
                     }`}
                   >
                     {mem.type}
@@ -222,7 +222,7 @@ export const MemoryView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => handleForget(mem.id)}
-                  className="flex items-center gap-1 text-slate-500 hover:text-rose-400 transition-colors p-1"
+                  className="flex items-center gap-1 text-slate-500 hover:text-danger-400 transition-colors p-1"
                   title="Forget this memory"
                 >
                   <Trash2 size={13} />
@@ -261,7 +261,7 @@ export const MemoryView: React.FC = () => {
                   placeholder="e.g. Coding Standard, Food Preference..."
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                 />
               </div>
 
@@ -274,7 +274,7 @@ export const MemoryView: React.FC = () => {
                   placeholder="e.g. Always generate concise Python code with type annotations."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500 resize-none h-20 font-sans text-xs"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500 resize-none h-20 font-sans text-xs"
                 />
               </div>
 
@@ -286,7 +286,7 @@ export const MemoryView: React.FC = () => {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="fact">Fact (≥ 85%)</option>
                     <option value="observation">Observation (50-85%)</option>
@@ -303,7 +303,7 @@ export const MemoryView: React.FC = () => {
                     max="100"
                     value={confidence}
                     onChange={(e) => setConfidence(Number(e.target.value))}
-                    className="w-full mt-2 accent-sky-500"
+                    className="w-full mt-2 accent-accent-500"
                   />
                 </div>
               </div>
@@ -318,7 +318,7 @@ export const MemoryView: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Save Fact
                 </button>

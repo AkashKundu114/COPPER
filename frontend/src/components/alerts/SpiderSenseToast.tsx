@@ -30,10 +30,10 @@ const SEVERITY_CONFIG = {
   },
   warning: {
     icon: AlertTriangle,
-    border: "border-amber-500/40",
-    bg: "bg-amber-950/30",
-    iconColor: "text-amber-400",
-    titleColor: "text-amber-300",
+    border: "border-molten-500/40",
+    bg: "bg-molten-950/30",
+    iconColor: "text-molten-400",
+    titleColor: "text-molten-300",
     autoDismissMs: 0,
   },
   critical: {

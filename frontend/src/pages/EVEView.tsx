@@ -219,7 +219,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
   const currentState = speaking ? "speaking" : thinking ? "thinking" : isRecording ? "recording" : "idle";
 
   const getBlobColor = () => {
-    if (speaking) return "bg-cyan-500 shadow-[0_0_60px_rgba(6,182,212,0.8)]";
+    if (speaking) return "bg-accent-500 shadow-[0_0_60px_rgba(6,182,212,0.8)]";
     if (thinking) return "bg-orange-500 shadow-[0_0_40px_rgba(249,115,22,0.6)]";
     if (isRecording) return "bg-red-500 shadow-[0_0_40px_rgba(239,68,68,0.6)]";
     return "bg-accent/80 shadow-[0_0_30px_rgba(0,255,204,0.4)]";

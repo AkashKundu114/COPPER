@@ -158,7 +158,7 @@ export const FoodView: React.FC = () => {
         </div>
         <button
           onClick={() => setIsMealModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-sky-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
         >
           <Plus size={15} strokeWidth={2.5} />
           <span>Log Meal</span>
@@ -169,7 +169,7 @@ export const FoodView: React.FC = () => {
       <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-sm text-white font-sans">
-            <Flame size={18} className="text-amber-400" />
+            <Flame size={18} className="text-molten-400" />
             <span>Today's Energy Balance</span>
           </div>
           <span className="text-slate-400">
@@ -180,7 +180,7 @@ export const FoodView: React.FC = () => {
         <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${
-              totalCalories > calorieTarget ? "bg-rose-500" : "bg-amber-400"
+              totalCalories > calorieTarget ? "bg-danger-500" : "bg-molten-400"
             }`}
             style={{ width: `${caloriePct}%` }}
           />
@@ -194,7 +194,7 @@ export const FoodView: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
               <div className="flex items-center gap-2 font-bold text-white text-sm font-sans">
-                <Utensils size={16} className="text-sky-400" />
+                <Utensils size={16} className="text-accent-400" />
                 <span>Today's Meal Log</span>
               </div>
               <span className="text-slate-500 text-[11px]">
@@ -214,7 +214,7 @@ export const FoodView: React.FC = () => {
                     className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between hover:border-slate-700 transition-all"
                   >
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-sky-400 block">
+                      <span className="text-[10px] uppercase font-bold text-accent-400 block">
                         {m.type}
                       </span>
                       <span className="text-xs text-white font-medium font-sans">
@@ -227,7 +227,7 @@ export const FoodView: React.FC = () => {
                       </span>
                       <button
                         onClick={() => deleteMeal(m.id)}
-                        className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                        className="p-1 text-slate-500 hover:text-danger-400 transition-colors"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -243,7 +243,7 @@ export const FoodView: React.FC = () => {
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
             <div className="flex items-center gap-2 font-bold text-white text-sm font-sans">
-              <ShoppingBag size={16} className="text-emerald-400" />
+              <ShoppingBag size={16} className="text-verdigris-400" />
               <span>Grocery Checklist</span>
             </div>
             <span className="text-slate-500 text-[11px]">
@@ -258,11 +258,11 @@ export const FoodView: React.FC = () => {
               placeholder="Add item (e.g. Eggs, Greek Yogurt)..."
               value={newGroceryName}
               onChange={(e) => setNewGroceryName(e.target.value)}
-              className="flex-1 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+              className="flex-1 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
             />
             <button
               type="submit"
-              className="px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold"
+              className="px-3 py-1.5 rounded-xl bg-verdigris-500/20 hover:bg-verdigris-500/30 text-verdigris-400 border border-verdigris-500/40 font-bold"
             >
               Add
             </button>
@@ -283,7 +283,7 @@ export const FoodView: React.FC = () => {
                   onClick={() => toggleGrocery(item.id)}
                 >
                   {item.completed ? (
-                    <CheckCircle2 size={16} className="text-emerald-400" />
+                    <CheckCircle2 size={16} className="text-verdigris-400" />
                   ) : (
                     <Circle size={16} className="text-slate-500" />
                   )}
@@ -295,7 +295,7 @@ export const FoodView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => deleteGrocery(item.id)}
-                  className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                  className="p-1 text-slate-500 hover:text-danger-400 transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>
@@ -332,7 +332,7 @@ export const FoodView: React.FC = () => {
                   placeholder="e.g. Chicken Rice Bowl..."
                   value={mealName}
                   onChange={(e) => setMealName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500 font-sans"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500 font-sans"
                 />
               </div>
 
@@ -344,7 +344,7 @@ export const FoodView: React.FC = () => {
                   <select
                     value={mealType}
                     onChange={(e) => setMealType(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   >
                     <option value="Breakfast">Breakfast</option>
                     <option value="Lunch">Lunch</option>
@@ -361,7 +361,7 @@ export const FoodView: React.FC = () => {
                     min="0"
                     value={mealCalories}
                     onChange={(e) => setMealCalories(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
                   />
                 </div>
               </div>
@@ -376,7 +376,7 @@ export const FoodView: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Log Entry
                 </button>
