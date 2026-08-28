@@ -18,6 +18,18 @@
   - *Option B:* Quantized sub-models permanently pinned in VRAM using Ollama `keep_alive`.
 - **Current Status:** Option A selected for V1 release.
 
+### Question 3: Background Reflection Cycle Model Choice
+- **Issue:** Dedicated small local model (`subagents.summarizer` e.g. Qwen2.5-1.5B) vs. reusing whatever model is already warm in Ollama's `keep_alive` window to prevent GPU VRAM swapping during background thought cycles.
+- **Current Status:** Dedicated summarizer model configured with fallback to active warm model.
+
+### Question 4: Self-Memory Privacy & Retention Policy
+- **Issue:** Extent of user editability and deletion for `self_memory` vs `memory_v2`. Internal self-reflections and track records have different retention rationales than personal user data.
+- **Current Status:** Individual entry resolution and inspection enabled in UI; full audit log deletion rules under review.
+
+### Question 5: Character Universality vs Persona Voice Differentiation
+- **Issue:** Balancing unified COPPER directness, uncertainty-honesty, and continuity across all 30 personas while preserving persona-specific technical traits (e.g. AXIS engineering terseness vs CYPHER dry analysis).
+- **Current Status:** Additive layering implemented — base character prompt prepended to all agents, with mode-specific instructions appended.
+
 ---
 
 ## 2. Technical Trade-Off Decisions

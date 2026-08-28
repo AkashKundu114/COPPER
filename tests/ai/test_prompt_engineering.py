@@ -9,8 +9,10 @@ from app.core.constants import AgentType
 
 def test_base_copper_prompt_personality():
     assert "COPPER" in BASE_COPPER_SYSTEM_PROMPT
-    assert "adaptive" in BASE_COPPER_SYSTEM_PROMPT
-    assert "guardian" in BASE_COPPER_SYSTEM_PROMPT
+    assert "continuity" in BASE_COPPER_SYSTEM_PROMPT
+    assert "Guardian" in BASE_COPPER_SYSTEM_PROMPT
+    assert "WHO YOU ARE" in BASE_COPPER_SYSTEM_PROMPT
+    assert "HOW YOU CHANGE" in BASE_COPPER_SYSTEM_PROMPT
 
 
 def test_routing_prompt_contains_all_agents():
