@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, Info, ShieldAlert, X } from "lucide-react";
+import { AlertTriangle, Info, ShieldAlert, X, Lightbulb } from "lucide-react";
 import { playAlertSound } from "../../utils/alertSound";
 
 export interface ProactiveAlert {
   alert_id: string;
-  severity: "info" | "warning" | "critical";
+  severity: "info" | "warning" | "critical" | "reflection";
   category: string;
   title: string;
   message: string;
@@ -43,6 +43,14 @@ const SEVERITY_CONFIG = {
     iconColor: "text-red-400",
     titleColor: "text-red-300",
     autoDismissMs: 0,
+  },
+  reflection: {
+    icon: Lightbulb,
+    border: "border-verdigris-500/40",
+    bg: "bg-verdigris-950/30",
+    iconColor: "text-verdigris-400",
+    titleColor: "text-verdigris-300",
+    autoDismissMs: 20000,
   },
 };
 
@@ -111,7 +119,7 @@ function AlertToast({
           )}
           <div className="flex items-center gap-2 mt-2">
             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
-              Spider-Sense • {alert.category}
+              {alert.category === "reflection" ? "COPPER Thought" : "Spider-Sense"} • {alert.category}
             </span>
           </div>
           {config.autoDismissMs > 0 && (

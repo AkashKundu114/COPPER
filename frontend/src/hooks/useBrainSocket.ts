@@ -15,13 +15,16 @@ export type BrainEvent =
       familiarity: number;
       tier: string;
       glow?: number;
+      correction_acknowledged?: boolean;
+      self_memory_id?: string;
+      self_memory_summary?: string;
     }
   | { type: "done" }
   | { type: "audio_playback"; audio_base64: string }
   | {
       type: "proactive_intervention";
       alert_id: string;
-      severity: "info" | "warning" | "critical";
+      severity: "info" | "warning" | "critical" | "reflection";
       category: string;
       title: string;
       message: string;
@@ -53,6 +56,7 @@ interface BrainState {
   alerts: ProactiveAlert[];
   dismissAlert: (alertId: string) => void;
   stopAudio: () => void;
+  lastCorrectionAck: { id: string; summary: string; timestamp: number } | null;
 }
 
 function estimateSpeakingDuration(text: string): number {
@@ -84,6 +88,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     undefined,
   );
   const [alerts, setAlerts] = useState<ProactiveAlert[]>([]);
+  const [lastCorrectionAck, setLastCorrectionAck] = useState<{ id: string; summary: string; timestamp: number } | null>(null);
 
   const audioQueue = useRef<string[]>([]);
   const isPlayingAudio = useRef<boolean>(false);
@@ -202,6 +207,13 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           break;
         case "memory_update":
           setLastMemoryUpdate(event);
+          if (event.correction_acknowledged && event.self_memory_id && event.self_memory_summary) {
+            setLastCorrectionAck({
+              id: event.self_memory_id,
+              summary: event.self_memory_summary,
+              timestamp: Date.now()
+            });
+          }
           onProfileChange?.();
           break;
         case "proactive_intervention":
@@ -293,5 +305,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     alerts,
     dismissAlert,
     stopAudio,
+    lastCorrectionAck,
   };
 }

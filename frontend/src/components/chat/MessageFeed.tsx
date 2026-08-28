@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { type ChatLine } from "../../hooks/useBrainSocket";
 import { type AgentStats, type ParsedDocument } from "../../lib/api";
-import { FileText, BookOpen, FileCode, Table, Braces } from "lucide-react";
+import { FileText, BookOpen, FileCode, Table, Braces, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 
@@ -10,6 +11,7 @@ interface MessageFeedProps {
   agentStats: Record<string, AgentStats>;
   thinking: boolean;
   activeAgent: string | null;
+  lastCorrectionAck?: { id: string; summary: string; timestamp: number } | null;
 }
 
 
@@ -54,14 +56,42 @@ function parseAttachments(text: string): { cleanText: string; attachments: Parse
   return { cleanText, attachments };
 }
 
+function CorrectionAckPill({ summary, onFade }: { summary: string; onFade: () => void }) {
+    useEffect(() => {
+        const timer = setTimeout(onFade, 5000);
+        return () => clearTimeout(timer);
+    }, [onFade]);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            title={summary}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-verdigris-400 bg-verdigris-950/30 border border-verdigris-800/30 rounded-full w-fit ml-0 mt-1 mb-2"
+        >
+            <Check className="w-3 h-3" />
+            <span>Noted — updating</span>
+        </motion.div>
+    );
+}
+
 export function MessageFeed({
   lines,
   agentStats,
   thinking,
   activeAgent,
+  lastCorrectionAck,
 }: MessageFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<ParsedDocument | null>(null);
+  const [showCorrection, setShowCorrection] = useState<{ id: string; summary: string } | null>(null);
+
+  useEffect(() => {
+    if (lastCorrectionAck && (Date.now() - lastCorrectionAck.timestamp < 6000)) {
+      setShowCorrection(lastCorrectionAck);
+    }
+  }, [lastCorrectionAck]);
 
   useEffect(() => {
     if (feedRef.current) {
@@ -122,6 +152,9 @@ export function MessageFeed({
       {lines.map((line, i) => {
         const isUser = line.agent === "YOU" || line.agent === "user";
         const { cleanText, attachments } = isUser ? parseAttachments(line.text) : { cleanText: line.text, attachments: [] };
+        
+        // Compute lastAssistantIndex efficiently inline or by finding it outside
+        const isLastAssistant = i === lines.reduce((acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc), -1);
 
         if (isUser) {
           return (
@@ -156,6 +189,11 @@ export function MessageFeed({
             <div className="w-full markdown-body">
               <MarkdownContent content={cleanText} />
             </div>
+            <AnimatePresence>
+              {isLastAssistant && showCorrection && (
+                <CorrectionAckPill summary={showCorrection.summary} onFade={() => setShowCorrection(null)} />
+              )}
+            </AnimatePresence>
           </div>
         );
       })}

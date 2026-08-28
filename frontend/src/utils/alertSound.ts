@@ -7,7 +7,7 @@ export function toggleAlertMute(): boolean {
 }
 
 export function playAlertSound(
-  severity: "info" | "warning" | "critical" = "warning",
+  severity: "info" | "warning" | "critical" | "reflection" = "warning",
 ): void {
   if (isMuted) return;
 
@@ -24,8 +24,8 @@ export function playAlertSound(
     osc2.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    const freqMap = { info: 587.33, warning: 659.25, critical: 880 };
-    const baseFreq = freqMap[severity];
+    const freqMap = { info: 587.33, warning: 659.25, critical: 880, reflection: 523.25 };
+    const baseFreq = freqMap[severity] || 523.25;
 
     osc1.type = severity === "critical" ? "sawtooth" : "sine";
     osc2.type = "sine";

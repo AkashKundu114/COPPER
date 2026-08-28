@@ -9,6 +9,7 @@ import {
   type AgentStats,
   type InteractionRecord,
 } from "../../lib/api";
+import { selfMemoryAPI } from "../../services/api";
 
 interface Props {
   open: boolean;
@@ -137,6 +138,25 @@ export function SideDrawer({
   selectedAgent,
   onProfileReset,
 }: Props) {
+  const [drawerTab, setDrawerTab] = useState<'profile' | 'mind'>('profile');
+  const [selfMemories, setSelfMemories] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (open && !selectedAgent && drawerTab === 'mind') {
+      selfMemoryAPI.getAll().then(setSelfMemories).catch(console.error);
+    }
+  }, [open, selectedAgent, drawerTab]);
+
+  const resolveMemory = async (id: string) => {
+    try {
+      await selfMemoryAPI.resolve(id);
+      const data = await selfMemoryAPI.getAll();
+      setSelfMemories(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleReset = async () => {
     if (
       !confirm(
@@ -181,53 +201,118 @@ export function SideDrawer({
               />
             ) : (
               <div className="animate-fade-in">
-                <div className="rounded-none border border-zinc-800 bg-void-raised px-4 py-3 mb-4">
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint mb-1">
-                    Relationship
-                  </p>
-                  <p className="font-display text-lg text-white font-semibold">
-                    {profile?.relationship_tier ?? "Just Met"}
-                  </p>
-                  <p className="text-xs text-ink-secondary mt-1">
-                    {profile?.total_interactions ?? 0} interactions ·{" "}
-                    {profile?.agents_met ?? 0}/{profile?.agents_total ?? 50}{" "}
-                    agents met
-                  </p>
-                  {profile?.most_used_agent && (
-                    <p className="text-xs text-ink-secondary mt-0.5">
-                      Most trusted:{" "}
-                      <span className="text-ink-primary">
-                        {AGENT_MAP[profile.most_used_agent]?.name}
-                      </span>
+                <div className="flex gap-1 p-1 bg-bg-panel rounded-lg mb-4">
+                  <button
+                    onClick={() => setDrawerTab('profile')}
+                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      drawerTab === 'profile'
+                        ? 'bg-verdigris-900/60 text-verdigris-300'
+                        : 'text-ink-muted hover:text-ink-secondary'
+                    }`}
+                  >
+                    What COPPER knows
+                  </button>
+                  <button
+                    onClick={() => setDrawerTab('mind')}
+                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      drawerTab === 'mind'
+                        ? 'bg-verdigris-900/60 text-verdigris-300'
+                        : 'text-ink-muted hover:text-ink-secondary'
+                    }`}
+                  >
+                    COPPER's Mind
+                  </button>
+                </div>
+
+                {drawerTab === 'profile' ? (
+                  <>
+                    <div className="rounded-none border border-zinc-800 bg-void-raised px-4 py-3 mb-4">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint mb-1">
+                        Relationship
+                      </p>
+                      <p className="font-display text-lg text-white font-semibold">
+                        {profile?.relationship_tier ?? "Just Met"}
+                      </p>
+                      <p className="text-xs text-ink-secondary mt-1">
+                        {profile?.total_interactions ?? 0} interactions ·{" "}
+                        {profile?.agents_met ?? 0}/{profile?.agents_total ?? 50}{" "}
+                        agents met
+                      </p>
+                      {profile?.most_used_agent && (
+                        <p className="text-xs text-ink-secondary mt-0.5">
+                          Most trusted:{" "}
+                          <span className="text-ink-primary">
+                            {AGENT_MAP[profile.most_used_agent]?.name}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint mb-2">
+                      Learned facts
                     </p>
-                  )}
-                </div>
+                    {(!profile || profile.facts.length === 0) && (
+                      <p className="text-sm text-ink-faint italic mb-4">
+                        Nothing yet — the more you talk, the more it picks up.
+                      </p>
+                    )}
+                    <div className="mb-6">
+                      {profile?.facts.map((f) => (
+                        <FactRow
+                          key={f.key}
+                          label={f.key}
+                          value={f.value}
+                          confidence={f.confidence}
+                        />
+                      ))}
+                    </div>
 
-                <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint mb-2">
-                  Learned facts
-                </p>
-                {(!profile || profile.facts.length === 0) && (
-                  <p className="text-sm text-ink-faint italic mb-4">
-                    Nothing yet — the more you talk, the more it picks up.
-                  </p>
+                    <button
+                      onClick={handleReset}
+                      className="flex items-center gap-2 text-xs font-mono text-ink-faint hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 size={13} /> Forget everything
+                    </button>
+                  </>
+                ) : (
+                  <div className="animate-fade-in space-y-2">
+                    {selfMemories.length === 0 && (
+                      <p className="text-sm text-ink-faint italic mb-4">
+                        Mind is quiet...
+                      </p>
+                    )}
+                    {selfMemories.map((mem) => (
+                      <div key={mem.id} className="p-3 bg-bg-raised rounded-lg border border-white/5 mb-2">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`px-1.5 py-0.5 text-[10px] font-bold uppercase rounded ${
+                              mem.category === 'correction' ? 'bg-molten-950 text-molten-400 border border-molten-800/40' :
+                              mem.category === 'open_question' ? 'bg-blue-950 text-blue-400 border border-blue-800/40 border-dashed' :
+                              'bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40'
+                          }`}>{mem.category?.replace('_', ' ')}</span>
+                          {mem.category === 'correction' && (
+                              <span className="text-[10px] text-molten-400">Learned from you</span>
+                          )}
+                          {mem.category === 'open_question' && !mem.outcome && (
+                              <span className="text-[10px] text-blue-400 italic">Still thinking...</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-ink-default leading-relaxed">{mem.content}</p>
+                        <div className="flex items-center justify-between mt-2 text-[10px] text-ink-muted">
+                            <span>{Math.round(mem.confidence * 100)}% · {mem.evidence_count}x</span>
+                            <span>{new Date(mem.created_at).toLocaleDateString()}</span>
+                        </div>
+                        {mem.category === 'open_question' && !mem.outcome && (
+                            <button
+                                onClick={() => resolveMemory(mem.id)}
+                                className="mt-2 px-2 py-1 text-[10px] text-verdigris-400 border border-verdigris-800/40 rounded hover:bg-verdigris-950/40 transition-colors"
+                            >
+                                Mark as resolved
+                            </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <div className="mb-6">
-                  {profile?.facts.map((f) => (
-                    <FactRow
-                      key={f.key}
-                      label={f.key}
-                      value={f.value}
-                      confidence={f.confidence}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-2 text-xs font-mono text-ink-faint hover:text-red-400 transition-colors"
-                >
-                  <Trash2 size={13} /> Forget everything
-                </button>
               </div>
             )}
           </div>

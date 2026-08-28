@@ -9,7 +9,7 @@ from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
-from app.ai.llm.prompt_manager import build_messages, get_system_prompt
+from app.ai.llm.prompt_manager import build_messages, get_system_prompt, get_mode_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
 from app.ai.orchestration.agent_router import is_consequential_action, route_message
@@ -18,6 +18,7 @@ from app.core.constants import AgentType, LLMProvider
 from app.core.guardian import DisagreementLevel
 from app.core.logger import logger
 from app.services.guardian_service import guardian_service
+from app.services.self_model_service import self_model_service
 
 AGENT_MAP = {
     AgentType.CODING: coding_agent,
@@ -57,18 +58,29 @@ class ChatService:
                     "session_id": session_id,
                     "guardian_verdict": verdict.to_dict(),
                 }
-        history, memory_context = await context_engine.build_context(session_id, message)
+        history, memory_context, self_context = await context_engine.build_context(session_id, message)
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
         try:
             if agent:
                 response = await agent.run(message, history, memory_context, provider)
             else:
-                system = get_system_prompt(AgentType.CHAT, memory_context)
+                system = get_system_prompt(AgentType.CHAT, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 response = await langchain_manager.ainvoke(messages, provider)
             await context_engine.append_message(session_id, "assistant", response)
             await memory_manager.save_interaction(session_id, message, response, agent_type)
+            
+            # Send correction acknowledgment if user corrected COPPER
+            if self_model_service.detect_correction(message):
+                try:
+                    from app.api.websocket.manager import manager
+                    recent = self_model_service.get_all(category="correction", limit=1)
+                    entry = recent[0] if recent else {"id": "", "content": message[:150]}
+                    await manager.send_correction_ack(session_id, entry)
+                except Exception:
+                    pass
+            
             return {"response": response, "agent_type": agent_type, "session_id": session_id}
         except Exception as e:
             logger.error(f"Chat service error: {e}")
@@ -78,7 +90,7 @@ class ChatService:
         self, session_id: str, message: str, provider: LLMProvider = LLMProvider.OLLAMA, mode: str = "auto"
     ) -> AsyncGenerator[str, None]:
         agent_type = await route_message(message)
-        history, memory_context = await context_engine.build_context(session_id, message)
+        history, memory_context, self_context = await context_engine.build_context(session_id, message)
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
 
@@ -104,47 +116,26 @@ class ChatService:
         start_time = time.time()
         full_response = []
         try:
-            ctx_snippet = f"\n\n{memory_context}" if memory_context else ""
             if mode == "reasoning":
-                system = (
-                    "You are C.O.P.P.E.R. operating in Deep Cognitive (Complex Thinking) Mode. "
-                    "Before providing your final response, you MUST conduct a comprehensive step-by-step reasoning process enclosed strictly inside <think>...</think> tags. "
-                    "In your thought process: 1. Deconstruct the question, 2. Evaluate constraints and edge cases, 3. Validate logic step-by-step. "
-                    f"After </think>, deliver your polished, clear, and structured final answer.{ctx_snippet}"
-                )
+                system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="deepseek-r1:7b")
             elif mode == "coding":
-                system = (
-                    "You are C.O.P.P.E.R. in Software Architect & Engineering Mode. "
-                    f"Provide production-ready, clean, well-tested code, system architectures, and type-safe solutions.{ctx_snippet}"
-                )
+                system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="qwen2.5-coder:7b")
             elif mode == "research":
-                system = (
-                    "You are C.O.P.P.E.R. in Deep Research & Synthesis Mode. "
-                    f"Perform structured analysis, synthesize complex information, identify core facts, and deliver organized evidence-backed reports.{ctx_snippet}"
-                )
+                system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="mistral:7b")
             elif mode == "fast":
-                system = (
-                    "You are C.O.P.P.E.R. in Instant Reflex Mode. "
-                    f"Provide highly concise, extremely fast, and direct answers without any filler or markdown fluff.{ctx_snippet}"
-                )
+                system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="llama3.1:8b")
             elif agent and hasattr(agent, "stream"):
                 gen = agent.stream(message, history, memory_context, provider)
             else:
-                system = (
-                    "You are C.O.P.P.E.R. (Centralized Omnifunctional Personal Productivity and Execution Routine), "
-                    "a highly capable AI operating system. "
-                    f"Always respond in a direct, structured, and professional manner.{ctx_snippet}\n"
-                    "CRITICAL INSTRUCTION: You are a text-based AI. You DO NOT have the ability to generate, render, or create images. "
-                    "If the user asks you to generate an image or picture, explicitly state that you do not have an image generation module installed."
-                )
+                system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider)
             async for chunk in gen:
@@ -153,6 +144,16 @@ class ChatService:
             complete = "".join(full_response)
             await context_engine.append_message(session_id, "assistant", complete)
             await memory_manager.save_interaction(session_id, message, complete, agent_type)
+            
+            # Send correction acknowledgment if user corrected COPPER
+            if self_model_service.detect_correction(message):
+                try:
+                    from app.api.websocket.manager import manager
+                    recent = self_model_service.get_all(category="correction", limit=1)
+                    entry = recent[0] if recent else {"id": "", "content": message[:150]}
+                    await manager.send_correction_ack(session_id, entry)
+                except Exception:
+                    pass
 
             # Record genuine token metrics
             try:

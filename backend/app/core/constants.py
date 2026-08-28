@@ -45,3 +45,4 @@ class AlertMode(str, Enum):
     FOCUSED = "focused"
     GUARDIAN = "guardian"
     EMERGENCY = "emergency"
+    REFLECTION = "reflection"

@@ -15,6 +15,7 @@ from app.api.routes import (
     guardian,
     memory,
     reminders,
+    self_memory,
     system,
     vision,
     voice,
@@ -66,6 +67,7 @@ app.include_router(audit.router, prefix="/api/v1")
 app.include_router(episodes.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
+app.include_router(self_memory.router, prefix="/api/v1")
 
 
 @app.get("/")

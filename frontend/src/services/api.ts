@@ -136,4 +136,18 @@ export const auditAPI = {
     api.post("/audit/delete-all", { confirm }),
 };
 
+export const selfMemoryAPI = {
+    getAll: async (category?: string, limit: number = 50) => {
+        const params = new URLSearchParams();
+        if (category) params.set('category', category);
+        params.set('limit', String(limit));
+        const { data } = await api.get(`/self-memory?${params}`);
+        return data;
+    },
+    resolve: async (memoryId: string) => {
+        const { data } = await api.post(`/self-memory/${memoryId}/resolve`);
+        return data;
+    },
+};
+
 export default api;

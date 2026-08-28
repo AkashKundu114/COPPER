@@ -61,5 +61,18 @@ class ConnectionManager:
         event["type"] = "proactive_intervention"
         await self.broadcast(event)
 
+    async def send_correction_ack(self, session_id: str, self_memory_entry: dict):
+        """Notify the frontend that a correction was acknowledged."""
+        await self.send(session_id, {
+            "type": "memory_update",
+            "correction_acknowledged": True,
+            "self_memory_id": self_memory_entry.get("id", ""),
+            "self_memory_summary": self_memory_entry.get("content", "")[:150],
+            "agent": "COPPER",
+            "familiarity": 0,
+            "tier": "",
+            "profile_delta": [],
+        })
+
 
 manager = ConnectionManager()

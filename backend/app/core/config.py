@@ -34,6 +34,8 @@ class Settings(BaseSettings):
         (15, "Trusted Partner"),
         (40, "Inner Circle"),
     ]
+    REFLECTION_INTERVAL_SECONDS: int = 600
+    REFLECTION_CONFIDENCE_THRESHOLD: float = 0.7
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

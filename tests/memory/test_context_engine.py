@@ -41,9 +41,10 @@ async def test_context_engine_build_context():
     sid = "ctx_test_session_build"
     await context_engine.clear_session(sid)
     await context_engine.append_message(sid, "user", "How do I build RAG?")
-    history, mem = await context_engine.build_context(sid, "How do I build RAG?")
+    history, mem, self_ctx = await context_engine.build_context(sid, "How do I build RAG?")
     assert len(history) == 1
     assert isinstance(mem, str)
+    assert isinstance(self_ctx, str)
 
 
 @pytest.mark.asyncio
