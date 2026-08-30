@@ -189,3 +189,72 @@ export const searchDocuments = async (query: string, limit = 5) => {
   const res = await api.post("/api/v1/documents/search", { query, limit });
   return res.data;
 };
+
+export interface GeneratedDocumentRecord {
+  filename: string;
+  filepath: string;
+  extension: string;
+  category: string;
+  size_bytes: number;
+  size_formatted: string;
+  modified_at: string;
+  download_url: string;
+}
+
+export interface DocumentGeneratePayload {
+  title: string;
+  format?: string;
+  prompt?: string;
+  template_type?: string;
+  sections?: Array<{
+    heading?: string;
+    subheading?: string;
+    content?: string;
+    bullets?: string[];
+    table?: { headers?: string[]; rows?: any[][] };
+  }>;
+  author?: string;
+  index_to_memory?: boolean;
+}
+
+export const generateDocument = async (payload: DocumentGeneratePayload) => {
+  const res = await api.post("/api/v1/documents/generate", payload);
+  return res.data;
+};
+
+export const fetchDocumentTemplates = async () => {
+  const res = await api.get("/api/v1/documents/templates");
+  return res.data;
+};
+
+export const fetchGeneratedDocuments = async () => {
+  const res = await api.get<{ documents: GeneratedDocumentRecord[]; total: number }>(
+    "/api/v1/documents/generated",
+  );
+  return res.data;
+};
+
+export interface VramStatusResponse {
+  always_on_mini_model: string;
+  loaded_models_count: number;
+  loaded_models: Array<{ name: string; size?: number; size_vram?: number }>;
+  vram_policy: {
+    always_on_mini_model: string;
+    mini_model_keep_alive: number | string;
+    heavy_model_keep_alive: string;
+    auto_unload_heavy_after_turn: boolean;
+    target_idle_vram_gb: number;
+  };
+  status: "optimized" | "multi_loaded";
+}
+
+export const fetchVramModelsStatus = async () => {
+  const res = await api.get<VramStatusResponse>("/api/v1/system/models/vram");
+  return res.data;
+};
+
+export const enforceKeepOnlyMiniModel = async () => {
+  const res = await api.post("/api/v1/system/models/keep-mini");
+  return res.data;
+};
+

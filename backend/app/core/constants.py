@@ -7,6 +7,7 @@ MEMORY_SEARCH_LIMIT = 5
 class AgentType(str, Enum):
     CHAT = "chat"
     CODING = "coding"
+    DOCUMENT = "document"
     AUTOMATION = "automation"
     REMINDER = "reminder"
     RESEARCH = "research"

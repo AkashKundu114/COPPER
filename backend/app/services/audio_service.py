@@ -98,9 +98,9 @@ class PiperTTSPipeline:
             {"id": "david", "name": "Microsoft David (Offline Windows Male)", "engine": "windows-sapi5"},
         ]
 
-    async def synthesize(self, text: str, voice: str = "en-US-AvaNeural", speed: float = 1.0) -> bytes:
+    async def synthesize(self, text: str, voice: str = "copper_synth", speed: float = 1.0) -> bytes:
         """
-        Synthesize text into WAV audio bytes.
+        Synthesize text into WAV or Neural audio bytes.
         """
         clean_text = text.strip()
         if "<think>" in clean_text:
@@ -113,8 +113,8 @@ class PiperTTSPipeline:
         if not clean_text:
             return self._generate_silence_wav(0.1)
 
-        # 1. Try edge-tts if neural voice requested
-        if "neural" in voice.lower() or "edge" in voice.lower():
+        # 1. Try edge-tts if neural voice explicitly requested
+        if voice and ("neural" in voice.lower() or "edge" in voice.lower()):
             try:
                 import edge_tts
 
@@ -129,7 +129,7 @@ class PiperTTSPipeline:
             except Exception as e:
                 logger.info(f"edge-tts unavailable: {e}")
 
-        # 2. Try pyttsx3 for standard WAV synthesis or fallback
+        # 2. Try pyttsx3 for standard offline Windows WAV synthesis
         try:
             import pyttsx3
 

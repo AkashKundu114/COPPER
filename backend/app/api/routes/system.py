@@ -180,3 +180,36 @@ async def get_system_telemetry():
             "prompt_eval_speed_tps": _last_prompt_eval_speed,
         },
     }
+
+
+@router.get("/models/vram")
+async def get_vram_models_status():
+    """
+    Returns live loaded models in VRAM, memory usage per model, and VRAM policy status.
+    """
+    from app.ai.llm.model_manager import model_manager
+    from app.ai.llm.ollama_client import ollama_client
+
+    loaded_models = await ollama_client.get_loaded_models()
+    mini_model_name = model_manager.get_mini_model()
+    policy = model_manager.get_vram_policy()
+
+    return {
+        "always_on_mini_model": mini_model_name,
+        "loaded_models_count": len(loaded_models),
+        "loaded_models": loaded_models,
+        "vram_policy": policy,
+        "status": "optimized" if len(loaded_models) <= 1 else "multi_loaded",
+    }
+
+
+@router.post("/models/keep-mini")
+async def enforce_keep_only_mini_model():
+    """
+    Enforces VRAM Policy: unloads any heavy models (7B/8B) and keeps only the Always-On Mini Model loaded.
+    """
+    from app.ai.llm.ollama_client import ollama_client
+
+    result = await ollama_client.keep_only_mini_model_loaded()
+    return result
+

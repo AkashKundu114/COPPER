@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     AI_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models")
+    DOCUMENTS_DIR: str = str(Path(__file__).resolve().parent.parent.parent / "data" / "documents")
     AUDIO_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio")
     WHISPER_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "whisper")
     TTS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "tts")

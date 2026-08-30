@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.ai.agents.automation_agent import automation_agent
 from app.ai.agents.coding_agent import coding_agent
+from app.ai.agents.document_agent import document_agent
 from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
@@ -22,6 +23,7 @@ from app.services.self_model_service import self_model_service
 
 AGENT_MAP = {
     AgentType.CODING: coding_agent,
+    AgentType.DOCUMENT: document_agent,
     AgentType.AUTOMATION: automation_agent,
     AgentType.REMINDER: reminder_agent,
     AgentType.RESEARCH: research_agent,
@@ -116,6 +118,8 @@ class ChatService:
         start_time = time.time()
         full_response = []
         try:
+            from app.ai.llm.model_manager import model_manager
+
             if mode == "reasoning":
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
@@ -124,6 +128,10 @@ class ChatService:
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(messages, provider, model="qwen2.5-coder:7b")
+            elif mode == "document":
+                system = get_mode_prompt(mode, memory_context, self_context)
+                messages = build_messages(system, history, message)
+                gen = langchain_manager.astream(messages, provider, model=model_manager.get_document_model())
             elif mode == "research":
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
@@ -131,13 +139,13 @@ class ChatService:
             elif mode == "fast":
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(messages, provider, model="llama3.1:8b")
+                gen = langchain_manager.astream(messages, provider, model=model_manager.get_mini_model())
             elif agent and hasattr(agent, "stream"):
                 gen = agent.stream(message, history, memory_context, provider)
             else:
                 system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(messages, provider)
+                gen = langchain_manager.astream(messages, provider, model=model_manager.get_mini_model())
             async for chunk in gen:
                 full_response.append(chunk)
                 yield chunk

@@ -223,6 +223,32 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
         ),
         (r"\b(milestones|roadmap|action plan|task breakdown|sprint roadmap)\b", 3.0),
     ],
+    AgentType.DOCUMENT: [
+        (
+            r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|technical report|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document)\b",
+            6.0,
+        ),
+        (
+            r"\b(generate (a\s+|an\s+)?pdf|create (a\s+|an\s+)?pdf|make (a\s+|an\s+)?pdf|export (to\s+)?pdf|save as pdf|convert to pdf|as (a\s+)?pdf|in pdf format)\b",
+            6.0,
+        ),
+        (
+            r"\b(generate (a\s+|an\s+)?(word|docx)|create (a\s+|an\s+)?(word|docx)|make (a\s+|an\s+)?(word|docx)|export (to\s+)?(word|docx)|in (word|docx) format)\b",
+            6.0,
+        ),
+        (
+            r"\b(generate (a\s+|an\s+)?(csv|spreadsheet|table)|create (a\s+|an\s+)?(csv|spreadsheet|table)|export (to\s+)?csv|save as csv)\b",
+            5.0,
+        ),
+        (
+            r"\b(create|generate|write)\s+.*(document|whitepaper|business proposal|briefing document|curriculum vitae)\b",
+            4.5,
+        ),
+        (
+            r"\b(pdf report|word report|html report|csv export|document generation|document architect|downloadable document)\b",
+            4.0,
+        ),
+    ],
 }
 
 GREETING_PATTERNS = [
@@ -232,6 +258,11 @@ GREETING_PATTERNS = [
 ]
 
 NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
+    AgentType.DOCUMENT: [
+        (r"^(remind me to|set an alarm|schedule a notification|schedule a time to)\b", 6.0),
+        (r"^(delete the file|open the terminal|open chrome|close all windows|kill process)\b", 6.0),
+        (r"^(what is on my screen|describe this screenshot)\b", 6.0),
+    ],
     AgentType.CODING: [
         (r"^(what is|who is|explain the history of|why was .* invented|tell me about|summarize)\b", 4.0),
         (
@@ -389,8 +420,8 @@ async def _llm_subagent_route(message: str) -> AgentType:
     from app.ai.llm.prompt_manager import ROUTING_PROMPT
 
     messages = [{"role": "system", "content": ROUTING_PROMPT}, {"role": "user", "content": message}]
-    target_model = model_manager.get_model("subagents.router")
-    result = await ollama_client.chat(messages, model=target_model)
+    target_model = model_manager.get_mini_model()
+    result = await ollama_client.chat(messages, model=target_model, keep_alive=-1)
     result = result.strip().lower()
 
     try:

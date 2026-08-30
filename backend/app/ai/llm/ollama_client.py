@@ -1,5 +1,6 @@
 import json
 from collections.abc import AsyncGenerator
+from typing import Any
 
 import httpx
 
@@ -21,6 +22,20 @@ class OllamaClient:
                 return res.status_code == 200
         except Exception:
             return False
+
+    async def get_loaded_models(self) -> list[dict[str, Any]]:
+        """
+        Queries Ollama /api/ps to inspect models currently loaded in GPU/CPU memory.
+        """
+        try:
+            async with httpx.AsyncClient(timeout=3.0) as client:
+                res = await client.get(f"{self.base_url}/api/ps")
+                if res.status_code == 200:
+                    return res.json().get("models", [])
+                return []
+        except Exception as e:
+            logger.debug(f"Failed to query loaded models from Ollama: {e}")
+            return []
 
     async def unload_all_models(self) -> str:
         """
@@ -45,6 +60,76 @@ class OllamaClient:
         except Exception as e:
             return f"Error connecting to Ollama to unload models: {e}"
 
+    async def unload_heavy_models(self, keep_mini: bool = True) -> dict[str, Any]:
+        """
+        Selectively evicts heavy models (7B/8B reasoning, coding, etc.) from GPU VRAM
+        while keeping the always-on mini model resident.
+        """
+        unloaded = []
+        kept = []
+        try:
+            loaded = await self.get_loaded_models()
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                for m in loaded:
+                    m_name = m.get("name", "")
+                    if keep_mini and model_manager.is_mini_model(m_name):
+                        kept.append(m_name)
+                        continue
+
+                    # Unload this model immediately
+                    try:
+                        await client.post(f"{self.base_url}/api/chat", json={"model": m_name, "keep_alive": 0})
+                        unloaded.append(m_name)
+                    except Exception as err:
+                        logger.warning(f"Could not unload model '{m_name}': {err}")
+
+            return {
+                "status": "success",
+                "unloaded_models": unloaded,
+                "kept_mini_models": kept,
+                "total_unloaded": len(unloaded),
+            }
+        except Exception as e:
+            logger.error(f"Error during unload_heavy_models: {e}")
+            return {"status": "error", "error": str(e), "unloaded_models": unloaded}
+
+    async def warmup_mini_model(self) -> dict[str, Any]:
+        """
+        Loads the Always-On Mini Model into VRAM with keep_alive: -1.
+        Ensures instantaneous latency for voice interactions and sub-40ms routing.
+        """
+        mini_tag = model_manager.get_mini_model()
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                payload = {
+                    "model": mini_tag,
+                    "messages": [{"role": "user", "content": "ping"}],
+                    "stream": False,
+                    "keep_alive": -1,
+                }
+                res = await client.post(f"{self.base_url}/api/chat", json=payload)
+                if res.status_code == 200:
+                    logger.info(f"Warmed up always-on mini model '{mini_tag}' in VRAM (keep_alive: -1)")
+                    return {"status": "warmed", "model": mini_tag, "keep_alive": -1}
+                else:
+                    logger.warning(f"Ollama warmup returned {res.status_code} for '{mini_tag}'")
+                    return {"status": "failed", "model": mini_tag, "code": res.status_code}
+        except Exception as e:
+            logger.debug(f"Mini model warmup skipped (Ollama offline or unavailable): {e}")
+            return {"status": "unavailable", "model": mini_tag, "error": str(e)}
+
+    async def keep_only_mini_model_loaded(self) -> dict[str, Any]:
+        """
+        Enforces system policy: Evicts all heavy models from VRAM and warms up the mini model.
+        """
+        unload_res = await self.unload_heavy_models(keep_mini=True)
+        warmup_res = await self.warmup_mini_model()
+        return {
+            "vram_policy_enforced": True,
+            "unload_result": unload_res,
+            "mini_model_warmup": warmup_res,
+        }
+
     def select_model(self, agent_type: AgentType | None = None, requested_model: str | None = None) -> str:
         if requested_model:
             return requested_model
@@ -53,6 +138,8 @@ class OllamaClient:
             return model_manager.get_model("core_agents.chat", "llama3.1:8b")
         elif agent_type == AgentType.CODING:
             return model_manager.get_model("core_agents.coding", "qwen2.5-coder:7b")
+        elif agent_type == AgentType.DOCUMENT:
+            return model_manager.get_document_model()
         elif agent_type == AgentType.AUTOMATION:
             return model_manager.get_model("core_agents.automation", "mistral:7b")
         elif agent_type == AgentType.RESEARCH:
@@ -63,10 +150,17 @@ class OllamaClient:
         return self.default_model
 
     async def chat(
-        self, messages: list[dict[str, str]], agent_type: AgentType | None = None, model: str | None = None
+        self,
+        messages: list[dict[str, str]],
+        agent_type: AgentType | None = None,
+        model: str | None = None,
+        keep_alive: int | str | None = None,
     ) -> str:
         target_model = self.select_model(agent_type, model)
-        payload = {"model": target_model, "messages": messages, "stream": False}
+        if keep_alive is None:
+            keep_alive = model_manager.get_model_keep_alive(target_model)
+
+        payload = {"model": target_model, "messages": messages, "stream": False, "keep_alive": keep_alive}
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 res = await client.post(f"{self.base_url}/api/chat", json=payload)
@@ -81,10 +175,17 @@ class OllamaClient:
             return f"Cannot reach the local Ollama LLM server at {self.base_url}. Please launch Ollama on your PC to enable active local reasoning."
 
     async def stream_chat(
-        self, messages: list[dict[str, str]], agent_type: AgentType | None = None, model: str | None = None
+        self,
+        messages: list[dict[str, str]],
+        agent_type: AgentType | None = None,
+        model: str | None = None,
+        keep_alive: int | str | None = None,
     ) -> AsyncGenerator[str, None]:
         target_model = self.select_model(agent_type, model)
-        payload = {"model": target_model, "messages": messages, "stream": True}
+        if keep_alive is None:
+            keep_alive = model_manager.get_model_keep_alive(target_model)
+
+        payload = {"model": target_model, "messages": messages, "stream": True, "keep_alive": keep_alive}
         try:
             async with httpx.AsyncClient(timeout=120.0) as client:
                 async with client.stream("POST", f"{self.base_url}/api/chat", json=payload) as resp:
@@ -103,3 +204,4 @@ class OllamaClient:
 
 
 ollama_client = OllamaClient()
+

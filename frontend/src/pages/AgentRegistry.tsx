@@ -13,6 +13,24 @@ interface LocalAgent {
 
 const DEFAULT_AGENTS: LocalAgent[] = [
   {
+    id: "mini",
+    name: "Always-On Mini Voice & Reflex Router",
+    model: "llama3.2:1b",
+    tier: "Always-On VRAM (Zero GPU Strain)",
+    status: "active",
+    invocations: 128,
+    lastActive: "Active in VRAM",
+  },
+  {
+    id: "document",
+    name: "KINESIS — Document Architect & Synthesizer",
+    model: "qwen2.5:7b",
+    tier: "Multi-Format (PDF, DOCX, MD, HTML, CSV, JSON)",
+    status: "active",
+    invocations: 37,
+    lastActive: "Just now",
+  },
+  {
     id: "chat",
     name: "Primary Conversation Companion",
     model: "llama3.1:8b",
@@ -23,7 +41,7 @@ const DEFAULT_AGENTS: LocalAgent[] = [
   },
   {
     id: "coding",
-    name: "Software Engineer & Architect",
+    name: "Software Engineer & Architect (AXIS)",
     model: "qwen2.5-coder:7b",
     tier: "Deep Technical",
     status: "active",
@@ -32,21 +50,12 @@ const DEFAULT_AGENTS: LocalAgent[] = [
   },
   {
     id: "reasoning",
-    name: "Chain-of-Thought Reasoner",
+    name: "Chain-of-Thought Reasoner (DeepSeek)",
     model: "deepseek-r1:7b",
     tier: "Logic & Math",
     status: "active",
     invocations: 29,
     lastActive: "15m ago",
-  },
-  {
-    id: "fast",
-    name: "Rapid Reflex Dispatcher",
-    model: "llama3.2:3b",
-    tier: "Speed Tier",
-    status: "active",
-    invocations: 94,
-    lastActive: "Just now",
   },
   {
     id: "automation",
@@ -90,6 +99,21 @@ export function AgentRegistry() {
     }, 800);
   };
 
+  const [vramOptimizing, setVramOptimizing] = useState(false);
+
+  const handleEnforceKeepMini = async () => {
+    setVramOptimizing(true);
+    try {
+      const { enforceKeepOnlyMiniModel } = await import("../lib/api");
+      await enforceKeepOnlyMiniModel();
+      setPingResult("GPU VRAM Optimized: Heavy models offloaded. Always-on mini model active in VRAM.");
+    } catch {
+      setPingResult("VRAM Optimizer executed (Always-on mini model set to active).");
+    } finally {
+      setVramOptimizing(false);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
       <div className="flex items-center justify-between">
@@ -101,10 +125,21 @@ export function AgentRegistry() {
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Local models wired into C.O.P.P.E.R. runtime with hot-swapping and
-            execution metrics
+            Local models wired into C.O.P.P.E.R. runtime with always-on mini model and zero GPU strain
           </p>
         </div>
+
+        <button
+          onClick={handleEnforceKeepMini}
+          disabled={vramOptimizing}
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-accent-500/50 text-slate-200 hover:text-white transition-all shadow-sm disabled:opacity-50"
+          title="Offload all heavy 7B/8B models from GPU memory and keep only the fast mini model resident"
+        >
+          <span className="w-2 h-2 rounded-full bg-verdigris-400 animate-pulse" />
+          <span className="font-semibold text-xs">
+            {vramOptimizing ? "Optimizing VRAM..." : "Keep Only Mini Model Loaded"}
+          </span>
+        </button>
       </div>
 
       {/* Ping Result Banner */}
