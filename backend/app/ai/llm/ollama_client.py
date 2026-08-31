@@ -13,7 +13,7 @@ from app.core.logger import logger
 class OllamaClient:
     def __init__(self):
         self.base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
-        self.default_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
+        self.default_model = model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
 
     async def is_available(self) -> bool:
         try:
@@ -130,22 +130,36 @@ class OllamaClient:
             "mini_model_warmup": warmup_res,
         }
 
-    def select_model(self, agent_type: AgentType | None = None, requested_model: str | None = None) -> str:
-        if requested_model:
-            return requested_model
+    def select_model(self, agent_type: Any = None, requested_model: str | None = None) -> str:
+        # Handle string passed into agent_type parameter
+        if isinstance(agent_type, str):
+            clean_type = agent_type.strip().lower()
+            try:
+                agent_type = AgentType(clean_type)
+            except ValueError:
+                # Check if it looks like a model tag (e.g. contains colon or known model name)
+                if any(x in clean_type for x in [":", "llama", "qwen", "mistral", "deepseek", "smollm", "falcon", "gemma", "granite"]):
+                    requested_model = agent_type
+                agent_type = None
+
+        if requested_model and isinstance(requested_model, str):
+            clean_req = requested_model.strip().lower()
+            # Ignore random greetings or invalid non-model strings
+            if clean_req not in ["hi", "hello", "hey", "test", "null", "none", ""]:
+                return requested_model
 
         if agent_type == AgentType.CHAT:
-            return model_manager.get_model("core_agents.chat", "llama3.1:8b")
+            return model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
         elif agent_type == AgentType.CODING:
-            return model_manager.get_model("core_agents.coding", "qwen2.5-coder:7b")
+            return model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
         elif agent_type == AgentType.DOCUMENT:
             return model_manager.get_document_model()
         elif agent_type == AgentType.AUTOMATION:
-            return model_manager.get_model("core_agents.automation", "mistral:7b")
+            return model_manager.get_model("core_agents.automation", "mistral-abliterated:7b")
         elif agent_type == AgentType.RESEARCH:
-            return model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
+            return model_manager.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
         elif agent_type == AgentType.VISION:
-            return model_manager.get_model("vision_agents.vision_primary", "llava:7b")
+            return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl-abliterated:7b")
 
         return self.default_model
 

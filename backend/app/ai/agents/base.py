@@ -150,6 +150,8 @@ class BaseAgent:
         for h in history[-6:]:
             messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
 
+        messages.append({"role": "user", "content": message})
+
         target_model = self.get_target_model()
         metrics_collector = kwargs.get("metrics_collector")
 

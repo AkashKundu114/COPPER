@@ -101,7 +101,7 @@ class ChatService:
         agent = AGENT_MAP.get(agent_type)
         t_start = time.perf_counter()
         ollama_metrics: dict = {}
-        target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else "llama3.1:8b"
+        target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
         try:
             if agent:
                 response = await agent.run(message, history, memory_context, provider)
@@ -273,14 +273,14 @@ class ChatService:
             from app.ai.llm.model_manager import model_manager
 
             if mode == "reasoning":
-                model_name = "deepseek-r1:7b"
+                model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
                     messages, provider, model=model_name, metrics_collector=ollama_metrics
                 )
             elif mode == "coding":
-                model_name = "qwen2.5-coder:7b"
+                model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
@@ -294,7 +294,7 @@ class ChatService:
                     messages, provider, model=model_name, metrics_collector=ollama_metrics
                 )
             elif mode == "research":
-                model_name = "mistral:7b"
+                model_name = model_manager.get_model("core_agents.reasoning", "mistral-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
@@ -308,7 +308,7 @@ class ChatService:
                     messages, provider, model=model_name, metrics_collector=ollama_metrics
                 )
             elif agent and hasattr(agent, "stream"):
-                model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else "llama3.1:8b"
+                model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
                 gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics)
             else:
                 model_name = model_manager.get_mini_model()
