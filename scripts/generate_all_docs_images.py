@@ -5,6 +5,7 @@ Theme: Cyberpunk / Molten Copper Dark Mode (#090d16 background,
 """
 
 from pathlib import Path
+import textwrap
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -520,10 +521,10 @@ def make_firewall_diagram():
     ax.axis("off")
 
     steps = [
-        ("1. INBOUND PROMPT", "Raw user input or tool telemetry", "#3b82f6", 0.05),
+        ("1. INBOUND PROMPT", "Raw user input or tool telemetry", "#3b82f6", 0.04),
         ("2. REGEX REDACTION", "Masks API keys, JWTs, SSNs, IPs", "#f97316", 0.29),
-        ("3. SEVERITY TIERING", "Public -> Internal -> Secret", "#a855f7", 0.53),
-        ("4. SAFE LOCAL INFERENCE", "Zero cloud egress, 100% offline", "#10b981", 0.77),
+        ("3. SEVERITY TIERING", "Public -> Internal -> Secret", "#a855f7", 0.54),
+        ("4. SAFE LOCAL INFERENCE", "Zero cloud egress, 100% offline", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in steps:
@@ -540,7 +541,7 @@ def make_firewall_diagram():
         ax.text(
             x + 0.09,
             0.60,
-            title,
+            textwrap.fill(title, width=16),
             fontsize=9.5,
             fontweight="bold",
             color=col,
@@ -550,19 +551,18 @@ def make_firewall_diagram():
         ax.text(
             x + 0.09,
             0.44,
-            desc,
+            textwrap.fill(desc, width=22),
             fontsize=8.5,
             color="#cbd5e1",
             ha="center",
             va="center",
-            wrap=True,
-        )
+            )
 
         if x < 0.7:
             ax.annotate(
                 "",
-                xy=(x + 0.23, 0.52),
-                xytext=(x + 0.19, 0.52),
+                xy=(x + 0.265, 0.525),
+                xytext=(x + 0.205, 0.525),
                 arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
             )
 
@@ -640,10 +640,10 @@ def make_audio_pipeline_diagram():
     ax.axis("off")
 
     components = [
-        ("1. Microphone Input", "PCM Audio (16kHz WAV)", "#3b82f6", 0.06),
+        ("1. Microphone Input", "PCM Audio (16kHz WAV)", "#3b82f6", 0.04),
         ("2. Whisper STT", "ggml-base.en (Offline)", "#06b6d4", 0.29),
-        ("3. Agent Orchestrator", "Llama-3.1 / Qwen2.5", "#f97316", 0.52),
-        ("4. Piper TTS", "ONNX Neural Voices", "#10b981", 0.75),
+        ("3. Agent Orchestrator", "Llama-3.1 / Qwen2.5", "#f97316", 0.54),
+        ("4. Piper TTS", "ONNX Neural Voices", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in components:
@@ -660,7 +660,7 @@ def make_audio_pipeline_diagram():
         ax.text(
             x + 0.09,
             0.60,
-            title,
+            textwrap.fill(title, width=16),
             fontsize=9.5,
             fontweight="bold",
             color=col,
@@ -670,7 +670,7 @@ def make_audio_pipeline_diagram():
         ax.text(
             x + 0.09,
             0.44,
-            desc,
+            textwrap.fill(desc, width=22),
             fontsize=8.5,
             color="#cbd5e1",
             ha="center",
@@ -680,8 +680,8 @@ def make_audio_pipeline_diagram():
         if x < 0.7:
             ax.annotate(
                 "",
-                xy=(x + 0.23, 0.52),
-                xytext=(x + 0.19, 0.52),
+                xy=(x + 0.265, 0.525),
+                xytext=(x + 0.205, 0.525),
                 arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
             )
 
@@ -702,15 +702,15 @@ def make_nexus_dag_diagram():
 
     stages = [
         ("1. Goal Decomposition", "NexusPlanner & DeepSeek-R1 splits goal into DAG SubTasks", "#f97316", 0.04),
-        ("2. Dependency Engine", "TaskGraph resolves topological layers & cycle locks", "#06b6d4", 0.28),
-        ("3. Parallel Execution", "Specialists (AXIS, OMNI, KINESIS) run concurrently", "#a855f7", 0.52),
-        ("4. ContextBus Synthesis", "Inter-agent messages stream into final polished output", "#10b981", 0.76),
+        ("2. Dependency Engine", "TaskGraph resolves topological layers & cycle locks", "#06b6d4", 0.29),
+        ("3. Parallel Execution", "Specialists (AXIS, OMNI, KINESIS) run concurrently", "#a855f7", 0.54),
+        ("4. ContextBus Synthesis", "Inter-agent messages stream into final polished output", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in stages:
         box = patches.FancyBboxPatch(
             (x, 0.32),
-            0.20,
+            0.18,
             0.38,
             boxstyle="round,pad=0.02,rounding_size=0.03",
             facecolor="#131b2e",
@@ -719,9 +719,9 @@ def make_nexus_dag_diagram():
         )
         ax.add_patch(box)
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.60,
-            title,
+            textwrap.fill(title, width=16),
             fontsize=9.5,
             fontweight="bold",
             color=col,
@@ -729,21 +729,20 @@ def make_nexus_dag_diagram():
             va="center",
         )
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.43,
-            desc,
+            textwrap.fill(desc, width=22),
             fontsize=8.5,
             color="#cbd5e1",
             ha="center",
             va="center",
-            wrap=True,
         )
 
         if x < 0.7:
             ax.annotate(
                 "",
-                xy=(x + 0.25, 0.51),
-                xytext=(x + 0.21, 0.51),
+                xy=(x + 0.265, 0.51),
+                xytext=(x + 0.205, 0.51),
                 arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
             )
 
@@ -764,15 +763,15 @@ def make_self_healing_diagram():
 
     stages = [
         ("1. Anomaly Sentinel", "Real-time process, memory leak, and VRAM watchdog", "#3b82f6", 0.04),
-        ("2. Health Diagnostics", "Identifies GPU OOM, worker deadlocks, or crashed subagents", "#f97316", 0.28),
-        ("3. Automated Recovery", "Reaps zombies, prunes KV cache, and resets Ollama pipes", "#06b6d4", 0.52),
-        ("4. Dynamic Fallback", "Graceful model tier switching with zero user disruption", "#10b981", 0.76),
+        ("2. Health Diagnostics", "Identifies GPU OOM, worker deadlocks, or crashed subagents", "#f97316", 0.29),
+        ("3. Automated Recovery", "Reaps zombies, prunes KV cache, and resets Ollama pipes", "#06b6d4", 0.54),
+        ("4. Dynamic Fallback", "Graceful model tier switching with zero user disruption", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in stages:
         box = patches.FancyBboxPatch(
             (x, 0.32),
-            0.20,
+            0.18,
             0.38,
             boxstyle="round,pad=0.02,rounding_size=0.03",
             facecolor="#131b2e",
@@ -781,9 +780,9 @@ def make_self_healing_diagram():
         )
         ax.add_patch(box)
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.60,
-            title,
+            textwrap.fill(title, width=16),
             fontsize=9.5,
             fontweight="bold",
             color=col,
@@ -791,21 +790,20 @@ def make_self_healing_diagram():
             va="center",
         )
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.43,
-            desc,
+            textwrap.fill(desc, width=22),
             fontsize=8.5,
             color="#cbd5e1",
             ha="center",
             va="center",
-            wrap=True,
         )
 
         if x < 0.7:
             ax.annotate(
                 "",
-                xy=(x + 0.25, 0.51),
-                xytext=(x + 0.21, 0.51),
+                xy=(x + 0.265, 0.51),
+                xytext=(x + 0.205, 0.51),
                 arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
             )
 
@@ -826,15 +824,15 @@ def make_document_pipeline_diagram():
 
     stages = [
         ("1. Structured Input", "Markdown text, code blocks, tables, and visual artifacts", "#3b82f6", 0.04),
-        ("2. ReportLab Engine", "Flowable document AST, custom canvas, and page layouts", "#a855f7", 0.28),
-        ("3. Executive Styling", "Cyberpunk / Molten Copper theme, syntax highlighting, charts", "#f97316", 0.52),
-        ("4. Multi-Format Output", "Publication-ready PDF, DOCX, CSV, and HTML exports", "#10b981", 0.76),
+        ("2. ReportLab Engine", "Flowable document AST, custom canvas, and page layouts", "#a855f7", 0.29),
+        ("3. Executive Styling", "Cyberpunk / Molten Copper theme, syntax highlighting, charts", "#f97316", 0.54),
+        ("4. Multi-Format Output", "Publication-ready PDF, DOCX, CSV, and HTML exports", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in stages:
         box = patches.FancyBboxPatch(
             (x, 0.32),
-            0.20,
+            0.18,
             0.38,
             boxstyle="round,pad=0.02,rounding_size=0.03",
             facecolor="#131b2e",
@@ -843,9 +841,9 @@ def make_document_pipeline_diagram():
         )
         ax.add_patch(box)
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.60,
-            title,
+            textwrap.fill(title, width=16),
             fontsize=9.5,
             fontweight="bold",
             color=col,
@@ -853,21 +851,20 @@ def make_document_pipeline_diagram():
             va="center",
         )
         ax.text(
-            x + 0.10,
+            x + 0.09,
             0.43,
-            desc,
+            textwrap.fill(desc, width=22),
             fontsize=8.5,
             color="#cbd5e1",
             ha="center",
             va="center",
-            wrap=True,
         )
 
         if x < 0.7:
             ax.annotate(
                 "",
-                xy=(x + 0.25, 0.51),
-                xytext=(x + 0.21, 0.51),
+                xy=(x + 0.265, 0.51),
+                xytext=(x + 0.205, 0.51),
                 arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
             )
 
