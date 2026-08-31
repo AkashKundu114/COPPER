@@ -10,6 +10,7 @@ from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
+from app.ai.llm.model_manager import model_manager
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
