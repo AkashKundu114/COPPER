@@ -161,3 +161,7 @@ scratch/
 ehthumbs.db
 Thumbs.db
 desktop.ini
+
+# ── Study Materials ───────────────────────────────────────────────────────────
+papers/
+!papers/references.md
