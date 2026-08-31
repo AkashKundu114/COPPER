@@ -91,9 +91,7 @@ class ModelTierManager:
         while True:
             await asyncio.sleep(15)
             now = time.time()
-            expired = [
-                m for m, st in self._resident.items() if (now - st.last_used_at) >= st.idle_timeout_seconds
-            ]
+            expired = [m for m, st in self._resident.items() if (now - st.last_used_at) >= st.idle_timeout_seconds]
             for model in expired:
                 await self._unload(model)
                 self._resident.pop(model, None)

@@ -2,7 +2,6 @@ import csv
 import datetime
 import io
 import json
-import os
 import re
 from pathlib import Path
 from typing import Any
@@ -56,56 +55,111 @@ class DocumentService:
             "name": "Technical Architecture & System Report",
             "description": "In-depth engineering report with executive summary, system architecture, component breakdown, and benchmarks.",
             "default_format": "pdf",
-            "recommended_sections": ["Executive Summary", "System Architecture", "Component Specifications", "Security & Data Governance", "Performance Benchmarks", "Recommendations"],
+            "recommended_sections": [
+                "Executive Summary",
+                "System Architecture",
+                "Component Specifications",
+                "Security & Data Governance",
+                "Performance Benchmarks",
+                "Recommendations",
+            ],
         },
         "project_proposal": {
             "id": "project_proposal",
             "name": "Project Proposal & Implementation Plan",
             "description": "Formal proposal outlining scope, business justification, milestones, resource allocation, and risk matrix.",
             "default_format": "docx",
-            "recommended_sections": ["Problem Statement", "Proposed Solution", "Project Scope & Deliverables", "Timeline & Milestones", "Resource Requirements", "Risk Analysis"],
+            "recommended_sections": [
+                "Problem Statement",
+                "Proposed Solution",
+                "Project Scope & Deliverables",
+                "Timeline & Milestones",
+                "Resource Requirements",
+                "Risk Analysis",
+            ],
         },
         "executive_summary": {
             "id": "executive_summary",
             "name": "Executive Briefing Document",
             "description": "High-impact summary tailored for leadership with key findings, metric highlights, and strategic decisions.",
             "default_format": "pdf",
-            "recommended_sections": ["Strategic Context", "Key Findings & Metrics", "Impact Analysis", "Actionable Next Steps"],
+            "recommended_sections": [
+                "Strategic Context",
+                "Key Findings & Metrics",
+                "Impact Analysis",
+                "Actionable Next Steps",
+            ],
         },
         "meeting_notes": {
             "id": "meeting_notes",
             "name": "Meeting Minutes & Action Items",
             "description": "Structured agenda, discussion points, decisions made, and assigned action item table.",
             "default_format": "md",
-            "recommended_sections": ["Meeting Overview & Attendees", "Agenda Topics", "Discussion Summary", "Key Decisions Made", "Action Items & Owners"],
+            "recommended_sections": [
+                "Meeting Overview & Attendees",
+                "Agenda Topics",
+                "Discussion Summary",
+                "Key Decisions Made",
+                "Action Items & Owners",
+            ],
         },
         "resume": {
             "id": "resume",
             "name": "Professional Curriculum Vitae / Resume",
             "description": "Polished career profile with summary, core competencies, professional experience, education, and technical skills.",
             "default_format": "pdf",
-            "recommended_sections": ["Professional Summary", "Core Competencies", "Work Experience", "Technical Skills", "Education & Certifications"],
+            "recommended_sections": [
+                "Professional Summary",
+                "Core Competencies",
+                "Work Experience",
+                "Technical Skills",
+                "Education & Certifications",
+            ],
         },
         "formal_letter": {
             "id": "formal_letter",
             "name": "Formal Business / Official Letter",
             "description": "Standard business letter format with header block, salutation, body paragraphs, call to action, and signature block.",
             "default_format": "docx",
-            "recommended_sections": ["Recipient Information", "Subject Line", "Salutation", "Opening Context", "Core Message", "Call to Action", "Sign-off"],
+            "recommended_sections": [
+                "Recipient Information",
+                "Subject Line",
+                "Salutation",
+                "Opening Context",
+                "Core Message",
+                "Call to Action",
+                "Sign-off",
+            ],
         },
         "invoice_table": {
             "id": "invoice_table",
             "name": "Tabular Data & Financial Sheet",
             "description": "Structured columns, line items, unit costs, subtotals, taxes, and grand totals.",
             "default_format": "csv",
-            "recommended_sections": ["Item Description", "Category", "Quantity", "Unit Rate", "Subtotal", "Tax", "Total"],
+            "recommended_sections": [
+                "Item Description",
+                "Category",
+                "Quantity",
+                "Unit Rate",
+                "Subtotal",
+                "Tax",
+                "Total",
+            ],
         },
         "research_paper": {
             "id": "research_paper",
             "name": "Academic & Scientific Research Paper",
             "description": "Formal research layout with abstract, literature review, methodology, findings, and bibliography.",
             "default_format": "html",
-            "recommended_sections": ["Abstract", "Introduction", "Related Work", "Methodology", "Experimental Results", "Discussion", "References"],
+            "recommended_sections": [
+                "Abstract",
+                "Introduction",
+                "Related Work",
+                "Methodology",
+                "Experimental Results",
+                "Discussion",
+                "References",
+            ],
         },
     }
 
@@ -149,18 +203,18 @@ class DocumentService:
         out_path = self.output_dir / fname
 
         try:
-            from reportlab.lib.pagesizes import letter
             from reportlab.lib import colors
+            from reportlab.lib.enums import TA_LEFT
+            from reportlab.lib.pagesizes import letter
+            from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
             from reportlab.platypus import (
-                SimpleDocTemplate,
+                HRFlowable,
                 Paragraph,
+                SimpleDocTemplate,
                 Spacer,
                 Table,
                 TableStyle,
-                HRFlowable,
             )
-            from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-            from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
             buffer = io.BytesIO()
             doc = SimpleDocTemplate(
@@ -348,7 +402,6 @@ class DocumentService:
         """
         import docx
         from docx.shared import Inches, Pt, RGBColor
-        from docx.enum.text import WD_ALIGN_PARAGRAPH
 
         fname = self._sanitize_filename(filename or title, "docx")
         out_path = self.output_dir / fname
@@ -372,7 +425,9 @@ class DocumentService:
 
         # Subtitle / Author
         sub_p = doc.add_paragraph()
-        sub_run = sub_p.add_run(f"Author: {author}  |  Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}")
+        sub_run = sub_p.add_run(
+            f"Author: {author}  |  Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+        )
         sub_run.font.size = Pt(9.5)
         sub_run.font.italic = True
         sub_run.font.color.rgb = RGBColor(100, 116, 139)
@@ -472,7 +527,9 @@ class DocumentService:
             slide = prs.slides.add_slide(title_slide_layout)
             slide.shapes.title.text = title
             if len(slide.placeholders) > 1:
-                slide.placeholders[1].text = f"Author: {author}  |  Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+                slide.placeholders[
+                    1
+                ].text = f"Author: {author}  |  Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
 
             bullet_layout = prs.slide_layouts[1]
             for s in sections:
@@ -618,10 +675,10 @@ class DocumentService:
 
         lines = [
             "---",
-            f"title: \"{title}\"",
-            f"author: \"{author}\"",
-            f"date: \"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}\"",
-            f"generator: \"C.O.P.P.E.R. AI Document Engine\"",
+            f'title: "{title}"',
+            f'author: "{author}"',
+            f'date: "{datetime.datetime.now().strftime("%Y-%m-%d %H:%M UTC")}"',
+            'generator: "C.O.P.P.E.R. AI Document Engine"',
             "---",
             "",
             f"# {title}",
@@ -693,7 +750,8 @@ class DocumentService:
             if s.get("content"):
                 paras = [p.strip() for p in s["content"].split("\n\n") if p.strip()]
                 for p in paras:
-                    sec_html.append(f"<p>{p.replace('\n', '<br/>')}</p>")
+                    formatted_p = p.replace("\n", "<br/>")
+                    sec_html.append(f"<p>{formatted_p}</p>")
             if s.get("bullets"):
                 sec_html.append("<ul class='bullet-list'>")
                 for b in s["bullets"]:
@@ -839,7 +897,7 @@ class DocumentService:
   <div class="container">
     <header>
       <h1>{title}</h1>
-      <div class="meta-bar">Generated by <strong>{author}</strong> · {datetime.datetime.now().strftime('%B %d, %Y · %H:%M UTC')}</div>
+      <div class="meta-bar">Generated by <strong>{author}</strong> · {datetime.datetime.now().strftime("%B %d, %Y · %H:%M UTC")}</div>
     </header>
     <main>
       {"".join(body_elements)}
@@ -1002,21 +1060,31 @@ class DocumentService:
         elif fmt == "pptx":
             file_bytes, out_path = self.generate_pptx(title=title, sections=sections, filename=filename, author=author)
         elif fmt == "xlsx":
-            file_bytes, out_path = self.generate_xlsx(title=title, sections=sections, headers=headers, rows=rows, filename=filename, author=author)
+            file_bytes, out_path = self.generate_xlsx(
+                title=title, sections=sections, headers=headers, rows=rows, filename=filename, author=author
+            )
         elif fmt == "md":
-            text_res, out_path = self.generate_markdown(title=title, sections=sections, filename=filename, author=author)
+            text_res, out_path = self.generate_markdown(
+                title=title, sections=sections, filename=filename, author=author
+            )
             file_bytes = text_res.encode("utf-8")
         elif fmt == "html":
             text_res, out_path = self.generate_html(title=title, sections=sections, filename=filename, author=author)
             file_bytes = text_res.encode("utf-8")
         elif fmt == "csv":
-            text_res, out_path = self.generate_csv(headers=headers or ["Column 1", "Column 2"], rows=rows or [], filename=filename)
+            text_res, out_path = self.generate_csv(
+                headers=headers or ["Column 1", "Column 2"], rows=rows or [], filename=filename
+            )
             file_bytes = text_res.encode("utf-8")
         elif fmt == "tsv":
-            text_res, out_path = self.generate_tsv(headers=headers or ["Column 1", "Column 2"], rows=rows or [], filename=filename)
+            text_res, out_path = self.generate_tsv(
+                headers=headers or ["Column 1", "Column 2"], rows=rows or [], filename=filename
+            )
             file_bytes = text_res.encode("utf-8")
         elif fmt == "json":
-            text_res, out_path = self.generate_json(data=data or {"title": title, "sections": sections}, filename=filename)
+            text_res, out_path = self.generate_json(
+                data=data or {"title": title, "sections": sections}, filename=filename
+            )
             file_bytes = text_res.encode("utf-8")
         else:
             text_res, out_path = self.generate_text(title=title, sections=sections, filename=filename, author=author)
@@ -1057,7 +1125,7 @@ class DocumentService:
             "size_formatted": size_formatted,
             "indexed_chunks": indexed_chunks,
             "download_url": f"/documents/download/{out_path.name}",
-            "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
         }
 
     def list_generated_documents(self) -> list[dict[str, Any]]:
@@ -1323,4 +1391,3 @@ class DocumentService:
 
 
 document_service = DocumentService()
-

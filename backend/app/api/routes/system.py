@@ -212,4 +212,3 @@ async def enforce_keep_only_mini_model():
 
     result = await ollama_client.keep_only_mini_model_loaded()
     return result
-

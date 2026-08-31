@@ -56,7 +56,7 @@ def make_accuracy_benchmark():
         "Verification Score (%)", fontsize=12, fontweight="bold", color="#cbd5e1"
     )
     ax.set_title(
-        "C.O.P.P.E.R. Performance & Safety Verification (1,360 Combinatorial Test Cases)",
+        "C.O.P.P.E.R. Performance & Safety Verification (1,740 Combinatorial Test Cases)",
         fontsize=14,
         fontweight="bold",
         color="#f8fafc",
@@ -695,9 +695,195 @@ def make_audio_pipeline_diagram():
     save_image(fig, "audio_voice_pipeline.png")
 
 
+def make_nexus_dag_diagram():
+    fig, ax = plt.subplots(figsize=(12.5, 6.0), facecolor="#090d16")
+    ax.set_facecolor("#0d1322")
+    ax.axis("off")
+
+    stages = [
+        ("1. Goal Decomposition", "NexusPlanner & DeepSeek-R1 splits goal into DAG SubTasks", "#f97316", 0.04),
+        ("2. Dependency Engine", "TaskGraph resolves topological layers & cycle locks", "#06b6d4", 0.28),
+        ("3. Parallel Execution", "Specialists (AXIS, OMNI, KINESIS) run concurrently", "#a855f7", 0.52),
+        ("4. ContextBus Synthesis", "Inter-agent messages stream into final polished output", "#10b981", 0.76),
+    ]
+
+    for title, desc, col, x in stages:
+        box = patches.FancyBboxPatch(
+            (x, 0.32),
+            0.20,
+            0.38,
+            boxstyle="round,pad=0.02,rounding_size=0.03",
+            facecolor="#131b2e",
+            edgecolor=col,
+            linewidth=2.0,
+        )
+        ax.add_patch(box)
+        ax.text(
+            x + 0.10,
+            0.60,
+            title,
+            fontsize=9.5,
+            fontweight="bold",
+            color=col,
+            ha="center",
+            va="center",
+        )
+        ax.text(
+            x + 0.10,
+            0.43,
+            desc,
+            fontsize=8.5,
+            color="#cbd5e1",
+            ha="center",
+            va="center",
+            wrap=True,
+        )
+
+        if x < 0.7:
+            ax.annotate(
+                "",
+                xy=(x + 0.25, 0.51),
+                xytext=(x + 0.21, 0.51),
+                arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
+            )
+
+    ax.set_title(
+        "Nexus Multi-Agent DAG Task Graph & Concurrent Orchestration Pipeline",
+        fontsize=14,
+        fontweight="bold",
+        color="#f8fafc",
+        pad=20,
+    )
+    save_image(fig, "nexus_dag_orchestration.png")
+
+
+def make_self_healing_diagram():
+    fig, ax = plt.subplots(figsize=(12.5, 6.0), facecolor="#090d16")
+    ax.set_facecolor("#0d1322")
+    ax.axis("off")
+
+    stages = [
+        ("1. Anomaly Sentinel", "Real-time process, memory leak, and VRAM watchdog", "#3b82f6", 0.04),
+        ("2. Health Diagnostics", "Identifies GPU OOM, worker deadlocks, or crashed subagents", "#f97316", 0.28),
+        ("3. Automated Recovery", "Reaps zombies, prunes KV cache, and resets Ollama pipes", "#06b6d4", 0.52),
+        ("4. Dynamic Fallback", "Graceful model tier switching with zero user disruption", "#10b981", 0.76),
+    ]
+
+    for title, desc, col, x in stages:
+        box = patches.FancyBboxPatch(
+            (x, 0.32),
+            0.20,
+            0.38,
+            boxstyle="round,pad=0.02,rounding_size=0.03",
+            facecolor="#131b2e",
+            edgecolor=col,
+            linewidth=2.0,
+        )
+        ax.add_patch(box)
+        ax.text(
+            x + 0.10,
+            0.60,
+            title,
+            fontsize=9.5,
+            fontweight="bold",
+            color=col,
+            ha="center",
+            va="center",
+        )
+        ax.text(
+            x + 0.10,
+            0.43,
+            desc,
+            fontsize=8.5,
+            color="#cbd5e1",
+            ha="center",
+            va="center",
+            wrap=True,
+        )
+
+        if x < 0.7:
+            ax.annotate(
+                "",
+                xy=(x + 0.25, 0.51),
+                xytext=(x + 0.21, 0.51),
+                arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
+            )
+
+    ax.set_title(
+        "Self-Healing Engine & Autonomous Sentinel Watchdog Loop",
+        fontsize=14,
+        fontweight="bold",
+        color="#f8fafc",
+        pad=20,
+    )
+    save_image(fig, "self_healing_sentinel.png")
+
+
+def make_document_pipeline_diagram():
+    fig, ax = plt.subplots(figsize=(12.5, 6.0), facecolor="#090d16")
+    ax.set_facecolor("#0d1322")
+    ax.axis("off")
+
+    stages = [
+        ("1. Structured Input", "Markdown text, code blocks, tables, and visual artifacts", "#3b82f6", 0.04),
+        ("2. ReportLab Engine", "Flowable document AST, custom canvas, and page layouts", "#a855f7", 0.28),
+        ("3. Executive Styling", "Cyberpunk / Molten Copper theme, syntax highlighting, charts", "#f97316", 0.52),
+        ("4. Multi-Format Output", "Publication-ready PDF, DOCX, CSV, and HTML exports", "#10b981", 0.76),
+    ]
+
+    for title, desc, col, x in stages:
+        box = patches.FancyBboxPatch(
+            (x, 0.32),
+            0.20,
+            0.38,
+            boxstyle="round,pad=0.02,rounding_size=0.03",
+            facecolor="#131b2e",
+            edgecolor=col,
+            linewidth=2.0,
+        )
+        ax.add_patch(box)
+        ax.text(
+            x + 0.10,
+            0.60,
+            title,
+            fontsize=9.5,
+            fontweight="bold",
+            color=col,
+            ha="center",
+            va="center",
+        )
+        ax.text(
+            x + 0.10,
+            0.43,
+            desc,
+            fontsize=8.5,
+            color="#cbd5e1",
+            ha="center",
+            va="center",
+            wrap=True,
+        )
+
+        if x < 0.7:
+            ax.annotate(
+                "",
+                xy=(x + 0.25, 0.51),
+                xytext=(x + 0.21, 0.51),
+                arrowprops={"arrowstyle": "->", "color": "#64748b", "lw": 2.5},
+            )
+
+    ax.set_title(
+        "Document & Report Generation Pipeline (ReportLab PDF & DOCX)",
+        fontsize=14,
+        fontweight="bold",
+        color="#f8fafc",
+        pad=20,
+    )
+    save_image(fig, "document_generation_pipeline.png")
+
+
 if __name__ == "__main__":
     print("=" * 66)
-    print("      GENERATING 10 CRYSTAL-CLEAR HIGH-DPI VISUAL ASSETS        ")
+    print("      GENERATING 13 CRYSTAL-CLEAR HIGH-DPI VISUAL ASSETS        ")
     print("=" * 66)
     make_accuracy_benchmark()
     make_latency_percentiles()
@@ -709,6 +895,9 @@ if __name__ == "__main__":
     make_firewall_diagram()
     make_epistemic_memory_diagram()
     make_audio_pipeline_diagram()
+    make_nexus_dag_diagram()
+    make_self_healing_diagram()
+    make_document_pipeline_diagram()
     print("=" * 66)
-    print("[SUCCESS] All 10 High-DPI images saved in docs/images/ and images/")
+    print("[SUCCESS] All 13 High-DPI images saved in docs/images/ and images/")
     print("=" * 66)

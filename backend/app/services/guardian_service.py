@@ -27,13 +27,17 @@ class GuardianService:
 
             # Record Guardian outcome in self-model
             try:
-                from app.services.self_model_service import self_model_service
                 import asyncio
-                asyncio.ensure_future(self_model_service.record_guardian_outcome(
-                    verdict_level=verdict.level.name,
-                    reasoning=verdict.reasoning or "",
-                    user_action="pending",
-                ))
+
+                from app.services.self_model_service import self_model_service
+
+                asyncio.ensure_future(
+                    self_model_service.record_guardian_outcome(
+                        verdict_level=verdict.level.name,
+                        reasoning=verdict.reasoning or "",
+                        user_action="pending",
+                    )
+                )
             except Exception:
                 pass
 

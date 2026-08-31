@@ -27,19 +27,21 @@ SELF_CONTEXT
 {self_context_snippet}
 """
 
+
 def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_context: str = "") -> str:
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
     self_snippet = self_context if self_context else "No self-model entries yet."
-    
+
     formatted_base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
-    
+
     return f"{formatted_base}\nAgent Role: {agent_type.value.upper()}{ctx_snippet}"
+
 
 def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "") -> str:
     self_snippet = self_context if self_context else "No self-model entries yet."
     base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
-    
+
     if mode == "reasoning":
         mode_instructions = (
             "\nMode: Deep Cognitive. Before answering, reason step-by-step inside <think>...</think> tags. "
@@ -67,13 +69,13 @@ def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "")
         )
     elif mode == "fast":
         mode_instructions = (
-            "\nMode: Instant Reflex. Be extremely concise — answer only, no elaboration. "
-            "Still opinionated, just terse."
+            "\nMode: Instant Reflex. Be extremely concise — answer only, no elaboration. Still opinionated, just terse."
         )
     else:
         mode_instructions = ""
-        
+
     return f"{base}{mode_instructions}{ctx_snippet}"
+
 
 def build_messages(system_prompt: str, history: list[dict[str, str]], current_message: str) -> list[dict[str, str]]:
     msgs = [{"role": "system", "content": system_prompt}]

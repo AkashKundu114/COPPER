@@ -190,8 +190,8 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.VISION: [
         (
-            r"\b(what is on my screen|describe this screenshot|read text from this image|ocr|read the error message in|scanned pdf receipt|circuit board picture|extract the text from|check the alignment of|find the bounding box coordinates of|describe the objects and colors|describe my screen)\b",
-            5.0,
+            r"\b(what is on my screen|describe this screenshot|read text from this image|ocr|read the error message in|scanned pdf receipt|circuit board picture|extract the text from|check the alignment of|find the bounding box coordinates of|describe the objects and colors|describe my screen|inspect my screen|inspect the screen|screen right now)\b",
+            6.0,
         ),
         (
             r"\b(look at this image|inspect this picture|analyze this photo|what do you see|diagram photo|chart image|ui mockup photo|webpage screenshot|architecture diagram|screenshot of|scanned pdf|this uploaded image|image capture)\b",
@@ -225,15 +225,15 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.DOCUMENT: [
         (
-            r"\b(write|create|generate|make|build|export|turn this into)\s+.*(word doc|word document|\.docx|slide deck|presentation|\.pptx|spreadsheet|\.xlsx|pdf report|\.pdf)\b",
-            5.0,
+            r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|technical report|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice|presentation slide deck|financial report|specification document|whitepaper|invoice document)\b",
+            7.0,
+        ),
+        (
+            r"\b(write|create|generate|make|build|export|turn this into|draft)\s+.*(word doc|word document|\.docx|slide deck|presentation|\.pptx|spreadsheet|\.xlsx|pdf report|\.pdf|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice)\b",
+            6.0,
         ),
         (r"\b(docx|pptx|xlsx|pdf)\b", 3.0),
         (r"\b(slide deck|presentation slides|word document|excel sheet)\b", 4.0),
-        (
-            r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|technical report|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document)\b",
-            6.0,
-        ),
         (
             r"\b(generate (a\s+|an\s+)?pdf|create (a\s+|an\s+)?pdf|make (a\s+|an\s+)?pdf|export (to\s+)?pdf|save as pdf|convert to pdf|as (a\s+)?pdf|in pdf format)\b",
             6.0,
@@ -268,6 +268,7 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
         (r"^(remind me to|set an alarm|schedule a notification|schedule a time to)\b", 6.0),
         (r"^(delete the file|open the terminal|open chrome|close all windows|kill process)\b", 6.0),
         (r"^(what is on my screen|describe this screenshot)\b", 6.0),
+        (r"^(write a script to|create a script to|plan a roadmap for|explain how to|draw an image of)\b", 8.0),
     ],
     AgentType.CODING: [
         (r"^(what is|who is|explain the history of|why was .* invented|tell me about|summarize)\b", 4.0),
@@ -297,17 +298,22 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.PLANNER: [
         (r"^(write a script to|delete the file about|explain how to|remind me to|schedule a time to)\b", 6.0),
+        (r"\b(quarterly financial report|technical specification|formal invoice|whitepaper document)\b", 6.0),
     ],
     AgentType.VISION: [
         (r"^(delete the file about|remind me to|write a script to|schedule a time to|plan a roadmap for)\b", 6.0),
         (r"\btake a screenshot.*and save\b", 6.0),
     ],
+    AgentType.IMAGE: [
+        (r"^(remind me to|schedule a time to|write a script to|delete the file|what is|explain|summarize)\b", 6.0),
+        (r"^(plan a roadmap for|break down|build a checklist)\b", 6.0),
+    ],
 }
 
 CONSEQUENTIAL_PATTERNS = [
     r"(format\s+[a-z]:?|rm\s+-rf|del\s+/f|dd\s+if=|mkfs|wipe\s+(disk|all|partitions)|factory\s+reset)",
-    r"(delete\s+all|drop\s+(database|table|all)|truncate|delete\s+from\s+users)",
-    r"(publish\s+to\s+prod|deploy\s+to\s+production|push\s+--force|destroy)",
+    r"(delete\s+all|drop\s+(database|table|all)|truncate|delete\s+from\s+users|chmod\s+-r\s+777|remove-item\s+-recurse)",
+    r"(publish\s+to\s+prod|deploy\s+to\s+production|push\s+--force|destroy|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh)",
     r"(send\s+email\s+to|transfer\s+funds|cancel\s+subscription)",
 ]
 

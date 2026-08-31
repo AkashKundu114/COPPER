@@ -2,8 +2,9 @@ import asyncio
 import re
 import time
 import uuid
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
-from typing import Any, Callable, Coroutine
+from typing import Any
 
 from app.ai.agents.automation_agent import automation_agent
 from app.ai.agents.coding_agent import coding_agent
@@ -204,9 +205,7 @@ class TaskGraphExecutor:
 
                 # Interpolate inputs from prior tasks
                 merged_outputs = {**outputs_by_id, **outputs_by_key}
-                interpolated_instruction = self._substitute_placeholders(
-                    sub_task.instruction, merged_outputs
-                )
+                interpolated_instruction = self._substitute_placeholders(sub_task.instruction, merged_outputs)
 
                 # Send handoff message from dependencies to this agent
                 if sub_task.depends_on:
@@ -226,8 +225,10 @@ class TaskGraphExecutor:
                 agent_inst = self._resolve_agent(sub_task.agent)
                 try:
                     logger.info(f"NEXUS DAG [{dag_id}] executing sub-task {sub_task.id} with agent {sub_task.agent}")
-                    
-                    if sub_task.agent.upper() in ["FORGE", "SANDBOX"] and ("execute" in interpolated_instruction.lower() or "run" in interpolated_instruction.lower()):
+
+                    if sub_task.agent.upper() in ["FORGE", "SANDBOX"] and (
+                        "execute" in interpolated_instruction.lower() or "run" in interpolated_instruction.lower()
+                    ):
                         res = await self._execute_forge_sandbox_task(interpolated_instruction)
                     elif agent_inst:
                         res = await agent_inst.run(
@@ -237,14 +238,13 @@ class TaskGraphExecutor:
                         )
                     else:
                         from app.ai.llm.ollama_client import ollama_client
-                        res = await ollama_client.chat(
-                            messages=[{"role": "user", "content": interpolated_instruction}]
-                        )
+
+                        res = await ollama_client.chat(messages=[{"role": "user", "content": interpolated_instruction}])
 
                     sub_task.output = res
                     sub_task.status = "done"
                     sub_task.execution_time_ms = round((time.perf_counter() - t_start) * 1000.0, 2)
-                    
+
                     outputs_by_id[sub_task.id] = res
                     if sub_task.output_key:
                         outputs_by_key[sub_task.output_key] = res
@@ -257,12 +257,14 @@ class TaskGraphExecutor:
                     if "Document Artifact Created Successfully" in str(res):
                         url_match = re.search(r"Download URL\]:\s*\[(.*?)\]\((.*?)\)", str(res))
                         if url_match:
-                            artifacts.append({
-                                "name": url_match.group(1),
-                                "url": url_match.group(2),
-                                "agent": sub_task.agent,
-                                "task_id": sub_task.id,
-                            })
+                            artifacts.append(
+                                {
+                                    "name": url_match.group(1),
+                                    "url": url_match.group(2),
+                                    "agent": sub_task.agent,
+                                    "task_id": sub_task.id,
+                                }
+                            )
 
                     # Send status update message on bus
                     await context_bus.send_message(
@@ -348,12 +350,11 @@ class TaskGraphExecutor:
                 )
             else:
                 from app.ai.llm.ollama_client import ollama_client
-                final_text = await ollama_client.chat(
-                    messages=[{"role": "user", "content": synth_instruction}]
-                )
+
+                final_text = await ollama_client.chat(messages=[{"role": "user", "content": synth_instruction}])
         except Exception as e:
             logger.error(f"NEXUS synthesis error: {e}")
-            final_text = f"NEXUS multi-agent collaboration completed:\n" + "\n".join(
+            final_text = "NEXUS multi-agent collaboration completed:\n" + "\n".join(
                 f"- **[{t.agent}] {t.title}:** {t.output or t.error}" for t in plan.tasks
             )
 

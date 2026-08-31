@@ -161,7 +161,12 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
-        payload: dict[str, Any] = {"model": target_model, "messages": messages, "stream": False, "keep_alive": keep_alive}
+        payload: dict[str, Any] = {
+            "model": target_model,
+            "messages": messages,
+            "stream": False,
+            "keep_alive": keep_alive,
+        }
         if format is not None:
             payload["format"] = format
 
@@ -190,7 +195,12 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
-        payload: dict[str, Any] = {"model": target_model, "messages": messages, "stream": True, "keep_alive": keep_alive}
+        payload: dict[str, Any] = {
+            "model": target_model,
+            "messages": messages,
+            "stream": True,
+            "keep_alive": keep_alive,
+        }
         if format is not None:
             payload["format"] = format
 
@@ -212,4 +222,3 @@ class OllamaClient:
 
 
 ollama_client = OllamaClient()
-

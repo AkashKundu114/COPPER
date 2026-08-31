@@ -34,7 +34,7 @@ async def file_read(path: str, encoding: str = "utf-8") -> dict[str, Any]:
         if size > 5 * 1024 * 1024:
             return {"status": "error", "error": f"File is too large ({size} bytes > 5MB limit)."}
 
-        with open(p, "r", encoding=encoding, errors="replace") as f:
+        with open(p, encoding=encoding, errors="replace") as f:
             content = f.read()
 
         return {
@@ -115,12 +115,14 @@ async def file_list(directory: str = ".", pattern: str = "*") -> dict[str, Any]:
                 full = target_dir / item
                 is_dir = full.is_dir()
                 size = 0 if is_dir else (full.stat().st_size if full.exists() else 0)
-                entries.append({
-                    "name": item,
-                    "is_dir": is_dir,
-                    "size_bytes": size,
-                    "path": str(full),
-                })
+                entries.append(
+                    {
+                        "name": item,
+                        "is_dir": is_dir,
+                        "size_bytes": size,
+                        "path": str(full),
+                    }
+                )
 
         return {
             "status": "success",

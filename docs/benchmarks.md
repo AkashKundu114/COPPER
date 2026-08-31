@@ -7,16 +7,16 @@
 
 ## 1. Core Performance & Accuracy Metrics
 
-All benchmarks evaluated on the **1,360-sample combinatorial evaluation suite** ([`backend/eval/benchmark.py`](../backend/eval/benchmark.py)) on an **AMD Ryzen 9 8940HX** host with **NVIDIA GeForce RTX 5060 Laptop GPU (8GB VRAM)** and **16GB DDR5 RAM**.
+All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** ([`backend/eval/benchmark.py`](../backend/eval/benchmark.py)) on an **AMD Ryzen 9 8940HX** host with **NVIDIA GeForce RTX 5060 Laptop GPU (8GB VRAM)** and **16GB DDR5 RAM**.
 
 ![Routing & Guardian Benchmark](images/routing_accuracy_benchmark.png)
 
 | Benchmark Category | Sample Count | Accuracy | Precision / F1 | Latency (Avg) | Throughput (QPS) | Risk Breaches |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Agent Intent Routing** | 1,110 | **100.0%** | **100.0%** | **0.052 ms** | **~18,950 QPS** | 0 |
-| **Guardian Safety Catch**| 250 | **100.0%** | **100.0%** | **0.002 ms** | **~420,000 QPS**| **0 (0.0% Risk)**|
+| **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.102 ms** | **~9,660 QPS** | 0 |
+| **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.003 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest Test Suite** | 213 | **100.0%** | **100.0%** | **12.53s total** | — | 0 |
+| **Pytest Test Suite** | 313 | **100.0%** | **100.0%** | **46.50s total** | — | 0 |
 
 ---
 
@@ -149,3 +149,17 @@ COPPER includes a fully-integrated `psutil`-powered telemetry dashboard accessib
 - **Thermal Monitors**: Monitors GPU Core, GPU Hotspot, and CPU Package temperatures in real-time.
 - **Memory Allocations**: Real-time breakdowns of System RAM vs VRAM usage across active Subagents, Core Models, and the KV Cache.
 - **Synthetic Evaluation**: Allows the user to execute synthetic benchmark runs dynamically from the UI, streaming results directly into the React component.
+
+---
+
+## 8. Multi-Agent & Resilience Architecture Pipelines
+
+### Nexus Multi-Agent DAG Task Decomposition
+![Nexus Multi-Agent DAG Orchestration](images/nexus_dag_orchestration.png)
+
+### Autonomous Self-Healing & Sentinel Watchdog
+![Self-Healing Sentinel](images/self_healing_sentinel.png)
+
+### Document & Executive Report Generation Engine
+![Document Generation Pipeline](images/document_generation_pipeline.png)
+

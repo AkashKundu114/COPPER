@@ -6,6 +6,7 @@ websockets==17.1
 python-multipart==0.0.32
 sqlalchemy
 alembic
+psycopg2-binary
 redis
 chromadb
 httpx

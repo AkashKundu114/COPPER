@@ -1,9 +1,5 @@
-import json
-import re
 from collections.abc import AsyncGenerator
-from typing import Any
 
-from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.ai.tools.executor import tool_executor
 from app.ai.tools.registry import tool_registry

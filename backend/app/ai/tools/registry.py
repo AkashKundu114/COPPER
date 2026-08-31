@@ -1,7 +1,7 @@
 import inspect
-import json
-from dataclasses import dataclass, field
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass
+from typing import Any
 
 from app.core.logger import logger
 

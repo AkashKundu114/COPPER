@@ -1,9 +1,8 @@
 import math
 import re
 import uuid
-import time
-from datetime import datetime, timezone
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+
 from sqlalchemy import desc
 
 from app.ai.memory.vector_store import VectorStore
@@ -13,16 +12,17 @@ from app.database.postgres import SessionLocal
 
 _self_memory_store = VectorStore("copper_self_memory")
 
+
 class SelfModelService:
     # Bayesian update constants from docs/research/epistemic-memory.md
     LEARNING_RATE = 0.15
     # Decay rates (per day)
     DECAY_RATES = {
-        SelfMemoryCategory.DECISION: 0.005,    # ~138 day half-life
-        SelfMemoryCategory.CORRECTION: 0.03,   # ~23 day half-life  
-        SelfMemoryCategory.POSITION: 0.005,    # ~138 day half-life
-        SelfMemoryCategory.TRACK_RECORD: 0.005,# ~138 day half-life
-        SelfMemoryCategory.OPEN_QUESTION: 0.10,# ~7 day half-life
+        SelfMemoryCategory.DECISION: 0.005,  # ~138 day half-life
+        SelfMemoryCategory.CORRECTION: 0.03,  # ~23 day half-life
+        SelfMemoryCategory.POSITION: 0.005,  # ~138 day half-life
+        SelfMemoryCategory.TRACK_RECORD: 0.005,  # ~138 day half-life
+        SelfMemoryCategory.OPEN_QUESTION: 0.10,  # ~7 day half-life
     }
     # Correction detection patterns
     CORRECTION_PATTERNS = [
@@ -42,10 +42,16 @@ class SelfModelService:
         db = SessionLocal()
         try:
             # Get unresolved open questions (always included)
-            open_qs = db.query(SelfMemory).filter(
-                SelfMemory.category == SelfMemoryCategory.OPEN_QUESTION,
-                SelfMemory.outcome == None  # noqa: E711
-            ).order_by(desc(SelfMemory.created_at)).limit(2).all()
+            open_qs = (
+                db.query(SelfMemory)
+                .filter(
+                    SelfMemory.category == SelfMemoryCategory.OPEN_QUESTION,
+                    SelfMemory.outcome == None,  # noqa: E711
+                )
+                .order_by(desc(SelfMemory.created_at))
+                .limit(2)
+                .all()
+            )
 
             # Vector search for relevant self-memories
             relevant = []
@@ -81,10 +87,12 @@ class SelfModelService:
             # Render compact text
             lines = []
             for mem in top_memories:
-                cat = mem.category.value.upper().replace('_', ' ')
+                cat = mem.category.value.upper().replace("_", " ")
                 outcome_tag = f" [{mem.outcome.value}]" if mem.outcome else ""
-                lines.append(f"- [{cat}]{outcome_tag} {mem.content} (confidence: {mem.confidence:.0%}, evidence: {mem.evidence_count}x)")
-            
+                lines.append(
+                    f"- [{cat}]{outcome_tag} {mem.content} (confidence: {mem.confidence:.0%}, evidence: {mem.evidence_count}x)"
+                )
+
             return "\n".join(lines)
         finally:
             db.close()
@@ -101,15 +109,19 @@ class SelfModelService:
         """Detect and record user corrections."""
         if not self.detect_correction(user_message):
             return None
-        
-        content = f"User corrected COPPER: '{user_message[:200]}'. Previous response was about: '{copper_response[:150]}'"
+
+        content = (
+            f"User corrected COPPER: '{user_message[:200]}'. Previous response was about: '{copper_response[:150]}'"
+        )
         return await self._create_entry(
             category=SelfMemoryCategory.CORRECTION,
             content=content,
             confidence=0.8,
         )
 
-    async def record_decision(self, agent_type: str, decision: str, context: str, episode_id: int | None = None) -> SelfMemory | None:
+    async def record_decision(
+        self, agent_type: str, decision: str, context: str, episode_id: int | None = None
+    ) -> SelfMemory | None:
         """Record a significant decision COPPER made."""
         # Only record decisions with substance (not trivial chat)
         if len(decision) < 20:
@@ -125,7 +137,11 @@ class SelfModelService:
     async def record_guardian_outcome(self, verdict_level: str, reasoning: str, user_action: str) -> SelfMemory | None:
         """Record the outcome of a Guardian challenge."""
         content = f"Guardian {verdict_level}: {reasoning[:200]}. User chose: {user_action}"
-        outcome = SelfMemoryOutcome.CONFIRMED_HELPFUL if user_action in ("follow_rec", "Follow Rec") else SelfMemoryOutcome.UNKNOWN
+        outcome = (
+            SelfMemoryOutcome.CONFIRMED_HELPFUL
+            if user_action in ("follow_rec", "Follow Rec")
+            else SelfMemoryOutcome.UNKNOWN
+        )
         return await self._create_entry(
             category=SelfMemoryCategory.TRACK_RECORD,
             content=content,
@@ -133,7 +149,9 @@ class SelfModelService:
             outcome=outcome,
         )
 
-    async def record_reflection(self, content: str, category: SelfMemoryCategory = SelfMemoryCategory.POSITION, confidence: float = 0.5) -> SelfMemory | None:
+    async def record_reflection(
+        self, content: str, category: SelfMemoryCategory = SelfMemoryCategory.POSITION, confidence: float = 0.5
+    ) -> SelfMemory | None:
         """Record a reflection from the background reflection cycle."""
         return await self._create_entry(
             category=category,
@@ -141,7 +159,14 @@ class SelfModelService:
             confidence=confidence,
         )
 
-    async def _create_entry(self, category: SelfMemoryCategory, content: str, confidence: float = 0.5, outcome: SelfMemoryOutcome | None = None, related_episode_id: int | None = None) -> SelfMemory | None:
+    async def _create_entry(
+        self,
+        category: SelfMemoryCategory,
+        content: str,
+        confidence: float = 0.5,
+        outcome: SelfMemoryOutcome | None = None,
+        related_episode_id: int | None = None,
+    ) -> SelfMemory | None:
         """Create a self_memory row and index in vector store."""
         db = SessionLocal()
         try:
@@ -188,7 +213,7 @@ class SelfModelService:
             c_old = mem.confidence
             c_new = c_old + (1 - c_old) * self.LEARNING_RATE * math.log2(1 + mem.evidence_count)
             mem.confidence = min(c_new, 0.99)
-            mem.last_reinforced_at = datetime.now(timezone.utc)
+            mem.last_reinforced_at = datetime.now(UTC)
             db.commit()
             return True
         except Exception as e:
@@ -207,14 +232,13 @@ class SelfModelService:
         try:
             entries = db.query(SelfMemory).filter(SelfMemory.superseded_by == None).all()  # noqa: E711
             updated = 0
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             for entry in entries:
                 ref_time = entry.last_reinforced_at or entry.created_at
                 if ref_time is None:
                     continue
                 if ref_time.tzinfo is None:
-                    from datetime import timezone as tz
-                    ref_time = ref_time.replace(tzinfo=tz.utc)
+                    ref_time = ref_time.replace(tzinfo=UTC)
                 delta_days = (now - ref_time).total_seconds() / 86400
                 if delta_days < 0.1:
                     continue
@@ -242,7 +266,7 @@ class SelfModelService:
             if not mem:
                 return False
             mem.outcome = SelfMemoryOutcome.CONFIRMED_HELPFUL
-            mem.last_reinforced_at = datetime.now(timezone.utc)
+            mem.last_reinforced_at = datetime.now(UTC)
             db.commit()
             return True
         except Exception as e:

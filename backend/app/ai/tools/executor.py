@@ -1,11 +1,12 @@
 import json
 import re
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass
+from typing import Any
 
-from app.ai.tools.builtin import *  # Ensure all builtins are imported & registered
-from app.ai.tools.registry import BaseTool, tool_registry
+import app.ai.tools.builtin  # noqa: F401 - Ensure all builtins are imported & registered
+from app.ai.tools.registry import tool_registry
 from app.core.guardian import DisagreementLevel, GuardianVerdict, guardian_engine
 from app.core.logger import logger
 
@@ -91,7 +92,7 @@ class ToolExecutor:
 
         # Pattern 3: Clean top-level JSON object
         trimmed = text.strip()
-        if (trimmed.startswith("{") and trimmed.endswith("}")) or ("\"tool\":" in trimmed and "\"arguments\":" in trimmed):
+        if (trimmed.startswith("{") and trimmed.endswith("}")) or ('"tool":' in trimmed and '"arguments":' in trimmed):
             json_candidate = re.search(r"\{[\s\S]*\}", trimmed)
             if json_candidate:
                 parsed = self._safe_parse_json(json_candidate.group(0))
@@ -132,7 +133,9 @@ class ToolExecutor:
         tool = self.registry.get(tool_name)
         if not tool:
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-            err_msg = f"Unknown tool '{tool_name}'. Available tools: {', '.join(t.name for t in self.registry.list_tools())}"
+            err_msg = (
+                f"Unknown tool '{tool_name}'. Available tools: {', '.join(t.name for t in self.registry.list_tools())}"
+            )
             logger.warning(err_msg)
             return ToolResult(
                 tool_name=tool_name,

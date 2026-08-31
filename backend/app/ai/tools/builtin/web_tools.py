@@ -40,12 +40,14 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
                 raw_results = data.get("results", [])
                 results = []
                 for r in raw_results[:num_results]:
-                    results.append({
-                        "title": r.get("title", ""),
-                        "snippet": r.get("content", ""),
-                        "url": r.get("url", ""),
-                        "engine": r.get("engine", "searxng"),
-                    })
+                    results.append(
+                        {
+                            "title": r.get("title", ""),
+                            "snippet": r.get("content", ""),
+                            "url": r.get("url", ""),
+                            "engine": r.get("engine", "searxng"),
+                        }
+                    )
                 if results:
                     return {
                         "status": "success",
@@ -90,21 +92,25 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
                             unwrapped = urllib.parse.unquote(raw_link.split("uddg=")[-1].split("&")[0])
                         else:
                             unwrapped = raw_link
-                        results.append({
-                            "title": clean_title,
-                            "snippet": clean_snippet,
-                            "url": unwrapped,
-                            "engine": "duckduckgo",
-                        })
+                        results.append(
+                            {
+                                "title": clean_title,
+                                "snippet": clean_snippet,
+                                "url": unwrapped,
+                                "engine": "duckduckgo",
+                            }
+                        )
                 else:
                     for link, snippet in matches[:num_results]:
                         clean_snippet = re.sub(r"<[^>]+>", "", snippet).strip()
-                        results.append({
-                            "title": query,
-                            "snippet": clean_snippet,
-                            "url": link.strip(),
-                            "engine": "duckduckgo",
-                        })
+                        results.append(
+                            {
+                                "title": query,
+                                "snippet": clean_snippet,
+                                "url": link.strip(),
+                                "engine": "duckduckgo",
+                            }
+                        )
 
                 if results:
                     return {

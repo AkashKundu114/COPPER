@@ -181,9 +181,24 @@ class NexusPlanner:
         has_cue = any(cue in msg_lower for cue in multi_step_cues)
 
         action_verbs = [
-            "search", "research", "find", "code", "implement", "write",
-            "create", "generate", "document", "schedule", "remind", "test",
-            "automate", "analyze", "visualize", "execute", "export", "plot"
+            "search",
+            "research",
+            "find",
+            "code",
+            "implement",
+            "write",
+            "create",
+            "generate",
+            "document",
+            "schedule",
+            "remind",
+            "test",
+            "automate",
+            "analyze",
+            "visualize",
+            "execute",
+            "export",
+            "plot",
         ]
         verb_count = sum(1 for v in action_verbs if f" {v} " in f" {msg_lower} ")
 
@@ -251,7 +266,7 @@ class NexusPlanner:
 
             tasks = []
             for t in raw_tasks:
-                task_id = str(t.get("id", f"T{len(tasks)+1}"))
+                task_id = str(t.get("id", f"T{len(tasks) + 1}"))
                 tasks.append(
                     SubTask(
                         id=task_id,

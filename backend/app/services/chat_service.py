@@ -13,7 +13,7 @@ from app.ai.agents.vision_agent import vision_agent
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
-from app.ai.orchestration.agent_router import is_consequential_action, route_message, route_message_detailed
+from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
 from app.ai.orchestration.langchain_manager import langchain_manager
 from app.ai.orchestration.planner import nexus_planner
 from app.ai.orchestration.task_graph import task_graph_executor
@@ -74,9 +74,10 @@ class ChatService:
                 plan = await nexus_planner.plan(message, memory_context)
                 if plan.is_decomposition:
                     logger.info(f"NEXUS decomposed task into {len(plan.tasks)} sub-tasks: {plan.goal}")
-                    
+
                     async def ws_graph_event(event_type: str, payload: dict):
                         from app.api.websocket.manager import manager
+
                         await manager.send_task_graph_update(session_id, event_type, payload)
 
                     graph_result = await task_graph_executor.execute_plan(
@@ -84,7 +85,9 @@ class ChatService:
                     )
 
                     await context_engine.append_message(session_id, "assistant", graph_result.final_response)
-                    await memory_manager.save_interaction(session_id, message, graph_result.final_response, "nexus_multi_agent")
+                    await memory_manager.save_interaction(
+                        session_id, message, graph_result.final_response, "nexus_multi_agent"
+                    )
 
                     return {
                         "response": graph_result.final_response,
@@ -154,7 +157,9 @@ class ChatService:
         full_response = []
 
         # Check NEXUS Multi-Agent Collaboration
-        if mode == "auto" and nexus_planner.should_consider_decomposition(message, router_confidence=routing_res.confidence):
+        if mode == "auto" and nexus_planner.should_consider_decomposition(
+            message, router_confidence=routing_res.confidence
+        ):
             try:
                 yield "🧠 *NEXUS Planner evaluating multi-agent workflow decomposition...*\n\n"
                 plan = await nexus_planner.plan(message, memory_context)
@@ -167,6 +172,7 @@ class ChatService:
 
                     async def ws_graph_event(event_type: str, payload: dict):
                         from app.api.websocket.manager import manager
+
                         await manager.send_task_graph_update(session_id, event_type, payload)
 
                     graph_result = await task_graph_executor.execute_plan(
@@ -177,7 +183,9 @@ class ChatService:
                     yield graph_result.final_response
 
                     await context_engine.append_message(session_id, "assistant", graph_result.final_response)
-                    await memory_manager.save_interaction(session_id, message, graph_result.final_response, "nexus_multi_agent")
+                    await memory_manager.save_interaction(
+                        session_id, message, graph_result.final_response, "nexus_multi_agent"
+                    )
                     return
             except Exception as nexus_err:
                 logger.warning(f"NEXUS streaming planning fallback: {nexus_err}")

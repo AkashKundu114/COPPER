@@ -1,7 +1,6 @@
 import json
 import re
 from collections.abc import AsyncGenerator
-from typing import Any
 
 from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager

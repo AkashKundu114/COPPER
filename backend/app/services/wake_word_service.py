@@ -84,7 +84,6 @@ class WakeWordService:
 
     async def _run_openwakeword(self) -> None:
         try:
-            import numpy as np
             from openwakeword.model import Model as OWWModel
         except ImportError:
             logger.warning("openwakeword not installed — falling back to whisper phrase-spotting.")

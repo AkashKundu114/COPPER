@@ -1,4 +1,3 @@
-import platform
 from typing import Any
 
 from app.ai.tools.registry import tool_registry

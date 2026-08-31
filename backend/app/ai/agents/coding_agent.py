@@ -1,12 +1,6 @@
-import re
-
 from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
-from app.ai.tools.executor import tool_executor
-from app.core.constants import AgentType, LLMProvider
-from app.core.forge_sandbox import forge_sandbox
-from app.core.logger import logger
+from app.core.constants import AgentType
 
 
 class CodingAgent(BaseAgent):

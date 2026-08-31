@@ -66,19 +66,23 @@ async def memory_query(query: str, limit: int = 5) -> dict[str, Any]:
 
         results = []
         for m in memories:
-            results.append({
-                "source": "chat_memory",
-                "content": m.get("content", ""),
-                "type": m.get("memory_type", "chat"),
-                "score": m.get("distance", 0.0),
-            })
+            results.append(
+                {
+                    "source": "chat_memory",
+                    "content": m.get("content", ""),
+                    "type": m.get("memory_type", "chat"),
+                    "score": m.get("distance", 0.0),
+                }
+            )
         for d in docs:
-            results.append({
-                "source": "document_store",
-                "content": d.get("document", ""),
-                "type": d.get("metadata", {}).get("type", "document"),
-                "score": d.get("distance", 0.0),
-            })
+            results.append(
+                {
+                    "source": "document_store",
+                    "content": d.get("document", ""),
+                    "type": d.get("metadata", {}).get("type", "document"),
+                    "score": d.get("distance", 0.0),
+                }
+            )
 
         return {
             "status": "success",

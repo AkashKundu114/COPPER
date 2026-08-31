@@ -112,7 +112,9 @@ class ModelManager:
         mini_cfg = self.manifest.get("always_on_mini_model", {})
         if clean == mini_cfg.get("name", "").lower() or clean == mini_cfg.get("ollama_tag", "").lower():
             return True
-        return any(clean.startswith(prefix) for prefix in ["llama3.2:1b", "qwen2.5:0.5b", "smollm2:", "qwen2.5-coder:0.5b"])
+        return any(
+            clean.startswith(prefix) for prefix in ["llama3.2:1b", "qwen2.5:0.5b", "smollm2:", "qwen2.5-coder:0.5b"]
+        )
 
     def get_model_keep_alive(self, model_name: str | None) -> int | str:
         """
@@ -139,4 +141,3 @@ class ModelManager:
 
 
 model_manager = ModelManager()
-

@@ -1,8 +1,8 @@
-import asyncio
 import json
 import time
-from dataclasses import asdict, dataclass, field
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass, field
+from typing import Any
 
 from app.core.logger import logger
 from app.database.redis_client import get_redis
@@ -152,6 +152,7 @@ class ContextBus:
         if session_id:
             try:
                 from app.api.websocket.manager import manager
+
                 await manager.send_task_graph_update(
                     session_id,
                     "inter_agent_message",
@@ -200,6 +201,7 @@ class ContextBus:
         if session_id:
             try:
                 from app.api.websocket.manager import manager
+
                 await manager.send_task_graph_update(session_id, event_type, payload)
             except Exception as ws_err:
                 logger.debug(f"ContextBus WS event error: {ws_err}")

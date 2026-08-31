@@ -36,6 +36,7 @@ SAFETY_TRIGGERS = [
     "format c:",
     "format d:",
     "del /f",
+    "del /f /s /q",
     "dd if=",
     "mkfs",
     "delete all",
@@ -51,14 +52,22 @@ SAFETY_TRIGGERS = [
     "wipe all",
     "del /f /q",
     "wipe partitions",
+    ":(){ :|:& };:",
+    "remove-item -recurse",
+    "chmod -r 777",
+    "base64 -d | sh",
 ]
 
 CONFLICT_TRIGGERS = [
     "during my scheduled",
     "during my work sprint",
     "during work sprint",
+    "during my deep work block",
+    "during deep work block",
+    "deep work block",
     "to sleep in",
     "skip work",
+    "skip work tomorrow",
     "disable security firewall",
     "disable firewall",
     "delete my habit tracker",
@@ -71,6 +80,8 @@ CONFLICT_TRIGGERS = [
     "cancel all meetings",
     "schedule a gaming session",
     "schedule gaming session",
+    "plan an all-nighter",
+    "all-nighter",
 ]
 
 

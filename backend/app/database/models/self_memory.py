@@ -7,19 +7,21 @@ from app.database.postgres import Base
 
 
 class SelfMemoryCategory(str, PyEnum):
-    DECISION = 'decision'
-    CORRECTION = 'correction'
-    POSITION = 'position'
-    TRACK_RECORD = 'track_record'
-    OPEN_QUESTION = 'open_question'
+    DECISION = "decision"
+    CORRECTION = "correction"
+    POSITION = "position"
+    TRACK_RECORD = "track_record"
+    OPEN_QUESTION = "open_question"
+
 
 class SelfMemoryOutcome(str, PyEnum):
-    CONFIRMED_HELPFUL = 'confirmed_helpful'
-    CONFIRMED_WRONG = 'confirmed_wrong'
-    UNKNOWN = 'unknown'
+    CONFIRMED_HELPFUL = "confirmed_helpful"
+    CONFIRMED_WRONG = "confirmed_wrong"
+    UNKNOWN = "unknown"
+
 
 class SelfMemory(Base):
-    __tablename__ = 'self_memory'
+    __tablename__ = "self_memory"
     id = Column(String(64), primary_key=True)
     category = Column(Enum(SelfMemoryCategory), nullable=False)
     content = Column(Text, nullable=False)
@@ -33,17 +35,17 @@ class SelfMemory(Base):
 
     def to_dict(self) -> dict:
         return {
-            'id': self.id,
-            'category': self.category.value if self.category else None,
-            'content': self.content,
-            'outcome': self.outcome.value if self.outcome else None,
-            'confidence': self.confidence,
-            'evidence_count': self.evidence_count,
-            'related_episode_id': self.related_episode_id,
-            'superseded_by': self.superseded_by,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'last_reinforced_at': self.last_reinforced_at.isoformat() if self.last_reinforced_at else None
+            "id": self.id,
+            "category": self.category.value if self.category else None,
+            "content": self.content,
+            "outcome": self.outcome.value if self.outcome else None,
+            "confidence": self.confidence,
+            "evidence_count": self.evidence_count,
+            "related_episode_id": self.related_episode_id,
+            "superseded_by": self.superseded_by,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_reinforced_at": self.last_reinforced_at.isoformat() if self.last_reinforced_at else None,
         }
 
     def __repr__(self) -> str:
-        return f'<SelfMemory id={self.id} category={self.category} conf={self.confidence:.2f}>'
+        return f"<SelfMemory id={self.id} category={self.category} conf={self.confidence:.2f}>"

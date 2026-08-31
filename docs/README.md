@@ -13,6 +13,8 @@ Welcome to the official technical documentation and architectural reference for 
 | ![Latency Percentiles](images/latency_percentiles.png) | ![Guardian Protocol](images/guardian_intervention_levels.png) |
 | ![VRAM Allocation](images/vram_memory_allocation.png) | ![Data Firewall](images/data_firewall_pipeline.png) |
 | ![Token Throughput](images/token_generation_throughput.png) | ![Epistemic Memory](images/epistemic_memory_layers.png) |
+| ![Nexus DAG Orchestration](images/nexus_dag_orchestration.png) | ![Self-Healing Sentinel](images/self_healing_sentinel.png) |
+| ![Voice Activation Pipeline](images/audio_voice_pipeline.png) | ![Document Pipeline](images/document_generation_pipeline.png) |
 
 ---
 
