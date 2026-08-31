@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { type ChatLine } from "../../hooks/useBrainSocket";
+import { type ChatLine, type ActiveTaskGraphTrace } from "../../hooks/useBrainSocket";
 import { type AgentStats, type ParsedDocument } from "../../lib/api";
-import { FileText, BookOpen, FileCode, Table, Braces, Check, Wrench, ChevronDown, ChevronRight } from "lucide-react";
+import { FileText, BookOpen, FileCode, Table, Braces, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
+import { TaskGraphVisualizer } from "./TaskGraphVisualizer";
 
 interface MessageFeedProps {
   lines: ChatLine[];
   agentStats: Record<string, AgentStats>;
   thinking: boolean;
   activeAgent: string | null;
+  activeTaskGraph?: ActiveTaskGraphTrace | null;
   lastCorrectionAck?: { id: string; summary: string; timestamp: number } | null;
 }
 
@@ -73,44 +75,14 @@ function CorrectionAckPill({ summary, onFade }: { summary: string; onFade: () =>
   );
 }
 
-function ToolCallCard({ rawCall }: { rawCall: string }) {
-  const [open, setOpen] = useState(false);
-  let toolName = "Tool Execution";
-  let args = "";
-  try {
-    const parsed = JSON.parse(rawCall);
-    toolName = parsed.tool || parsed.name || "Tool";
-    args = JSON.stringify(parsed.arguments || {}, null, 2);
-  } catch {
-    args = rawCall;
-  }
 
-  return (
-    <div className="my-2 rounded-xl border border-cyan-900/40 bg-cyan-950/20 text-xs font-mono overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-cyan-950/40 hover:bg-cyan-950/60 text-cyan-300 transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          <Wrench size={13} className="text-cyan-400" />
-          <span className="font-bold">Tool Call: {toolName}</span>
-        </div>
-        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-      </button>
-      {open && (
-        <pre className="p-3 text-[11px] text-cyan-200 bg-black/40 overflow-x-auto whitespace-pre-wrap">
-          {args}
-        </pre>
-      )}
-    </div>
-  );
-}
 
 export function MessageFeed({
   lines,
   agentStats,
   thinking,
   activeAgent,
+  activeTaskGraph,
   lastCorrectionAck,
 }: MessageFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
@@ -127,7 +99,7 @@ export function MessageFeed({
     if (feedRef.current) {
       feedRef.current.scrollTop = feedRef.current.scrollHeight;
     }
-  }, [lines, thinking]);
+  }, [lines, thinking, activeTaskGraph]);
 
   const openAttachmentReader = (att: ParsedAttachment) => {
     const ext = att.filename.split(".").pop()?.toLowerCase() || "txt";
@@ -217,7 +189,10 @@ export function MessageFeed({
 
         // System/Agent message
         return (
-          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text">
+          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text space-y-3">
+            {line.taskGraph && (
+              <TaskGraphVisualizer graph={line.taskGraph} className="my-2" />
+            )}
             <div className="w-full markdown-body">
               <MarkdownContent content={cleanText} />
             </div>
@@ -230,7 +205,14 @@ export function MessageFeed({
         );
       })}
 
-      {thinking && activeAgent && (
+      {/* Active Live Task Graph */}
+      {activeTaskGraph && (
+        <div className="w-full animate-slide-up">
+          <TaskGraphVisualizer graph={activeTaskGraph} />
+        </div>
+      )}
+
+      {thinking && activeAgent && !activeTaskGraph && (
         <div className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-4">
           <div className="flex items-center gap-2 text-sm">
             <span>Thought process active...</span>

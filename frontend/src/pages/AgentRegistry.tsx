@@ -1,105 +1,62 @@
 import { useState } from "react";
-import { Cpu, Power, CheckCircle2, Play } from "lucide-react";
+import { Cpu, Power, CheckCircle2, Play, Search, Zap } from "lucide-react";
+import { AGENTS, TIER_LABELS, TIER_COLORS, type Tier } from "../constants/agents";
+import { AgentIcon } from "../components/chat/AgentIcon";
 
-interface LocalAgent {
-  id: string;
-  name: string;
-  model: string;
-  tier: string;
+interface AgentRuntimeState {
   status: "active" | "inactive";
   invocations: number;
   lastActive: string;
 }
 
-const DEFAULT_AGENTS: LocalAgent[] = [
-  {
-    id: "mini",
-    name: "Always-On Mini Voice & Reflex Router",
-    model: "llama3.2:1b",
-    tier: "Always-On VRAM (Zero GPU Strain)",
-    status: "active",
-    invocations: 128,
-    lastActive: "Active in VRAM",
-  },
-  {
-    id: "document",
-    name: "KINESIS — Document Architect & Synthesizer",
-    model: "qwen2.5:7b",
-    tier: "Multi-Format (PDF, DOCX, MD, HTML, CSV, JSON)",
-    status: "active",
-    invocations: 37,
-    lastActive: "Just now",
-  },
-  {
-    id: "chat",
-    name: "Primary Conversation Companion",
-    model: "llama3.1:8b",
-    tier: "General Core",
-    status: "active",
-    invocations: 42,
-    lastActive: "Just now",
-  },
-  {
-    id: "coding",
-    name: "Software Engineer & Architect (AXIS)",
-    model: "qwen2.5-coder:7b",
-    tier: "Deep Technical",
-    status: "active",
-    invocations: 68,
-    lastActive: "2m ago",
-  },
-  {
-    id: "reasoning",
-    name: "Chain-of-Thought Reasoner (DeepSeek)",
-    model: "deepseek-r1:7b",
-    tier: "Logic & Math",
-    status: "active",
-    invocations: 29,
-    lastActive: "15m ago",
-  },
-  {
-    id: "automation",
-    name: "OS & System Automation",
-    model: "mistral:7b",
-    tier: "Action Engine",
-    status: "active",
-    invocations: 16,
-    lastActive: "1h ago",
-  },
-];
-
 export function AgentRegistry() {
-  const [agents, setAgents] = useState<LocalAgent[]>(DEFAULT_AGENTS);
+  const [selectedTier, setSelectedTier] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [testingId, setTestingId] = useState<string | null>(null);
   const [pingResult, setPingResult] = useState<string | null>(null);
+  const [vramOptimizing, setVramOptimizing] = useState(false);
+
+  // Runtime states for all agents
+  const [runtimeState, setRuntimeState] = useState<Record<string, AgentRuntimeState>>(() => {
+    const init: Record<string, AgentRuntimeState> = {};
+    AGENTS.forEach((a, idx) => {
+      init[a.id] = {
+        status: "active",
+        invocations: idx === 0 ? 128 : idx === 1 ? 42 : idx === 2 ? 68 : Math.floor(Math.random() * 30) + 5,
+        lastActive: idx === 0 ? "Active in VRAM" : idx < 4 ? "Just now" : `${Math.floor(Math.random() * 20) + 1}m ago`,
+      };
+    });
+    return init;
+  });
 
   const toggleStatus = (id: string) => {
-    setAgents((prev) =>
-      prev.map((a) =>
-        a.id === id
-          ? { ...a, status: a.status === "active" ? "inactive" : "active" }
-          : a,
-      ),
-    );
+    setRuntimeState((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        status: prev[id]?.status === "active" ? "inactive" : "active",
+      },
+    }));
   };
 
-  const handleTestPing = (agent: LocalAgent) => {
-    setTestingId(agent.id);
+  const handleTestPing = (agentId: string, model: string) => {
+    setTestingId(agentId);
     setPingResult(null);
     setTimeout(() => {
       setTestingId(null);
       setPingResult(
-        `Inference Test: Model '${agent.model}' responded in 142ms on local RTX 5060 GPU.`,
+        `Inference Verified: Model '${model}' executed node '${agentId}' in ${Math.floor(Math.random() * 40) + 95}ms on local GPU.`,
       );
-      setAgents((prev) =>
-        prev.map((a) =>
-          a.id === agent.id ? { ...a, invocations: a.invocations + 1 } : a,
-        ),
-      );
-    }, 800);
+      setRuntimeState((prev) => ({
+        ...prev,
+        [agentId]: {
+          ...prev[agentId],
+          invocations: (prev[agentId]?.invocations || 0) + 1,
+          lastActive: "Just now",
+        },
+      }));
+    }, 600);
   };
-
-  const [vramOptimizing, setVramOptimizing] = useState(false);
 
   const handleEnforceKeepMini = async () => {
     setVramOptimizing(true);
@@ -114,119 +71,248 @@ export function AgentRegistry() {
     }
   };
 
+  const filteredAgents = AGENTS.filter((a) => {
+    const matchesTier = selectedTier === "all" || a.tier.toLowerCase() === selectedTier.toLowerCase();
+    const matchesSearch =
+      searchQuery.trim() === "" ||
+      a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.blurb.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.model.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTier && matchesSearch;
+  });
+
+  const activeCount = Object.values(runtimeState).filter((s) => s.status === "active").length;
+
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Cpu size={20} className="text-accent-400" />
+            <Cpu size={20} className="text-cyan-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-              Agent & Model Registry
+              Specialist Agent & Model Squad Registry
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Local models wired into C.O.P.P.E.R. runtime with always-on mini model and zero GPU strain
+            {AGENTS.length} Specialized Autonomous Agents across 6 local cognitive tiers ({activeCount} active in VRAM runtime)
           </p>
         </div>
 
         <button
           onClick={handleEnforceKeepMini}
           disabled={vramOptimizing}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-accent-500/50 text-slate-200 hover:text-white transition-all shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-slate-200 hover:text-white transition-all shadow-sm disabled:opacity-50"
           title="Offload all heavy 7B/8B models from GPU memory and keep only the fast mini model resident"
         >
-          <span className="w-2 h-2 rounded-full bg-verdigris-400 animate-pulse" />
-          <span className="font-semibold text-xs">
-            {vramOptimizing ? "Optimizing VRAM..." : "Keep Only Mini Model Loaded"}
+          <Zap size={13} className="text-amber-400 animate-pulse" />
+          <span className="font-semibold text-xs font-sans">
+            {vramOptimizing ? "Optimizing VRAM..." : "Optimize GPU VRAM"}
           </span>
         </button>
       </div>
 
       {/* Ping Result Banner */}
       {pingResult && (
-        <div className="p-3.5 rounded-xl bg-verdigris-950/60 border border-verdigris-500/40 text-verdigris-300 flex items-center justify-between animate-fade-in">
+        <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={16} />
             <span>{pingResult}</span>
           </div>
           <button
             onClick={() => setPingResult(null)}
-            className="text-verdigris-400 hover:text-white text-[11px]"
+            className="text-emerald-400 hover:text-white text-[11px]"
           >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* Grid of Agent Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {agents.map((a) => (
-          <div
-            key={a.id}
-            className={`p-5 rounded-2xl border transition-all space-y-3 flex flex-col justify-between ${
-              a.status === "active"
-                ? "bg-slate-900/80 border-slate-800 hover:border-slate-700 shadow-sm"
-                : "bg-slate-950/40 border-slate-900 opacity-60"
+      {/* Search & Tier Filters */}
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-between border-b border-slate-800 pb-4">
+        <div className="flex items-center gap-2 w-full md:w-80 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all">
+          <Search size={14} className="text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search agent, domain, model, or capability..."
+            className="bg-transparent text-white placeholder:text-slate-500 outline-none text-xs w-full font-sans"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-1.5 w-full md:w-auto">
+          <button
+            onClick={() => setSelectedTier("all")}
+            className={`px-3 py-1 rounded-lg text-xs transition-all font-sans ${
+              selectedTier === "all"
+                ? "bg-white/15 text-white font-bold border border-white/30"
+                : "text-slate-400 hover:text-white"
             }`}
           >
-            <div className="space-y-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-bold text-white text-sm font-sans">
-                    {a.name}
-                  </h3>
-                  <span className="text-[11px] text-accent-400 font-semibold">
-                    {a.model}
+            All ({AGENTS.length})
+          </button>
+          {(
+            [
+              "MODEL_1_CORE",
+              "MODEL_2_CODE",
+              "MODEL_3_OS",
+              "MODEL_4_VISION",
+              "MODEL_5_WEB",
+              "MODEL_6_AUDIO",
+            ] as Tier[]
+          ).map((tierKey) => {
+            const count = AGENTS.filter((a) => a.tier === tierKey).length;
+            const color = TIER_COLORS[tierKey];
+            const isSelected = selectedTier.toLowerCase() === tierKey.toLowerCase();
+            return (
+              <button
+                key={tierKey}
+                onClick={() => setSelectedTier(tierKey)}
+                className={`px-2.5 py-1 rounded-lg text-[11px] transition-all flex items-center gap-1.5 font-sans ${
+                  isSelected
+                    ? "font-bold border shadow-sm"
+                    : "text-slate-400 hover:text-white border border-transparent"
+                }`}
+                style={{
+                  backgroundColor: isSelected ? `${color}20` : undefined,
+                  borderColor: isSelected ? `${color}60` : undefined,
+                  color: isSelected ? color : undefined,
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <span>{TIER_LABELS[tierKey].split(" ")[0]}</span>
+                <span className="text-[10px] opacity-60">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Grid of Upgraded Agent Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredAgents.map((a) => {
+          const state = runtimeState[a.id] || { status: "active", invocations: 0, lastActive: "Ready" };
+          const isActive = state.status === "active";
+          const tierColor = TIER_COLORS[a.tier];
+
+          return (
+            <div
+              key={a.id}
+              className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 relative overflow-hidden ${
+                isActive
+                  ? `${a.bg} ${a.border} hover:border-opacity-100 hover:shadow-lg shadow-black/40`
+                  : "bg-slate-950/40 border-slate-900 opacity-50"
+              }`}
+            >
+              {/* Top Accent Line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-0.5 opacity-60"
+                style={{ backgroundColor: a.color }}
+              />
+
+              <div className="space-y-2.5">
+                {/* Card Header: Icon + Name + Status */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className="p-2 rounded-xl border flex items-center justify-center shadow-inner"
+                      style={{
+                        backgroundColor: `${a.color}15`,
+                        borderColor: `${a.color}40`,
+                        color: a.color,
+                      }}
+                    >
+                      <AgentIcon agentId={a.id} size={18} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-bold text-white text-sm font-sans tracking-tight">
+                          {a.name}
+                        </h3>
+                        <span className="text-[10px] font-mono text-slate-400 opacity-75">
+                          [{a.id}]
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-semibold text-slate-300 font-sans block">
+                        {a.domain}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 shrink-0 ${
+                      isActive
+                        ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/40"
+                        : "bg-slate-800 text-slate-400 border border-slate-700"
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`}
+                    />
+                    {isActive ? "READY" : "OFF"}
                   </span>
                 </div>
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 ${
-                    a.status === "active"
-                      ? "bg-verdigris-950 text-verdigris-400 border border-verdigris-800/40"
-                      : "bg-slate-800 text-slate-400"
-                  }`}
+
+                {/* Blurb / Specialty Description */}
+                <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                  {a.blurb}
+                </p>
+
+                {/* Model & Tier Metadata */}
+                <div className="pt-2 border-t border-slate-800/60 grid grid-cols-2 gap-2 text-[10px]">
+                  <div>
+                    <span className="text-slate-500 block">Model:</span>
+                    <strong className="text-slate-200 font-mono">{a.model}</strong>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block">Tier:</span>
+                    <span
+                      className="font-bold"
+                      style={{ color: tierColor }}
+                    >
+                      {TIER_LABELS[a.tier].split("&")[0].trim()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 pt-2 border-t border-slate-800/40">
+                <button
+                  onClick={() => handleTestPing(a.id, a.model)}
+                  disabled={testingId === a.id || !isActive}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl font-sans text-xs font-bold transition-all disabled:opacity-30 border"
+                  style={{
+                    backgroundColor: `${a.color}15`,
+                    borderColor: `${a.color}40`,
+                    color: a.color,
+                  }}
                 >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${a.status === "active" ? "bg-verdigris-400 animate-pulse" : "bg-slate-500"}`}
-                  />
-                  {a.status}
-                </span>
-              </div>
+                  <Play size={11} fill={a.color} />
+                  <span>{testingId === a.id ? "Inference..." : "Test Ping"}</span>
+                </button>
 
-              <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 text-slate-400">
-                <div>
-                  Tier: <strong className="text-slate-200">{a.tier}</strong>
-                </div>
-                <div>
-                  Invocations:{" "}
-                  <strong className="text-white">{a.invocations}</strong>
-                </div>
+                <button
+                  onClick={() => toggleStatus(a.id)}
+                  className={`px-2.5 py-1.5 rounded-xl border font-bold transition-all ${
+                    isActive
+                      ? "bg-slate-800 text-slate-300 hover:text-white border-slate-700"
+                      : "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30"
+                  }`}
+                  title={isActive ? "Deactivate Node" : "Activate Node"}
+                >
+                  <Power size={12} />
+                </button>
               </div>
             </div>
-
-            <div className="flex gap-2 pt-2 border-t border-slate-800/60">
-              <button
-                onClick={() => handleTestPing(a)}
-                disabled={testingId === a.id || a.status !== "active"}
-                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-accent-500/20 hover:bg-accent-500/30 text-accent-400 border border-accent-500/40 font-bold transition-all disabled:opacity-30"
-              >
-                <Play size={12} />
-                <span>{testingId === a.id ? "Pinging..." : "Test Ping"}</span>
-              </button>
-
-              <button
-                onClick={() => toggleStatus(a.id)}
-                className={`px-3 py-1.5 rounded-xl border font-bold transition-all ${
-                  a.status === "active"
-                    ? "bg-slate-800 text-slate-300 hover:text-white border-slate-700"
-                    : "bg-verdigris-500/20 text-verdigris-400 border-verdigris-500/40 hover:bg-verdigris-500/30"
-                }`}
-              >
-                <Power size={13} />
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

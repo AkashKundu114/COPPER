@@ -12,6 +12,7 @@ async def execute_powershell(command: str, timeout: int = 30) -> str:
             "-NonInteractive",
             "-Command",
             command,
+            stdin=asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )

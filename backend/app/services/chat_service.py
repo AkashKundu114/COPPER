@@ -80,7 +80,7 @@ class ChatService:
                         await manager.send_task_graph_update(session_id, event_type, payload)
 
                     graph_result = await task_graph_executor.execute_plan(
-                        plan, memory_context=memory_context, on_event=ws_graph_event
+                        plan, memory_context=memory_context, session_id=session_id, on_event=ws_graph_event
                     )
 
                     await context_engine.append_message(session_id, "assistant", graph_result.final_response)
@@ -170,7 +170,7 @@ class ChatService:
                         await manager.send_task_graph_update(session_id, event_type, payload)
 
                     graph_result = await task_graph_executor.execute_plan(
-                        plan, memory_context=memory_context, on_event=ws_graph_event
+                        plan, memory_context=memory_context, session_id=session_id, on_event=ws_graph_event
                     )
 
                     yield "🎯 **Final Synthesis Response:**\n\n"

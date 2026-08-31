@@ -24,6 +24,7 @@ class ForgeSandbox:
                 text=True,
                 timeout=timeout,
                 cwd=str(SANDBOX_DIR),
+                stdin=subprocess.DEVNULL,
             )
             return {"stdout": result.stdout, "stderr": result.stderr, "exit_code": result.returncode, "error": None}
         except subprocess.TimeoutExpired:
@@ -43,6 +44,11 @@ class ForgeSandbox:
                     os.remove(script_path)
                 except OSError:
                     pass
+
+    def execute_python(self, code: str, timeout_seconds: int = 10) -> dict:
+        res = self.run_python_code(code, timeout=timeout_seconds)
+        status = "success" if res.get("exit_code") == 0 else "error"
+        return {"status": status, **res}
 
 
 forge_sandbox = ForgeSandbox()

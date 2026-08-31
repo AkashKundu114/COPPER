@@ -15,6 +15,7 @@ from app.api.routes import (
     episodes,
     guardian,
     memory,
+    orchestration,
     reminders,
     self_memory,
     system,
@@ -73,6 +74,7 @@ app.include_router(agents.router, prefix="/api/v1")
 app.include_router(audit.router, prefix="/api/v1")
 app.include_router(episodes.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
+app.include_router(orchestration.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
 

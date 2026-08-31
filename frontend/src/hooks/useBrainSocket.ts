@@ -47,30 +47,51 @@ export type BrainEvent =
     }
   | {
       type: "task_graph_start";
+      dag_id?: string;
       goal: string;
       total_tasks: number;
       tasks: any[];
     }
   | {
       type: "task_graph_step_start";
+      dag_id?: string;
       id: string;
       agent: string;
+      title?: string;
       instruction: string;
+      depends_on?: string[];
     }
   | {
       type: "task_graph_step_end";
+      dag_id?: string;
       id: string;
       agent: string;
       status: string;
       output?: any;
+      error?: string;
       execution_time_ms?: number;
     }
   | {
       type: "task_graph_complete";
+      dag_id?: string;
       goal: string;
       final_response: string;
       tasks: any[];
       success: boolean;
+      total_duration_ms?: number;
+      inter_agent_messages?: any[];
+      artifacts?: any[];
+    }
+  | {
+      type: "inter_agent_message";
+      id: string;
+      dag_id: string;
+      sender: string;
+      recipient: string;
+      message_type: string;
+      content: string;
+      timestamp?: number;
+      payload?: Record<string, any>;
     };
 
 export interface ChatLine {
@@ -78,6 +99,7 @@ export interface ChatLine {
   agent: string;
   text: string;
   timestamp: number;
+  taskGraph?: ActiveTaskGraphTrace | null;
 }
 
 export interface ActiveToolTrace {
@@ -90,10 +112,16 @@ export interface ActiveToolTrace {
 }
 
 export interface ActiveTaskGraphTrace {
+  dag_id?: string;
   goal: string;
   total_tasks: number;
   tasks: any[];
   active_step?: string;
+  status?: "running" | "done" | "failed";
+  total_duration_ms?: number;
+  inter_agent_messages?: any[];
+  artifacts?: any[];
+  final_response?: string;
 }
 
 export type BrainLine = ChatLine;
@@ -288,9 +316,13 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           break;
         case "task_graph_start":
           setActiveTaskGraph({
+            dag_id: event.dag_id,
             goal: event.goal,
             total_tasks: event.total_tasks,
             tasks: event.tasks,
+            status: "running",
+            inter_agent_messages: [],
+            artifacts: [],
           });
           break;
         case "task_graph_step_start":
@@ -300,7 +332,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
                   ...prev,
                   active_step: event.id,
                   tasks: prev.tasks.map((t) =>
-                    t.id === event.id ? { ...t, status: "running" } : t,
+                    t.id === event.id ? { ...t, status: "running", title: event.title || t.title } : t,
                   ),
                 }
               : null,
@@ -317,6 +349,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
                           ...t,
                           status: event.status,
                           output: event.output,
+                          error: event.error,
                           execution_time_ms: event.execution_time_ms,
                         }
                       : t,
@@ -325,8 +358,61 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
               : null,
           );
           break;
+        case "inter_agent_message":
+          setActiveTaskGraph((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  inter_agent_messages: [
+                    ...(prev.inter_agent_messages || []),
+                    {
+                      id: event.id,
+                      dag_id: event.dag_id,
+                      sender: event.sender,
+                      recipient: event.recipient,
+                      message_type: event.message_type,
+                      content: event.content,
+                      timestamp: event.timestamp || Date.now(),
+                      payload: event.payload,
+                    },
+                  ],
+                }
+              : null,
+          );
+          break;
         case "task_graph_complete":
-          setTimeout(() => setActiveTaskGraph(null), 4000);
+          setActiveTaskGraph((prev) => {
+            const completedTrace: ActiveTaskGraphTrace = {
+              dag_id: event.dag_id,
+              goal: event.goal,
+              total_tasks: event.tasks?.length || prev?.total_tasks || 0,
+              tasks: event.tasks || prev?.tasks || [],
+              status: event.success ? "done" : "failed",
+              total_duration_ms: event.total_duration_ms,
+              inter_agent_messages: event.inter_agent_messages || prev?.inter_agent_messages || [],
+              artifacts: event.artifacts || prev?.artifacts || [],
+              final_response: event.final_response,
+            };
+
+            // Also attach completed taskGraph to the current assistant message in feed
+            setLines((curLines) => {
+              const lastIdx = curLines.reduce(
+                (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
+                -1,
+              );
+              if (lastIdx >= 0) {
+                const updated = [...curLines];
+                updated[lastIdx] = {
+                  ...updated[lastIdx],
+                  taskGraph: completedTrace,
+                };
+                return updated;
+              }
+              return curLines;
+            });
+
+            return completedTrace;
+          });
           break;
         case "memory_update":
           setLastMemoryUpdate(event);

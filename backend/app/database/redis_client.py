@@ -6,7 +6,12 @@ try:
     import redis.asyncio as aioredis
 
     redis_url = getattr(settings, "REDIS_URL", "redis://localhost:6379/0")
-    redis_client = aioredis.from_url(redis_url, decode_responses=True)
+    redis_client = aioredis.from_url(
+        redis_url,
+        decode_responses=True,
+        socket_connect_timeout=0.15,
+        socket_timeout=0.15,
+    )
 except Exception as e:
     logger.warning(f"Redis client disabled or unavailable (local memory fallback active): {e}")
 

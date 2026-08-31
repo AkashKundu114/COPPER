@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Brain, Trash2 } from "lucide-react";
+import { X, Brain, Trash2, Cpu } from "lucide-react";
 import { AGENT_MAP, TIER_COLORS, TIER_LABELS } from "../../constants/agents";
+import { AgentIcon } from "../chat/AgentIcon";
 import {
   fetchAgentHistory,
   resetProfile,
@@ -67,23 +68,45 @@ function AgentDetail({
   }, [agentId]);
 
   if (!meta) return null;
-  const color = TIER_COLORS[meta.tier];
+  const color = meta.color || TIER_COLORS[meta.tier] || "#06b6d4";
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex items-center gap-2 mb-1">
-        <span
-          className="w-2.5 h-2.5 rounded-none"
-          style={{ background: color }}
-        />
-        <h3 className="font-display font-semibold text-lg text-white">
-          {meta.name}
-        </h3>
+    <div className="animate-fade-in space-y-4">
+      <div className="flex items-center gap-3 p-3 rounded-2xl border" style={{ backgroundColor: `${color}15`, borderColor: `${color}40` }}>
+        <div
+          className="p-2.5 rounded-xl border flex items-center justify-center shadow-inner"
+          style={{
+            backgroundColor: `${color}25`,
+            borderColor: `${color}60`,
+            color: color,
+          }}
+        >
+          <AgentIcon agentId={agentId} size={22} />
+        </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <h3 className="font-display font-semibold text-lg text-white">
+              {meta.name}
+            </h3>
+            <span className="text-[10px] font-mono text-zinc-400">
+              [{meta.id}]
+            </span>
+          </div>
+          <p className="text-xs font-semibold" style={{ color }}>
+            {meta.domain}
+          </p>
+        </div>
       </div>
-      <p className="text-xs font-mono text-ink-faint mb-1">
-        {TIER_LABELS[meta.tier]} · {meta.domain}
-      </p>
-      <p className="text-sm text-ink-secondary mb-4">{meta.blurb}</p>
+
+      <div className="flex items-center justify-between text-[11px] font-mono px-1">
+        <span className="text-zinc-400">{TIER_LABELS[meta.tier]}</span>
+        <span className="text-zinc-300 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded-md flex items-center gap-1">
+          <Cpu size={10} className="text-zinc-400" />
+          {meta.model}
+        </span>
+      </div>
+
+      <p className="text-sm text-ink-secondary leading-relaxed bg-void-raised p-3 rounded-xl border border-zinc-800/80">{meta.blurb}</p>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="rounded-none bg-void-raised border border-zinc-800 px-3 py-2">

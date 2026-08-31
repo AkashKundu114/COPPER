@@ -70,6 +70,7 @@ export default function App() {
     dismissAlert,
     stopAudio,
     speaking,
+    activeTaskGraph,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -161,6 +162,7 @@ export default function App() {
                   agentStats={agentStats}
                   thinking={thinking}
                   activeAgent={activeAgent}
+                  activeTaskGraph={activeTaskGraph}
                 />
                 <div className="w-full max-w-[850px] px-4 pb-6 mt-auto">
                   <ChatDock
