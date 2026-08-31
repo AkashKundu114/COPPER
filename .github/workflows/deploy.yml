@@ -31,7 +31,7 @@ jobs:
       name: staging
       url: https://staging.copper.example.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure kubectl
         uses: azure/setup-kubectl@v5
@@ -69,7 +69,7 @@ jobs:
       name: production
       url: https://copper.example.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure kubectl
         uses: azure/setup-kubectl@v5
