@@ -19,7 +19,7 @@ Write-Host "[*] Python Environment: $PYTHON_CMD" -ForegroundColor Yellow
 
 # 2. Start Backend FastAPI Server
 Write-Host "[*] Launching FastAPI Backend on 127.0.0.1:8000 ..." -ForegroundColor Green
-$backendProcess = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT_DIR'; $PYTHON_CMD -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000" -PassThru
+$backendProcess = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT_DIR'; $PYTHON_CMD -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload" -PassThru
 
 # 3. Start Electron Desktop Application
 Write-Host "[*] Launching C.O.P.P.E.R. Electron Desktop App ..." -ForegroundColor Green

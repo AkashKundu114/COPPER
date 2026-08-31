@@ -192,7 +192,22 @@ class PersistentMemoryStore:
             self.add_fact(fact)
 
     def get_history(self, session_id: str) -> list[dict[str, str]]:
-        return self.sessions.get(session_id, [])
+        raw = self.sessions.get(session_id, [])
+        clean = []
+        for m in raw:
+            content = m.get("content", "")
+            if any(
+                content.startswith(err)
+                for err in [
+                    "Ollama returned status",
+                    "Cannot reach local Ollama",
+                    "Cannot reach the local Ollama",
+                    "Ollama model '",
+                ]
+            ):
+                continue
+            clean.append(m)
+        return clean
 
     def append_message(self, session_id: str, role: str, content: str):
         if session_id not in self.sessions:

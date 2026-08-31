@@ -312,7 +312,7 @@ class ChatService:
                 model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
                 gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics)
             else:
-                model_name = model_manager.get_mini_model()
+                model_name = model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
                 system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
