@@ -49,7 +49,7 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may be repor
 
 * **Maintainer:** Akash Kundu
 * **GitHub:** [@AkashKundu114](https://github.com/AkashKundu114)
-* **Email:** `conduct@copper-ai.local`
+* **Email:** `akashkundu1152@gmail.com`
 
 All reports will be reviewed and investigated promptly, confidentially, and fairly. The maintainer is obligated to respect the privacy and security of the reporter of any incident.
 

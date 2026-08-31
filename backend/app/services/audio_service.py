@@ -98,16 +98,86 @@ class PiperTTSPipeline:
             {"id": "david", "name": "Microsoft David (Offline Windows Male)", "engine": "windows-sapi5"},
         ]
 
-    async def synthesize(self, text: str, voice: str = "copper_synth", speed: float = 1.0) -> bytes:
+    @staticmethod
+    def format_spoken_summary(text: str, max_sentences: int = 2) -> str:
+        """
+        Distills a full response into a natural, conversational spoken summary.
+        Leaves long code blocks, tables, lists, and lengthy multi-paragraph text
+        for the user to read on screen, while speaking a punchy 1-2 sentence overview.
+        """
+        raw = text.strip()
+        if not raw:
+            return ""
+
+        # 1. Remove chain-of-thought tags
+        if "<think>" in raw:
+            raw = raw.split("</think>")[-1].strip()
+
+        # 2. Detect presence of code, tables, or lists
+        has_code = bool(re.search(r"```[\s\S]*?```", raw))
+        has_table = bool(re.search(r"^\s*\|.*\|\s*$", raw, flags=re.MULTILINE))
+        has_list = bool(re.search(r"^\s*(\d+\.|\*|-|\+)\s+", raw, flags=re.MULTILINE))
+
+        # 3. Strip code blocks and markdown tables
+        clean = re.sub(r"```[\s\S]*?```", "", raw)
+        clean = re.sub(r"^\s*\|.*\|\s*$", "", clean, flags=re.MULTILINE)
+
+        # 4. Strip markdown headers (# Title, ## Subheading)
+        clean = re.sub(r"^#{1,6}\s+.*$", "", clean, flags=re.MULTILINE)
+
+        # 5. Strip markdown bullet/numbered list markers
+        clean = re.sub(r"^\s*(\d+\.|\*|-|\+)\s+", "", clean, flags=re.MULTILINE)
+
+        # 6. Strip URLs and formatting characters
+        clean = re.sub(r"https?://\S+", "link", clean)
+        clean = re.sub(r"[*_`~>]", "", clean)
+
+        # 7. Normalize paragraphs
+        paragraphs = [p.strip() for p in clean.split("\n") if p.strip()]
+        full_text = " ".join(paragraphs).strip()
+
+        if not full_text:
+            if has_code:
+                return "I've generated the code and placed it on your screen for you."
+            if has_table:
+                return "I've generated the data table for you on screen."
+            return ""
+
+        # 8. Split into sentences
+        raw_sentences = re.split(r"(?<=[.!?])\s+", full_text)
+        sentences = [s.strip() for s in raw_sentences if len(s.strip()) > 3]
+
+        if not sentences:
+            return full_text[:160]
+
+        # If it's already a short, direct message with no stripped structural elements
+        if len(sentences) <= max_sentences and len(full_text) <= 220 and not (has_code or has_table or has_list):
+            return full_text
+
+        # Take first 1-2 core sentences as the conversational overview
+        summary_sentences = sentences[:max_sentences]
+        spoken = " ".join(summary_sentences).strip()
+
+        if not spoken.endswith((".", "!", "?")):
+            spoken += "."
+
+        # Append natural indicator that full content is on screen
+        if len(sentences) > max_sentences or has_code or has_table or has_list:
+            spoken += " I've left the rest on your screen for you to review."
+
+        return spoken
+
+    async def synthesize(
+        self, text: str, voice: str = "copper_synth", speed: float = 1.0, summarize: bool = True
+    ) -> bytes:
         """
         Synthesize text into WAV or Neural audio bytes.
+        If summarize=True (default), extracts a natural conversational spoken summary.
         """
-        clean_text = text.strip()
+        clean_text = self.format_spoken_summary(text) if summarize else text.strip()
         if "<think>" in clean_text:
             clean_text = clean_text.split("</think>")[-1].strip()
 
-        clean_text = re.sub(r"```[\s\S]*?```", " Code snippet attached. ", clean_text)
-        clean_text = re.sub(r"[*#_`>]", "", clean_text)
         clean_text = clean_text.strip()
 
         if not clean_text:
