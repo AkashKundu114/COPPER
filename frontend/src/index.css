@@ -10,11 +10,11 @@ body,
 #root {
   height: 100%;
   margin: 0;
-  background-color: #0b0c0e;
-  /* Faint warm vignette from the top (like light catching a copper panel)
-     over a near-invisible scanline texture — restrained, no grid/glow. */
+  background-color: #090a0c;
+  /* Obsidian base with a restrained copper highlight: premium, but quiet. */
   background-image:
-    radial-gradient(ellipse 70% 45% at 50% -12%, rgba(201, 124, 76, 0.07), transparent 60%),
+    radial-gradient(ellipse 65% 42% at 74% -16%, rgba(218, 157, 101, 0.10), transparent 62%),
+    radial-gradient(ellipse 44% 30% at 4% 100%, rgba(72, 125, 111, 0.055), transparent 68%),
     repeating-linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.012) 0px,
@@ -71,6 +71,28 @@ input:focus,
 input:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(219, 149, 99, 0.8) !important;
+  outline-offset: 2px;
+}
+
+input, textarea, select {
+  accent-color: #c97c4c;
+}
+
+/* Use the same material language across legacy screens without forcing
+   every component to carry presentation-specific overrides. */
+.app-surface {
+  background: linear-gradient(145deg, rgba(29, 32, 35, 0.92), rgba(15, 17, 19, 0.88));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
 }
 
 /* ── Signature element ──────────────────────────────────────────────────

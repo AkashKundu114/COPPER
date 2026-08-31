@@ -8,6 +8,7 @@ import {
   X,
   Clock,
 } from "lucide-react";
+import { workspaceAPI } from "../lib/api";
 
 export type TaskStatus = "inbox" | "planned" | "active" | "completed";
 
@@ -21,17 +22,9 @@ export interface TaskItem {
   createdAt: number;
 }
 
-const STORAGE_KEY = "copper_tasks_data";
-
 export const TasksView: React.FC = () => {
-  const [tasks, setTasks] = useState<TaskItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [activeFilter, setActiveFilter] = useState<TaskStatus | "all">("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,19 +35,14 @@ export const TasksView: React.FC = () => {
   const [status, setStatus] = useState<TaskStatus>("inbox");
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [tasks]);
+    workspaceAPI.list<TaskItem>("task").then(setTasks).catch(console.error).finally(() => setLoading(false));
+  }, []);
 
-  const handleCreateTask = (e: React.FormEvent) => {
+  const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const newTask: TaskItem = {
-      id: `task-${Date.now()}`,
+    const payload = {
       title: title.trim(),
       project: project.trim() || "General",
       priority,
@@ -62,23 +50,20 @@ export const TasksView: React.FC = () => {
       status,
       createdAt: Date.now(),
     };
-
+    const newTask = await workspaceAPI.create<TaskItem>("task", payload);
     setTasks((prev) => [newTask, ...prev]);
     setTitle("");
     setIsModalOpen(false);
   };
 
-  const toggleTaskStatus = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? { ...t, status: t.status === "completed" ? "active" : "completed" }
-          : t,
-      ),
-    );
+  const toggleTaskStatus = async (task: TaskItem) => {
+    const status = task.status === "completed" ? "active" : "completed";
+    const updated = await workspaceAPI.update<TaskItem>("task", task.id, { status });
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
   };
 
-  const deleteTask = (id: string) => {
+  const deleteTask = async (id: string) => {
+    await workspaceAPI.remove("task", id);
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
@@ -138,7 +123,7 @@ export const TasksView: React.FC = () => {
       </div>
 
       {/* Tasks List */}
-      {filteredTasks.length === 0 ? (
+      {loading ? <div className="p-12 text-center text-text-muted">Loading your tasks…</div> : filteredTasks.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
           <p className="text-sm font-semibold text-slate-300">
             No tasks in this view
@@ -160,7 +145,7 @@ export const TasksView: React.FC = () => {
             >
               <div className="flex items-start gap-3">
                 <button
-                  onClick={() => toggleTaskStatus(task.id)}
+                  onClick={() => toggleTaskStatus(task)}
                   className="mt-0.5 text-slate-400 hover:text-accent-400 transition-colors flex-shrink-0"
                 >
                   {task.status === "completed" ? (

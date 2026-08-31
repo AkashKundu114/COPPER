@@ -17,7 +17,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenCommandPalette,
 }) => {
   return (
-    <header className="drag-region h-14 bg-bg-panel/80 backdrop-blur-xl border-b border-border flex items-center justify-between px-6 z-20 select-none">
+    <header className="drag-region h-14 bg-bg-panel/70 backdrop-blur-xl border-b border-border flex items-center justify-between px-6 z-20 select-none">
       <div className="flex items-center gap-3">
         <h2 className="font-display text-sm font-medium text-text tracking-tight capitalize">
           {sectionTitle}

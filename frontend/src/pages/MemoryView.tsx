@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Search, X } from "lucide-react";
+import { workspaceAPI } from "../lib/api";
 
 export interface EpistemicMemoryItem {
   id: string;
@@ -11,60 +12,8 @@ export interface EpistemicMemoryItem {
   lastConfirmed: string;
 }
 
-const STORAGE_KEY = "copper_memories_data";
-
-const DEFAULT_MEMORIES: EpistemicMemoryItem[] = [
-  {
-    id: "m1",
-    type: "fact",
-    category: "Hardware Specs",
-    content:
-      "Windows 11 with NVIDIA RTX 5060 Laptop GPU (8GB VRAM) and AMD Ryzen 9 8940HX.",
-    confidence: 0.99,
-    evidenceCount: 30,
-    lastConfirmed: "Today",
-  },
-  {
-    id: "m2",
-    type: "fact",
-    category: "Privacy Constraint",
-    content:
-      "Default to 100% offline local model execution via Ollama. No remote telemetry.",
-    confidence: 1.0,
-    evidenceCount: 45,
-    lastConfirmed: "Today",
-  },
-  {
-    id: "m3",
-    type: "observation",
-    category: "Working Habit",
-    content:
-      "User works on full-stack TypeScript, React, and Python AI architectures.",
-    confidence: 0.92,
-    evidenceCount: 18,
-    lastConfirmed: "Today",
-  },
-  {
-    id: "m4",
-    type: "hypothesis",
-    category: "UI Preference",
-    content:
-      "User prefers dark glassmorphism cyber-HUD with rich formatted typography and timestamps.",
-    confidence: 0.88,
-    evidenceCount: 12,
-    lastConfirmed: "Today",
-  },
-];
-
 export const MemoryView: React.FC = () => {
-  const [memories, setMemories] = useState<EpistemicMemoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : DEFAULT_MEMORIES;
-    } catch {
-      return DEFAULT_MEMORIES;
-    }
-  });
+  const [memories, setMemories] = useState<EpistemicMemoryItem[]>([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState<
@@ -77,19 +26,14 @@ export const MemoryView: React.FC = () => {
   const [confidence, setConfidence] = useState(95);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(memories));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [memories]);
+    workspaceAPI.list<EpistemicMemoryItem>("memory").then(setMemories).catch(console.error);
+  }, []);
 
-  const handleAddMemory = (e: React.FormEvent) => {
+  const handleAddMemory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    const newMemory: EpistemicMemoryItem = {
-      id: `mem-${Date.now()}`,
+    const payload = {
       type,
       category: category.trim() || "General",
       content: content.trim(),
@@ -98,12 +42,14 @@ export const MemoryView: React.FC = () => {
       lastConfirmed: "Just now",
     };
 
+    const newMemory = await workspaceAPI.create<EpistemicMemoryItem>("memory", payload);
     setMemories((prev) => [newMemory, ...prev]);
     setContent("");
     setIsModalOpen(false);
   };
 
-  const handleForget = (id: string) => {
+  const handleForget = async (id: string) => {
+    await workspaceAPI.remove("memory", id);
     setMemories((prev) => prev.filter((m) => m.id !== id));
   };
 

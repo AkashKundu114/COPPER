@@ -19,7 +19,8 @@ export type BrainEvent =
       self_memory_id?: string;
       self_memory_summary?: string;
     }
-  | { type: "done" }
+  | { type: "done"; metrics?: MessageMetrics }
+  | { type: "message_metrics"; metrics: MessageMetrics }
   | { type: "audio_playback"; audio_base64: string }
   | {
       type: "proactive_intervention";
@@ -94,12 +95,24 @@ export type BrainEvent =
       payload?: Record<string, any>;
     };
 
+export interface MessageMetrics {
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  tokens_per_sec: number;
+  ttft_ms: number;
+  total_time_sec: number;
+  total_time_ms?: number;
+}
+
 export interface ChatLine {
   id: string;
   agent: string;
   text: string;
   timestamp: number;
   taskGraph?: ActiveTaskGraphTrace | null;
+  metrics?: MessageMetrics | null;
 }
 
 export interface ActiveToolTrace {
@@ -449,9 +462,45 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
             playNextAudio();
           }
           break;
+        case "message_metrics":
+          if (event.metrics) {
+            setLines((curLines) => {
+              const lastIdx = curLines.reduce(
+                (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
+                -1,
+              );
+              if (lastIdx >= 0) {
+                const updated = [...curLines];
+                updated[lastIdx] = {
+                  ...updated[lastIdx],
+                  metrics: event.metrics,
+                };
+                return updated;
+              }
+              return curLines;
+            });
+          }
+          break;
         case "done":
           setThinking(false);
           setActiveEdge(null);
+          if (event.metrics) {
+            setLines((curLines) => {
+              const lastIdx = curLines.reduce(
+                (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
+                -1,
+              );
+              if (lastIdx >= 0) {
+                const updated = [...curLines];
+                updated[lastIdx] = {
+                  ...updated[lastIdx],
+                  metrics: event.metrics,
+                };
+                return updated;
+              }
+              return curLines;
+            });
+          }
           setTimeout(() => setActiveAgent(null), 1200);
           break;
       }

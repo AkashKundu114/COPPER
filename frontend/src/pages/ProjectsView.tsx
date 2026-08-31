@@ -8,6 +8,7 @@ import {
   ShieldAlert,
   X,
 } from "lucide-react";
+import { workspaceAPI } from "../lib/api";
 
 export interface ProjectItem {
   id: string;
@@ -18,38 +19,8 @@ export interface ProjectItem {
   totalTasks: number;
 }
 
-const STORAGE_KEY = "copper_projects_data";
-
 export const ProjectsView: React.FC = () => {
-  const [projects, setProjects] = useState<ProjectItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved
-        ? JSON.parse(saved)
-        : [
-            {
-              id: "p1",
-              name: "C.O.P.P.E.R. Core Architecture",
-              health: "healthy",
-              reason:
-                "All 30 local agent workflows and offline telemetry pipelines active.",
-              completedTasks: 18,
-              totalTasks: 20,
-            },
-            {
-              id: "p2",
-              name: "Personal Knowledge Graph",
-              health: "healthy",
-              reason:
-                "Local SQLite memory vectors & relationship tier tracking synchronized.",
-              completedTasks: 8,
-              totalTasks: 10,
-            },
-          ];
-    } catch {
-      return [];
-    }
-  });
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -59,19 +30,14 @@ export const ProjectsView: React.FC = () => {
   const [completedTasks] = useState(0);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [projects]);
+    workspaceAPI.list<ProjectItem>("project").then(setProjects).catch(console.error);
+  }, []);
 
-  const handleCreateProject = (e: React.FormEvent) => {
+  const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const newProject: ProjectItem = {
-      id: `proj-${Date.now()}`,
+    const payload = {
       name: name.trim(),
       reason: reason.trim() || "Project milestone tracking active.",
       health,
@@ -79,27 +45,22 @@ export const ProjectsView: React.FC = () => {
       totalTasks: Math.max(1, Number(totalTasks) || 1),
     };
 
+    const newProject = await workspaceAPI.create<ProjectItem>("project", payload);
     setProjects((prev) => [newProject, ...prev]);
     setName("");
     setReason("");
     setIsModalOpen(false);
   };
 
-  const incrementTask = (id: string) => {
-    setProjects((prev) =>
-      prev.map((p) => {
-        if (p.id !== id) return p;
-        const nextDone = Math.min(p.totalTasks, p.completedTasks + 1);
-        return {
-          ...p,
-          completedTasks: nextDone,
-          health: nextDone === p.totalTasks ? "completed" : p.health,
-        };
-      }),
-    );
+  const incrementTask = async (project: ProjectItem) => {
+    const completedTasks = Math.min(project.totalTasks, project.completedTasks + 1);
+    const health = completedTasks === project.totalTasks ? "completed" : project.health;
+    const updated = await workspaceAPI.update<ProjectItem>("project", project.id, { completedTasks, health });
+    setProjects((prev) => prev.map((p) => p.id === project.id ? updated : p));
   };
 
-  const deleteProject = (id: string) => {
+  const deleteProject = async (id: string) => {
+    await workspaceAPI.remove("project", id);
     setProjects((prev) => prev.filter((p) => p.id !== id));
   };
 
@@ -183,7 +144,7 @@ export const ProjectsView: React.FC = () => {
                         {proj.completedTasks} / {proj.totalTasks} Tasks
                       </span>
                       <button
-                        onClick={() => incrementTask(proj.id)}
+                        onClick={() => incrementTask(proj)}
                         disabled={proj.completedTasks >= proj.totalTasks}
                         className="px-2 py-0.5 rounded bg-accent-500/20 hover:bg-accent-500/30 text-accent-400 border border-accent-500/40 text-[10px] disabled:opacity-30"
                       >

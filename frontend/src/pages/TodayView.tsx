@@ -8,6 +8,7 @@ import {
   X,
   Sparkles,
 } from "lucide-react";
+import { workspaceAPI } from "../lib/api";
 
 interface ScheduleEvent {
   id: string;
@@ -17,42 +18,9 @@ interface ScheduleEvent {
   completed: boolean;
 }
 
-const STORAGE_KEY = "copper_schedule_events";
-
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
-  const [events, setEvents] = useState<ScheduleEvent[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved
-        ? JSON.parse(saved)
-        : [
-            {
-              id: "e1",
-              time: "09:00 AM",
-              title: "Morning Standup & Task Alignment",
-              category: "Meeting",
-              completed: true,
-            },
-            {
-              id: "e2",
-              time: "11:00 AM",
-              title: "Deep Work: Core Architecture Coding",
-              category: "Focus",
-              completed: false,
-            },
-            {
-              id: "e3",
-              time: "02:30 PM",
-              title: "AI Model & Benchmark Review",
-              category: "Review",
-              completed: false,
-            },
-          ];
-    } catch {
-      return [];
-    }
-  });
+  const [events, setEvents] = useState<ScheduleEvent[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [time, setTime] = useState("10:00 AM");
@@ -60,37 +28,33 @@ export const TodayView: React.FC = () => {
   const [category, setCategory] = useState<ScheduleEvent["category"]>("Focus");
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [events]);
+    workspaceAPI.list<ScheduleEvent>("event").then(setEvents).catch(console.error);
+  }, []);
 
-  const handleCreateEvent = (e: React.FormEvent) => {
+  const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const newEvent: ScheduleEvent = {
-      id: `event-${Date.now()}`,
+    const payload = {
       time: time.trim() || "12:00 PM",
       title: title.trim(),
       category,
       completed: false,
     };
 
+    const newEvent = await workspaceAPI.create<ScheduleEvent>("event", payload);
     setEvents((prev) => [...prev, newEvent]);
     setTitle("");
     setIsModalOpen(false);
   };
 
-  const toggleEvent = (id: string) => {
-    setEvents((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, completed: !e.completed } : e)),
-    );
+  const toggleEvent = async (event: ScheduleEvent) => {
+    const updated = await workspaceAPI.update<ScheduleEvent>("event", event.id, { completed: !event.completed });
+    setEvents((prev) => prev.map((e) => e.id === event.id ? updated : e));
   };
 
-  const deleteEvent = (id: string) => {
+  const deleteEvent = async (id: string) => {
+    await workspaceAPI.remove("event", id);
     setEvents((prev) => prev.filter((e) => e.id !== id));
   };
 
@@ -190,7 +154,7 @@ export const TodayView: React.FC = () => {
               >
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => toggleEvent(event.id)}
+                    onClick={() => toggleEvent(event)}
                     className="text-slate-400 hover:text-accent-400 transition-colors"
                   >
                     {event.completed ? (

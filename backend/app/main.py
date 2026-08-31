@@ -22,6 +22,7 @@ from app.api.routes import (
     vision,
     voice,
     wake,
+    workspace,
 )
 from app.core.config import settings
 from app.core.logger import logger
@@ -58,7 +59,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "Accept", "Origin"],
 )
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -77,6 +78,7 @@ app.include_router(documents.router, prefix="/api/v1")
 app.include_router(orchestration.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
+app.include_router(workspace.router, prefix="/api/v1")
 
 
 @app.get("/")

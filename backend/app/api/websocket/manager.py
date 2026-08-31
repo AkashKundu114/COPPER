@@ -39,8 +39,11 @@ class ConnectionManager:
     async def send_chunk(self, session_id: str, chunk: str):
         await self.send(session_id, {"type": "agent_speaking", "agent": "COPPER", "text": chunk})
 
-    async def send_done(self, session_id: str):
-        await self.send(session_id, {"type": "done"})
+    async def send_done(self, session_id: str, metrics: dict | None = None):
+        payload: dict[str, Any] = {"type": "done"}
+        if metrics is not None:
+            payload["metrics"] = metrics
+        await self.send(session_id, payload)
 
     async def send_error(self, session_id: str, error: str):
         await self.send(session_id, {"type": "error", "message": error})

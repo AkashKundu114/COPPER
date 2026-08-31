@@ -9,6 +9,7 @@ import {
   Flame,
   X,
 } from "lucide-react";
+import { workspaceAPI } from "../lib/api";
 
 interface MealEntry {
   id: string;
@@ -23,59 +24,9 @@ interface GroceryItem {
   completed: boolean;
 }
 
-const STORAGE_MEALS = "copper_food_meals";
-const STORAGE_GROCERIES = "copper_food_groceries";
-
 export const FoodView: React.FC = () => {
-  const [meals, setMeals] = useState<MealEntry[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_MEALS);
-      return saved
-        ? JSON.parse(saved)
-        : [
-            {
-              id: "m1",
-              name: "Oatmeal with Blueberries & Whey",
-              type: "Breakfast",
-              calories: 420,
-            },
-            {
-              id: "m2",
-              name: "Paneer Tikka Roll with Mint Chutney",
-              type: "Lunch",
-              calories: 580,
-            },
-            {
-              id: "m3",
-              name: "Grilled Veggie Salad & Quinoa",
-              type: "Dinner",
-              calories: 450,
-            },
-          ];
-    } catch {
-      return [];
-    }
-  });
-
-  const [groceries, setGroceries] = useState<GroceryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_GROCERIES);
-      return saved
-        ? JSON.parse(saved)
-        : [
-            { id: "g1", name: "Paneer (Indian Cheese)", completed: true },
-            {
-              id: "g2",
-              name: "Fresh Cilantro & Green Onions",
-              completed: true,
-            },
-            { id: "g3", name: "Whole Wheat Wraps", completed: false },
-            { id: "g4", name: "Greek Yogurt & Almond Milk", completed: false },
-          ];
-    } catch {
-      return [];
-    }
-  });
+  const [meals, setMeals] = useState<MealEntry[]>([]);
+  const [groceries, setGroceries] = useState<GroceryItem[]>([]);
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
   const [mealName, setMealName] = useState("");
@@ -85,55 +36,53 @@ export const FoodView: React.FC = () => {
   const [newGroceryName, setNewGroceryName] = useState("");
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_MEALS, JSON.stringify(meals));
-      localStorage.setItem(STORAGE_GROCERIES, JSON.stringify(groceries));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [meals, groceries]);
+    Promise.all([workspaceAPI.list<MealEntry>("meal"), workspaceAPI.list<GroceryItem>("grocery")])
+      .then(([savedMeals, savedGroceries]) => { setMeals(savedMeals); setGroceries(savedGroceries); })
+      .catch(console.error);
+  }, []);
 
-  const handleAddMeal = (e: React.FormEvent) => {
+  const handleAddMeal = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mealName.trim()) return;
 
-    const newMeal: MealEntry = {
-      id: `meal-${Date.now()}`,
+    const payload = {
       name: mealName.trim(),
       type: mealType,
       calories: Number(mealCalories) || 0,
     };
 
+    const newMeal = await workspaceAPI.create<MealEntry>("meal", payload);
     setMeals((prev) => [...prev, newMeal]);
     setMealName("");
     setIsMealModalOpen(false);
   };
 
-  const deleteMeal = (id: string) => {
+  const deleteMeal = async (id: string) => {
+    await workspaceAPI.remove("meal", id);
     setMeals((prev) => prev.filter((m) => m.id !== id));
   };
 
-  const handleAddGrocery = (e: React.FormEvent) => {
+  const handleAddGrocery = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newGroceryName.trim()) return;
 
-    const newItem: GroceryItem = {
-      id: `groc-${Date.now()}`,
+    const payload = {
       name: newGroceryName.trim(),
       completed: false,
     };
 
+    const newItem = await workspaceAPI.create<GroceryItem>("grocery", payload);
     setGroceries((prev) => [...prev, newItem]);
     setNewGroceryName("");
   };
 
-  const toggleGrocery = (id: string) => {
-    setGroceries((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, completed: !g.completed } : g)),
-    );
+  const toggleGrocery = async (item: GroceryItem) => {
+    const updated = await workspaceAPI.update<GroceryItem>("grocery", item.id, { completed: !item.completed });
+    setGroceries((prev) => prev.map((g) => g.id === item.id ? updated : g));
   };
 
-  const deleteGrocery = (id: string) => {
+  const deleteGrocery = async (id: string) => {
+    await workspaceAPI.remove("grocery", id);
     setGroceries((prev) => prev.filter((g) => g.id !== id));
   };
 
@@ -280,7 +229,7 @@ export const FoodView: React.FC = () => {
               >
                 <div
                   className="flex items-center gap-2.5 cursor-pointer flex-1"
-                  onClick={() => toggleGrocery(item.id)}
+                  onClick={() => toggleGrocery(item)}
                 >
                   {item.completed ? (
                     <CheckCircle2 size={16} className="text-verdigris-400" />

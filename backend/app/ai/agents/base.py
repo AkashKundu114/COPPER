@@ -150,17 +150,21 @@ class BaseAgent:
         for h in history[-6:]:
             messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
 
-        messages.append({"role": "user", "content": message})
         target_model = self.get_target_model()
+        metrics_collector = kwargs.get("metrics_collector")
 
         if not self.tools:
-            async for chunk in ollama_client.stream_chat(messages, model=target_model, agent_type=self.agent_type):
+            async for chunk in ollama_client.stream_chat(
+                messages, model=target_model, agent_type=self.agent_type, metrics_collector=metrics_collector
+            ):
                 yield chunk
             return
 
         for step in range(self.max_tool_steps):
             full_response = []
-            async for chunk in ollama_client.stream_chat(messages, model=target_model, agent_type=self.agent_type):
+            async for chunk in ollama_client.stream_chat(
+                messages, model=target_model, agent_type=self.agent_type, metrics_collector=metrics_collector
+            ):
                 full_response.append(chunk)
                 yield chunk
 

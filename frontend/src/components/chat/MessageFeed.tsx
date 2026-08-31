@@ -1,7 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { type ChatLine, type ActiveTaskGraphTrace } from "../../hooks/useBrainSocket";
+import { type ChatLine, type ActiveTaskGraphTrace, type MessageMetrics } from "../../hooks/useBrainSocket";
 import { type AgentStats, type ParsedDocument } from "../../lib/api";
-import { FileText, BookOpen, FileCode, Table, Braces, Check } from "lucide-react";
+import {
+  FileText,
+  BookOpen,
+  FileCode,
+  Table,
+  Braces,
+  Check,
+  Cpu,
+  Zap,
+  Layers,
+  Timer,
+  Clock,
+  Copy,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
@@ -75,7 +88,105 @@ function CorrectionAckPill({ summary, onFade }: { summary: string; onFade: () =>
   );
 }
 
+function MessageMetricsBar({ metrics, text }: { metrics: MessageMetrics; text: string }) {
+  const [copied, setCopied] = useState(false);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const formattedTtft =
+    metrics.ttft_ms < 1000
+      ? `${Math.round(metrics.ttft_ms)}ms`
+      : `${(metrics.ttft_ms / 1000).toFixed(2)}s`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 3 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className="flex flex-wrap items-center gap-2 pt-2 pb-1 font-mono text-[11px] text-zinc-400 select-none border-t border-white/5 mt-1"
+    >
+      {/* Model Selected */}
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
+        title={`Model Selected: ${metrics.model}`}
+      >
+        <Cpu size={12} className="text-accent-400" />
+        <span className="font-semibold text-accent-300 font-sans tracking-tight">{metrics.model}</span>
+      </div>
+
+      {/* Tokens / Sec */}
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
+        title={`Throughput: ${metrics.tokens_per_sec} tokens/second`}
+      >
+        <Zap size={12} className="text-amber-400" />
+        <span>
+          <strong className="text-white">{metrics.tokens_per_sec}</strong> tok/s
+        </span>
+      </div>
+
+      {/* Total Tokens (with Prompt / Completion breakdown) */}
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
+        title={`Total Tokens: ${metrics.total_tokens} (${metrics.prompt_tokens} prompt + ${metrics.completion_tokens} completion)`}
+      >
+        <Layers size={12} className="text-purple-400" />
+        <span>
+          <strong className="text-white">{metrics.total_tokens}</strong> toks
+        </span>
+        <span className="text-[9.5px] text-zinc-500 font-mono">
+          ({metrics.prompt_tokens}p · {metrics.completion_tokens}c)
+        </span>
+      </div>
+
+      {/* Time to First Token (TTFT) */}
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
+        title={`Time to First Token: ${formattedTtft}`}
+      >
+        <Timer size={12} className="text-sky-400" />
+        <span>
+          TTFT: <strong className="text-white">{formattedTtft}</strong>
+        </span>
+      </div>
+
+      {/* Total Time Taken */}
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
+        title={`Total Generation Time: ${metrics.total_time_sec}s`}
+      >
+        <Clock size={12} className="text-emerald-400" />
+        <span>
+          Total: <strong className="text-white">{metrics.total_time_sec}s</strong>
+        </span>
+      </div>
+
+      {/* Copy Response Button */}
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 text-zinc-400 hover:text-zinc-200 transition-all ml-auto"
+        title="Copy response markdown"
+      >
+        {copied ? (
+          <>
+            <Check size={12} className="text-emerald-400" />
+            <span className="text-[10px] text-emerald-400">Copied</span>
+          </>
+        ) : (
+          <>
+            <Copy size={12} />
+            <span className="text-[10px]">Copy</span>
+          </>
+        )}
+      </button>
+    </motion.div>
+  );
+}
 
 export function MessageFeed({
   lines,
@@ -196,6 +307,9 @@ export function MessageFeed({
             <div className="w-full markdown-body">
               <MarkdownContent content={cleanText} />
             </div>
+            {line.metrics && (
+              <MessageMetricsBar metrics={line.metrics} text={cleanText} />
+            )}
             <AnimatePresence>
               {isLastAssistant && showCorrection && (
                 <CorrectionAckPill summary={showCorrection.summary} onFade={() => setShowCorrection(null)} />

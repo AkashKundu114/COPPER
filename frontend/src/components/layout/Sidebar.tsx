@@ -59,10 +59,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectSection,
 }) => {
   return (
-    <aside className="w-64 h-screen bg-bg-panel border-r border-border flex flex-col justify-between p-4 z-30 select-none">
+    <aside className="w-64 h-screen bg-bg-panel/85 backdrop-blur-xl border-r border-border flex flex-col justify-between p-4 z-30 select-none shadow-[16px_0_40px_rgba(0,0,0,0.16)]">
       <div>
         <div className="drag-region flex items-center gap-3 px-3 py-4 mb-4">
-          <div className="notch-corner w-8 h-8 bg-accent text-bg flex items-center justify-center font-display font-bold text-sm shadow-sm">
+          <div className="notch-corner w-8 h-8 bg-gradient-to-br from-accent-300 to-accent-700 text-bg flex items-center justify-center font-display font-bold text-sm shadow-[0_8px_24px_rgba(201,124,76,0.22)]">
             C
           </div>
           <div>
@@ -99,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      <div className="p-3 rounded-lg bg-bg-raised border border-border flex items-center justify-between">
+      <div className="p-3 rounded-xl bg-bg-raised/75 border border-border flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-verdigris shadow-[0_0_6px_rgba(95,168,143,0.5)]" />
           <span className="text-xs font-medium text-text">100% Offline</span>

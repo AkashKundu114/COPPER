@@ -27,6 +27,7 @@ class ChatResponse(BaseModel):
     agent_type: str
     session_id: str
     guardian_verdict: dict | None = None
+    metrics: dict | None = None
 
 
 @router.post("/message", response_model=ChatResponse)
@@ -45,6 +46,7 @@ async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
             agent_type=str(result["agent_type"]),
             session_id=session_id,
             guardian_verdict=result.get("guardian_verdict"),
+            metrics=result.get("metrics"),
         )
     except Exception as e:
         logger.error(f"Chat endpoint error: {e}")
@@ -112,7 +114,10 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 continue
             await manager.send(session_id, {"type": "thinking", "agent_type": ""})
             full_response = []
-            async for chunk in chat_service.stream_message(session_id, message, provider, mode=mode):
+            metrics: dict = {}
+            async for chunk in chat_service.stream_message(
+                session_id, message, provider, mode=mode, metrics_collector=metrics
+            ):
                 await manager.send_chunk(session_id, chunk)
                 full_response.append(chunk)
 
@@ -129,7 +134,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 except Exception as e:
                     logger.error(f"TTS websocket error: {e}")
 
-            await manager.send_done(session_id)
+            await manager.send_done(session_id, metrics=metrics)
     except WebSocketDisconnect:
         manager.disconnect(session_id)
     except Exception as e:

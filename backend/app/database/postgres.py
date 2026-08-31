@@ -30,5 +30,6 @@ def init_db():
     import app.database.models.history  # noqa: F401
     import app.database.models.memory_v2  # noqa: F401
     import app.database.models.self_memory  # noqa: F401
+    import app.database.models.workspace  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

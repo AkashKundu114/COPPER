@@ -156,6 +156,7 @@ class OllamaClient:
         model: str | None = None,
         keep_alive: int | str | None = None,
         format: str | dict | None = None,
+        metrics_collector: dict | None = None,
     ) -> str:
         target_model = self.select_model(agent_type, model)
         if keep_alive is None:
@@ -175,6 +176,12 @@ class OllamaClient:
                 res = await client.post(f"{self.base_url}/api/chat", json=payload)
                 if res.status_code == 200:
                     data = res.json()
+                    if metrics_collector is not None:
+                        metrics_collector["model"] = data.get("model", target_model)
+                        metrics_collector["prompt_eval_count"] = data.get("prompt_eval_count")
+                        metrics_collector["eval_count"] = data.get("eval_count")
+                        metrics_collector["eval_duration"] = data.get("eval_duration")
+                        metrics_collector["total_duration"] = data.get("total_duration")
                     return data.get("message", {}).get("content", "")
                 else:
                     logger.warning(f"Ollama non-200 ({res.status_code}): {res.text}")
@@ -190,6 +197,7 @@ class OllamaClient:
         model: str | None = None,
         keep_alive: int | str | None = None,
         format: str | dict | None = None,
+        metrics_collector: dict | None = None,
     ) -> AsyncGenerator[str, None]:
         target_model = self.select_model(agent_type, model)
         if keep_alive is None:
@@ -214,6 +222,12 @@ class OllamaClient:
                                 content = chunk.get("message", {}).get("content", "")
                                 if content:
                                     yield content
+                                if chunk.get("done") and metrics_collector is not None:
+                                    metrics_collector["model"] = chunk.get("model", target_model)
+                                    metrics_collector["prompt_eval_count"] = chunk.get("prompt_eval_count")
+                                    metrics_collector["eval_count"] = chunk.get("eval_count")
+                                    metrics_collector["eval_duration"] = chunk.get("eval_duration")
+                                    metrics_collector["total_duration"] = chunk.get("total_duration")
                     else:
                         yield f"Ollama returned status {resp.status_code} for '{target_model}'. Run 'ollama pull {target_model}' to download the model into Ollama."
         except Exception as e:

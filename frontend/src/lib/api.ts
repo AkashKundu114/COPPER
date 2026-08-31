@@ -4,6 +4,17 @@ export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export const api = axios.create({ baseURL: API_BASE, timeout: 15000 });
 
+export interface MessageMetrics {
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  tokens_per_sec: number;
+  ttft_ms: number;
+  total_time_sec: number;
+  total_time_ms?: number;
+}
+
 export interface AgentStats {
   id: string;
   name: string;
@@ -258,3 +269,12 @@ export const enforceKeepOnlyMiniModel = async () => {
   return res.data;
 };
 
+export const workspaceAPI = {
+  list: <T>(kind: "task" | "project" | "event" | "meal" | "grocery" | "memory") =>
+    api.get<T[]>(`/api/v1/workspace/${kind}`).then((r) => r.data),
+  create: <T>(kind: string, payload: Record<string, unknown>) =>
+    api.post<T>(`/api/v1/workspace/${kind}`, { payload }).then((r) => r.data),
+  update: <T>(kind: string, id: string, payload: Record<string, unknown>) =>
+    api.patch<T>(`/api/v1/workspace/${kind}/${id}`, { payload }).then((r) => r.data),
+  remove: (kind: string, id: string) => api.delete(`/api/v1/workspace/${kind}/${id}`),
+};
