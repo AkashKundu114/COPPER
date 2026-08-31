@@ -10,7 +10,7 @@ router = APIRouter(prefix="/voice", tags=["voice"])
 
 class SynthesisRequest(BaseModel):
     text: str
-    voice: str | None = "en_US-amy-medium"
+    voice: str | None = "en-US-AvaNeural"
     speed: float | None = 1.0
 
 
@@ -69,7 +69,7 @@ async def transcribe_audio(
 @router.post("/speak")
 async def synthesize_speech(request: SynthesisRequest):
     """
-    Synthesize text into WAV audio stream.
+    Synthesize text into natural female audio stream (MP3/WAV).
     """
     try:
         if not request.text.strip():
@@ -77,15 +77,18 @@ async def synthesize_speech(request: SynthesisRequest):
 
         audio_bytes = await audio_pipeline.tts.synthesize(
             text=request.text,
-            voice=request.voice or "copper_synth",
+            voice=request.voice or "en-US-AvaNeural",
             speed=request.speed or 1.0,
         )
 
+        media_type = "audio/wav" if (len(audio_bytes) > 4 and audio_bytes[:4] == b"RIFF") else "audio/mpeg"
+        ext = "wav" if media_type == "audio/wav" else "mp3"
+
         return Response(
             content=audio_bytes,
-            media_type="audio/wav",
+            media_type=media_type,
             headers={
-                "Content-Disposition": "inline; filename=speech.wav",
+                "Content-Disposition": f"inline; filename=speech.{ext}",
                 "Content-Length": str(len(audio_bytes)),
             },
         )

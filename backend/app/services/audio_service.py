@@ -89,13 +89,14 @@ class PiperTTSPipeline:
 
     def list_available_voices(self) -> list[dict[str, Any]]:
         return [
-            {"id": "os_default", "name": "Operating System Default Voice", "engine": "windows-sapi5"},
-            {"id": "copper_synth", "name": "C.O.P.P.E.R. Synthetic Voice", "engine": "internal"},
-            {"id": "en-US-AvaNeural", "name": "Ava (Neural Female - Ultra Realistic)", "engine": "edge-tts"},
-            {"id": "en-US-JennyNeural", "name": "Jenny (Neural Female)", "engine": "edge-tts"},
-            {"id": "en-US-GuyNeural", "name": "Guy (Neural Male)", "engine": "edge-tts"},
+            {"id": "en-US-AvaNeural", "name": "Ava (Neural Female - Natural Human-Like)", "engine": "edge-tts", "default": True},
+            {"id": "en-US-JennyNeural", "name": "Jenny (Neural Female - Warm & Expressive)", "engine": "edge-tts"},
+            {"id": "en-US-EmmaNeural", "name": "Emma (Neural Female - Clear & Fluent)", "engine": "edge-tts"},
             {"id": "zira", "name": "Microsoft Zira (Offline Windows Female)", "engine": "windows-sapi5"},
+            {"id": "en-US-GuyNeural", "name": "Guy (Neural Male)", "engine": "edge-tts"},
             {"id": "david", "name": "Microsoft David (Offline Windows Male)", "engine": "windows-sapi5"},
+            {"id": "copper_synth", "name": "C.O.P.P.E.R. Natural Female Voice", "engine": "edge-tts"},
+            {"id": "os_default", "name": "Operating System Default Female Voice", "engine": "windows-sapi5"},
         ]
 
     @staticmethod
@@ -168,10 +169,10 @@ class PiperTTSPipeline:
         return spoken
 
     async def synthesize(
-        self, text: str, voice: str = "copper_synth", speed: float = 1.0, summarize: bool = True
+        self, text: str, voice: str = "en-US-AvaNeural", speed: float = 1.0, summarize: bool = True
     ) -> bytes:
         """
-        Synthesize text into WAV or Neural audio bytes.
+        Synthesize text into natural human-like female neural audio bytes or Windows SAPI5 WAV.
         If summarize=True (default), extracts a natural conversational spoken summary.
         """
         clean_text = self.format_spoken_summary(text) if summarize else text.strip()
@@ -183,13 +184,23 @@ class PiperTTSPipeline:
         if not clean_text:
             return self._generate_silence_wav(0.1)
 
-        # 1. Try edge-tts if neural voice explicitly requested
-        if voice and ("neural" in voice.lower() or "edge" in voice.lower()):
+        target_voice = voice or "en-US-AvaNeural"
+        if target_voice in ["copper_synth", "female", "en_US-amy-medium", "default", "os_default"]:
+            target_voice = "en-US-AvaNeural"
+
+        # 1. Try edge-tts for natural human-like neural female voice
+        is_explicit_offline = target_voice.lower() in ["zira", "david", "sapi", "sapi5"]
+        if not is_explicit_offline:
             try:
                 import edge_tts
 
-                target_voice = voice if "Neural" in voice else "en-US-AvaNeural"
-                communicate = edge_tts.Communicate(clean_text, target_voice)
+                edge_voice = target_voice if "Neural" in target_voice else "en-US-AvaNeural"
+                rate_str = "+0%"
+                if speed != 1.0:
+                    pct = int(round((speed - 1.0) * 100))
+                    rate_str = f"+{pct}%" if pct >= 0 else f"{pct}%"
+
+                communicate = edge_tts.Communicate(clean_text, edge_voice, rate=rate_str)
                 chunks = []
                 async for chunk in communicate.stream():
                     if chunk["type"] == "audio":
@@ -197,20 +208,32 @@ class PiperTTSPipeline:
                 if chunks:
                     return b"".join(chunks)
             except Exception as e:
-                logger.info(f"edge-tts unavailable: {e}")
+                logger.info(f"edge-tts unavailable, falling back to local SAPI5 female voice: {e}")
 
-        # 2. Try pyttsx3 for standard offline Windows WAV synthesis
+        # 2. Try pyttsx3 for offline Windows WAV synthesis (prioritizing female voice Microsoft Zira)
         try:
             import pyttsx3
 
             engine = pyttsx3.init()
             voices = engine.getProperty("voices")
 
-            if voice and voice.lower() in ["zira", "female"]:
+            target_male = target_voice.lower() in ["david", "guy", "male"]
+            selected_voice_id = None
+
+            if not target_male:
                 for v in voices:
-                    if "zira" in v.name.lower() or "female" in v.name.lower():
-                        engine.setProperty("voice", v.id)
+                    v_name = v.name.lower()
+                    if "zira" in v_name or "female" in v_name or "hazel" in v_name or "eva" in v_name:
+                        selected_voice_id = v.id
                         break
+            else:
+                for v in voices:
+                    if "david" in v.name.lower() or "male" in v.name.lower():
+                        selected_voice_id = v.id
+                        break
+
+            if selected_voice_id:
+                engine.setProperty("voice", selected_voice_id)
 
             if speed != 1.0:
                 current_rate = engine.getProperty("rate")
@@ -227,7 +250,7 @@ class PiperTTSPipeline:
                     temp_wav.unlink()
                 except Exception:
                     pass
-                if len(data) > 44 and data[:4] == b"RIFF":
+                if len(data) > 44:
                     return data
         except Exception as e:
             logger.debug(f"pyttsx3 synthesis unavailable: {e}")

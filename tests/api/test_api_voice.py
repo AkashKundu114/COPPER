@@ -34,7 +34,7 @@ def test_voice_synthesize_success():
         json={"text": "Voice test speech audio", "voice": "copper_synth", "speed": 1.0},
     )
     assert response.status_code == 200
-    assert response.headers["content-type"] == "audio/wav"
+    assert response.headers["content-type"] in ["audio/wav", "audio/mpeg"]
     assert len(response.content) > 44
 
 

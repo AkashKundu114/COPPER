@@ -22,8 +22,9 @@ async def test_tts_synthesize_clean_text():
     tts = PiperTTSPipeline()
     audio = await tts.synthesize("Hello world from unit test")
     assert len(audio) > 44
-    assert audio[:4] == b"RIFF"
-    assert audio[8:12] == b"WAVE"
+    is_wav = audio[:4] == b"RIFF" and audio[8:12] == b"WAVE"
+    is_mp3 = audio[:2] in [b"\xff\xfb", b"\xff\xf3", b"\xff\xf2"] or audio[:3] == b"ID3"
+    assert is_wav or is_mp3
 
 
 @pytest.mark.asyncio

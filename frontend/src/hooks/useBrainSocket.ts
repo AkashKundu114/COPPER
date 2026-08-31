@@ -209,7 +209,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     const base64 = audioQueue.current.shift()!;
 
     try {
-      const audio = new Audio("data:audio/wav;base64," + base64);
+      const mimeType = base64.startsWith("UklGR") ? "audio/wav" : "audio/mpeg";
+      const audio = new Audio(`data:${mimeType};base64,` + base64);
       currentAudio.current = audio;
 
       audio.onended = () => {
@@ -531,7 +532,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
       },
     ]);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ message, mode }));
+      const voice = localStorage.getItem("copper_selected_voice") || "en-US-AvaNeural";
+      wsRef.current.send(JSON.stringify({ message, mode, voice }));
     }
   }, []);
 

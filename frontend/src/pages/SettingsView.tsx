@@ -4,7 +4,9 @@ import { API_BASE } from "../lib/api";
 
 export const SettingsView: React.FC = () => {
   const [backendRunning, setBackendRunning] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState("en-US-AvaNeural");
+  const [selectedVoice, setSelectedVoice] = useState(
+    () => localStorage.getItem("copper_selected_voice") || "en-US-AvaNeural"
+  );
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const [continuousVoice, setContinuousVoice] = useState(
     () => localStorage.getItem("copper_continuous_voice") === "true"
@@ -212,6 +214,7 @@ export const SettingsView: React.FC = () => {
                 key={v.id}
                 onClick={() => {
                   setSelectedVoice(v.id);
+                  localStorage.setItem("copper_selected_voice", v.id);
                   setToast(`Voice set to ${v.name}`);
                 }}
                 className={`p-3.5 rounded-xl border text-left transition-all ${

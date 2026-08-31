@@ -107,6 +107,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
 
             message = data.get("message", "")
             mode = data.get("mode", "auto")
+            voice = data.get("voice", "en-US-AvaNeural")
             provider = LLMProvider(data.get("provider", "ollama"))
             valid, err = validate_message(message)
             if not valid:
@@ -128,7 +129,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
 
                     from app.services.audio_service import audio_pipeline
 
-                    audio_bytes = await audio_pipeline.tts.synthesize(complete_text)
+                    audio_bytes = await audio_pipeline.tts.synthesize(complete_text, voice=voice)
                     audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
                     await manager.send(session_id, {"type": "audio_playback", "audio_base64": audio_b64})
                 except Exception as e:

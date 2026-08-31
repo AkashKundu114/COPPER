@@ -55,10 +55,10 @@ class ModelManager:
         except Exception as e:
             logger.error(f"Failed to load models manifest: {e}")
 
-    def get_model(self, path: str, default: str = "llama3.1:8b") -> str:
+    def get_model(self, path: str, default: str = "llama3.1-abliterated:8b") -> str:
         """
-        Retrieves a model name from the manifest using dot notation.
-        Example: get_model("core_agents.chat") -> "Meta-Llama-3.1-8B-Instruct"
+        Retrieves the Ollama tag from the manifest using dot notation (falling back to name or default).
+        Example: get_model("core_agents.chat") -> "llama3.1-abliterated:8b"
         """
         try:
             parts = path.split(".")
@@ -66,8 +66,8 @@ class ModelManager:
             for part in parts:
                 current = current.get(part, {})
 
-            if isinstance(current, dict) and "name" in current:
-                return current["name"]
+            if isinstance(current, dict):
+                return current.get("ollama_tag") or current.get("name", default)
 
             logger.warning(f"Model path '{path}' not found in manifest. Using default: {default}")
             return default
