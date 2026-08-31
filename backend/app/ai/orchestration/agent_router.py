@@ -179,14 +179,14 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             5.0,
         ),
         (
-            r"\b(summarize (the\s+)?|search the web for|find research papers on|literature review|explain|investigate the economic|trade-offs between|compare and contrast|what are the (core\s+)?differences between|deep dive into|investigate)\b",
-            4.5,
+            r"\b(summarize (the\s+)?|search (the web for|online for|for recent|for research|for)\s+.*(papers|articles|studies|info|information|data|literature|news)|find research papers on|find papers on|literature review|explain|investigate the economic|trade-offs between|compare and contrast|what are the (core\s+)?differences between|deep dive into|investigate)\b",
+            5.0,
         ),
         (
-            r"\b(quantum mechanics|wave-particle duality|transformer neural network|sqlite and postgresql|epistemic memory|black hole information paradox|rna polymerase|2008 financial crisis|supervised vs self-supervised|byzantine generals|stoicism|solid-state batteries|theory of relativity|tcp and udp|voynich manuscript|solar and nuclear|human immune system|gödel|crispr-cas9|cap theorem|alan turing|stages of sleep|speed of light|superconductivity)\b",
+            r"\b(quantum mechanics|wave-particle duality|transformer (neural network|architecture)|sqlite and postgresql|epistemic memory|black hole information paradox|rna polymerase|2008 financial crisis|supervised vs self-supervised|byzantine generals|stoicism|solid-state batteries|theory of relativity|tcp and udp|voynich manuscript|solar and nuclear|human immune system|gödel|crispr-cas9|cap theorem|alan turing|stages of sleep|speed of light|superconductivity)\b",
             4.0,
         ),
-        (r"\b(what is|who is|who was|why is|explain|summarize|news on|research)\b", 2.0),
+        (r"^(what is|who is|who was|why is|explain|summarize|news on|research|papers on|study on)\b", 2.0),
     ],
     AgentType.VISION: [
         (
@@ -194,8 +194,8 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             6.0,
         ),
         (
-            r"\b(look at this image|inspect this picture|analyze this photo|what do you see|diagram photo|chart image|ui mockup photo|webpage screenshot|architecture diagram|screenshot of|scanned pdf|this uploaded image|image capture)\b",
-            4.5,
+            r"\b(look at this image|inspect this picture|analyze this photo|what do you see|diagram photo|chart image|ui mockup photo|webpage screenshot|architecture diagram|screenshot of|scanned pdf|this uploaded image|image capture|ui picture)\b",
+            5.5,
         ),
         (
             r"\b(screenshot|image|photo|picture|diagram|ui capture|bounding box|detect objects|find button in image|visual inspection|scanned pdf)\b",
@@ -295,6 +295,7 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
         ),
         (r"^(remind me to|set an alarm|schedule a notification|schedule a time to)\b", 6.0),
         (r"^(delete the file|open the terminal|move all|plan a roadmap for)\b", 6.0),
+        (r"\b(screenshot|photo|image|picture|diagram photo|ui picture|uploaded image|ui mockup)\b", 6.0),
     ],
     AgentType.PLANNER: [
         (r"^(write a script to|delete the file about|explain how to|remind me to|schedule a time to)\b", 6.0),
@@ -318,9 +319,21 @@ CONSEQUENTIAL_PATTERNS = [
 ]
 
 
+COMPILED_GREETING_PATTERNS = [re.compile(p, re.IGNORECASE) for p in GREETING_PATTERNS]
+COMPILED_KEYWORD_RULES = {
+    agent: [(re.compile(pattern, re.IGNORECASE), weight, pattern) for pattern, weight in rules]
+    for agent, rules in KEYWORD_RULES.items()
+}
+COMPILED_NEGATIVE_RULES = {
+    agent: [(re.compile(pattern, re.IGNORECASE), penalty) for pattern, penalty in neg_rules]
+    for agent, neg_rules in NEGATIVE_RULES.items()
+}
+COMPILED_CONSEQUENTIAL_PATTERNS = [re.compile(p, re.IGNORECASE) for p in CONSEQUENTIAL_PATTERNS]
+
+
 def is_consequential_action(message: str) -> bool:
     msg_lower = message.lower()
-    return any(re.search(pattern, msg_lower) for pattern in CONSEQUENTIAL_PATTERNS)
+    return any(pattern.search(msg_lower) for pattern in COMPILED_CONSEQUENTIAL_PATTERNS)
 
 
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
@@ -354,8 +367,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             is_consequential=is_consequential_action(msg_lower),
         )
 
-    for pattern in GREETING_PATTERNS:
-        if re.search(pattern, msg_lower):
+    for compiled_pat in COMPILED_GREETING_PATTERNS:
+        if compiled_pat.search(msg_lower):
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
             return RoutingResult(
                 agent=AgentType.CHAT,
@@ -366,18 +379,18 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 is_consequential=False,
             )
 
-    scores: dict[AgentType, float] = dict.fromkeys(KEYWORD_RULES, 0.0)
-    matched: dict[AgentType, list[str]] = {agent: [] for agent in KEYWORD_RULES}
+    scores: dict[AgentType, float] = dict.fromkeys(COMPILED_KEYWORD_RULES, 0.0)
+    matched: dict[AgentType, list[str]] = {agent: [] for agent in COMPILED_KEYWORD_RULES}
 
-    for agent, rules in KEYWORD_RULES.items():
-        for pattern, weight in rules:
-            if re.search(pattern, msg_lower):
+    for agent, rules in COMPILED_KEYWORD_RULES.items():
+        for compiled_pat, weight, raw_pat in rules:
+            if compiled_pat.search(msg_lower):
                 scores[agent] += weight
-                matched[agent].append(pattern)
+                matched[agent].append(raw_pat)
 
-    for agent, neg_rules in NEGATIVE_RULES.items():
-        for pattern, penalty in neg_rules:
-            if re.search(pattern, msg_lower):
+    for agent, neg_rules in COMPILED_NEGATIVE_RULES.items():
+        for compiled_pat, penalty in neg_rules:
+            if compiled_pat.search(msg_lower):
                 scores[agent] = max(0.0, scores[agent] - penalty)
 
     consequential = is_consequential_action(msg_lower)
