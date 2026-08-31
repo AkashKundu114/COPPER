@@ -2,7 +2,7 @@
 
 Everything you need to go from a fresh checkout to trained per-agent LoRA
 adapters. For renting and configuring a GPU specifically, see
-[`CLOUD_GPU_TRAINING_GUIDE.md`](./CLOUD_GPU_TRAINING_GUIDE.md) — this guide
+[`cloud-gpu-training.md`](../technical/cloud-gpu-training.md) — this guide
 covers the pipeline itself.
 
 ## 0. What's in this framework
@@ -251,6 +251,6 @@ you want it exactly balanced, that's a straightforward tweak to
 robin instead of `rng.choice`).
 
 **Where do I go next if training fails or I need cloud GPU setup help?**
-See [`CLOUD_GPU_TRAINING_GUIDE.md`](./CLOUD_GPU_TRAINING_GUIDE.md) —
+See [`cloud-gpu-training.md`](../technical/cloud-gpu-training.md) —
 provider walkthroughs (RunPod / Vast.ai / Lambda Labs), cost estimates, and
 a troubleshooting table for common CUDA/OOM/auth errors.

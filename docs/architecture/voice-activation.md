@@ -112,7 +112,7 @@ COPPER already has `DynamicRoutingMemory` + regex cascade in `agent_router.py`, 
 2. **Trivial-turn short-circuit** — greetings, "what time is it", "are you there", "thank you" get answered directly by the Gatekeeper (it already has live temporal context injected, same as CHRONOS) without ever touching a 7B model.
 
 ### 5.2 Model choice
-`Qwen2.5-0.5B-Instruct` (Q4_K_M, ~380 MB, already listed in `MODEL_SELECTION.md` as the `firewall` subagent model). Reusing a model already in the fleet means no new download, and 0.5B is small enough that `keep_alive=-1` costs under half a GB of VRAM permanently — well inside the "Available Safety Headroom" already budgeted in `BENCHMARK_AND_METRICS_REPORT.md`.
+`Qwen2.5-0.5B-Instruct` (Q4_K_M, ~380 MB, already listed in [`../technical/model-selection.md`](../technical/model-selection.md) as the `firewall` subagent model). Reusing a model already in the fleet means no new download, and 0.5B is small enough that `keep_alive=-1` costs under half a GB of VRAM permanently — well inside the "Available Safety Headroom" already budgeted in [`../benchmarks.md`](../benchmarks.md).
 
 ### 5.3 Gatekeeper system prompt
 

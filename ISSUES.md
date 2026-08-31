@@ -24,7 +24,7 @@ Maintainers and contributors are expected to treat all community members with re
 
 Before creating a new GitHub issue:
 1. **Search Existing Issues:** Search open and closed issues to avoid duplicates.
-2. **Consult Troubleshooting Documentation:** Review `docs/setup/TROUBLESHOOTING.md` for solutions to common Ollama timeouts, Alembic migration errors, or WebSocket disconnects.
+2. **Consult Troubleshooting Documentation:** Review `docs/setup/troubleshooting.md` for solutions to common Ollama timeouts, Alembic migration errors, or WebSocket disconnects.
 3. **Verify Version:** Ensure you are running the latest main branch version or release tag.
 4. **Check Quality Gates:** If you are developing locally, ensure `pytest` and `ruff` pass before reporting an issue on your fork.
 

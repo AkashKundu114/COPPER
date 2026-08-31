@@ -14,7 +14,7 @@ from app.database.postgres import SessionLocal
 _self_memory_store = VectorStore("copper_self_memory")
 
 class SelfModelService:
-    # Bayesian update constants from EPISTEMIC_MEMORY_RESEARCH.md
+    # Bayesian update constants from docs/research/epistemic-memory.md
     LEARNING_RATE = 0.15
     # Decay rates (per day)
     DECAY_RATES = {

@@ -8,9 +8,9 @@ Welcome to the C.O.P.P.E.R. support page! Here is how to get help, find answers,
 
 ### 1. Check Documentation & FAQs
 Before opening an issue, check the comprehensive documentation in [`docs/`](docs/README.md):
-- **Setup Issues:** Consult [`docs/setup/DEVELOPMENT_SETUP.md`](docs/setup/DEVELOPMENT_SETUP.md) and [`docs/setup/TROUBLESHOOTING.md`](docs/setup/TROUBLESHOOTING.md).
-- **Architecture & Agents:** Consult [`docs/architecture/ARCHITECTURE_OVERVIEW.md`](docs/architecture/ARCHITECTURE_OVERVIEW.md).
-- **Model Downloads & Manifest:** Consult [`docs/setup/MODEL_DOWNLOAD_GUIDE.md`](docs/setup/MODEL_DOWNLOAD_GUIDE.md).
+- **Setup Issues:** Consult [`docs/setup/development.md`](docs/setup/development.md) and [`docs/setup/troubleshooting.md`](docs/setup/troubleshooting.md).
+- **Architecture & Agents:** Consult [`docs/architecture/overview.md`](docs/architecture/overview.md).
+- **Model Downloads & Manifest:** Consult [`docs/setup/models.md`](docs/setup/models.md).
 
 ### 2. GitHub Issues
 If you encounter a bug or have a feature request:

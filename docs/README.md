@@ -20,27 +20,40 @@ Welcome to the official technical documentation and architectural reference for 
 
 ```
 docs/
+├── benchmarks.md                     # Full hardware profiling & multi-model evaluation report
 ├── architecture/                     # Architecture & System Design
-│   ├── ARCHITECTURE_OVERVIEW.md      # High-level architecture, sub-systems & stack
-│   ├── BACKEND_SCHEMA.md             # Relational, vector, & Redis DB schemas
-│   └── DATA_FIREWALL_AND_SECURITY.md # Zero-trust privacy, PII scanner, & firewall rules
-├── technical/                        # Technical Requirements & Benchmark Reports
-│   ├── BENCHMARK_AND_METRICS_REPORT.md # Full hardware profiling & multi-model evaluation
-│   ├── TRD.md                        # Technical Requirements Document & APIs
-│   ├── IMPLEMENTATION_GUIDE.md       # Developer codebase layout & agent creation guide
-│   └── MODEL_SELECTION.md            # 26-model catalog & quantization strategy
+│   ├── overview.md                   # High-level architecture, sub-systems & tech stack
+│   ├── schema.md                     # Relational, vector, & state schemas
+│   ├── security.md                   # Zero-trust privacy, PII scanner, & firewall rules
+│   └── voice-activation.md           # Wake-word voice activation & tiered inference spec
+├── technical/                        # Technical Requirements & Engineering Guides
+│   ├── trd.md                        # Technical Requirements Document & APIs
+│   ├── implementation.md             # Developer codebase layout & agent creation guide
+│   ├── model-selection.md            # Local model catalog & quantization strategy
+│   ├── finetuning.md                 # QLoRA personality + domain adapter fine-tuning
+│   └── cloud-gpu-training.md         # Cloud GPU rental & training guide
 ├── research/                         # Product & Epistemic Research
-│   ├── PRD.md                        # Product Requirements Document & personas
-│   ├── EPISTEMIC_MEMORY_RESEARCH.md  # Fact / Observation / Hypothesis math & memory decay
-│   └── GUARDIAN_INTERVENTION_RESEARCH.md # Levels 0-3 Guardian alignment framework
+│   ├── prd.md                        # Product Requirements Document & user personas
+│   ├── epistemic-memory.md           # Fact / Observation / Hypothesis math & memory decay
+│   ├── guardian.md                   # Guardian 4-level alignment framework
+│   └── whitepaper.md                 # Technical architecture whitepaper
 ├── setup/                            # Installation & Operational Guides
-│   ├── DEVELOPMENT_SETUP.md          # Local environment, Docker, & desktop build setup
-│   ├── DEPLOYMENT_AND_INFRASTRUCTURE.md # Docker Compose production & K8s deployment
-│   └── TROUBLESHOOTING.md            # Operational diagnostics & common FAQs
+│   ├── development.md                # Local environment, Docker, & desktop build setup
+│   ├── deployment.md                 # Docker Compose production & K8s deployment
+│   ├── models.md                     # Local model downloads & hardware guide
+│   ├── training-setup.md             # Dataset generation & fine-tuning pipeline setup
+│   └── troubleshooting.md            # Operational diagnostics & common FAQs
+├── planning/                         # Roadmap & Open Architectural Decisions
+│   ├── roadmap.md                    # Product roadmap & milestone timeline
+│   └── open-questions.md             # Architectural trade-offs & open questions
+├── ui_ux/                            # User Interface & Experience Design
+│   ├── design-brief.md               # UI/UX design brief & desktop OS spec
+│   ├── interface-spec.md             # Live desktop app & neural UI spec
+│   └── accessibility.md              # Accessibility (a11y) standards & design tokens
 ├── diagrams/                         # Visual Architecture & Sequence Flow Diagrams
-│   ├── SYSTEM_ARCHITECTURE.md        # Mermaid system architecture diagrams
-│   ├── APP_FLOW.md                   # Request lifecycle & memory flow sequence diagrams
-│   └── STATE_MACHINES.md             # Agent registry, memory, & guardian state machines
+│   ├── system-architecture.md        # Mermaid system architecture diagrams
+│   ├── app-flow.md                   # Request lifecycle & memory flow sequence diagrams
+│   └── state-machines.md             # Agent registry, memory, & guardian state machines
 └── images/                           # High-Resolution (300+ DPI) Performance & Architecture Charts
 ```
 
@@ -48,10 +61,15 @@ docs/
 
 ## Key Document Links
 
-- **[Comprehensive Benchmark & Multi-Model Report](BENCHMARK_AND_METRICS_REPORT.md)**
-- **[Architecture Overview](architecture/ARCHITECTURE_OVERVIEW.md)**
-- **[Data Firewall & Security](architecture/DATA_FIREWALL_AND_SECURITY.md)**
-- **[Model Selection Strategy](technical/MODEL_SELECTION.md)**
-- **[Epistemic Memory Research](research/EPISTEMIC_MEMORY_RESEARCH.md)**
-- **[Guardian Intervention Research](research/GUARDIAN_INTERVENTION_RESEARCH.md)**
-- **[Development Setup Guide](setup/DEVELOPMENT_SETUP.md)**
+- **[Comprehensive Benchmark & Multi-Model Report](benchmarks.md)**
+- **[Architecture Overview](architecture/overview.md)**
+- **[Backend Schema Specification](architecture/schema.md)**
+- **[Data Firewall & Security](architecture/security.md)**
+- **[Voice Activation & Tiered Inference](architecture/voice-activation.md)**
+- **[Model Selection Strategy](technical/model-selection.md)**
+- **[Implementation Guide](technical/implementation.md)**
+- **[Product Requirements Document (PRD)](research/prd.md)**
+- **[Epistemic Memory Research](research/epistemic-memory.md)**
+- **[Guardian Intervention Research](research/guardian.md)**
+- **[Development Setup Guide](setup/development.md)**
+- **[Troubleshooting Guide](setup/troubleshooting.md)**

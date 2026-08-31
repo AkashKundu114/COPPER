@@ -53,13 +53,14 @@ This major release consolidates five architectural passes, resolving legacy sing
 - **Self-Healing Execution Loop (`self_healing.py`):** Automated 3-stage retry and secondary tool/model fallback engine for failed agent tasks.
 - **Security Center & Audit Log (`audit_log`):** Human-readable event trail with one-click encrypted JSON data export and instant permanent purge (`delete-all`).
 - **Comprehensive Documentation Suite in `docs/`:**
-  - `docs/architecture/`: `ARCHITECTURE_OVERVIEW.md`, `BACKEND_SCHEMA.md`, `DATA_FIREWALL_AND_SECURITY.md`
-  - `docs/technical/`: `TRD.md`, `IMPLEMENTATION_GUIDE.md`, `MODEL_SELECTION.md`
-  - `docs/research/`: `PRD.md`, `EPISTEMIC_MEMORY_RESEARCH.md`, `GUARDIAN_INTERVENTION_RESEARCH.md`
-  - `docs/setup/`: `DEVELOPMENT_SETUP.md`, `DEPLOYMENT_AND_INFRASTRUCTURE.md`, `TROUBLESHOOTING.md`
-  - `docs/diagrams/`: `SYSTEM_ARCHITECTURE.md`, `APP_FLOW.md`, `STATE_MACHINES.md`
-  - `docs/ui_ux/`: `UI_UX_BRIEF.md`, `ACCESSIBILITY_AND_DESIGN.md`
-  - `docs/planning/`: `OPEN_QUESTIONS.md`, `ROADMAP_AND_MILESTONES.md`
+  - `docs/architecture/`: `overview.md`, `schema.md`, `security.md`, `voice-activation.md`
+  - `docs/technical/`: `trd.md`, `implementation.md`, `model-selection.md`, `finetuning.md`, `cloud-gpu-training.md`
+  - `docs/research/`: `prd.md`, `epistemic-memory.md`, `guardian.md`, `whitepaper.md`
+  - `docs/setup/`: `development.md`, `deployment.md`, `models.md`, `training-setup.md`, `troubleshooting.md`
+  - `docs/diagrams/`: `system-architecture.md`, `app-flow.md`, `state-machines.md`
+  - `docs/ui_ux/`: `design-brief.md`, `interface-spec.md`, `accessibility.md`
+  - `docs/planning/`: `open-questions.md`, `roadmap.md`
+  - `docs/`: `benchmarks.md`, `README.md`
 
 ### Changed
 - **Backend Architecture:** Refactored FastAPI backend from monolithic routes into a modular pipeline (`route` $\rightarrow$ `animate` $\rightarrow$ `respond` $\rightarrow$ `remember`).
