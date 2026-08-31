@@ -1,17 +1,7 @@
 from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
-from app.core.constants import AgentType, LLMProvider
+from app.core.constants import AgentType
 from app.core.temporal import get_current_temporal_context
-
-SYS_PROMPT = """You are CHRONOS, the Schedule, Alarm, and Task Planner Agent for C.O.P.P.E.R.
-You have real-time live clock awareness and schedule precision.
-When the user asks to set an alarm, reminder, or schedule a task:
-1. Note the EXACT current time provided in your live context.
-2. Accurately calculate the remaining time (e.g. from 12:16 AM to 12:20 AM is EXACTLY 4 minutes).
-3. Confirm clearly that the alarm / reminder / task has been scheduled.
-4. Always state the exact Target Time and Remaining Time accurately.
-"""
 
 
 class ReminderAgent(BaseAgent):
@@ -19,50 +9,23 @@ class ReminderAgent(BaseAgent):
         super().__init__(
             agent_type=AgentType.REMINDER,
             name="CHRONOS (Schedule & Reminder Agent)",
-            description="Manages daily schedules, focus blocks, deadlines, alarms, and reminders with live clock awareness.",
+            description="Manages daily schedules, calendar events, focus blocks, deadlines, alarms, and reminders with live clock awareness.",
+            tools=[
+                "calendar_create",
+                "reminder_set",
+                "memory_query",
+                "memory_store",
+            ],
+            max_tool_steps=5,
         )
 
-    async def run(
-        self,
-        message: str,
-        history: list = None,
-        memory_context: str = "",
-        provider: LLMProvider = LLMProvider.OLLAMA,
-        *args,
-        **kwargs,
-    ) -> str:
+    def _build_system_prompt(self, memory_context: str = "") -> str:
         temporal_ctx = get_current_temporal_context()
         combined_ctx = f"{temporal_ctx}\n\n{memory_context}" if memory_context else temporal_ctx
+        return super()._build_system_prompt(combined_ctx)
 
-        messages = [
-            {"role": "system", "content": f"{SYS_PROMPT}\n\n{combined_ctx}"},
-            {"role": "user", "content": message},
-        ]
-
-        target_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
-        response = await ollama_client.chat(messages, model=target_model)
-        return response
-
-    async def stream(
-        self,
-        message: str,
-        history: list = None,
-        memory_context: str = "",
-        provider: LLMProvider = LLMProvider.OLLAMA,
-        *args,
-        **kwargs,
-    ):
-        temporal_ctx = get_current_temporal_context()
-        combined_ctx = f"{temporal_ctx}\n\n{memory_context}" if memory_context else temporal_ctx
-
-        messages = [
-            {"role": "system", "content": f"{SYS_PROMPT}\n\n{combined_ctx}"},
-            {"role": "user", "content": message},
-        ]
-
-        target_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
-        async for chunk in ollama_client.stream_chat(messages, model=target_model):
-            yield chunk
+    def get_target_model(self) -> str:
+        return model_manager.get_model("core_agents.chat", "llama3.1:8b")
 
 
 reminder_agent = ReminderAgent()

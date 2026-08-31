@@ -12,6 +12,8 @@ router = APIRouter(prefix="/documents", tags=["documents"])
 MIME_MAP = {
     "pdf": "application/pdf",
     "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "txt": "text/plain",
     "md": "text/markdown",
     "html": "text/html",

@@ -30,6 +30,47 @@ export type BrainEvent =
       message: string;
       mode: string;
       suggested_actions: string[];
+    }
+  | {
+      type: "tool_call_start";
+      agent: string;
+      tool: string;
+      arguments: Record<string, any>;
+      timestamp?: number;
+    }
+  | {
+      type: "tool_call_end";
+      tool: string;
+      success: boolean;
+      output: any;
+      duration_ms: number;
+    }
+  | {
+      type: "task_graph_start";
+      goal: string;
+      total_tasks: number;
+      tasks: any[];
+    }
+  | {
+      type: "task_graph_step_start";
+      id: string;
+      agent: string;
+      instruction: string;
+    }
+  | {
+      type: "task_graph_step_end";
+      id: string;
+      agent: string;
+      status: string;
+      output?: any;
+      execution_time_ms?: number;
+    }
+  | {
+      type: "task_graph_complete";
+      goal: string;
+      final_response: string;
+      tasks: any[];
+      success: boolean;
     };
 
 export interface ChatLine {
@@ -37,6 +78,22 @@ export interface ChatLine {
   agent: string;
   text: string;
   timestamp: number;
+}
+
+export interface ActiveToolTrace {
+  tool: string;
+  agent: string;
+  arguments: Record<string, any>;
+  status: "running" | "done" | "error";
+  output?: any;
+  duration_ms?: number;
+}
+
+export interface ActiveTaskGraphTrace {
+  goal: string;
+  total_tasks: number;
+  tasks: any[];
+  active_step?: string;
 }
 
 export type BrainLine = ChatLine;
@@ -57,6 +114,8 @@ interface BrainState {
   dismissAlert: (alertId: string) => void;
   stopAudio: () => void;
   lastCorrectionAck: { id: string; summary: string; timestamp: number } | null;
+  activeTool: ActiveToolTrace | null;
+  activeTaskGraph: ActiveTaskGraphTrace | null;
 }
 
 function estimateSpeakingDuration(text: string): number {
@@ -80,6 +139,9 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   );
   const [speaking, setSpeaking] = useState(false);
   const [speakingAgent, setSpeakingAgent] = useState<string | null>(null);
+  const [activeTool, setActiveTool] = useState<ActiveToolTrace | null>(null);
+  const [activeTaskGraph, setActiveTaskGraph] = useState<ActiveTaskGraphTrace | null>(null);
+
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
@@ -173,7 +235,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
         case "agent_speaking":
           setLines((prev) => {
             const last = prev[prev.length - 1];
-            // If the last line is from the same agent and is a stream, append to it
             if (
               last &&
               last.agent === event.agent &&
@@ -184,7 +245,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
                 { ...last, text: last.text + event.text },
               ];
             }
-            // Otherwise, start a new stream bubble
             return [
               ...prev,
               {
@@ -204,6 +264,69 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
               if (!isPlayingAudio.current) setSpeaking(false);
             }, estimateSpeakingDuration(event.text));
           }
+          break;
+        case "tool_call_start":
+          setActiveTool({
+            tool: event.tool,
+            agent: event.agent,
+            arguments: event.arguments,
+            status: "running",
+          });
+          break;
+        case "tool_call_end":
+          setActiveTool((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  status: event.success ? "done" : "error",
+                  output: event.output,
+                  duration_ms: event.duration_ms,
+                }
+              : null,
+          );
+          setTimeout(() => setActiveTool(null), 3000);
+          break;
+        case "task_graph_start":
+          setActiveTaskGraph({
+            goal: event.goal,
+            total_tasks: event.total_tasks,
+            tasks: event.tasks,
+          });
+          break;
+        case "task_graph_step_start":
+          setActiveTaskGraph((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  active_step: event.id,
+                  tasks: prev.tasks.map((t) =>
+                    t.id === event.id ? { ...t, status: "running" } : t,
+                  ),
+                }
+              : null,
+          );
+          break;
+        case "task_graph_step_end":
+          setActiveTaskGraph((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  tasks: prev.tasks.map((t) =>
+                    t.id === event.id
+                      ? {
+                          ...t,
+                          status: event.status,
+                          output: event.output,
+                          execution_time_ms: event.execution_time_ms,
+                        }
+                      : t,
+                  ),
+                }
+              : null,
+          );
+          break;
+        case "task_graph_complete":
+          setTimeout(() => setActiveTaskGraph(null), 4000);
           break;
         case "memory_update":
           setLastMemoryUpdate(event);
@@ -306,5 +429,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     dismissAlert,
     stopAudio,
     lastCorrectionAck,
+    activeTool,
+    activeTaskGraph,
   };
 }

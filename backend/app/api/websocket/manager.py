@@ -1,3 +1,4 @@
+from typing import Any
 from fastapi import WebSocket
 
 from app.core.logger import logger
@@ -72,6 +73,33 @@ class ConnectionManager:
             "familiarity": 0,
             "tier": "",
             "profile_delta": [],
+        })
+
+    async def send_tool_start(self, session_id: str, tool_name: str, arguments: dict[str, Any], agent: str = "COPPER"):
+        """Notify the frontend that a tool is starting execution."""
+        await self.send(session_id, {
+            "type": "tool_call_start",
+            "agent": agent,
+            "tool": tool_name,
+            "arguments": arguments,
+            "timestamp": int(1000 * logger.get_time() if hasattr(logger, "get_time") else 0),
+        })
+
+    async def send_tool_end(self, session_id: str, tool_name: str, success: bool, output: Any, duration_ms: float = 0.0):
+        """Notify the frontend that a tool has finished execution."""
+        await self.send(session_id, {
+            "type": "tool_call_end",
+            "tool": tool_name,
+            "success": success,
+            "output": output,
+            "duration_ms": duration_ms,
+        })
+
+    async def send_task_graph_update(self, session_id: str, event_type: str, payload: dict[str, Any]):
+        """Broadcast live multi-agent DAG execution updates."""
+        await self.send(session_id, {
+            "type": event_type,
+            **payload,
         })
 
 

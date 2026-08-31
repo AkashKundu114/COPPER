@@ -1,7 +1,9 @@
 import re
 
 from app.ai.agents.base import BaseAgent
+from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
+from app.ai.tools.executor import tool_executor
 from app.core.constants import AgentType, LLMProvider
 from app.core.forge_sandbox import forge_sandbox
 from app.core.logger import logger
@@ -12,46 +14,20 @@ class CodingAgent(BaseAgent):
         super().__init__(
             agent_type=AgentType.CODING,
             name="AXIS (Forge AI Engineer)",
-            description="Autonomous coding agent capable of executing code in a local sandbox.",
+            description="Autonomous coding and software engineering agent capable of writing, analyzing, refactoring, and testing code in a local sandbox or host environment.",
+            tools=[
+                "python_execute",
+                "file_read",
+                "file_write",
+                "file_list",
+                "shell_execute",
+                "memory_query",
+            ],
+            max_tool_steps=5,
         )
 
-    async def run(
-        self,
-        message: str,
-        history: list[dict[str, str]],
-        memory_context: str,
-        provider: LLMProvider = LLMProvider.OLLAMA,
-    ) -> str:
-        prompt = f"""System: You are {self.name}, an autonomous AI Software Engineer.
-Context: {memory_context}
-Capabilities: You can write Python code and test it. If you need to execute code to verify your solution or gather information, wrap it in <execute>...</execute> tags. You will receive the <observation> with stdout/stderr before you give your final answer.
-Do not use markdown formatting inside the <execute> tag, just raw python code.
-
-User: {message}"""
-
-        messages = [{"role": "user", "content": prompt}]
-
-        for step in range(3):
-            try:
-                res = await ollama_client.chat(messages, agent_type=self.agent_type)
-
-                match = re.search(r"<execute>(.*?)</execute>", res, re.DOTALL)
-                if match:
-                    code = match.group(1).strip()
-                    logger.info(f"AXIS executing {len(code)} bytes of code in sandbox.")
-                    sandbox_result = forge_sandbox.run_python_code(code)
-
-                    obs = f"<observation>\nSTDOUT:\n{sandbox_result['stdout']}\nSTDERR:\n{sandbox_result['stderr']}\nEXIT_CODE: {sandbox_result['exit_code']}\n</observation>"
-
-                    messages.append({"role": "assistant", "content": res})
-                    messages.append({"role": "user", "content": obs})
-                else:
-                    return res
-            except Exception as e:
-                logger.warning(f"Agent {self.name} error: {e}")
-                return f"[{self.name} Error]: {e}"
-
-        return res
+    def get_target_model(self) -> str:
+        return model_manager.get_model("core_agents.coding", "qwen2.5-coder:7b")
 
 
 coding_agent = CodingAgent()

@@ -16,3 +16,10 @@ pytest
 pytest-cov
 pytest-asyncio
 pypdf
+openwakeword
+webrtcvad
+sounddevice
+python-docx
+python-pptx
+openpyxl
+reportlab

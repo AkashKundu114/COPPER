@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
+from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api.routes import (
     agents,
@@ -19,11 +20,13 @@ from app.api.routes import (
     system,
     vision,
     voice,
+    wake,
 )
 from app.core.config import settings
 from app.core.logger import logger
 from app.database.postgres import init_db
 from app.database.redis_client import redis_close
+from app.services.wake_word_service import wake_word_service
 
 
 @asynccontextmanager
@@ -34,8 +37,11 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"DB init failed (continuing): {e}")
     start_scheduler()
+    model_tier_manager.start()
     logger.info("COPPER backend ready")
     yield
+    await wake_word_service.disable()
+    model_tier_manager.stop()
     stop_scheduler()
     await redis_close()
     logger.info("COPPER backend shutdown complete")
@@ -57,6 +63,7 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
+app.include_router(wake.router, prefix="/api/v1")
 app.include_router(memory.router, prefix="/api/v1")
 app.include_router(reminders.router, prefix="/api/v1")
 app.include_router(automation.router, prefix="/api/v1")

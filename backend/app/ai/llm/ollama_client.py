@@ -155,12 +155,16 @@ class OllamaClient:
         agent_type: AgentType | None = None,
         model: str | None = None,
         keep_alive: int | str | None = None,
+        format: str | dict | None = None,
     ) -> str:
         target_model = self.select_model(agent_type, model)
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
-        payload = {"model": target_model, "messages": messages, "stream": False, "keep_alive": keep_alive}
+        payload: dict[str, Any] = {"model": target_model, "messages": messages, "stream": False, "keep_alive": keep_alive}
+        if format is not None:
+            payload["format"] = format
+
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 res = await client.post(f"{self.base_url}/api/chat", json=payload)
@@ -180,12 +184,16 @@ class OllamaClient:
         agent_type: AgentType | None = None,
         model: str | None = None,
         keep_alive: int | str | None = None,
+        format: str | dict | None = None,
     ) -> AsyncGenerator[str, None]:
         target_model = self.select_model(agent_type, model)
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
-        payload = {"model": target_model, "messages": messages, "stream": True, "keep_alive": keep_alive}
+        payload: dict[str, Any] = {"model": target_model, "messages": messages, "stream": True, "keep_alive": keep_alive}
+        if format is not None:
+            payload["format"] = format
+
         try:
             async with httpx.AsyncClient(timeout=120.0) as client:
                 async with client.stream("POST", f"{self.base_url}/api/chat", json=payload) as resp:

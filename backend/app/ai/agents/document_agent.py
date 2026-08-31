@@ -29,6 +29,10 @@ class DocumentAgent(BaseAgent):
         p = prompt.lower()
         if "word" in p or ".docx" in p or "docx" in p or "ms word" in p:
             return "docx"
+        elif "slide" in p or "presentation" in p or "pptx" in p or ".pptx" in p or "powerpoint" in p:
+            return "pptx"
+        elif "excel" in p or "xlsx" in p or ".xlsx" in p or "workbook" in p:
+            return "xlsx"
         elif "markdown" in p or ".md" in p or "md file" in p:
             return "md"
         elif "html" in p or "webpage" in p or "web document" in p or ".html" in p:

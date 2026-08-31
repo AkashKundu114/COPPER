@@ -22,6 +22,8 @@ class DocumentService:
     SUPPORTED_EXTENSIONS = {
         "pdf": "PDF Document (.pdf)",
         "docx": "Microsoft Word (.docx)",
+        "pptx": "PowerPoint Presentation (.pptx)",
+        "xlsx": "Excel Spreadsheet (.xlsx)",
         "txt": "Plain Text (.txt)",
         "md": "Markdown Document (.md)",
         "html": "HTML Web Document (.html)",
@@ -447,6 +449,159 @@ class DocumentService:
 
         return docx_bytes, out_path
 
+    def generate_pptx(
+        self,
+        title: str,
+        sections: list[dict[str, Any]],
+        filename: str | None = None,
+        author: str = "C.O.P.P.E.R. AI",
+        metadata: dict[str, Any] | None = None,
+    ) -> tuple[bytes, Path]:
+        """
+        Generates a styled Microsoft PowerPoint (.pptx) presentation using python-pptx.
+        Falls back to formatted text representation if python-pptx is not installed.
+        """
+        fname = self._sanitize_filename(filename or title, "pptx")
+        out_path = self.output_dir / fname
+
+        try:
+            from pptx import Presentation
+
+            prs = Presentation()
+            title_slide_layout = prs.slide_layouts[0]
+            slide = prs.slides.add_slide(title_slide_layout)
+            slide.shapes.title.text = title
+            if len(slide.placeholders) > 1:
+                slide.placeholders[1].text = f"Author: {author}  |  Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M UTC')}"
+
+            bullet_layout = prs.slide_layouts[1]
+            for s in sections:
+                slide = prs.slides.add_slide(bullet_layout)
+                slide.shapes.title.text = s.get("heading") or s.get("title") or "Slide"
+                body = slide.placeholders[1].text_frame
+                bullets = s.get("bullets") or s.get("items") or []
+                content = s.get("content") or s.get("text") or ""
+
+                first = True
+                if content:
+                    for para in content.split("\n\n"):
+                        if para.strip():
+                            if first:
+                                body.text = para.strip()
+                                first = False
+                            else:
+                                p = body.add_paragraph()
+                                p.text = para.strip()
+
+                for b in bullets:
+                    if first:
+                        body.text = b
+                        first = False
+                    else:
+                        p = body.add_paragraph()
+                        p.text = b
+
+            buf = io.BytesIO()
+            prs.save(buf)
+            pptx_bytes = buf.getvalue()
+
+            with open(out_path, "wb") as f:
+                f.write(pptx_bytes)
+
+            return pptx_bytes, out_path
+
+        except ImportError:
+            logger.warning("python-pptx not installed — generating formatted fallback presentation.")
+            txt_lines = [f"# {title.upper()}", f"Author: {author}", "=" * 50, ""]
+            for s in sections:
+                txt_lines.append(f"\n[Slide: {s.get('heading') or s.get('title') or 'Slide'}]")
+                if s.get("content"):
+                    txt_lines.append(s["content"])
+                for b in s.get("bullets", []):
+                    txt_lines.append(f"  * {b}")
+            fallback_bytes = "\n".join(txt_lines).encode("utf-8")
+            with open(out_path, "wb") as f:
+                f.write(fallback_bytes)
+            return fallback_bytes, out_path
+
+    def generate_xlsx(
+        self,
+        title: str,
+        sections: list[dict[str, Any]] | None = None,
+        headers: list[str] | None = None,
+        rows: list[list[Any]] | None = None,
+        filename: str | None = None,
+        author: str = "C.O.P.P.E.R. AI",
+        metadata: dict[str, Any] | None = None,
+    ) -> tuple[bytes, Path]:
+        """
+        Generates a styled Microsoft Excel (.xlsx) spreadsheet using openpyxl.
+        Falls back to CSV format if openpyxl is not installed.
+        """
+        fname = self._sanitize_filename(filename or title, "xlsx")
+        out_path = self.output_dir / fname
+
+        table_headers = list(headers) if headers else []
+        table_rows = list(rows) if rows else []
+
+        if not table_headers and not table_rows and sections:
+            for s in sections:
+                tbl = s.get("table")
+                if tbl and isinstance(tbl, dict):
+                    table_headers = tbl.get("headers", [])
+                    table_rows = tbl.get("rows", [])
+                    break
+            if not table_headers and not table_rows:
+                table_headers = ["Section", "Content"]
+                for s in sections:
+                    h = s.get("heading") or s.get("title") or "Section"
+                    c = s.get("content") or ", ".join(s.get("bullets", [])) or ""
+                    table_rows.append([h, c])
+
+        try:
+            import openpyxl
+            from openpyxl.styles import Alignment, Font, PatternFill
+
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = re.sub(r"[\\/*?:\[\]]", "", title)[:31] or "Sheet1"
+
+            if table_headers:
+                ws.append(table_headers)
+                header_fill = PatternFill(start_color="1E293B", end_color="1E293B", fill_type="solid")
+                header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+                for col_idx in range(1, len(table_headers) + 1):
+                    cell = ws.cell(row=1, column=col_idx)
+                    cell.fill = header_fill
+                    cell.font = header_font
+                    cell.alignment = Alignment(horizontal="center", vertical="center")
+
+            for r in table_rows:
+                ws.append(r)
+
+            # Auto-adjust column widths
+            for col in ws.columns:
+                max_len = max(len(str(cell.value or "")) for cell in col)
+                col_letter = openpyxl.utils.get_column_letter(col[0].column)
+                ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+
+            buf = io.BytesIO()
+            wb.save(buf)
+            xlsx_bytes = buf.getvalue()
+
+            with open(out_path, "wb") as f:
+                f.write(xlsx_bytes)
+
+            return xlsx_bytes, out_path
+
+        except ImportError:
+            logger.warning("openpyxl not installed — generating CSV fallback spreadsheet.")
+            csv_text, _ = self.generate_csv(headers=table_headers, rows=table_rows, filename=fname)
+            fallback_bytes = csv_text.encode("utf-8")
+            with open(out_path, "wb") as f:
+                f.write(fallback_bytes)
+            return fallback_bytes, out_path
+
     def generate_markdown(
         self,
         title: str,
@@ -828,7 +983,7 @@ class DocumentService:
         Handles all document formats, files creation, metadata indexing, and returns standard response.
         """
         fmt = format.lower().strip().lstrip(".")
-        if fmt not in ["pdf", "docx", "md", "html", "csv", "tsv", "json", "txt", "yaml"]:
+        if fmt not in ["pdf", "docx", "pptx", "xlsx", "md", "html", "csv", "tsv", "json", "txt", "yaml"]:
             fmt = "pdf"
 
         # If raw content passed, convert to standard section format
@@ -844,6 +999,10 @@ class DocumentService:
             file_bytes, out_path = self.generate_pdf(title=title, sections=sections, filename=filename, author=author)
         elif fmt == "docx":
             file_bytes, out_path = self.generate_docx(title=title, sections=sections, filename=filename, author=author)
+        elif fmt == "pptx":
+            file_bytes, out_path = self.generate_pptx(title=title, sections=sections, filename=filename, author=author)
+        elif fmt == "xlsx":
+            file_bytes, out_path = self.generate_xlsx(title=title, sections=sections, headers=headers, rows=rows, filename=filename, author=author)
         elif fmt == "md":
             text_res, out_path = self.generate_markdown(title=title, sections=sections, filename=filename, author=author)
             file_bytes = text_res.encode("utf-8")

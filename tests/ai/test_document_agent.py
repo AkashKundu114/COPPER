@@ -6,6 +6,8 @@ from app.core.constants import AgentType
 def test_document_agent_format_detection():
     assert document_agent._detect_format("Create a PDF report on machine learning") == "pdf"
     assert document_agent._detect_format("Generate a Word document proposal") == "docx"
+    assert document_agent._detect_format("Build a presentation slide deck for the pitch") == "pptx"
+    assert document_agent._detect_format("Turn this into an excel workbook") == "xlsx"
     assert document_agent._detect_format("Export data to csv spreadsheet") == "csv"
     assert document_agent._detect_format("Write a markdown spec") == "md"
     assert document_agent._detect_format("Create an html webpage summary") == "html"

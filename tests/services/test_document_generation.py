@@ -55,6 +55,32 @@ def test_generate_docx(doc_service):
     assert out_path.suffix == ".docx"
 
 
+def test_generate_pptx(doc_service):
+    title = "C.O.P.P.E.R. Architecture Deck"
+    sections = [
+        {"heading": "System Architecture", "bullets": ["Tiered Inference", "Gatekeeper Model", "Dynamic Routing"]},
+        {"heading": "VRAM Discipline", "content": "Gatekeeper pinned at keep_alive=-1, heavy models swept after idle."},
+    ]
+    pptx_bytes, out_path = doc_service.generate_pptx(title=title, sections=sections)
+    assert len(pptx_bytes) > 50
+    assert out_path.exists()
+    assert out_path.suffix == ".pptx"
+
+
+def test_generate_xlsx(doc_service):
+    title = "Model Inventory & VRAM Budget"
+    headers = ["Model", "Role", "VRAM (GB)", "Keep-Alive"]
+    rows = [
+        ["Qwen2.5-0.5B", "Gatekeeper", "0.38", "-1"],
+        ["Llama-3.1-8B", "Chat Core", "4.58", "240s"],
+        ["Qwen2.5-Coder-7B", "AXIS Coding", "4.36", "240s"],
+    ]
+    xlsx_bytes, out_path = doc_service.generate_xlsx(title=title, headers=headers, rows=rows)
+    assert len(xlsx_bytes) > 50
+    assert out_path.exists()
+    assert out_path.suffix == ".xlsx"
+
+
 def test_generate_markdown(doc_service):
     title = "API Specification"
     sections = [

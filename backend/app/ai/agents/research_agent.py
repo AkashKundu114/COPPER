@@ -1,16 +1,6 @@
 from app.ai.agents.base import BaseAgent
 from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
-from app.ai.memory.memory_manager import memory_manager
-from app.core.constants import AgentType, LLMProvider
-from app.core.logger import logger
-
-SYS_PROMPT = """You are OMNI, the Research Agent for C.O.P.P.E.R.
-You function as a localized "Offline Google".
-When the user asks about the current time, current date, user identity, or system status, ALWAYS use the live temporal and memory context provided directly in your system prompt.
-When answering document or knowledge questions, utilize the retrieved document excerpts and cite sources accurately.
-Be concise, accurate, and highly analytical.
-"""
+from app.core.constants import AgentType
 
 
 class ResearchAgent(BaseAgent):
@@ -18,73 +8,19 @@ class ResearchAgent(BaseAgent):
         super().__init__(
             agent_type=AgentType.RESEARCH,
             name="OMNI (Research Agent)",
-            description="Handles information retrieval, source comparison, and local RAG search.",
+            description="Deep information retrieval, source comparison, academic reasoning, web searching, and local RAG search agent.",
+            tools=[
+                "web_search",
+                "memory_query",
+                "file_read",
+                "file_list",
+                "memory_store",
+            ],
+            max_tool_steps=5,
         )
 
-    async def run(
-        self,
-        message: str,
-        history: list = None,
-        memory_context: str = "",
-        provider: LLMProvider = LLMProvider.OLLAMA,
-        *args,
-        **kwargs,
-    ) -> str:
-        logger.info(f"Researching local documents for: {message}")
-        results = await memory_manager.search_documents(message, limit=5)
-
-        retrieved_context = ""
-        if results:
-            retrieved_context = "--- LOCAL DOCUMENT RESULTS ---\n"
-            for res in results:
-                content = res.get("document", "")
-                meta = res.get("metadata", {})
-                source = meta.get("filename", "Unknown Source")
-                if content:
-                    retrieved_context += f"Source: {source}\n{content}\n\n"
-
-        if not retrieved_context:
-            retrieved_context = "No highly relevant local documents found for this query."
-
-        system_content = f"{SYS_PROMPT}\n\n{memory_context}" if memory_context else SYS_PROMPT
-        messages = [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}"},
-        ]
-
-        target_model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
-
-        response = await ollama_client.chat(messages, model=target_model)
-        return response
-
-    async def stream(
-        self,
-        message: str,
-        history: list = None,
-        memory_context: str = "",
-        provider: LLMProvider = LLMProvider.OLLAMA,
-        *args,
-        **kwargs,
-    ):
-        results = await memory_manager.search_documents(message, limit=5)
-        retrieved_context = ""
-        if results:
-            retrieved_context = "--- LOCAL DOCUMENT RESULTS ---\n"
-            for res in results:
-                content = res.get("document", "")
-                meta = res.get("metadata", {})
-                source = meta.get("filename", "Unknown Source")
-                if content:
-                    retrieved_context += f"Source: {source}\n{content}\n\n"
-
-        system_content = f"{SYS_PROMPT}\n\n{memory_context}" if memory_context else SYS_PROMPT
-        messages = [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": f"Query: {message}\n\n{retrieved_context}"},
-        ]
-        target_model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
-        async for chunk in ollama_client.stream_chat(messages, model=target_model):
-            yield chunk
+    def get_target_model(self) -> str:
+        return model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
 
 
 research_agent = ResearchAgent()

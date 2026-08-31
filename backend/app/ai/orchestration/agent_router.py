@@ -225,6 +225,12 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.DOCUMENT: [
         (
+            r"\b(write|create|generate|make|build|export|turn this into)\s+.*(word doc|word document|\.docx|slide deck|presentation|\.pptx|spreadsheet|\.xlsx|pdf report|\.pdf)\b",
+            5.0,
+        ),
+        (r"\b(docx|pptx|xlsx|pdf)\b", 3.0),
+        (r"\b(slide deck|presentation slides|word document|excel sheet)\b", 4.0),
+        (
             r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|technical report|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document)\b",
             6.0,
         ),
