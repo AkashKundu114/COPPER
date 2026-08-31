@@ -82,10 +82,10 @@ npm run desktop
 Always run the full test and benchmark suite before submitting PRs:
 
 ```bash
-# 1. Run all 213 Pytest Unit & Integration Tests
+# 1. Run all 309 Pytest Unit & Integration Tests
 python -m pytest tests/ -v
 
-# 2. Run the 1,360-case Intent Routing & Guardian Benchmark
+# 2. Run the 1,740-case Intent Routing & Guardian Benchmark
 python backend/eval/benchmark.py
 
 # 3. Verify Local Model Artifacts

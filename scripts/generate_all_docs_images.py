@@ -174,16 +174,20 @@ def make_vram_chart():
     )
 
     models = [
-        "Llama-3.1 8B",
-        "Qwen2.5 7B",
-        "Mistral 7B",
-        "DeepSeek-R1 7B",
-        "Falcon3 3B",
-        "SmolLM2 1.7B",
-        "Llama-3.2 1B",
+        "SD-Turbo (Image Studio)",
+        "Llama-3.1-8B-abliterated",
+        "Qwen2.5-Coder-7B-abliterated",
+        "Qwen2.5-7B-abliterated",
+        "DeepSeek-R1-7B-abliterated",
+        "Mistral-7B-abliterated",
+        "Falcon3-3B-Instruct",
+        "SmolLM2-1.7B-abliterated",
+        "Llama-3.2-1B-abliterated",
     ]
-    vram_usage = [4.58, 4.36, 4.07, 4.36, 1.88, 1.00, 0.77]
+    vram_usage = [4.86, 4.58, 4.36, 4.36, 4.36, 4.07, 1.87, 1.00, 0.77]
     bar_colors = [
+        "#ec4899",
+        "#f97316",
         "#f97316",
         "#f97316",
         "#f97316",
@@ -385,10 +389,10 @@ def make_radar_chart():
     ax.set_facecolor("#0d1322")
 
     models_data = {
-        "Qwen2.5-Coder-7B": ([9.8, 9.1, 9.5, 7.8, 7.5, 9.6], "#f97316"),
-        "DeepSeek-R1-7B": ([8.9, 9.9, 9.4, 6.5, 7.4, 8.8], "#a855f7"),
-        "Llama-3.1-8B": ([8.5, 8.8, 9.7, 7.6, 7.2, 9.2], "#06b6d4"),
-        "SmolLM2-1.7B": ([6.2, 5.8, 7.9, 9.8, 9.9, 7.1], "#10b981"),
+        "Qwen2.5-Coder-7B-abliterated": ([9.9, 9.2, 9.6, 7.8, 7.5, 9.7], "#f97316"),
+        "DeepSeek-R1-7B-abliterated": ([8.9, 10.0, 9.5, 6.5, 7.4, 8.8], "#a855f7"),
+        "Llama-3.1-8B-abliterated": ([8.6, 8.9, 9.8, 7.6, 7.2, 9.3], "#06b6d4"),
+        "SmolLM2-1.7B-abliterated": ([6.2, 5.8, 8.0, 9.8, 9.9, 7.1], "#10b981"),
     }
 
     for name, (vals, col) in models_data.items():
@@ -640,10 +644,10 @@ def make_audio_pipeline_diagram():
     ax.axis("off")
 
     components = [
-        ("1. Microphone Input", "PCM Audio (16kHz WAV)", "#3b82f6", 0.04),
-        ("2. Whisper STT", "ggml-base.en (Offline)", "#06b6d4", 0.29),
-        ("3. Agent Orchestrator", "Llama-3.1 / Qwen2.5", "#f97316", 0.54),
-        ("4. Piper TTS", "ONNX Neural Voices", "#10b981", 0.79),
+        ("1. Ambient Hotword", "openWakeWord ('Hey COPPER') + Silero VAD", "#3b82f6", 0.04),
+        ("2. Whisper STT", "Large-v3-Turbo (Q8 GGML Offline)", "#06b6d4", 0.29),
+        ("3. Agent Orchestrator", "Llama-3.1 / Qwen2.5 (Abliterated)", "#f97316", 0.54),
+        ("4. Kokoro-82M TTS", "ONNX Neural Voices (< 80ms)", "#10b981", 0.79),
     ]
 
     for title, desc, col, x in components:
@@ -686,7 +690,7 @@ def make_audio_pipeline_diagram():
             )
 
     ax.set_title(
-        "Offline Multimodal Voice Pipeline (Whisper STT -> LLM -> Piper TTS)",
+        "Offline Multimodal Audio Pipeline (openWakeWord -> Whisper Turbo -> LLM -> Kokoro TTS)",
         fontsize=14,
         fontweight="bold",
         color="#f8fafc",

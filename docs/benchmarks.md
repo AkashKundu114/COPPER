@@ -13,10 +13,10 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 
 | Benchmark Category | Sample Count | Accuracy | Precision / F1 | Latency (Avg) | Throughput (QPS) | Risk Breaches |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.102 ms** | **~9,660 QPS** | 0 |
+| **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.093 ms** | **~10,780 QPS** | 0 |
 | **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.003 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest Test Suite** | 313 | **100.0%** | **100.0%** | **46.50s total** | — | 0 |
+| **Pytest Test Suite** | 309 | **100.0%** | **100.0%** | **~62.4s total** | — | 0 |
 
 ---
 
@@ -26,10 +26,10 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 
 | Pipeline Component | P50 (Median) | P90 | P95 | P99 | Processing Mechanism |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Stage 0: Dynamic Memory Cache** | **0.012 ms** | 0.019 ms | 0.024 ms | 0.035 ms | In-memory token set similarity & exact hash match |
-| **Stage 1: Regex & Suppress Rules** | **0.028 ms** | 0.041 ms | 0.052 ms | 0.071 ms | Pre-compiled regex patterns with negative lookahead |
+| **Stage 0: Dynamic Memory Cache** | **0.012 ms** | 0.018 ms | 0.022 ms | 0.031 ms | In-memory token set similarity & exact hash match |
+| **Stage 1: Regex & Suppress Rules** | **0.028 ms** | 0.041 ms | 0.052 ms | 0.071 ms | Pre-compiled regex patterns with negative suppression |
 | **Stage 2: Micro-LLM 1B Classifier**| **18.50 ms** | 24.20 ms | 28.60 ms | 35.00 ms | Quantized Llama-3.2-1B single-token logit prediction |
-| **Full End-to-End Routing Engine** | **0.045 ms** | **0.058 ms** | **0.066 ms** | **0.089 ms** | Blended execution (99.8% served by Stages 0 & 1) |
+| **Full End-to-End Routing Engine** | **0.088 ms** | **0.105 ms** | **0.118 ms** | **0.142 ms** | Blended execution (99.8% served by Stages 0 & 1) |
 
 ---
 
@@ -38,7 +38,8 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 ### VRAM Budget Allocation (NVIDIA RTX 5060 — 8.0 GB Total)
 ![VRAM Memory Allocation](images/vram_memory_allocation.png)
 
-- **Primary Core Model (7B/8B Q4_K_M):** ~4.36 – 4.58 GB
+- **Primary Core Model (7B/8B Q4_K_M Abliterated):** ~4.07 – 4.58 GB
+- **Offline Image Studio (SD-Turbo Safetensors):** ~4.86 GB (transient on-demand slot)
 - **Active Micro-Subagent (1B-1.5B Q4_K_M):** ~0.94 – 1.09 GB
 - **KV Context Cache (8,192 token window):** ~0.90 GB
 - **CUDA Runtime & Kernel Overhead:** ~0.30 GB
@@ -62,13 +63,13 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 
 | Model Name | Parameter Size | Prompt Eval Speed (Tokens/s) | Generation Speed (Tokens/s) | Time-to-First-Token (TTFT) |
 | :--- | :---: | :---: | :---: | :---: |
-| **`Llama-3.2-1B-Instruct`** | 1.23B | **940 T/s** | **185 T/s** | **8 ms** |
-| **`SmolLM2-1.7B-Instruct`** | 1.71B | **720 T/s** | **135 T/s** | **12 ms** |
+| **`Llama-3.2-1B-Instruct-abliterated`** | 1.23B | **940 T/s** | **185 T/s** | **8 ms** |
+| **`SmolLM2-1.7B-Instruct-abliterated`** | 1.71B | **720 T/s** | **135 T/s** | **12 ms** |
 | **`Falcon3-3B-Instruct`** | 3.20B | **480 T/s** | **92 T/s** | **18 ms** |
-| **`Mistral-7B-Instruct-v0.3`** | 7.25B | **235 T/s** | **55 T/s** | **35 ms** |
-| **`Qwen2.5-Coder-7B-Instruct`** | 7.61B | **228 T/s** | **52 T/s** | **38 ms** |
-| **`Meta-Llama-3.1-8B-Instruct`**| 8.03B | **215 T/s** | **48 T/s** | **42 ms** |
-| **`DeepSeek-R1-Distill-7B`** | 7.61B | **220 T/s** | **49 T/s** | **40 ms** |
+| **`Mistral-7B-Instruct-v0.3-abliterated`** | 7.25B | **235 T/s** | **55 T/s** | **35 ms** |
+| **`Qwen2.5-Coder-7B-Instruct-abliterated`** | 7.61B | **228 T/s** | **52 T/s** | **38 ms** |
+| **`Meta-Llama-3.1-8B-Instruct-abliterated-v3`**| 8.03B | **215 T/s** | **48 T/s** | **42 ms** |
+| **`DeepSeek-R1-Distill-Qwen-7B-abliterated`** | 7.61B | **220 T/s** | **49 T/s** | **40 ms** |
 
 ---
 
