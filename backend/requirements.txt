@@ -24,3 +24,5 @@ python-docx
 python-pptx
 openpyxl
 reportlab
+kokoro-onnx
+soundfile

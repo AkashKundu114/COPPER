@@ -37,8 +37,9 @@ class Settings(BaseSettings):
     ]
     REFLECTION_INTERVAL_SECONDS: int = 600
     REFLECTION_CONFIDENCE_THRESHOLD: float = 0.7
-    WAKE_WORD_ENGINE: str = "whisper_fallback"
+    WAKE_WORD_ENGINE: str = "openwakeword"
     WAKE_WORD_MODEL_PATH: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "wakeword" / "hey_copper.onnx")
+    WAKE_WORD_EMBEDDING_PATH: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "wakeword" / "embedding_model.onnx")
     GATEKEEPER_KEEP_ALIVE: int = -1
     HEAVY_MODEL_IDLE_UNLOAD_SECONDS: int = 240
 

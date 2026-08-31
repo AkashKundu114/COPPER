@@ -13,3 +13,12 @@ class ChatHistory(Base):
     sender = Column(String(16), nullable=False)
     message = Column(Text, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "session_id": self.session_id,
+            "sender": self.sender,
+            "message": self.message,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }

@@ -27,14 +27,14 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 - **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~9,660 QPS** (0.102 ms average latency).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
 - **313 / 313 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
-- **26 Quantized Local GGUF / ONNX Models (39.5 GB):** Specialized model pool (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`, `nomic-embed-text-v1.5`, and 14 micro-subagents).
-- **Zero Cloud Egress:** 100% offline speech-to-text (Whisper), natural voice synthesis (Piper), and local vector embeddings (ChromaDB).
+- **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).
+- **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
 ---
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 313 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 26 quantized local models (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`), achieving **sub-millisecond routing (0.10ms)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 313 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.10ms)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 

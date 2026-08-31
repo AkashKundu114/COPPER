@@ -1,53 +1,66 @@
-# C.O.P.P.E.R. Model Setup Guide (RTX 5060 8GB VRAM Optimized)
+# C.O.P.P.E.R. Model Setup & Management Guide (RTX 5060 8GB VRAM Optimized)
 
-Tailored for laptops with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9 8940HX**, and **16GB System RAM** running **Q4_K_M** quantized GGUF models via Ollama.
-
----
-
-## Hardware Memory Strategy
-
-With **8GB VRAM**, each Q4_K_M quantized model takes **~3.8 GB to 4.7 GB VRAM**, allowing every model to fit **100% inside GPU VRAM** with 3GB+ headroom for KV-cache context windows. Ollama switches active models in $< 1$ second automatically.
+Tailored for modern laptops with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**, and **16GB–32GB System RAM** running **Q4_K_M Lossless Abliterated GGUF models**, **Local Diffusion (PICASSO)**, and **openWakeWord / Kokoro Audio Pipelines**.
 
 ---
 
-## Copy & Paste Terminal Pull Commands
+## 1. Model Store Architecture & Manifest
 
-Run these 3 commands in your terminal for the optimal 8GB VRAM setup:
+All models reside under the local [`ai-models/`](file:///d:/C.O.P.P.E.R/ai-models/) directory, orchestrated dynamically via [`ai-models/models_manifest.json`](file:///d:/C.O.P.P.E.R/ai-models/models_manifest.json):
 
-```bash
-# 1. Core Reasoning & Guardian Alignment (Q4_K_M ~4.7 GB VRAM)
-ollama pull llama3.1:8b
-
-# 2. Code Synthesis, Refactoring & Debugging (Q4_K_M ~4.4 GB VRAM)
-ollama pull qwen2.5-coder:7b
-
-# 3. Epistemic Memory & Task Scheduling (Q4_K_M ~4.1 GB VRAM)
-ollama pull mistral:7b-instruct
+```
+ai-models/
+├── core/                  # Lossless Abliterated 7B/8B Heavyweight Models (Chat, Coding, Docs, Reasoning, Auto)
+├── subagents/             # 14 Specialized Micro-Subagents (Router, Firewall, Diagnostics, Git, SQL, etc.)
+├── vision/                # Multimodal Vision Models (Qwen2.5-VL 7B & 3B)
+├── image/                 # 100% Offline 1-Step Local Diffusion (PICASSO / SD-Turbo)
+├── embeddings/            # ChromaDB Dense Vectors (nomic-embed-text, ModernBERT, BGE Reranker)
+├── audio/                 # Kokoro-82M ONNX TTS, Silero VAD v5, Whisper Large v3 Turbo
+└── wakeword/              # openWakeWord Acoustic Models (hey_copper.onnx, embedding_model.onnx)
 ```
 
 ---
 
-## Q4_K_M Model Allocation for RTX 5060 8GB VRAM
+## 2. Hardware VRAM Discipline (8GB Budget)
 
-| Model Pull Command | Q4 VRAM Size | Expected Speed (RTX 5060) | Assigned Sub-Agents & Roles |
-| :--- | :--- | :--- | :--- |
-| `ollama pull llama3.1:8b` | **~4.7 GB** | **55–70 tokens/sec** | **COPPER Core**, `WARDEN` (Security), `AEGIS` (Guardian), `ATLAS` (Task Core), `DIRECTOR` (Workflow). |
-| `ollama pull qwen2.5-coder:7b` | **~4.4 GB** | **65–85 tokens/sec** | `AXIS` (Coding), `CRUCIBLE` (Refactoring), `FORGE` (Build Systems), `GLITCH` (Debugging), `TENSOR` (ML Ops). |
-| `ollama pull mistral:7b-instruct` | **~4.1 GB** | **70–90 tokens/sec** | `CHRONOS` (Schedule), `MNEMONIC` (Memory), `SYNAPSE` (Learner), `LEDGER` (Finance), `PIVOT` (Routines). |
-| `ollama pull deepseek-coder:6.7b` *(Optional)* | **~3.8 GB** | **75–95 tokens/sec** | `QUANTA` (Data Analytics), `CYPHER` (Crypto), `PRISM` (Logic Engine), `GOLIATH` (Big Data). |
-| `ollama pull llava:7b` *(Optional Vision)* | **~4.5 GB** | **50–65 tokens/sec** | `IRIS` (Vision Inspection), `SPECTRE` (UI Inspector), `RENDER` (Design Layout). |
+With **8GB VRAM**, running multiple heavy models simultaneously would cause Out-Of-Memory (OOM) crashes. C.O.P.P.E.R. enforces strict **VRAM Tiering**:
+
+1. **Always-On Gatekeeper / Router (`Llama-3.2-1B-abliterated` / `Qwen2.5-0.5B-abliterated`)**:
+   - Pinned in VRAM with `keep_alive: -1` (~770 MB VRAM footprint).
+   - Handles sub-40ms intent classification, wake-word validation, and small reflex replies.
+2. **Transient Heavyweight Tier (7B–8B Core Models)**:
+   - Loaded on-demand into GPU VRAM (4.0–4.6 GB).
+   - Automatically unloaded by `ModelTierManager` after 60s–240s of idle time.
+3. **Ambient Audio & Wake-Word Layer**:
+   - Silero VAD v5 and openWakeWord run strictly on CPU ($\approx 1-3\%$ CPU usage, 0 MB VRAM).
 
 ---
 
-## Recommended Ollama Environment Settings
+## 3. Ollama Modelfile Creation for Local GGUFs
 
-To maximize RTX 5060 GPU utilization and prevent VRAM unloading latency, set this environment variable in your terminal or Windows System Environment Variables:
+To register downloaded GGUFs into your local Ollama instance, create a `Modelfile`:
+
+```dockerfile
+# Example Modelfile for AXIS Coding Agent
+FROM ./ai-models/core/Qwen2.5-Coder-7B-Instruct-abliterated-Q4_K_M.gguf
+PARAMETER temperature 0.2
+PARAMETER top_p 0.95
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "<|endoftext|>"
+```
+
+Then create and verify the model:
+```bash
+ollama create qwen2.5-coder-abliterated:7b -f Modelfile
+ollama list
+```
+
+---
+
+## 4. Model Store Integrity Verification
+
+Run the built-in integrity verifier to validate all 34 model files and storage health across all categories:
 
 ```powershell
-# In Windows PowerShell:
-$env:OLLAMA_NUM_PARALLEL="1"
-$env:OLLAMA_KEEP_ALIVE="10m"
+python scripts/models/verify_models.py
 ```
-
-- `OLLAMA_KEEP_ALIVE="10m"`: Keeps the active model loaded in VRAM for 10 minutes so back-and-forth prompts respond instantly without reloading overhead.
-- `OLLAMA_NUM_PARALLEL="1"`: Ensures 100% of the RTX 5060's VRAM is dedicated to single-user generation.

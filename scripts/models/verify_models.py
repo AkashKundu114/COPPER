@@ -28,13 +28,18 @@ def verify_models():
 
     print(f"\n[*] Inspecting Model Store: {MODELS_DIR}\n")
 
-    for category in ["core", "subagents", "vision", "embeddings", "audio"]:
+    for category in ["core", "subagents", "vision", "image", "embeddings", "audio", "wakeword"]:
         cat_dir = MODELS_DIR / category
         if not cat_dir.exists():
             print(f"[-] Category directory missing: {cat_dir}")
             continue
 
-        files = list(cat_dir.rglob("*.gguf")) + list(cat_dir.rglob("*.bin")) + list(cat_dir.rglob("*.onnx"))
+        files = (
+            list(cat_dir.rglob("*.gguf"))
+            + list(cat_dir.rglob("*.bin"))
+            + list(cat_dir.rglob("*.onnx"))
+            + list(cat_dir.rglob("*.safetensors"))
+        )
         print(f"[+] [{category.upper():<10}] Found {len(files)} model artifacts:")
         for f in sorted(files):
             sz_mb = f.stat().st_size / (1024 * 1024)
