@@ -1,42 +1,64 @@
 # C.O.P.P.E.R.
 
-**Centralized Omnifunctional Personal Productivity and Execution Routine**
-*A 100% offline, local-first personal AI operating system - 30 orchestrated agents, epistemic memory, a Guardian safety engine, and zero cloud egress.*
+**Centralized Omnifunctional Personal Productivity and Execution Routine**  
+*An independent, 100% offline, local-first personal AI operating system featuring 30 orchestrated agents, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary%20%7C%20All%20Rights%20Reserved-red.svg)](LICENSE)
+[![Author: Akash Kundu](https://img.shields.io/badge/Author-Akash%20Kundu-blue.svg)](https://github.com/AkashKundu114)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
 [![Tests Passing](https://img.shields.io/badge/Tests-213%20Passed%20(100%25)-brightgreen.svg)]()
 [![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~19%2C000%20QPS-blueviolet.svg)]()
+[![Guardian Catch Rate](https://img.shields.io/badge/Guardian%20Catch%20Rate-100.0%25-success.svg)]()
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)]()
 [![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)]()
 
 ---
 
-## Why COPPER
+## Overview & Project Independence
 
-COPPER routes every request through a 30-agent orchestration layer running entirely on local hardware — no API keys, no cloud calls, no data leaving your machine unless you explicitly allow it. A Guardian engine challenges risky or off-goal actions before they execute, a Zero-Trust firewall redacts secrets and PII in real time, and an epistemic memory system builds up a genuine, decaying model of what it knows about you — all visualized through a live neural map that lights up as agents work.
+**C.O.P.P.E.R.** is an **independent, proprietary personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
 
-**In numbers:**
-- **100.0% routing accuracy** across 1,110 benchmark cases at **~19,000 QPS** (0.05ms avg latency)
-- **100.0% Guardian threat catch rate**, 0 breaches across 250 adversarial safety tests
-- **213/213 tests passing**, CodeQL security scanning on every push
-- **26 quantized local models** (Llama 3.1, Qwen2.5-Coder, DeepSeek-R1, Qwen2-VL) — zero cloud dependency by default
+Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
+
+### By the Numbers:
+- **100.0% Routing Precision:** Evaluated over 1,110 benchmark test cases at **~18,954 QPS** (0.052 ms average latency).
+- **100.0% Guardian Threat Sensitivity:** 0 security breaches across 250 adversarial destructive trigger test cases.
+- **213 / 213 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, REST APIs, audio pipelines, epistemic memory, sandboxing, and data sanitization.
+- **26 Quantized Local GGUF / ONNX Models (39.5 GB):** Specialized model pool (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`, `nomic-embed-text-v1.5`, and 14 micro-subagents).
+- **Zero Cloud Egress:** 100% offline speech-to-text (Whisper), natural voice synthesis (Piper), and local vector embeddings (ChromaDB).
 
 ---
 
-## Executive Summary & Key Highlights
+## Executive Summary & Key Technical Innovations
 
-> **Engineered** a persistent, privacy-preserving personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, **by architecting** a multi-tier agent orchestration framework across 26 quantized local models (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`), achieving **sub-millisecond routing (0.05ms)**, **100% Guardian threat sensitivity**, and autonomous self-healing.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 213 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 26 quantized local models (`Llama-3.1-8B`, `Qwen2.5-Coder-7B`, `Mistral-7B`, `DeepSeek-R1-7B`, `Qwen2-VL-7B`), achieving **sub-millisecond routing (0.05ms)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
-- **Sub-Millisecond Multi-Stage Router (< 0.05ms):** Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)**.
-- **Guardian Safety & Alignment Engine:** 4-level disagreement protocol (Execute, Suggest, Challenge, Safety Boundary) evaluating user prompts against destructive triggers (`rm -rf`, raw disk formats, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
-- **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive PII (OpenAI `sk-` / `sk-proj-` tokens, Bearer headers, SSNs, credit cards, emails, IP addresses, file paths).
-- **Offline Multimodal Voice Pipeline:** Real-time speech transcription via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with zero internet dependency.
-- **3-Layer Epistemic Memory:** Persistent storage of user facts, preferences, and hypotheses integrating SQLite state with ChromaDB semantic vector embeddings (`nomic-embed-text-v1.5`).
-- **Native Desktop Application:** Standalone Electron desktop app with single-instance locking, in-app navigation constraints (no external browser popups), and seamless Windows startup auto-launch.
+### Key Architectural Pillars:
+
+1. **Sub-Millisecond Multi-Stage Router (< 0.05ms):**
+   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)** with zero GPU blocking overhead.
+
+2. **Multi-Level Guardian Safety & Alignment Engine:**
+   A 4-tier disagreement protocol (Level 0: Execute, Level 1: Suggest, Level 2: Challenge, Level 3: Safety Boundary) that intercepts destructive shell invocations (`rm -rf`, drive formatting, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
+
+3. **Zero-Trust Data Firewall:**
+   In-line regex and pattern sanitizer scrubbing sensitive API credentials (OpenAI `sk-` / `sk-proj-`, JWT Bearer tokens), Social Security Numbers (SSNs), credit card details, emails, IP addresses, and private filesystem paths prior to model ingestion or persistence.
+
+4. **3-Layer Epistemic Memory Engine:**
+   Classifies user interactions into Facts ($C \ge 0.85$), Observations ($0.50 \le C < 0.85$), and Hypotheses ($0.10 \le C < 0.50$) with continuous Bayesian belief revision and temporal decay mathematical formulation:
+   $$C(t) = C_0 \cdot e^{-\lambda_T \cdot \Delta t}$$
+
+5. **100% Offline Multimodal Voice Pipeline:**
+   Real-time local speech-to-text via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with real-time waveform equalization.
+
+6. **Forge Code Execution Sandbox & Self-Healing Loop:**
+   Isolated subprocess execution environment for coding subagents (AXIS) with configurable timeouts, sandboxed directory scopes, and an autonomous 3-stage retry and secondary tool/model fallback engine (`self_healing.py`).
+
+7. **Molten Copper Native Desktop Experience:**
+   Standalone Electron desktop application built with React 19, Tailwind CSS, and Framer Motion. Features a live 30-node radial ganglia neural map, live hardware telemetry (GPU/CPU thermals, VRAM monitor, RAM footprint), and single-instance process locking.
 
 ---
 
@@ -126,12 +148,12 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 
 ### Live Telemetry & Benchmarking Tab
 
-COPPER now features a dedicated **Benchmarks & Metrics** tab inside the Electron Desktop Application. This provides live 1.5-second polling of:
-- **Token Velocity**: Real-time Prompt Tokens/Sec and Generation Tokens/Sec.
-- **Hardware Thermals**: Live GPU Core, Hotspot, and CPU Package Temperatures.
-- **VRAM Monitor**: Live 8GB VRAM allocation tracking (Core, Subagent, KV Cache).
-- **System RAM**: Sub-1GB active memory footprint monitoring.
-- **Live Evaluator**: Run synthetic benchmark test cases directly from the UI with real-time accuracy scoring.
+COPPER features a dedicated **Benchmarks & Metrics** tab inside the Electron Desktop Application providing real-time hardware telemetry:
+- **Token Velocity:** Real-time Prompt Tokens/Sec and Generation Tokens/Sec.
+- **Hardware Thermals:** Live GPU Core, Hotspot, and CPU Package Temperatures.
+- **VRAM Monitor:** Live 8GB VRAM allocation tracking (Core, Subagent, KV Cache).
+- **System RAM:** Sub-1GB active memory footprint monitoring.
+- **Live Evaluator:** Run synthetic benchmark test cases directly from the UI with real-time accuracy scoring.
 
 ### Prerequisites
 - **Python 3.11+**
@@ -154,7 +176,7 @@ source .venv/bin/activate
 pip install -r backend/requirements.txt
 ```
 
-### 2. Run Test Suite
+### 2. Run Test Suite & Benchmark Validation
 ```bash
 # Run all 213 unit & integration tests
 python -m pytest tests/ -v
@@ -178,7 +200,7 @@ npm run desktop
 
 ## Repository Directory Structure
 
-```
+```text
 COPPER/
 ├── backend/                       # FastAPI backend, agent router, guardian, services
 │   ├── app/
@@ -195,7 +217,8 @@ COPPER/
 │   ├── api/                       # REST API route integration tests
 │   ├── audio/                     # Whisper STT, Piper TTS, and PCM stream tests
 │   ├── core/                      # Guardian, data firewall, forge sandbox, self-healing
-│   └── memory/                    # Context engine, episodic memory, vector store
+│   ├── memory/                    # Context engine, episodic memory, vector store
+│   └── services/                  # Document generation & service integration tests
 ├── infrastructure/                # Containerization and production orchestration
 │   ├── docker/                    # Dockerfiles, docker-compose.dev.yml, docker-compose.prod.yml
 │   ├── kubernetes/                # Modular k8s manifests (base, ingress, deployments)
@@ -212,6 +235,21 @@ COPPER/
 
 ---
 
-## License
+## Intellectual Property, Patent Protection & License
 
-   Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for full details.
+**C.O.P.P.E.R.** is an **independent, proprietary software system** created and owned by **Akash Kundu**.
+
+- **All Rights Reserved:** Copyright &copy; 2026 Akash Kundu.
+- **Proprietary & Patent Protection:** The architectural concepts, multi-stage routing algorithms, epistemic temporal decay mathematical formulation ($C(t) = C_0 \cdot e^{-\lambda_T \cdot \Delta t}$), Guardian safety protocol mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
+- **Strict Prohibition:** No part of this software may be copied, reproduced, modified, distributed, sublicensed, commercially exploited, or used to train artificial intelligence models without the express prior written consent of the copyright owner.
+- **Terms of License:** See the [`LICENSE`](LICENSE) file for the full proprietary license terms.
+
+---
+
+## Security & Community Governance
+
+- **Security Policy & Vulnerability Disclosure:** Consult [`SECURITY.md`](SECURITY.md) for reporting vulnerabilities and threat model specifications.
+- **Code of Conduct:** Review [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community participation standards.
+- **Contributing Guidelines:** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for pull request requirements, contributor license terms, and quality gate criteria.
+- **Support:** Visit [`SUPPORT.md`](SUPPORT.md) for troubleshooting guides and issue submission workflows.
+

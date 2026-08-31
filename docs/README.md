@@ -29,9 +29,7 @@ docs/
 ├── technical/                        # Technical Requirements & Engineering Guides
 │   ├── trd.md                        # Technical Requirements Document & APIs
 │   ├── implementation.md             # Developer codebase layout & agent creation guide
-│   ├── model-selection.md            # Local model catalog & quantization strategy
-│   ├── finetuning.md                 # QLoRA personality + domain adapter fine-tuning
-│   └── cloud-gpu-training.md         # Cloud GPU rental & training guide
+│   └── model-selection.md            # Local model catalog & quantization strategy
 ├── research/                         # Product & Epistemic Research
 │   ├── prd.md                        # Product Requirements Document & user personas
 │   ├── epistemic-memory.md           # Fact / Observation / Hypothesis math & memory decay
@@ -41,7 +39,6 @@ docs/
 │   ├── development.md                # Local environment, Docker, & desktop build setup
 │   ├── deployment.md                 # Docker Compose production & K8s deployment
 │   ├── models.md                     # Local model downloads & hardware guide
-│   ├── training-setup.md             # Dataset generation & fine-tuning pipeline setup
 │   └── troubleshooting.md            # Operational diagnostics & common FAQs
 ├── planning/                         # Roadmap & Open Architectural Decisions
 │   ├── roadmap.md                    # Product roadmap & milestone timeline

@@ -1,21 +1,115 @@
-MIT License
+================================================================================
+C.O.P.P.E.R. PROPRIETARY SOFTWARE LICENSE & INTELLECTUAL PROPERTY NOTICE
+================================================================================
 
-Copyright (c) 2026 Akash Kundu
+Copyright (c) 2026 Akash Kundu. All Rights Reserved.
+Independent Project - Created, Designed, and Maintained by Akash Kundu.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+--------------------------------------------------------------------------------
+1. PROPRIETARY & INTELLECTUAL PROPERTY NOTICE
+--------------------------------------------------------------------------------
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+C.O.P.P.E.R. (Centralized Omnifunctional Personal Productivity and Execution
+Routine), including but not limited to its source code, compiled binaries,
+architectural designs, algorithms, multi-stage routing paradigms, Guardian
+safety protocol mechanisms, epistemic memory models and mathematical
+formulations, zero-trust firewall filters, user interface designs, visual
+representations, benchmarks, and associated documentation (collectively, the
+"Software"), is the confidential, proprietary, and patented/patent-pending
+intellectual property of Akash Kundu ("Owner").
+
+This Software represents an independent, proprietary project. No rights, title,
+or interest in or to the Software are transferred, assigned, or conveyed to any
+individual, organization, or third party, except for the explicit and limited
+permissions defined in Section 2 below.
+
+--------------------------------------------------------------------------------
+2. LIMITED GRANT OF VIEWING & EVALUATION RIGHTS
+--------------------------------------------------------------------------------
+
+Subject to the terms and restrictions of this License, the Owner grants to any
+individual viewing this repository a limited, non-exclusive, non-transferable,
+non-sublicensable, revocable right to:
+
+  (a) View, read, and inspect the source code solely for personal evaluation,
+      academic study, and security auditing purposes; and
+  (b) Submit non-binding issues, questions, or pull requests strictly subject
+      to the Contribution Terms in Section 4.
+
+--------------------------------------------------------------------------------
+3. STRICT RESTRICTIONS & PROHIBITIONS
+--------------------------------------------------------------------------------
+
+Except as expressly authorized under Section 2 or with prior explicit written
+authorization signed by Akash Kundu, YOU SHALL NOT:
+
+  (a) COPY, REPRODUCE, OR CLONE: Copy, duplicate, reproduce, or mirror the
+      Software, in whole or in part, in source code, binary, or any other form.
+  (b) MODIFY OR CREATE DERIVATIVE WORKS: Modify, adapt, translate, alter, or
+      create derivative works based upon the Software or any portion thereof.
+  (c) DISTRIBUTE, PUBLISH, OR SUBLICENSE: Distribute, publish, publicly display,
+      broadcast, rent, lease, loan, sell, resell, sublicense, assign, or
+      transfer the Software or any derivative works to any third party.
+  (d) COMMERCIAL USE: Utilize, host, embed, integrate, or deploy the Software,
+      its algorithms, its routing architecture, or its concepts in any commercial
+      product, service, platform, SaaS offering, or enterprise workflow.
+  (e) AI / ML TRAINING & EXTRACTION: Ingest, train, fine-tune, distill, extract,
+      or generate machine learning models, weights, or datasets using the
+      Software, its prompt engineering, or its benchmark datasets.
+  (f) REVERSE ENGINEERING: Decompile, reverse engineer, disassemble, or attempt
+      to derive the underlying source code, ideas, algorithms, or patentable
+      inventions from any binary or compiled component of the Software.
+  (g) REMOVAL OF NOTICES: Remove, alter, obscure, or delete any copyright,
+      patent, trademark, or proprietary notices affixed to or contained within
+      the Software.
+
+--------------------------------------------------------------------------------
+4. CONTRIBUTIONS & ASSIGNMENT
+--------------------------------------------------------------------------------
+
+By submitting any code, documentation, pull request, bug fix, feature, idea,
+or suggestion (collectively, "Contributions") to this repository or to the
+Owner, you irrevocably agree that:
+
+  (a) All intellectual property rights, patent rights, copyright, and title in
+      and to your Contributions are assigned to and become the sole, exclusive
+      property of Akash Kundu upon submission; and
+  (b) You represent and warrant that you possess all legal authority to make
+      such Contributions free of any third-party encumbrances, licenses, or
+      claims.
+
+--------------------------------------------------------------------------------
+5. PATENT & TRADE SECRET RESERVATION
+--------------------------------------------------------------------------------
+
+No patent license, express or implied, by estoppel or otherwise, is granted
+under this License. The Owner expressly reserves all rights under any patent
+applications, granted patents, trade secrets, trademarks, and statutory
+intellectual property protections embodying the algorithms, state machines,
+epistemic decay equations, and multi-tier agent orchestration systems of
+C.O.P.P.E.R.
+
+--------------------------------------------------------------------------------
+6. DISCLAIMER OF WARRANTIES
+--------------------------------------------------------------------------------
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT
+SHALL AKASH KUNDU BE LIABLE FOR ANY CLAIM, DAMAGES, LOSS OF DATA, SYSTEM
+FAILURE, LOSS OF BUSINESS, OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH
+THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------------------
+7. INQUIRIES & LICENSING REQUESTS
+--------------------------------------------------------------------------------
+
+For enterprise licensing, commercial authorization, integration inquiries,
+or partnership requests, please contact the author and copyright holder:
+
+  Akash Kundu
+  GitHub: https://github.com/AkashKundu114
+  Repository: https://github.com/AkashKundu114/COPPER
+================================================================================
+

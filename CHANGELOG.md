@@ -54,9 +54,9 @@ This major release consolidates five architectural passes, resolving legacy sing
 - **Security Center & Audit Log (`audit_log`):** Human-readable event trail with one-click encrypted JSON data export and instant permanent purge (`delete-all`).
 - **Comprehensive Documentation Suite in `docs/`:**
   - `docs/architecture/`: `overview.md`, `schema.md`, `security.md`, `voice-activation.md`
-  - `docs/technical/`: `trd.md`, `implementation.md`, `model-selection.md`, `finetuning.md`, `cloud-gpu-training.md`
+  - `docs/technical/`: `trd.md`, `implementation.md`, `model-selection.md`
   - `docs/research/`: `prd.md`, `epistemic-memory.md`, `guardian.md`, `whitepaper.md`
-  - `docs/setup/`: `development.md`, `deployment.md`, `models.md`, `training-setup.md`, `troubleshooting.md`
+  - `docs/setup/`: `development.md`, `deployment.md`, `models.md`, `troubleshooting.md`
   - `docs/diagrams/`: `system-architecture.md`, `app-flow.md`, `state-machines.md`
   - `docs/ui_ux/`: `design-brief.md`, `interface-spec.md`, `accessibility.md`
   - `docs/planning/`: `open-questions.md`, `roadmap.md`
