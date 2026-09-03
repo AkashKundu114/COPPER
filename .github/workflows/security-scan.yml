@@ -40,7 +40,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Review dependency changes for known vulnerabilities
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5.0.0
         with:
           fail-on-severity: high
           comment-summary-in-pr: always
@@ -62,7 +62,7 @@ jobs:
           exit-code: '0'
 
       - name: Upload results to code scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-fs.sarif
           category: trivy-filesystem
@@ -74,13 +74,13 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Lint backend Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: infrastructure/docker/backend/Dockerfile
           failure-threshold: error
 
       - name: Lint frontend Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: infrastructure/docker/frontend/Dockerfile
           failure-threshold: error

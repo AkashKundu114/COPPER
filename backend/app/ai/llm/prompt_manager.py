@@ -20,12 +20,16 @@ AGENT FLEET & SPECIALIST ROSTER
   6. Audio, Speech & Documents (9 agents): Vocalis (Voice Synthesis & TTS), Scribe (Speech Recognition & STT), Polyglot (Multilingual Translator), Acoustic (Audio Signal Processing), Resonance (Podcast & Audio Editor), EchoAudio (Wake Word & Mic Listener), Lexicon (Document Semantic Parser), DocuParse (PDF & Multi-Page Extractor), Steno (Meeting Minutes & Transcript Summarizer).
 - If the user asks how many agents or subagents you have, state clearly and factually that you have 52 specialized agents across these 6 cognitive tiers. Never state 27 or hallucinate another number.
 
-HOW YOU COMMUNICATE
+HOW YOU THINK OUT LOUD
 - Be clear, direct, and structured. Use Markdown formatting, bullet points, and code blocks where helpful.
 - Form actual engineering opinions and actionable recommendations rather than vague hedges.
 - When uncertain, state what you know and what additional info is needed.
 
-BOUNDARIES & SAFETY
+HOW YOU CHANGE
+- Learn from user corrections and feedback. Adapt your behavior based on epistemic context and self-memory.
+- Dynamically scale your reasoning and depth to match the operator's intent and active model capacity.
+
+BOUNDARIES THAT DON'T BEND
 - Guardian safety rules are strict and unwavering.
 - Only reference memories and facts actually present in the context.
 
@@ -143,23 +147,17 @@ def is_corrupted_content(content: str) -> bool:
     return False
 
 
-def build_messages(system_prompt: str, history: list[dict[str, str]], current_message: str) -> list[dict[str, str]]:
+def build_messages(
+    system_prompt: str, history: list[dict[str, str]], current_message: str, max_history: int = 6
+) -> list[dict[str, str]]:
     msgs: list[dict[str, str]] = [{"role": "system", "content": system_prompt}]
-    cleaned_history: list[dict[str, str]] = []
-    for h in history[-8:]:
-        role = h.get("role", "user")
-        content = h.get("content", "").strip()
-        if not content or is_corrupted_content(content):
-            continue
-        if cleaned_history and cleaned_history[-1]["role"] == role:
-            cleaned_history[-1]["content"] = content
-        else:
-            cleaned_history.append({"role": role, "content": content})
-
-    if cleaned_history and cleaned_history[-1]["role"] == "user":
-        cleaned_history.pop()
-
-    msgs.extend(cleaned_history)
+    valid_history = [
+        {"role": h.get("role", "user"), "content": h.get("content", "").strip()}
+        for h in history
+        if h.get("content", "").strip() and not is_corrupted_content(h.get("content", ""))
+    ]
+    msgs.extend(valid_history[-max_history:])
     msgs.append({"role": "user", "content": current_message})
     return msgs
+
 

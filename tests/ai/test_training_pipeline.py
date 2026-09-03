@@ -122,6 +122,8 @@ async def test_data_curator_curation_and_deduplication():
         db.add(ev_high)
         db.add(ev_fail)
         db.commit()
+        db.refresh(ev_high)
+        db.refresh(ev_fail)
 
         # Run curation sweep
         res = await curator.curate_from_evaluations(min_score=0.85, limit=50)
