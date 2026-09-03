@@ -165,7 +165,7 @@ class OllamaClient:
 
     async def chat(
         self,
-        messages: list[dict[str, str]],
+        messages: list[dict[str, Any]],
         agent_type: AgentType | None = None,
         model: str | None = None,
         keep_alive: int | str | None = None,
@@ -206,7 +206,7 @@ class OllamaClient:
 
     async def stream_chat(
         self,
-        messages: list[dict[str, str]],
+        messages: list[dict[str, Any]],
         agent_type: AgentType | None = None,
         model: str | None = None,
         keep_alive: int | str | None = None,

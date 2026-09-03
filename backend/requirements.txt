@@ -26,3 +26,6 @@ openpyxl
 reportlab
 kokoro-onnx
 soundfile
+pillow
+pyautogui
+mss

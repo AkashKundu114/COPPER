@@ -93,6 +93,19 @@ export type BrainEvent =
       content: string;
       timestamp?: number;
       payload?: Record<string, any>;
+    }
+  | {
+      type: "computer_use_step";
+      step: number;
+      max_steps: number;
+      action: string;
+      action_details?: Record<string, any>;
+      thought?: string;
+      screenshot_b64?: string;
+      status?: "running" | "completed" | "blocked" | "error";
+      summary?: string;
+      window_title?: string;
+      coordinates?: { x: number; y: number } | null;
     };
 
 export interface MessageMetrics {
@@ -106,12 +119,27 @@ export interface MessageMetrics {
   total_time_ms?: number;
 }
 
+export interface ComputerUseStep {
+  step: number;
+  max_steps: number;
+  action: string;
+  action_details?: Record<string, any>;
+  thought?: string;
+  screenshot_b64?: string;
+  status: "running" | "completed" | "blocked" | "error";
+  summary?: string;
+  window_title?: string;
+  coordinates?: { x: number; y: number } | null;
+  timestamp?: number;
+}
+
 export interface ChatLine {
   id: string;
   agent: string;
   text: string;
   timestamp: number;
   taskGraph?: ActiveTaskGraphTrace | null;
+  computerUseSteps?: ComputerUseStep[];
   metrics?: MessageMetrics | null;
 }
 
@@ -157,6 +185,7 @@ interface BrainState {
   lastCorrectionAck: { id: string; summary: string; timestamp: number } | null;
   activeTool: ActiveToolTrace | null;
   activeTaskGraph: ActiveTaskGraphTrace | null;
+  activeComputerUse: ComputerUseStep[] | null;
 }
 
 function estimateSpeakingDuration(text: string): number {
@@ -182,6 +211,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [speakingAgent, setSpeakingAgent] = useState<string | null>(null);
   const [activeTool, setActiveTool] = useState<ActiveToolTrace | null>(null);
   const [activeTaskGraph, setActiveTaskGraph] = useState<ActiveTaskGraphTrace | null>(null);
+  const [activeComputerUse, setActiveComputerUse] = useState<ComputerUseStep[] | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -482,6 +512,62 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
             });
           }
           break;
+        case "computer_use_step": {
+          const stepData: ComputerUseStep = {
+            step: event.step,
+            max_steps: event.max_steps,
+            action: event.action,
+            action_details: event.action_details,
+            thought: event.thought,
+            screenshot_b64: event.screenshot_b64,
+            status: event.status || "running",
+            summary: event.summary,
+            window_title: event.window_title,
+            coordinates: event.coordinates,
+            timestamp: Date.now(),
+          };
+
+          setActiveComputerUse((prev) => {
+            const list = prev ? [...prev] : [];
+            const existingIdx = list.findIndex((s) => s.step === event.step);
+            if (existingIdx >= 0) {
+              list[existingIdx] = stepData;
+            } else {
+              list.push(stepData);
+            }
+            return list;
+          });
+
+          // Also attach live steps to the last assistant message in lines
+          setLines((curLines) => {
+            const lastIdx = curLines.reduce(
+              (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
+              -1,
+            );
+            if (lastIdx >= 0) {
+              const updated = [...curLines];
+              const prevSteps = updated[lastIdx].computerUseSteps || [];
+              const sIdx = prevSteps.findIndex((s) => s.step === event.step);
+              const newSteps = [...prevSteps];
+              if (sIdx >= 0) {
+                newSteps[sIdx] = stepData;
+              } else {
+                newSteps.push(stepData);
+              }
+              updated[lastIdx] = {
+                ...updated[lastIdx],
+                computerUseSteps: newSteps,
+              };
+              return updated;
+            }
+            return curLines;
+          });
+
+          if (event.status === "completed" || event.status === "blocked") {
+            setTimeout(() => setActiveComputerUse(null), 4000);
+          }
+          break;
+        }
         case "done":
           setThinking(false);
           setActiveEdge(null);
@@ -568,5 +654,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     lastCorrectionAck,
     activeTool,
     activeTaskGraph,
+    activeComputerUse,
   };
 }

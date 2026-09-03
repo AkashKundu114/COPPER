@@ -33,9 +33,11 @@ import { AgentRegistry } from "./pages/AgentRegistry";
 import { Insights } from "./pages/Insights";
 import { SecurityCenter } from "./pages/SecurityCenter";
 import { BenchmarkMetricsView } from "./pages/BenchmarkMetricsView";
+import { SensorModeProvider, useSensorMode } from "./context/SensorModeContext";
 
-export default function App() {
-  const [activeSection, setActiveSection] = useState<NavSection>("chat");
+function MainApp() {
+  const { mode } = useSensorMode();
+  const [activeSection, setActiveSection] = useState<NavSection>("dashboard");
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -71,6 +73,7 @@ export default function App() {
     stopAudio,
     speaking,
     activeTaskGraph,
+    activeComputerUse,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -94,6 +97,8 @@ export default function App() {
               agentStats={agentStats}
               thinking={thinking}
               activeAgent={activeAgent}
+              activeTaskGraph={activeTaskGraph}
+              activeComputerUse={activeComputerUse}
             />
             <div className="w-full max-w-4xl px-6 pb-6">
               <ChatDock
@@ -136,7 +141,14 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body">
+    <div
+      className={`relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body transition-all duration-500 sensor-${mode}`}
+    >
+      {/* CRT Scanline Overlay Strip */}
+      {mode === "crt" && (
+        <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-60" />
+      )}
+
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
       <main className="flex-1 overflow-hidden relative flex flex-col">
         <TopBar
@@ -237,5 +249,13 @@ export default function App() {
         }}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <SensorModeProvider>
+      <MainApp />
+    </SensorModeProvider>
   );
 }

@@ -405,26 +405,32 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
         </div>
       )}
 
-      {/* Main Antigravity-Style Input Capsule */}
+      {/* Main God's Eye Tactical Input Capsule */}
       <div className="w-full flex flex-col items-center">
         <div
-          className={`w-full flex flex-row items-end rounded-3xl bg-white/10 backdrop-blur-lg transition-all duration-300 shadow-sm border border-border py-1 px-2 ${
+          className={`w-full relative flex flex-row items-end rounded-2xl bg-[#080d18]/90 backdrop-blur-xl transition-all duration-300 shadow-hud border py-1 px-3 ${
             thinking
-              ? "border-accent-500/30"
-              : "focus-within:border-accent/50"
+              ? "border-cyber-cyan/50 shadow-[0_0_20px_rgba(0,240,255,0.2)]"
+              : "border-cyber-cyan/30 focus-within:border-cyber-cyan focus-within:shadow-[0_0_25px_rgba(0,240,255,0.25)]"
           }`}
         >
+          {/* 4 HUD Chamfer Corner Brackets */}
+          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-cyan pointer-events-none rounded-tl-sm" />
+          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-cyber-cyan pointer-events-none rounded-tr-sm" />
+          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-cyber-cyan pointer-events-none rounded-bl-sm" />
+          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-cyber-cyan pointer-events-none rounded-br-sm" />
+
           {isRecording ? (
             <div className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
               <div className="flex items-center gap-3">
                 <span className="w-3 h-3 rounded-full bg-danger-500 animate-ping" />
                 <span className="text-sm font-semibold text-danger-400 font-mono">
-                  Listening... {formatTimer(recordDuration)}
+                  ACOUSTIC SENSOR LISTENING... {formatTimer(recordDuration)}
                 </span>
               </div>
               <button
                 onClick={stopRecording}
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all shadow-md"
               >
                 <div className="w-3 h-3 bg-white rounded-sm" />
               </button>
@@ -436,18 +442,18 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || thinking}
-                className="p-2 mb-1 rounded-full text-zinc-400 hover:text-white transition-all flex-shrink-0"
-                title="Attach Documents"
+                className="p-2 mb-1 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all flex-shrink-0"
+                title="Attach Recon Documents / Files"
               >
                 {isUploading ? (
-                  <Loader2 size={20} className="animate-spin text-zinc-400" />
+                  <Loader2 size={18} className="animate-spin text-cyber-cyan" />
                 ) : (
-                  <div className="w-5 h-5 flex items-center justify-center text-xl font-light pb-1">+</div>
+                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-cyber-cyan">+</div>
                 )}
               </button>
 
               {/* Input Text Area */}
-              <div className="flex-1 py-3 px-2">
+              <div className="flex-1 py-2.5 px-2">
                 <textarea
                   ref={textareaRef}
                   value={draft}
@@ -460,24 +466,36 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                   }}
                   placeholder={
                     thinking
-                      ? "Thinking..."
+                      ? "Neural processing active across local agents..."
                       : isUploading
-                      ? "Uploading..."
-                      : "Ask anything, @ to mention, / for actions"
+                      ? "Parsing & vectorizing document..."
+                      : "Input command or prompt for God's Eye intelligence..."
                   }
                   disabled={thinking || isUploading}
-                  className="w-full bg-transparent outline-none border-none text-[15px] leading-relaxed text-text placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block"
+                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans"
                   rows={1}
                 />
               </div>
 
+              {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
+              {(thinking || speaking) && (
+                <div className="flex items-center gap-1 mb-3 px-2 py-1 rounded bg-black/50 border border-cyber-cyan/30 text-cyber-cyan" title="Audio / Neural Telemetry Stream">
+                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-1" />
+                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-2" />
+                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-3" />
+                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-4" />
+                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-5" />
+                </div>
+              )}
+
               {/* Right Side Buttons */}
-              <div className="flex items-center gap-1 mb-1.5 pr-1">
+              <div className="flex items-center gap-1.5 mb-1.5 pr-1">
                 {!draft.trim() && attachedDocs.length === 0 && !thinking && (
                   <button
                     type="button"
                     onClick={toggleRecording}
-                    className="p-2 rounded-full text-zinc-400 hover:text-white transition-all"
+                    className="p-2 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all"
+                    title="Voice Intercept Mic"
                   >
                     <Mic size={18} />
                   </button>
@@ -488,7 +506,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                     type="button"
                     onClick={submit}
                     disabled={isUploading}
-                    className="w-8 h-8 rounded-full bg-white text-black hover:bg-zinc-200 transition-all flex items-center justify-center disabled:opacity-50"
+                    className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyber-cyan to-accent text-black hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_12px_rgba(0,240,255,0.4)]"
                   >
                     <ArrowUp size={18} strokeWidth={2.5} />
                   </button>
@@ -498,7 +516,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
                   <button
                     type="button"
                     onClick={onStop}
-                    className="w-8 h-8 rounded-full bg-[#3f3f3f] text-danger-400 hover:bg-[#4f4f4f] hover:text-danger-300 transition-all flex items-center justify-center"
+                    className="w-8 h-8 rounded-lg bg-black/80 border border-danger/40 text-danger-400 hover:bg-danger/20 hover:text-danger-300 transition-all flex items-center justify-center shadow-md"
                     title="Stop generation"
                   >
                     <div className="w-3 h-3 bg-danger-400 rounded-sm" />
@@ -509,17 +527,25 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
           )}
         </div>
 
-        {/* Bottom Model Selector Pill */}
-        <div className="flex w-full justify-start mt-3 px-2">
-           <button
-             type="button"
-             onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-             className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/5 text-[12px] text-zinc-400 transition-all"
-           >
-             <span className="font-light">+</span>
-             <span className="font-medium">{selectedModel.name}</span>
-             <ChevronUp size={14} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
-           </button>
+        {/* Bottom Model Selector Pill & Telemetry Status */}
+        <div className="flex w-full justify-between items-center mt-2.5 px-2 font-mono text-[11px]">
+          <button
+            type="button"
+            onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+            className="flex items-center gap-2 px-3 py-1 rounded-md bg-black/50 border border-cyber-cyan/25 hover:border-cyber-cyan text-cyber-cyan transition-all shadow-sm"
+          >
+            <span className="font-bold text-accent">+</span>
+            <span className="font-semibold text-white tracking-tight">{selectedModel.name}</span>
+            <span className="px-1.5 py-0.2 rounded bg-cyber-cyan/15 text-[9px] font-bold text-cyber-cyan uppercase">
+              {selectedModel.badge}
+            </span>
+            <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          <div className="hidden sm:flex items-center gap-3 text-[10px] text-zinc-500">
+            <span>ENC: <span className="text-zinc-400">AES-256</span></span>
+            <span>UPLINK: <span className="text-verdigris font-semibold">AIR-GAPPED</span></span>
+          </div>
         </div>
       </div>
     </div>

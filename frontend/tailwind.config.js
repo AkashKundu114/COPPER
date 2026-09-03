@@ -89,6 +89,18 @@ export default {
           900: "#4A1315",
           950: "#2E0B0C",
         },
+
+        // Tactical HUD / God's Eye Cyber Palette
+        cyber: {
+          cyan: "#00F0FF",
+          "cyan-dim": "#0099AA",
+          "cyan-glow": "rgba(0, 240, 255, 0.4)",
+          blue: "#0088FF",
+          emerald: "#00FF88",
+          amber: "#FFAA00",
+          void: "#04060A",
+          grid: "rgba(0, 240, 255, 0.04)",
+        },
       },
       borderRadius: {
         none: "0px",
@@ -111,6 +123,10 @@ export default {
         neon: "0 0 0 1px rgba(201,124,76,0.45)",
         "neon-copper": "0 0 24px rgba(201,124,76,0.16)",
         hud: "0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.35)",
+        "hud-cyan": "0 0 16px rgba(0,240,255,0.22), inset 0 0 8px rgba(0,240,255,0.04)",
+        "hud-amber": "0 0 16px rgba(255,170,0,0.22), inset 0 0 8px rgba(255,170,0,0.04)",
+        "hud-green": "0 0 16px rgba(0,255,136,0.22), inset 0 0 8px rgba(0,255,136,0.04)",
+        "hud-card": "0 8px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(0,240,255,0.12)",
       },
       fontFamily: {
         display: ["'Space Grotesk'", "Inter", "'Helvetica Neue'", "sans-serif"],
@@ -124,11 +140,26 @@ export default {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         trace: { "0%": { backgroundPosition: "0% 0" }, "100%": { backgroundPosition: "200% 0" } },
+        "radar-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "scanline-sweep": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100vh)" },
+        },
+        "reticle-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.45", transform: "scale(0.97)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.2s ease-out",
         "slide-up": "slide-up 0.2s ease-out",
         trace: "trace 2.4s linear infinite",
+        "radar-spin": "radar-spin 4s linear infinite",
+        "scanline-sweep": "scanline-sweep 8s linear infinite",
+        "reticle-pulse": "reticle-pulse 2.2s ease-in-out infinite",
       },
     },
   },

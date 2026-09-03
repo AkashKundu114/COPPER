@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { type ChatLine, type ActiveTaskGraphTrace, type MessageMetrics } from "../../hooks/useBrainSocket";
+import {
+  type ChatLine,
+  type ActiveTaskGraphTrace,
+  type MessageMetrics,
+  type ComputerUseStep,
+} from "../../hooks/useBrainSocket";
 import { type AgentStats, type ParsedDocument } from "../../lib/api";
 import {
   FileText,
@@ -19,6 +24,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 import { TaskGraphVisualizer } from "./TaskGraphVisualizer";
+import { ComputerUseVisualizer } from "./ComputerUseVisualizer";
 
 interface MessageFeedProps {
   lines: ChatLine[];
@@ -26,6 +32,7 @@ interface MessageFeedProps {
   thinking: boolean;
   activeAgent: string | null;
   activeTaskGraph?: ActiveTaskGraphTrace | null;
+  activeComputerUse?: ComputerUseStep[] | null;
   lastCorrectionAck?: { id: string; summary: string; timestamp: number } | null;
 }
 
@@ -194,6 +201,7 @@ export function MessageFeed({
   thinking,
   activeAgent,
   activeTaskGraph,
+  activeComputerUse,
   lastCorrectionAck,
 }: MessageFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
@@ -210,7 +218,7 @@ export function MessageFeed({
     if (feedRef.current) {
       feedRef.current.scrollTop = feedRef.current.scrollHeight;
     }
-  }, [lines, thinking, activeTaskGraph]);
+  }, [lines, thinking, activeTaskGraph, activeComputerUse]);
 
   const openAttachmentReader = (att: ParsedAttachment) => {
     const ext = att.filename.split(".").pop()?.toLowerCase() || "txt";
@@ -274,7 +282,16 @@ export function MessageFeed({
         if (isUser) {
           return (
             <div key={line.id || i} className="flex justify-end w-full animate-slide-up mb-8 mt-4">
-              <div className="bg-white/10 backdrop-blur-md text-text px-4 py-3 rounded-2xl max-w-[85%] border border-border shadow-sm text-[15px] font-light leading-relaxed">
+              <div className="relative bg-[#070d18]/90 backdrop-blur-xl text-text px-4 py-3 rounded-2xl max-w-[85%] border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,240,255,0.08)] text-[14.5px] leading-relaxed font-sans">
+                {/* User Header Metadata */}
+                <div className="flex items-center justify-between gap-3 text-[9px] font-mono text-zinc-500 mb-1.5 border-b border-cyber-cyan/15 pb-1 select-none">
+                  <span className="text-cyber-cyan font-bold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan" />
+                    OPERATOR // DIRECT INTENT
+                  </span>
+                  <span>ENCRYPTED</span>
+                </div>
+
                 {attachments.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-2">
                     {attachments.map((att, idx) => {
@@ -283,9 +300,9 @@ export function MessageFeed({
                         <button
                           key={idx}
                           onClick={() => openAttachmentReader(att)}
-                          className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#333] hover:bg-[#444] text-[11px] font-mono transition-all"
+                          className="flex items-center gap-1.5 px-2 py-1 rounded bg-black/60 hover:bg-black/90 border border-cyber-cyan/25 text-[11px] font-mono text-cyber-cyan transition-all"
                         >
-                          <Icon size={12} className="text-zinc-400" />
+                          <Icon size={12} className="text-cyber-cyan" />
                           <span>{att.filename}</span>
                         </button>
                       );
@@ -300,11 +317,26 @@ export function MessageFeed({
 
         // System/Agent message
         return (
-          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text space-y-3">
+          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text space-y-3 relative">
+            {/* Tactical Agent Message Header */}
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 select-none px-1 border-b border-white/5 pb-1">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
+                <span className="text-white font-bold tracking-wider uppercase">
+                  {line.agent && line.agent !== "system" ? line.agent : "GOD'S EYE // COPPER OS"}
+                </span>
+                <span className="text-cyber-cyan/70">[CONFIDENCE: 98%]</span>
+              </div>
+              <span className="text-zinc-600">AIR-GAPPED SYNTHESIS</span>
+            </div>
+
             {line.taskGraph && (
               <TaskGraphVisualizer graph={line.taskGraph} className="my-2" />
             )}
-            <div className="w-full markdown-body">
+            {line.computerUseSteps && line.computerUseSteps.length > 0 && (
+              <ComputerUseVisualizer steps={line.computerUseSteps} isLive={false} className="my-2" />
+            )}
+            <div className="w-full markdown-body font-sans text-[14.5px] leading-relaxed">
               <MarkdownContent content={cleanText} />
             </div>
             {line.metrics && (
@@ -326,21 +358,29 @@ export function MessageFeed({
         </div>
       )}
 
+      {/* Active Live Computer Use Overlay */}
+      {activeComputerUse && activeComputerUse.length > 0 && (
+        <div className="w-full animate-slide-up">
+          <ComputerUseVisualizer steps={activeComputerUse} isLive={true} />
+        </div>
+      )}
+
       {thinking && activeAgent && !activeTaskGraph && (
-        <div className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-4">
-          <div className="flex items-center gap-2 text-sm">
-            <span>Thought process active...</span>
+        <div className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono">
+          <div className="flex items-center gap-2 text-xs text-cyber-cyan">
+            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
+            <span className="tracking-wider uppercase">Neural Reasoning & Tool Execution Active...</span>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-white/5 backdrop-blur-md">
-            <div className="w-4 h-4 rounded-full border border-zinc-600 flex items-center justify-center">
-              <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-pulse" />
+          <div className="flex items-center gap-3 p-3.5 rounded-xl border border-cyber-cyan/30 bg-[#070d18]/80 backdrop-blur-xl shadow-hud">
+            <div className="w-7 h-7 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center flex-shrink-0">
+              <Cpu size={14} className="text-cyber-cyan animate-pulse" />
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] text-white">
+              <span className="text-[13px] text-white font-bold font-sans">
                 {agentStats[activeAgent]?.name || activeAgent}
               </span>
-              <span className="text-[11px] text-zinc-500">
-                Executing tool-use and subagent tasks...
+              <span className="text-[10.5px] text-zinc-400 font-mono">
+                Executing cognitive tasks across local agent mesh...
               </span>
             </div>
           </div>

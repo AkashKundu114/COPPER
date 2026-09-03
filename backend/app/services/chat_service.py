@@ -105,7 +105,7 @@ class ChatService:
         target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
         try:
             if agent:
-                response = await agent.run(message, history, memory_context, provider)
+                response = await agent.run(message, history, memory_context, provider, session_id=session_id)
             else:
                 system = get_system_prompt(AgentType.CHAT, memory_context, self_context)
                 messages = build_messages(system, history, message)
@@ -310,7 +310,7 @@ class ChatService:
                 )
             elif agent and hasattr(agent, "stream"):
                 model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
-                gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics)
+                gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id)
             else:
                 model_name = model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
                 system = get_mode_prompt("auto", memory_context, self_context)

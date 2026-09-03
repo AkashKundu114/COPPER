@@ -85,7 +85,135 @@ CONFLICT_TRIGGERS = [
 ]
 
 
+# Computer Use Blacklists
+SENSITIVE_WINDOW_KEYWORDS = [
+    # Banking & Financial
+    "bank",
+    "chase",
+    "wells fargo",
+    "bank of america",
+    "citibank",
+    "citi",
+    "capital one",
+    "fidelity",
+    "vanguard",
+    "schwab",
+    "paypal",
+    "binance",
+    "coinbase",
+    "robinhood",
+    "stripe dashboard",
+    # Medical & Healthcare
+    "medical",
+    "patient",
+    "mychart",
+    "epic systems",
+    "cerner",
+    "prescription",
+    "hospital",
+    "health records",
+    "telehealth",
+    # Password Managers & Vaults
+    "1password",
+    "bitwarden",
+    "lastpass",
+    "keepass",
+    "dashlane",
+    "authenticator",
+    "credential manager",
+    "passwords",
+    "login - google accounts",
+]
+
+PASSWORD_INPUT_TRIGGERS = [
+    "password",
+    "passcode",
+    "pin code",
+    "secret_key",
+    "private_key",
+    "api_key",
+    "token",
+    "auth_token",
+    "bearer ",
+    "cvv",
+    "ssn",
+    "credit card",
+]
+
+
 class GuardianEngine:
+    def __init__(self):
+        self.window_whitelist: set[str] = set()
+        self.window_blacklist: list[str] = list(SENSITIVE_WINDOW_KEYWORDS)
+
+    def check_window_safety(self, window_title: str) -> GuardianVerdict:
+        """Check whether the active window is permitted for automated interaction."""
+        if not window_title:
+            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+        title_lower = window_title.lower()
+
+        # Whitelist override check
+        if any(w.lower() in title_lower for w in self.window_whitelist):
+            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+        # Blacklist check
+        for forbidden in self.window_blacklist:
+            if forbidden in title_lower:
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Protected window detected: '{window_title}' matches sensitive keyword '{forbidden}'.",
+                    evidence=[f"Window title: {window_title}", f"Blocked pattern: {forbidden}"],
+                    requires_confirmation=True,
+                    recommendation="COPPER will not interact with banking, medical, or credential windows. Please perform this action manually.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+    def check_typing_safety(self, text: str) -> GuardianVerdict:
+        """Prevent automated typing of sensitive credentials or passwords."""
+        text_lower = text.lower()
+        for trigger in PASSWORD_INPUT_TRIGGERS:
+            if trigger in text_lower:
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Sensitive input detected matching '{trigger}'. Automated password entry is forbidden.",
+                    evidence=[f"Pattern matched: {trigger}"],
+                    requires_confirmation=True,
+                    recommendation="Please type passwords, PINs, and secret keys manually.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+    def evaluate_screen_action(
+        self, action_type: str, action_data: dict, window_title: str = ""
+    ) -> GuardianVerdict:
+        """Guardian evaluation specifically tailored for Computer Use Agent steps."""
+        # 1. Active window check
+        win_verdict = self.check_window_safety(window_title)
+        if win_verdict.level >= DisagreementLevel.CHALLENGE:
+            return win_verdict
+
+        # 2. Text typing check
+        if action_type == "type_text":
+            text_to_type = action_data.get("text", "")
+            typing_verdict = self.check_typing_safety(text_to_type)
+            if typing_verdict.level >= DisagreementLevel.CHALLENGE:
+                return typing_verdict
+
+        # 3. Dangerous hotkeys check (e.g. system shutdown, format, deletion)
+        if action_type == "hotkey":
+            keys = [str(k).lower() for k in action_data.get("keys", [])]
+            if ("alt" in keys and "f4" in keys) or ("ctrl" in keys and "alt" in keys and "del" in keys):
+                return GuardianVerdict(
+                    level=DisagreementLevel.CHALLENGE,
+                    reasoning=f"High-impact system shortcut: {keys}",
+                    requires_confirmation=True,
+                    recommendation="Confirm before closing or terminating system applications.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
     def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
         if context is None:
             context = {}

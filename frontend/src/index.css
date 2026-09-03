@@ -10,20 +10,16 @@ body,
 #root {
   height: 100%;
   margin: 0;
-  background-color: #090a0c;
-  /* Obsidian base with a restrained copper highlight: premium, but quiet. */
+  background-color: #05080e;
+  /* Tactical Ops Room Base: Cybernetic Obsidian with tactical HUD grid & coordinate overlays */
   background-image:
-    radial-gradient(ellipse 65% 42% at 74% -16%, rgba(218, 157, 101, 0.10), transparent 62%),
-    radial-gradient(ellipse 44% 30% at 4% 100%, rgba(72, 125, 111, 0.055), transparent 68%),
-    repeating-linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.012) 0px,
-      rgba(255, 255, 255, 0.012) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.08), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(201, 124, 76, 0.08), transparent 60%),
+    linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
   background-attachment: fixed;
-  color: #ededea;
+  color: #ededfa;
   font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
@@ -38,26 +34,35 @@ body,
 }
 
 .glow-text {
-  text-shadow: none;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+}
+
+.glow-amber {
+  text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
+}
+
+.glow-green {
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(5, 8, 14, 0.6);
 }
 ::-webkit-scrollbar-thumb {
-  background: #34383f;
-  border-radius: 8px;
+  background: #1e293b;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c97c4c;
+  background: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
 ::selection {
-  background: rgba(201, 124, 76, 0.35);
+  background: rgba(0, 240, 255, 0.35);
   color: #ffffff;
 }
 
@@ -79,26 +84,77 @@ button {
 
 button:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(219, 149, 99, 0.8) !important;
+  outline: 2px solid rgba(0, 240, 255, 0.8) !important;
   outline-offset: 2px;
 }
 
 input, textarea, select {
-  accent-color: #c97c4c;
+  accent-color: #00f0ff;
 }
 
-/* Use the same material language across legacy screens without forcing
-   every component to carry presentation-specific overrides. */
+/* ── Tactical God's Eye Surface ────────────────────────────────────────── */
 .app-surface {
-  background: linear-gradient(145deg, rgba(29, 32, 35, 0.92), rgba(15, 17, 19, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
+  background: linear-gradient(135deg, rgba(10, 15, 25, 0.90), rgba(5, 8, 14, 0.94));
+  border: 1px solid rgba(0, 240, 255, 0.14);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(0, 240, 255, 0.12);
+  backdrop-filter: blur(16px);
 }
 
-/* ── Signature element ──────────────────────────────────────────────────
-   "Copper trace": a thin current running along an element's top edge.
-   Apply ONLY to states that represent something actually live — a focused
-   input, the active nav item, a streaming response — never as decoration. */
+/* Tactical HUD Card with Chamfered Tech Corners */
+.hud-card {
+  position: relative;
+  background: rgba(8, 13, 22, 0.78);
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.hud-card-active {
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.18), inset 0 1px 0 rgba(0, 240, 255, 0.3);
+}
+
+/* HUD Corner Reticle Crosshairs */
+.hud-bracket {
+  position: relative;
+}
+
+.hud-bracket::before,
+.hud-bracket::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+
+.hud-bracket::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid #00f0ff;
+  border-left: 2px solid #00f0ff;
+}
+
+.hud-bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid #00f0ff;
+  border-right: 2px solid #00f0ff;
+}
+
+/* Tactical HUD Badge */
+.hud-tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+/* ── Signature Copper Trace ─────────────────────────────────────────── */
 .copper-trace {
   position: relative;
 }
@@ -106,20 +162,74 @@ input, textarea, select {
   content: "";
   position: absolute;
   top: -1px;
-  left: 8%;
-  right: 8%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #c97c4c, #ff7a45, #c97c4c, transparent);
+  left: 6%;
+  right: 6%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #00f0ff, #c97c4c, #00f0ff, transparent);
   background-size: 200% 100%;
-  opacity: 0.9;
-  animation: trace 2.4s linear infinite;
+  opacity: 0.95;
+  animation: trace 2.2s linear infinite;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
 }
 
-/* Small machined corner-notch, used on the wordmark and a few signature
-   surfaces instead of a plain rounded/square badge. */
+/* Chamfered Tech Cut Corner */
 .notch-corner {
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
 }
+
+.notch-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+
+/* ── God's Eye Sensor Look Shader Filters ────────────────────────────── */
+
+/* FLIR (Forward-Looking Infrared / Thermal Heat) */
+.sensor-flir {
+  filter: contrast(1.1) saturate(1.4) sepia(0.35) hue-rotate(-25deg);
+}
+.sensor-flir ::selection {
+  background: rgba(255, 122, 69, 0.5) !important;
+}
+
+/* NVG (Night Vision Goggles / Tactical Phosphor) */
+.sensor-nvg {
+  filter: contrast(1.15) brightness(1.05) hue-rotate(85deg) saturate(1.2);
+}
+.sensor-nvg ::selection {
+  background: rgba(0, 255, 136, 0.5) !important;
+}
+
+/* CRT Scanlines / Cyber Surveillance */
+.sensor-crt {
+  text-shadow: 0 0 1px rgba(0, 240, 255, 0.4);
+}
+
+/* Scanline Overlay Strip */
+.scanlines-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Audio Equalizer Bar Animation */
+@keyframes eq-bounce {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+.eq-bar-1 { animation: eq-bounce 0.6s ease-in-out infinite; }
+.eq-bar-2 { animation: eq-bounce 0.8s ease-in-out infinite 0.15s; }
+.eq-bar-3 { animation: eq-bounce 0.5s ease-in-out infinite 0.3s; }
+.eq-bar-4 { animation: eq-bounce 0.9s ease-in-out infinite 0.1s; }
+.eq-bar-5 { animation: eq-bounce 0.7s ease-in-out infinite 0.25s; }
 
 @media (prefers-reduced-motion: reduce) {
   *,
