@@ -154,5 +154,44 @@ class ModelManager:
             },
         )
 
+    def resolve_model_alias(self, alias: str) -> tuple[str, str]:
+        """
+        Resolves a user-friendly alias, size, or model family to an Ollama model tag and readable tier name.
+        Returns: (ollama_tag, tier_display_name)
+        """
+        clean = alias.strip().lower()
+        if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "lightweight", "fast", "instant"]):
+            tag = self.get_mini_model(prefer_tag=True)
+            return tag, "Mini (Speed Tier ~1B)"
+        if any(w in clean for w in ["3b", "medium", "mid"]):
+            guardian_cfg = self.manifest.get("subagents", {}).get("guardian", {})
+            tag = guardian_cfg.get("ollama_tag", "llama3.2-abliterated:3b")
+            return tag, "Medium (~3B Tier)"
+        if any(w in clean for w in ["0.5b", "micro"]):
+            firewall_cfg = self.manifest.get("subagents", {}).get("firewall", {})
+            tag = firewall_cfg.get("ollama_tag", "qwen2.5-abliterated:0.5b")
+            return tag, "Micro (~0.5B Reflex Tier)"
+        if any(w in clean for w in ["1.5b"]):
+            summ_cfg = self.manifest.get("subagents", {}).get("summarizer", {})
+            tag = summ_cfg.get("ollama_tag", "qwen2.5-abliterated:1.5b")
+            return tag, "Lightweight (~1.5B Tier)"
+        if any(w in clean for w in ["8b", "large", "full", "heavy", "llama 3.1", "llama3.1", "standard", "default"]):
+            tag = self.get_model("core_agents.chat", "llama3.1:8b")
+            return tag, "Full (8B Standard Tier)"
+        if "deepseek" in clean:
+            if "1.5" in clean:
+                return "deepseek-r1-abliterated:1.5b", "DeepSeek Reasoning (~1.5B Tier)"
+            tag = self.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
+            return tag, "DeepSeek Reasoning (7B Tier)"
+        if "qwen" in clean:
+            if "coder" in clean:
+                return self.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b"), "Qwen Coder (7B Tier)"
+            return self.get_model("core_agents.document", "qwen2.5-abliterated:7b"), "Qwen General (7B Tier)"
+        if "mistral" in clean:
+            return self.get_model("core_agents.automation", "mistral-abliterated:7b"), "Mistral (7B Tier)"
+
+        return self.get_model("core_agents.chat", "llama3.1:8b"), "Default Chat (8B Tier)"
+
 
 model_manager = ModelManager()
+

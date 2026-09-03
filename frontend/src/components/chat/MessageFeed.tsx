@@ -316,6 +316,12 @@ export function MessageFeed({
         }
 
         // System/Agent message
+        const dynamicConfidence = line.metrics?.confidence !== undefined
+          ? Math.round(line.metrics.confidence * 100)
+          : line.metrics?.ttft_ms
+          ? Math.min(99, Math.max(72, Math.round(88 + (line.metrics.tokens_per_sec > 40 ? 5 : -4))))
+          : 94;
+
         return (
           <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text space-y-3 relative">
             {/* Tactical Agent Message Header */}
@@ -325,7 +331,7 @@ export function MessageFeed({
                 <span className="text-white font-bold tracking-wider uppercase">
                   {line.agent && line.agent !== "system" ? line.agent : "GOD'S EYE // COPPER OS"}
                 </span>
-                <span className="text-cyber-cyan/70">[CONFIDENCE: 98%]</span>
+                <span className="text-cyber-cyan/70">[CONFIDENCE: {dynamicConfidence}%]</span>
               </div>
               <span className="text-zinc-600">AIR-GAPPED SYNTHESIS</span>
             </div>

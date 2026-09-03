@@ -122,8 +122,15 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 await manager.send_chunk(session_id, chunk)
                 full_response.append(chunk)
 
+            from app.ai.memory.persistent_memory import persistent_memory
+
+            persisted_voice = persistent_memory.get_preference("voice")
+            if persisted_voice:
+                voice = persisted_voice
+            mute_voice = persistent_memory.get_preference("mute_voice", False)
+
             complete_text = "".join(full_response)
-            if complete_text.strip():
+            if complete_text.strip() and not mute_voice:
                 try:
                     import base64
 

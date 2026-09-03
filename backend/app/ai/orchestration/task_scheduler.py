@@ -146,6 +146,19 @@ async def _prompt_optimization_cycle():
         logger.error(f"Scheduled prompt optimization cycle failed: {e}")
 
 
+async def _training_curation_cycle():
+    try:
+        from app.ai.training.data_curator import data_curator
+
+        logger.info("Running scheduled daily CHRYSALIS training data curation sweep...")
+        res = await data_curator.curate_from_evaluations(min_score=0.85, limit=50)
+        new_c = res.get("curated_new", 0)
+        if new_c > 0:
+            logger.info(f"CHRYSALIS auto-curated {new_c} new high-quality training pairs.")
+    except Exception as e:
+        logger.debug(f"Scheduled CHRYSALIS curation cycle skipped: {e}")
+
+
 def start_scheduler():
     global _scheduler
     if not APSCHEDULER_AVAILABLE:
@@ -176,6 +189,13 @@ def start_scheduler():
         name="COPPER Prompt Optimization Cycle",
         replace_existing=True,
     )
+    _scheduler.add_job(
+        _training_curation_cycle,
+        IntervalTrigger(seconds=86400),  # Daily interval
+        id="training_curation_cycle",
+        name="CHRYSALIS Daily Training Data Curation",
+        replace_existing=True,
+    )
     try:
         _scheduler.start()
         logger.info("Spider-Sense Anomaly Sentinel started (30s interval)")
@@ -183,6 +203,7 @@ def start_scheduler():
             f"COPPER Reflection Cycle started ({settings.REFLECTION_INTERVAL_SECONDS if hasattr(settings, 'REFLECTION_INTERVAL_SECONDS') else 600}s interval)"
         )
         logger.info("COPPER Prompt Optimization Cycle scheduled (weekly)")
+        logger.info("CHRYSALIS Training Data Curation scheduled (daily)")
     except Exception as e:
         logger.warning(f"Scheduler start deferred: {e}")
 

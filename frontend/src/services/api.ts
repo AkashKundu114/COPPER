@@ -181,4 +181,44 @@ export const selfImprovementAPI = {
   },
 };
 
+export const trainingAPI = {
+  getStats: async () => {
+    const { data } = await api.get("/training/stats");
+    return data;
+  },
+  curate: async (minScore: number = 0.85, limit: number = 50) => {
+    const { data } = await api.post("/training/curate", { min_score: minScore, limit });
+    return data;
+  },
+  startTraining: async (baseModel: string = "llama3.1:8b", targetAgent: string = "all") => {
+    const { data } = await api.post("/training/start", { base_model: baseModel, target_agent: targetAgent });
+    return data;
+  },
+  getStatus: async (jobId?: number) => {
+    const query = jobId ? `?job_id=${jobId}` : "";
+    const { data } = await api.get(`/training/status${query}`);
+    return data;
+  },
+  getAdapters: async () => {
+    const { data } = await api.get("/training/adapters");
+    return data;
+  },
+  activateAdapter: async (adapterId: number) => {
+    const { data } = await api.post(`/training/adapters/${adapterId}/activate`);
+    return data;
+  },
+  deactivateAdapter: async (adapterId: number) => {
+    const { data } = await api.post(`/training/adapters/${adapterId}/deactivate`);
+    return data;
+  },
+  startABTest: async (adapterId: number, percentage: number = 20) => {
+    const { data } = await api.post(`/training/adapters/${adapterId}/ab-test`, { percentage });
+    return data;
+  },
+  mergeAdapter: async (adapterId: number) => {
+    const { data } = await api.post(`/training/adapters/${adapterId}/merge`);
+    return data;
+  },
+};
+
 export default api;

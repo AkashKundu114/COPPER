@@ -21,6 +21,7 @@ from app.api.routes import (
     self_improvement,
     self_memory,
     system,
+    training,
     vision,
     voice,
     wake,
@@ -85,6 +86,7 @@ app.include_router(orchestration.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
 app.include_router(self_improvement.router, prefix="/api/v1")
+app.include_router(training.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
 
 

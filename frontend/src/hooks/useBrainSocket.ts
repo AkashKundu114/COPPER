@@ -20,6 +20,7 @@ export type BrainEvent =
       self_memory_summary?: string;
     }
   | { type: "done"; metrics?: MessageMetrics }
+  | { type: "preference_update"; updates: Record<string, any> }
   | { type: "message_metrics"; metrics: MessageMetrics }
   | { type: "audio_playback"; audio_base64: string }
   | {
@@ -117,6 +118,7 @@ export interface MessageMetrics {
   ttft_ms: number;
   total_time_sec: number;
   total_time_ms?: number;
+  confidence?: number;
 }
 
 export interface ComputerUseStep {
@@ -467,6 +469,20 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
               summary: event.self_memory_summary,
               timestamp: Date.now()
             });
+          }
+          onProfileChange?.();
+          break;
+        case "preference_update":
+          if (event.updates) {
+            if (event.updates.voice) {
+              localStorage.setItem("copper_selected_voice", event.updates.voice);
+            }
+            if (typeof event.updates.continuous_voice === "boolean") {
+              localStorage.setItem("copper_continuous_voice", String(event.updates.continuous_voice));
+            }
+            if (event.updates.cognitive_mode) {
+              localStorage.setItem("copper_selected_mode", event.updates.cognitive_mode);
+            }
           }
           onProfileChange?.();
           break;

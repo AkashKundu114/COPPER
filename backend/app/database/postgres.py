@@ -29,6 +29,7 @@ def init_db():
     import app.database.models.episode  # noqa: F401
     import app.database.models.history  # noqa: F401
     import app.database.models.knowledge_graph  # noqa: F401
+    import app.database.models.lora_adapter  # noqa: F401
     import app.database.models.memory_v2  # noqa: F401
     import app.database.models.response_evaluation  # noqa: F401
     import app.database.models.self_memory  # noqa: F401

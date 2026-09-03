@@ -217,15 +217,53 @@ class PersistentMemoryStore:
             self.sessions[session_id] = self.sessions[session_id][-50:]
         self._save_sessions()
 
+    def get_preference(self, key: str, default=None):
+        return self.profile.get("preferences", {}).get(key, default)
+
+    def set_preference(self, key: str, value):
+        prefs = self.profile.setdefault("preferences", {})
+        prefs[key] = value
+        self._save_profile(self.profile)
+        logger.info(f"User preference updated: {key} = {value}")
+
+    def get_chat_model(self) -> str | None:
+        """Returns explicitly set user chat model preference or None for adaptive default."""
+        return self.get_preference("chat_model", None)
+
+    def set_chat_model(self, model_tag: str | None, tier_name: str | None = None):
+        self.set_preference("chat_model", model_tag)
+        if tier_name:
+            self.set_preference("chat_tier_name", tier_name)
+
+    def get_chat_tier(self) -> str:
+        return self.get_preference("chat_tier", "auto")
+
+    def set_chat_tier(self, tier: str):
+        self.set_preference("chat_tier", tier)
+
+    def get_cognitive_mode(self) -> str:
+        return self.get_preference("cognitive_mode", "auto")
+
+    def set_cognitive_mode(self, mode: str):
+        self.set_preference("cognitive_mode", mode)
+
+    def clear_session_history(self, session_id: str):
+        if session_id in self.sessions:
+            self.sessions[session_id] = []
+            self._save_sessions()
+            logger.info(f"Cleared session history for: {session_id}")
+
     def get_memory_prompt_snippet(self) -> str:
         user_name = self.get_user_name()
         role = self.profile.get("role", "Software Engineer & Full-Stack Developer")
         facts = self.profile.get("facts", [])
         facts_list = "\n".join([f"• {f}" for f in facts])
+        active_model = self.get_chat_model() or "Adaptive Autonomous"
         return (
             f"[CRITICAL USER IDENTITY & PERSISTENT MEMORY]\n"
             f"• User Name: {user_name}\n"
             f"• Occupation / Role: {role}\n"
+            f"• Preferred Chat Model: {active_model}\n"
             f"• Verified Core Facts:\n"
             f"{facts_list}\n"
             f"• CRITICAL INSTRUCTIONS:\n"

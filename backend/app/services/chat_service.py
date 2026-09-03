@@ -1,3 +1,4 @@
+import re
 import time
 from collections.abc import AsyncGenerator
 
@@ -14,6 +15,7 @@ from app.ai.llm.model_manager import model_manager
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
+from app.ai.memory.persistent_memory import persistent_memory
 from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
 from app.ai.orchestration.langchain_manager import langchain_manager
 from app.ai.orchestration.planner import nexus_planner
@@ -21,6 +23,7 @@ from app.ai.orchestration.task_graph import task_graph_executor
 from app.core.constants import AgentType, LLMProvider
 from app.core.guardian import DisagreementLevel
 from app.core.logger import logger
+from app.services.directive_service import directive_service
 from app.services.guardian_service import guardian_service
 from app.services.self_model_service import self_model_service
 
@@ -36,6 +39,34 @@ AGENT_MAP = {
 
 
 class ChatService:
+    def _resolve_chat_model(self, agent_type: AgentType, message: str, agent=None) -> str:
+        """
+        Determines the target model tag:
+        1. Agent-specified model if specialized agent is active.
+        2. Explicit user preference saved in persistent_memory.
+        3. Adaptive Intent: Fast reflex mini-model for simple greetings, identity, and personal facts.
+        4. Manifest default (8B tier).
+        """
+        if agent and hasattr(agent, "get_target_model"):
+            return agent.get_target_model()
+
+        preferred_model = persistent_memory.get_chat_model()
+        if preferred_model:
+            return preferred_model
+
+        msg_clean = message.strip().lower()
+        simple_patterns = [
+            r"^(hi|hello|hey|greetings|howdy|sup)\b",
+            r"\b(who am i|whats my name|what is my name|what do i do)\b",
+            r"\b(whats my age|what is my age|how old am i|my age)\b",
+            r"\b(tell me a joke|fun thought|who are you|what can you do)\b",
+            r"\b(what time is it|current date|today's date)\b",
+        ]
+        if any(re.search(pat, msg_clean) for pat in simple_patterns):
+            return model_manager.get_mini_model(prefer_tag=True)
+
+        return model_manager.get_model("core_agents.chat", "llama3.1:8b")
+
     async def process_message(
         self,
         session_id: str,
@@ -44,6 +75,31 @@ class ChatService:
         stream: bool = False,
         db: Session | None = None,
     ) -> dict:
+        # Check Operator Directives (model switching, cognitive mode, voice, VRAM)
+        directive_res = await directive_service.evaluate(message, session_id=session_id)
+        prefix_confirmation = ""
+        if directive_res.is_directive:
+            if not directive_res.remaining_prompt:
+                await context_engine.append_message(session_id, "user", message)
+                await context_engine.append_message(session_id, "assistant", directive_res.confirmation, agent_type="directive")
+                return {
+                    "response": directive_res.confirmation,
+                    "agent_type": "directive",
+                    "session_id": session_id,
+                    "metrics": {
+                        "model": "system:directive-engine",
+                        "prompt_tokens": max(1, len(message.split())),
+                        "completion_tokens": max(1, len(directive_res.confirmation.split())),
+                        "total_tokens": max(2, len(message.split()) + len(directive_res.confirmation.split())),
+                        "tokens_per_sec": 100.0,
+                        "ttft_ms": 5.0,
+                        "total_time_sec": 0.05,
+                        "total_time_ms": 50.0,
+                    },
+                }
+            prefix_confirmation = directive_res.confirmation + "\n\n---\n\n"
+            message = directive_res.remaining_prompt
+
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
 
@@ -92,8 +148,9 @@ class ChatService:
                         session_id, message, graph_result.final_response, "nexus_multi_agent"
                     )
 
+                    final_resp = prefix_confirmation + graph_result.final_response if prefix_confirmation else graph_result.final_response
                     return {
-                        "response": graph_result.final_response,
+                        "response": final_resp,
                         "agent_type": "nexus_multi_agent",
                         "session_id": session_id,
                         "task_graph": graph_result.to_dict(),
@@ -104,7 +161,7 @@ class ChatService:
         agent = AGENT_MAP.get(agent_type)
         t_start = time.perf_counter()
         ollama_metrics: dict = {}
-        target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1:8b")
+        target_model = self._resolve_chat_model(agent_type, message, agent=agent)
         try:
             if agent:
                 response = await agent.run(message, history, memory_context, provider, session_id=session_id)
@@ -114,6 +171,8 @@ class ChatService:
                 response = await langchain_manager.ainvoke(
                     messages, provider, model=target_model, metrics_collector=ollama_metrics
                 )
+            if prefix_confirmation:
+                response = prefix_confirmation + response
             t_end = time.perf_counter()
 
             prompt_tokens = ollama_metrics.get("prompt_eval_count") or max(1, int(len(message.split()) * 1.3))
@@ -134,6 +193,7 @@ class ChatService:
                 "ttft_ms": ttft_ms,
                 "total_time_sec": total_time_sec,
                 "total_time_ms": total_time_ms,
+                "confidence": round(routing_res.confidence, 2) if (routing_res and hasattr(routing_res, "confidence")) else 0.95,
             }
 
             await context_engine.append_message(
@@ -183,41 +243,52 @@ class ChatService:
         mode: str = "auto",
         metrics_collector: dict | None = None,
     ) -> AsyncGenerator[str, None]:
+        # Check Operator Directives (model switching, cognitive mode, voice, VRAM)
+        directive_res = await directive_service.evaluate(message, session_id=session_id)
+        if directive_res.is_directive:
+            if "cognitive_mode" in directive_res.updates:
+                mode = directive_res.updates["cognitive_mode"]
+
+            try:
+                from app.api.websocket.manager import manager
+
+                await manager.send(
+                    session_id,
+                    {
+                        "type": "preference_update",
+                        "updates": directive_res.updates,
+                    },
+                )
+            except Exception:
+                pass
+
+            yield directive_res.confirmation
+            if not directive_res.remaining_prompt:
+                if metrics_collector is not None:
+                    metrics_collector.update({
+                        "model": "system:directive-engine",
+                        "prompt_tokens": max(1, len(message.split())),
+                        "completion_tokens": max(1, len(directive_res.confirmation.split())),
+                        "total_tokens": max(2, len(message.split()) + len(directive_res.confirmation.split())),
+                        "tokens_per_sec": 100.0,
+                        "ttft_ms": 10.0,
+                        "total_time_sec": 0.05,
+                        "total_time_ms": 50.0,
+                    })
+                await context_engine.append_message(session_id, "user", message)
+                await context_engine.append_message(
+                    session_id, "assistant", directive_res.confirmation, agent_type="directive"
+                )
+                return
+
+            yield "\n\n---\n\n"
+            message = directive_res.remaining_prompt
+
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
         history, memory_context, self_context = await context_engine.build_context(session_id, message)
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
-
-        # Intercept unload VRAM requests explicitly before hitting LLMs
-        lowered = message.strip().lower()
-        if lowered in [
-            "unload model",
-            "unload models",
-            "unload ur pre-loaed model",
-            "unload your models",
-            "unload pre-loaded model",
-            "clear vram",
-            "free memory",
-            "unload",
-        ]:
-            from app.ai.llm.ollama_client import ollama_client
-
-            yield "Unloading AI models from GPU VRAM to free system memory...\n\n"
-            result = await ollama_client.unload_all_models()
-            yield result
-            if metrics_collector is not None:
-                metrics_collector.update({
-                    "model": "system:vram-manager",
-                    "prompt_tokens": 5,
-                    "completion_tokens": 12,
-                    "total_tokens": 17,
-                    "tokens_per_sec": 40.0,
-                    "ttft_ms": 15.0,
-                    "total_time_sec": 0.25,
-                    "total_time_ms": 250.0,
-                })
-            return
 
         t_start = time.perf_counter()
         first_token_time = None
@@ -320,10 +391,10 @@ class ChatService:
                     messages, provider, model=model_name, metrics_collector=ollama_metrics
                 )
             elif agent and hasattr(agent, "stream"):
-                model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1:8b")
+                model_name = self._resolve_chat_model(agent_type, message, agent=agent)
                 gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id)
             else:
-                model_name = model_manager.get_model("core_agents.chat", "llama3.1:8b")
+                model_name = self._resolve_chat_model(agent_type, message, agent=agent)
                 system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
@@ -366,6 +437,7 @@ class ChatService:
                 "ttft_ms": ttft_ms,
                 "total_time_sec": total_time_sec,
                 "total_time_ms": total_time_ms,
+                "confidence": round(routing_res.confidence, 2) if (routing_res and hasattr(routing_res, "confidence")) else 0.95,
             }
 
             if metrics_collector is not None:
