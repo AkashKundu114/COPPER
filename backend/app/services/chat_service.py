@@ -85,7 +85,9 @@ class ChatService:
                         plan, memory_context=memory_context, session_id=session_id, on_event=ws_graph_event
                     )
 
-                    await context_engine.append_message(session_id, "assistant", graph_result.final_response)
+                    await context_engine.append_message(
+                        session_id, "assistant", graph_result.final_response, agent_type="nexus_multi_agent"
+                    )
                     await memory_manager.save_interaction(
                         session_id, message, graph_result.final_response, "nexus_multi_agent"
                     )
@@ -102,7 +104,7 @@ class ChatService:
         agent = AGENT_MAP.get(agent_type)
         t_start = time.perf_counter()
         ollama_metrics: dict = {}
-        target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
+        target_model = agent.get_target_model() if agent and hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1:8b")
         try:
             if agent:
                 response = await agent.run(message, history, memory_context, provider, session_id=session_id)
@@ -134,7 +136,14 @@ class ChatService:
                 "total_time_ms": total_time_ms,
             }
 
-            await context_engine.append_message(session_id, "assistant", response)
+            await context_engine.append_message(
+                session_id,
+                "assistant",
+                response,
+                agent_type=agent_type,
+                model_name=model_selected,
+                latency_ms=total_time_ms,
+            )
             await memory_manager.save_interaction(session_id, message, response, agent_type)
 
             # Record to system telemetry
@@ -262,7 +271,9 @@ class ChatService:
                             "total_time_ms": round((t_end - t_start) * 1000, 1),
                         })
 
-                    await context_engine.append_message(session_id, "assistant", graph_result.final_response)
+                    await context_engine.append_message(
+                        session_id, "assistant", graph_result.final_response, agent_type="nexus_multi_agent"
+                    )
                     await memory_manager.save_interaction(
                         session_id, message, graph_result.final_response, "nexus_multi_agent"
                     )
@@ -309,10 +320,10 @@ class ChatService:
                     messages, provider, model=model_name, metrics_collector=ollama_metrics
                 )
             elif agent and hasattr(agent, "stream"):
-                model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
+                model_name = agent.get_target_model() if hasattr(agent, "get_target_model") else model_manager.get_model("core_agents.chat", "llama3.1:8b")
                 gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id)
             else:
-                model_name = model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
+                model_name = model_manager.get_model("core_agents.chat", "llama3.1:8b")
                 system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
                 gen = langchain_manager.astream(
@@ -360,7 +371,14 @@ class ChatService:
             if metrics_collector is not None:
                 metrics_collector.update(metrics)
 
-            await context_engine.append_message(session_id, "assistant", complete)
+            await context_engine.append_message(
+                session_id,
+                "assistant",
+                complete,
+                agent_type=agent_type,
+                model_name=model_selected,
+                latency_ms=total_time_ms,
+            )
             await memory_manager.save_interaction(session_id, message, complete, agent_type)
 
             # Send correction acknowledgment if user corrected COPPER

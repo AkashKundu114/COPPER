@@ -14,8 +14,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/d3": "^7.4.3",
     "autoprefixer": "^10.5.4",
     "axios": "^1.20.0",
+    "d3": "^7.9.0",
     "framer-motion": "^13.1.1",
     "lucide-react": "^1.35.0",
     "postcss": "^8.5.17",

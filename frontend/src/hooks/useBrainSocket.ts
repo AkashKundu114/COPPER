@@ -186,6 +186,7 @@ interface BrainState {
   activeTool: ActiveToolTrace | null;
   activeTaskGraph: ActiveTaskGraphTrace | null;
   activeComputerUse: ComputerUseStep[] | null;
+  clearChat: () => void;
 }
 
 function estimateSpeakingDuration(text: string): number {
@@ -636,6 +637,11 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     [],
   );
 
+  const clearChat = useCallback(() => {
+    setLines([]);
+    fetch(`${API_BASE}/api/v1/chat/history/default`, { method: "DELETE" }).catch(() => {});
+  }, []);
+
   return {
     connected,
     thinking,
@@ -655,5 +661,6 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     activeTool,
     activeTaskGraph,
     activeComputerUse,
+    clearChat,
   };
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Calendar,
   ArrowUpRight,
@@ -9,8 +9,15 @@ import {
 } from "lucide-react";
 import { TacticalGlobe } from "../components/hud/TacticalGlobe";
 import { HudCard } from "../components/hud/HudBrackets";
+import type { NavSection } from "../components/layout/Sidebar";
 
-export const DashboardView: React.FC = () => {
+interface DashboardViewProps {
+  onNavigate?: (section: NavSection) => void;
+}
+
+export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
+  const [intelDismissed, setIntelDismissed] = useState(false);
+
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-text select-none pb-16 font-mono">
       {/* Top Classified Mission Banner */}
@@ -113,33 +120,62 @@ export const DashboardView: React.FC = () => {
             </p>
             <div className="pt-2 flex items-center justify-between text-[10px] text-accent">
               <span>TARGET: 18:00 HRS</span>
-              <span className="flex items-center gap-1 cursor-pointer hover:underline font-bold">
+              <button
+                onClick={() => onNavigate?.("agents")}
+                className="flex items-center gap-1 cursor-pointer hover:underline font-bold text-accent"
+              >
                 INSPECT OBJECTIVE <ArrowUpRight className="w-3 h-3" />
-              </span>
+              </button>
             </div>
           </div>
         </HudCard>
 
         {/* Guardian Proactive Intel */}
-        <HudCard tag="GUARDIAN" subtag="EPISTEMIC-94%">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
-            <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-              <Sparkles className="w-4 h-4 text-verdigris" /> Tactical Intelligence
-            </span>
-            <span className="text-[10px] text-verdigris font-bold">EVIDENCE 94%</span>
-          </div>
-          <p className="text-xs text-zinc-300 leading-relaxed italic bg-black/50 p-3 rounded-xl border border-white/10 font-sans">
-            "Your peak cognitive velocity is scheduled for 10 AM - 12 PM. 3 planned deep focus tasks remain queued."
-          </p>
-          <div className="flex gap-2 pt-2">
-            <button className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyber-cyan to-accent text-black font-bold text-xs transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)]">
-              EXECUTE PLAN
+        {!intelDismissed ? (
+          <HudCard tag="GUARDIAN" subtag="EPISTEMIC-94%">
+            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
+              <span className="flex items-center gap-2 font-bold text-white tracking-tight">
+                <Sparkles className="w-4 h-4 text-verdigris" /> Tactical Intelligence
+              </span>
+              <span className="text-[10px] text-verdigris font-bold">EVIDENCE 94%</span>
+            </div>
+            <p className="text-xs text-zinc-300 leading-relaxed italic bg-black/50 p-3 rounded-xl border border-white/10 font-sans">
+              "Your peak cognitive velocity is scheduled for 10 AM - 12 PM. 3 planned deep focus tasks remain queued."
+            </p>
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => onNavigate?.("chat")}
+                className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyber-cyan to-accent text-black font-bold text-xs transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)] hover:brightness-110 cursor-pointer"
+              >
+                EXECUTE PLAN
+              </button>
+              <button
+                onClick={() => setIntelDismissed(true)}
+                className="px-3 py-1.5 rounded-lg bg-black/60 hover:bg-zinc-800 text-zinc-400 text-xs border border-white/10 transition-all cursor-pointer"
+              >
+                DISMISS
+              </button>
+            </div>
+          </HudCard>
+        ) : (
+          <HudCard tag="GUARDIAN" subtag="STANDBY">
+            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
+              <span className="flex items-center gap-2 font-bold text-white tracking-tight">
+                <Sparkles className="w-4 h-4 text-zinc-500" /> Tactical Intelligence
+              </span>
+              <span className="text-[10px] text-zinc-500">STANDBY</span>
+            </div>
+            <p className="text-xs text-zinc-500 leading-relaxed italic bg-black/30 p-3 rounded-xl border border-white/5 font-sans">
+              All tactical intelligence advisories acknowledged. System standing by for operational directives.
+            </p>
+            <button
+              onClick={() => setIntelDismissed(false)}
+              className="mt-2 text-[10px] text-cyber-cyan hover:underline font-mono cursor-pointer"
+            >
+              RESTORE ADVISORY
             </button>
-            <button className="px-3 py-1.5 rounded-lg bg-black/60 hover:bg-zinc-800 text-zinc-400 text-xs border border-white/10 transition-all">
-              DISMISS
-            </button>
-          </div>
-        </HudCard>
+          </HudCard>
+        )}
       </div>
 
       {/* Live Hardware & Telemetry Matrix */}
@@ -148,9 +184,12 @@ export const DashboardView: React.FC = () => {
           <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
             <Activity className="w-4 h-4 text-cyber-cyan" /> Hardware & Model Telemetry Matrix
           </h3>
-          <span className="text-[11px] text-verdigris flex items-center gap-1.5 font-bold">
-            <span className="w-2 h-2 rounded-full bg-verdigris animate-pulse" /> ALL 213 PYTEST TESTS PASSING
-          </span>
+          <button
+            onClick={() => onNavigate?.("benchmarks")}
+            className="text-[11px] text-verdigris flex items-center gap-1.5 font-bold hover:underline cursor-pointer"
+          >
+            <span className="w-2 h-2 rounded-full bg-verdigris animate-pulse" /> LIVE TELEMETRY & BENCHMARKS →
+          </button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

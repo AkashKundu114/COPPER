@@ -13,7 +13,8 @@ import {
   Loader2,
   Eye,
   Brain,
-  Zap
+  Zap,
+  RotateCcw,
 } from "lucide-react";
 import { API_BASE, parseDocumentFile, type ParsedDocument } from "../../lib/api";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
@@ -24,6 +25,7 @@ interface Props {
   speaking?: boolean;
   onSend: (message: string, mode?: string) => void;
   onStop?: () => void;
+  onClear?: () => void;
 }
 
 export interface AttachedDocState {
@@ -75,7 +77,7 @@ const COGNITIVE_MODES = [
   }
 ];
 
-export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
+export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props) {
   const [draft, setDraft] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
@@ -542,9 +544,20 @@ export function ChatDock({ thinking, speaking, onSend, onStop }: Props) {
             <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
           </button>
 
-          <div className="hidden sm:flex items-center gap-3 text-[10px] text-zinc-500">
-            <span>ENC: <span className="text-zinc-400">AES-256</span></span>
-            <span>UPLINK: <span className="text-verdigris font-semibold">AIR-GAPPED</span></span>
+          <div className="flex items-center gap-3 text-[10px] text-zinc-500">
+            {onClear && (
+              <button
+                type="button"
+                onClick={onClear}
+                className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono"
+                title="Purge session memory & reset chat"
+              >
+                <RotateCcw size={10} />
+                <span>PURGE LOGS</span>
+              </button>
+            )}
+            <span className="hidden sm:inline">ENC: <span className="text-zinc-400">AES-256</span></span>
+            <span className="hidden sm:inline">UPLINK: <span className="text-verdigris font-semibold">AIR-GAPPED</span></span>
           </div>
         </div>
       </div>

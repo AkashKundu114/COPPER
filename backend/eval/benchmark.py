@@ -339,6 +339,7 @@ async def run_benchmark():
     print(f"\n[+] Full Markdown report generated: {report_path}")
     print(f"[+] Structured metrics exported:     {metrics_path}")
     print("==================================================================")
+    return metrics_json
 
 
 if __name__ == "__main__":

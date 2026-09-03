@@ -134,6 +134,18 @@ async def _reflection_cycle():
         logger.error(f"Reflection cycle failed: {e}")
 
 
+async def _prompt_optimization_cycle():
+    try:
+        from app.ai.evaluation.prompt_optimizer import prompt_optimizer
+
+        logger.info("Running scheduled weekly prompt optimization cycle...")
+        proposals = await prompt_optimizer.run_optimization_cycle()
+        if proposals:
+            logger.info(f"Prompt optimization cycle generated {len(proposals)} new candidate prompt edits")
+    except Exception as e:
+        logger.error(f"Scheduled prompt optimization cycle failed: {e}")
+
+
 def start_scheduler():
     global _scheduler
     if not APSCHEDULER_AVAILABLE:
@@ -157,12 +169,20 @@ def start_scheduler():
         name="COPPER Reflection Cycle",
         replace_existing=True,
     )
+    _scheduler.add_job(
+        _prompt_optimization_cycle,
+        IntervalTrigger(seconds=7 * 86400),  # Weekly interval
+        id="prompt_optimization_cycle",
+        name="COPPER Prompt Optimization Cycle",
+        replace_existing=True,
+    )
     try:
         _scheduler.start()
         logger.info("Spider-Sense Anomaly Sentinel started (30s interval)")
         logger.info(
             f"COPPER Reflection Cycle started ({settings.REFLECTION_INTERVAL_SECONDS if hasattr(settings, 'REFLECTION_INTERVAL_SECONDS') else 600}s interval)"
         )
+        logger.info("COPPER Prompt Optimization Cycle scheduled (weekly)")
     except Exception as e:
         logger.warning(f"Scheduler start deferred: {e}")
 

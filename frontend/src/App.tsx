@@ -74,6 +74,7 @@ function MainApp() {
     speaking,
     activeTaskGraph,
     activeComputerUse,
+    clearChat,
   } = useBrainSocket(refresh);
 
   const handleToggleDrawer = () => {
@@ -88,7 +89,7 @@ function MainApp() {
   const renderActiveSection = () => {
     switch (activeSection) {
       case "dashboard":
-        return <DashboardView />;
+        return <DashboardView onNavigate={setActiveSection} />;
       case "chat":
         return (
           <div className="relative w-full h-full flex flex-col items-center">
@@ -107,6 +108,7 @@ function MainApp() {
                 speaking={speaking}
                 onSend={send}
                 onStop={stopAudio}
+                onClear={clearChat}
               />
             </div>
           </div>
@@ -150,7 +152,7 @@ function MainApp() {
       )}
 
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
-      <main className="flex-1 overflow-hidden relative flex flex-col">
+      <main className="flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg">
         <TopBar
           sectionTitle={activeSection}
           profile={profile}
@@ -164,25 +166,29 @@ function MainApp() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="flex-1 w-full h-full flex flex-col"
+            transition={{ duration: 0.15 }}
+            className={`flex-1 w-full min-h-0 flex flex-col ${
+              activeSection === "chat" ? "overflow-hidden" : "overflow-y-auto custom-scrollbar"
+            }`}
           >
             {activeSection === "chat" ? (
-              <div className="relative w-full h-full flex flex-col items-center justify-between">
+              <div className="relative w-full h-full flex flex-col items-center justify-between min-h-0">
                 <MessageFeed
                   lines={lines}
                   agentStats={agentStats}
                   thinking={thinking}
                   activeAgent={activeAgent}
                   activeTaskGraph={activeTaskGraph}
+                  activeComputerUse={activeComputerUse}
                 />
-                <div className="w-full max-w-[850px] px-4 pb-6 mt-auto">
+                <div className="w-full max-w-[850px] px-4 pb-6 mt-auto flex-shrink-0">
                   <ChatDock
                     connected={connected}
                     thinking={thinking}
                     speaking={speaking}
                     onSend={send}
                     onStop={stopAudio}
+                    onClear={clearChat}
                   />
                 </div>
               </div>

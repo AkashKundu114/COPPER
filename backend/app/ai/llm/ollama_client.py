@@ -13,7 +13,7 @@ from app.core.logger import logger
 class OllamaClient:
     def __init__(self):
         self.base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
-        self.default_model = model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
+        self.default_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
 
     async def is_available(self) -> bool:
         try:
@@ -148,8 +148,20 @@ class OllamaClient:
             if clean_req not in ["hi", "hello", "hey", "test", "null", "none", ""]:
                 return requested_model
 
+        # Dynamic Model Selection Optimization check
+        if agent_type:
+            try:
+                from app.ai.evaluation.model_optimizer import model_optimizer
+
+                agent_val = agent_type.value if hasattr(agent_type, "value") else str(agent_type)
+                optimal_model = model_optimizer.get_optimal_model(agent_val)
+                if optimal_model:
+                    return optimal_model
+            except Exception:
+                pass
+
         if agent_type == AgentType.CHAT:
-            return model_manager.get_model("core_agents.chat", "llama3.1-abliterated:8b")
+            return model_manager.get_model("core_agents.chat", "llama3.1:8b")
         elif agent_type == AgentType.CODING:
             return model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
         elif agent_type == AgentType.DOCUMENT:
@@ -176,11 +188,20 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
+        options = {
+            "temperature": 0.7,
+            "top_p": 0.9,
+            "repeat_penalty": 1.18,
+            "repeat_last_n": 128,
+            "num_ctx": 8192,
+        }
+
         payload: dict[str, Any] = {
             "model": target_model,
             "messages": messages,
             "stream": False,
             "keep_alive": keep_alive,
+            "options": options,
         }
         if format is not None:
             payload["format"] = format
@@ -217,11 +238,20 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
+        options = {
+            "temperature": 0.7,
+            "top_p": 0.9,
+            "repeat_penalty": 1.18,
+            "repeat_last_n": 128,
+            "num_ctx": 8192,
+        }
+
         payload: dict[str, Any] = {
             "model": target_model,
             "messages": messages,
             "stream": True,
             "keep_alive": keep_alive,
+            "options": options,
         }
         if format is not None:
             payload["format"] = format
@@ -230,11 +260,22 @@ class OllamaClient:
             async with httpx.AsyncClient(timeout=120.0) as client:
                 async with client.stream("POST", f"{self.base_url}/api/chat", json=payload) as resp:
                     if resp.status_code == 200:
+                        recent_tokens: list[str] = []
                         async for line in resp.aiter_lines():
                             if line.strip():
                                 chunk = json.loads(line)
                                 content = chunk.get("message", {}).get("content", "")
                                 if content:
+                                    # Repetition loop circuit breaker:
+                                    # Detect runaway degeneration loops (e.g. 15 identical symbols in a row)
+                                    recent_tokens.append(content)
+                                    if len(recent_tokens) > 20:
+                                        recent_tokens.pop(0)
+                                    if len(recent_tokens) >= 12 and len(set(recent_tokens[-12:])) <= 2:
+                                        # Repetition loop detected, break immediately
+                                        logger.warning(f"Ollama repetition loop detected for '{target_model}'. Breaking stream.")
+                                        break
+
                                     yield content
                                 if chunk.get("done") and metrics_collector is not None:
                                     metrics_collector["model"] = chunk.get("model", target_model)

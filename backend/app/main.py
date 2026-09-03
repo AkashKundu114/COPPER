@@ -14,9 +14,11 @@ from app.api.routes import (
     documents,
     episodes,
     guardian,
+    knowledge_graph,
     memory,
     orchestration,
     reminders,
+    self_improvement,
     self_memory,
     system,
     vision,
@@ -36,6 +38,9 @@ async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
     try:
         init_db()
+        from app.ai.llm.prompt_manager import load_applied_patches_from_db
+
+        load_applied_patches_from_db()
     except Exception as e:
         logger.warning(f"DB init failed (continuing): {e}")
     start_scheduler()
@@ -67,6 +72,7 @@ app.include_router(chat.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 app.include_router(wake.router, prefix="/api/v1")
 app.include_router(memory.router, prefix="/api/v1")
+app.include_router(knowledge_graph.router, prefix="/api/v1")
 app.include_router(reminders.router, prefix="/api/v1")
 app.include_router(automation.router, prefix="/api/v1")
 app.include_router(vision.router, prefix="/api/v1")
@@ -78,6 +84,7 @@ app.include_router(documents.router, prefix="/api/v1")
 app.include_router(orchestration.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
+app.include_router(self_improvement.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
 
 

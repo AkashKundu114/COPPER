@@ -24,13 +24,64 @@ SELF_CONTEXT
 """
 
 
+_active_prompt_patches: dict[str, list[str]] = {}
+
+
+def register_prompt_patch(agent_type: str, snippet: str):
+    """Registers an active prompt optimization patch for an agent type."""
+    clean_type = agent_type.lower().strip()
+    if clean_type not in _active_prompt_patches:
+        _active_prompt_patches[clean_type] = []
+    if snippet not in _active_prompt_patches[clean_type]:
+        _active_prompt_patches[clean_type].append(snippet)
+
+
+def clear_prompt_patches():
+    """Clears all active prompt patches (used for testing or resetting)."""
+    _active_prompt_patches.clear()
+
+
+def get_prompt_patches_for_agent(agent_type: str) -> list[str]:
+    """Retrieves all active prompt patches for an agent type, plus general patches."""
+    patches = []
+    clean_type = agent_type.lower().strip()
+    if clean_type in _active_prompt_patches:
+        patches.extend(_active_prompt_patches[clean_type])
+    if "all" in _active_prompt_patches:
+        patches.extend(_active_prompt_patches["all"])
+    return patches
+
+
+def load_applied_patches_from_db():
+    """Loads all applied prompt patches from the database."""
+    try:
+        from app.database.models.response_evaluation import ProposedPromptEdit
+        from app.database.postgres import SessionLocal
+
+        db = SessionLocal()
+        try:
+            edits = db.query(ProposedPromptEdit).filter(ProposedPromptEdit.status == "applied").all()
+            for edit in edits:
+                register_prompt_patch(edit.agent_type, edit.proposed_prompt_snippet)
+        finally:
+            db.close()
+    except Exception:
+        pass
+
+
 def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_context: str = "") -> str:
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
     self_snippet = self_context if self_context else "No self-model entries yet."
 
     formatted_base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
 
-    return f"{formatted_base}\nAgent Role: {agent_type.value.upper()}{ctx_snippet}"
+    # Inject CRUCIBLE optimized directives if present
+    patches = get_prompt_patches_for_agent(agent_type.value)
+    patch_snippet = ""
+    if patches:
+        patch_snippet = "\n\nCRUCIBLE OPTIMIZED DIRECTIVES:\n" + "\n".join(f"- {p}" for p in patches)
+
+    return f"{formatted_base}\nAgent Role: {agent_type.value.upper()}{patch_snippet}{ctx_snippet}"
 
 
 def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "") -> str:
@@ -73,13 +124,22 @@ def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "")
     return f"{base}{mode_instructions}{ctx_snippet}"
 
 
+def is_corrupted_content(content: str) -> bool:
+    if not content:
+        return True
+    for ch in ["(", ")", "[", "]", ":", ".", "-", "_", "#", " "]:
+        if ch * 8 in content:
+            return True
+    return False
+
+
 def build_messages(system_prompt: str, history: list[dict[str, str]], current_message: str) -> list[dict[str, str]]:
     msgs: list[dict[str, str]] = [{"role": "system", "content": system_prompt}]
     cleaned_history: list[dict[str, str]] = []
     for h in history[-8:]:
         role = h.get("role", "user")
         content = h.get("content", "").strip()
-        if not content:
+        if not content or is_corrupted_content(content):
             continue
         if cleaned_history and cleaned_history[-1]["role"] == role:
             cleaned_history[-1]["content"] = content
@@ -92,3 +152,4 @@ def build_messages(system_prompt: str, history: list[dict[str, str]], current_me
     msgs.extend(cleaned_history)
     msgs.append({"role": "user", "content": current_message})
     return msgs
+

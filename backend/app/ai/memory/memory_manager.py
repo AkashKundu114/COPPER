@@ -20,6 +20,15 @@ class MemoryManager:
     async def save_interaction(
         self, session_id: str, user_message: str, assistant_response: str, agent_type: str = "chat"
     ) -> None:
+        from app.ai.llm.prompt_manager import is_corrupted_content
+
+        if not assistant_response or len(assistant_response.strip()) < 3:
+            return
+        if is_corrupted_content(assistant_response):
+            return
+        if any(err in assistant_response for err in ["Ollama returned status", "Cannot reach local Ollama", "Error connecting to Ollama"]):
+            return
+
         combined = f"User: {user_message}\nAssistant: {assistant_response}"
         await self.chat_store.add(
             text=combined, metadata={"session_id": session_id, "agent_type": agent_type, "type": "interaction"}
@@ -28,21 +37,28 @@ class MemoryManager:
     async def search_relevant_context(
         self, query: str, session_id: str | None = None, limit: int = MEMORY_SEARCH_LIMIT
     ) -> str:
+        from app.ai.llm.prompt_manager import is_corrupted_content
+
         where = {"session_id": session_id} if session_id else None
         results = await self.chat_store.search(query, n_results=limit, where=where)
         if not results:
             return ""
-        context_parts = [r["document"] for r in results if r["distance"] < 1.2]
+        context_parts = [r["document"] for r in results if r["distance"] < 1.2 and not is_corrupted_content(r["document"])]
         return "\n\n".join(context_parts[:3])
 
     async def get_relevant_memories(self, query: str, limit: int = MEMORY_SEARCH_LIMIT) -> list[dict]:
+        from app.ai.llm.prompt_manager import is_corrupted_content
+
         results = await self.chat_store.search(query, n_results=limit)
         memories = []
         for r in results:
             if r.get("distance", 99) < 1.5:
+                doc = r.get("document", "")
+                if is_corrupted_content(doc):
+                    continue
                 memories.append(
                     {
-                        "content": r["document"],
+                        "content": doc,
                         "memory_type": r.get("metadata", {}).get("type", "observation"),
                         "distance": r.get("distance", 0),
                     }

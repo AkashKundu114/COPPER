@@ -278,3 +278,70 @@ export const workspaceAPI = {
     api.patch<T>(`/api/v1/workspace/${kind}/${id}`, { payload }).then((r) => r.data),
   remove: (kind: string, id: string) => api.delete(`/api/v1/workspace/${kind}/${id}`),
 };
+
+export interface KnowledgeEntityItem {
+  id: number;
+  name: string;
+  canonical_name: string;
+  type: string;
+  confidence: number;
+  context: string;
+  evidence_count: number;
+  metadata?: Record<string, unknown>;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface KnowledgeRelationshipItem {
+  id: number;
+  source_id?: number;
+  target_id?: number;
+  source: string;
+  target: string;
+  type: string;
+  confidence: number;
+  context?: string;
+  evidence_count: number;
+  metadata?: Record<string, unknown>;
+}
+
+export interface KnowledgeSubgraphResponse {
+  nodes: KnowledgeEntityItem[];
+  links: KnowledgeRelationshipItem[];
+  edges?: KnowledgeRelationshipItem[];
+  center?: string;
+}
+
+export interface KnowledgeStatsResponse {
+  status: string;
+  stats: {
+    total_entities: number;
+    total_relationships: number;
+    entities_by_type: Record<string, number>;
+    relationships_by_type: Record<string, number>;
+  };
+}
+
+export const knowledgeAPI = {
+  getEntities: (params?: { type?: string; min_confidence?: number; search?: string; limit?: number }) =>
+    api.get<{ data: KnowledgeEntityItem[]; count: number }>("/api/v1/knowledge/entities", { params }).then((r) => r.data),
+  createEntity: (payload: { name: string; type: string; confidence?: number; context?: string }) =>
+    api.post<{ status: string; entity: KnowledgeEntityItem }>("/api/v1/knowledge/entities", payload).then((r) => r.data),
+  deleteEntity: (id: number) =>
+    api.delete<{ status: string; message: string }>(`/api/v1/knowledge/entities/${id}`).then((r) => r.data),
+  getRelationships: (params?: { type?: string; source?: string; target?: string; min_confidence?: number; limit?: number }) =>
+    api.get<{ data: KnowledgeRelationshipItem[]; count: number }>("/api/v1/knowledge/relationships", { params }).then((r) => r.data),
+  createRelationship: (payload: { source: string; target: string; type: string; confidence?: number; context?: string }) =>
+    api.post<{ status: string; relationship: KnowledgeRelationshipItem }>("/api/v1/knowledge/relationships", payload).then((r) => r.data),
+  getSubgraph: (params?: { entity?: string; depth?: number; max_nodes?: number }) =>
+    api.get<KnowledgeSubgraphResponse>("/api/v1/knowledge/subgraph", { params }).then((r) => r.data),
+  getPath: (source: string, target: string) =>
+    api.get<{ source: string; target: string; path: any[] }>("/api/v1/knowledge/path", { params: { source, target } }).then((r) => r.data),
+  extractFromText: (text: string, sessionId?: string) =>
+    api.post<{ status: string; extracted: { entities: KnowledgeEntityItem[]; relationships: KnowledgeRelationshipItem[] } }>(
+      "/api/v1/knowledge/extract",
+      { text, session_id: sessionId }
+    ).then((r) => r.data),
+  getStats: () =>
+    api.get<KnowledgeStatsResponse>("/api/v1/knowledge/stats").then((r) => r.data),
+};

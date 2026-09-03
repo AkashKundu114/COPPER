@@ -150,4 +150,35 @@ export const selfMemoryAPI = {
     },
 };
 
+export const selfImprovementAPI = {
+  getMetrics: async (days: number = 7) => {
+    const { data } = await api.get(`/self-improvement/metrics?days=${days}`);
+    return data;
+  },
+  getFailures: async (limit: number = 20) => {
+    const { data } = await api.get(`/self-improvement/failures?limit=${limit}`);
+    return data;
+  },
+  getProposedEdits: async () => {
+    const { data } = await api.get("/self-improvement/proposed-edits");
+    return data;
+  },
+  applyEdit: async (editId: number) => {
+    const { data } = await api.post(`/self-improvement/apply-edit/${editId}`);
+    return data;
+  },
+  runBenchmark: async () => {
+    const { data } = await api.post("/self-improvement/run-benchmark");
+    return data;
+  },
+  optimizePrompts: async () => {
+    const { data } = await api.post("/self-improvement/optimize-prompts");
+    return data;
+  },
+  getModelRankings: async () => {
+    const { data } = await api.get("/self-improvement/model-rankings");
+    return data;
+  },
+};
+
 export default api;
