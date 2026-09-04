@@ -138,7 +138,10 @@ class OllamaClient:
                 agent_type = AgentType(clean_type)
             except ValueError:
                 # Check if it looks like a model tag (e.g. contains colon or known model name)
-                if any(x in clean_type for x in [":", "llama", "qwen", "mistral", "deepseek", "smollm", "falcon", "gemma", "granite"]):
+                if any(
+                    x in clean_type
+                    for x in [":", "llama", "qwen", "mistral", "deepseek", "smollm", "falcon", "gemma", "granite"]
+                ):
                     requested_model = agent_type
                 agent_type = None
 
@@ -273,7 +276,9 @@ class OllamaClient:
                                         recent_tokens.pop(0)
                                     if len(recent_tokens) >= 12 and len(set(recent_tokens[-12:])) <= 2:
                                         # Repetition loop detected, break immediately
-                                        logger.warning(f"Ollama repetition loop detected for '{target_model}'. Breaking stream.")
+                                        logger.warning(
+                                            f"Ollama repetition loop detected for '{target_model}'. Breaking stream."
+                                        )
                                         break
 
                                     yield content

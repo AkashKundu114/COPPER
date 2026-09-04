@@ -44,11 +44,7 @@ class PromptOptimizer:
 
         try:
             cutoff = datetime.now(UTC) - timedelta(days=7)
-            recent_evals = (
-                db.query(ResponseEvaluation)
-                .filter(ResponseEvaluation.created_at >= cutoff)
-                .all()
-            )
+            recent_evals = db.query(ResponseEvaluation).filter(ResponseEvaluation.created_at >= cutoff).all()
 
             # Cluster failures by (agent_type, failure_category)
             clusters: dict[tuple[str, str], list[ResponseEvaluation]] = {}

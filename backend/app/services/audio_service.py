@@ -89,7 +89,12 @@ class PiperTTSPipeline:
 
     def list_available_voices(self) -> list[dict[str, Any]]:
         return [
-            {"id": "en-US-AvaNeural", "name": "Ava (Neural Female - Natural Human-Like)", "engine": "edge-tts", "default": True},
+            {
+                "id": "en-US-AvaNeural",
+                "name": "Ava (Neural Female - Natural Human-Like)",
+                "engine": "edge-tts",
+                "default": True,
+            },
             {"id": "en-US-JennyNeural", "name": "Jenny (Neural Female - Warm & Expressive)", "engine": "edge-tts"},
             {"id": "en-US-EmmaNeural", "name": "Emma (Neural Female - Clear & Fluent)", "engine": "edge-tts"},
             {"id": "zira", "name": "Microsoft Zira (Offline Windows Female)", "engine": "windows-sapi5"},

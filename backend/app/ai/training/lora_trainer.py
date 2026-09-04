@@ -1,6 +1,5 @@
 import asyncio
 import json
-import os
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -48,11 +47,7 @@ class QLoRATrainer:
         db = SessionLocal()
         try:
             # Check if another training run is currently active
-            running = (
-                db.query(TrainingJob)
-                .filter(TrainingJob.status == TrainingJobStatus.RUNNING.value)
-                .first()
-            )
+            running = db.query(TrainingJob).filter(TrainingJob.status == TrainingJobStatus.RUNNING.value).first()
             if running:
                 return {
                     "success": False,
@@ -154,7 +149,9 @@ class QLoRATrainer:
 
                 # Early stopping check: abort if loss increases for 2 consecutive epochs
                 if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
-                    logger.warning(f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {epoch}: loss rising consecutively.")
+                    logger.warning(
+                        f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {epoch}: loss rising consecutively."
+                    )
                     job.status = TrainingJobStatus.ABORTED.value
                     job.error_message = "Early stopping: validation loss increased for 2 consecutive epochs."
                     aborted = True
@@ -206,9 +203,7 @@ class QLoRATrainer:
             job.status = TrainingJobStatus.COMPLETED.value
             job.completed_at = datetime.now(UTC)
             if is_rejected:
-                job.error_message = (
-                    f"Auto-rejected due to regression: Routing drop={routing_drop:.2f}%, Guardian drop={guardian_drop:.2f}%"
-                )
+                job.error_message = f"Auto-rejected due to regression: Routing drop={routing_drop:.2f}%, Guardian drop={guardian_drop:.2f}%"
                 logger.warning(f"[CHRYSALIS QLoRA] {job.error_message}")
             else:
                 logger.info(
@@ -287,7 +282,10 @@ class QLoRATrainer:
                 "messages": [
                     {"role": "system", "content": "You are COPPER coding agent."},
                     {"role": "user", "content": "Write a python function to check if a number is prime."},
-                    {"role": "assistant", "content": "```python\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n```"},
+                    {
+                        "role": "assistant",
+                        "content": "```python\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n```",
+                    },
                 ],
             },
             {
@@ -295,7 +293,10 @@ class QLoRATrainer:
                 "messages": [
                     {"role": "system", "content": "You are COPPER research agent."},
                     {"role": "user", "content": "Compare SQLite vs DuckDB for local analytics."},
-                    {"role": "assistant", "content": "- **SQLite**: Row-oriented transactional storage, optimal for OLTP.\n- **DuckDB**: Columnar vectorized execution, optimal for analytical queries (OLAP)."},
+                    {
+                        "role": "assistant",
+                        "content": "- **SQLite**: Row-oriented transactional storage, optimal for OLTP.\n- **DuckDB**: Columnar vectorized execution, optimal for analytical queries (OLAP).",
+                    },
                 ],
             },
             {
@@ -303,7 +304,10 @@ class QLoRATrainer:
                 "messages": [
                     {"role": "system", "content": "You are COPPER companion."},
                     {"role": "user", "content": "What is the status of our offline models?"},
-                    {"role": "assistant", "content": "All local models are synchronized, with the Gatekeeper running in VRAM."},
+                    {
+                        "role": "assistant",
+                        "content": "All local models are synchronized, with the Gatekeeper running in VRAM.",
+                    },
                 ],
             },
         ]

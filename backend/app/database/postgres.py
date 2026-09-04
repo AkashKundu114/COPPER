@@ -51,9 +51,7 @@ def init_db():
                     )
                     conn.commit()
                 if col_names and "latency_ms" not in col_names:
-                    conn.execute(
-                        text("ALTER TABLE response_evaluations ADD COLUMN latency_ms FLOAT DEFAULT 0.0")
-                    )
+                    conn.execute(text("ALTER TABLE response_evaluations ADD COLUMN latency_ms FLOAT DEFAULT 0.0"))
                     conn.commit()
         except Exception:
             pass

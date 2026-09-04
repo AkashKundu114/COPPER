@@ -79,7 +79,7 @@ class ImprovementTracker:
                     "trend_delta": "+0.0%",
                     "trend_delta_value": 0.0,
                     "correction_rate_pct": 0.0,
-                    "failures_summary": {cat: 0 for cat in self.ALL_FAILURE_CATEGORIES},
+                    "failures_summary": dict.fromkeys(self.ALL_FAILURE_CATEGORIES, 0),
                     "daily_history": self._generate_empty_history(days),
                 }
 
@@ -93,11 +93,7 @@ class ImprovementTracker:
             avg_voice = sum(e.voice_consistency for e in current_evals) / n
 
             # Previous window overall average
-            prev_avg = (
-                sum(e.overall_score for e in prev_evals) / len(prev_evals)
-                if prev_evals
-                else avg_overall
-            )
+            prev_avg = sum(e.overall_score for e in prev_evals) / len(prev_evals) if prev_evals else avg_overall
 
             # Trend direction & delta
             delta = avg_overall - prev_avg
@@ -116,7 +112,7 @@ class ImprovementTracker:
             correction_rate = (corrections_count / max(1, n)) * 100.0
 
             # Failure category breakdown
-            failure_counts = {cat: 0 for cat in self.ALL_FAILURE_CATEGORIES}
+            failure_counts = dict.fromkeys(self.ALL_FAILURE_CATEGORIES, 0)
             for e in current_evals:
                 for f in e.failures or []:
                     f_upper = str(f).strip().upper()
@@ -203,7 +199,7 @@ class ImprovementTracker:
         try:
             # All evaluations with at least one failure
             all_evals = db.query(ResponseEvaluation).all()
-            category_counts = {cat: 0 for cat in self.ALL_FAILURE_CATEGORIES}
+            category_counts = dict.fromkeys(self.ALL_FAILURE_CATEGORIES, 0)
 
             for ev in all_evals:
                 for f in ev.failures or []:
@@ -213,10 +209,7 @@ class ImprovementTracker:
 
             # Recent failures
             recent_failed_evals = (
-                db.query(ResponseEvaluation)
-                .order_by(desc(ResponseEvaluation.created_at))
-                .limit(limit * 2)
-                .all()
+                db.query(ResponseEvaluation).order_by(desc(ResponseEvaluation.created_at)).limit(limit * 2).all()
             )
 
             filtered_recent = []

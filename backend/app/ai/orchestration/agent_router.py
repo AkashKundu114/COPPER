@@ -74,6 +74,13 @@ class DynamicRoutingMemory:
         self.save()
         logger.info(f"Learned route: '{prompt[:40]}...' -> {agent.value}")
 
+    def forget(self, prompt: str):
+        """Remove a learned route and persist memory."""
+        key = self._normalize(prompt)
+        if key in self.memory:
+            del self.memory[key]
+            self.save()
+
     def find_match(self, prompt: str, threshold: float = 0.85) -> tuple[AgentType, float] | None:
         """Fast n-gram and token similarity search over learned routes."""
         if not self.memory:
@@ -225,15 +232,15 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
     ],
     AgentType.DOCUMENT: [
         (
-            r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|technical report|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice|presentation slide deck|financial report|specification document|whitepaper|invoice document)\b",
+            r"\b(create|generate|write|make|export|build|draft)\s+(a\s+|an\s+|the\s+)?(markdown\s+|pdf\s+|word\s+)?(technical report|report|pdf|word document|docx|ms word|markdown document|md document|html document|csv file|spreadsheet|excel sheet|tsv file|formal letter|project proposal|executive summary|resume|cv|meeting minutes|invoice table|research paper|standalone document|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice|presentation slide deck|financial report|specification document|whitepaper|invoice document)\b",
             7.0,
         ),
         (
-            r"\b(write|create|generate|make|build|export|turn this into|draft)\s+.*(word doc|word document|\.docx|slide deck|presentation|\.pptx|spreadsheet|\.xlsx|pdf report|\.pdf|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice)\b",
+            r"\b(write|create|generate|make|build|export|turn this into|draft)\s+.*(word doc|word document|\.docx|slide deck|presentation|\.pptx|spreadsheet|\.xlsx|pdf report|\.pdf|technical report|markdown report|quarterly financial report|technical specification document|technical specification|whitepaper document|formal invoice document|formal invoice)\b",
             6.0,
         ),
         (r"\b(docx|pptx|xlsx|pdf)\b", 3.0),
-        (r"\b(slide deck|presentation slides|word document|excel sheet)\b", 4.0),
+        (r"\b(slide deck|presentation slides|word document|excel sheet|technical report)\b", 4.0),
         (
             r"\b(generate (a\s+|an\s+)?pdf|create (a\s+|an\s+)?pdf|make (a\s+|an\s+)?pdf|export (to\s+)?pdf|save as pdf|convert to pdf|as (a\s+)?pdf|in pdf format)\b",
             6.0,
@@ -247,11 +254,11 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             5.0,
         ),
         (
-            r"\b(create|generate|write)\s+.*(document|whitepaper|business proposal|briefing document|curriculum vitae)\b",
+            r"\b(create|generate|write)\s+.*(document|whitepaper|business proposal|briefing document|curriculum vitae|technical report)\b",
             4.5,
         ),
         (
-            r"\b(pdf report|word report|html report|csv export|document generation|document architect|downloadable document)\b",
+            r"\b(pdf report|word report|html report|csv export|technical report|markdown report|document generation|document architect|downloadable document)\b",
             4.0,
         ),
     ],

@@ -241,7 +241,7 @@ export const BenchmarkMetricsView: React.FC = () => {
       try {
         await fetchSystemTelemetry();
         latencies.push(performance.now() - start);
-      } catch (e) {
+      } catch {
         latencies.push(5.0);
       }
       setLiveProgress(i * 20);

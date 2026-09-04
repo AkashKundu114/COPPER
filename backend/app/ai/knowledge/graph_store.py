@@ -1,6 +1,4 @@
 import asyncio
-import logging
-from typing import Any
 
 import networkx as nx
 from sqlalchemy import or_
@@ -206,9 +204,7 @@ class GraphStore:
             if not existing_rel:
                 # Also check case-insensitive match on canonical names
                 candidates = (
-                    db.query(KnowledgeRelationship)
-                    .filter(KnowledgeRelationship.relation_type == rel_type_clean)
-                    .all()
+                    db.query(KnowledgeRelationship).filter(KnowledgeRelationship.relation_type == rel_type_clean).all()
                 )
                 for cand in candidates:
                     if (
@@ -293,9 +289,9 @@ class GraphStore:
 
         # Use undirected view to traverse edges in both directions
         undirected = self.graph.to_undirected(as_view=True)
-        subgraph_nodes = set([canon])
+        subgraph_nodes = {canon}
 
-        current_level = set([canon])
+        current_level = {canon}
         for _ in range(depth):
             next_level = set()
             for node in current_level:
@@ -385,8 +381,12 @@ class GraphStore:
         if entity_name:
             result = self.query_neighbors(entity_name, depth=depth, min_confidence=0.0)
             nodes = result["nodes"][:max_nodes]
-            node_names = set(n["canonical_name"] for n in nodes)
-            edges = [e for e in result["edges"] if canonicalize_name(e["source"]) in node_names and canonicalize_name(e["target"]) in node_names]
+            node_names = {n["canonical_name"] for n in nodes}
+            edges = [
+                e
+                for e in result["edges"]
+                if canonicalize_name(e["source"]) in node_names and canonicalize_name(e["target"]) in node_names
+            ]
             return {
                 "nodes": nodes,
                 "edges": edges,
@@ -397,7 +397,7 @@ class GraphStore:
         nodes = [dict(data) for _, data in self.graph.nodes(data=True)]
         nodes.sort(key=lambda x: (x.get("evidence_count", 1), x.get("confidence", 0.0)), reverse=True)
         top_nodes = nodes[:max_nodes]
-        top_node_canons = set(n["canonical_name"] for n in top_nodes)
+        top_node_canons = {n["canonical_name"] for n in top_nodes}
 
         edges = []
         for u, v, key, edge_data in self.graph.edges(keys=True, data=True):

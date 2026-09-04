@@ -23,12 +23,7 @@ def validate_kind(kind: str) -> None:
 @router.get("/{kind}")
 def list_items(kind: str, db: Session = Depends(get_db)):
     validate_kind(kind)
-    items = (
-        db.query(WorkspaceItem)
-        .filter(WorkspaceItem.kind == kind)
-        .order_by(WorkspaceItem.created_at.desc())
-        .all()
-    )
+    items = db.query(WorkspaceItem).filter(WorkspaceItem.kind == kind).order_by(WorkspaceItem.created_at.desc()).all()
     return [item.to_dict() for item in items]
 
 

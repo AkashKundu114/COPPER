@@ -1,19 +1,29 @@
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: infrastructure/docker/frontend/Dockerfile
     container_name: copper-frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: infrastructure/docker/backend/Dockerfile
     container_name: copper-backend
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
+      - path: ./backend/.env
+        required: false
+    environment:
+      - DATABASE_URL=postgresql://copper:copperpass@postgres:5432/copperdb
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
     depends_on:
       - postgres
       - redis

@@ -229,6 +229,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const audioQueue = useRef<string[]>([]);
   const isPlayingAudio = useRef<boolean>(false);
   const currentAudio = useRef<HTMLAudioElement | null>(null);
+  const playNextAudioRef = useRef<() => void>(() => {});
+  const connectRef = useRef<() => void>(() => {});
 
   const playNextAudio = useCallback(() => {
     if (audioQueue.current.length === 0) {
@@ -247,23 +249,27 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
       currentAudio.current = audio;
 
       audio.onended = () => {
-        playNextAudio();
+        playNextAudioRef.current();
       };
 
       audio.onerror = (e) => {
         console.error("Audio playback error", e);
-        playNextAudio();
+        playNextAudioRef.current();
       };
 
       audio.play().catch((e) => {
         console.error("Failed to play audio", e);
-        playNextAudio();
+        playNextAudioRef.current();
       });
     } catch (e) {
       console.error("Failed to initialize audio", e);
-      playNextAudio();
+      playNextAudioRef.current();
     }
   }, []);
+
+  useEffect(() => {
+    playNextAudioRef.current = playNextAudio;
+  }, [playNextAudio]);
 
   const stopAudio = useCallback(() => {
     if (currentAudio.current) {
@@ -282,7 +288,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     ws.onopen = () => setConnected(true);
     ws.onclose = () => {
       setConnected(false);
-      reconnectTimer.current = setTimeout(connect, 2000);
+      reconnectTimer.current = setTimeout(() => connectRef.current(), 2000);
     };
     ws.onerror = () => ws.close();
 
@@ -612,6 +618,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   }, [onProfileChange, playNextAudio]);
 
   useEffect(() => {
+    connectRef.current = connect;
     connect();
     return () => {
       clearTimeout(reconnectTimer.current);

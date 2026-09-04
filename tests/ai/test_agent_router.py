@@ -6,6 +6,7 @@ from app.ai.orchestration.agent_router import (
     learn_user_correction,
     route_message,
     route_message_detailed,
+    routing_memory,
 )
 from app.core.constants import AgentType
 
@@ -261,12 +262,15 @@ async def test_dynamic_self_training_memory():
     res_before = await route_message_detailed(unique_prompt)
     assert res_before.route_stage == "default_conversational_fallback"
 
-    learn_user_correction(unique_prompt, AgentType.AUTOMATION)
+    try:
+        learn_user_correction(unique_prompt, AgentType.AUTOMATION)
 
-    res_after = await route_message_detailed(unique_prompt)
-    assert res_after.agent == AgentType.AUTOMATION
-    assert res_after.route_stage == "learned_memory_cache"
-    assert res_after.confidence == 1.0
+        res_after = await route_message_detailed(unique_prompt)
+        assert res_after.agent == AgentType.AUTOMATION
+        assert res_after.route_stage == "learned_memory_cache"
+        assert res_after.confidence == 1.0
+    finally:
+        routing_memory.forget(unique_prompt)
 
 
 @pytest.mark.asyncio

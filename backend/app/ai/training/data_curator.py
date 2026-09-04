@@ -66,7 +66,7 @@ class ChrysalisDataCurator:
         """Computes deterministic hash for deduplication."""
         norm_u = " ".join(user_msg.strip().lower().split())
         norm_a = " ".join(assistant_msg.strip().lower().split())
-        raw = f"{norm_u}||{norm_a}".encode("utf-8")
+        raw = f"{norm_u}||{norm_a}".encode()
         return hashlib.sha256(raw).hexdigest()
 
     async def curate_from_evaluations(self, min_score: float = 0.85, limit: int = 50) -> dict[str, Any]:
@@ -86,15 +86,9 @@ class ChrysalisDataCurator:
             )
 
             # Query recent correction sessions to exclude corrected turns
-            corrections = (
-                db.query(SelfMemory)
-                .filter(SelfMemory.category == SelfMemoryCategory.CORRECTION)
-                .all()
-            )
+            corrections = db.query(SelfMemory).filter(SelfMemory.category == SelfMemoryCategory.CORRECTION).all()
             corrected_snippets = [
-                c.content.lower().strip()
-                for c in corrections
-                if c.content and len(c.content.strip()) >= 5
+                c.content.lower().strip() for c in corrections if c.content and len(c.content.strip()) >= 5
             ]
 
             for ev in evals:
@@ -114,7 +108,8 @@ class ChrysalisDataCurator:
 
                 # Exclude if user corrected this response
                 if any(
-                    len(snip) >= 5 and (snip in user_text.lower() or (len(user_text) >= 10 and user_text[:30].lower() in snip))
+                    len(snip) >= 5
+                    and (snip in user_text.lower() or (len(user_text) >= 10 and user_text[:30].lower() in snip))
                     for snip in corrected_snippets
                 ):
                     skipped_count += 1
@@ -122,7 +117,9 @@ class ChrysalisDataCurator:
 
                 # Deduplication check
                 c_hash = self.compute_content_hash(user_text, asst_text)
-                existing = db.query(CuratedTrainingExample).filter(CuratedTrainingExample.content_hash == c_hash).first()
+                existing = (
+                    db.query(CuratedTrainingExample).filter(CuratedTrainingExample.content_hash == c_hash).first()
+                )
                 if existing:
                     skipped_count += 1
                     continue
@@ -273,12 +270,7 @@ class ChrysalisDataCurator:
                 agent_dist[ag] = agent_dist.get(ag, 0) + 1
                 total_score += ex.quality_score
 
-            recent = (
-                db.query(CuratedTrainingExample)
-                .order_by(desc(CuratedTrainingExample.created_at))
-                .limit(5)
-                .all()
-            )
+            recent = db.query(CuratedTrainingExample).order_by(desc(CuratedTrainingExample.created_at)).limit(5).all()
 
             file_size = self.output_path.stat().st_size if self.output_path.exists() else 0
 

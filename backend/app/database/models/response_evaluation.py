@@ -129,4 +129,3 @@ class AgentModelPerformance(Base):
             "is_active_route": self.is_active_route,
             "last_evaluated_at": self.last_evaluated_at.isoformat() if self.last_evaluated_at else None,
         }
-

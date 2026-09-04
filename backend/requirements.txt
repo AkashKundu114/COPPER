@@ -12,6 +12,7 @@ chromadb
 httpx
 apscheduler
 numpy
+networkx
 ruff
 pytest
 pytest-cov

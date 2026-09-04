@@ -189,7 +189,7 @@ async function stopBackend() {
       const { execSync } = require("child_process");
       const cmd = `powershell -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }"`;
       execSync(cmd, { stdio: "ignore" });
-    } catch (e) {}
+    } catch {}
   }
   return true;
 }

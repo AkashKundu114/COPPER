@@ -135,7 +135,9 @@ class LoRAAdapter(Base):
             "target_agent": self.target_agent,
             "status": self.status,
             "ab_test_percentage": self.ab_test_percentage,
-            "evaluation_quality_score": round(self.evaluation_quality_score, 2) if self.evaluation_quality_score is not None else None,
+            "evaluation_quality_score": round(self.evaluation_quality_score, 2)
+            if self.evaluation_quality_score is not None
+            else None,
             "is_active": self.is_active,
             "training_loss": round(self.training_loss, 4) if self.training_loss is not None else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,

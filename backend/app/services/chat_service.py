@@ -81,7 +81,9 @@ class ChatService:
         if directive_res.is_directive:
             if not directive_res.remaining_prompt:
                 await context_engine.append_message(session_id, "user", message)
-                await context_engine.append_message(session_id, "assistant", directive_res.confirmation, agent_type="directive")
+                await context_engine.append_message(
+                    session_id, "assistant", directive_res.confirmation, agent_type="directive"
+                )
                 return {
                     "response": directive_res.confirmation,
                     "agent_type": "directive",
@@ -148,7 +150,11 @@ class ChatService:
                         session_id, message, graph_result.final_response, "nexus_multi_agent"
                     )
 
-                    final_resp = prefix_confirmation + graph_result.final_response if prefix_confirmation else graph_result.final_response
+                    final_resp = (
+                        prefix_confirmation + graph_result.final_response
+                        if prefix_confirmation
+                        else graph_result.final_response
+                    )
                     return {
                         "response": final_resp,
                         "agent_type": "nexus_multi_agent",
@@ -193,7 +199,9 @@ class ChatService:
                 "ttft_ms": ttft_ms,
                 "total_time_sec": total_time_sec,
                 "total_time_ms": total_time_ms,
-                "confidence": round(routing_res.confidence, 2) if (routing_res and hasattr(routing_res, "confidence")) else 0.95,
+                "confidence": round(routing_res.confidence, 2)
+                if (routing_res and hasattr(routing_res, "confidence"))
+                else 0.95,
             }
 
             await context_engine.append_message(
@@ -265,16 +273,18 @@ class ChatService:
             yield directive_res.confirmation
             if not directive_res.remaining_prompt:
                 if metrics_collector is not None:
-                    metrics_collector.update({
-                        "model": "system:directive-engine",
-                        "prompt_tokens": max(1, len(message.split())),
-                        "completion_tokens": max(1, len(directive_res.confirmation.split())),
-                        "total_tokens": max(2, len(message.split()) + len(directive_res.confirmation.split())),
-                        "tokens_per_sec": 100.0,
-                        "ttft_ms": 10.0,
-                        "total_time_sec": 0.05,
-                        "total_time_ms": 50.0,
-                    })
+                    metrics_collector.update(
+                        {
+                            "model": "system:directive-engine",
+                            "prompt_tokens": max(1, len(message.split())),
+                            "completion_tokens": max(1, len(directive_res.confirmation.split())),
+                            "total_tokens": max(2, len(message.split()) + len(directive_res.confirmation.split())),
+                            "tokens_per_sec": 100.0,
+                            "ttft_ms": 10.0,
+                            "total_time_sec": 0.05,
+                            "total_time_ms": 50.0,
+                        }
+                    )
                 await context_engine.append_message(session_id, "user", message)
                 await context_engine.append_message(
                     session_id, "assistant", directive_res.confirmation, agent_type="directive"
@@ -331,16 +341,18 @@ class ChatService:
                     tokens_per_sec = round(completion_tokens / max(0.001, total_time_sec), 1)
 
                     if metrics_collector is not None:
-                        metrics_collector.update({
-                            "model": "nexus:multi-agent-dag",
-                            "prompt_tokens": prompt_tokens,
-                            "completion_tokens": completion_tokens,
-                            "total_tokens": total_tokens,
-                            "tokens_per_sec": tokens_per_sec,
-                            "ttft_ms": ttft_ms,
-                            "total_time_sec": total_time_sec,
-                            "total_time_ms": round((t_end - t_start) * 1000, 1),
-                        })
+                        metrics_collector.update(
+                            {
+                                "model": "nexus:multi-agent-dag",
+                                "prompt_tokens": prompt_tokens,
+                                "completion_tokens": completion_tokens,
+                                "total_tokens": total_tokens,
+                                "tokens_per_sec": tokens_per_sec,
+                                "ttft_ms": ttft_ms,
+                                "total_time_sec": total_time_sec,
+                                "total_time_ms": round((t_end - t_start) * 1000, 1),
+                            }
+                        )
 
                     await context_engine.append_message(
                         session_id, "assistant", graph_result.final_response, agent_type="nexus_multi_agent"
@@ -359,47 +371,37 @@ class ChatService:
                 model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
             elif mode == "coding":
                 model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
             elif mode == "document":
                 model_name = model_manager.get_document_model()
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
             elif mode == "research":
                 model_name = model_manager.get_model("core_agents.reasoning", "mistral-abliterated:7b")
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
             elif mode == "fast":
                 model_name = model_manager.get_mini_model()
                 system = get_mode_prompt(mode, memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
             elif agent and hasattr(agent, "stream"):
                 model_name = self._resolve_chat_model(agent_type, message, agent=agent)
-                gen = agent.stream(message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id)
+                gen = agent.stream(
+                    message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id
+                )
             else:
                 model_name = self._resolve_chat_model(agent_type, message, agent=agent)
                 system = get_mode_prompt("auto", memory_context, self_context)
                 messages = build_messages(system, history, message)
-                gen = langchain_manager.astream(
-                    messages, provider, model=model_name, metrics_collector=ollama_metrics
-                )
+                gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
 
             async for chunk in gen:
                 if first_token_time is None and chunk.strip():
@@ -410,7 +412,11 @@ class ChatService:
             complete = "".join(full_response)
 
             # Compute detailed token & latency telemetry
-            ttft_ms = round((first_token_time - t_start) * 1000, 1) if first_token_time else round((t_end - t_start) * 1000, 1)
+            ttft_ms = (
+                round((first_token_time - t_start) * 1000, 1)
+                if first_token_time
+                else round((t_end - t_start) * 1000, 1)
+            )
             total_time_sec = round(t_end - t_start, 2)
             total_time_ms = round((t_end - t_start) * 1000, 1)
 
@@ -437,7 +443,9 @@ class ChatService:
                 "ttft_ms": ttft_ms,
                 "total_time_sec": total_time_sec,
                 "total_time_ms": total_time_ms,
-                "confidence": round(routing_res.confidence, 2) if (routing_res and hasattr(routing_res, "confidence")) else 0.95,
+                "confidence": round(routing_res.confidence, 2)
+                if (routing_res and hasattr(routing_res, "confidence"))
+                else 0.95,
             }
 
             if metrics_collector is not None:

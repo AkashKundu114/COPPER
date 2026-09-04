@@ -1,5 +1,5 @@
 import random
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -196,6 +196,7 @@ class AdapterManager:
             }
             with open(merge_info_path, "w", encoding="utf-8") as f:
                 import json
+
                 json.dump(merge_data, f, indent=2)
 
             self._refresh_cache()

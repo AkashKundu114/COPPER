@@ -5,8 +5,8 @@ import io
 import sys
 from typing import Any
 
-from PIL import Image, ImageGrab
 import pyautogui
+from PIL import Image, ImageGrab
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
@@ -306,9 +306,7 @@ async def scroll(x: int, y: int, direction: str = "down", amount: int = 3) -> di
     description="Pause execution for a given number of seconds to allow UI or page to load.",
     parameters={
         "type": "object",
-        "properties": {
-            "seconds": {"type": "number", "description": "Number of seconds to wait (default 1.0)."}
-        },
+        "properties": {"seconds": {"type": "number", "description": "Number of seconds to wait (default 1.0)."}},
     },
     return_description="Wait confirmation.",
     guardian_level=0,

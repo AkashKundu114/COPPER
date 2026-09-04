@@ -26,7 +26,10 @@ class MemoryManager:
             return
         if is_corrupted_content(assistant_response):
             return
-        if any(err in assistant_response for err in ["Ollama returned status", "Cannot reach local Ollama", "Error connecting to Ollama"]):
+        if any(
+            err in assistant_response
+            for err in ["Ollama returned status", "Cannot reach local Ollama", "Error connecting to Ollama"]
+        ):
             return
 
         combined = f"User: {user_message}\nAssistant: {assistant_response}"
@@ -43,7 +46,9 @@ class MemoryManager:
         results = await self.chat_store.search(query, n_results=limit, where=where)
         if not results:
             return ""
-        context_parts = [r["document"] for r in results if r["distance"] < 1.2 and not is_corrupted_content(r["document"])]
+        context_parts = [
+            r["document"] for r in results if r["distance"] < 1.2 and not is_corrupted_content(r["document"])
+        ]
         return "\n\n".join(context_parts[:3])
 
     async def get_relevant_memories(self, query: str, limit: int = MEMORY_SEARCH_LIMIT) -> list[dict]:

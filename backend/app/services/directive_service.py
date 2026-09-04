@@ -234,7 +234,6 @@ class OperatorDirectiveService:
             match = re.search(pat, lower_msg)
             if match:
                 matched_span = match.span()
-                matched_text = clean_msg[matched_span[0] : matched_span[1]]
 
                 # Check if there is an accompanying prompt after the directive
                 # e.g. "use a smaller model and tell me my age" -> "tell me my age"

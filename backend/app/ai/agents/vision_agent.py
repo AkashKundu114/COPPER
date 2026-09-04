@@ -417,12 +417,14 @@ class VisionAgent(BaseAgent):
                     summary=final_summary,
                     window_title=active_window,
                 )
-                action_history.append({
-                    "step": step,
-                    "thought": thought,
-                    "action": action_data,
-                    "status": "completed",
-                })
+                action_history.append(
+                    {
+                        "step": step,
+                        "thought": thought,
+                        "action": action_data,
+                        "status": "completed",
+                    }
+                )
                 logger.info(f"IRIS completed task in {step} steps: {final_summary}")
                 return f"✅ **Task Completed**\n\n{final_summary}"
 
@@ -447,12 +449,14 @@ class VisionAgent(BaseAgent):
                 coordinates=coordinates,
             )
 
-            action_history.append({
-                "step": step,
-                "thought": thought,
-                "action": action_data,
-                "status": exec_status,
-            })
+            action_history.append(
+                {
+                    "step": step,
+                    "thought": thought,
+                    "action": action_data,
+                    "status": exec_status,
+                }
+            )
 
             # Small cooldown before next observation
             await asyncio.sleep(0.3)
@@ -479,7 +483,7 @@ class VisionAgent(BaseAgent):
         screen_w, screen_h = screen_tools.get_screen_size()
         target_model = self.get_target_model()
 
-        yield f"👁️ **IRIS (Computer Use Agent) Activated**\n"
+        yield "👁️ **IRIS (Computer Use Agent) Activated**\n"
         yield f"- **Display Resolution:** `{screen_w}x{screen_h}`\n"
         yield f"- **Vision Model:** `{target_model}`\n"
         yield f"- **Goal:** {message}\n\n"
@@ -642,12 +646,14 @@ class VisionAgent(BaseAgent):
                 coordinates=coordinates,
             )
 
-            action_history.append({
-                "step": step,
-                "thought": thought,
-                "action": action_data,
-                "status": exec_status,
-            })
+            action_history.append(
+                {
+                    "step": step,
+                    "thought": thought,
+                    "action": action_data,
+                    "status": exec_status,
+                }
+            )
 
             await asyncio.sleep(0.3)
 

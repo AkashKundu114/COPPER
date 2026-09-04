@@ -81,9 +81,7 @@ async def run_benchmark_endpoint() -> dict[str, Any]:
                 "routing_p95_ms": metrics.get("routing", {}).get("latency_metrics_ms", {}).get("p95", 0.0),
                 "throughput_qps": metrics.get("routing", {}).get("throughput_qps", 0.0),
                 "guardian_accuracy_pct": metrics.get("guardian", {}).get("accuracy_pct", 0.0),
-                "guardian_threat_catch_pct": metrics.get("guardian", {}).get(
-                    "threat_detection_sensitivity_pct", 0.0
-                ),
+                "guardian_threat_catch_pct": metrics.get("guardian", {}).get("threat_detection_sensitivity_pct", 0.0),
             },
         }
     except Exception as e:

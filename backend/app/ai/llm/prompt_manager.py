@@ -159,5 +159,3 @@ def build_messages(
     msgs.extend(valid_history[-max_history:])
     msgs.append({"role": "user", "content": current_message})
     return msgs
-
-

@@ -185,9 +185,7 @@ class GuardianEngine:
 
         return GuardianVerdict(level=DisagreementLevel.EXECUTE)
 
-    def evaluate_screen_action(
-        self, action_type: str, action_data: dict, window_title: str = ""
-    ) -> GuardianVerdict:
+    def evaluate_screen_action(self, action_type: str, action_data: dict, window_title: str = "") -> GuardianVerdict:
         """Guardian evaluation specifically tailored for Computer Use Agent steps."""
         # 1. Active window check
         win_verdict = self.check_window_safety(window_title)

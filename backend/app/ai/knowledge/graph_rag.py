@@ -97,9 +97,7 @@ class GraphRAG:
 
         return "\n".join(lines)
 
-    async def get_graph_context(
-        self, query: str, max_relationships: int = 10, min_confidence: float = 0.5
-    ) -> str:
+    async def get_graph_context(self, query: str, max_relationships: int = 10, min_confidence: float = 0.5) -> str:
         """
         End-to-end extraction and formatting of graph context for an agent query.
         """

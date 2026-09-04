@@ -87,11 +87,7 @@ class ModelSelectionOptimizer:
 
             # Dynamic routing evaluation
             # Find all candidate models for this agent type with sufficient samples
-            candidates = (
-                db.query(AgentModelPerformance)
-                .filter(AgentModelPerformance.agent_type == clean_agent)
-                .all()
-            )
+            candidates = db.query(AgentModelPerformance).filter(AgentModelPerformance.agent_type == clean_agent).all()
 
             # Route to highest quality score with >= 3 samples
             eligible = [c for c in candidates if c.sample_count >= 3]

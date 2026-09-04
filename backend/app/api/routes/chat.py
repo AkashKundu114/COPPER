@@ -91,31 +91,23 @@ async def clear_history(session_id: str, db: Session = Depends(get_db)):
 @router.websocket("/ws/{session_id}")
 async def websocket_chat(websocket: WebSocket, session_id: str):
     await manager.connect(websocket, session_id)
-    try:
-        while True:
-            data = await websocket.receive_json()
+    active_task: asyncio.Task | None = None
 
-            if "action" in data:
-                action = data["action"]
-                from app.core.anomaly_sentinel import sentinel
+    async def execute_turn(data_payload: dict):
+        nonlocal active_task
+        message = data_payload.get("message", "")
+        mode = data_payload.get("mode", "auto")
+        voice = data_payload.get("voice", "en-US-AvaNeural")
+        provider = LLMProvider(data_payload.get("provider", "ollama"))
+        valid, err = validate_message(message)
+        if not valid:
+            await manager.send_error(session_id, err)
+            return
 
-                if action == "snooze":
-                    sentinel.snooze_alert(data.get("alert_id"), int(data.get("duration", 900)))
-                elif action == "dismiss":
-                    sentinel.dismiss_alert(data.get("alert_id"))
-                continue
-
-            message = data.get("message", "")
-            mode = data.get("mode", "auto")
-            voice = data.get("voice", "en-US-AvaNeural")
-            provider = LLMProvider(data.get("provider", "ollama"))
-            valid, err = validate_message(message)
-            if not valid:
-                await manager.send_error(session_id, err)
-                continue
-            await manager.send(session_id, {"type": "thinking", "agent_type": ""})
-            full_response = []
-            metrics: dict = {}
+        await manager.send(session_id, {"type": "thinking", "agent_type": ""})
+        full_response = []
+        metrics: dict = {}
+        try:
             async for chunk in chat_service.stream_message(
                 session_id, message, provider, mode=mode, metrics_collector=metrics
             ):
@@ -133,19 +125,52 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
             if complete_text.strip() and not mute_voice:
                 try:
                     import base64
-
                     from app.services.audio_service import audio_pipeline
 
                     audio_bytes = await audio_pipeline.tts.synthesize(complete_text, voice=voice)
                     audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
                     await manager.send(session_id, {"type": "audio_playback", "audio_base64": audio_b64})
                 except Exception as e:
-                    logger.error(f"TTS websocket error: {e}")
+                    logger.error(f"TTS synthesis failed for websocket: {e}")
 
             await manager.send_done(session_id, metrics=metrics)
+        except asyncio.CancelledError:
+            logger.info(f"Stream generation cancelled for session {session_id}")
+            raise
+        except Exception as e:
+            logger.error(f"WebSocket execution error: {e}")
+            await manager.send_error(session_id, "Execution error occurred")
+
+    try:
+        while True:
+            data = await websocket.receive_json()
+
+            if "action" in data:
+                action = data["action"]
+                if action in ("interrupt", "stop_audio"):
+                    if active_task and not active_task.done():
+                        active_task.cancel()
+                        logger.info(f"Interrupted stream for session {session_id}")
+                    continue
+
+                from app.core.anomaly_sentinel import sentinel
+                if action == "snooze":
+                    sentinel.snooze_alert(data.get("alert_id"), int(data.get("duration", 900)))
+                elif action == "dismiss":
+                    sentinel.dismiss_alert(data.get("alert_id"))
+                continue
+
+            # Cancel any previous task still executing
+            if active_task and not active_task.done():
+                active_task.cancel()
+
+            active_task = asyncio.create_task(execute_turn(data))
     except WebSocketDisconnect:
+        if active_task and not active_task.done():
+            active_task.cancel()
         manager.disconnect(session_id)
     except Exception as e:
         logger.error(f"WebSocket error: {e}")
-        await manager.send_error(session_id, str(e))
+        if active_task and not active_task.done():
+            active_task.cancel()
         manager.disconnect(session_id)
