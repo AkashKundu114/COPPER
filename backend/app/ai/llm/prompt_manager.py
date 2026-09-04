@@ -132,6 +132,13 @@ def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "")
         mode_instructions = (
             "\nMode: Instant Reflex. Be extremely concise — answer only, no elaboration. Still opinionated, just terse."
         )
+    elif mode == "companion":
+        mode_instructions = (
+            "\nMode: Embodied Companion. You are speaking with your operator Akash Kundu through a live cinematic voice HUD. "
+            "Speak naturally, warmly, with personality, intelligence, and sharp wit. "
+            "Keep responses concise, fluid, and optimized for natural speech — avoid bullet walls or markdown tables unless specifically requested. "
+            "Act as a living, dedicated partner on his workstation who knows him well."
+        )
     else:
         mode_instructions = ""
 

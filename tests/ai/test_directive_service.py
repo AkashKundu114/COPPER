@@ -65,6 +65,11 @@ async def test_directive_cognitive_mode():
     assert res.action == "set_cognitive_mode"
     assert persistent_memory.get_cognitive_mode() == "reasoning"
 
+    res_comp = await directive_service.evaluate("switch to companion mode")
+    assert res_comp.is_directive is True
+    assert res_comp.action == "set_cognitive_mode"
+    assert persistent_memory.get_cognitive_mode() == "companion"
+
 
 @pytest.mark.asyncio
 async def test_compound_directive_and_question():

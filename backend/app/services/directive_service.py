@@ -80,6 +80,8 @@ class OperatorDirectiveService:
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:coding|code|developer)\s+mode\b", "coding"),
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:research|deep research)\s+mode\b", "research"),
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:fast|instant|speed|reflex)\s+mode\b", "fast"),
+        (r"\b(?:switch to|enter|enable|activate|set)\s+(?:companion|isabella|embodied|living)\s+mode\b", "companion"),
+        (r"\b(?:companion|isabella)\s+mode\b", "companion"),
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:adaptive|autonomous|auto)\s+mode\b", "auto"),
     ]
 

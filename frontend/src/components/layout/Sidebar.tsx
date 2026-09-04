@@ -1,6 +1,7 @@
 import React from "react";
 import {
   LayoutDashboard,
+  Radio,
   MessageSquare,
   Bot,
   Brain,
@@ -11,6 +12,7 @@ import {
 
 export type NavSection =
   | "dashboard"
+  | "companion"
   | "chat"
   | "today"
   | "tasks"
@@ -32,6 +34,7 @@ interface SidebarProps {
 
 const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "companion", label: "Companion HUD", icon: Radio },
   { id: "chat", label: "Conversation", icon: MessageSquare },
   { id: "agents", label: "Agent Registry", icon: Bot },
   { id: "memory", label: "Memory Center", icon: Brain },

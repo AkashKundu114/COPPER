@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.tools.builtin import screen_tools
+from app.services.vision_service import vision_service
 
 router = APIRouter(prefix="/vision", tags=["vision"])
 
@@ -10,6 +11,11 @@ router = APIRouter(prefix="/vision", tags=["vision"])
 class ComputerUseRequest(BaseModel):
     goal: str
     session_id: str | None = None
+
+
+class FrameObservationRequest(BaseModel):
+    image_base64: str
+    source: str = "camera"  # "camera" or "screen"
 
 
 @router.get("/status")
@@ -46,3 +52,17 @@ async def execute_task(req: ComputerUseRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/observe")
+async def observe_frame(req: FrameObservationRequest):
+    """
+    Receives base64 webcam or screen frame snapshot, runs local optical inference,
+    and returns a concise contextual observation.
+    """
+    try:
+        result = await vision_service.observe_frame(req.image_base64, source=req.source)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

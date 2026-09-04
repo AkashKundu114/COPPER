@@ -279,6 +279,13 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     audioQueue.current = [];
     isPlayingAudio.current = false;
     setSpeaking(false);
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      try {
+        wsRef.current.send(JSON.stringify({ action: "interrupt" }));
+      } catch (e) {
+        // ignore websocket send errors
+      }
+    }
   }, []);
 
   const connect = useCallback(() => {

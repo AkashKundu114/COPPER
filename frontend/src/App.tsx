@@ -18,6 +18,7 @@ import {
   type ProfileResponse,
 } from "./lib/api";
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
+import { CompanionHUDView } from "./pages/CompanionHUDView";
 
 import { DashboardView } from "./pages/DashboardView";
 import { TodayView } from "./pages/TodayView";
@@ -90,6 +91,18 @@ function MainApp() {
     switch (activeSection) {
       case "dashboard":
         return <DashboardView onNavigate={setActiveSection} />;
+      case "companion":
+        return (
+          <CompanionHUDView
+            lines={lines}
+            thinking={thinking}
+            speaking={speaking}
+            connected={connected}
+            onSend={send}
+            stopAudio={stopAudio}
+            clearChat={clearChat}
+          />
+        );
       case "chat":
         return (
           <div className="relative w-full h-full flex flex-col items-center">
