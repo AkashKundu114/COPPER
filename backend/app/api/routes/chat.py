@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -168,9 +170,9 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
     except WebSocketDisconnect:
         if active_task and not active_task.done():
             active_task.cancel()
-        manager.disconnect(session_id)
+        manager.disconnect(websocket)
     except Exception as e:
         logger.error(f"WebSocket error: {e}")
         if active_task and not active_task.done():
             active_task.cancel()
-        manager.disconnect(session_id)
+        manager.disconnect(websocket)

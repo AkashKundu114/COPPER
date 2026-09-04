@@ -19,6 +19,9 @@ function getPythonExecutable(rootDir) {
   return "python";
 }
 
+// Force NVIDIA Dedicated High-Performance GPU
+app.commandLine.appendSwitch("force_high_performance_gpu");
+
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();

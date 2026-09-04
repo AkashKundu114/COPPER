@@ -8,33 +8,51 @@ from app.core.logger import logger
 class ConnectionManager:
     def __init__(self):
         self.active: list[WebSocket] = []
-        self.sessions: dict[str, WebSocket] = {}
+        self.sessions: dict[str, list[WebSocket]] = {}
 
     async def connect(self, ws: WebSocket, session_id: str | None = None):
         await ws.accept()
         self.active.append(ws)
         if session_id:
-            self.sessions[session_id] = ws
+            # Prune and close any stale prior websocket connections for this session
+            existing = list(self.sessions.get(session_id, []))
+            for old_ws in existing:
+                if old_ws != ws:
+                    try:
+                        await old_ws.close(code=1000, reason="Superseded by new session connection")
+                    except Exception:
+                        pass
+                    if old_ws in self.active:
+                        self.active.remove(old_ws)
+            self.sessions[session_id] = [ws]
         logger.info(f"WS connected ({len(self.active)} total)")
 
     def disconnect(self, session_id_or_ws: str | WebSocket = None):
         if isinstance(session_id_or_ws, str):
-            ws = self.sessions.pop(session_id_or_ws, None)
-            if ws and ws in self.active:
-                self.active.remove(ws)
+            sockets = self.sessions.pop(session_id_or_ws, [])
+            for ws in sockets:
+                if ws in self.active:
+                    self.active.remove(ws)
         elif isinstance(session_id_or_ws, WebSocket):
             if session_id_or_ws in self.active:
                 self.active.remove(session_id_or_ws)
-            self.sessions = {k: v for k, v in self.sessions.items() if v != session_id_or_ws}
+            for sid, sockets in list(self.sessions.items()):
+                if session_id_or_ws in sockets:
+                    sockets.remove(session_id_or_ws)
+                if not sockets:
+                    self.sessions.pop(sid, None)
         logger.info(f"WS disconnected ({len(self.active)} total)")
 
     async def send(self, session_id: str, event: dict):
-        ws = self.sessions.get(session_id)
-        if ws:
+        sockets = list(self.sessions.get(session_id, []))
+        dead = []
+        for ws in sockets:
             try:
                 await ws.send_json(event)
             except Exception:
-                self.disconnect(session_id)
+                dead.append(ws)
+        for ws in dead:
+            self.disconnect(ws)
 
     async def send_chunk(self, session_id: str, chunk: str):
         await self.send(session_id, {"type": "agent_speaking", "agent": "COPPER", "text": chunk})

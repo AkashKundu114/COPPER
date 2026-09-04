@@ -231,6 +231,11 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const currentAudio = useRef<HTMLAudioElement | null>(null);
   const playNextAudioRef = useRef<() => void>(() => {});
   const connectRef = useRef<() => void>(() => {});
+  const onProfileChangeRef = useRef(onProfileChange);
+
+  useEffect(() => {
+    onProfileChangeRef.current = onProfileChange;
+  }, [onProfileChange]);
 
   const playNextAudio = useCallback(() => {
     if (audioQueue.current.length === 0) {
@@ -289,17 +294,63 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
   }, []);
 
   const connect = useCallback(() => {
+    // If a connection is already alive or connecting, don't open duplicate sockets
+    if (
+      wsRef.current &&
+      (wsRef.current.readyState === WebSocket.OPEN ||
+        wsRef.current.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
+
+    if (reconnectTimer.current) {
+      clearTimeout(reconnectTimer.current);
+      reconnectTimer.current = undefined;
+    }
+
+    if (wsRef.current) {
+      const oldWs = wsRef.current;
+      oldWs.onopen = null;
+      oldWs.onclose = null;
+      oldWs.onerror = null;
+      oldWs.onmessage = null;
+      try {
+        oldWs.close();
+      } catch {
+        // ignore
+      }
+      wsRef.current = null;
+    }
+
     const ws = new WebSocket(WS_URL);
     wsRef.current = ws;
 
-    ws.onopen = () => setConnected(true);
-    ws.onclose = () => {
-      setConnected(false);
-      reconnectTimer.current = setTimeout(() => connectRef.current(), 2000);
+    ws.onopen = () => {
+      if (wsRef.current === ws) {
+        setConnected(true);
+      }
     };
-    ws.onerror = () => ws.close();
+    ws.onclose = () => {
+      if (wsRef.current === ws) {
+        setConnected(false);
+        wsRef.current = null;
+        if (!reconnectTimer.current) {
+          reconnectTimer.current = setTimeout(() => connectRef.current(), 2000);
+        }
+      }
+    };
+    ws.onerror = () => {
+      if (wsRef.current === ws) {
+        try {
+          ws.close();
+        } catch {
+          // ignore
+        }
+      }
+    };
 
     ws.onmessage = (evt) => {
+      if (wsRef.current !== ws) return;
       const event: BrainEvent = JSON.parse(evt.data);
       switch (event.type) {
         case "copper_thinking":
@@ -483,7 +534,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
               timestamp: Date.now()
             });
           }
-          onProfileChange?.();
+          onProfileChangeRef.current?.();
           break;
         case "preference_update":
           if (event.updates) {
@@ -497,7 +548,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
               localStorage.setItem("copper_selected_mode", event.updates.cognitive_mode);
             }
           }
-          onProfileChange?.();
+          onProfileChangeRef.current?.();
           break;
         case "proactive_intervention":
           setAlerts((prev) => {
@@ -520,7 +571,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           audioQueue.current.push(event.audio_base64);
           if (!isPlayingAudio.current) {
             clearTimeout(speakingTimer.current);
-            playNextAudio();
+            playNextAudioRef.current();
           }
           break;
         case "message_metrics":
@@ -622,19 +673,34 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
           break;
       }
     };
-  }, [onProfileChange, playNextAudio]);
+  }, []);
 
   useEffect(() => {
     connectRef.current = connect;
     connect();
     return () => {
-      clearTimeout(reconnectTimer.current);
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+        reconnectTimer.current = undefined;
+      }
       clearTimeout(speakingTimer.current);
       if (currentAudio.current) {
         currentAudio.current.pause();
         currentAudio.current = null;
       }
-      wsRef.current?.close();
+      if (wsRef.current) {
+        const activeWs = wsRef.current;
+        wsRef.current = null;
+        activeWs.onopen = null;
+        activeWs.onclose = null;
+        activeWs.onerror = null;
+        activeWs.onmessage = null;
+        try {
+          activeWs.close();
+        } catch {
+          // ignore
+        }
+      }
     };
   }, [connect]);
 

@@ -1,4 +1,11 @@
+import os
 from contextlib import asynccontextmanager
+
+# Enforce NVIDIA dedicated GPU isolation
+os.environ.setdefault("CUDA_DEVICE_ORDER", "PCI_BUS_ID")
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+os.environ.setdefault("HIP_VISIBLE_DEVICES", "")
+os.environ.setdefault("ROCR_VISIBLE_DEVICES", "")
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
