@@ -169,9 +169,15 @@ class ToolExecutor:
             "is_destructive": tool.guardian_level >= 3 or arguments.get("mode") == "overwrite",
         }
 
-        # Check safety triggers in arguments (e.g. command or path)
+        # Check safety triggers in arguments (e.g. command, code, script, or path)
         if "command" in arguments:
             action_summary += f" command: {arguments['command']}"
+        if "code" in arguments:
+            action_summary += f" code: {arguments['code']}"
+        if "script" in arguments:
+            action_summary += f" script: {arguments['script']}"
+        if "path" in arguments:
+            action_summary += f" path: {arguments['path']}"
 
         verdict: GuardianVerdict = guardian_engine.evaluate(action_summary, guardian_context)
 

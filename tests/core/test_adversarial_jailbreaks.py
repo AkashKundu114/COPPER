@@ -68,7 +68,9 @@ def test_guardian_format_challenge_output():
     assert "I disagree" in formatted_safety
     assert "requires your explicit confirmation" in formatted_safety
 
-    verdict_conflict = guardian_engine.evaluate("Schedule a gaming session during my work sprint")
+    verdict_conflict = guardian_engine.evaluate(
+        "Schedule a gaming session during my work sprint"
+    )
     formatted_conflict = guardian_engine.format_challenge(verdict_conflict)
     assert "I disagree" in formatted_conflict
     assert "existing commitment" in formatted_conflict.lower()

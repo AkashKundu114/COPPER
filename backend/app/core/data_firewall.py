@@ -18,10 +18,38 @@ class FirewallResult:
 
 
 _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
+    (
+        re.compile(r"-----BEGIN (?:[A-Z0-9_-]+ )?PRIVATE KEY-----[\s\S]*?-----END (?:[A-Z0-9_-]+ )?PRIVATE KEY-----"),
+        "•••PRIVATE_KEY_REDACTED•••",
+        DataClass.SECRET,
+    ),
+    (re.compile(r"\bsk-ant-[a-zA-Z0-9_\-]{20,}\b"), "sk-ant-•••REDACTED•••", DataClass.SECRET),
     (re.compile(r"sk-[a-zA-Z0-9_\-]{20,}"), "sk-•••REDACTED•••", DataClass.SECRET),
+    (re.compile(r"\b(AKIA[0-9A-Z]{16})\b"), "•••AWS_KEY_REDACTED•••", DataClass.SECRET),
+    (
+        re.compile(r"(?i)\b(aws[_-]?secret[_-]?access[_-]?key)\s*[:=]\s*[A-Za-z0-9/+=]{40}\b"),
+        "•••AWS_SECRET_REDACTED•••",
+        DataClass.SECRET,
+    ),
+    (
+        re.compile(r"\b(gh[pousr]_[A-Za-z0-9_]{36,255}|github_pat_[A-Za-z0-9_]{82})\b"),
+        "•••GITHUB_TOKEN_REDACTED•••",
+        DataClass.SECRET,
+    ),
+    (re.compile(r"\bhf_[a-zA-Z0-9]{34,}\b"), "hf_•••REDACTED•••", DataClass.SECRET),
+    (
+        re.compile(r"\b([a-zA-Z0-9+.-]+://[^:\s/]+):([^@\s/]+)@"),
+        r"\1:•••PASSWORD_REDACTED•••@",
+        DataClass.SECRET,
+    ),
     (
         re.compile(r"(?i)\b(api[_-]?key|access[_-]?token|secret[_-]?key)\s*[:=]\s*\S+"),
         "•••CREDENTIAL_REDACTED•••",
+        DataClass.SECRET,
+    ),
+    (
+        re.compile(r"(?i)\b(password|passwd|pwd)\s*[:=]\s*([\"'][^\"'\s]+[\"']|\S+)"),
+        "•••PASSWORD_REDACTED•••",
         DataClass.SECRET,
     ),
     (re.compile(r"(?i)\bAuthorization:\s*Bearer\s+\S+"), "Authorization: Bearer •••REDACTED•••", DataClass.SECRET),

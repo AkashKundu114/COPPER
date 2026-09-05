@@ -1,4 +1,5 @@
 import asyncio
+import base64
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
@@ -126,7 +127,6 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
             complete_text = "".join(full_response)
             if complete_text.strip() and not mute_voice:
                 try:
-                    import base64
                     from app.services.audio_service import audio_pipeline
 
                     audio_bytes = await audio_pipeline.tts.synthesize(complete_text, voice=voice)
@@ -156,6 +156,7 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                     continue
 
                 from app.core.anomaly_sentinel import sentinel
+
                 if action == "snooze":
                     sentinel.snooze_alert(data.get("alert_id"), int(data.get("duration", 900)))
                 elif action == "dismiss":

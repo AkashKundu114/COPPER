@@ -65,4 +65,3 @@ async def observe_frame(req: FrameObservationRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

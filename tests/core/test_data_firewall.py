@@ -133,3 +133,65 @@ def test_firewall_result_dataclass():
     assert res.redacted_text == "clean"
     assert res.classification == DataClass.PUBLIC
     assert res.redaction_count == 0
+
+
+def test_firewall_secret_aws_access_key():
+    result = classify_and_redact("My AWS key is AKIAIOSFODNN7EXAMPLE for S3")
+    assert result.classification == DataClass.SECRET
+    assert "•••AWS_KEY_REDACTED•••" in result.redacted_text
+
+
+def test_firewall_secret_aws_secret_key():
+    result = classify_and_redact(
+        "aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    )
+    assert result.classification == DataClass.SECRET
+    assert "•••AWS_SECRET_REDACTED•••" in result.redacted_text
+
+
+def test_firewall_secret_github_token():
+    result = classify_and_redact("Push using ghp_1234567890abcdefghijklmnopqrstuvwx12")
+    assert result.classification == DataClass.SECRET
+    assert "•••GITHUB_TOKEN_REDACTED•••" in result.redacted_text
+
+
+def test_firewall_secret_anthropic_key():
+    result = classify_and_redact(
+        "Anthropic key sk-ant-api03-abcdef1234567890abcdef1234567890"
+    )
+    assert result.classification == DataClass.SECRET
+    assert "sk-ant-•••REDACTED•••" in result.redacted_text
+
+
+def test_firewall_secret_huggingface_token():
+    result = classify_and_redact("HF token is hf_abcdefghijklmnopqrstuvwxyz0123456789")
+    assert result.classification == DataClass.SECRET
+    assert "hf_•••REDACTED•••" in result.redacted_text
+
+
+def test_firewall_secret_database_uri():
+    result = classify_and_redact(
+        "Connect to postgresql://copper_user:super_secret_pw123@localhost:5432/copperdb"
+    )
+    assert result.classification == DataClass.SECRET
+    assert "•••PASSWORD_REDACTED•••" in result.redacted_text
+    assert "super_secret_pw123" not in result.redacted_text
+
+
+def test_firewall_secret_private_key_block():
+    key_text = (
+        "-----BEGIN RSA PRIVATE KEY-----\n"
+        "MIIEowIBAAKCAQEA0Y8v...test...key...data...\n"
+        "-----END RSA PRIVATE KEY-----"
+    )
+    result = classify_and_redact(f"Here is my key:\n{key_text}")
+    assert result.classification == DataClass.SECRET
+    assert "•••PRIVATE_KEY_REDACTED•••" in result.redacted_text
+    assert "MIIEowIBAAKCAQEA" not in result.redacted_text
+
+
+def test_firewall_secret_password_assignment():
+    result = classify_and_redact("password: 'MyVerySecretPassword!123'")
+    assert result.classification == DataClass.SECRET
+    assert "•••PASSWORD_REDACTED•••" in result.redacted_text
+    assert "MyVerySecretPassword!123" not in result.redacted_text

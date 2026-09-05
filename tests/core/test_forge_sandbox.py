@@ -36,3 +36,25 @@ def test_sandbox_cleanup():
     temp_script = SANDBOX_DIR / "temp_exec.py"
     forge_sandbox.run_python_code("print('Clean up check')")
     assert not temp_script.exists()
+
+
+def test_sandbox_environment_sanitization(monkeypatch):
+    monkeypatch.setenv(
+        "DATABASE_URL", "postgresql://copper:supersecret@localhost:5432/db"
+    )
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-secret-key-12345")
+    res = forge_sandbox.run_python_code(
+        "import os\n"
+        "print('DB:', os.environ.get('DATABASE_URL'))\n"
+        "print('KEY:', os.environ.get('OPENAI_API_KEY'))\n"
+    )
+    assert res["exit_code"] == 0
+    assert "DB: None" in res["stdout"]
+    assert "KEY: None" in res["stdout"]
+
+
+def test_sandbox_blocks_forbidden_destructive_patterns():
+    res = forge_sandbox.run_python_code("import shutil\nshutil.rmtree('/')")
+    assert res["exit_code"] == 1
+    assert "Execution blocked by Forge Sandbox safety filter" in res["stderr"]
+    assert res["error"] == "SecurityViolation"

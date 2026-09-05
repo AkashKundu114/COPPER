@@ -1,6 +1,6 @@
-import base64
 import re
 from typing import Any
+
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.ai.memory.persistent_memory import persistent_memory
