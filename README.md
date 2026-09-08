@@ -114,7 +114,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 | **Vision Primary** | `Qwen2-VL-7B-Instruct` | Q4_K_M | 4.36 GB | Full screenshot inspection & architectural diagrams |
 | **Vision Fast** | `Qwen2-VL-2B-Instruct` | Q4_K_M | 940 MB | Fast UI bounding box localization & OCR extraction |
 | **Embeddings** | `nomic-embed-text-v1.5` | Q4_K_M | 80 MB | ChromaDB 8192-dim semantic vector memory |
-| **14 Micro-Subagents** | `Llama-3.2`, `Qwen2.5`, `SmolLM2`, `Falcon3`, `Gemma-2`, `Granite-3.1` (360M – 3B) | Q4_K_M | ~16 GB total | Micro-routing, AST linting, git commits, SQL queries, shell validation |
+| **14 Micro-Subagents** | `Llama-3.2`, `Qwen2.5`, `SmolLM2`, `Falcon3`, `Gemma-2`, `Granite-3.1` (360M - 3B) | Q4_K_M | ~16 GB total | Micro-routing, AST linting, git commits, SQL queries, shell validation |
 
 ---
 
