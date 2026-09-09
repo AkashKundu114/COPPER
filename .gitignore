@@ -165,3 +165,7 @@ desktop.ini
 # ── Study Materials ───────────────────────────────────────────────────────────
 papers/
 !papers/references.md
+
+# ── Legal Documents (Website Only) ────────────────────────────────────────────
+TERMS_AND_CONDITIONS.md
+PRIVACY_POLICY.md

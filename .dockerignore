@@ -101,3 +101,7 @@ docker-compose*.yml
 scripts/
 conftest.py
 index_docs.py
+
+# ── Legal Documents (Website Only) ────────────────────────────────────────────
+TERMS_AND_CONDITIONS.md
+PRIVACY_POLICY.md
