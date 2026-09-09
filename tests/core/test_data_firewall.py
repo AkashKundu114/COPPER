@@ -26,9 +26,7 @@ def test_firewall_secret_openai_sk_legacy():
 
 
 def test_firewall_secret_openai_sk_proj():
-    result = classify_and_redact(
-        "Secret: sk-proj-abcdef1234567890abcdef1234567890abcdef12"
-    )
+    result = classify_and_redact("Secret: sk-proj-abcdef1234567890abcdef1234567890abcdef12")
     assert result.classification == DataClass.SECRET
     assert "sk-•••REDACTED•••" in result.redacted_text
 
@@ -40,9 +38,7 @@ def test_firewall_secret_api_key_header():
 
 
 def test_firewall_secret_bearer_token():
-    result = classify_and_redact(
-        "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-    )
+    result = classify_and_redact("Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
     assert result.classification == DataClass.SECRET
     assert "Authorization: Bearer •••REDACTED•••" in result.redacted_text
 
@@ -76,9 +72,7 @@ def test_firewall_sensitive_ipv4():
 
 
 def test_firewall_personal_home_path():
-    result = classify_and_redact(
-        "The file is located at /home/akash/documents/secret.txt"
-    )
+    result = classify_and_redact("The file is located at /home/akash/documents/secret.txt")
     assert result.classification in [
         DataClass.PERSONAL,
         DataClass.SENSITIVE,
@@ -110,9 +104,7 @@ def test_firewall_sensitive_credit_card():
 
 
 def test_firewall_multiple_patterns():
-    text = (
-        "User bob@corp.com with key sk-1234567890abcdef1234567890 and SSN 999-00-1111"
-    )
+    text = "User bob@corp.com with key sk-1234567890abcdef1234567890 and SSN 999-00-1111"
     result = classify_and_redact(text)
     assert result.classification == DataClass.SECRET
     assert result.redaction_count >= 3
@@ -127,9 +119,7 @@ def test_firewall_convenience_redact():
 
 
 def test_firewall_result_dataclass():
-    res = FirewallResult(
-        redacted_text="clean", classification=DataClass.PUBLIC, redaction_count=0
-    )
+    res = FirewallResult(redacted_text="clean", classification=DataClass.PUBLIC, redaction_count=0)
     assert res.redacted_text == "clean"
     assert res.classification == DataClass.PUBLIC
     assert res.redaction_count == 0
@@ -142,9 +132,7 @@ def test_firewall_secret_aws_access_key():
 
 
 def test_firewall_secret_aws_secret_key():
-    result = classify_and_redact(
-        "aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-    )
+    result = classify_and_redact("aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
     assert result.classification == DataClass.SECRET
     assert "•••AWS_SECRET_REDACTED•••" in result.redacted_text
 
@@ -156,9 +144,7 @@ def test_firewall_secret_github_token():
 
 
 def test_firewall_secret_anthropic_key():
-    result = classify_and_redact(
-        "Anthropic key sk-ant-api03-abcdef1234567890abcdef1234567890"
-    )
+    result = classify_and_redact("Anthropic key sk-ant-api03-abcdef1234567890abcdef1234567890")
     assert result.classification == DataClass.SECRET
     assert "sk-ant-•••REDACTED•••" in result.redacted_text
 
@@ -170,9 +156,7 @@ def test_firewall_secret_huggingface_token():
 
 
 def test_firewall_secret_database_uri():
-    result = classify_and_redact(
-        "Connect to postgresql://copper_user:super_secret_pw123@localhost:5432/copperdb"
-    )
+    result = classify_and_redact("Connect to postgresql://copper_user:super_secret_pw123@localhost:5432/copperdb")
     assert result.classification == DataClass.SECRET
     assert "•••PASSWORD_REDACTED•••" in result.redacted_text
     assert "super_secret_pw123" not in result.redacted_text
@@ -180,9 +164,7 @@ def test_firewall_secret_database_uri():
 
 def test_firewall_secret_private_key_block():
     key_text = (
-        "-----BEGIN RSA PRIVATE KEY-----\n"
-        "MIIEowIBAAKCAQEA0Y8v...test...key...data...\n"
-        "-----END RSA PRIVATE KEY-----"
+        "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0Y8v...test...key...data...\n-----END RSA PRIVATE KEY-----"
     )
     result = classify_and_redact(f"Here is my key:\n{key_text}")
     assert result.classification == DataClass.SECRET

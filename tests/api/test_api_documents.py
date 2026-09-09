@@ -1,5 +1,6 @@
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -64,7 +65,5 @@ def test_parse_json_document():
 
 
 def test_parse_empty_document():
-    response = client.post(
-        "/api/v1/documents/parse", files={"file": ("empty.txt", b"", "text/plain")}
-    )
+    response = client.post("/api/v1/documents/parse", files={"file": ("empty.txt", b"", "text/plain")})
     assert response.status_code == 400

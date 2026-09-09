@@ -67,7 +67,7 @@ def register_models(force: bool = False):
         print(f"[-] Error: Manifest not found at {MANIFEST_PATH}", flush=True)
         sys.exit(1)
 
-    with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
+    with open(MANIFEST_PATH, encoding="utf-8") as f:
         manifest = json.load(f)
 
     existing_tags = get_existing_ollama_tags()
@@ -126,7 +126,10 @@ def register_models(force: bool = False):
                 os.remove(tmp_path)
 
     print("\n" + "=" * 66, flush=True)
-    print(f"[*] Done! Newly Linked: {success_count} | Already Linked: {skipped_count} | Failed: {failed_count}", flush=True)
+    print(
+        f"[*] Done! Newly Linked: {success_count} | Already Linked: {skipped_count} | Failed: {failed_count}",
+        flush=True,
+    )
     print("=" * 66, flush=True)
 
 

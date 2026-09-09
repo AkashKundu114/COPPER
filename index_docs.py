@@ -9,9 +9,7 @@ from app.core.document_indexer import index_directory
 
 
 async def main():
-    parser = argparse.ArgumentParser(
-        description="C.O.P.P.E.R. Offline Document Indexer"
-    )
+    parser = argparse.ArgumentParser(description="C.O.P.P.E.R. Offline Document Indexer")
     parser.add_argument("directory", help="The directory path to index")
     parser.add_argument(
         "--ext",
@@ -24,9 +22,7 @@ async def main():
 
     print(f"Indexing {args.directory} for extensions {args.ext}...")
     count = await index_directory(args.directory, extensions=args.ext)
-    print(
-        f"\nDone! Successfully indexed {count} files into C.O.P.P.E.R.'s Offline Google."
-    )
+    print(f"\nDone! Successfully indexed {count} files into C.O.P.P.E.R.'s Offline Google.")
 
 
 if __name__ == "__main__":

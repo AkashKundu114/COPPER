@@ -1,4 +1,5 @@
 import pytest
+
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.core.constants import AgentType
@@ -46,7 +47,7 @@ async def test_ollama_client_vram_methods(monkeypatch):
         ]
 
     monkeypatch.setattr(ollama_client, "get_loaded_models", mock_get_loaded_models)
-    
+
     unload_res = await ollama_client.unload_heavy_models(keep_mini=True)
     assert unload_res["status"] == "success"
     assert "llama3.2:1b" in unload_res["kept_mini_models"]

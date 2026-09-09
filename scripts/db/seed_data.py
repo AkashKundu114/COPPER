@@ -4,7 +4,7 @@ Seeds initial agent version registrations, core epistemic memories, and default 
 """
 
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
@@ -64,16 +64,14 @@ def seed_default_agents(db):
     ]
 
     for agent_id, name, desc, ver in agents:
-        existing = (
-            db.query(AgentVersion).filter(AgentVersion.agent_id == agent_id).first()
-        )
+        existing = db.query(AgentVersion).filter(AgentVersion.agent_id == agent_id).first()
         if not existing:
             av = AgentVersion(
                 agent_id=agent_id,
                 version=ver,
                 is_current=True,
                 status=AgentStatus.ACTIVE,
-                activated_at=datetime.now(timezone.utc),
+                activated_at=datetime.now(UTC),
             )
             db.add(av)
             print(f"[+] Registered default agent: {name} (v{ver})")

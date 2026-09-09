@@ -66,17 +66,13 @@ def test_guardian_safety_truncate_table():
 
 
 def test_guardian_safety_destructive_context_flag():
-    verdict = guardian_engine.evaluate(
-        "Custom action pipeline", {"is_destructive": True}
-    )
+    verdict = guardian_engine.evaluate("Custom action pipeline", {"is_destructive": True})
     assert verdict.level == DisagreementLevel.SAFETY
     assert verdict.requires_confirmation is True
 
 
 def test_guardian_challenge_gaming_during_work():
-    verdict = guardian_engine.evaluate(
-        "Schedule a 3-hour gaming session during my scheduled work sprint", {}
-    )
+    verdict = guardian_engine.evaluate("Schedule a 3-hour gaming session during my scheduled work sprint", {})
     assert verdict.level == DisagreementLevel.CHALLENGE
     assert len(verdict.evidence) > 0
 
@@ -87,16 +83,12 @@ def test_guardian_challenge_cancel_morning_meetings():
 
 
 def test_guardian_challenge_disable_firewall():
-    verdict = guardian_engine.evaluate(
-        "Disable security firewall for outbound agent requests", {}
-    )
+    verdict = guardian_engine.evaluate("Disable security firewall for outbound agent requests", {})
     assert verdict.level == DisagreementLevel.CHALLENGE
 
 
 def test_guardian_challenge_override_sleep():
-    verdict = guardian_engine.evaluate(
-        "Override the 8-hour sleep schedule for continuous overnight coding", {}
-    )
+    verdict = guardian_engine.evaluate("Override the 8-hour sleep schedule for continuous overnight coding", {})
     assert verdict.level == DisagreementLevel.CHALLENGE
 
 

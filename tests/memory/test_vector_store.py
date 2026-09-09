@@ -1,4 +1,5 @@
 import pytest
+
 from app.ai.memory.vector_store import VectorStore
 
 
@@ -10,9 +11,7 @@ def test_vector_store_initialization():
 @pytest.mark.asyncio
 async def test_vector_store_add_document():
     vs = VectorStore("test_mem_collection")
-    doc_id = await vs.add(
-        "FastAPI is an async web framework for Python", metadata={"tag": "python"}
-    )
+    doc_id = await vs.add("FastAPI is an async web framework for Python", metadata={"tag": "python"})
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
 

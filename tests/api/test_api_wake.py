@@ -1,8 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
+
+from app.ai.llm.model_tier_manager import model_tier_manager
 from app.main import app
 from app.services.wake_word_service import wake_word_service
-from app.ai.llm.model_tier_manager import model_tier_manager
 
 
 @pytest.fixture

@@ -1,4 +1,5 @@
 import pytest
+
 from app.core.self_healing import ResilientResult, resilient_call
 
 
@@ -60,9 +61,7 @@ async def test_self_healing_multi_tier_fallbacks():
     async def fallback_2():
         return "tertiary_engine_online"
 
-    result = await resilient_call(
-        primary, fallbacks=[fallback_1, fallback_2], retries=1, retry_delay_s=0.005
-    )
+    result = await resilient_call(primary, fallbacks=[fallback_1, fallback_2], retries=1, retry_delay_s=0.005)
     assert result.success is True
     assert result.result == "tertiary_engine_online"
     assert len(result.attempts) >= 3

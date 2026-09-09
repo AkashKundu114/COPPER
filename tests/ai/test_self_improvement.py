@@ -1,15 +1,17 @@
-import asyncio
-from unittest.mock import AsyncMock, patch
-
 import pytest
 from fastapi.testclient import TestClient
 
 from app.ai.evaluation.improvement_tracker import improvement_tracker
 from app.ai.evaluation.judge import crucible_judge
 from app.ai.evaluation.prompt_optimizer import prompt_optimizer
-from app.ai.llm.prompt_manager import clear_prompt_patches, get_prompt_patches_for_agent, get_system_prompt, register_prompt_patch
+from app.ai.llm.prompt_manager import (
+    clear_prompt_patches,
+    get_prompt_patches_for_agent,
+    get_system_prompt,
+    register_prompt_patch,
+)
 from app.core.constants import AgentType
-from app.database.models.response_evaluation import EditStatus, FailureCategory, ProposedPromptEdit, ResponseEvaluation
+from app.database.models.response_evaluation import EditStatus, ProposedPromptEdit, ResponseEvaluation
 from app.database.postgres import SessionLocal, init_db
 from app.main import app
 
@@ -169,7 +171,9 @@ async def test_prompt_optimizer_cluster_and_apply():
         # Run optimization cycle
         proposals = await prompt_optimizer.run_optimization_cycle()
         assert len(proposals) >= 1
-        verbose_prop = next(p for p in proposals if p["agent_type"] == "research" and p["failure_category"] == "VERBOSE")
+        verbose_prop = next(
+            p for p in proposals if p["agent_type"] == "research" and p["failure_category"] == "VERBOSE"
+        )
         assert verbose_prop["failure_count"] >= 4
         assert verbose_prop["status"] == "pending"
 
@@ -276,4 +280,3 @@ def test_model_selection_optimization():
     assert r.status_code == 200
     rankings = r.json()
     assert any(rank["model_name"] == "deepseek-r1:7b" for rank in rankings)
-

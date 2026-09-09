@@ -1,5 +1,7 @@
-import pytest
 from pathlib import Path
+
+import pytest
+
 from app.services.document_service import DocumentService
 
 
@@ -116,7 +118,7 @@ def test_generate_html(doc_service):
 def test_generate_csv_and_tsv(doc_service):
     headers = ["ID", "Name", "Score"]
     rows = [["1", "Alice", "98"], ["2", "Bob", "95"]]
-    
+
     csv_text, csv_path = doc_service.generate_csv(headers=headers, rows=rows)
     assert "ID,Name,Score" in csv_text
     assert csv_path.exists()

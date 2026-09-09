@@ -36,9 +36,7 @@ def test_system_prompt_for_chat_agent():
 
 
 def test_system_prompt_for_coding_agent():
-    prompt = get_system_prompt(
-        AgentType.CODING, memory_context="Preferred language: Rust"
-    )
+    prompt = get_system_prompt(AgentType.CODING, memory_context="Preferred language: Rust")
     assert "Agent Role: CODING" in prompt
     assert "User Epistemic Context" in prompt
     assert "Preferred language: Rust" in prompt

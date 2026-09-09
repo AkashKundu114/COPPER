@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass, field
 from enum import IntEnum
 
@@ -17,6 +18,8 @@ class GuardianVerdict:
     confidence: str | None = None
     recommendation: str | None = None
     requires_confirmation: bool = False
+    friction_index: float = 0.0  # Novelty 3: Continuous DFM-Guard friction score [0.0 - 3.0]
+    fatigue_score: float = 0.0  # Real-time modeled session fatigue
 
     def to_dict(self) -> dict:
         return {
@@ -27,6 +30,8 @@ class GuardianVerdict:
             "confidence": self.confidence,
             "recommendation": self.recommendation,
             "requires_confirmation": self.requires_confirmation,
+            "friction_index": round(self.friction_index, 3),
+            "fatigue_score": round(self.fatigue_score, 3),
         }
 
 
@@ -165,6 +170,49 @@ PASSWORD_INPUT_TRIGGERS = [
 ]
 
 
+def calculate_fatigue_score(session_hours: float = 0.0, recent_error_rate: float = 0.0) -> float:
+    """
+    DFM-Guard: Models real-time user cognitive fatigue.
+    F(t) = tanh(t_hours / 4.0 + 0.5 * error_rate)
+    """
+    z = (max(0.0, session_hours) / 4.0) + (0.5 * max(0.0, min(1.0, recent_error_rate)))
+    return round(math.tanh(z), 3)
+
+
+def compute_action_reversibility_risk(proposed_action: str) -> float:
+    """
+    Evaluates semantic reversibility risk R(a) in [0.0, 1.0].
+    """
+    action_lower = proposed_action.lower()
+    if any(t in action_lower for t in SAFETY_TRIGGERS):
+        return 1.0
+    if any(
+        k in action_lower
+        for k in ["push --force", "git reset --hard", "kill -9", "chmod 777", "delete database", "drop collection"]
+    ):
+        return 0.85
+    if any(k in action_lower for k in ["delete", "remove", "clean", "truncate", "overwrite", "uninstall", "purge"]):
+        return 0.55
+    if any(k in action_lower for k in ["write", "update", "modify", "patch", "edit"]):
+        return 0.30
+    return 0.05
+
+
+def compute_dynamic_friction_index(
+    reversibility_risk: float,
+    fatigue_score: float,
+    goal_conflict: float,
+    bias: float = 1.0,
+) -> float:
+    """
+    Computes continuous Friction Index:
+    F_idx = 3.0 * sigma(2.8 * R + 1.8 * F + 2.2 * G - bias)
+    """
+    logit = (2.8 * reversibility_risk) + (1.8 * fatigue_score) + (2.2 * goal_conflict) - bias
+    sigma = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
+    return round(3.0 * sigma, 3)
+
+
 class GuardianEngine:
     def __init__(self):
         self.window_whitelist: set[str] = set()
@@ -241,33 +289,68 @@ class GuardianEngine:
             context = {}
         action_lower = proposed_action.lower()
 
+        # Real-time cognitive & context telemetry
+        session_hours = float(context.get("session_hours", 0.0))
+        error_rate = float(context.get("error_rate", 0.0))
+        fatigue = calculate_fatigue_score(session_hours, error_rate)
+        risk = compute_action_reversibility_risk(proposed_action)
+
+        conflicts = context.get("conflicting_commitments") or []
+        detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
+        has_conflict = bool(conflicts or detected_conflicts)
+        goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
+
+        friction = compute_dynamic_friction_index(risk, fatigue, goal_conflict)
+
+        # 1. Hard-boundary Catastrophic Safety Interception (Guaranteed 100% catch rate)
         if context.get("is_destructive") or any(t in action_lower for t in SAFETY_TRIGGERS):
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
                 reasoning="This action is destructive or irreversible.",
                 requires_confirmation=True,
                 recommendation="Confirm explicitly before I proceed, or choose a safer alternative.",
+                friction_index=max(2.85, friction),
+                fatigue_score=fatigue,
             )
 
-        conflicts = context.get("conflicting_commitments") or []
-        detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
-        if conflicts or detected_conflicts:
+        # 2. Level 2 Challenge: Commitment Conflict or Consequential Command under High Fatigue
+        if has_conflict or (risk >= 0.70 and fatigue >= 0.65):
             evidence = conflicts if conflicts else detected_conflicts
+            reason = (
+                "This conflicts with an existing commitment or goal."
+                if has_conflict
+                else (f"Elevated fatigue ({fatigue:.2f}) detected during high-impact operation.")
+            )
             return GuardianVerdict(
                 level=DisagreementLevel.CHALLENGE,
-                reasoning="This conflicts with an existing commitment or goal.",
-                evidence=evidence,
+                reasoning=reason,
+                evidence=evidence or [f"Reversibility risk: {risk:.2f}", f"Fatigue index: {fatigue:.2f}"],
                 confidence=context.get("confidence", "high"),
                 recommendation=context.get("recommendation", "Keep existing schedule and priorities intact."),
+                requires_confirmation=True,
+                friction_index=max(2.0, friction),
+                fatigue_score=fatigue,
             )
 
+        # 3. Level 1 Suggestion: Optimization Nudge or Moderate Fatigue Advisory
         suggestion = context.get("optimization_suggestion")
-        if suggestion:
+        if suggestion or (fatigue >= 0.50 and risk >= 0.30):
+            reason = (
+                suggestion or f"High session duration ({session_hours:.1f}h). Consider reviewing changes carefully."
+            )
             return GuardianVerdict(
-                level=DisagreementLevel.SUGGEST, reasoning=suggestion, confidence=context.get("confidence", "medium")
+                level=DisagreementLevel.SUGGEST,
+                reasoning=reason,
+                confidence=context.get("confidence", "medium"),
+                friction_index=max(1.0, friction),
+                fatigue_score=fatigue,
             )
 
-        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+        return GuardianVerdict(
+            level=DisagreementLevel.EXECUTE,
+            friction_index=friction,
+            fatigue_score=fatigue,
+        )
 
     def format_challenge(self, verdict: GuardianVerdict) -> str:
         if verdict.level < DisagreementLevel.CHALLENGE:

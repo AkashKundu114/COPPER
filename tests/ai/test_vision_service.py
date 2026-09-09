@@ -1,8 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
+
+from app.ai.memory.persistent_memory import persistent_memory
 from app.main import app
 from app.services.vision_service import vision_service
-from app.ai.memory.persistent_memory import persistent_memory
 
 client = TestClient(app)
 

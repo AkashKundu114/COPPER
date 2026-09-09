@@ -1,12 +1,12 @@
-import os
 import tempfile
 from pathlib import Path
+
 import pytest
 
-from app.ai.tools.builtin.file_tools import file_list, file_read, file_write
-from app.ai.tools.builtin.shell_tools import python_execute, shell_execute
-from app.ai.tools.builtin.memory_tools import memory_query, memory_store
 from app.ai.tools.builtin.calendar_tools import calendar_create, reminder_set
+from app.ai.tools.builtin.file_tools import file_list, file_read, file_write
+from app.ai.tools.builtin.memory_tools import memory_query, memory_store
+from app.ai.tools.builtin.shell_tools import python_execute, shell_execute
 from app.ai.tools.builtin.web_tools import web_search
 
 
@@ -52,7 +52,9 @@ async def test_shell_execute():
 @pytest.mark.asyncio
 async def test_memory_tools():
     # Store
-    store_res = await memory_store(content="User prefers Python over JavaScript", memory_type="preference", confidence=0.95)
+    store_res = await memory_store(
+        content="User prefers Python over JavaScript", memory_type="preference", confidence=0.95
+    )
     assert store_res["status"] == "success"
     assert "memory_id" in store_res
 

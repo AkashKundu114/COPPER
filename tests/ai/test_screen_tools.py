@@ -1,11 +1,11 @@
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from PIL import Image
 
 from app.ai.tools.builtin.screen_tools import (
     click,
     double_click,
-    get_active_window_title,
     get_screen_size,
     hotkey,
     screenshot,
@@ -35,8 +35,10 @@ def test_get_screen_size():
 async def test_screenshot_capture():
     """Verify screenshot captures image and encodes to base64."""
     mock_img = Image.new("RGB", (800, 600), color="blue")
-    with patch("mss.MSS", side_effect=Exception("mss disabled for test")), \
-         patch("PIL.ImageGrab.grab", return_value=mock_img):
+    with (
+        patch("mss.MSS", side_effect=Exception("mss disabled for test")),
+        patch("PIL.ImageGrab.grab", return_value=mock_img),
+    ):
         res = await screenshot(max_dimension=1000)
         assert res["status"] == "success"
         assert len(res["image_b64"]) > 100
@@ -49,8 +51,10 @@ async def test_screenshot_capture():
 async def test_screenshot_downscaling():
     """Verify screenshot scales down high-resolution images."""
     mock_img = Image.new("RGB", (3840, 2160), color="red")
-    with patch("mss.MSS", side_effect=Exception("mss disabled for test")), \
-         patch("PIL.ImageGrab.grab", return_value=mock_img):
+    with (
+        patch("mss.MSS", side_effect=Exception("mss disabled for test")),
+        patch("PIL.ImageGrab.grab", return_value=mock_img),
+    ):
         res = await screenshot(max_dimension=1920)
         assert res["status"] == "success"
         assert res["width"] == 3840
@@ -63,7 +67,11 @@ async def test_screenshot_downscaling():
 @pytest.mark.asyncio
 async def test_click_execution():
     """Verify click delegates to pyautogui with delay."""
-    with patch("pyautogui.moveTo") as mock_move, patch("pyautogui.click") as mock_click, patch("asyncio.sleep", new_callable=AsyncMock):
+    with (
+        patch("pyautogui.moveTo") as mock_move,
+        patch("pyautogui.click") as mock_click,
+        patch("asyncio.sleep", new_callable=AsyncMock),
+    ):
         res = await click(x=400, y=300, button="left")
         assert res["status"] == "success"
         assert res["action"] == "click"
@@ -76,7 +84,11 @@ async def test_click_execution():
 @pytest.mark.asyncio
 async def test_double_click_execution():
     """Verify double_click delegates to pyautogui."""
-    with patch("pyautogui.moveTo") as mock_move, patch("pyautogui.doubleClick") as mock_dclick, patch("asyncio.sleep", new_callable=AsyncMock):
+    with (
+        patch("pyautogui.moveTo") as mock_move,
+        patch("pyautogui.doubleClick") as mock_dclick,
+        patch("asyncio.sleep", new_callable=AsyncMock),
+    ):
         res = await double_click(x=250, y=180)
         assert res["status"] == "success"
         assert res["action"] == "double_click"
@@ -109,7 +121,11 @@ async def test_hotkey_execution():
 @pytest.mark.asyncio
 async def test_scroll_execution():
     """Verify scroll moves and scrolls wheel."""
-    with patch("pyautogui.moveTo") as mock_move, patch("pyautogui.scroll") as mock_scroll, patch("asyncio.sleep", new_callable=AsyncMock):
+    with (
+        patch("pyautogui.moveTo") as mock_move,
+        patch("pyautogui.scroll") as mock_scroll,
+        patch("asyncio.sleep", new_callable=AsyncMock),
+    ):
         res = await scroll(x=500, y=400, direction="down", amount=5)
         assert res["status"] == "success"
         assert res["action"] == "scroll"

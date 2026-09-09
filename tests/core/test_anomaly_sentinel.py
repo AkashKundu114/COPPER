@@ -29,11 +29,7 @@ def test_sentinel_stuck_task_detection():
     alerts = s.run_checks()
     stuck = [a for a in alerts if a.category == "stuck_task"]
     assert len(stuck) == 1
-    assert (
-        "46" in stuck[0].message
-        or "47" in stuck[0].message
-        or "minutes" in stuck[0].message
-    )
+    assert "46" in stuck[0].message or "47" in stuck[0].message or "minutes" in stuck[0].message
 
 
 def test_sentinel_alert_dismiss():

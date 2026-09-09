@@ -1,4 +1,5 @@
 import pytest
+
 from app.ai.tools.executor import ToolExecutor, tool_executor
 from app.ai.tools.registry import BaseTool, ToolRegistry
 
@@ -19,7 +20,9 @@ Let me know if you need anything else."""
 
 def test_parse_tool_call_markdown_json():
     registry = ToolRegistry()
-    registry.register(BaseTool(name="web_search", description="search", parameters={"type": "object", "properties": {}}))
+    registry.register(
+        BaseTool(name="web_search", description="search", parameters={"type": "object", "properties": {}})
+    )
     executor = ToolExecutor(registry=registry)
 
     llm_output = """Here is the search tool call:

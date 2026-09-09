@@ -1,6 +1,6 @@
 import pytest
+
 from app.ai.agents.document_agent import document_agent
-from app.core.constants import AgentType
 
 
 def test_document_agent_format_detection():

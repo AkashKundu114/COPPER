@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Cpu, Power, CheckCircle2, Play, Search, Zap } from "lucide-react";
 import { AGENTS, TIER_LABELS, TIER_COLORS, type Tier } from "../constants/agents";
 import { AgentIcon } from "../components/chat/AgentIcon";
+import { enforceKeepOnlyMiniModel } from "../lib/api";
 
 interface AgentRuntimeState {
   status: "active" | "inactive";
@@ -61,7 +62,6 @@ export function AgentRegistry() {
   const handleEnforceKeepMini = async () => {
     setVramOptimizing(true);
     try {
-      const { enforceKeepOnlyMiniModel } = await import("../lib/api");
       await enforceKeepOnlyMiniModel();
       setPingResult("GPU VRAM Optimized: Heavy models offloaded. Always-on mini model active in VRAM.");
     } catch {

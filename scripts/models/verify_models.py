@@ -10,6 +10,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 MODELS_DIR = ROOT_DIR / "ai-models"
 MANIFEST_PATH = MODELS_DIR / "models_manifest.json"
 
+
 def verify_models():
     print("=" * 66)
     print("         C.O.P.P.E.R. LOCAL AI MODEL VERIFICATION")
@@ -19,11 +20,13 @@ def verify_models():
         print(f"[-] Error: Manifest not found at {MANIFEST_PATH}")
         return False
 
-    with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
+    with open(MANIFEST_PATH, encoding="utf-8") as f:
         manifest = json.load(f)
 
+    manifest_version = manifest.get("version", "unknown")
+    print(f"[*] Manifest Version: {manifest_version}")
+
     total_found = 0
-    total_missing = 0
     total_bytes = 0
 
     print(f"\n[*] Inspecting Model Store: {MODELS_DIR}\n")
@@ -51,12 +54,13 @@ def verify_models():
             else:
                 print(f"    - {f.name:<48} ({sz_mb:5.1f} MB)")
 
-    total_gb = total_bytes / (1024 ** 3)
+    total_gb = total_bytes / (1024**3)
     print("\n" + "=" * 66)
     print(f"[*] Total Models Detected:  {total_found}")
     print(f"[*] Total Storage Consumed: {total_gb:.2f} GB")
     print("=" * 66)
     return True
+
 
 if __name__ == "__main__":
     verify_models()

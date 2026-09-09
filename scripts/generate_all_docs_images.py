@@ -4,8 +4,8 @@ Generates crystal-clear, high-contrast, publication-quality PNG charts & archite
 Theme: Cyberpunk / Molten Copper Dark Mode (#090d16 background,
 """
 
-from pathlib import Path
 import textwrap
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,9 +53,7 @@ def make_accuracy_benchmark():
     )
 
     ax.set_ylim(0, 115)
-    ax.set_ylabel(
-        "Verification Score (%)", fontsize=12, fontweight="bold", color="#cbd5e1"
-    )
+    ax.set_ylabel("Verification Score (%)", fontsize=12, fontweight="bold", color="#cbd5e1")
     ax.set_title(
         "C.O.P.P.E.R. Performance & Safety Verification (1,740 Combinatorial Test Cases)",
         fontsize=14,
@@ -107,15 +105,9 @@ def make_latency_percentiles():
         color="#06b6d4",
         edgecolor="#1e293b",
     )
-    ax.bar(
-        x - 0.5 * width, p90, width, label="P90", color="#3b82f6", edgecolor="#1e293b"
-    )
-    ax.bar(
-        x + 0.5 * width, p95, width, label="P95", color="#f97316", edgecolor="#1e293b"
-    )
-    ax.bar(
-        x + 1.5 * width, p99, width, label="P99", color="#ec4899", edgecolor="#1e293b"
-    )
+    ax.bar(x - 0.5 * width, p90, width, label="P90", color="#3b82f6", edgecolor="#1e293b")
+    ax.bar(x + 0.5 * width, p95, width, label="P95", color="#f97316", edgecolor="#1e293b")
+    ax.bar(x + 1.5 * width, p99, width, label="P99", color="#ec4899", edgecolor="#1e293b")
 
     ax.set_yscale("log")
     ax.set_ylabel(
@@ -198,9 +190,7 @@ def make_vram_chart():
     ]
 
     y_pos = np.arange(len(models))
-    bars = ax2.barh(
-        y_pos, vram_usage, color=bar_colors, edgecolor="#1e293b", height=0.6
-    )
+    bars = ax2.barh(y_pos, vram_usage, color=bar_colors, edgecolor="#1e293b", height=0.6)
     ax2.set_yticks(y_pos)
     ax2.set_yticklabels(models, fontsize=10, color="#e2e8f0")
     ax2.invert_yaxis()
@@ -279,9 +269,7 @@ def make_throughput_chart():
         edgecolor="#1e293b",
     )
 
-    ax.set_ylabel(
-        "Throughput (Tokens / Second)", fontsize=12, fontweight="bold", color="#cbd5e1"
-    )
+    ax.set_ylabel("Throughput (Tokens / Second)", fontsize=12, fontweight="bold", color="#cbd5e1")
     ax.set_title(
         "Inference Speed & Token Throughput on NVIDIA RTX 5060 Laptop GPU",
         fontsize=14,
@@ -325,13 +313,9 @@ def make_ram_chart():
     ram_mb = [320, 260, 210, 140, 45, 3800]
     colors = ["#f97316", "#06b6d4", "#a855f7", "#3b82f6", "#ec4899", "#64748b"]
 
-    bars = ax.bar(
-        services, ram_mb, color=colors, width=0.55, edgecolor="#1e293b", linewidth=1.5
-    )
+    bars = ax.bar(services, ram_mb, color=colors, width=0.55, edgecolor="#1e293b", linewidth=1.5)
 
-    ax.set_ylabel(
-        "RAM Consumed (Megabytes - MB)", fontsize=12, fontweight="bold", color="#cbd5e1"
-    )
+    ax.set_ylabel("RAM Consumed (Megabytes - MB)", fontsize=12, fontweight="bold", color="#cbd5e1")
     ax.set_title(
         "C.O.P.P.E.R. Runtime System RAM Footprint (Total App Suite < 1.0 GB)",
         fontsize=14,
@@ -383,9 +367,7 @@ def make_radar_chart():
     angles = [n / float(N) * 2 * np.pi for n in range(N)]
     angles += angles[:1]
 
-    fig, ax = plt.subplots(
-        figsize=(8.5, 8.5), subplot_kw={"polar": True}, facecolor="#090d16"
-    )
+    fig, ax = plt.subplots(figsize=(8.5, 8.5), subplot_kw={"polar": True}, facecolor="#090d16")
     ax.set_facecolor("#0d1322")
 
     models_data = {
@@ -397,9 +379,7 @@ def make_radar_chart():
 
     for name, (vals, col) in models_data.items():
         vals_ext = vals + vals[:1]
-        ax.plot(
-            angles, vals_ext, linewidth=2.4, linestyle="solid", label=name, color=col
-        )
+        ax.plot(angles, vals_ext, linewidth=2.4, linestyle="solid", label=name, color=col)
         ax.fill(angles, vals_ext, color=col, alpha=0.15)
 
     ax.set_theta_offset(np.pi / 2)
@@ -560,7 +540,7 @@ def make_firewall_diagram():
             color="#cbd5e1",
             ha="center",
             va="center",
-            )
+        )
 
         if x < 0.7:
             ax.annotate(

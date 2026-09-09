@@ -15,8 +15,8 @@ Features:
 
 import argparse
 import asyncio
+import importlib.util
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -78,7 +78,7 @@ def load_dataset(dataset_path: Path):
         raise FileNotFoundError(f"Training dataset not found at: {dataset_path}")
 
     examples = []
-    with open(dataset_path, "r", encoding="utf-8") as f:
+    with open(dataset_path, encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 try:
@@ -101,10 +101,10 @@ def format_prompts(batch, tokenizer):
 
 def run_training_unsloth(args, dataset):
     """Executes QLoRA training using Unsloth for 2x faster execution and 70% less VRAM."""
-    from unsloth import FastLanguageModel
-    from trl import SFTTrainer
-    from transformers import TrainingArguments
     from datasets import Dataset
+    from transformers import TrainingArguments
+    from trl import SFTTrainer
+    from unsloth import FastLanguageModel
 
     print(f"[*] Initializing Unsloth FastLanguageModel for '{args.base_model}'...")
     model, tokenizer = FastLanguageModel.from_pretrained(
@@ -168,10 +168,10 @@ def run_training_unsloth(args, dataset):
 def run_training_peft(args, dataset):
     """Fallback execution using HuggingFace Transformers + PEFT."""
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
-    from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-    from trl import SFTTrainer
     from datasets import Dataset
+    from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+    from trl import SFTTrainer
 
     print(f"[*] Loading model with 4-bit BitsAndBytes quantization: {args.base_model}...")
     bnb_config = BitsAndBytesConfig(
@@ -273,11 +273,10 @@ async def main_async():
 
     # 3. Train with unsloth or peft fallback
     try:
-        try:
-            import unsloth
+        if importlib.util.find_spec("unsloth") is not None:
             print("[+] Using Unsloth FastLanguageModel engine.")
             run_training_unsloth(args, dataset)
-        except ImportError:
+        else:
             print("[*] Unsloth not detected. Falling back to Transformers + PEFT.")
             run_training_peft(args, dataset)
     finally:

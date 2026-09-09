@@ -1,6 +1,7 @@
 import time
 
 import pytest
+
 from app.ai.orchestration.agent_router import (
     is_consequential_action,
     learn_user_correction,
@@ -244,14 +245,10 @@ async def test_negative_keyword_suppression():
     res2 = await route_message_detailed("Remind me to write code tomorrow morning")
     assert res2.agent == AgentType.REMINDER
 
-    res3 = await route_message_detailed(
-        "Delete the file about quantum mechanics from my desktop"
-    )
+    res3 = await route_message_detailed("Delete the file about quantum mechanics from my desktop")
     assert res3.agent == AgentType.AUTOMATION
 
-    res4 = await route_message_detailed(
-        "Plan a roadmap for refactoring our React app in a 4-week sprint"
-    )
+    res4 = await route_message_detailed("Plan a roadmap for refactoring our React app in a 4-week sprint")
     assert res4.agent == AgentType.PLANNER
 
 
@@ -277,9 +274,7 @@ async def test_dynamic_self_training_memory():
 async def test_router_performance_and_latency():
     start = time.perf_counter()
     for _ in range(100):
-        await route_message_detailed(
-            "Write a python script to parse JSON logs with regex"
-        )
+        await route_message_detailed("Write a python script to parse JSON logs with regex")
     total_time = (time.perf_counter() - start) * 1000.0
     avg_latency = total_time / 100.0
     assert avg_latency < 1.0

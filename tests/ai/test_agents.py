@@ -1,4 +1,5 @@
 import pytest
+
 from app.ai.agents.automation_agent import AutomationAgent
 from app.ai.agents.base import BaseAgent
 from app.ai.agents.coding_agent import CodingAgent

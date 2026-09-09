@@ -1,8 +1,6 @@
-import asyncio
 import pytest
-from unittest.mock import AsyncMock, patch
 
-from app.ai.orchestration.context_bus import ContextBus, InterAgentMessage
+from app.ai.orchestration.context_bus import ContextBus
 
 
 @pytest.mark.asyncio
@@ -48,6 +46,8 @@ async def test_context_bus_inter_agent_messaging():
         content="Generated visualization script plot_trends.py",
         payload={"script": "import matplotlib..."},
     )
+    assert msg2.sender == "AXIS"
+    assert msg2.recipient == "FORGE"
 
     messages = bus.get_messages(dag_id)
     assert len(messages) == 2

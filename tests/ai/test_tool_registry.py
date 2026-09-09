@@ -1,4 +1,3 @@
-import pytest
 from app.ai.tools.registry import BaseTool, ToolRegistry
 
 
@@ -42,6 +41,8 @@ def test_tool_argument_validation():
         },
         return_description="val",
     )
+    registry.register(tool)
+    assert registry.get("test_tool") is tool
 
     # Valid args
     valid, err = tool.validate_args({"text": "hello", "count": 5})

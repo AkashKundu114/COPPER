@@ -14,9 +14,7 @@ def test_validate_message_code_snippet():
 
 
 def test_validate_message_unicode():
-    valid, err = validate_message(
-        "🌟 Testing multi-byte utf-8 unicode characters: こんにちは"
-    )
+    valid, err = validate_message("🌟 Testing multi-byte utf-8 unicode characters: こんにちは")
     assert valid is True
     assert err == ""
 

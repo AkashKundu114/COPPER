@@ -1,4 +1,5 @@
 from unittest.mock import AsyncMock, patch
+
 import pytest
 
 from app.ai.agents.vision_agent import VisionAgent, vision_agent
@@ -32,12 +33,12 @@ def test_parse_action_markdown_and_bare_json():
     agent = VisionAgent()
 
     # Markdown block
-    md_output = "Navigating down.\n```json\n{\"type\": \"scroll\", \"x\": 500, \"y\": 500, \"direction\": \"down\"}\n```"
+    md_output = 'Navigating down.\n```json\n{"type": "scroll", "x": 500, "y": 500, "direction": "down"}\n```'
     thought, action = agent.parse_action(md_output)
     assert action == {"type": "scroll", "x": 500, "y": 500, "direction": "down"}
 
     # Bare JSON
-    bare_output = "Pausing for loading.\n{\"type\": \"wait\", \"seconds\": 2}"
+    bare_output = 'Pausing for loading.\n{"type": "wait", "seconds": 2}'
     thought, action = agent.parse_action(bare_output)
     assert action == {"type": "wait", "seconds": 2}
 
@@ -96,14 +97,15 @@ async def test_vision_agent_closed_loop_execution():
         '<action>{"type": "done", "summary": "Successfully clicked Start button and opened menu."}</action>'
     )
 
-    with patch("app.ai.tools.builtin.screen_tools.screenshot", new_callable=AsyncMock) as mock_shot, \
-         patch("app.ai.tools.builtin.screen_tools.get_active_window_title", return_value="Desktop"), \
-         patch("app.ai.tools.builtin.screen_tools.get_screen_size", return_value=(1920, 1080)), \
-         patch("app.ai.tools.builtin.screen_tools.click", new_callable=AsyncMock) as mock_click, \
-         patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat, \
-         patch("app.api.websocket.manager.manager.send", new_callable=AsyncMock) as mock_ws_send, \
-         patch("app.api.websocket.manager.manager.broadcast", new_callable=AsyncMock) as mock_ws_broadcast:
-
+    with (
+        patch("app.ai.tools.builtin.screen_tools.screenshot", new_callable=AsyncMock) as mock_shot,
+        patch("app.ai.tools.builtin.screen_tools.get_active_window_title", return_value="Desktop"),
+        patch("app.ai.tools.builtin.screen_tools.get_screen_size", return_value=(1920, 1080)),
+        patch("app.ai.tools.builtin.screen_tools.click", new_callable=AsyncMock) as mock_click,
+        patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat,
+        patch("app.api.websocket.manager.manager.send", new_callable=AsyncMock) as mock_ws_send,
+        patch("app.api.websocket.manager.manager.broadcast", new_callable=AsyncMock),
+    ):
         mock_shot.return_value = mock_screenshot
         mock_click.return_value = {"status": "success", "action": "click", "x": 30, "y": 1050}
         mock_chat.side_effect = [step1_response, step2_response]
@@ -130,11 +132,14 @@ async def test_vision_agent_guardian_window_halt():
         "scale_factor": 1.0,
     }
 
-    with patch("app.ai.tools.builtin.screen_tools.screenshot", new_callable=AsyncMock) as mock_shot, \
-         patch("app.ai.tools.builtin.screen_tools.get_active_window_title", return_value="Fidelity Investments - Portfolio"), \
-         patch("app.ai.tools.builtin.screen_tools.get_screen_size", return_value=(1920, 1080)), \
-         patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat:
-
+    with (
+        patch("app.ai.tools.builtin.screen_tools.screenshot", new_callable=AsyncMock) as mock_shot,
+        patch(
+            "app.ai.tools.builtin.screen_tools.get_active_window_title", return_value="Fidelity Investments - Portfolio"
+        ),
+        patch("app.ai.tools.builtin.screen_tools.get_screen_size", return_value=(1920, 1080)),
+        patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat,
+    ):
         mock_shot.return_value = mock_screenshot
 
         result = await agent.run("Click the transfer button", session_id="test_session_2")

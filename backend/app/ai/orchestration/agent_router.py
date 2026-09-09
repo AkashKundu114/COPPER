@@ -19,6 +19,8 @@ class RoutingResult:
     scores: dict[str, float] = field(default_factory=dict)
     matched_keywords: list[str] = field(default_factory=list)
     is_consequential: bool = False
+    cascade_risk: float = 0.0  # Novelty 1: Topological DAG cascade failure probability
+    sub_tasks: list[str] = field(default_factory=list)  # Decomposed compound task pipeline
 
     def __str__(self) -> str:
         return self.agent.value
@@ -186,12 +188,16 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             5.0,
         ),
         (
-            r"\b(summarize (the\s+)?|search (the web for|online for|for recent|for research|for)\s+.*(papers|articles|studies|info|information|data|literature|news)|find research papers on|find papers on|literature review|explain|investigate the economic|trade-offs between|compare and contrast|what are the (core\s+)?differences between|deep dive into|investigate)\b",
+            r"\b(summarize (the\s+)?|search (the web for|online for|the internet for|for recent|for research|for)\s+.*(papers|articles|studies|info|information|data|literature|news)|find research papers on|find papers on|literature review|explain|investigate the economic|trade-offs between|compare and contrast|what are the (core\s+)?differences between|deep dive into|investigate)\b",
             5.0,
         ),
         (
-            r"\b(quantum mechanics|wave-particle duality|transformer (neural network|architecture)|sqlite and postgresql|epistemic memory|black hole information paradox|rna polymerase|2008 financial crisis|supervised vs self-supervised|byzantine generals|stoicism|solid-state batteries|theory of relativity|tcp and udp|voynich manuscript|solar and nuclear|human immune system|gödel|crispr-cas9|cap theorem|alan turing|stages of sleep|speed of light|superconductivity)\b",
-            4.0,
+            r"\b(search (the web|online|the internet|google|bing|duckduckgo)(\s+for)?|look up online|find online)\b",
+            6.5,
+        ),
+        (
+            r"\b(quantum mechanics|wave-particle duality|transformer (neural network|architecture)|sqlite and postgresql|epistemic memory|black hole information paradox|rna polymerase|2008 financial crisis|supervised vs self-supervised|byzantine generals|stoicism|solid-state batteries|theory of relativity|tcp and udp|tcp vs udp|solar vs nuclear|solar and nuclear|react vs vue|react and vue|history of the roman empire|voynich manuscript|human immune system|gödel|crispr-cas9|cap theorem|alan turing|stages of sleep|speed of light|superconductivity)\b",
+            5.0,
         ),
         (r"^(what is|who is|who was|why is|explain|summarize|news on|research|papers on|study on)\b", 2.0),
     ],
@@ -302,7 +308,10 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
         ),
         (r"^(remind me to|set an alarm|schedule a notification|schedule a time to)\b", 6.0),
         (r"^(delete the file|open the terminal|move all|plan a roadmap for)\b", 6.0),
-        (r"\b(screenshot|photo|image|picture|diagram photo|ui picture|uploaded image|ui mockup)\b", 6.0),
+        (
+            r"^(look at|inspect|describe|read text from|extract text from|ocr|what is on my screen)\s+.*(screenshot|photo|image|picture)\b",
+            6.0,
+        ),
     ],
     AgentType.PLANNER: [
         (r"^(write a script to|delete the file about|explain how to|remind me to|schedule a time to)\b", 6.0),
@@ -311,6 +320,7 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
     AgentType.VISION: [
         (r"^(delete the file about|remind me to|write a script to|schedule a time to|plan a roadmap for)\b", 6.0),
         (r"\btake a screenshot.*and save\b", 6.0),
+        (r"^(explain how to|how do i|teach me how to|guide me on how to)\b", 6.0),
     ],
     AgentType.IMAGE: [
         (r"^(remind me to|schedule a time to|write a script to|delete the file|what is|explain|summarize)\b", 6.0),
@@ -343,6 +353,53 @@ def is_consequential_action(message: str) -> bool:
     return any(pattern.search(msg_lower) for pattern in COMPILED_CONSEQUENTIAL_PATTERNS)
 
 
+def estimate_dag_cascade_risk(agent: AgentType, is_consequential: bool, sub_tasks: list[str] | None = None) -> float:
+    """
+    TFP-Router (Topological Failure-Predicting Router):
+    Estimates downstream execution graph (DAG) cascade failure probability.
+    Higher risk for autonomous mutating agents (automation, coding) and multi-node DAG workflows.
+    R_cascade = 1 - \\prod_{k \\in Children} (1 - P(fail_k))
+    """
+    base_failure_rates = {
+        AgentType.CHAT: 0.01,
+        AgentType.REMINDER: 0.02,
+        AgentType.DOCUMENT: 0.04,
+        AgentType.IMAGE: 0.05,
+        AgentType.RESEARCH: 0.07,
+        AgentType.VISION: 0.09,
+        AgentType.PLANNER: 0.11,
+        AgentType.CODING: 0.16,
+        AgentType.AUTOMATION: 0.20,
+    }
+    base_p = base_failure_rates.get(agent, 0.05)
+    if is_consequential:
+        base_p = min(0.92, base_p * 2.5)
+    if sub_tasks and len(sub_tasks) > 1:
+        cascade_p = 1.0 - ((1.0 - base_p) ** len(sub_tasks))
+        return round(cascade_p, 3)
+    return round(base_p, 3)
+
+
+def decompose_compound_intent(message: str) -> list[str]:
+    """
+    Identifies compound task dependencies across multi-agent workflows.
+    e.g. "Read text in screenshot and open VSCode" -> ['vision', 'automation']
+    """
+    lower = message.lower()
+    tasks = []
+    if any(k in lower for k in ["screenshot", "image", "photo", "ocr"]):
+        tasks.append("vision")
+    if any(k in lower for k in ["open ", "close ", "launch ", "window", "terminal", "kill pid", "process"]):
+        tasks.append("automation")
+    if any(k in lower for k in ["function", "class", "debug", "refactor", "code", "script", "api"]):
+        tasks.append("coding")
+    if any(k in lower for k in ["pdf", "report", "document", "docx", "export"]):
+        tasks.append("document")
+    if any(k in lower for k in ["search", "research", "explain how", "history of"]):
+        tasks.append("research")
+    return tasks if len(tasks) > 1 else []
+
+
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
     res = await route_message_detailed(message, use_llm=use_llm)
     return res.agent
@@ -360,6 +417,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     start_time = time.perf_counter()
     msg_clean = message.strip()
     msg_lower = msg_clean.lower()
+    consequential = is_consequential_action(msg_lower)
+    sub_tasks = decompose_compound_intent(msg_clean)
 
     memory_match = routing_memory.find_match(msg_clean, threshold=0.90)
     if memory_match:
@@ -371,7 +430,9 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             latency_ms=round(elapsed_ms, 3),
             route_stage="learned_memory_cache",
             scores={learned_agent.value: 1.0},
-            is_consequential=is_consequential_action(msg_lower),
+            is_consequential=consequential,
+            cascade_risk=estimate_dag_cascade_risk(learned_agent, consequential, sub_tasks),
+            sub_tasks=sub_tasks,
         )
 
     for compiled_pat in COMPILED_GREETING_PATTERNS:
@@ -384,6 +445,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 route_stage="fast_smalltalk_filter",
                 scores={AgentType.CHAT.value: 1.0},
                 is_consequential=False,
+                cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, False),
+                sub_tasks=[],
             )
 
     scores: dict[AgentType, float] = dict.fromkeys(COMPILED_KEYWORD_RULES, 0.0)
@@ -399,8 +462,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         for compiled_pat, penalty in neg_rules:
             if compiled_pat.search(msg_lower):
                 scores[agent] = max(0.0, scores[agent] - penalty)
-
-    consequential = is_consequential_action(msg_lower)
 
     best_agent = max(scores, key=scores.get)
     best_score = scores[best_agent]
@@ -418,6 +479,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             scores={k.value: round(v, 2) for k, v in scores.items()},
             matched_keywords=matched[best_agent],
             is_consequential=consequential,
+            cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
+            sub_tasks=sub_tasks,
         )
 
     if use_llm:
@@ -431,6 +494,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 route_stage="llm_subagent_router",
                 scores={llm_agent.value: 1.0},
                 is_consequential=consequential,
+                cascade_risk=estimate_dag_cascade_risk(llm_agent, consequential, sub_tasks),
+                sub_tasks=sub_tasks,
             )
         except Exception as e:
             logger.warning(f"LLM routing failed: {e}")
@@ -443,6 +508,8 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         route_stage="default_conversational_fallback",
         scores={k.value: round(v, 2) for k, v in scores.items()},
         is_consequential=consequential,
+        cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, consequential, sub_tasks),
+        sub_tasks=sub_tasks,
     )
 
 

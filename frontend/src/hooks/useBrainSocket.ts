@@ -287,7 +287,7 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       try {
         wsRef.current.send(JSON.stringify({ action: "interrupt" }));
-      } catch (e) {
+      } catch {
         // ignore websocket send errors
       }
     }

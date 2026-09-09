@@ -1,5 +1,5 @@
-
 import pytest
+
 from app.services.audio_service import PiperTTSPipeline
 
 
@@ -77,4 +77,3 @@ def test_format_spoken_summary_with_code_block():
     res = tts.format_spoken_summary(code_text)
     assert "def fib(n)" not in res
     assert "screen" in res.lower()
-

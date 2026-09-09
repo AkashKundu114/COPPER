@@ -14,9 +14,7 @@ def test_model_manager_initialization():
 
 
 def test_model_manager_dot_notation():
-    model_name = model_manager.get_model(
-        "core_agents.chat", default="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
-    )
+    model_name = model_manager.get_model("core_agents.chat", default="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf")
     assert isinstance(model_name, str)
     assert len(model_name) > 0
 
@@ -34,9 +32,7 @@ def test_routing_and_base_prompts():
 
 def test_get_system_prompt_all_agents():
     for agent in AgentType:
-        prompt = get_system_prompt(
-            agent, memory_context="User is coding a FastAPI project"
-        )
+        prompt = get_system_prompt(agent, memory_context="User is coding a FastAPI project")
         assert agent.value.upper() in prompt
         assert "User is coding a FastAPI project" in prompt
         assert "COPPER" in prompt

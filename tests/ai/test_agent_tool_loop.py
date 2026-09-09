@@ -1,11 +1,12 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
+
 import pytest
 
+from app.ai.agents.automation_agent import automation_agent
 from app.ai.agents.base import BaseAgent
 from app.ai.agents.coding_agent import coding_agent
-from app.ai.agents.automation_agent import automation_agent
-from app.ai.agents.research_agent import research_agent
 from app.ai.agents.reminder_agent import reminder_agent
+from app.ai.agents.research_agent import research_agent
 from app.core.constants import AgentType
 
 

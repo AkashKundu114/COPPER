@@ -1,0 +1,39 @@
+{
+  "pwebr_accuracy": 100.0,
+  "naive_accuracy": 0.0,
+  "lww_accuracy": 100.0,
+  "eval_scenarios": [
+    {
+      "stream_id": "poison_defense_01",
+      "attribute": "editor_theme",
+      "lww_conf": 0.1,
+      "naive_conf": 0.7,
+      "pwebr_conf": 0.07,
+      "pwebr_correct": true
+    },
+    {
+      "stream_id": "instant_convergence_02",
+      "attribute": "user_name",
+      "lww_conf": 0.9,
+      "naive_conf": 0.6,
+      "pwebr_conf": 0.92,
+      "pwebr_correct": true
+    },
+    {
+      "stream_id": "temporal_shift_03",
+      "attribute": "frontend_framework",
+      "lww_conf": 0.1,
+      "naive_conf": 0.6,
+      "pwebr_conf": 0.09,
+      "pwebr_correct": true
+    },
+    {
+      "stream_id": "tool_verification_04",
+      "attribute": "test_suite",
+      "lww_conf": 0.9,
+      "naive_conf": 0.8,
+      "pwebr_conf": 0.86,
+      "pwebr_correct": true
+    }
+  ]
+}

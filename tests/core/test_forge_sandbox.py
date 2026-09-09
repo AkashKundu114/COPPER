@@ -39,14 +39,10 @@ def test_sandbox_cleanup():
 
 
 def test_sandbox_environment_sanitization(monkeypatch):
-    monkeypatch.setenv(
-        "DATABASE_URL", "postgresql://copper:supersecret@localhost:5432/db"
-    )
+    monkeypatch.setenv("DATABASE_URL", "postgresql://copper:supersecret@localhost:5432/db")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-secret-key-12345")
     res = forge_sandbox.run_python_code(
-        "import os\n"
-        "print('DB:', os.environ.get('DATABASE_URL'))\n"
-        "print('KEY:', os.environ.get('OPENAI_API_KEY'))\n"
+        "import os\nprint('DB:', os.environ.get('DATABASE_URL'))\nprint('KEY:', os.environ.get('OPENAI_API_KEY'))\n"
     )
     assert res["exit_code"] == 0
     assert "DB: None" in res["stdout"]

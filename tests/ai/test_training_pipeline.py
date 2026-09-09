@@ -1,5 +1,4 @@
 import json
-import os
 import shutil
 from pathlib import Path
 
@@ -27,8 +26,12 @@ def setup_training_env():
 
     db = SessionLocal()
     try:
-        db.query(ResponseEvaluation).filter(ResponseEvaluation.session_id.like("curate_test_%")).delete(synchronize_session=False)
-        db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id.like("curate_test_%")).delete(synchronize_session=False)
+        db.query(ResponseEvaluation).filter(ResponseEvaluation.session_id.like("curate_test_%")).delete(
+            synchronize_session=False
+        )
+        db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id.like("curate_test_%")).delete(
+            synchronize_session=False
+        )
         db.query(LoRAAdapter).filter(LoRAAdapter.version.like("test_%")).delete(synchronize_session=False)
         db.query(TrainingJob).filter(TrainingJob.status.in_(["running", "pending"])).delete(synchronize_session=False)
         db.commit()
@@ -39,8 +42,12 @@ def setup_training_env():
 
     db = SessionLocal()
     try:
-        db.query(ResponseEvaluation).filter(ResponseEvaluation.session_id.like("curate_test_%")).delete(synchronize_session=False)
-        db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id.like("curate_test_%")).delete(synchronize_session=False)
+        db.query(ResponseEvaluation).filter(ResponseEvaluation.session_id.like("curate_test_%")).delete(
+            synchronize_session=False
+        )
+        db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id.like("curate_test_%")).delete(
+            synchronize_session=False
+        )
         db.query(LoRAAdapter).filter(LoRAAdapter.version.like("test_%")).delete(synchronize_session=False)
         db.query(TrainingJob).filter(TrainingJob.status.in_(["running", "pending"])).delete(synchronize_session=False)
         db.commit()
@@ -57,7 +64,7 @@ def test_data_curator_cleaning_and_triviality():
     # 1. Clean XML tags
     dirty_text = (
         "<think>Let me calculate the square root</think>\n"
-        "<tool_call>{\"name\": \"calculator\"}</tool_call>\n"
+        '<tool_call>{"name": "calculator"}</tool_call>\n'
         "The square root of 144 is 12.\n"
         "<tool_result>12</tool_result>"
     )
@@ -70,7 +77,12 @@ def test_data_curator_cleaning_and_triviality():
     # 2. Trivial interactions check
     assert curator.is_trivial("hi", "Hello! How can I help you today?") is True
     assert curator.is_trivial("thanks", "You're very welcome!") is True
-    assert curator.is_trivial("Explain vector embeddings in vector databases", "Vector embeddings are mathematical representations...") is False
+    assert (
+        curator.is_trivial(
+            "Explain vector embeddings in vector databases", "Vector embeddings are mathematical representations..."
+        )
+        is False
+    )
 
 
 @pytest.mark.asyncio
@@ -81,7 +93,9 @@ async def test_data_curator_curation_and_deduplication():
 
     db = SessionLocal()
     try:
-        db.query(ResponseEvaluation).filter(ResponseEvaluation.session_id.in_(["curate_test_001", "curate_test_002"])).delete()
+        db.query(ResponseEvaluation).filter(
+            ResponseEvaluation.session_id.in_(["curate_test_001", "curate_test_002"])
+        ).delete()
         c_hash = curator.compute_content_hash(
             "How do I optimize postgres queries for time-series data?",
             "To optimize PostgreSQL for time-series data, implement declarative table partitioning by range, utilize BRIN indexes on timestamp columns, and tune autovacuum parameters.",
@@ -130,16 +144,18 @@ async def test_data_curator_curation_and_deduplication():
         assert res["curated_new"] >= 1
 
         # Check curated record exists in DB
-        curated_db = db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id == "curate_test_001").first()
+        curated_db = (
+            db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id == "curate_test_001").first()
+        )
         assert curated_db is not None
         assert curated_db.quality_score >= 0.85
         assert curated_db.difficulty in ["easy", "medium", "hard"]
 
         # Check JSONL file was written
         assert TEST_JSONL.exists()
-        with open(TEST_JSONL, "r", encoding="utf-8") as f:
+        with open(TEST_JSONL, encoding="utf-8") as f:
             lines = [json.loads(line) for line in f if line.strip()]
-        assert any(l["agent_type"] == "coding" for l in lines)
+        assert any(entry["agent_type"] == "coding" for entry in lines)
 
         # Deduplication test: Running curation again should skip existing hash
         res_dedup = await curator.curate_from_evaluations(min_score=0.85, limit=50)
@@ -170,7 +186,7 @@ def test_lora_trainer_artifact_generation():
     assert meta_path.exists()
     assert weights_path.exists()
 
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         cfg = json.load(f)
     assert cfg["r"] == 16
     assert cfg["lora_alpha"] == 32

@@ -1,5 +1,6 @@
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 client = TestClient(app)
 
@@ -47,7 +48,5 @@ def test_voice_synthesize_empty_text():
 
 
 def test_voice_transcribe_empty_file():
-    response = client.post(
-        "/api/v1/voice/transcribe", files={"audio": ("empty.wav", b"", "audio/wav")}
-    )
+    response = client.post("/api/v1/voice/transcribe", files={"audio": ("empty.wav", b"", "audio/wav")})
     assert response.status_code in [200, 400, 422]

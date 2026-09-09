@@ -1,4 +1,5 @@
 from unittest.mock import AsyncMock, patch
+
 import pytest
 
 from app.ai.orchestration.planner import PlanResult, SubTask
@@ -16,23 +17,37 @@ async def test_dag_parallel_branch_concurrency():
         goal="Fetch market research and compile financial data into a presentation",
         tasks=[
             SubTask(id="T1", agent="OMNI", title="Market Research", instruction="Gather market trends", depends_on=[]),
-            SubTask(id="T2", agent="AXIS", title="Financial Computation", instruction="Compute profit margins", depends_on=[]),
-            SubTask(id="T3", agent="KINESIS", title="Compile Document", instruction="Combine {T1.output} and {T2.output}", depends_on=["T1", "T2"]),
+            SubTask(
+                id="T2",
+                agent="AXIS",
+                title="Financial Computation",
+                instruction="Compute profit margins",
+                depends_on=[],
+            ),
+            SubTask(
+                id="T3",
+                agent="KINESIS",
+                title="Compile Document",
+                instruction="Combine {T1.output} and {T2.output}",
+                depends_on=["T1", "T2"],
+            ),
         ],
         synthesis={"agent": "CHAT", "instruction": "Synthesize {T3.output}"},
     )
 
-    with patch("app.ai.agents.research_agent.research_agent.run", new_callable=AsyncMock) as mock_omni, \
-         patch("app.ai.agents.coding_agent.coding_agent.run", new_callable=AsyncMock) as mock_axis, \
-         patch("app.ai.agents.document_agent.document_agent.run", new_callable=AsyncMock) as mock_kinesis, \
-         patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat:
-
+    with (
+        patch("app.ai.agents.research_agent.research_agent.run", new_callable=AsyncMock) as mock_omni,
+        patch("app.ai.agents.coding_agent.coding_agent.run", new_callable=AsyncMock) as mock_axis,
+        patch("app.ai.agents.document_agent.document_agent.run", new_callable=AsyncMock) as mock_kinesis,
+        patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat,
+    ):
         mock_omni.return_value = "OMNI: 2026 AI market up 45%."
         mock_axis.return_value = "AXIS: Margin computed at 34.2%."
         mock_kinesis.return_value = "KINESIS: Document generated successfully."
         mock_chat.return_value = "Synthesis: Executive summary complete."
 
         events = []
+
         async def on_event(ev, data):
             events.append(ev)
 

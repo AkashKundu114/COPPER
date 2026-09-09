@@ -4,9 +4,9 @@ from app.core.logger import get_logger, logger
 
 
 def test_get_logger_default():
-    l = get_logger("test_copper")
-    assert isinstance(l, logging.Logger)
-    assert l.level == logging.INFO
+    log_instance = get_logger("test_copper")
+    assert isinstance(log_instance, logging.Logger)
+    assert log_instance.level == logging.INFO
 
 
 def test_logger_singleton():

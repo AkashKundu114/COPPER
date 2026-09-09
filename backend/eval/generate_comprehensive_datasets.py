@@ -38,7 +38,9 @@ def generate_combinatorial_dataset(templates, variables, expected_agent, categor
                 prompt = template.format(**kwargs).strip() + mod
                 if prompt not in generated:
                     generated.add(prompt)
-                    dataset.append({"prompt": prompt, "expected_agent": expected_agent, "category": random.choice(categories)})
+                    dataset.append(
+                        {"prompt": prompt, "expected_agent": expected_agent, "category": random.choice(categories)}
+                    )
 
     return dataset
 
@@ -434,9 +436,7 @@ IMAGE_CATEGORIES = [
     "synthwave",
     "photorealism",
 ]
-IMAGE_SAMPLES = generate_combinatorial_dataset(
-    IMAGE_TEMPLATES, IMAGE_VARS, "image", IMAGE_CATEGORIES, 120
-)
+IMAGE_SAMPLES = generate_combinatorial_dataset(IMAGE_TEMPLATES, IMAGE_VARS, "image", IMAGE_CATEGORIES, 120)
 
 dataset_adv = []
 action_intent_map = {
