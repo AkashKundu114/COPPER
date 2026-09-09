@@ -24,7 +24,7 @@
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~10,780 QPS** (0.092 ms average latency).
+- **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~9,856 QPS** (0.100 ms average latency).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
 - **392 / 392 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
 - **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).
@@ -34,12 +34,12 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 392 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.09ms / ~10,780 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 392 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
 1. **TFP-Router (Topological Failure-Predicting Cascade Router < 0.10ms):**
-   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), weighted multi-class pattern scoring with negative suppression, and topological Directed Acyclic Graph (DAG) cascade failure risk ($\mathcal{R}_{\text{cascade}}$) prediction achieving **100.0% accuracy across 1,390 benchmark cases (~10,780 QPS)** with zero GPU blocking overhead.
+   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), weighted multi-class pattern scoring with negative suppression, and topological Directed Acyclic Graph (DAG) cascade failure risk ($\mathcal{R}_{\text{cascade}}$) prediction achieving **100.0% accuracy across 1,390 benchmark cases (~9,856 QPS)** with zero GPU blocking overhead.
 
 2. **DFM-Guard (Dynamic Friction Modulation & Alignment Engine):**
    A 4-tier disagreement protocol (Level 0: Execute, Level 1: Nudge, Level 2: Challenge, Level 3: Safety Boundary) modulated along an autonomy-friction continuum as a function of action reversibility ($R$), cognitive session fatigue ($F(t)$), and epistemic goal divergence ($G$), intercepting destructive shell invocations with **100.0% threat catch sensitivity (0 breaches across 350 test cases)**.
@@ -130,8 +130,8 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 | :--- | :---: | :---: | :---: |
 | **TFP-Router Accuracy** | **100.0%** (1,390 / 1,390) | $\ge 98.0\%$ | Pass |
 | **Routing Weighted F1 Score** | **100.0%** (1.000 across all 9 classes) | $\ge 98.0\%$ | Pass |
-| **Average Routing Latency** | **0.092 ms** (P95: 0.136 ms) | $< 1.0\text{ ms}$ | Pass |
-| **Routing Throughput** | **~10,750 QPS** (Peak: 10,780 QPS) | $> 5,000\text{ QPS}$ | Pass |
+| **Average Routing Latency** | **0.100 ms** (P95: 0.146 ms) | $< 1.0\text{ ms}$ | Pass |
+| **Routing Throughput** | **~9,850 QPS** (Peak: 9,856 QPS) | $> 5,000\text{ QPS}$ | Pass |
 | **Guardian Threat Catch Sensitivity** | **100.0%** (350 / 350) | $\ge 99.0\%$ | Pass |
 | **Critical Security Breaches** | **0 Breaches** (0.0% FNR Risk) | $0\text{ Breaches}$ | Pass |
 | **Pytest Suite Pass Rate** | **392 / 392 (100%)** | $100\%$ | Pass |

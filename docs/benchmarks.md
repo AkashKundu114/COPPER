@@ -13,8 +13,8 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 
 | Benchmark Category | Sample Count | Accuracy | Precision / F1 | Latency (Avg) | Throughput (QPS) | Risk Breaches |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.093 ms** | **~10,780 QPS** | 0 |
-| **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.003 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
+| **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.1 ms** | **~9,856 QPS** | 0 |
+| **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.008 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
 | **Pytest Test Suite** | 392 | **100.0%** | **100.0%** | **174.7s total** | — | 0 |
 
@@ -29,7 +29,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 | **Stage 0: Dynamic Memory Cache** | **0.012 ms** | 0.018 ms | 0.022 ms | 0.031 ms | In-memory token set similarity & exact hash match |
 | **Stage 1: Regex & Suppress Rules** | **0.028 ms** | 0.041 ms | 0.052 ms | 0.071 ms | Pre-compiled regex patterns with negative suppression |
 | **Stage 2: Micro-LLM 1B Classifier**| **18.50 ms** | 24.20 ms | 28.60 ms | 35.00 ms | Quantized Llama-3.2-1B single-token logit prediction |
-| **Full End-to-End Routing Engine** | **0.088 ms** | **0.105 ms** | **0.118 ms** | **0.142 ms** | Blended execution (99.8% served by Stages 0 & 1) |
+| **Full End-to-End Routing Engine** | **0.105 ms** | **0.137 ms** | **0.146 ms** | **0.165 ms** | Blended execution (99.8% served by Stages 0 & 1) |
 
 ---
 
