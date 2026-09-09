@@ -23,11 +23,12 @@ function label(code: number): string {
 
 export function WeatherWidget() {
   const [weather, setWeather] = useState<Weather | null>(null);
-  const [status, setStatus] = useState<"loading" | "ok" | "denied">("loading");
+  const [status, setStatus] = useState<"loading" | "ok" | "denied">(() =>
+    typeof navigator !== "undefined" && !navigator.geolocation ? "denied" : "loading",
+  );
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setStatus("denied");
       return;
     }
     navigator.geolocation.getCurrentPosition(

@@ -289,20 +289,18 @@ const ThinkingProcessBlock: React.FC<{
   thought: string;
   isStreaming: boolean;
 }> = ({ thought, isStreaming }) => {
-  const [expanded, setExpanded] = useState(isStreaming);
+  const [userToggledExpanded, setUserToggledExpanded] = useState<boolean | null>(null);
+  const expanded = userToggledExpanded ?? isStreaming;
   const [copied, setCopied] = useState(false);
   const [seconds, setSeconds] = useState(1);
 
   useEffect(() => {
-    let timer: number | undefined;
-    if (isStreaming) {
-      setExpanded(true);
-      timer = window.setInterval(() => {
-        setSeconds((prev) => prev + 1);
-      }, 1000);
-    }
+    if (!isStreaming) return;
+    const timer = window.setInterval(() => {
+      setSeconds((prev) => prev + 1);
+    }, 1000);
     return () => {
-      if (timer) clearInterval(timer);
+      clearInterval(timer);
     };
   }, [isStreaming]);
 
@@ -324,7 +322,7 @@ const ThinkingProcessBlock: React.FC<{
       }`}
     >
       <div
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => setUserToggledExpanded(!expanded)}
         className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-900/70 hover:bg-slate-900 border-b border-slate-800/50 text-slate-400 hover:text-slate-200 transition-all cursor-pointer select-none"
       >
         <div className="flex items-center gap-2.5">

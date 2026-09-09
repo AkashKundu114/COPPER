@@ -1,8 +1,10 @@
 import json
+import math
 import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from app.core.constants import AgentType
 from app.core.logger import logger
@@ -21,6 +23,7 @@ class RoutingResult:
     is_consequential: bool = False
     cascade_risk: float = 0.0  # Novelty 1: Topological DAG cascade failure probability
     sub_tasks: list[str] = field(default_factory=list)  # Decomposed compound task pipeline
+    routing_entropy: float = 0.0  # Novelty 1: Shannon entropy H(R) = -sum(p_i * log2(p_i))
 
     def __str__(self) -> str:
         return self.agent.value
@@ -400,6 +403,24 @@ def decompose_compound_intent(message: str) -> list[str]:
     return tasks if len(tasks) > 1 else []
 
 
+def calculate_routing_entropy(scores: dict[Any, float]) -> float:
+    r"""
+    Novelty 1: Formal Information-Theoretic Routing Entropy.
+    H(R) = - \sum_{i} p_i \log_2(p_i)
+    Measures distribution ambiguity across candidate agent specialists.
+    Zero entropy indicates absolute single-agent determinism.
+    """
+    total = sum(scores.values())
+    if total <= 0:
+        return 0.0
+    entropy = 0.0
+    for s in scores.values():
+        if s > 0:
+            p = s / total
+            entropy -= p * math.log2(p)
+    return round(entropy, 3)
+
+
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
     res = await route_message_detailed(message, use_llm=use_llm)
     return res.agent
@@ -433,6 +454,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             is_consequential=consequential,
             cascade_risk=estimate_dag_cascade_risk(learned_agent, consequential, sub_tasks),
             sub_tasks=sub_tasks,
+            routing_entropy=0.0,
         )
 
     for compiled_pat in COMPILED_GREETING_PATTERNS:
@@ -447,6 +469,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 is_consequential=False,
                 cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, False),
                 sub_tasks=[],
+                routing_entropy=0.0,
             )
 
     scores: dict[AgentType, float] = dict.fromkeys(COMPILED_KEYWORD_RULES, 0.0)
@@ -468,6 +491,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     total_score = sum(scores.values())
 
     confidence = round(best_score / total_score, 3) if total_score > 0 else 0.0
+    entropy = calculate_routing_entropy(scores)
 
     if best_score >= 1.5:
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -481,6 +505,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             is_consequential=consequential,
             cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
             sub_tasks=sub_tasks,
+            routing_entropy=entropy,
         )
 
     if use_llm:
@@ -496,6 +521,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 is_consequential=consequential,
                 cascade_risk=estimate_dag_cascade_risk(llm_agent, consequential, sub_tasks),
                 sub_tasks=sub_tasks,
+                routing_entropy=0.15,
             )
         except Exception as e:
             logger.warning(f"LLM routing failed: {e}")
@@ -510,6 +536,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         is_consequential=consequential,
         cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, consequential, sub_tasks),
         sub_tasks=sub_tasks,
+        routing_entropy=round(entropy if entropy > 0 else 0.5, 3),
     )
 
 

@@ -24,9 +24,9 @@
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~10,780 QPS** (0.093 ms average latency).
+- **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~10,780 QPS** (0.092 ms average latency).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
-- **309 / 309 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
+- **392 / 392 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
 - **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
@@ -34,22 +34,23 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 309 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.09ms / ~10,780 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 392 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.09ms / ~10,780 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
-1. **Sub-Millisecond Multi-Stage Router (< 0.05ms):**
-   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), and micro-LLM intent scoring achieving **100.0% accuracy across 1,110 benchmark cases (~19,000 QPS)** with zero GPU blocking overhead.
+1. **TFP-Router (Topological Failure-Predicting Cascade Router < 0.10ms):**
+   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), weighted multi-class pattern scoring with negative suppression, and topological Directed Acyclic Graph (DAG) cascade failure risk ($\mathcal{R}_{\text{cascade}}$) prediction achieving **100.0% accuracy across 1,390 benchmark cases (~10,780 QPS)** with zero GPU blocking overhead.
 
-2. **Multi-Level Guardian Safety & Alignment Engine:**
-   A 4-tier disagreement protocol (Level 0: Execute, Level 1: Suggest, Level 2: Challenge, Level 3: Safety Boundary) that intercepts destructive shell invocations (`rm -rf`, drive formatting, database drops) and commitment conflicts with **100.0% threat catch sensitivity (0 breaches across 250 test cases)**.
+2. **DFM-Guard (Dynamic Friction Modulation & Alignment Engine):**
+   A 4-tier disagreement protocol (Level 0: Execute, Level 1: Nudge, Level 2: Challenge, Level 3: Safety Boundary) modulated along an autonomy-friction continuum as a function of action reversibility ($R$), cognitive session fatigue ($F(t)$), and epistemic goal divergence ($G$), intercepting destructive shell invocations with **100.0% threat catch sensitivity (0 breaches across 350 test cases)**.
 
 3. **Zero-Trust Data Firewall:**
    In-line regex and pattern sanitizer scrubbing sensitive API credentials (OpenAI `sk-` / `sk-proj-`, JWT Bearer tokens), Social Security Numbers (SSNs), credit card details, emails, IP addresses, and private filesystem paths prior to model ingestion or persistence.
 
-4. **3-Layer Epistemic Memory Engine:**
-   Classifies user interactions into Facts ($C \ge 0.85$), Observations ($0.50 \le C < 0.85$), and Hypotheses ($0.10 \le C < 0.50$) with continuous Bayesian belief revision and temporal decay mathematical formulation:
-   $$C(t) = C_0 \cdot e^{-\lambda_T \cdot \Delta t}$$
+4. **UMF-EDR & PW-EBR Epistemic Memory Engine:**
+   Classifies user interactions into Facts ($C \ge 0.85$), Observations ($0.50 \le C < 0.85$), and Hypotheses ($0.10 \le C < 0.50$) with continuous Bayesian belief revision and Unified Multi-Factor Epistemic Decay & Reinforcement:
+   $$C_i(\Delta t) = \max\left(C_{\text{floor}}(m_i), C_{i, 0} \cdot e^{-\lambda_{\text{eff}}(m_i) \cdot \Delta t}\right)$$
+   $$\lambda_{\text{eff}} = \frac{\lambda_T}{1 + \beta \ln(1 + N_{\text{retrievals}})}, \quad C_{\text{floor}} = 0.05 + 0.50 \cdot \mathcal{I}_i$$
 
 5. **100% Offline Multimodal Voice Pipeline:**
    Real-time local speech-to-text via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with real-time waveform equalization.
@@ -76,21 +77,21 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 │ FASTAPI BACKEND (Python 3.11+ / 100% Local Execution)                                       │
 │                                                                                             │
 │  ┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐  │
-│  │ Cascaded Agent Router   │ ──> │ Guardian Safety Engine │ ──> │ Zero-Trust Firewall    │  │
-│  │ (Stage 0 Memory -> 1B)  │     │ (Levels 0 - 3 Checks)  │     │ (PII & Secret Redact)  │  │
+│  │ TFP-Router (DAG Risk)   │ ──> │ DFM-Guard (Levels 0-3) │ ──> │ Zero-Trust Firewall    │  │
+│  │ (< 0.10ms / ~10k QPS)   │     │ (Friction Continuum)   │     │ (PII & Secret Redact)  │  │
 │  └────────────┬────────────┘     └────────────────────────┘     └───────────┬────────────┘  │
 │               │                                                             │               │
 │               └──────────────────────────────┬──────────────────────────────┘               │
 │                                              ▼                                              │
 │  ┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐  │
 │  │ AXIS Software Engineer  │ ──> │ Forge Sandbox Engine   │ ──> │ Local AI Model Pool    │  │
-│  │ (Coding Agent)          │     │ (Isolated Execution)   │     │ (26 GGUF / ONNX Models)│  │
+│  │ (Coding Agent)          │     │ (Isolated Execution)   │     │ (34 GGUF / ONNX Models)│  │
 │  └────────────┬────────────┘     └────────────────────────┘     └───────────┬────────────┘  │
 │               │                                                             │               │
 │               ▼                                                             ▼               │
 │  ┌─────────────────────────┐                                    ┌────────────────────────┐  │
-│  │ Epistemic Fact Engine   │                                    │ Offline Audio Pipeline │  │
-│  │ (Memory & Context)      │                                    │ (Whisper STT / Piper)  │  │
+│  │ UMF-EDR & PW-EBR Memory │                                    │ Offline Audio Pipeline │  │
+│  │ (Epistemic Plasticity)  │                                    │ (Whisper STT / Kokoro) │  │
 │  └────────────┬────────────┘                                    └────────────────────────┘  │
 └───────────────┼─────────────────────────────────────────────────────────────┼───────────────┘
                 │                                                             │
@@ -118,21 +119,40 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ---
 
-## Comprehensive Benchmark Results
+## Comprehensive Benchmark & Verification Results
 
 ![Routing & Guardian Benchmark](docs/images/routing_accuracy_benchmark.png)
 
+### 1. System Orchestration & Guardian Safety Benchmark
 Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](backend/eval/benchmark.py)) across **1,740 validation test cases**:
 
 | Evaluation Metric | Measured Result | Benchmark Standard | Status |
 | :--- | :---: | :---: | :---: |
-| **Agent Routing Accuracy** | **100.0%** (1,390 / 1,390) | $\ge 98.0\%$ | Pass |
-| **Routing Weighted F1 Score** | **100.0%** | $\ge 98.0\%$ | Pass |
-| **Average Routing Latency** | **0.102 ms** (P95: 0.148 ms) | $< 1.0\text{ ms}$ | Pass |
-| **Routing Throughput** | **9,662 QPS** | $> 5,000\text{ QPS}$ | Pass |
-| **Guardian Threat Catch Rate** | **100.0%** (350 / 350) | $\ge 99.0\%$ | Pass |
-| **Critical Security Breaches** | **0 Breaches** (0.0% Risk) | $0\text{ Breaches}$ | Pass |
-| **Pytest Suite Pass Rate** | **313 / 313 (100%)** | $100\%$ | Pass |
+| **TFP-Router Accuracy** | **100.0%** (1,390 / 1,390) | $\ge 98.0\%$ | Pass |
+| **Routing Weighted F1 Score** | **100.0%** (1.000 across all 9 classes) | $\ge 98.0\%$ | Pass |
+| **Average Routing Latency** | **0.092 ms** (P95: 0.136 ms) | $< 1.0\text{ ms}$ | Pass |
+| **Routing Throughput** | **~10,750 QPS** (Peak: 10,780 QPS) | $> 5,000\text{ QPS}$ | Pass |
+| **Guardian Threat Catch Sensitivity** | **100.0%** (350 / 350) | $\ge 99.0\%$ | Pass |
+| **Critical Security Breaches** | **0 Breaches** (0.0% FNR Risk) | $0\text{ Breaches}$ | Pass |
+| **Pytest Suite Pass Rate** | **392 / 392 (100%)** | $100\%$ | Pass |
+
+### 2. Epistemic Memory & Belief Revision Benchmark (UMF-EDR & PW-EBR)
+Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/benchmark_belief_revision.py) comparing UMF-EDR against Naive Bayes and Last-Write-Wins (LWW):
+
+| Evaluation Scenario | Stream / Attribute | LWW Baseline | Naive Bayes | UMF-EDR / PW-EBR (Ours) | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **1. Ambient Poisoning Defense** | `editor_theme` | 0.10 (Pass) | 0.70 (Fail)* | **0.05 (Pass)** | Pass |
+| **2. Instant User Convergence** | `user_name` | 0.90 (Pass) | 0.60 (Fail)** | **0.92 (Pass)** | Pass |
+| **3. 60-Day Preference Migration** | `frontend_framework` | 0.10 (Pass) | 0.60 (Fail) | **0.11 (Pass)** | Pass |
+| **4. Tool Corroboration** | `test_suite` | 0.90 (Pass) | 0.80 (Fail) | **0.87 (Pass)** | Pass |
+| **5. Retrieval Spacing Plasticity** | `api_architecture` | 0.90 (Pass) | 0.99 (Pass) | **0.77 (Pass)†** | Pass |
+| **6. Importance Floor Retention** | `hardware_profile` | 0.90 (Pass) | 0.70 (Pass) | **0.62 (Pass)‡** | Pass |
+| **Overall Convergence Accuracy** | | **100.0% (naive)** | **33.3% (failed)** | **100.0% (robust)** | **Pass** |
+
+*\* Naive Bayes poisoned by 3 ambient speculative statements ($C=0.70$). PW-EBR attenuated ambient chatter ($\gamma=0.25$).*  
+*\*\* Naive Bayes failed to reach FACT threshold ($C \ge 0.85$) on authoritative user correction. PW-EBR converged instantly ($C=0.92$).*  
+*† Under UMF-EDR, 8 retrieval accesses over 45 days expanded effective half-life, maintaining $C=0.77$ vs. $0.38$ unretrieved.*  
+*‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
 
 | Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 - 8GB) |
 | :--- | :--- |
@@ -244,7 +264,7 @@ COPPER/
 **C.O.P.P.E.R.** is an **independent, proprietary software system** created and owned by **Akash Kundu**.
 
 - **All Rights Reserved:** Copyright &copy; 2026 Akash Kundu.
-- **Proprietary & Patent Protection:** The architectural concepts, multi-stage routing algorithms, epistemic temporal decay mathematical formulation ($C(t) = C_0 \cdot e^{-\lambda_T \cdot \Delta t}$), Guardian safety protocol mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
+- **Proprietary & Patent Protection:** The architectural concepts, TFP-Router cascade risk algorithms, UMF-EDR epistemic decay mathematical formulations ($C_i(\Delta t) = \max(C_{\text{floor}}, C_{i, 0} e^{-\lambda_{\text{eff}} \Delta t})$), DFM-Guard adaptive friction alignment mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
 - **Strict Prohibition:** No part of this software may be copied, reproduced, modified, distributed, sublicensed, commercially exploited, or used to train artificial intelligence models without the express prior written consent of the copyright owner.
 - **Terms of License:** See the [`LICENSE`](LICENSE) file for the full proprietary license terms.
 

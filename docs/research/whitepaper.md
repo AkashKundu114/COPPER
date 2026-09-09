@@ -42,18 +42,22 @@ Traditional Retrieval-Augmented Generation (RAG) treats long-term memory as a fl
 
 ### 4.1 Epistemic Classification Hierarchy
 Memories are dynamically categorized by an autonomous background worker into confidence tiers:
-1. **Facts ($C \ge 0.85$):** Explicitly verified state (e.g., "User's primary language is TypeScript").
-2. **Observations ($0.50 \le C < 0.85$):** Contextual events observed in recent sessions. 
-3. **Hypotheses ($0.10 \le C < 0.50$):** Pattern inferences deduced by background memory learners.
+1. **Facts ($C \ge 0.85$):** Explicitly verified state (e.g., "User's primary language is TypeScript"). Decay constant $\lambda_{\text{Fact}} = 0.005\text{ day}^{-1}$ (Half-life $\approx 138.6\text{ days}$).
+2. **Observations ($0.50 \le C < 0.85$):** Contextual events observed in recent sessions. Decay constant $\lambda_{\text{Obs}} = 0.030\text{ day}^{-1}$ (Half-life $\approx 23.1\text{ days}$).
+3. **Hypotheses ($0.10 \le C < 0.50$):** Pattern inferences deduced by background memory learners. Decay constant $\lambda_{\text{Hyp}} = 0.100\text{ day}^{-1}$ (Half-life $\approx 6.93\text{ days}$).
 
-### 4.2 Bayesian Belief Updating
-When a memory item $i$ is re-observed, its confidence $C_i$ is updated mathematically as new evidence arrives:
-$$C_{i, \text{new}} = C_{i, \text{old}} + (1 - C_{i, \text{old}}) \times \alpha \times \log_2(1 + E_i)$$
-*(Where $\alpha = 0.15$ is the learning rate, and $E_i$ is the cumulative evidence count).*
+### 4.2 Surprise-Gated Bayesian Log-Odds Update (PW-EBR)
+When a memory item $i$ receives new evidence $x$ with polarity $y \in \{0, 1\}$ and source provenance $\gamma_s \in (0, 1]$, confidence is updated in log-odds space ($L = \ln \frac{C}{1 - C}$):
+$$L_{i, t+1} = L_{i, t} + \text{sign}(y - 0.5) \cdot \gamma_s \cdot \min(3.5, I(x \mid C_{i, t}) \cdot \kappa_s)$$
+*(Where $I(x \mid C_{i, t}) = -\log_2(1 - |C_{i, t} - y| + 10^{-4})$ is the information-theoretic surprise, and $\gamma_{\text{explicit}} = 1.00, \gamma_{\text{tool}} = 0.85, \gamma_{\text{chat}} = 0.50, \gamma_{\text{ambient}} = 0.25$).*
 
-### 4.3 Exponential Temporal Decay & Hybrid Retrieval
-Unreinforced memories undergo exponential temporal decay ($C_i(t) = C_{i, 0} \times e^{-\lambda_T \cdot \Delta t}$) to prevent stagnation. Context retrieval utilizes a weighted formula to prevent unverified semantic matches from overriding established facts:
-$$S_{\text{final}} = 0.6 \cdot \text{CosineSim}(v_q, v_m) + 0.4 \cdot C_m$$
+### 4.3 Unified Epistemic Decay & Reinforcement (UMF-EDR)
+Transcending the static retrieval scoring of *Generative Agents* (Park et al., 2023), C.O.P.P.E.R. models retrieval-induced plasticity and importance-bounded floors:
+$$C_i(\Delta t) = \max\left( C_{\text{floor}}(m_i), C_{i, 0} \cdot e^{-\lambda_{\text{eff}}(m_i) \cdot \Delta t} \right)$$
+$$\lambda_{\text{eff}}(m_i) = \frac{\lambda_T}{1 + \beta_{\text{plasticity}} \cdot \ln(1 + N_{\text{retrievals}}(m_i))}, \quad C_{\text{floor}}(m_i) = 0.05 + 0.50 \cdot \mathcal{I}_i$$
+
+During prompt assembly, memories are ranked via a unified multi-factor relevance metric:
+$$S_{\text{unified}}(q, m_i) = 0.50 \cdot \text{Relevance}(v_q, v_{m_i}) + 0.35 \cdot C_i + 0.15 \cdot \mathcal{I}_i$$
 
 ---
 

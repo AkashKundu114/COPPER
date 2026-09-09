@@ -8,6 +8,13 @@ import {
   BarChart3,
   Sparkles,
   Settings,
+  Shield,
+  Calendar,
+  CheckSquare,
+  Layers,
+  Activity,
+  TrendingUp,
+  UtensilsCrossed,
 } from "lucide-react";
 
 export type NavSection =
@@ -32,15 +39,47 @@ interface SidebarProps {
   onSelectSection: (section: NavSection) => void;
 }
 
-const NAV_ITEMS: { id: NavSection; label: string; icon: React.ElementType }[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "companion", label: "Companion HUD", icon: Radio },
-  { id: "chat", label: "Conversation", icon: MessageSquare },
-  { id: "agents", label: "Agent Registry", icon: Bot },
-  { id: "memory", label: "Memory Center", icon: Brain },
-  { id: "benchmarks", label: "Benchmarks & Metrics", icon: BarChart3 },
-  { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
-  { id: "settings", label: "Settings", icon: Settings },
+interface NavGroup {
+  category: string;
+  items: { id: NavSection; label: string; icon: React.ElementType }[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    category: "COMMAND & HUD",
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { id: "companion", label: "Companion HUD", icon: Radio },
+      { id: "chat", label: "Conversation", icon: MessageSquare },
+    ],
+  },
+  {
+    category: "COGNITIVE MESH",
+    items: [
+      { id: "agents", label: "Agent Registry", icon: Bot },
+      { id: "memory", label: "Memory Center", icon: Brain },
+      { id: "benchmarks", label: "Benchmarks", icon: BarChart3 },
+      { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
+      { id: "security", label: "Security Center", icon: Shield },
+    ],
+  },
+  {
+    category: "MISSION OPS",
+    items: [
+      { id: "today", label: "Today & Schedule", icon: Calendar },
+      { id: "tasks", label: "Tasks & Queue", icon: CheckSquare },
+      { id: "projects", label: "Projects", icon: Layers },
+      { id: "activity", label: "Activity Stream", icon: Activity },
+      { id: "insights", label: "System Insights", icon: TrendingUp },
+      { id: "food", label: "Nutrition & Bio", icon: UtensilsCrossed },
+    ],
+  },
+  {
+    category: "SYSTEM",
+    items: [
+      { id: "settings", label: "Settings", icon: Settings },
+    ],
+  },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -76,36 +115,43 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Navigation Sections */}
-        <nav className="no-drag space-y-0.5 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSelectSection(item.id)}
-                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group ${
-                  isActive
-                    ? "copper-trace bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 shadow-sm"
-                    : "text-zinc-400 border border-transparent hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <div className="flex items-center gap-2.5 truncate">
-                  <Icon
-                    className={`w-[14px] h-[14px] flex-shrink-0 transition-colors ${
+        <nav className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.category} className="space-y-0.5">
+              <div className="px-2 py-1 text-[8.5px] font-mono font-semibold tracking-wider text-zinc-500 uppercase flex items-center justify-between">
+                <span>{group.category}</span>
+              </div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelectSection(item.id)}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group ${
                       isActive
-                        ? "text-cyber-cyan drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]"
-                        : "text-zinc-500 group-hover:text-zinc-300"
+                        ? "copper-trace bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 shadow-sm"
+                        : "text-zinc-400 border border-transparent hover:text-white hover:bg-white/5"
                     }`}
-                  />
-                  <span className="tracking-tight truncate">{item.label}</span>
-                </div>
-                {isActive && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_rgba(0,240,255,0.8)] flex-shrink-0 ml-1" />
-                )}
-              </button>
-            );
-          })}
+                  >
+                    <div className="flex items-center gap-2.5 truncate">
+                      <Icon
+                        className={`w-[14px] h-[14px] flex-shrink-0 transition-colors ${
+                          isActive
+                            ? "text-cyber-cyan drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]"
+                            : "text-zinc-500 group-hover:text-zinc-300"
+                        }`}
+                      />
+                      <span className="tracking-tight truncate">{item.label}</span>
+                    </div>
+                    {isActive && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_rgba(0,240,255,0.8)] flex-shrink-0 ml-1" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </div>
 

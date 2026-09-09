@@ -96,7 +96,33 @@ export const KnowledgeGraphView: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchGraphData(focusedEntityName || undefined);
+    let active = true;
+    const load = async () => {
+      try {
+        if (focusedEntityName) {
+          const sub = await knowledgeAPI.getSubgraph({ entity: focusedEntityName, depth: 2, max_nodes: 50 });
+          if (!active) return;
+          setEntities(sub.nodes);
+          setRelationships(sub.links || sub.edges || []);
+        } else {
+          const sub = await knowledgeAPI.getSubgraph({ depth: 2, max_nodes: 60 });
+          if (!active) return;
+          setEntities(sub.nodes);
+          setRelationships(sub.links || sub.edges || []);
+        }
+        const st = await knowledgeAPI.getStats();
+        if (!active) return;
+        setStats(st.stats);
+      } catch (err) {
+        console.error("[ATLAS Graph] Fetch failed:", err);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
   }, [focusedEntityName]);
 
   // Filtered nodes based on type & search

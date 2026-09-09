@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
   Search,
+  LayoutDashboard,
+  Radio,
+  MessageSquare,
+  Bot,
   Brain,
+  BarChart3,
+  Sparkles,
+  Settings,
   Shield,
   Calendar,
-  Bot,
   CheckSquare,
-  Settings,
+  Layers,
+  Activity,
+  TrendingUp,
+  UtensilsCrossed,
 } from "lucide-react";
 import type { NavSection } from "../layout/Sidebar";
 
@@ -15,6 +24,122 @@ interface CommandPaletteProps {
   onClose: () => void;
   onSelectSection: (section: NavSection) => void;
 }
+
+interface CommandItem {
+  label: string;
+  section: NavSection;
+  icon: React.ElementType;
+  keywords?: string;
+  category: string;
+}
+
+const COMMAND_LIST: CommandItem[] = [
+  {
+    label: "Ops Center Dashboard",
+    section: "dashboard",
+    icon: LayoutDashboard,
+    category: "Command",
+    keywords: "home overview telemetry status telemetry",
+  },
+  {
+    label: "Companion HUD (Continuous Voice / VAD)",
+    section: "companion",
+    icon: Radio,
+    category: "Command",
+    keywords: "voice holographic audio handsfree mic live vad",
+  },
+  {
+    label: "Conversation & Multi-Agent Chat",
+    section: "chat",
+    icon: MessageSquare,
+    category: "Command",
+    keywords: "chat talk message ask assistant prompt",
+  },
+  {
+    label: "Agent Registry & Orchestrator",
+    section: "agents",
+    icon: Bot,
+    category: "Cognitive Mesh",
+    keywords: "models mesh swarm subagents routing",
+  },
+  {
+    label: "Memory Center & Knowledge Graph",
+    section: "memory",
+    icon: Brain,
+    category: "Cognitive Mesh",
+    keywords: "graph episodic semantic atlas recall memory",
+  },
+  {
+    label: "System Benchmarks & Metrics",
+    section: "benchmarks",
+    icon: BarChart3,
+    category: "Cognitive Mesh",
+    keywords: "latency accuracy evaluation throughput tests",
+  },
+  {
+    label: "Autonomous Self-Improvement & LoRA",
+    section: "self-improvement",
+    icon: Sparkles,
+    category: "Cognitive Mesh",
+    keywords: "training adapters feedback dpo fine-tuning",
+  },
+  {
+    label: "Security Center & Air-Gap Audit",
+    section: "security",
+    icon: Shield,
+    category: "Cognitive Mesh",
+    keywords: "guardian airgap permissions defenses audit",
+  },
+  {
+    label: "Today & Daily Schedule",
+    section: "today",
+    icon: Calendar,
+    category: "Mission Ops",
+    keywords: "calendar events agenda day plan schedule",
+  },
+  {
+    label: "Tasks & Objective Queue",
+    section: "tasks",
+    icon: CheckSquare,
+    category: "Mission Ops",
+    keywords: "todo action items backlog priorities queue",
+  },
+  {
+    label: "Projects & Workspaces",
+    section: "projects",
+    icon: Layers,
+    category: "Mission Ops",
+    keywords: "repositories workspace files deliverables",
+  },
+  {
+    label: "Activity Stream & Audit Log",
+    section: "activity",
+    icon: Activity,
+    category: "Mission Ops",
+    keywords: "history logs timeline events telemetry audit",
+  },
+  {
+    label: "System Insights & Trends",
+    section: "insights",
+    icon: TrendingUp,
+    category: "Mission Ops",
+    keywords: "analytics patterns performance overview trends",
+  },
+  {
+    label: "Nutrition, Meal & Bio Tracker",
+    section: "food",
+    icon: UtensilsCrossed,
+    category: "Mission Ops",
+    keywords: "calories food diet health macro nutrients bio",
+  },
+  {
+    label: "System Settings & Diagnostics",
+    section: "settings",
+    icon: Settings,
+    category: "System",
+    keywords: "config preferences developer mode telemetry options",
+  },
+];
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   open,
@@ -40,43 +165,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   if (!open) return null;
 
-  const commands = [
-    {
-      label: "Ask COPPER Assistant",
-      section: "chat" as NavSection,
-      icon: Brain,
-    },
-    {
-      label: "Open Schedule & Today View",
-      section: "today" as NavSection,
-      icon: Calendar,
-    },
-    {
-      label: "Create / View Tasks",
-      section: "tasks" as NavSection,
-      icon: CheckSquare,
-    },
-    {
-      label: "Open Memory Center",
-      section: "memory" as NavSection,
-      icon: Brain,
-    },
-    {
-      label: "Manage Agent Registry",
-      section: "agents" as NavSection,
-      icon: Bot,
-    },
-    {
-      label: "Open Security Center",
-      section: "security" as NavSection,
-      icon: Shield,
-    },
-    {
-      label: "Settings & Developer Mode",
-      section: "settings" as NavSection,
-      icon: Settings,
-    },
-  ].filter((c) => c.label.toLowerCase().includes(query.toLowerCase()));
+  const commands = COMMAND_LIST.filter(
+    (c) =>
+      c.label.toLowerCase().includes(query.toLowerCase()) ||
+      c.section.toLowerCase().includes(query.toLowerCase()) ||
+      (c.keywords && c.keywords.toLowerCase().includes(query.toLowerCase())),
+  );
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-24 select-none">
@@ -109,16 +203,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     onSelectSection(cmd.section);
                     onClose();
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-text-muted hover:bg-accent/15 hover:text-text transition-all text-left group"
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs text-zinc-300 hover:bg-cyber-cyan/10 hover:text-white hover:border-cyber-cyan/30 border border-transparent transition-all text-left group"
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon
-                      size={16}
-                      className="text-text-muted group-hover:text-molten"
-                    />
-                    <span>{cmd.label}</span>
+                  <div className="flex items-center gap-3 truncate">
+                    <div className="p-1.5 rounded-md bg-white/5 border border-white/10 group-hover:border-cyber-cyan/40 group-hover:bg-cyber-cyan/15 transition-all flex-shrink-0">
+                      <Icon
+                        size={14}
+                        className="text-zinc-400 group-hover:text-cyber-cyan transition-colors"
+                      />
+                    </div>
+                    <div className="flex flex-col truncate">
+                      <span className="font-medium text-[12.5px] truncate text-white">{cmd.label}</span>
+                      <span className="text-[10px] text-zinc-500 font-mono">{cmd.category}</span>
+                    </div>
                   </div>
-                  <span className="text-[10px] text-text-muted font-mono uppercase tracking-wider">
+                  <span className="text-[9.5px] text-cyber-cyan/80 font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/20 ml-2 flex-shrink-0">
                     {cmd.section}
                   </span>
                 </button>

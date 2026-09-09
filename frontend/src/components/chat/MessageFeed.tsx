@@ -206,13 +206,23 @@ export function MessageFeed({
 }: MessageFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<ParsedDocument | null>(null);
-  const [showCorrection, setShowCorrection] = useState<{ id: string; summary: string } | null>(null);
+  const [dismissedCorrectionId, setDismissedCorrectionId] = useState<string | null>(null);
+  const [expiredCorrectionId, setExpiredCorrectionId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (lastCorrectionAck && (Date.now() - lastCorrectionAck.timestamp < 6000)) {
-      setShowCorrection(lastCorrectionAck);
-    }
+    if (!lastCorrectionAck) return;
+    const timer = window.setTimeout(() => {
+      setExpiredCorrectionId(lastCorrectionAck.id);
+    }, 6000);
+    return () => window.clearTimeout(timer);
   }, [lastCorrectionAck]);
+
+  const showCorrection =
+    lastCorrectionAck &&
+    lastCorrectionAck.id !== dismissedCorrectionId &&
+    lastCorrectionAck.id !== expiredCorrectionId
+      ? lastCorrectionAck
+      : null;
 
   useEffect(() => {
     if (feedRef.current) {
@@ -350,7 +360,7 @@ export function MessageFeed({
             )}
             <AnimatePresence>
               {isLastAssistant && showCorrection && (
-                <CorrectionAckPill summary={showCorrection.summary} onFade={() => setShowCorrection(null)} />
+                <CorrectionAckPill summary={showCorrection.summary} onFade={() => setDismissedCorrectionId(showCorrection.id)} />
               )}
             </AnimatePresence>
           </div>

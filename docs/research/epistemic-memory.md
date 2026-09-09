@@ -43,39 +43,53 @@ C.O.P.P.E.R. solves this through an **Epistemic Memory Framework** based on Baye
 
 ---
 
-## 3. Mathematical Confidence & Decay Formulas
+## 3. Mathematical Confidence & Decay Formulas (UMF-EDR Framework)
 
-### 3.1 Reinforcement Formula (Bayesian Update)
-When an existing memory item $i$ is re-observed or reinforced, its confidence score $C_i$ is updated via:
+Existing architectures like *Generative Agents* (Park et al., 2023) use static multi-factor scoring purely at retrieval query time:
+$$\text{Score} = \alpha_{\text{recency}} \cdot \text{recency} + \alpha_{\text{importance}} \cdot \text{importance} + \alpha_{\text{relevance}} \cdot \text{relevance}$$
 
-$$C_{i, \text{new}} = C_{i, \text{old}} + (1 - C_{i, \text{old}}) \times \alpha \times \log_2(1 + E_i)$$
+However, *Generative Agents* treats this scoring as a decoupled linear heuristic without updating the underlying epistemic belief state or modeling the cognitive spacing effect. C.O.P.P.E.R. formalizes **UMF-EDR (Unified Multi-Factor Epistemic Decay and Reinforcement)**, creating a closed-loop dynamical memory engine.
 
-Where:
-- $C_{i, \text{old}}$ is the current confidence score.
-- $\alpha$ is the learning rate hyperparameter ($\alpha = 0.15$).
-- $E_i$ is the cumulative evidence count ($E_{i, \text{new}} = E_{i, \text{old}} + 1$).
+### 3.1 Surprise-Gated Bayesian Log-Odds Update (PW-EBR)
+When an existing memory item $i$ receives new evidence $x$ with polarity $y \in \{0, 1\}$ and source provenance $\gamma_s \in (0, 1]$:
 
-### 3.2 Temporal Decay Formula
-Confidence decays gradually over time unless reinforced:
-
-$$C_i(t) = C_{i, 0} \times e^{-\lambda_T \cdot \Delta t}$$
+$$L_{i, t+1} = L_{i, t} + \text{sign}(y - 0.5) \cdot \gamma_s \cdot \min(3.5, I(x \mid C_{i, t}) \cdot \kappa_s)$$
 
 Where:
-- $\Delta t$ is the time elapsed in days since last reinforcement.
-- $\lambda_T$ is the decay constant specific to epistemic type $T$:
-  - $\lambda_{\text{Fact}} = 0.005\text{ days}^{-1}$ (Half-life $\approx 138\text{ days}$)
-  - $\lambda_{\text{Observation}} = 0.03\text{ days}^{-1}$ (Half-life $\approx 23\text{ days}$)
-  - $\lambda_{\text{Hypothesis}} = 0.10\text{ days}^{-1}$ (Half-life $\approx 7\text{ days}$)
+- $L_{i, t} = \ln\left(\frac{C_{i, t}}{1 - C_{i, t}}\right)$ is the prior belief in log-odds space.
+- $I(x \mid C_{i, t}) = -\log_2(1 - |C_{i, t} - y| + 10^{-4})$ is the information-theoretic surprise.
+- $\gamma_s$ is the source provenance weight ($\gamma_{\text{explicit}} = 1.00$, $\gamma_{\text{tool}} = 0.85$, $\gamma_{\text{chat}} = 0.50$, $\gamma_{\text{ambient}} = 0.25$).
+- $\kappa_s$ is the provenance decisiveness scale factor.
+- $C_{i, t+1} = \frac{1}{1 + e^{-L_{i, t+1}}}$ recovers the updated confidence probability.
+
+### 3.2 Unified Multi-Factor Epistemic Decay (UMF-EDR)
+Memory confidence decays over elapsed days $\Delta t$, modulated by retrieval-induced plasticity and intrinsic epistemic importance:
+
+$$C_i(\Delta t) = \max\left( C_{\text{floor}}(m_i), C_{i, 0} \cdot e^{-\lambda_{\text{eff}}(m_i) \cdot \Delta t} \right)$$
+
+1. **Retrieval-Induced Plasticity (Spacing & Testing Effect):**
+   Memories that are frequently retrieved for prompt context develop higher structural stability, slowing future decay sub-linearly:
+   $$\lambda_{\text{eff}}(m_i) = \frac{\lambda_T}{1 + \beta_{\text{plasticity}} \cdot \ln(1 + N_{\text{retrievals}}(m_i))}$$
+   *(Where $\beta_{\text{plasticity}} = 0.40$, and $\lambda_{\text{Fact}} = 0.005$, $\lambda_{\text{Obs}} = 0.030$, $\lambda_{\text{Hyp}} = 0.100$).*
+
+2. **Importance-Bounded Confidence Floor:**
+   Core truths (high importance $\mathcal{I}_i \in [0.1, 1.0]$) never decay below an epistemic threshold:
+   $$C_{\text{floor}}(m_i) = C_{\min} + (C_{\text{base\_floor}} - C_{\min}) \cdot \mathcal{I}_i \quad (C_{\min} = 0.05, C_{\text{base\_floor}} = 0.55)$$
+
+3. **Closed-Loop Retrieval Reinforcement:**
+   Accessing memory $m_i$ provides active synaptic reinforcement:
+   $$N_{\text{retrievals}}(m_i) \leftarrow N_{\text{retrievals}}(m_i) + 1$$
+   $$C_{i, \text{new}} = \min(0.99, C_i + 0.02 \cdot \mathcal{I}_i)$$
 
 ---
 
-## 4. Hybrid Retrieval Architecture (Vector + Relational)
+## 4. Multi-Factor Context Retrieval Architecture
 
-When retrieving memory context for prompt augmentation:
-1. **Relational Query:** Selects top high-confidence Facts ($C \ge 0.85$) belonging to the active user context.
-2. **Vector Similarity Query (ChromaDB):** Performs cosine similarity search over `copper_epistemic_memory` collection using query embedding $v_q$.
-3. **Combined Rank Score:**
+When selecting memory context for dynamic prompt injection, C.O.P.P.E.R. synthesizes semantic relevance, dynamic epistemic confidence, and intrinsic importance into a unified context score:
 
-$$S_{\text{final}} = w_v \cdot \text{CosineSim}(v_q, v_m) + w_c \cdot C_m$$
+$$S_{\text{unified}}(q, m_i) = \alpha_{\text{rel}} \cdot \text{Relevance}(v_q, v_{m_i}) + \alpha_{\text{conf}} \cdot C_i(\Delta t, N, \mathcal{I}) + \alpha_{\text{imp}} \cdot \mathcal{I}_i$$
 
-Where $w_v = 0.6$ and $w_c = 0.4$. This ensures that relevant observations with high confidence score higher than low-confidence semantic matches.
+Where:
+- $\text{Relevance}(v_q, v_{m_i}) = \max\left(0, 1 - \frac{\text{Distance}(v_q, v_{m_i})}{2.0}\right)$
+- $\alpha_{\text{rel}} = 0.50$, $\alpha_{\text{conf}} = 0.35$, $\alpha_{\text{imp}} = 0.15$ (guaranteeing $\sum \alpha = 1.0$).
+- High-relevance, high-confidence, high-importance facts dominate prompt context, while unverified or decayed hypotheses are smoothly suppressed.

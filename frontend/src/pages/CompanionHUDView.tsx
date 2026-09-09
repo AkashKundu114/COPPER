@@ -71,6 +71,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
     const nextVal = !handsFree;
     setHandsFree(nextVal);
     localStorage.setItem("copper_continuous_voice", String(nextVal));
+    if (!nextVal) {
+      setIsRecording(false);
+      isRecordingRef.current = false;
+    }
   };
 
   // Setup Continuous Web Audio VAD
@@ -84,7 +88,6 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         micStreamRef.current.getTracks().forEach((t) => t.stop());
         micStreamRef.current = null;
       }
-      setIsRecording(false);
       isRecordingRef.current = false;
       return;
     }

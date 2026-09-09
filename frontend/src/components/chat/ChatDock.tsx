@@ -91,7 +91,6 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
-  const recordTimerRef = useRef<number | null>(null);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -104,17 +103,12 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
 
   // Recording duration timer
   useEffect(() => {
-    if (isRecording) {
-      setRecordDuration(0);
-      recordTimerRef.current = window.setInterval(() => {
-        setRecordDuration((prev) => prev + 1);
-      }, 1000);
-    } else {
-      if (recordTimerRef.current) clearInterval(recordTimerRef.current);
-      setRecordDuration(0);
-    }
+    if (!isRecording) return;
+    const timer = window.setInterval(() => {
+      setRecordDuration((prev) => prev + 1);
+    }, 1000);
     return () => {
-      if (recordTimerRef.current) clearInterval(recordTimerRef.current);
+      clearInterval(timer);
     };
   }, [isRecording]);
 
@@ -238,6 +232,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
       };
 
       recorder.start();
+      setRecordDuration(0);
       setIsRecording(true);
     } catch (e) {
       console.error("Mic access denied", e);
@@ -248,6 +243,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      setRecordDuration(0);
     }
   };
 

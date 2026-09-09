@@ -14,19 +14,25 @@ export const SettingsView: React.FC = () => {
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      if ((window as any).require) {
-        const { ipcRenderer } = (window as any).require("electron");
-        ipcRenderer.invoke("get-backend-status").then(setBackendRunning);
-      } else {
-        // In browser dev mode, check port 8000 via fetch
-        fetch(`${API_BASE}/api/v1/system/telemetry`)
-          .then((res) => setBackendRunning(res.ok))
-          .catch(() => setBackendRunning(false));
+    let active = true;
+    const checkStatus = async () => {
+      try {
+        if ((window as any).require) {
+          const { ipcRenderer } = (window as any).require("electron");
+          const running = await ipcRenderer.invoke("get-backend-status");
+          if (active) setBackendRunning(running);
+        } else {
+          const res = await fetch(`${API_BASE}/api/v1/system/telemetry`);
+          if (active) setBackendRunning(res.ok);
+        }
+      } catch {
+        if (active) setBackendRunning(false);
       }
-    } catch {
-      setBackendRunning(false);
-    }
+    };
+    checkStatus();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const toggleBackend = async () => {

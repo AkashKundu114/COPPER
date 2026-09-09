@@ -11,6 +11,24 @@ interface TopBarProps {
   onOpenCommandPalette: () => void;
 }
 
+const SECTION_TITLES: Record<string, string> = {
+  dashboard: "Operations Center",
+  companion: "Companion HUD // VAD",
+  chat: "Multi-Agent Conversation",
+  agents: "Agent Registry & Swarm",
+  memory: "Memory Center & Atlas",
+  benchmarks: "System Benchmarks",
+  "self-improvement": "Self-Improvement & LoRA",
+  security: "Security Center & Audit",
+  today: "Today & Schedule",
+  tasks: "Tasks & Objective Queue",
+  projects: "Projects & Workspaces",
+  activity: "Activity Stream & Logs",
+  insights: "System Insights & Trends",
+  food: "Nutrition & Bio Tracker",
+  settings: "System Diagnostics & Settings",
+};
+
 export const TopBar: React.FC<TopBarProps> = ({
   sectionTitle,
   profile,
@@ -39,6 +57,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     { id: "crt", label: "CRT" },
   ];
 
+  const displayTitle =
+    SECTION_TITLES[sectionTitle] || sectionTitle.replace(/-/g, " ");
+
   return (
     <header className="drag-region h-14 bg-[#05080e]/90 backdrop-blur-xl border-b border-cyber-cyan/20 flex items-center justify-between px-4 md:px-6 z-20 select-none shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
       {/* Left: Section Title & Coordinates Ticker */}
@@ -46,7 +67,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
           <h2 className="font-display text-xs md:text-sm font-bold text-white tracking-wider uppercase whitespace-nowrap">
-            {sectionTitle}
+            {displayTitle}
           </h2>
         </div>
 

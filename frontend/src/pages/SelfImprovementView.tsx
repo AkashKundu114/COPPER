@@ -171,7 +171,39 @@ export const SelfImprovementView: React.FC = () => {
   };
 
   useEffect(() => {
-    loadAllData();
+    let active = true;
+    const init = async () => {
+      try {
+        const [mRes, fRes, eRes, rRes, tStats, aList, tJob] = await Promise.all([
+          selfImprovementAPI.getMetrics(7),
+          selfImprovementAPI.getFailures(10),
+          selfImprovementAPI.getProposedEdits(),
+          selfImprovementAPI.getModelRankings(),
+          trainingAPI.getStats().catch(() => null),
+          trainingAPI.getAdapters().catch(() => []),
+          trainingAPI.getStatus().catch(() => null),
+        ]);
+        if (!active) return;
+        setMetrics(mRes);
+        setFailures(fRes.recent_failures || []);
+        setFailureCategories(fRes.category_counts || {});
+        setProposedEdits(eRes || []);
+        setModelRankings(rRes || []);
+        if (tStats) setTrainingStats(tStats);
+        if (aList) setAdapters(aList);
+        if (tJob && tJob.job) setTrainingJob(tJob.job);
+      } catch (err: any) {
+        if (!active) return;
+        console.error("Failed to load self-improvement data:", err);
+        setBannerMessage("Notice: Connected with local fallback metrics.");
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    init();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleRunBenchmark = async () => {

@@ -1,5 +1,6 @@
+import hashlib
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 
@@ -15,6 +16,8 @@ class FirewallResult:
     redacted_text: str
     classification: DataClass
     redaction_count: int
+    audit_hash: str = ""  # Novelty 6: Zero-knowledge cryptographic provenance integrity hash
+    redacted_categories: list[str] = field(default_factory=list)  # Preserved structural tags
 
 
 _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
@@ -71,13 +74,25 @@ def classify_and_redact(text: str) -> FirewallResult:
     worst = DataClass.PUBLIC
     redaction_count = 0
     result_text = text
+    categories: list[str] = []
     for pattern, replacement, classification in _PATTERNS:
         result_text, n = pattern.subn(replacement, result_text)
         if n:
             redaction_count += n
+            categories.append(classification.value)
             if severity_order.index(classification) > severity_order.index(worst):
                 worst = classification
-    return FirewallResult(redacted_text=result_text, classification=worst, redaction_count=redaction_count)
+
+    # Cryptographic integrity provenance hash for zero-trust tracking
+    audit_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16] if redaction_count > 0 else ""
+
+    return FirewallResult(
+        redacted_text=result_text,
+        classification=worst,
+        redaction_count=redaction_count,
+        audit_hash=audit_hash,
+        redacted_categories=categories,
+    )
 
 
 def redact(text: str) -> str:

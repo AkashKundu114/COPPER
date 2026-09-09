@@ -35,6 +35,34 @@ class UserMemoryV2(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     last_confirmed_at = Column(DateTime(timezone=True), nullable=True)
 
+    @property
+    def importance(self) -> float:
+        if self.extra_metadata and "importance" in self.extra_metadata:
+            return float(self.extra_metadata["importance"])
+        if self.type == MemoryType.FACT:
+            return 0.90
+        elif self.type == MemoryType.OBSERVATION:
+            return 0.50
+        return 0.25
+
+    @importance.setter
+    def importance(self, val: float):
+        if not self.extra_metadata:
+            self.extra_metadata = {}
+        self.extra_metadata["importance"] = max(0.05, min(1.0, float(val)))
+
+    @property
+    def retrieval_count(self) -> int:
+        if self.extra_metadata and "retrieval_count" in self.extra_metadata:
+            return int(self.extra_metadata["retrieval_count"])
+        return 0
+
+    @retrieval_count.setter
+    def retrieval_count(self, val: int):
+        if not self.extra_metadata:
+            self.extra_metadata = {}
+        self.extra_metadata["retrieval_count"] = max(0, int(val))
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -44,6 +72,8 @@ class UserMemoryV2(Base):
             "source": self.source,
             "confidence": self.confidence,
             "evidence_count": self.evidence_count,
+            "importance": self.importance,
+            "retrieval_count": self.retrieval_count,
             "status": self.status.value if self.status else None,
             "supersedes_id": self.supersedes_id,
             "created_at": self.created_at.isoformat() if self.created_at else None,

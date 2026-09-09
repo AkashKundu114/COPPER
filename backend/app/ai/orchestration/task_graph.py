@@ -50,6 +50,8 @@ class TaskGraphResult:
     execution_trace: list[dict[str, Any]] = field(default_factory=list)
     inter_agent_messages: list[dict[str, Any]] = field(default_factory=list)
     artifacts: list[dict[str, Any]] = field(default_factory=list)
+    vads_layers: int = 0  # Novelty 4: VADS scheduled topological layers
+    peak_vram_budget_gb: float = 8.0  # Novelty 4: Hardware VRAM ceiling bound
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -62,6 +64,8 @@ class TaskGraphResult:
             "execution_trace": self.execution_trace,
             "inter_agent_messages": self.inter_agent_messages,
             "artifacts": self.artifacts,
+            "vads_layers": self.vads_layers,
+            "peak_vram_budget_gb": self.peak_vram_budget_gb,
         }
 
 
@@ -160,8 +164,10 @@ class TaskGraphExecutor:
 
         completed_task_ids: set[str] = set()
         failed_task_ids: set[str] = set()
+        layer_count = 0
 
         while len(completed_task_ids) + len(failed_task_ids) < len(plan.tasks):
+            layer_count += 1
             # Find tasks whose dependencies have all completed
             ready_tasks: list[SubTask] = []
             for t in plan.tasks:
@@ -373,6 +379,8 @@ class TaskGraphExecutor:
             execution_trace=execution_trace,
             inter_agent_messages=inter_agent_msgs,
             artifacts=artifacts,
+            vads_layers=layer_count,
+            peak_vram_budget_gb=8.0,
         )
 
         # Record trace in ContextBus

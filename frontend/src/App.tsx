@@ -34,7 +34,8 @@ import { AgentRegistry } from "./pages/AgentRegistry";
 import { Insights } from "./pages/Insights";
 import { SecurityCenter } from "./pages/SecurityCenter";
 import { BenchmarkMetricsView } from "./pages/BenchmarkMetricsView";
-import { SensorModeProvider, useSensorMode } from "./context/SensorModeContext";
+import { SensorModeProvider } from "./context/SensorModeProvider";
+import { useSensorMode } from "./context/SensorModeContext";
 
 function MainApp() {
   const { mode } = useSensorMode();
@@ -105,7 +106,7 @@ function MainApp() {
         );
       case "chat":
         return (
-          <div className="relative w-full h-full flex flex-col items-center">
+          <div className="relative w-full h-full flex flex-col items-center justify-between min-h-0">
             <MessageFeed
               lines={lines}
               agentStats={agentStats}
@@ -114,7 +115,7 @@ function MainApp() {
               activeTaskGraph={activeTaskGraph}
               activeComputerUse={activeComputerUse}
             />
-            <div className="w-full max-w-4xl px-6 pb-6">
+            <div className="w-full max-w-[850px] px-4 pb-6 mt-auto flex-shrink-0">
               <ChatDock
                 connected={connected}
                 thinking={thinking}
@@ -151,7 +152,7 @@ function MainApp() {
       case "settings":
         return <SettingsView />;
       default:
-        return <DashboardView />;
+        return <DashboardView onNavigate={setActiveSection} />;
     }
   };
 
@@ -184,30 +185,7 @@ function MainApp() {
               activeSection === "chat" ? "overflow-hidden" : "overflow-y-auto custom-scrollbar"
             }`}
           >
-            {activeSection === "chat" ? (
-              <div className="relative w-full h-full flex flex-col items-center justify-between min-h-0">
-                <MessageFeed
-                  lines={lines}
-                  agentStats={agentStats}
-                  thinking={thinking}
-                  activeAgent={activeAgent}
-                  activeTaskGraph={activeTaskGraph}
-                  activeComputerUse={activeComputerUse}
-                />
-                <div className="w-full max-w-[850px] px-4 pb-6 mt-auto flex-shrink-0">
-                  <ChatDock
-                    connected={connected}
-                    thinking={thinking}
-                    speaking={speaking}
-                    onSend={send}
-                    onStop={stopAudio}
-                    onClear={clearChat}
-                  />
-                </div>
-              </div>
-            ) : (
-              renderActiveSection()
-            )}
+            {renderActiveSection()}
           </motion.div>
         </AnimatePresence>
       </main>

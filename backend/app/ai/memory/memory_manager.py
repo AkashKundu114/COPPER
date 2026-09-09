@@ -28,14 +28,54 @@ DECAY_CONSTANTS: dict[MemoryType, float] = {
 }
 
 
-def compute_temporal_decay(confidence: float, mem_type: MemoryType, elapsed_days: float) -> float:
+def compute_unified_epistemic_decay(
+    confidence: float,
+    mem_type: MemoryType,
+    elapsed_days: float,
+    importance: float = 0.50,
+    retrieval_count: int = 0,
+) -> float:
     """
-    Computes continuous exponential temporal decay based on epistemic memory tier.
-    C(t) = max(0.05, C_0 * exp(-lambda_T * delta_t))
+    UMF-EDR (Unified Multi-Factor Epistemic Decay and Reinforcement):
+    Integrates:
+    1. Base tier decay constants (lambda_Fact=0.005, lambda_Obs=0.030, lambda_Hyp=0.100).
+    2. Spacing / Testing Effect: Retrieval-Induced Plasticity:
+       lambda_eff = lambda_T / (1.0 + beta * ln(1 + N_retrievals))
+    3. Importance-Bounded Confidence Floor:
+       C_floor = C_min + (C_base_floor - C_min) * Importance
+    Formula:
+       C(t) = max(C_floor, C_0 * exp(-lambda_eff * delta_t))
     """
-    lam = DECAY_CONSTANTS.get(mem_type, 0.03)
-    decayed = confidence * math.exp(-lam * max(0.0, elapsed_days))
-    return max(0.05, min(0.99, decayed))
+    lam_base = DECAY_CONSTANTS.get(mem_type, 0.030)
+    beta_plasticity = 0.40
+    lam_eff = lam_base / (1.0 + beta_plasticity * math.log(1.0 + max(0, retrieval_count)))
+
+    # Importance-bounded resistance floor (high-importance memories never decay below floor)
+    c_floor = 0.05 + (0.50 * max(0.0, min(1.0, importance)))
+    decayed = confidence * math.exp(-lam_eff * max(0.0, elapsed_days))
+    return max(c_floor, min(0.99, decayed))
+
+
+# Backward-compatible alias
+compute_temporal_decay = compute_unified_epistemic_decay
+
+
+def compute_unified_retrieval_score(
+    semantic_distance: float,
+    confidence: float,
+    importance: float = 0.50,
+    alpha_rel: float = 0.50,
+    alpha_conf: float = 0.35,
+    alpha_imp: float = 0.15,
+) -> float:
+    """
+    UMF-EDR Unified Context Scoring Function:
+    S_unified = alpha_rel * Relevance(v_q, v_m) + alpha_conf * Confidence(m) + alpha_imp * Importance(m)
+    where Relevance = max(0.0, 1.0 - (distance / 2.0))
+    """
+    relevance = max(0.0, min(1.0, 1.0 - (semantic_distance / 2.0)))
+    score = (alpha_rel * relevance) + (alpha_conf * confidence) + (alpha_imp * importance)
+    return round(score, 4)
 
 
 def compute_surprise_gated_log_odds(
@@ -44,15 +84,17 @@ def compute_surprise_gated_log_odds(
     elapsed_days: float,
     provenance_source: str = "chat",
     polarity: int = 1,
+    importance: float = 0.50,
+    retrieval_count: int = 0,
 ) -> float:
     """
-    PW-EBR Algorithm:
-    L_{t+1} = L_prior * exp(-lambda_T * delta_t) + gamma_s * Surprise * polarity
+    PW-EBR Algorithm with UMF-EDR integration:
+    L_{t+1} = L_prior * exp(-lambda_eff * delta_t) + gamma_s * Surprise * polarity
     where Surprise = -log2(1 - |C_prior - y| + 1e-4)
     and C_{new} = 1 / (1 + exp(-L_{t+1}))
     """
-    # 1. Decay prior confidence over elapsed time
-    c_prior = compute_temporal_decay(current_confidence, mem_type, elapsed_days)
+    # 1. Decay prior confidence over elapsed time using UMF-EDR multi-factor formulation
+    c_prior = compute_unified_epistemic_decay(current_confidence, mem_type, elapsed_days, importance, retrieval_count)
     c_prior = max(0.01, min(0.99, c_prior))
 
     # 2. Prior log-odds
@@ -124,17 +166,29 @@ class MemoryManager:
         results = await self.chat_store.search(query, n_results=limit)
         memories = []
         for r in results:
-            if r.get("distance", 99) < 1.5:
+            dist = r.get("distance", 99.0)
+            if dist < 1.5:
                 doc = r.get("document", "")
                 if is_corrupted_content(doc):
                     continue
+                meta = r.get("metadata", {})
+                mem_type = meta.get("type", "observation")
+                confidence = float(meta.get("confidence", 0.85 if mem_type == "fact" else 0.50))
+                importance = float(meta.get("importance", 0.90 if mem_type == "fact" else 0.50))
+                unified_score = compute_unified_retrieval_score(dist, confidence, importance)
+
                 memories.append(
                     {
                         "content": doc,
-                        "memory_type": r.get("metadata", {}).get("type", "observation"),
-                        "distance": r.get("distance", 0),
+                        "memory_type": mem_type,
+                        "distance": dist,
+                        "confidence": confidence,
+                        "importance": importance,
+                        "unified_score": unified_score,
                     }
                 )
+        # Sort by UMF-EDR unified ranking score descending
+        memories.sort(key=lambda m: m.get("unified_score", 0.0), reverse=True)
         return memories
 
     async def save_document(self, content: str, source: str, metadata: dict = None) -> str:
@@ -157,8 +211,13 @@ class MemoryManager:
         category: str | None = None,
         source: str = "chat",
         confidence: float = 0.5,
+        importance: float | None = None,
         user_id: int | None = None,
     ) -> UserMemoryV2:
+        if importance is None:
+            importance = (
+                0.90 if memory_type == MemoryType.FACT else (0.50 if memory_type == MemoryType.OBSERVATION else 0.25)
+            )
         mem = UserMemoryV2(
             user_id=user_id,
             content=content,
@@ -167,11 +226,12 @@ class MemoryManager:
             source=source,
             confidence=confidence,
             evidence_count=1,
+            extra_metadata={"importance": importance, "retrieval_count": 0},
         )
         db.add(mem)
         db.commit()
         db.refresh(mem)
-        logger.info(f"Saved {memory_type.value} memory: {content[:80]}")
+        logger.info(f"Saved {memory_type.value} memory (Importance: {importance:.2f}): {content[:80]}")
         return mem
 
     def reinforce_memory(
@@ -199,22 +259,39 @@ class MemoryManager:
         if confidence_delta is not None and confidence_delta != 0.05:
             mem.confidence = min(0.99, mem.confidence + confidence_delta)
         else:
-            # Novelty 2: PW-EBR Surprise-Gated Bayesian Log-Odds Update
+            # Novelty 2: PW-EBR with UMF-EDR Multi-Factor Scaling
             mem.confidence = compute_surprise_gated_log_odds(
                 current_confidence=mem.confidence,
                 mem_type=mem.type,
                 elapsed_days=elapsed_days,
                 provenance_source=provenance,
                 polarity=1,
+                importance=mem.importance,
+                retrieval_count=mem.retrieval_count,
             )
 
         if mem.confidence >= 0.85 and mem.type != MemoryType.FACT:
             mem.type = MemoryType.FACT
-            logger.info(f"[PW-EBR] Memory promoted to FACT: ID {mem.id} (Confidence: {mem.confidence})")
+            logger.info(f"[PW-EBR/UMF-EDR] Memory promoted to FACT: ID {mem.id} (Confidence: {mem.confidence})")
         elif mem.confidence < 0.50 and mem.type == MemoryType.OBSERVATION:
             mem.type = MemoryType.HYPOTHESIS
 
         mem.last_confirmed_at = now
+        db.commit()
+        db.refresh(mem)
+        return mem
+
+    def record_retrieval(self, db: Session, memory_id: int) -> UserMemoryV2 | None:
+        """
+        UMF-EDR Closed-Loop Retrieval Plasticity (Testing / Spacing Effect):
+        Reinforces memory stability when accessed during task execution.
+        """
+        mem = db.query(UserMemoryV2).filter(UserMemoryV2.id == memory_id).first()
+        if not mem:
+            return None
+        mem.retrieval_count += 1
+        # Plasticity bonus: reinforces confidence and slows future decay
+        mem.confidence = min(0.99, mem.confidence + (0.02 * mem.importance))
         db.commit()
         db.refresh(mem)
         return mem
