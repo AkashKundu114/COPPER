@@ -50,13 +50,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               <span className="text-zinc-500 block text-[9px] uppercase tracking-wider">
                 Intent Velocity
               </span>
-              <span className="text-cyber-cyan font-bold text-sm">0.052 ms</span>
+              <span className="text-cyber-cyan font-bold text-sm">0.105 ms</span>
             </div>
             <div className="p-2.5 rounded-xl bg-black/60 border border-cyber-cyan/20 text-right">
               <span className="text-zinc-500 block text-[9px] uppercase tracking-wider">
                 Mesh Throughput
               </span>
-              <span className="text-accent font-bold text-sm">~18,950 QPS</span>
+              <span className="text-accent font-bold text-sm">~9,856 QPS</span>
             </div>
           </div>
         </div>

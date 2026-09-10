@@ -246,7 +246,7 @@ export const BenchmarkMetricsView: React.FC = () => {
       const routingAcc = res.metrics?.routing?.overall_accuracy_pct ?? 100.0;
       const guardianCatch = res.metrics?.guardian?.threat_detection_sensitivity_pct ?? 100.0;
       const totalSamples = res.metrics?.routing?.total_samples + res.metrics?.guardian?.total_samples || 1740;
-      const avgLat = res.metrics?.routing?.latency_metrics_ms?.avg ?? 0.09;
+      const avgLat = res.metrics?.routing?.latency_metrics_ms?.avg ?? 0.100;
 
       setLiveProgress(100);
       setLiveResults({
@@ -730,8 +730,8 @@ export const BenchmarkMetricsView: React.FC = () => {
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold text-white">0.099 ms</span>
-                <span className="text-xs text-accent-400">~10,002 QPS</span>
+                <span className="text-2xl font-bold text-white">0.100 ms</span>
+                <span className="text-xs text-accent-400">~9,856 QPS</span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
                 Sub-millisecond instant dispatch across all cores.

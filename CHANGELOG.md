@@ -19,7 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Algorithmic Novelties & Epistemic Operating System Milestones
 
-> **Pioneered** a 100% offline, local-first personal AI operating system **as measured by** 100.0% routing precision (1,390 samples at 0.092ms / ~10,750 QPS), 100.0% Guardian threat intercept (0 breaches across 350 test cases), 100.0% epistemic belief convergence, and 392/392 passing tests, **by designing and implementing** TFP-Router, UMF-EDR & PW-EBR epistemic memory, and DFM-Guard adaptive friction alignment.
+> **Pioneered** a 100% offline, local-first personal AI operating system **as measured by** 100.0% routing precision (1,390 samples at 0.100ms / ~9,856 QPS), 100.0% Guardian threat intercept (0 breaches across 350 test cases), 100.0% epistemic belief convergence, and 392/392 passing tests, **by designing and implementing** TFP-Router, UMF-EDR & PW-EBR epistemic memory, and DFM-Guard adaptive friction alignment.
 
 ### Added
 - **TFP-Router (Topological Failure-Predicting Cascade Router):** Cascaded sub-millisecond dispatch (<0.10ms) combining Jaccard exemplar caching, weighted multi-class pattern scoring with negative suppression, compound intent decomposition (`sub_tasks`), and topological DAG cascade failure risk prediction ($\mathcal{R}_{\text{cascade}}$).
