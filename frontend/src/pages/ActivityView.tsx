@@ -12,6 +12,7 @@ import {
   Clock,
   Loader2,
   Sparkles,
+  Zap,
 } from "lucide-react";
 import { API_BASE } from "../lib/api";
 import {
@@ -22,7 +23,7 @@ import {
 interface ActivityLog {
   id: string;
   timestamp: string;
-  category: "Tools" | "NEXUS" | "Routing" | "Guardian" | "Firewall" | "Inference" | "Memory";
+  category: "Tools" | "NEXUS" | "Routing" | "Guardian" | "Firewall" | "Inference" | "Memory" | "Cache";
   title: string;
   detail: string;
   status: "success" | "warning" | "blocked" | "running";
@@ -199,9 +200,9 @@ export const ActivityView: React.FC = () => {
           const fetchedLogs: ActivityLog[] = traces.map((tr) => ({
             id: tr.dag_id || `trace-${Date.now()}`,
             timestamp: "Recent",
-            category: "NEXUS",
-            title: `Multi-Agent DAG: ${tr.goal?.slice(0, 60)}...`,
-            detail: `Executed ${tr.tasks?.length || 0} specialist sub-tasks across ContextBus.`,
+            category: (tr.category as any) || "NEXUS",
+            title: tr.goal?.startsWith("⚡") ? tr.goal : `Multi-Agent DAG: ${tr.goal?.slice(0, 60)}...`,
+            detail: tr.tasks?.[0]?.output || `Executed ${tr.tasks?.length || 0} specialist sub-tasks across ContextBus.`,
             status: tr.success ? "success" : "warning",
             taskGraph: tr,
           }));
@@ -303,6 +304,8 @@ export const ActivityView: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
+      case "cache":
+        return <Zap size={14} className="text-amber-400 fill-amber-400" />;
       case "tools":
         return <Wrench size={14} className="text-cyan-400" />;
       case "nexus":
@@ -362,6 +365,7 @@ export const ActivityView: React.FC = () => {
           [
             "all",
             "nexus",
+            "cache",
             "tools",
             "routing",
             "guardian",
@@ -379,7 +383,7 @@ export const ActivityView: React.FC = () => {
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            {cat === "nexus" ? "NEXUS Multi-Agent DAG" : cat}
+            {cat === "nexus" ? "NEXUS Multi-Agent DAG" : cat === "cache" ? "⚡ Instant Recall" : cat}
           </button>
         ))}
       </div>

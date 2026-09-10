@@ -17,6 +17,8 @@ from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
 from app.ai.memory.persistent_memory import persistent_memory
 from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
+from app.ai.cache.semantic_cache import semantic_cache
+from app.ai.orchestration.context_bus import context_bus
 from app.ai.orchestration.langchain_manager import langchain_manager
 from app.ai.orchestration.planner import nexus_planner
 from app.ai.orchestration.task_graph import task_graph_executor
@@ -102,6 +104,67 @@ class ChatService:
             prefix_confirmation = directive_res.confirmation + "\n\n---\n\n"
             message = directive_res.remaining_prompt
 
+        # Check Semantic Response Cache BEFORE routing (if cache hit, skip routing + agent entirely)
+        memory_snippet = persistent_memory.get_memory_prompt_snippet()
+        current_context_hash = semantic_cache.compute_context_hash(memory_snippet)
+        cache_match = await semantic_cache.lookup(message, context_hash=current_context_hash)
+
+        if cache_match.status == "hit" and cache_match.cached_response:
+            cached_text = (
+                prefix_confirmation + cache_match.cached_response
+                if prefix_confirmation
+                else cache_match.cached_response
+            )
+            hit_latency_ms = max(0.1, cache_match.latency_ms)
+            logger.info(
+                f"⚡ Instant Recall hit for query '{message[:60]}...' (similarity: {cache_match.similarity:.4f}, latency: {hit_latency_ms:.2f}ms)"
+            )
+
+            # Log cache hits in activity trace as '⚡ Instant Recall' with <1ms latency
+            self._log_cache_activity_trace(
+                session_id=session_id,
+                query=message,
+                response=cached_text,
+                similarity=cache_match.similarity,
+                latency_ms=hit_latency_ms,
+                db=db,
+            )
+
+            metrics = {
+                "model": "cache:instant-recall",
+                "prompt_tokens": max(1, len(message.split())),
+                "completion_tokens": max(1, len(cached_text.split())),
+                "total_tokens": max(2, len(message.split()) + len(cached_text.split())),
+                "tokens_per_sec": 2000.0,
+                "ttft_ms": hit_latency_ms,
+                "total_time_sec": round(hit_latency_ms / 1000.0, 4),
+                "total_time_ms": hit_latency_ms,
+                "confidence": 1.0,
+                "cached": True,
+                "instant_recall": True,
+                "similarity": cache_match.similarity,
+            }
+
+            await context_engine.append_message(session_id, "user", message)
+            await context_engine.append_message(
+                session_id,
+                "assistant",
+                cached_text,
+                agent_type=cache_match.agent_type or "chat",
+                model_name="cache:instant-recall",
+                latency_ms=hit_latency_ms,
+            )
+            await memory_manager.save_interaction(
+                session_id, message, cached_text, cache_match.agent_type or "chat"
+            )
+
+            return {
+                "response": cached_text,
+                "agent_type": cache_match.agent_type or "chat",
+                "session_id": session_id,
+                "metrics": metrics,
+            }
+
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
 
@@ -125,6 +188,8 @@ class ChatService:
                 }
 
         history, memory_context, self_context = await context_engine.build_context(session_id, message)
+        if cache_match.status == "hint" and cache_match.cached_response:
+            memory_context += f"\n\n[Semantic Cache Hint (similarity: {cache_match.similarity:.2f})]:\n{cache_match.cached_response}\n"
         await context_engine.append_message(session_id, "user", message)
 
         # NEXUS Multi-Agent Collaboration Check
@@ -154,6 +219,13 @@ class ChatService:
                         prefix_confirmation + graph_result.final_response
                         if prefix_confirmation
                         else graph_result.final_response
+                    )
+                    await semantic_cache.store(
+                        message,
+                        graph_result.final_response,
+                        agent_type="nexus_multi_agent",
+                        context_hash=current_context_hash,
+                        memory_context=memory_snippet,
                     )
                     return {
                         "response": final_resp,
@@ -233,6 +305,14 @@ class ChatService:
                 except Exception:
                     pass
 
+            await semantic_cache.store(
+                message,
+                response,
+                agent_type=str(agent_type),
+                context_hash=current_context_hash,
+                memory_context=memory_snippet,
+            )
+
             return {
                 "response": response,
                 "agent_type": agent_type,
@@ -294,9 +374,63 @@ class ChatService:
             yield "\n\n---\n\n"
             message = directive_res.remaining_prompt
 
+        # Check Semantic Response Cache BEFORE routing (if cache hit, skip routing + agent entirely)
+        memory_snippet = persistent_memory.get_memory_prompt_snippet()
+        current_context_hash = semantic_cache.compute_context_hash(memory_snippet)
+        cache_match = await semantic_cache.lookup(message, context_hash=current_context_hash)
+
+        if cache_match.status == "hit" and cache_match.cached_response:
+            cached_text = cache_match.cached_response
+            hit_latency_ms = max(0.1, cache_match.latency_ms)
+            logger.info(
+                f"⚡ Instant Recall stream hit for query '{message[:60]}...' (similarity: {cache_match.similarity:.4f}, latency: {hit_latency_ms:.2f}ms)"
+            )
+
+            # Log cache hits in activity trace as '⚡ Instant Recall' with <1ms latency
+            self._log_cache_activity_trace(
+                session_id=session_id,
+                query=message,
+                response=cached_text,
+                similarity=cache_match.similarity,
+                latency_ms=hit_latency_ms,
+            )
+
+            if metrics_collector is not None:
+                metrics_collector.update({
+                    "model": "cache:instant-recall",
+                    "prompt_tokens": max(1, len(message.split())),
+                    "completion_tokens": max(1, len(cached_text.split())),
+                    "total_tokens": max(2, len(message.split()) + len(cached_text.split())),
+                    "tokens_per_sec": 2000.0,
+                    "ttft_ms": hit_latency_ms,
+                    "total_time_sec": round(hit_latency_ms / 1000.0, 4),
+                    "total_time_ms": hit_latency_ms,
+                    "confidence": 1.0,
+                    "cached": True,
+                    "instant_recall": True,
+                    "similarity": cache_match.similarity,
+                })
+
+            await context_engine.append_message(session_id, "user", message)
+            await context_engine.append_message(
+                session_id,
+                "assistant",
+                cached_text,
+                agent_type=cache_match.agent_type or "chat",
+                model_name="cache:instant-recall",
+                latency_ms=hit_latency_ms,
+            )
+            await memory_manager.save_interaction(
+                session_id, message, cached_text, cache_match.agent_type or "chat"
+            )
+            yield cached_text
+            return
+
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
         history, memory_context, self_context = await context_engine.build_context(session_id, message)
+        if cache_match.status == "hint" and cache_match.cached_response:
+            memory_context += f"\n\n[Semantic Cache Hint (similarity: {cache_match.similarity:.2f})]:\n{cache_match.cached_response}\n"
         await context_engine.append_message(session_id, "user", message)
         agent = AGENT_MAP.get(agent_type)
 
@@ -359,6 +493,13 @@ class ChatService:
                     )
                     await memory_manager.save_interaction(
                         session_id, message, graph_result.final_response, "nexus_multi_agent"
+                    )
+                    await semantic_cache.store(
+                        message,
+                        graph_result.final_response,
+                        agent_type="nexus_multi_agent",
+                        context_hash=current_context_hash,
+                        memory_context=memory_snippet,
                     )
                     return
             except Exception as nexus_err:
@@ -479,6 +620,14 @@ class ChatService:
                 record_token_usage(prompt_tokens, completion_tokens, total_time_sec)
             except Exception:
                 pass
+
+            await semantic_cache.store(
+                message,
+                complete,
+                agent_type=str(agent_type),
+                context_hash=current_context_hash,
+                memory_context=memory_snippet,
+            )
         except Exception as e:
             logger.error(f"Chat stream error: {e}")
             yield f"\n[Error: {e}]"
@@ -488,6 +637,60 @@ class ChatService:
 
     async def clear_history(self, session_id: str) -> None:
         await context_engine.clear_session(session_id)
+
+    def _log_cache_activity_trace(
+        self,
+        session_id: str,
+        query: str,
+        response: str,
+        similarity: float,
+        latency_ms: float,
+        db: Session | None = None,
+    ):
+        """
+        Logs cache hits in activity trace as '⚡ Instant Recall' with <1ms latency
+        across ContextBus, Audit Log, and WebSocket subscribers.
+        """
+        trace_id = f"recall_{int(time.time() * 1000)}"
+        context_bus.record_trace(
+            trace_id,
+            {
+                "dag_id": trace_id,
+                "goal": f"⚡ Instant Recall: {query[:80]}",
+                "status": "done",
+                "total_duration_ms": latency_ms,
+                "success": True,
+                "category": "Cache",
+                "tasks": [
+                    {
+                        "id": "T-RECALL",
+                        "agent": "CACHE",
+                        "title": "⚡ Instant Recall (<1ms)",
+                        "instruction": f"Matched cached semantic response (similarity: {similarity:.2%})",
+                        "status": "done",
+                        "execution_time_ms": latency_ms,
+                        "output": f"Served from ChromaDB response cache in {latency_ms:.2f}ms (similarity: {similarity:.4f})",
+                    }
+                ],
+            },
+        )
+
+        if db is not None:
+            try:
+                from app.database.models.audit_log import AuditLogEntry
+
+                entry = AuditLogEntry(
+                    session_id=session_id,
+                    category="cache_hit",
+                    actor="semantic_cache",
+                    summary="⚡ Instant Recall",
+                    detail=f"Served query '{query[:120]}' from ChromaDB response cache in {latency_ms:.2f}ms with {similarity:.2%} similarity.",
+                    extra_metadata={"query": query, "latency_ms": latency_ms, "similarity": similarity},
+                )
+                db.add(entry)
+                db.commit()
+            except Exception as e:
+                logger.debug(f"Audit log entry error for cache hit: {e}")
 
     def _build_guardian_context(self, message: str, agent_type: AgentType) -> dict:
         msg_lower = message.lower()

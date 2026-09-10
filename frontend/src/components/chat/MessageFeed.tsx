@@ -118,6 +118,17 @@ function MessageMetricsBar({ metrics, text }: { metrics: MessageMetrics; text: s
       transition={{ duration: 0.2 }}
       className="flex flex-wrap items-center gap-2 pt-2 pb-1 font-mono text-[11px] text-zinc-400 select-none border-t border-white/5 mt-1"
     >
+      {/* Instant Recall Cached Badge */}
+      {(metrics.cached || metrics.instant_recall) && (
+        <div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-bold shadow-[0_0_12px_rgba(245,158,11,0.25)] transition-colors"
+          title={`Served from ChromaDB Semantic Cache (<1ms latency)`}
+        >
+          <Zap size={12} className="text-amber-400 fill-amber-400 animate-pulse" />
+          <span className="font-semibold text-amber-300 font-sans tracking-tight">⚡ Instant Recall (&lt;1ms)</span>
+        </div>
+      )}
+
       {/* Model Selected */}
       <div
         className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 transition-colors shadow-sm"
@@ -360,6 +371,12 @@ export function MessageFeed({
                   {line.agent && line.agent !== "system" ? line.agent : "GOD'S EYE // COPPER OS"}
                 </span>
                 <span className="text-cyber-cyan/70">[CONFIDENCE: {dynamicConfidence}%]</span>
+                {(line.cached || line.instant_recall || line.metrics?.cached || line.metrics?.instant_recall) && (
+                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[9px] shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse tracking-normal font-sans">
+                    <Zap size={10} className="text-amber-400 fill-amber-400" />
+                    ⚡ Instant Recall
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 {onBranchAtMessage && (

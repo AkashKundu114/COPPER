@@ -119,6 +119,9 @@ export interface MessageMetrics {
   total_time_sec: number;
   total_time_ms?: number;
   confidence?: number;
+  cached?: boolean;
+  instant_recall?: boolean;
+  similarity?: number;
 }
 
 export interface ComputerUseStep {
@@ -143,6 +146,8 @@ export interface ChatLine {
   taskGraph?: ActiveTaskGraphTrace | null;
   computerUseSteps?: ComputerUseStep[];
   metrics?: MessageMetrics | null;
+  cached?: boolean;
+  instant_recall?: boolean;
 }
 
 export interface ActiveToolTrace {
@@ -585,6 +590,7 @@ export function useBrainSocket(
           break;
         case "message_metrics":
           if (event.metrics) {
+            const metrics = event.metrics;
             setLines((curLines) => {
               const lastIdx = curLines.reduce(
                 (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
@@ -594,7 +600,9 @@ export function useBrainSocket(
                 const updated = [...curLines];
                 updated[lastIdx] = {
                   ...updated[lastIdx],
-                  metrics: event.metrics,
+                  metrics,
+                  cached: metrics.cached,
+                  instant_recall: metrics.instant_recall,
                 };
                 return updated;
               }
@@ -662,6 +670,7 @@ export function useBrainSocket(
           setThinking(false);
           setActiveEdge(null);
           if (event.metrics) {
+            const metrics = event.metrics;
             setLines((curLines) => {
               const lastIdx = curLines.reduce(
                 (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
@@ -671,7 +680,9 @@ export function useBrainSocket(
                 const updated = [...curLines];
                 updated[lastIdx] = {
                   ...updated[lastIdx],
-                  metrics: event.metrics,
+                  metrics,
+                  cached: metrics.cached,
+                  instant_recall: metrics.instant_recall,
                 };
                 return updated;
               }

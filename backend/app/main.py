@@ -20,6 +20,7 @@ from app.api.routes import (
     agents,
     audit,
     automation,
+    cache,
     chat,
     documents,
     episodes,
@@ -93,6 +94,7 @@ app.add_middleware(
 )
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.include_router(chat.router, prefix="/api/v1")
+app.include_router(cache.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 app.include_router(wake.router, prefix="/api/v1")
 app.include_router(memory.router, prefix="/api/v1")
