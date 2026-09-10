@@ -153,7 +153,11 @@ export const TodayView: React.FC = () => {
           </span>
         </div>
 
-        {events.length === 0 ? (
+        {loading ? (
+          <div className="p-12 text-center text-xs text-slate-500 font-mono">
+            Loading events...
+          </div>
+        ) : events.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-500 font-mono">
             No events scheduled. Click "+ Add Event" to plan your day.
           </div>

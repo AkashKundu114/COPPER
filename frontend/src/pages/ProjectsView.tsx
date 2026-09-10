@@ -103,7 +103,11 @@ export const ProjectsView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {projects.length === 0 ? (
+        {loading ? (
+          <div className="col-span-2 p-12 text-center text-xs text-slate-500 font-mono bg-slate-900/60 rounded-2xl border border-slate-800">
+            Loading projects...
+          </div>
+        ) : projects.length === 0 ? (
           <div className="col-span-2 p-12 text-center text-xs text-slate-500 font-mono bg-slate-900/60 rounded-2xl border border-slate-800 space-y-2">
             <p className="font-semibold text-slate-300">
               No active projects yet.

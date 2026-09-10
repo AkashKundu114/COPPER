@@ -11,6 +11,9 @@
     "desktop": "concurrently \"npm run dev\" \"wait-on tcp:5173 && node launch-desktop.js\"",
     "desktop:electron": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"wait-on tcp:5173 && electron .\"",
     "desktop:build": "npm run build && electron-builder",
+    "desktop:build:win": "npm run build && electron-builder --win",
+    "desktop:build:mac": "npm run build && electron-builder --mac",
+    "desktop:build:linux": "npm run build && electron-builder --linux",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
@@ -64,8 +67,43 @@
       "dist/**/*",
       "electron-main.cjs"
     ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "maintainer": "COPPER Team <support@copper.ai>"
+    },
+    "deb": {
+      "priority": "optional"
+    },
     "win": {
       "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

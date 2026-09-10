@@ -9,9 +9,47 @@ permissions:
   contents: write
 
 jobs:
+  build-desktop:
+    name: Build Desktop (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Build desktop application
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: cd frontend && npm run desktop:build
+
+      - name: Upload desktop artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-binaries-${{ matrix.os }}
+          path: |
+            frontend/dist-electron/*.dmg
+            frontend/dist-electron/*.AppImage
+            frontend/dist-electron/*.deb
+            frontend/dist-electron/*.exe
+            frontend/dist-electron/*.zip
+          if-no-files-found: warn
+          retention-days: 7
+
   build-and-release:
     name: Build Artifacts & Publish Release
     runs-on: ubuntu-latest
+    needs: [build-desktop]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -38,6 +76,13 @@ jobs:
         run: |
           tar -czf "copper-backend-${{ github.ref_name }}.tar.gz" backend
 
+      - name: Download all desktop artifacts
+        uses: actions/download-artifact@v7
+        with:
+          pattern: desktop-binaries-*
+          merge-multiple: true
+          path: desktop-dist
+
       - name: Generate release notes from commit log
         run: |
           PREV_TAG=$(git describe --tags --abbrev=0 "${{ github.ref_name }}^" 2>/dev/null || echo "")
@@ -51,6 +96,11 @@ jobs:
             fi
             echo ""
             echo ""
+            echo "## Desktop Packages"
+            echo "- macOS: \`.dmg\`"
+            echo "- Linux: \`.AppImage\`, \`.deb\`"
+            echo "- Windows: \`.exe\` installer"
+            echo ""
             echo "## Container Images"
             echo "- \`ghcr.io/${{ github.repository }}-backend:${{ github.ref_name }}\`"
             echo "- \`ghcr.io/${{ github.repository }}-frontend:${{ github.ref_name }}\`"
@@ -63,6 +113,7 @@ jobs:
           files: |
             copper-frontend-${{ github.ref_name }}.tar.gz
             copper-backend-${{ github.ref_name }}.tar.gz
+            desktop-dist/*
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}

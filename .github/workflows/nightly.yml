@@ -35,7 +35,7 @@ jobs:
         run: python -m pytest tests/ -v --tb=short
 
   frontend-cross-platform-build:
-    name: Frontend Build (${{ matrix.os }})
+    name: Frontend & Desktop Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -50,8 +50,49 @@ jobs:
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
-      - run: cd frontend && npm ci
-      - run: cd frontend && npm run build
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Build web assets
+        run: cd frontend && npm run build
+
+      - name: Build desktop application
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: cd frontend && npm run desktop:build
+
+      - name: Verify desktop artifacts
+        shell: bash
+        run: |
+          cd frontend/dist-electron
+          echo "Built desktop artifacts for ${{ matrix.os }}:"
+          ls -la
+          case "${{ matrix.os }}" in
+            ubuntu-latest)
+              if compgen -G "*.AppImage" > /dev/null && compgen -G "*.deb" > /dev/null; then
+                echo "Linux .AppImage and .deb artifacts verified successfully."
+              else
+                echo "::error::Missing expected Linux artifacts (.AppImage or .deb)"
+                exit 1
+              fi
+              ;;
+            macos-latest)
+              if compgen -G "*.dmg" > /dev/null; then
+                echo "macOS .dmg artifact verified successfully."
+              else
+                echo "::error::Missing expected macOS artifact (.dmg)"
+                exit 1
+              fi
+              ;;
+            windows-latest)
+              if compgen -G "*.exe" > /dev/null; then
+                echo "Windows .exe installer verified successfully."
+              else
+                echo "::error::Missing expected Windows artifact (.exe)"
+                exit 1
+              fi
+              ;;
+          esac
 
   stale-housekeeping:
     name: Mark Stale Issues & PRs

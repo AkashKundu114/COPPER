@@ -161,7 +161,11 @@ export const MemoryView: React.FC = () => {
 
           {/* Memory Items */}
           <div className="space-y-3">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <div className="p-12 text-center text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
+                Loading memories...
+              </div>
+            ) : filtered.length === 0 ? (
               <div className="p-12 text-center text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
                 No memories match your query.
               </div>
