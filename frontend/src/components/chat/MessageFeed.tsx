@@ -189,17 +189,18 @@ function MessageMetricsBar({ metrics, text }: { metrics: MessageMetrics; text: s
       <button
         type="button"
         onClick={handleCopy}
-        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 text-zinc-400 hover:text-zinc-200 transition-all ml-auto"
+        aria-label="Copy response markdown to clipboard"
+        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 text-zinc-400 hover:text-zinc-200 transition-all ml-auto cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
         title="Copy response markdown"
       >
         {copied ? (
           <>
-            <Check size={12} className="text-emerald-400" />
+            <Check size={12} className="text-emerald-400" aria-hidden="true" />
             <span className="text-[10px] text-emerald-400">Copied</span>
           </>
         ) : (
           <>
-            <Copy size={12} />
+            <Copy size={12} aria-hidden="true" />
             <span className="text-[10px]">Copy</span>
           </>
         )}
@@ -288,6 +289,9 @@ export function MessageFeed({
   return (
     <div
       ref={feedRef}
+      role="log"
+      aria-label="Conversation message history"
+      aria-live="polite"
       className="flex-1 w-full max-w-[850px] mx-auto overflow-y-auto px-4 py-8 space-y-6 custom-scrollbar"
     >
       {selectedDoc && (
@@ -305,12 +309,17 @@ export function MessageFeed({
 
         if (isUser) {
           return (
-            <div key={line.id || i} className="flex justify-end w-full animate-slide-up mb-8 mt-4">
+            <div
+              key={line.id || i}
+              role="article"
+              aria-label="Message from Operator"
+              className="flex justify-end w-full animate-slide-up mb-8 mt-4"
+            >
               <div className="relative bg-[#070d18]/90 backdrop-blur-xl text-text px-4 py-3 rounded-2xl max-w-[85%] border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,240,255,0.08)] text-[14.5px] leading-relaxed font-sans">
                 {/* User Header Metadata */}
-                <div className="flex items-center justify-between gap-3 text-[9px] font-mono text-zinc-500 mb-1.5 border-b border-cyber-cyan/15 pb-1 select-none">
+                <div className="flex items-center justify-between gap-3 text-[9px] font-mono text-zinc-400 mb-1.5 border-b border-cyber-cyan/15 pb-1 select-none">
                   <span className="text-cyber-cyan font-bold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan" aria-hidden="true" />
                     OPERATOR // DIRECT INTENT
                   </span>
                   <div className="flex items-center gap-2">
@@ -320,10 +329,11 @@ export function MessageFeed({
                           e.stopPropagation();
                           onBranchAtMessage(i, cleanText);
                         }}
+                        aria-label="Branch conversation from this message"
                         title="Branch conversation from this message"
-                        className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-cyan/10 hover:bg-cyber-cyan/20 text-cyber-cyan transition-all text-[9px]"
+                        className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-cyan/10 hover:bg-cyber-cyan/20 text-cyber-cyan transition-all text-[9px] cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                       >
-                        <GitBranch size={10} />
+                        <GitBranch size={10} aria-hidden="true" />
                         <span>Branch</span>
                       </button>
                     )}
@@ -339,9 +349,10 @@ export function MessageFeed({
                         <button
                           key={idx}
                           onClick={() => openAttachmentReader(att)}
-                          className="flex items-center gap-1.5 px-2 py-1 rounded bg-black/60 hover:bg-black/90 border border-cyber-cyan/25 text-[11px] font-mono text-cyber-cyan transition-all"
+                          aria-label={`Open attached document: ${att.filename}`}
+                          className="flex items-center gap-1.5 px-2 py-1 rounded bg-black/60 hover:bg-black/90 border border-cyber-cyan/25 text-[11px] font-mono text-cyber-cyan transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                         >
-                          <Icon size={12} className="text-cyber-cyan" />
+                          <Icon size={12} className="text-cyber-cyan" aria-hidden="true" />
                           <span>{att.filename}</span>
                         </button>
                       );
@@ -355,6 +366,7 @@ export function MessageFeed({
         }
 
         // System/Agent message
+        const agentName = line.agent && line.agent !== "system" ? line.agent : "GOD'S EYE // COPPER OS";
         const dynamicConfidence = line.metrics?.confidence !== undefined
           ? Math.round(line.metrics.confidence * 100)
           : line.metrics?.ttft_ms
@@ -362,18 +374,23 @@ export function MessageFeed({
           : 94;
 
         return (
-          <div key={line.id || i} className="flex flex-col w-full animate-slide-up text-text space-y-3 relative">
+          <div
+            key={line.id || i}
+            role="article"
+            aria-label={`Response from ${agentName}`}
+            className="flex flex-col w-full animate-slide-up text-text space-y-3 relative"
+          >
             {/* Tactical Agent Message Header */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 select-none px-1 border-b border-white/5 pb-1">
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none px-1 border-b border-white/5 pb-1">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" aria-hidden="true" />
                 <span className="text-white font-bold tracking-wider uppercase">
-                  {line.agent && line.agent !== "system" ? line.agent : "GOD'S EYE // COPPER OS"}
+                  {agentName}
                 </span>
                 <span className="text-cyber-cyan/70">[CONFIDENCE: {dynamicConfidence}%]</span>
                 {(line.cached || line.instant_recall || line.metrics?.cached || line.metrics?.instant_recall) && (
                   <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[9px] shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse tracking-normal font-sans">
-                    <Zap size={10} className="text-amber-400 fill-amber-400" />
+                    <Zap size={10} className="text-amber-400 fill-amber-400" aria-hidden="true" />
                     ⚡ Instant Recall
                   </span>
                 )}
@@ -385,14 +402,15 @@ export function MessageFeed({
                       e.stopPropagation();
                       onBranchAtMessage(i, cleanText);
                     }}
+                    aria-label={`Branch conversation from ${agentName} response`}
                     title="Branch conversation from this response"
-                    className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-verdigris/10 hover:bg-verdigris/20 text-verdigris transition-all text-[9px]"
+                    className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-verdigris/10 hover:bg-verdigris/20 text-verdigris transition-all text-[9px] cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                   >
-                    <GitBranch size={10} />
+                    <GitBranch size={10} aria-hidden="true" />
                     <span>Branch</span>
                   </button>
                 )}
-                <span className="text-zinc-600">AIR-GAPPED SYNTHESIS</span>
+                <span className="text-zinc-500">AIR-GAPPED SYNTHESIS</span>
               </div>
             </div>
 
@@ -432,13 +450,18 @@ export function MessageFeed({
       )}
 
       {thinking && activeAgent && !activeTaskGraph && (
-        <div className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono">
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label={`Neural reasoning active: ${agentStats[activeAgent]?.name || activeAgent} executing cognitive tasks across local agent mesh`}
+          className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono"
+        >
           <div className="flex items-center gap-2 text-xs text-cyber-cyan">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" aria-hidden="true" />
             <span className="tracking-wider uppercase">Neural Reasoning & Tool Execution Active...</span>
           </div>
           <div className="flex items-center gap-3 p-3.5 rounded-xl border border-cyber-cyan/30 bg-[#070d18]/80 backdrop-blur-xl shadow-hud">
-            <div className="w-7 h-7 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <Cpu size={14} className="text-cyber-cyan animate-pulse" />
             </div>
             <div className="flex flex-col">

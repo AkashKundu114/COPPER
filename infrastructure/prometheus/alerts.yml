@@ -1,0 +1,10 @@
+groups:
+  - name: copper_alerts
+    rules:
+      - alert: BackendHighLatency
+        expr: http_request_duration_seconds{quantile="0.95"} > 5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "COPPER Backend High Latency (p95 > 5s)"

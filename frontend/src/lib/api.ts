@@ -445,3 +445,37 @@ export const knowledgeAPI = {
   getStats: () =>
     api.get<KnowledgeStatsResponse>("/api/v1/knowledge/stats").then((r) => r.data),
 };
+
+export interface TraceSpan {
+  span_id: string;
+  name: string;
+  parent_id: string | null;
+  start_time_ms: number;
+  end_time_ms: number;
+  duration_ms: number;
+  offset_ms?: number;
+  status: string;
+  attributes: Record<string, any>;
+}
+
+export interface DistributedTrace {
+  trace_id: string;
+  root_name: string;
+  timestamp: number;
+  duration_ms: number;
+  status: "success" | "error";
+  spans_count: number;
+  spans: TraceSpan[];
+  root_attributes: Record<string, any>;
+  grafana_url: string;
+}
+
+export const fetchDistributedTraces = (limit = 50) =>
+  api
+    .get<{ traces: DistributedTrace[]; total: number; grafana_base_url: string }>("/api/v1/telemetry/traces", {
+      params: { limit },
+    })
+    .then((r) => r.data);
+
+export const fetchDistributedTraceById = (traceId: string) =>
+  api.get<DistributedTrace>(`/api/v1/telemetry/traces/${traceId}`).then((r) => r.data);

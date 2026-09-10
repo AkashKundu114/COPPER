@@ -15,6 +15,9 @@ from app.services.chat_service import chat_service
 from app.utils.helpers import generate_session_id
 from app.utils.validators import validate_message
 
+from app.core.telemetry import start_request_trace
+from opentelemetry.trace import Status, StatusCode
+
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
@@ -31,6 +34,7 @@ class ChatResponse(BaseModel):
     session_id: str
     guardian_verdict: dict | None = None
     metrics: dict | None = None
+    trace_id: str | None = None
 
 
 @router.post("/message", response_model=ChatResponse)
@@ -39,8 +43,20 @@ async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
     if not valid:
         raise HTTPException(status_code=400, detail=err)
     session_id = req.session_id or generate_session_id()
+    root_span, trace_id, span_id = start_request_trace(
+        "copper.http.request",
+        session_id=session_id,
+        attributes={
+            "copper.session_id": session_id,
+            "copper.message": req.message[:200],
+            "copper.provider": req.provider.value if hasattr(req.provider, "value") else str(req.provider),
+            "copper.endpoint": "/chat/message",
+        },
+    )
     try:
-        result = await chat_service.process_message(session_id, req.message, req.provider, db=db)
+        result = await chat_service.process_message(
+            session_id, req.message, req.provider, db=db, trace_id=trace_id, parent_span=root_span
+        )
         for sender, message in [("user", req.message), ("assistant", result["response"])]:
             db.add(ChatHistory(session_id=session_id, sender=sender, message=message))
         db.commit()
@@ -50,10 +66,15 @@ async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
             session_id=session_id,
             guardian_verdict=result.get("guardian_verdict"),
             metrics=result.get("metrics"),
+            trace_id=trace_id,
         )
     except Exception as e:
+        root_span.record_exception(e)
+        root_span.set_status(Status(StatusCode.ERROR, str(e)))
         logger.error(f"Chat endpoint error: {e}")
         raise HTTPException(status_code=500, detail="AI service error")
+    finally:
+        root_span.end()
 
 
 @router.get("/stream")
@@ -126,12 +147,31 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
             await manager.send_error(session_id, err)
             return
 
-        await manager.send(session_id, {"type": "thinking", "agent_type": ""})
+        root_span, trace_id, span_id = start_request_trace(
+            "copper.websocket.request",
+            session_id=session_id,
+            attributes={
+                "copper.session_id": session_id,
+                "copper.message": message[:200],
+                "copper.mode": mode,
+                "copper.provider": provider.value if hasattr(provider, "value") else str(provider),
+                "copper.client": "websocket",
+            },
+        )
+
+        await manager.send_trace_context(session_id, trace_id, span_id)
+        await manager.send(session_id, {"type": "thinking", "agent_type": "", "trace_id": trace_id})
         full_response = []
         metrics: dict = {}
         try:
             async for chunk in chat_service.stream_message(
-                session_id, message, provider, mode=mode, metrics_collector=metrics
+                session_id,
+                message,
+                provider,
+                mode=mode,
+                metrics_collector=metrics,
+                trace_id=trace_id,
+                parent_span=root_span,
             ):
                 await manager.send_chunk(session_id, chunk)
                 full_response.append(chunk)
@@ -154,13 +194,18 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 except Exception as e:
                     logger.error(f"TTS synthesis failed for websocket: {e}")
 
-            await manager.send_done(session_id, metrics=metrics)
+            await manager.send_done(session_id, metrics=metrics, trace_id=trace_id)
         except asyncio.CancelledError:
             logger.info(f"Stream generation cancelled for session {session_id}")
+            root_span.set_attribute("copper.cancelled", True)
             raise
         except Exception as e:
+            root_span.record_exception(e)
+            root_span.set_status(Status(StatusCode.ERROR, str(e)))
             logger.error(f"WebSocket execution error: {e}")
-            await manager.send_error(session_id, "Execution error occurred")
+            await manager.send_error(session_id, "Execution error occurred", trace_id=trace_id)
+        finally:
+            root_span.end()
 
     try:
         while True:

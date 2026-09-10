@@ -57,14 +57,30 @@ class ConnectionManager:
     async def send_chunk(self, session_id: str, chunk: str):
         await self.send(session_id, {"type": "agent_speaking", "agent": "COPPER", "text": chunk})
 
-    async def send_done(self, session_id: str, metrics: dict | None = None):
+    async def send_done(self, session_id: str, metrics: dict | None = None, trace_id: str | None = None):
         payload: dict[str, Any] = {"type": "done"}
         if metrics is not None:
             payload["metrics"] = metrics
+        if trace_id is not None:
+            payload["trace_id"] = trace_id
         await self.send(session_id, payload)
 
-    async def send_error(self, session_id: str, error: str):
-        await self.send(session_id, {"type": "error", "message": error})
+    async def send_trace_context(self, session_id: str, trace_id: str, span_id: str | None = None):
+        """Notify the frontend of the active OpenTelemetry trace context."""
+        await self.send(
+            session_id,
+            {
+                "type": "trace_context",
+                "trace_id": trace_id,
+                "span_id": span_id or "",
+            },
+        )
+
+    async def send_error(self, session_id: str, error: str, trace_id: str | None = None):
+        payload = {"type": "error", "message": error}
+        if trace_id:
+            payload["trace_id"] = trace_id
+        await self.send(session_id, payload)
 
     async def broadcast(self, event: dict):
         dead = []

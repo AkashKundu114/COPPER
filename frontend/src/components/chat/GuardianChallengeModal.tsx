@@ -27,18 +27,36 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
   onFollowRecommendation,
   onDiscuss,
 }) => {
+  React.useEffect(() => {
+    if (!payload) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onFollowRecommendation();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [payload, onFollowRecommendation]);
+
   if (!payload) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none">
+    <div
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="guardian-challenge-title"
+      aria-describedby="guardian-challenge-desc"
+      className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none"
+    >
       <div className="copper-trace w-full max-w-lg bg-bg-panel border-2 border-molten/50 rounded-xl p-6 shadow-xl space-y-4">
-        {}
+        {/* Header */}
         <div className="flex items-center gap-3 border-b border-molten/20 pb-4">
-          <div className="w-10 h-10 rounded-lg bg-molten/15 border border-molten/40 flex items-center justify-center text-molten">
+          <div className="w-10 h-10 rounded-lg bg-molten/15 border border-molten/40 flex items-center justify-center text-molten" aria-hidden="true">
             <ShieldAlert size={24} />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-molten uppercase tracking-wider font-mono">
+            <h3 id="guardian-challenge-title" className="text-sm font-bold text-molten uppercase tracking-wider font-mono">
               COPPER Recommends Against This
             </h3>
             <p className="text-xs text-text-muted">
@@ -47,8 +65,8 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
           </div>
         </div>
 
-        {}
-        <div className="space-y-2 text-xs text-text-muted leading-relaxed">
+        {/* Content */}
+        <div id="guardian-challenge-desc" className="space-y-2 text-xs text-text-muted leading-relaxed">
           <p className="font-medium text-text">{payload.reasoning}</p>
 
           {payload.evidence && payload.evidence.length > 0 && (
@@ -58,7 +76,7 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
               </span>
               {payload.evidence.map((ev, i) => (
                 <div key={i} className="flex items-center gap-2 text-text-muted">
-                  <span className="text-molten">•</span>
+                  <span className="text-molten" aria-hidden="true">•</span>
                   <span>{ev}</span>
                 </div>
               ))}
@@ -80,29 +98,30 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
           </div>
         </div>
 
-        {}
+        {/* Action Buttons */}
         <div className="grid grid-cols-3 gap-2 pt-2">
           <button
             onClick={onFollowRecommendation}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-molten hover:bg-molten-400 text-bg text-xs font-bold transition-all shadow-sm"
+            autoFocus
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-molten hover:bg-molten-400 text-bg text-xs font-bold transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-molten"
           >
-            <CheckCircle2 size={14} />
+            <CheckCircle2 size={14} aria-hidden="true" />
             <span>Follow Rec</span>
           </button>
 
           <button
             onClick={onDiscuss}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-bg-raised hover:bg-border text-text text-xs font-medium transition-all border border-border"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-bg-raised hover:bg-border text-text text-xs font-medium transition-all border border-border cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
           >
-            <MessageSquare size={14} />
+            <MessageSquare size={14} aria-hidden="true" />
             <span>Discuss</span>
           </button>
 
           <button
             onClick={onProceedAnyway}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-danger/15 hover:bg-danger/25 text-danger-300 text-xs font-medium transition-all border border-danger/40"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-danger/15 hover:bg-danger/25 text-danger-300 text-xs font-medium transition-all border border-danger/40 cursor-pointer focus-visible:ring-2 focus-visible:ring-danger"
           >
-            <XCircle size={14} />
+            <XCircle size={14} aria-hidden="true" />
             <span>Proceed Anyway</span>
           </button>
         </div>

@@ -22,6 +22,9 @@ function getPythonExecutable(rootDir) {
 // Force NVIDIA Dedicated High-Performance GPU
 app.commandLine.appendSwitch("force_high_performance_gpu");
 
+// Force Chromium accessibility engine for screen readers (NVDA, JAWS, Narrator, VoiceOver)
+app.commandLine.appendSwitch("force-renderer-accessibility");
+
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
@@ -204,8 +207,22 @@ ipcMain.handle("get-backend-status", async () => {
 
 ipcMain.handle("start-backend", async () => await startBackend());
 ipcMain.handle("stop-backend", async () => await stopBackend());
+ipcMain.handle("get-accessibility-status", () => {
+  return typeof app.isAccessibilitySupportEnabled === "function"
+    ? app.isAccessibilitySupportEnabled()
+    : true;
+});
 
 app.whenReady().then(() => {
+  try {
+    if (typeof app.setAccessibilitySupportEnabled === "function") {
+      app.setAccessibilitySupportEnabled(true);
+    }
+    app.accessibilitySupportEnabled = true;
+  } catch (err) {
+    console.warn("Accessibility support initialization note:", err);
+  }
+
   configureAutoStart();
   createWindow();
 

@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     APP_NAME: str = "COPPER"
     APP_VERSION: str = "1.0.0"
+    APP_ENV: str = "development"
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
@@ -64,6 +65,13 @@ class Settings(BaseSettings):
     SANDBOX_CPU_LIMIT: float = 1.0
     SANDBOX_NETWORK_ENABLED: bool = False
     SANDBOX_DOCKER_IMAGE: str = "python:3.12-slim"
+
+    # OpenTelemetry & Observability Configuration
+    OTEL_ENABLED: bool = True
+    OTEL_SERVICE_NAME: str = "copper-backend"
+    OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://localhost:4317"
+    OTEL_EXPORTER_OTLP_HTTP_ENDPOINT: str = "http://localhost:4318/v1/traces"
+    GRAFANA_URL: str = "http://localhost:3000"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

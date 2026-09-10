@@ -69,6 +69,16 @@ export const BranchCompareModal: React.FC<Props> = ({
     }
   }, [isOpen, branchAId, branchBId]);
 
+  // Close on Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   const handleMergeBranch = async (sourceBranchId: string) => {
     setIsMerging(true);
     try {
@@ -88,16 +98,21 @@ export const BranchCompareModal: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-mono text-xs">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="branch-compare-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-mono text-xs"
+    >
       <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-slate-200">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/60">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-accent-950/80 border border-accent-800/40 text-accent-400">
+            <div className="p-2 rounded-xl bg-accent-950/80 border border-accent-800/40 text-accent-400" aria-hidden="true">
               <GitCompare size={18} />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white font-sans flex items-center gap-2">
+              <h2 id="branch-compare-title" className="text-sm font-bold text-white font-sans flex items-center gap-2">
                 Semantic Branch Comparison & Diff
               </h2>
               <p className="text-[10px] text-slate-400">
@@ -110,16 +125,18 @@ export const BranchCompareModal: React.FC<Props> = ({
             <button
               onClick={runComparison}
               disabled={isLoading}
-              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all"
+              aria-label="Refresh branch comparison"
+              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
               title="Refresh comparison"
             >
-              <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
+              <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} aria-hidden="true" />
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all"
+              aria-label="Close branch comparison dialog"
+              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -130,8 +147,9 @@ export const BranchCompareModal: React.FC<Props> = ({
             <span className="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap">Branch A:</span>
             <select
               value={branchAId}
+              aria-label="Select first branch to compare"
               onChange={(e) => setBranchAId(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             >
               {branches.map((b) => (
                 <option key={b.branch_id} value={b.branch_id}>

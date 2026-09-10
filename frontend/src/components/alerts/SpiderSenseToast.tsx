@@ -79,6 +79,7 @@ function AlertToast({
 
   return (
     <motion.div
+      role="alert"
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
@@ -86,7 +87,7 @@ function AlertToast({
       className={`w-96 rounded-xl border ${config.border} ${config.bg} backdrop-blur-md p-4 shadow-2xl`}
     >
       <div className="flex items-start gap-3">
-        <div className={`flex-shrink-0 mt-0.5 ${config.iconColor}`}>
+        <div className={`flex-shrink-0 mt-0.5 ${config.iconColor}`} aria-hidden="true">
           <Icon size={20} />
         </div>
         <div className="flex-1 min-w-0">
@@ -96,12 +97,13 @@ function AlertToast({
             </h4>
             <button
               onClick={onDismiss}
-              className="text-gray-500 hover:text-gray-300 transition-colors flex-shrink-0"
+              aria-label={`Dismiss alert: ${alert.title}`}
+              className="text-gray-400 hover:text-white transition-colors flex-shrink-0 cursor-pointer p-1 rounded focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             >
-              <X size={14} />
+              <X size={14} aria-hidden="true" />
             </button>
           </div>
-          <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+          <p className="text-xs text-gray-200 mt-1 leading-relaxed">
             {alert.message}
           </p>
           {alert.suggested_actions.length > 0 && (
@@ -110,7 +112,8 @@ function AlertToast({
                 <button
                   key={action}
                   onClick={() => onAction(action)}
-                  className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] text-gray-300 font-medium border border-white/10 transition-colors"
+                  aria-label={`Perform action: ${action}`}
+                  className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] text-gray-200 font-medium border border-white/20 transition-colors cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                 >
                   {action}
                 </button>
@@ -118,12 +121,12 @@ function AlertToast({
             </div>
           )}
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
+            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">
               {alert.category === "reflection" ? "COPPER Thought" : "Spider-Sense"} • {alert.category}
             </span>
           </div>
           {config.autoDismissMs > 0 && (
-            <div className="mt-2 h-[2px] w-full bg-black/20 rounded-full overflow-hidden">
+            <div className="mt-2 h-[2px] w-full bg-black/20 rounded-full overflow-hidden" aria-hidden="true">
               <motion.div
                 initial={{ width: "100%" }}
                 animate={{ width: "0%" }}
@@ -147,7 +150,12 @@ export function SpiderSenseToast({
   onAction,
 }: SpiderSenseToastProps) {
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-3 pointer-events-auto">
+    <aside
+      role="region"
+      aria-label="Proactive alerts and notifications"
+      aria-live="polite"
+      className="fixed top-4 right-4 z-50 flex flex-col gap-3 pointer-events-auto"
+    >
       <AnimatePresence mode="popLayout">
         {alerts.slice(0, 3).map((alert) => (
           <AlertToast
@@ -158,6 +166,6 @@ export function SpiderSenseToast({
           />
         ))}
       </AnimatePresence>
-    </div>
+    </aside>
   );
 }

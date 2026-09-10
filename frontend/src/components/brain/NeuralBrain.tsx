@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AGENTS, TIER_COLORS } from "../../constants/agents";
+import { AGENTS, TIER_COLORS, TIER_LABELS } from "../../constants/agents";
 import { computeLayout, computeOrbit, hashStr, CENTER, VIEWBOX } from "../../lib/layout";
 import type { AgentStats } from "../../lib/api";
 
@@ -29,14 +29,47 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
   const positions = useMemo(() => computeLayout(), []);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div
+      role="region"
+      aria-label="COPPER Neural Brain Visualization"
+      className="relative w-full h-full flex items-center justify-center"
+    >
+      {/* Screen Reader Accessible Summary and Agent Directory */}
+      <div className="sr-only">
+        <h2>Agent Neural Network Overview</h2>
+        <p>COPPER Core Engine Status: {thinking ? "Thinking and reasoning active" : "Idle"}.</p>
+        <p>Active Agent: {activeAgent ? AGENTS.find(a => a.id === activeAgent)?.name || activeAgent : "None"}.</p>
+        <p>Selected Agent: {selectedAgent ? AGENTS.find(a => a.id === selectedAgent)?.name || selectedAgent : "None"}.</p>
+        <p>Network includes {AGENTS.length} specialist agents across local neural mesh:</p>
+        <ul>
+          {AGENTS.map((agent) => {
+            const stats = agentStats[agent.id];
+            const isActive = activeAgent === agent.id;
+            const isSelected = selectedAgent === agent.id;
+            return (
+              <li key={`sr-${agent.id}`}>
+                <button
+                  type="button"
+                  onClick={() => onSelectAgent(agent.id)}
+                >
+                  Select {agent.name}: {agent.domain} ({TIER_LABELS[agent.tier] || agent.tier}).
+                  {isActive ? " Currently active in mesh." : ""}
+                  {isSelected ? " Currently selected." : ""}
+                  {stats?.times_invoked ? ` ${stats.times_invoked} jobs handled.` : ""}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
       <svg
         viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}
         className="w-full h-full max-w-[1100px] max-h-[1100px]"
         role="img"
         aria-label="COPPER neural map of active agents, orbiting like a solar system"
       >
-        <defs>
+        <defs aria-hidden="true">
           <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity="0.12" />
             <stop offset="60%" stopColor="#27272a" stopOpacity="0.04" />
@@ -51,7 +84,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
         </defs>
 
         {/* Central COPPER Core */}
-        <g data-testid="copper-core">
+        <g data-testid="copper-core" role="group" aria-label={`COPPER Core Engine: ${thinking ? "Active Reasoning" : "Idle"}`}>
           <circle
             cx={CENTER}
             cy={CENTER}
@@ -110,6 +143,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
             >
               {/* Spoke line from core to agent */}
               <motion.line
+                aria-hidden="true"
                 x1={CENTER}
                 y1={CENTER}
                 x2={pos.x}
@@ -132,6 +166,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                   <motion.line
                     key={`pulse-${pulseSeq}`}
                     data-testid={`edge-pulse-${agent.id}`}
+                    aria-hidden="true"
                     x1={CENTER}
                     y1={CENTER}
                     x2={pos.x}
@@ -151,6 +186,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
               {/* Active ripple ring */}
               {isActive && (
                 <motion.circle
+                  aria-hidden="true"
                   cx={pos.x}
                   cy={pos.y}
                   r={radius + 10}
@@ -172,6 +208,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 stroke={isSelected ? "#ffffff" : "transparent"}
                 strokeWidth={isSelected ? 1.5 : 0}
                 style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
+                initial={{ r: radius }}
                 animate={
                   isActive
                     ? { r: radius, opacity: 1, scale: 1 }
@@ -187,19 +224,24 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                         delay: (hashStr(agent.id) % 30) / 10,
                       }
                 }
-                className="cursor-pointer"
+                className="cursor-pointer focus-visible:outline-none"
                 whileHover={{ scale: 1.25 }}
                 onClick={() => onSelectAgent(agent.id)}
                 role="button"
                 tabIndex={0}
-                aria-label={`${agent.name}, ${agent.domain}`}
+                aria-pressed={isSelected}
+                aria-label={`${agent.name}, ${agent.domain}${TIER_LABELS[agent.tier] ? ` - ${TIER_LABELS[agent.tier]}` : ""}${isActive ? ", currently active" : ""}${isSelected ? ", selected" : ""}`}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") onSelectAgent(agent.id);
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSelectAgent(agent.id);
+                  }
                 }}
               />
 
               {/* Counter-rotating Label */}
               <g
+                aria-hidden="true"
                 style={{
                   transformOrigin: `${pos.x}px ${labelY}px`,
                   animation: `orbit ${orbit.durationSec}s linear infinite`,

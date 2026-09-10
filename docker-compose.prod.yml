@@ -13,6 +13,7 @@ volumes:
   prometheus_data:
   grafana_data:
   loki_data:
+  tempo_data:
 
 # ─── Services ────────────────────────────────────────────────────────────────
 services:
@@ -66,6 +67,8 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - SENTRY_DSN=${SENTRY_DSN:-}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://copper.yourdomain.com}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_SERVICE_NAME=copper-backend
     deploy:
       replicas: 2
       resources:
@@ -353,6 +356,28 @@ services:
       - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+
+  # ── Tempo (Distributed Tracing) ───────────────────────────────────────────
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: copper-tempo
+    restart: unless-stopped
+    command: ["-config.file=/etc/tempo/tempo.yml"]
+    volumes:
+      - tempo_data:/var/tempo
+      - ./infrastructure/tempo/tempo.yml:/etc/tempo/tempo.yml:ro
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - copper_internal
+      - copper_public
 
   # ── Loki (Log Aggregation) ─────────────────────────────────────────────────
   loki:

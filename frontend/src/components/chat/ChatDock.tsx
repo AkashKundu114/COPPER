@@ -91,6 +91,22 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
+  const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
+
+  // Keyboard navigation for cognitive mode dropdown
+  useEffect(() => {
+    if (!modelDropdownOpen) return;
+    const handleDropdownKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setModelDropdownOpen(false);
+        dropdownTriggerRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleDropdownKey);
+    return () => window.removeEventListener("keydown", handleDropdownKey);
+  }, [modelDropdownOpen]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -279,12 +295,19 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         type="file"
         multiple
         className="hidden"
+        aria-label="Upload document or file"
         onChange={handleFileUpload}
       />
 
       {/* Cognitive Intelligence Mode Selector Popover */}
       {modelDropdownOpen && (
-        <div className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-2.5 z-50 animate-slide-up font-mono text-xs">
+        <div
+          ref={dropdownMenuRef}
+          role="listbox"
+          id="cognitive-mode-listbox"
+          aria-label="Cognitive Intelligence Modes"
+          className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-2.5 z-50 animate-slide-up font-mono text-xs"
+        >
           <div className="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800 flex items-center justify-between">
             <span>Cognitive Intelligence Mode</span>
             <span className="text-accent-400">5 Active Squads</span>
@@ -296,17 +319,20 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
               return (
                 <button
                   key={m.id}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => {
                     setSelectedModel(m);
                     setModelDropdownOpen(false);
+                    dropdownTriggerRef.current?.focus();
                   }}
-                  className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all ${
+                  className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
                     isSelected
                       ? "bg-accent-500/15 text-accent-400 border border-accent-500/40 shadow-sm"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-transparent"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent"
                   }`}
                 >
-                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-accent-500/20 text-accent-400" : "bg-slate-800 text-slate-400"}`}>
+                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-accent-500/20 text-accent-400" : "bg-slate-800 text-slate-400"}`} aria-hidden="true">
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -322,9 +348,9 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                         {m.badge}
                       </span>
                     </div>
-                    <div className="text-[10.5px] text-slate-400 mt-0.5 leading-snug">{m.desc}</div>
-                    <div className="text-[9.5px] text-slate-500 mt-1 font-mono">
-                      Subagents: <span className="text-slate-300">{m.agents}</span>
+                    <div className="text-[10.5px] text-slate-300 mt-0.5 leading-snug">{m.desc}</div>
+                    <div className="text-[9.5px] text-slate-400 mt-1 font-mono">
+                      Subagents: <span className="text-slate-200">{m.agents}</span>
                     </div>
                   </div>
                 </button>
@@ -354,11 +380,13 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
             return (
               <div
                 key={idx}
+                role="group"
+                aria-label={`Attached document: ${doc.parsed.filename}`}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-accent-500/50 text-xs font-mono text-accent-300 shadow-sm transition-all cursor-pointer group"
                 onClick={() => setPreviewDoc(doc.parsed)}
                 title="Click to Open Document Reader & Preview"
               >
-                <Icon size={14} className="text-accent-400 group-hover:scale-110 transition-transform flex-shrink-0" />
+                <Icon size={14} className="text-accent-400 group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true" />
                 <span className="max-w-[160px] truncate group-hover:text-white transition-colors font-medium">
                   {doc.parsed.filename}
                 </span>
@@ -370,33 +398,35 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 )}
                 <button
                   type="button"
+                  aria-label={`Open document reader for ${doc.parsed.filename}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     setPreviewDoc(doc.parsed);
                   }}
-                  className="p-1 hover:bg-slate-800 hover:text-accent-400 rounded-lg text-slate-400 transition-colors ml-0.5"
+                  className="p-1 hover:bg-slate-800 hover:text-accent-400 rounded-lg text-slate-400 transition-colors ml-0.5 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                   title="Open Document Reader"
                 >
-                  <Eye size={13} />
+                  <Eye size={13} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
+                  aria-label={`Remove document ${doc.parsed.filename}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFile(idx);
                   }}
-                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-500 hover:text-danger-400 transition-colors"
+                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-danger-400 transition-colors focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                   title="Remove Document"
                 >
-                  <X size={13} />
+                  <X size={13} aria-hidden="true" />
                 </button>
               </div>
             );
           })}
 
           {isUploading && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-950/40 border border-accent-500/40 text-xs font-mono text-accent-400 animate-pulse">
-              <Loader2 size={13} className="animate-spin" />
+            <div role="status" aria-live="polite" className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-950/40 border border-accent-500/40 text-xs font-mono text-accent-400 animate-pulse">
+              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
               <span>Parsing document & extracting text...</span>
             </div>
           )}
@@ -413,24 +443,25 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           }`}
         >
           {/* 4 HUD Chamfer Corner Brackets */}
-          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-cyan pointer-events-none rounded-tl-sm" />
-          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-cyber-cyan pointer-events-none rounded-tr-sm" />
-          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-cyber-cyan pointer-events-none rounded-bl-sm" />
-          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-cyber-cyan pointer-events-none rounded-br-sm" />
+          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-cyan pointer-events-none rounded-tl-sm" aria-hidden="true" />
+          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-cyber-cyan pointer-events-none rounded-tr-sm" aria-hidden="true" />
+          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-cyber-cyan pointer-events-none rounded-bl-sm" aria-hidden="true" />
+          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-cyber-cyan pointer-events-none rounded-br-sm" aria-hidden="true" />
 
           {isRecording ? (
-            <div className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
+            <div role="status" aria-live="polite" className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
               <div className="flex items-center gap-3">
-                <span className="w-3 h-3 rounded-full bg-danger-500 animate-ping" />
+                <span className="w-3 h-3 rounded-full bg-danger-500 animate-ping" aria-hidden="true" />
                 <span className="text-sm font-semibold text-danger-400 font-mono">
                   ACOUSTIC SENSOR LISTENING... {formatTimer(recordDuration)}
                 </span>
               </div>
               <button
                 onClick={stopRecording}
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all shadow-md"
+                aria-label="Stop recording and transcribe voice"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
               >
-                <div className="w-3 h-3 bg-white rounded-sm" />
+                <div className="w-3 h-3 bg-white rounded-sm" aria-hidden="true" />
               </button>
             </div>
           ) : (
@@ -440,19 +471,21 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || thinking}
-                className="p-2 mb-1 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all flex-shrink-0"
+                aria-label="Attach reconnaissance documents or files"
+                className="p-2 mb-1 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                 title="Attach Recon Documents / Files"
               >
                 {isUploading ? (
-                  <Loader2 size={18} className="animate-spin text-cyber-cyan" />
+                  <Loader2 size={18} className="animate-spin text-cyber-cyan" aria-hidden="true" />
                 ) : (
-                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-cyber-cyan">+</div>
+                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-cyber-cyan" aria-hidden="true">+</div>
                 )}
               </button>
 
               {/* Input Text Area */}
               <div className="flex-1 py-2.5 px-2">
                 <textarea
+                  id="chat-message-input"
                   ref={textareaRef}
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
@@ -470,14 +503,16 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                       : "Input command or prompt for God's Eye intelligence..."
                   }
                   disabled={thinking || isUploading}
-                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-zinc-500 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans"
+                  aria-label="Message input for COPPER intelligence"
+                  aria-multiline="true"
+                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-zinc-400 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans focus-visible:ring-1 focus-visible:ring-cyber-cyan rounded"
                   rows={1}
                 />
               </div>
 
               {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
               {(thinking || speaking) && (
-                <div className="flex items-center gap-1 mb-3 px-2 py-1 rounded bg-black/50 border border-cyber-cyan/30 text-cyber-cyan" title="Audio / Neural Telemetry Stream">
+                <div aria-hidden="true" className="flex items-center gap-1 mb-3 px-2 py-1 rounded bg-black/50 border border-cyber-cyan/30 text-cyber-cyan" title="Audio / Neural Telemetry Stream">
                   <div className="w-1 bg-cyber-cyan rounded-full eq-bar-1" />
                   <div className="w-1 bg-cyber-cyan rounded-full eq-bar-2" />
                   <div className="w-1 bg-cyber-cyan rounded-full eq-bar-3" />
@@ -492,10 +527,12 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                   <button
                     type="button"
                     onClick={toggleRecording}
-                    className="p-2 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all"
+                    aria-label="Start voice recording"
+                    aria-pressed={false}
+                    className="p-2 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                     title="Voice Intercept Mic"
                   >
-                    <Mic size={18} />
+                    <Mic size={18} aria-hidden="true" />
                   </button>
                 )}
 
@@ -506,9 +543,9 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     disabled={isUploading}
                     aria-label="Send message"
                     title="Send message"
-                    className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyber-cyan to-accent text-black hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_12px_rgba(0,240,255,0.4)]"
+                    className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyber-cyan to-accent text-black hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_12px_rgba(0,240,255,0.4)] cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
                   >
-                    <ArrowUp size={18} strokeWidth={2.5} />
+                    <ArrowUp size={18} strokeWidth={2.5} aria-hidden="true" />
                   </button>
                 )}
 
@@ -516,10 +553,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                   <button
                     type="button"
                     onClick={onStop}
-                    className="w-8 h-8 rounded-lg bg-black/80 border border-danger/40 text-danger-400 hover:bg-danger/20 hover:text-danger-300 transition-all flex items-center justify-center shadow-md"
+                    aria-label="Stop response generation"
+                    className="w-8 h-8 rounded-lg bg-black/80 border border-danger/40 text-danger-400 hover:bg-danger/20 hover:text-danger-300 transition-all flex items-center justify-center shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
                     title="Stop generation"
                   >
-                    <div className="w-3 h-3 bg-danger-400 rounded-sm" />
+                    <div className="w-3 h-3 bg-danger-400 rounded-sm" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -530,32 +568,37 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         {/* Bottom Model Selector Pill & Telemetry Status */}
         <div className="flex w-full justify-between items-center mt-2.5 px-2 font-mono text-[11px]">
           <button
+            ref={dropdownTriggerRef}
             type="button"
             onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-            aria-label="Select cognitive intelligence mode"
-            className="flex items-center gap-2 px-3 py-1 rounded-md bg-black/50 border border-cyber-cyan/25 hover:border-cyber-cyan text-cyber-cyan transition-all shadow-sm"
+            aria-haspopup="listbox"
+            aria-expanded={modelDropdownOpen}
+            aria-controls="cognitive-mode-listbox"
+            aria-label={`Cognitive intelligence mode: ${selectedModel.name}`}
+            className="flex items-center gap-2 px-3 py-1 rounded-md bg-black/50 border border-cyber-cyan/25 hover:border-cyber-cyan text-cyber-cyan transition-all shadow-sm cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
           >
-            <span className="font-bold text-accent">+</span>
+            <span className="font-bold text-accent" aria-hidden="true">+</span>
             <span className="font-semibold text-white tracking-tight">{selectedModel.name}</span>
             <span className="px-1.5 py-0.2 rounded bg-cyber-cyan/15 text-[9px] font-bold text-cyber-cyan uppercase">
               {selectedModel.badge}
             </span>
-            <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} />
+            <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
           </button>
 
-          <div className="flex items-center gap-3 text-[10px] text-zinc-500">
+          <div className="flex items-center gap-3 text-[10px] text-zinc-400">
             {onClear && (
               <button
                 type="button"
                 onClick={onClear}
-                className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono"
+                aria-label="Purge session memory and reset chat logs"
+                className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                 title="Purge session memory & reset chat"
               >
-                <RotateCcw size={10} />
+                <RotateCcw size={10} aria-hidden="true" />
                 <span>PURGE LOGS</span>
               </button>
             )}
-            <span className="hidden sm:inline">ENC: <span className="text-zinc-400">AES-256</span></span>
+            <span className="hidden sm:inline">ENC: <span className="text-zinc-300">AES-256</span></span>
             <span className="hidden sm:inline">UPLINK: <span className="text-verdigris font-semibold">AIR-GAPPED</span></span>
           </div>
         </div>

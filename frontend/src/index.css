@@ -68,24 +68,29 @@ body,
 
 textarea,
 input {
-  outline: none !important;
+  outline: none;
 }
 textarea:focus,
+input:focus {
+  outline: none;
+}
+
+/* WCAG 2.1 AA Compliant High-Contrast Focus Visible Ring */
+*:focus-visible,
+button:focus-visible,
+select:focus-visible,
 textarea:focus-visible,
-input:focus,
-input:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
+input:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="option"]:focus-visible {
+  outline: 2px solid #00f0ff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4) !important;
 }
 
 button {
   -webkit-tap-highlight-color: transparent;
-}
-
-button:focus-visible,
-select:focus-visible {
-  outline: 2px solid rgba(0, 240, 255, 0.8) !important;
-  outline-offset: 2px;
 }
 
 input, textarea, select {
@@ -238,8 +243,12 @@ input, textarea, select {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   .copper-trace::before {
-    animation: none;
+    animation: none !important;
+  }
+  svg * {
+    animation: none !important;
   }
 }

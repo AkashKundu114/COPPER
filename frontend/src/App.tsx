@@ -39,9 +39,14 @@ import { SecurityCenter } from "./pages/SecurityCenter";
 import { BenchmarkMetricsView } from "./pages/BenchmarkMetricsView";
 import { SensorModeProvider } from "./context/SensorModeProvider";
 import { useSensorMode } from "./context/SensorModeContext";
+import {
+  ScreenReaderProvider,
+  useAnnounce,
+} from "./components/common/ScreenReaderAnnouncer";
 
 function MainApp() {
   const { mode } = useSensorMode();
+  const { announce } = useAnnounce();
   const [activeSection, setActiveSection] = useState<NavSection>("dashboard");
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
@@ -101,6 +106,16 @@ function MainApp() {
   useEffect(() => {
     refreshBranches("default");
   }, [refreshBranches]);
+
+  useEffect(() => {
+    announce(`Navigated to ${activeSection.replace(/-/g, " ")} view`);
+  }, [activeSection, announce]);
+
+  useEffect(() => {
+    if (thinking) {
+      announce("COPPER agent reasoning started");
+    }
+  }, [thinking, announce]);
 
   const handleBranchAtMessage = async (messageIndex: number, messageText: string) => {
     try {
@@ -225,13 +240,27 @@ function MainApp() {
     <div
       className={`relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body transition-all duration-500 sensor-${mode}`}
     >
+      {/* Accessible Skip to Content Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-cyber-cyan focus:text-black focus:font-bold focus:rounded-md focus:shadow-[0_0_15px_rgba(0,240,255,0.8)] focus:outline-none"
+      >
+        Skip to main content
+      </a>
+
       {/* CRT Scanline Overlay Strip */}
       {mode === "crt" && (
-        <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-60" />
+        <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-60" aria-hidden="true" />
       )}
 
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
-      <main className="flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        role="main"
+        aria-label="Main Content"
+        className="flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg focus:outline-none"
+      >
         <TopBar
           sectionTitle={activeSection}
           profile={profile}
@@ -329,7 +358,9 @@ function MainApp() {
 export default function App() {
   return (
     <SensorModeProvider>
-      <MainApp />
+      <ScreenReaderProvider>
+        <MainApp />
+      </ScreenReaderProvider>
     </SensorModeProvider>
   );
 }

@@ -87,12 +87,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectSection,
 }) => {
   return (
-    <aside className="w-60 h-screen bg-[#05080e]/95 backdrop-blur-2xl border-r border-cyber-cyan/20 flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_40px_rgba(0,0,0,0.5)] font-mono flex-shrink-0">
+    <aside
+      aria-label="Main Navigation"
+      className="w-60 h-screen bg-[#05080e]/95 backdrop-blur-2xl border-r border-cyber-cyan/20 flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_40px_rgba(0,0,0,0.5)] font-mono flex-shrink-0"
+    >
       <div className="flex-1 flex flex-col min-h-0">
         {/* Brand & Classification Header */}
         <div className="drag-region px-2.5 py-2.5 mb-2 border-b border-cyber-cyan/15 flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="notch-corner w-8 h-8 bg-gradient-to-br from-cyber-cyan to-accent text-black flex items-center justify-center font-display font-black text-sm shadow-[0_0_12px_rgba(0,240,255,0.4)] flex-shrink-0">
+            <div className="notch-corner w-8 h-8 bg-gradient-to-br from-cyber-cyan to-accent text-black flex items-center justify-center font-display font-black text-sm shadow-[0_0_12px_rgba(0,240,255,0.4)] flex-shrink-0" aria-hidden="true">
               C
             </div>
             <div className="overflow-hidden">
@@ -100,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <h1 className="font-display font-bold text-[14px] tracking-tight text-white truncate">
                   C.O.P.P.E.R.
                 </h1>
-                <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping flex-shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping flex-shrink-0" aria-hidden="true" />
               </div>
               <p className="text-[9px] text-cyber-cyan font-mono tracking-wider uppercase truncate">
                 GOD'S EYE OPS // TIER-1
@@ -108,17 +111,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
 
-          <div className="mt-2 px-2 py-0.5 rounded bg-black/60 border border-cyber-cyan/20 flex items-center justify-between text-[9px] text-zinc-400">
+          <div className="mt-2 px-2 py-0.5 rounded bg-black/60 border border-cyber-cyan/20 flex items-center justify-between text-[9px] text-zinc-300">
             <span className="text-verdigris font-bold">AIR-GAPPED</span>
-            <span className="text-zinc-500">26 MODELS</span>
+            <span className="text-zinc-400">26 MODELS</span>
           </div>
         </div>
 
         {/* Navigation Sections */}
-        <nav className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
+        <nav aria-label="Application Sections" className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
           {NAV_GROUPS.map((group) => (
             <div key={group.category} className="space-y-0.5">
-              <div className="px-2 py-1 text-[8.5px] font-mono font-semibold tracking-wider text-zinc-500 uppercase flex items-center justify-between">
+              <div className="px-2 py-1 text-[8.5px] font-mono font-semibold tracking-wider text-zinc-400 uppercase flex items-center justify-between">
                 <span>{group.category}</span>
               </div>
               {group.items.map((item) => {
@@ -128,24 +131,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => onSelectSection(item.id)}
-                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group ${
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={`${item.label} section${isActive ? ", current page" : ""}`}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-cyan ${
                       isActive
                         ? "copper-trace bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 shadow-sm"
-                        : "text-zinc-400 border border-transparent hover:text-white hover:bg-white/5"
+                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-white/5"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       <Icon
+                        aria-hidden="true"
                         className={`w-[14px] h-[14px] flex-shrink-0 transition-colors ${
                           isActive
                             ? "text-cyber-cyan drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]"
-                            : "text-zinc-500 group-hover:text-zinc-300"
+                            : "text-zinc-400 group-hover:text-zinc-200"
                         }`}
                       />
                       <span className="tracking-tight truncate">{item.label}</span>
                     </div>
                     {isActive && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_rgba(0,240,255,0.8)] flex-shrink-0 ml-1" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_rgba(0,240,255,0.8)] flex-shrink-0 ml-1" aria-hidden="true" />
                     )}
                   </button>
                 );

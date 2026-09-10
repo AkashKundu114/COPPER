@@ -147,13 +147,28 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onSelectSection,
 }) => {
   const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const commands = COMMAND_LIST.filter(
+    (c) =>
+      c.label.toLowerCase().includes(query.toLowerCase()) ||
+      c.section.toLowerCase().includes(query.toLowerCase()) ||
+      (c.keywords && c.keywords.toLowerCase().includes(query.toLowerCase())),
+  );
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [query]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         if (open) onClose();
-        else setQuery("");
+        else {
+          setQuery("");
+          setSelectedIndex(0);
+        }
       }
       if (e.key === "Escape" && open) {
         onClose();
@@ -163,58 +178,97 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (commands.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % commands.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev - 1 + commands.length) % commands.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (commands[selectedIndex]) {
+        onSelectSection(commands[selectedIndex].section);
+        onClose();
+      }
+    }
+  };
+
   if (!open) return null;
 
-  const commands = COMMAND_LIST.filter(
-    (c) =>
-      c.label.toLowerCase().includes(query.toLowerCase()) ||
-      c.section.toLowerCase().includes(query.toLowerCase()) ||
-      (c.keywords && c.keywords.toLowerCase().includes(query.toLowerCase())),
-  );
-
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-24 select-none">
-      <div className="w-full max-w-xl bg-bg-panel border border-accent/30 rounded-xl shadow-xl overflow-hidden">
-        {}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command Palette"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-24 select-none"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-xl bg-bg-panel border border-accent/30 rounded-xl shadow-xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center px-4 py-3 border-b border-border gap-3">
-          <Search size={18} className="text-molten" />
+          <Search size={18} className="text-molten" aria-hidden="true" />
           <input
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-autocomplete="list"
+            aria-controls="command-palette-list"
+            aria-activedescendant={commands[selectedIndex] ? `command-item-${selectedIndex}` : undefined}
+            aria-label="Type a command or search section"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleInputKeyDown}
             placeholder="Type a command or search section..."
             autoFocus
             className="w-full bg-transparent border-none outline-none text-text text-sm placeholder-text-muted font-mono"
           />
-          <kbd className="px-2 py-0.5 rounded bg-bg text-[10px] text-text-muted border border-border font-mono">
+          <kbd className="px-2 py-0.5 rounded bg-bg text-[10px] text-text-muted border border-border font-mono" aria-label="Escape key to close">
             ESC
           </kbd>
         </div>
 
-        {}
-        <div className="max-h-80 overflow-y-auto p-2 space-y-1">
+        <div
+          id="command-palette-list"
+          role="listbox"
+          aria-label="Command suggestions"
+          className="max-h-80 overflow-y-auto p-2 space-y-1 custom-scrollbar"
+        >
           {commands.length > 0 ? (
             commands.map((cmd, idx) => {
               const Icon = cmd.icon;
+              const isSelected = selectedIndex === idx;
               return (
                 <button
                   key={idx}
+                  id={`command-item-${idx}`}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => {
                     onSelectSection(cmd.section);
                     onClose();
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs text-zinc-300 hover:bg-cyber-cyan/10 hover:text-white hover:border-cyber-cyan/30 border border-transparent transition-all text-left group"
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left group cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
+                    isSelected
+                      ? "bg-cyber-cyan/15 text-white border border-cyber-cyan/40 shadow-sm"
+                      : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                  }`}
                 >
                   <div className="flex items-center gap-3 truncate">
-                    <div className="p-1.5 rounded-md bg-white/5 border border-white/10 group-hover:border-cyber-cyan/40 group-hover:bg-cyber-cyan/15 transition-all flex-shrink-0">
-                      <Icon
-                        size={14}
-                        className="text-zinc-400 group-hover:text-cyber-cyan transition-colors"
-                      />
+                    <div className={`p-1.5 rounded-md border transition-all flex-shrink-0 ${
+                      isSelected
+                        ? "border-cyber-cyan/40 bg-cyber-cyan/20 text-cyber-cyan"
+                        : "bg-white/5 border-white/10 text-zinc-400 group-hover:border-cyber-cyan/40 group-hover:text-cyber-cyan"
+                    }`}>
+                      <Icon size={14} aria-hidden="true" />
                     </div>
                     <div className="flex flex-col truncate">
                       <span className="font-medium text-[12.5px] truncate text-white">{cmd.label}</span>
-                      <span className="text-[10px] text-zinc-500 font-mono">{cmd.category}</span>
+                      <span className="text-[10px] text-zinc-400 font-mono">{cmd.category}</span>
                     </div>
                   </div>
                   <span className="text-[9.5px] text-cyber-cyan/80 font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/20 ml-2 flex-shrink-0">
@@ -224,7 +278,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               );
             })
           ) : (
-            <div className="p-4 text-center text-xs text-text-muted font-mono">
+            <div className="p-4 text-center text-xs text-text-muted font-mono" role="status">
               No matching commands found.
             </div>
           )}

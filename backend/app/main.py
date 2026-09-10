@@ -38,6 +38,7 @@ from app.api.routes import (
     self_memory,
     system,
     tasks,
+    telemetry_routes,
     training,
     vision,
     voice,
@@ -47,6 +48,7 @@ from app.api.routes import (
 )
 from app.core.config import settings
 from app.core.logger import logger
+from app.core.telemetry import init_telemetry
 from app.database.postgres import init_db
 from app.database.redis_client import redis_close
 from app.services.wake_word_service import wake_word_service
@@ -62,6 +64,10 @@ async def lifespan(app: FastAPI):
         load_applied_patches_from_db()
     except Exception as e:
         logger.warning(f"DB init failed (continuing): {e}")
+    try:
+        init_telemetry(app)
+    except Exception as e:
+        logger.warning(f"Telemetry init warning: {e}")
     start_scheduler()
     model_tier_manager.start()
     logger.info("COPPER backend ready")
@@ -81,6 +87,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = "geolocation=(), camera=(self), microphone=(self)"
+        try:
+            from opentelemetry import trace
+
+            span = trace.get_current_span()
+            if span and span.get_span_context().is_valid:
+                response.headers["X-Trace-Id"] = f"{span.get_span_context().trace_id:032x}"
+        except Exception:
+            pass
         return response
 
 
@@ -126,6 +140,7 @@ app.include_router(projects.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(schedule.events_router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1")
+app.include_router(telemetry_routes.router, prefix="/api/v1")
 
 # Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)

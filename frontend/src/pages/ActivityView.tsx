@@ -15,8 +15,9 @@ import {
   Zap,
   Compass,
   BarChart3,
+  Radio,
 } from "lucide-react";
-import { API_BASE } from "../lib/api";
+import { API_BASE, type DistributedTrace, fetchDistributedTraces } from "../lib/api";
 import {
   TaskGraphVisualizer,
   type TaskGraphData,
@@ -26,14 +27,15 @@ import {
   type RoutingExplanationData,
 } from "../components/routing/RoutingExplanationCard";
 import { RoutingBenchmarkView } from "../components/routing/RoutingBenchmarkView";
+import { TraceWaterfallVisualizer } from "../components/telemetry/TraceWaterfallVisualizer";
 
 interface ActivityLog {
   id: string;
   timestamp: string;
-  category: "Tools" | "NEXUS" | "Routing" | "Guardian" | "Firewall" | "Inference" | "Memory" | "Cache";
+  category: "Tools" | "NEXUS" | "Routing" | "Guardian" | "Firewall" | "Inference" | "Memory" | "Cache" | "Tracing";
   title: string;
   detail: string;
-  status: "success" | "warning" | "blocked" | "running";
+  status: "success" | "warning" | "blocked" | "running" | "error";
   io?: {
     arguments?: Record<string, any>;
     output?: any;
@@ -42,9 +44,129 @@ interface ActivityLog {
   };
   taskGraph?: TaskGraphData;
   routingExplanation?: RoutingExplanationData;
+  distributedTrace?: DistributedTrace;
 }
 
 const INITIAL_LOGS: ActivityLog[] = [
+  {
+    id: "otel-sample-1",
+    timestamp: "Just now",
+    category: "Tracing",
+    title: "Distributed Trace: websocket.request",
+    detail: "OpenTelemetry request traced across WebSocket -> Router -> Guardian -> Agent -> LLM -> Response (412.5ms)",
+    status: "success",
+    distributedTrace: {
+      trace_id: "4bf92f3577b34da6a3ce929d0e0e4736",
+      root_name: "copper.websocket.request",
+      timestamp: Date.now() - 30000,
+      duration_ms: 412.5,
+      status: "success",
+      spans_count: 6,
+      root_attributes: {
+        "copper.session_id": "sess-live-trace",
+        "copper.message": "Analyze system performance and explain trace telemetry",
+        "copper.mode": "auto",
+        "copper.provider": "ollama",
+      },
+      grafana_url: "http://localhost:3000/explore?left=%5B%7B%22datasource%22%3A%22Tempo%22%2C%22queries%22%3A%5B%7B%22query%22%3A%224bf92f3577b34da6a3ce929d0e0e4736%22%7D%5D%7D%5D",
+      spans: [
+        {
+          span_id: "00f067aa0ba902b7",
+          name: "copper.websocket.request",
+          parent_id: null,
+          start_time_ms: 0,
+          end_time_ms: 412.5,
+          duration_ms: 412.5,
+          offset_ms: 0,
+          status: "UNSET",
+          attributes: { "copper.session_id": "sess-live-trace", "copper.client": "websocket" },
+        },
+        {
+          span_id: "5fb397be34d23b0f",
+          name: "copper.router",
+          parent_id: "00f067aa0ba902b7",
+          start_time_ms: 2.1,
+          end_time_ms: 4.8,
+          duration_ms: 2.7,
+          offset_ms: 2.1,
+          status: "UNSET",
+          attributes: {
+            "router.selected_agent": "coding",
+            "router.confidence": 0.98,
+            "router.stage": "fast_pattern_scoring",
+            "router.agent_codename": "AXIS",
+          },
+        },
+        {
+          span_id: "38924bce89ef23aa",
+          name: "copper.guardian",
+          parent_id: "00f067aa0ba902b7",
+          start_time_ms: 5.2,
+          end_time_ms: 7.1,
+          duration_ms: 1.9,
+          offset_ms: 5.2,
+          status: "UNSET",
+          attributes: {
+            "guardian.action": "Analyze system performance and explain trace telemetry",
+            "guardian.is_consequential": false,
+            "guardian.verdict_level": "ALLOW",
+            "guardian.reasoning": "Benign analytical query cleared",
+          },
+        },
+        {
+          span_id: "90ab245d8ef012cb",
+          name: "copper.agent",
+          parent_id: "00f067aa0ba902b7",
+          start_time_ms: 8.0,
+          end_time_ms: 405.0,
+          duration_ms: 397.0,
+          offset_ms: 8.0,
+          status: "UNSET",
+          attributes: {
+            "agent.type": "coding",
+            "agent.name": "AXIS",
+            "agent.mode": "auto",
+            "agent.target_model": "qwen2.5-coder-abliterated:7b",
+          },
+        },
+        {
+          span_id: "c092ab345ef67812",
+          name: "copper.llm",
+          parent_id: "90ab245d8ef012cb",
+          start_time_ms: 12.0,
+          end_time_ms: 402.0,
+          duration_ms: 390.0,
+          offset_ms: 12.0,
+          status: "UNSET",
+          attributes: {
+            "llm.model": "qwen2.5-coder-abliterated:7b",
+            "llm.provider": "ollama",
+            "llm.prompt_tokens": 54,
+            "llm.completion_tokens": 142,
+            "llm.total_tokens": 196,
+            "llm.tokens_per_sec": 44.2,
+            "llm.ttft_ms": 145.2,
+            "llm.latency_ms": 390.0,
+          },
+        },
+        {
+          span_id: "1234567890abcdef",
+          name: "copper.response",
+          parent_id: "00f067aa0ba902b7",
+          start_time_ms: 405.2,
+          end_time_ms: 412.5,
+          duration_ms: 7.3,
+          offset_ms: 405.2,
+          status: "UNSET",
+          attributes: {
+            "response.length": 580,
+            "response.total_time_ms": 412.5,
+            "response.tokens_per_sec": 44.2,
+          },
+        },
+      ],
+    },
+  },
   {
     id: "nexus-example-1",
     timestamp: "Just now",
@@ -301,6 +423,34 @@ export const ActivityView: React.FC = () => {
         }
       })
       .catch(() => {});
+
+    // Fetch live OpenTelemetry distributed traces
+    fetchDistributedTraces(25)
+      .then((data) => {
+        if (data && Array.isArray(data.traces) && data.traces.length > 0) {
+          const fetchedTraces: ActivityLog[] = data.traces.map((tr) => ({
+            id: tr.trace_id,
+            timestamp: tr.timestamp
+              ? new Date(tr.timestamp * 1000).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })
+              : "Recent",
+            category: "Tracing",
+            title: `Distributed Trace: ${tr.root_name.replace("copper.", "")}`,
+            detail: `Traced ${tr.spans_count} spans across execution pipeline (${tr.duration_ms.toFixed(1)}ms)`,
+            status: tr.status === "error" ? "error" : "success",
+            distributedTrace: tr,
+          }));
+          setLogs((prev) => {
+            const existingIds = new Set(prev.map((p) => p.id));
+            const newTraces = fetchedTraces.filter((f) => !existingIds.has(f.id));
+            return [...newTraces, ...prev];
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const clearLogs = () => {
@@ -403,6 +553,8 @@ export const ActivityView: React.FC = () => {
         return <Compass size={14} className="text-purple-400" />;
       case "inference":
         return <Cpu size={14} className="text-emerald-400" />;
+      case "tracing":
+        return <Radio size={14} className="text-purple-400 animate-pulse" />;
       default:
         return <Terminal size={14} className="text-accent-400" />;
     }
@@ -465,6 +617,7 @@ export const ActivityView: React.FC = () => {
         {(
           [
             "all",
+            "tracing",
             "nexus",
             "cache",
             "tools",
@@ -484,7 +637,13 @@ export const ActivityView: React.FC = () => {
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            {cat === "nexus" ? "NEXUS Multi-Agent DAG" : cat === "cache" ? "⚡ Instant Recall" : cat}
+            {cat === "tracing"
+              ? "📡 Distributed Traces (OTel)"
+              : cat === "nexus"
+              ? "NEXUS Multi-Agent DAG"
+              : cat === "cache"
+              ? "⚡ Instant Recall"
+              : cat}
           </button>
         ))}
       </div>
@@ -537,6 +696,18 @@ export const ActivityView: React.FC = () => {
           </div>
         ) : (
           filtered.map((log) => {
+            // Render OpenTelemetry distributed trace waterfall
+            if (log.distributedTrace) {
+              return (
+                <div key={log.id} className="transition-all">
+                  <TraceWaterfallVisualizer
+                    trace={log.distributedTrace}
+                    defaultExpanded={filter === "tracing" || !!expandedLogs[log.id]}
+                  />
+                </div>
+              );
+            }
+
             // Render PRISM explainable routing card with horizontal bar charts, keyword highlights, and stage progression
             if (log.routingExplanation) {
               return (
@@ -613,6 +784,13 @@ export const ActivityView: React.FC = () => {
                 {hasGraph && log.taskGraph && (
                   <div className="mt-3">
                     <TaskGraphVisualizer graph={log.taskGraph} />
+                  </div>
+                )}
+
+                {/* If Log Contains Distributed Trace, Render Waterfall Visualizer */}
+                {log.distributedTrace && (
+                  <div className="mt-3">
+                    <TraceWaterfallVisualizer trace={log.distributedTrace} />
                   </div>
                 )}
 

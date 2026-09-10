@@ -180,6 +180,15 @@ export function SideDrawer({
     }
   };
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   const handleReset = async () => {
     if (
       !confirm(
@@ -199,21 +208,25 @@ export function SideDrawer({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 360, opacity: 0 }}
           transition={{ type: "spring", damping: 28, stiffness: 260 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedAgent ? "Agent Node Details" : "User Profile and Agent Details"}
           className="fixed top-0 right-0 h-full w-[360px] bg-void-panel border-l border-zinc-800 z-40 overflow-y-auto"
         >
           <div className="p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <Brain size={16} className="text-white" />
+                <Brain size={16} className="text-white" aria-hidden="true" />
                 <h2 className="font-display font-semibold text-white">
                   {selectedAgent ? "Agent Node" : "What COPPER knows"}
                 </h2>
               </div>
               <button
                 onClick={onClose}
-                className="text-ink-faint hover:text-white transition-colors"
+                aria-label="Close drawer"
+                className="text-ink-faint hover:text-white transition-colors cursor-pointer p-1 rounded focus-visible:ring-1 focus-visible:ring-cyber-cyan"
               >
-                <X size={18} />
+                <X size={18} aria-hidden="true" />
               </button>
             </div>
 
@@ -224,10 +237,12 @@ export function SideDrawer({
               />
             ) : (
               <div className="animate-fade-in">
-                <div className="flex gap-1 p-1 bg-bg-panel rounded-lg mb-4">
+                <div role="tablist" aria-label="Drawer tabs" className="flex gap-1 p-1 bg-bg-panel rounded-lg mb-4">
                   <button
+                    role="tab"
+                    aria-selected={drawerTab === 'profile'}
                     onClick={() => setDrawerTab('profile')}
-                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
                       drawerTab === 'profile'
                         ? 'bg-verdigris-900/60 text-verdigris-300'
                         : 'text-ink-muted hover:text-ink-secondary'
@@ -236,8 +251,10 @@ export function SideDrawer({
                     What COPPER knows
                   </button>
                   <button
+                    role="tab"
+                    aria-selected={drawerTab === 'mind'}
                     onClick={() => setDrawerTab('mind')}
-                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                    className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
                       drawerTab === 'mind'
                         ? 'bg-verdigris-900/60 text-verdigris-300'
                         : 'text-ink-muted hover:text-ink-secondary'
