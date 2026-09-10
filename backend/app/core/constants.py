@@ -19,6 +19,7 @@ class AgentType(str, Enum):
     NUTRITION = "nutrition"
     EVALUATOR = "evaluator"
     ORCHESTRATOR = "orchestrator"
+    WEB_SEARCH = "web_search"
 
 
 class GuardianLevel(int, Enum):

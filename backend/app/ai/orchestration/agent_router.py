@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from app.ai.orchestration.explainer import RoutingExplainer, routing_history_store
 from app.core.constants import AgentType
 from app.core.logger import logger
 
@@ -24,6 +25,29 @@ class RoutingResult:
     cascade_risk: float = 0.0  # Novelty 1: Topological DAG cascade failure probability
     sub_tasks: list[str] = field(default_factory=list)  # Decomposed compound task pipeline
     routing_entropy: float = 0.0  # Novelty 1: Shannon entropy H(R) = -sum(p_i * log2(p_i))
+    explanation: dict[str, Any] | None = None
+    suppressed_rules: list[dict[str, Any]] = field(default_factory=list)
+
+    @property
+    def agent_type(self) -> AgentType:
+        return self.agent
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "agent": self.agent.value,
+            "agent_type": self.agent.value,
+            "confidence": self.confidence,
+            "latency_ms": self.latency_ms,
+            "route_stage": self.route_stage,
+            "scores": self.scores,
+            "matched_keywords": self.matched_keywords,
+            "is_consequential": self.is_consequential,
+            "cascade_risk": self.cascade_risk,
+            "sub_tasks": self.sub_tasks,
+            "routing_entropy": self.routing_entropy,
+            "explanation": self.explanation,
+            "suppressed_rules": self.suppressed_rules,
+        }
 
     def __str__(self) -> str:
         return self.agent.value
@@ -204,6 +228,20 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
         ),
         (r"^(what is|who is|who was|why is|explain|summarize|news on|research|papers on|study on)\b", 2.0),
     ],
+    AgentType.WEB_SEARCH: [
+        (
+            r"\b(search for|look up|what's the latest|whats the latest|current news|google|find online|search the web|search online|search the internet|browse the web|latest news|today's news|recent news on|breaking news|live news|online search|search searxng)\b",
+            7.0,
+        ),
+        (
+            r"\b(search (the web|online|the internet|google|bing|duckduckgo)(\s+for)?|look up online|find online|google this|find on google|look up on google)\b",
+            6.5,
+        ),
+        (
+            r"\b(what is the latest|latest updates on|current status of|stock price of|weather in|who won|latest score)\b",
+            5.0,
+        ),
+    ],
     AgentType.VISION: [
         (
             r"\b(what is on my screen|describe this screenshot|read text from this image|ocr|read the error message in|scanned pdf receipt|circuit board picture|extract the text from|check the alignment of|find the bounding box coordinates of|describe the objects and colors|describe my screen|inspect my screen|inspect the screen|screen right now)\b",
@@ -329,6 +367,17 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
         (r"^(remind me to|schedule a time to|write a script to|delete the file|what is|explain|summarize)\b", 6.0),
         (r"^(plan a roadmap for|break down|build a checklist)\b", 6.0),
     ],
+    AgentType.WEB_SEARCH: [
+        (
+            r"\b(my name|my age|who am i|whats my name|what is my name|my files|my schedule|in my notes|my password|my memory|remember when|my habits|my calendar|my tasks|my todo|my projects|local documents|on my computer|my workstation|on my desktop|in my database)\b",
+            8.0,
+        ),
+        (r"\b(remind me|set an alarm|schedule a notification|schedule a time|create a reminder|add a todo|set a timer)\b", 8.0),
+        (r"\b(delete the file|open the terminal|open chrome|close all windows|kill process|close.*(tabs|windows|browser)|open.*(browser|chrome|firefox)|in google chrome)\b", 8.0),
+        (r"\b(write a python function|write a script|debug this error|fix my syntax|create a react component|implement a function)\b", 8.0),
+        (r"\b(what is on my screen|describe this screenshot|read text from this image)\b", 8.0),
+        (r"\b(generate an image|create an image|draw a picture)\b", 8.0),
+    ],
 }
 
 CONSEQUENTIAL_PATTERNS = [
@@ -369,6 +418,7 @@ def estimate_dag_cascade_risk(agent: AgentType, is_consequential: bool, sub_task
         AgentType.DOCUMENT: 0.04,
         AgentType.IMAGE: 0.05,
         AgentType.RESEARCH: 0.07,
+        AgentType.WEB_SEARCH: 0.06,
         AgentType.VISION: 0.09,
         AgentType.PLANNER: 0.11,
         AgentType.CODING: 0.16,
@@ -398,7 +448,9 @@ def decompose_compound_intent(message: str) -> list[str]:
         tasks.append("coding")
     if any(k in lower for k in ["pdf", "report", "document", "docx", "export"]):
         tasks.append("document")
-    if any(k in lower for k in ["search", "research", "explain how", "history of"]):
+    if any(k in lower for k in ["search online", "search the web", "look up", "find online"]):
+        tasks.append("web_search")
+    elif any(k in lower for k in ["search", "research", "explain how", "history of"]):
         tasks.append("research")
     return tasks if len(tasks) > 1 else []
 
@@ -426,6 +478,12 @@ async def route_message(message: str, use_llm: bool = False) -> AgentType:
     return res.agent
 
 
+async def route_and_explain(message: str, use_llm: bool = False) -> tuple[RoutingResult, dict[str, Any]]:
+    """Returns both the RoutingResult and its complete deterministic PRISM explanation."""
+    res = await route_message_detailed(message, use_llm=use_llm)
+    return res, res.explanation or {}
+
+
 async def route_message_detailed(message: str, use_llm: bool = False) -> RoutingResult:
     """
     Multi-stage high-precision router:
@@ -441,39 +499,51 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     consequential = is_consequential_action(msg_lower)
     sub_tasks = decompose_compound_intent(msg_clean)
 
+    scores: dict[AgentType, float] = dict.fromkeys(COMPILED_KEYWORD_RULES, 0.0)
+    matched: dict[AgentType, list[str]] = {agent: [] for agent in COMPILED_KEYWORD_RULES}
+    suppressed_rules: list[dict[str, Any]] = []
+
+    def _finalize_result(res: RoutingResult) -> RoutingResult:
+        explanation = RoutingExplainer.explain(res, msg_clean, suppressed_rules=suppressed_rules)
+        res.explanation = explanation.to_dict()
+        res.suppressed_rules = suppressed_rules
+        routing_history_store.record(explanation)
+        return res
+
     memory_match = routing_memory.find_match(msg_clean, threshold=0.90)
     if memory_match:
         learned_agent, confidence = memory_match
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-        return RoutingResult(
-            agent=learned_agent,
-            confidence=round(confidence, 3),
-            latency_ms=round(elapsed_ms, 3),
-            route_stage="learned_memory_cache",
-            scores={learned_agent.value: 1.0},
-            is_consequential=consequential,
-            cascade_risk=estimate_dag_cascade_risk(learned_agent, consequential, sub_tasks),
-            sub_tasks=sub_tasks,
-            routing_entropy=0.0,
+        return _finalize_result(
+            RoutingResult(
+                agent=learned_agent,
+                confidence=round(confidence, 3),
+                latency_ms=round(elapsed_ms, 3),
+                route_stage="learned_memory_cache",
+                scores={learned_agent.value: 1.0},
+                is_consequential=consequential,
+                cascade_risk=estimate_dag_cascade_risk(learned_agent, consequential, sub_tasks),
+                sub_tasks=sub_tasks,
+                routing_entropy=0.0,
+            )
         )
 
     for compiled_pat in COMPILED_GREETING_PATTERNS:
         if compiled_pat.search(msg_lower):
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-            return RoutingResult(
-                agent=AgentType.CHAT,
-                confidence=0.98,
-                latency_ms=round(elapsed_ms, 3),
-                route_stage="fast_smalltalk_filter",
-                scores={AgentType.CHAT.value: 1.0},
-                is_consequential=False,
-                cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, False),
-                sub_tasks=[],
-                routing_entropy=0.0,
+            return _finalize_result(
+                RoutingResult(
+                    agent=AgentType.CHAT,
+                    confidence=0.98,
+                    latency_ms=round(elapsed_ms, 3),
+                    route_stage="fast_smalltalk_filter",
+                    scores={AgentType.CHAT.value: 1.0},
+                    is_consequential=False,
+                    cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, False),
+                    sub_tasks=[],
+                    routing_entropy=0.0,
+                )
             )
-
-    scores: dict[AgentType, float] = dict.fromkeys(COMPILED_KEYWORD_RULES, 0.0)
-    matched: dict[AgentType, list[str]] = {agent: [] for agent in COMPILED_KEYWORD_RULES}
 
     for agent, rules in COMPILED_KEYWORD_RULES.items():
         for compiled_pat, weight, raw_pat in rules:
@@ -483,8 +553,18 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
 
     for agent, neg_rules in COMPILED_NEGATIVE_RULES.items():
         for compiled_pat, penalty in neg_rules:
-            if compiled_pat.search(msg_lower):
+            m = compiled_pat.search(msg_lower)
+            if m:
                 scores[agent] = max(0.0, scores[agent] - penalty)
+                suppressed_rules.append(
+                    {
+                        "agent": agent.value,
+                        "pattern": compiled_pat.pattern,
+                        "matched_text": m.group(0),
+                        "penalty": penalty,
+                        "reason": f"Negative rule '{m.group(0)}' suppressed {agent.value} (-{penalty} score)",
+                    }
+                )
 
     best_agent = max(scores, key=scores.get)
     best_score = scores[best_agent]
@@ -495,48 +575,54 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
 
     if best_score >= 1.5:
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-        return RoutingResult(
-            agent=best_agent,
-            confidence=min(1.0, confidence),
-            latency_ms=round(elapsed_ms, 3),
-            route_stage="fast_pattern_scoring",
-            scores={k.value: round(v, 2) for k, v in scores.items()},
-            matched_keywords=matched[best_agent],
-            is_consequential=consequential,
-            cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
-            sub_tasks=sub_tasks,
-            routing_entropy=entropy,
+        return _finalize_result(
+            RoutingResult(
+                agent=best_agent,
+                confidence=min(1.0, confidence),
+                latency_ms=round(elapsed_ms, 3),
+                route_stage="fast_pattern_scoring",
+                scores={k.value: round(v, 2) for k, v in scores.items()},
+                matched_keywords=matched[best_agent],
+                is_consequential=consequential,
+                cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
+                sub_tasks=sub_tasks,
+                routing_entropy=entropy,
+            )
         )
 
     if use_llm:
         try:
             llm_agent = await _llm_subagent_route(msg_clean)
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-            return RoutingResult(
-                agent=llm_agent,
-                confidence=0.85,
-                latency_ms=round(elapsed_ms, 3),
-                route_stage="llm_subagent_router",
-                scores={llm_agent.value: 1.0},
-                is_consequential=consequential,
-                cascade_risk=estimate_dag_cascade_risk(llm_agent, consequential, sub_tasks),
-                sub_tasks=sub_tasks,
-                routing_entropy=0.15,
+            return _finalize_result(
+                RoutingResult(
+                    agent=llm_agent,
+                    confidence=0.85,
+                    latency_ms=round(elapsed_ms, 3),
+                    route_stage="llm_subagent_router",
+                    scores={llm_agent.value: 1.0},
+                    is_consequential=consequential,
+                    cascade_risk=estimate_dag_cascade_risk(llm_agent, consequential, sub_tasks),
+                    sub_tasks=sub_tasks,
+                    routing_entropy=0.15,
+                )
             )
         except Exception as e:
             logger.warning(f"LLM routing failed: {e}")
 
     elapsed_ms = (time.perf_counter() - start_time) * 1000.0
-    return RoutingResult(
-        agent=AgentType.CHAT,
-        confidence=0.50 if best_score == 0 else 0.65,
-        latency_ms=round(elapsed_ms, 3),
-        route_stage="default_conversational_fallback",
-        scores={k.value: round(v, 2) for k, v in scores.items()},
-        is_consequential=consequential,
-        cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, consequential, sub_tasks),
-        sub_tasks=sub_tasks,
-        routing_entropy=round(entropy if entropy > 0 else 0.5, 3),
+    return _finalize_result(
+        RoutingResult(
+            agent=AgentType.CHAT,
+            confidence=0.50 if best_score == 0 else 0.65,
+            latency_ms=round(elapsed_ms, 3),
+            route_stage="default_conversational_fallback",
+            scores={k.value: round(v, 2) for k, v in scores.items()},
+            is_consequential=consequential,
+            cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, consequential, sub_tasks),
+            sub_tasks=sub_tasks,
+            routing_entropy=round(entropy if entropy > 0 else 0.5, 3),
+        )
     )
 
 

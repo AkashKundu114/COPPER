@@ -13,12 +13,19 @@ import {
   Loader2,
   Sparkles,
   Zap,
+  Compass,
+  BarChart3,
 } from "lucide-react";
 import { API_BASE } from "../lib/api";
 import {
   TaskGraphVisualizer,
   type TaskGraphData,
 } from "../components/chat/TaskGraphVisualizer";
+import {
+  RoutingExplanationCard,
+  type RoutingExplanationData,
+} from "../components/routing/RoutingExplanationCard";
+import { RoutingBenchmarkView } from "../components/routing/RoutingBenchmarkView";
 
 interface ActivityLog {
   id: string;
@@ -34,6 +41,7 @@ interface ActivityLog {
     guardian_level?: number;
   };
   taskGraph?: TaskGraphData;
+  routingExplanation?: RoutingExplanationData;
 }
 
 const INITIAL_LOGS: ActivityLog[] = [
@@ -177,19 +185,75 @@ const INITIAL_LOGS: ActivityLog[] = [
   },
   {
     id: "route-1",
-    timestamp: "6m ago",
+    timestamp: "Just now",
     category: "Routing",
-    title: "Autonomous Intent Dispatched",
-    detail: "Classified intent -> Routed to AXIS (Forge AI Engineer).",
+    title: "Autonomous Intent Dispatched: AXIS",
+    detail: "Routed to AXIS (confidence: 97%) because 'write a python script' matched CODING keywords",
     status: "success",
+    routingExplanation: {
+      id: "prism-sample-1",
+      prompt: "Write a python script to sort an array using quicksort",
+      agent: "coding",
+      agent_codename: "AXIS",
+      agent_display: "AXIS (Coding Engineer)",
+      decision_summary: "Routed to AXIS (confidence: 97%) because 'write a python script' matched CODING keywords",
+      confidence: 0.97,
+      confidence_pct: 97,
+      latency_ms: 0.048,
+      route_stage: "fast_pattern_scoring",
+      scores: { coding: 5.0, automation: 1.0, research: 0.5, document: 0.0 },
+      score_breakdown: [
+        { agent: "coding", agent_name: "AXIS (Coding Engineer)", codename: "AXIS", score: 5.0, percentage: 76.9, is_winner: true },
+        { agent: "automation", agent_name: "FORGE (OS & Sandbox Automation)", codename: "FORGE", score: 1.0, percentage: 15.4, is_winner: false },
+        { agent: "research", agent_name: "OMNI (Research & Analysis)", codename: "OMNI", score: 0.5, percentage: 7.7, is_winner: false },
+      ],
+      matched_keywords: ["\\b(write|debug|create)\\s+.*(script|code)\\b", "\\b(python|quicksort)\\b"],
+      matched_terms: [
+        { term: "Write a python script", start: 0, end: 21, agent: "coding" },
+        { term: "quicksort", start: 45, end: 54, agent: "coding" },
+      ],
+      suppressed_rules: [
+        {
+          agent: "document",
+          agent_name: "KINESIS (Document Architect)",
+          codename: "KINESIS",
+          pattern: "^(write a script to)\\b",
+          matched_text: "Write a script to",
+          penalty: 8.0,
+          reason: "Negative rule 'Write a script to' suppressed document agent in favor of coding (-8.0 score)",
+        },
+      ],
+      stage_progression: [
+        { stage_id: "learned_memory_cache", stage_number: 0, name: "Learned Memory Cache", status: "passed", decision: "Cache miss -> Proceeded to Stage 1" },
+        { stage_id: "fast_smalltalk_filter", stage_number: 1, name: "Fast Smalltalk Filter", status: "passed", decision: "No greeting detected -> Proceeded to Stage 2" },
+        { stage_id: "fast_pattern_scoring", stage_number: 2, name: "Weighted Pattern & Suppression", status: "matched", decision: "Specialist rules fired -> Selected AXIS (Coding Engineer) with winning score 5.0" },
+        { stage_id: "consequential_safety", stage_number: 3, name: "Consequential Action Safety Gate", status: "evaluated", decision: "Benign operation verified -> Execution cleared" },
+        { stage_id: "fallback_resolution", stage_number: 4, name: "Micro-Router / Fallback", status: "bypassed", decision: "Bypassed (Resolved deterministically in earlier stages)" },
+      ],
+      is_consequential: false,
+      cascade_risk: 0.16,
+      sub_tasks: [],
+      confidence_calibration: {
+        raw_confidence: 0.97,
+        calibrated_confidence: 0.96,
+        calibrated_pct: 96,
+        certainty_tier: "HIGH_CERTAINTY",
+        certainty_description: "Optimal single-agent determinism",
+        routing_entropy: 0.28,
+        runner_up_margin: 4.0,
+        is_consequential: false,
+        cascade_risk: 0.16,
+      },
+    },
   },
 ];
 
 export const ActivityView: React.FC = () => {
   const [logs, setLogs] = useState<ActivityLog[]>(INITIAL_LOGS);
   const [filter, setFilter] = useState<string>("all");
-  const [expandedLogs, setExpandedLogs] = useState<Record<string, boolean>>({ "tool-1": true });
+  const [expandedLogs, setExpandedLogs] = useState<Record<string, boolean>>({ "tool-1": true, "route-1": true });
   const [isSimulating, setIsSimulating] = useState(false);
+  const [showBenchmarkAnalytics, setShowBenchmarkAnalytics] = useState(false);
 
   useEffect(() => {
     // Fetch live traces from backend if available
@@ -210,6 +274,29 @@ export const ActivityView: React.FC = () => {
             const existingIds = new Set(prev.map((p) => p.id));
             const newTraces = fetchedLogs.filter((f) => !existingIds.has(f.id));
             return [...newTraces, ...prev];
+          });
+        }
+      })
+      .catch(() => {});
+
+    // Fetch live PRISM routing history
+    fetch(`${API_BASE}/api/v1/routing/history?limit=20`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && Array.isArray(data.history) && data.history.length > 0) {
+          const fetchedRouting: ActivityLog[] = data.history.map((h: any) => ({
+            id: h.id || `route-${Date.now()}-${Math.random()}`,
+            timestamp: "Recent",
+            category: "Routing",
+            title: `PRISM Intent Routed: ${h.agent_codename || h.agent?.toUpperCase()}`,
+            detail: h.decision_summary,
+            status: "success",
+            routingExplanation: h,
+          }));
+          setLogs((prev) => {
+            const existingIds = new Set(prev.map((p) => p.id));
+            const newRouting = fetchedRouting.filter((f) => !existingIds.has(f.id));
+            return [...newRouting, ...prev];
           });
         }
       })
@@ -312,6 +399,8 @@ export const ActivityView: React.FC = () => {
         return <Network size={14} className="text-purple-400" />;
       case "guardian":
         return <ShieldAlert size={14} className="text-amber-400" />;
+      case "routing":
+        return <Compass size={14} className="text-purple-400" />;
       case "inference":
         return <Cpu size={14} className="text-emerald-400" />;
       default:
@@ -331,11 +420,23 @@ export const ActivityView: React.FC = () => {
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            NEXUS DAG decomposition, Redis context bus dispatches, and local tool telemetry
+            NEXUS DAG decomposition, PRISM explainable routing telemetry, and local tool execution traces
           </p>
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowBenchmarkAnalytics(!showBenchmarkAnalytics)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-sans font-semibold transition-all ${
+              showBenchmarkAnalytics
+                ? "bg-purple-600 text-white border-purple-500 shadow-lg shadow-purple-900/50"
+                : "bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white"
+            }`}
+          >
+            <BarChart3 size={13} />
+            <span>PRISM Benchmarks</span>
+          </button>
+
           <button
             onClick={runExampleDAGSimulation}
             disabled={isSimulating}
@@ -388,6 +489,13 @@ export const ActivityView: React.FC = () => {
         ))}
       </div>
 
+      {/* PRISM Systematic Benchmark Analytics & Calibration Panel */}
+      {showBenchmarkAnalytics && (
+        <div className="transition-all animate-in fade-in duration-300">
+          <RoutingBenchmarkView />
+        </div>
+      )}
+
       {/* Active Execution Pipeline Card */}
       <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
         <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between">
@@ -429,6 +537,18 @@ export const ActivityView: React.FC = () => {
           </div>
         ) : (
           filtered.map((log) => {
+            // Render PRISM explainable routing card with horizontal bar charts, keyword highlights, and stage progression
+            if (log.routingExplanation) {
+              return (
+                <div key={log.id} className="transition-all">
+                  <RoutingExplanationCard
+                    data={log.routingExplanation}
+                    initialExpanded={filter === "routing" || !!expandedLogs[log.id]}
+                  />
+                </div>
+              );
+            }
+
             const isExpanded = !!expandedLogs[log.id];
             const hasIO = !!log.io;
             const hasGraph = !!log.taskGraph;

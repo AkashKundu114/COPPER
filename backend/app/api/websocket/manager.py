@@ -138,5 +138,15 @@ class ConnectionManager:
             },
         )
 
+    async def send_routing_decision(self, session_id: str | None, routing_event: dict[str, Any]):
+        """Broadcast live PRISM explainable routing decisions with full breakdown."""
+        event = {
+            "type": "routing_decision",
+            **routing_event,
+        }
+        if session_id:
+            await self.send(session_id, event)
+        await self.broadcast(event)
+
 
 manager = ConnectionManager()

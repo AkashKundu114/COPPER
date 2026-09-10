@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     )
     GATEKEEPER_KEEP_ALIVE: int = -1
     HEAVY_MODEL_IDLE_UNLOAD_SECONDS: int = 240
+    SEARXNG_URL: str = "http://localhost:8888"
+    WEB_SEARCH_ENABLED: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

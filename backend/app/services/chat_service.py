@@ -11,6 +11,7 @@ from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
+from app.ai.agents.web_search_agent import web_search_agent
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
@@ -35,6 +36,7 @@ AGENT_MAP = {
     AgentType.AUTOMATION: automation_agent,
     AgentType.REMINDER: reminder_agent,
     AgentType.RESEARCH: research_agent,
+    AgentType.WEB_SEARCH: web_search_agent,
     AgentType.VISION: vision_agent,
     AgentType.IMAGE: image_agent,
 }
@@ -167,6 +169,12 @@ class ChatService:
 
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
+
+        try:
+            from app.api.websocket.manager import manager
+            await manager.send_routing_decision(session_id, routing_res.to_dict())
+        except Exception as ws_err:
+            logger.debug(f"Could not broadcast routing event: {ws_err}")
 
         if db is not None and is_consequential_action(message):
             verdict = await guardian_service.evaluate_action(
@@ -428,6 +436,12 @@ class ChatService:
 
         routing_res = await route_message_detailed(message)
         agent_type = routing_res.agent
+
+        try:
+            from app.api.websocket.manager import manager
+            await manager.send_routing_decision(session_id, routing_res.to_dict())
+        except Exception as ws_err:
+            logger.debug(f"Could not broadcast routing event: {ws_err}")
         history, memory_context, self_context = await context_engine.build_context(session_id, message)
         if cache_match.status == "hint" and cache_match.cached_response:
             memory_context += f"\n\n[Semantic Cache Hint (similarity: {cache_match.similarity:.2f})]:\n{cache_match.cached_response}\n"

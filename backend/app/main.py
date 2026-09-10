@@ -29,6 +29,7 @@ from app.api.routes import (
     memory,
     orchestration,
     reminders,
+    routing_analytics,
     self_improvement,
     self_memory,
     system,
@@ -113,6 +114,7 @@ app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
 app.include_router(self_improvement.router, prefix="/api/v1")
 app.include_router(training.router, prefix="/api/v1")
+app.include_router(routing_analytics.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
 
 

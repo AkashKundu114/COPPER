@@ -11,7 +11,7 @@ from app.ai.tools.builtin.screen_tools import (
     wait,
 )
 from app.ai.tools.builtin.shell_tools import python_execute, shell_execute
-from app.ai.tools.builtin.web_tools import web_search
+from app.ai.tools.builtin.web_tools import web_fetch, web_search
 
 __all__ = [
     "file_read",
@@ -22,6 +22,7 @@ __all__ = [
     "memory_store",
     "memory_query",
     "web_search",
+    "web_fetch",
     "calendar_create",
     "reminder_set",
     "screenshot",

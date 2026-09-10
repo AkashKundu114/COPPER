@@ -61,5 +61,15 @@ services:
     volumes:
       - ollama:/root/.ollama
 
+  searxng:
+    image: searxng/searxng:latest
+    container_name: copper-searxng
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./data/searxng:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8888
+
 volumes:
   ollama:
