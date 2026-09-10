@@ -21,6 +21,16 @@ class Settings(BaseSettings):
     AUDIO_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio")
     WHISPER_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "whisper")
     TTS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "tts")
+    IMAGE_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "image")
+    IMAGE_MODEL_PATH: str = str(
+        Path(__file__).resolve().parents[3] / "ai-models" / "image" / "sd_turbo.safetensors"
+    )
+    IMAGE_OUTPUT_DIR: str = str(Path(__file__).resolve().parents[3] / "frontend" / "public" / "generated")
+    IMAGE_DEVICE: str = "auto"  # "auto", "cuda", "cpu"
+    IMAGE_WIDTH: int = 512
+    IMAGE_HEIGHT: int = 512
+    IMAGE_INFERENCE_STEPS: int = 1
+    IMAGE_OFFLINE_ONLY: bool = True
     AGENT_TIERS: list[tuple[int, str]] = [
         (0, "Stranger"),
         (1, "Acquaintance"),

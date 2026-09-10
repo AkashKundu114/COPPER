@@ -10,6 +10,7 @@ def test_image_agent_initialization():
     assert "PICASSO" in agent.name
     assert agent.description is not None
     assert agent.output_dir is not None
+    assert agent.engine is not None
 
 
 def test_extract_prompt_variations():
@@ -21,7 +22,7 @@ def test_extract_prompt_variations():
     assert agent.extract_prompt("make a photo of a cozy cabin in the rain") == "cozy cabin in the rain"
     assert agent.extract_prompt("draw me a robotic dragon") == "robotic dragon"
     assert agent.extract_prompt("draw a futuristic sports car") == "futuristic sports car"
-    assert agent.extract_prompt("generate a wallpaper of synthwave mountains") == "wallpaper of synthwave mountains"
+    assert agent.extract_prompt("generate a wallpaper of synthwave mountains") == "synthwave mountains"
 
 
 def test_extract_prompt_fallback():
@@ -41,8 +42,10 @@ async def test_image_agent_run():
     )
     assert isinstance(result, str)
     assert "🎨 **Generated Image for:**" in result
-    assert "pollinations.ai" in result
-    assert "copper%20robot" in result or "copper+robot" in result
+    assert "/generated/copper_sd_" in result
+    assert "100% Offline" in result
+    assert "copper robot" in result
+    assert "pollinations.ai" not in result
 
 
 @pytest.mark.asyncio
@@ -55,6 +58,8 @@ async def test_image_agent_empty_prompt_fallback():
         provider=LLMProvider.OLLAMA,
     )
     assert "a futuristic cyber city" in result
+    assert "/generated/copper_sd_" in result
+    assert "100% Offline" in result
 
 
 @pytest.mark.asyncio
@@ -67,7 +72,9 @@ async def test_image_agent_streaming():
 
     assert len(chunks) == 1
     assert "neon tiger" in chunks[0]
-    assert "pollinations.ai" in chunks[0]
+    assert "/generated/copper_sd_" in chunks[0]
+    assert "pollinations.ai" not in chunks[0]
+    assert "100% Offline" in chunks[0]
 
 
 def test_singleton_instance():

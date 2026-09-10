@@ -32,3 +32,6 @@ pyautogui
 mss
 rank-bm25
 trafilatura
+diffusers
+accelerate
+safetensors

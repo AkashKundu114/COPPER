@@ -10,6 +10,7 @@ os.environ.setdefault("ROCR_VISIBLE_DEVICES", "")
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
@@ -25,6 +26,7 @@ from app.api.routes import (
     documents,
     episodes,
     guardian,
+    images,
     knowledge_graph,
     memory,
     orchestration,
@@ -123,6 +125,11 @@ app.include_router(tasks.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(schedule.events_router, prefix="/api/v1")
+app.include_router(images.router, prefix="/api/v1")
+
+# Mount static files directory for generated image assets
+os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)
+app.mount("/generated", StaticFiles(directory=settings.IMAGE_OUTPUT_DIR), name="generated")
 
 
 @app.get("/")
