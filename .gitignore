@@ -36,6 +36,8 @@ data/reminders/
 data/screenshots/
 data/vector/
 data/user_profile.json
+frontend/public/generated/*.png
+!frontend/public/generated/.gitkeep
 
 # ── Model Binaries & Quantized Weights ────────────────────────────────────────
 ai-models/
