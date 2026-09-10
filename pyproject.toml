@@ -16,3 +16,6 @@ known-first-party = ["app"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[project.optional-dependencies]
+training = ["unsloth", "peft", "trl", "transformers", "datasets", "bitsandbytes"]

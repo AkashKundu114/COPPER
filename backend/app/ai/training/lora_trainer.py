@@ -83,6 +83,28 @@ class QLoRATrainer:
         finally:
             db.close()
 
+    @property
+    def _has_real_training_support(self) -> bool:
+        try:
+            import torch
+            if not torch.cuda.is_available():
+                return False
+        except ImportError:
+            return False
+
+        try:
+            import unsloth
+            return True
+        except ImportError:
+            pass
+            
+        try:
+            import peft
+            import trl
+            return True
+        except ImportError:
+            return False
+
     async def _execute_training_pipeline(
         self, job_id: int, version_tag: str, base_model: str, target_agent: str
     ) -> None:
@@ -132,32 +154,168 @@ class QLoRATrainer:
             adapter_dir.mkdir(parents=True, exist_ok=True)
             job.adapter_dir = str(adapter_dir)
 
-            for epoch in range(1, self.EPOCHS + 1):
-                job.current_epoch = epoch
-                job.current_step = int((epoch / self.EPOCHS) * total_steps)
+            if not self._has_real_training_support:
+                logger.warning("[CHRYSALIS QLoRA] Running in SIMULATION mode — install unsloth or peft+trl for real training")
+                for epoch in range(1, self.EPOCHS + 1):
+                    job.current_epoch = epoch
+                    job.current_step = int((epoch / self.EPOCHS) * total_steps)
 
-                # Simulated / actual training step progression
-                epoch_train_loss = max(0.45, 1.85 - (0.42 * epoch) + (0.02 * (epoch % 2)))
-                epoch_eval_loss = max(0.48, 1.90 - (0.40 * epoch) + (0.01 * epoch))
+                    # Simulated / actual training step progression
+                    epoch_train_loss = max(0.45, 1.85 - (0.42 * epoch) + (0.02 * (epoch % 2)))
+                    epoch_eval_loss = max(0.48, 1.90 - (0.40 * epoch) + (0.01 * epoch))
 
-                train_losses.append(epoch_train_loss)
-                eval_losses.append(epoch_eval_loss)
+                    train_losses.append(epoch_train_loss)
+                    eval_losses.append(epoch_eval_loss)
 
-                job.train_loss = epoch_train_loss
-                job.eval_loss = epoch_eval_loss
-                db.commit()
+                    job.train_loss = epoch_train_loss
+                    job.eval_loss = epoch_eval_loss
+                    db.commit()
 
-                # Early stopping check: abort if loss increases for 2 consecutive epochs
-                if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
-                    logger.warning(
-                        f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {epoch}: loss rising consecutively."
+                    # Early stopping check: abort if loss increases for 2 consecutive epochs
+                    if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
+                        logger.warning(
+                            f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {epoch}: loss rising consecutively."
+                        )
+                        job.status = TrainingJobStatus.ABORTED.value
+                        job.error_message = "Early stopping: validation loss increased for 2 consecutive epochs."
+                        aborted = True
+                        break
+
+                    await asyncio.sleep(0.5)
+            else:
+                logger.info(f"[CHRYSALIS QLoRA] Starting real training for {base_model}...")
+                
+                import torch
+                from datasets import Dataset
+                from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+                from trl import SFTTrainer
+                
+                def formatting_prompts_func(example):
+                    output_texts = []
+                    for i in range(len(example['messages'])):
+                        messages = example['messages'][i] if isinstance(example['messages'][0], list) else example['messages']
+                        text = ""
+                        for msg in messages:
+                            text += f"<|im_start|>{msg['role']}\n{msg['content']}<|im_end|>\n"
+                        output_texts.append(text)
+                        if not isinstance(example['messages'][0], list):
+                            break
+                    return output_texts
+                
+                hf_dataset = Dataset.from_list(dataset)
+                hf_dataset = hf_dataset.train_test_split(test_size=self.VAL_SPLIT)
+                train_ds = hf_dataset["train"]
+                eval_ds = hf_dataset["test"]
+                
+                try:
+                    from unsloth import FastLanguageModel
+                    use_unsloth = True
+                except ImportError:
+                    use_unsloth = False
+                    from peft import LoraConfig, get_peft_model
+                
+                if use_unsloth:
+                    model, tokenizer = FastLanguageModel.from_pretrained(
+                        model_name=base_model,
+                        max_seq_length=self.MAX_SEQ_LEN,
+                        dtype=None,
+                        load_in_4bit=True,
                     )
-                    job.status = TrainingJobStatus.ABORTED.value
-                    job.error_message = "Early stopping: validation loss increased for 2 consecutive epochs."
-                    aborted = True
-                    break
+                    model = FastLanguageModel.get_peft_model(
+                        model,
+                        r=self.LORA_RANK,
+                        target_modules=self.LORA_TARGETS,
+                        lora_alpha=self.LORA_ALPHA,
+                        lora_dropout=self.LORA_DROPOUT,
+                        bias="none",
+                        use_gradient_checkpointing="unsloth",
+                        random_state=3407,
+                    )
+                else:
+                    tokenizer = AutoTokenizer.from_pretrained(base_model)
+                    if not tokenizer.pad_token:
+                        tokenizer.pad_token = tokenizer.eos_token
+                    bnb_config = BitsAndBytesConfig(
+                        load_in_4bit=True,
+                        bnb_4bit_use_double_quant=True,
+                        bnb_4bit_quant_type="nf4",
+                        bnb_4bit_compute_dtype=torch.bfloat16
+                    )
+                    model = AutoModelForCausalLM.from_pretrained(
+                        base_model, quantization_config=bnb_config, device_map="auto"
+                    )
+                    peft_config = LoraConfig(
+                        r=self.LORA_RANK,
+                        lora_alpha=self.LORA_ALPHA,
+                        target_modules=self.LORA_TARGETS,
+                        lora_dropout=self.LORA_DROPOUT,
+                        bias="none",
+                        task_type="CAUSAL_LM",
+                    )
+                    model = get_peft_model(model, peft_config)
 
-                await asyncio.sleep(0.5)
+                training_args = TrainingArguments(
+                    output_dir=str(adapter_dir),
+                    per_device_train_batch_size=self.BATCH_SIZE,
+                    warmup_ratio=self.WARMUP_RATIO,
+                    learning_rate=self.LEARNING_RATE,
+                    num_train_epochs=self.EPOCHS,
+                    logging_steps=1,
+                    eval_strategy="epoch",
+                    save_strategy="epoch",
+                    seed=3407,
+                )
+
+                class ProgressCallback(TrainerCallback):
+                    def on_log(self, args, state, control, logs=None, **kwargs):
+                        if logs and "loss" in logs:
+                            job.train_loss = logs["loss"]
+                            job.current_step = state.global_step
+                            db.commit()
+                            
+                    def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+                        if metrics and "eval_loss" in metrics:
+                            loss_val = metrics["eval_loss"]
+                            job.eval_loss = loss_val
+                            eval_losses.append(loss_val)
+                            train_losses.append(job.train_loss if job.train_loss else loss_val)
+                            job.current_epoch = int(state.epoch)
+                            db.commit()
+                            
+                            if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
+                                logger.warning(
+                                    f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {state.epoch}: loss rising consecutively."
+                                )
+                                job.status = TrainingJobStatus.ABORTED.value
+                                job.error_message = "Early stopping: validation loss increased for 2 consecutive epochs."
+                                nonlocal aborted
+                                aborted = True
+                                control.should_training_stop = True
+
+                trainer = SFTTrainer(
+                    model=model,
+                    train_dataset=train_ds,
+                    eval_dataset=eval_ds,
+                    max_seq_length=self.MAX_SEQ_LEN,
+                    processing_class=tokenizer,
+                    args=training_args,
+                    formatting_func=formatting_prompts_func,
+                )
+                
+                trainer.add_callback(ProgressCallback())
+                trainer.train()
+                
+                if not aborted:
+                    model.save_pretrained(str(adapter_dir))
+                    try:
+                        tokenizer.save_pretrained(str(adapter_dir))
+                    except Exception:
+                        pass
+                
+                # Cleanup GPU Memory
+                del model
+                del trainer
+                torch.cuda.empty_cache()
 
             if aborted:
                 db.commit()
@@ -227,6 +385,8 @@ class QLoRATrainer:
         self, adapter_dir: Path, version_tag: str, base_model: str, train_loss: float, eval_loss: float
     ) -> None:
         """Writes PEFT adapter configuration and weight files."""
+        is_simulated = not self._has_real_training_support
+
         adapter_config = {
             "base_model_name_or_path": base_model,
             "lora_version": version_tag,
@@ -254,12 +414,16 @@ class QLoRATrainer:
             "final_eval_loss": round(eval_loss, 4),
             "created_at": datetime.now(UTC).isoformat(),
         }
+        if is_simulated:
+            training_meta["training_mode"] = "simulated"
+
         with open(adapter_dir / "training_meta.json", "w", encoding="utf-8") as f:
             json.dump(training_meta, f, indent=2)
 
-        # Create model checkpoint placeholder
-        with open(adapter_dir / "adapter_model.safetensors", "wb") as f:
-            f.write(b"CHRYSALIS_QLORA_ADAPTER_WEIGHTS_VRAM_SAFE\n")
+        if is_simulated:
+            # Create model checkpoint placeholder
+            with open(adapter_dir / "adapter_model.safetensors", "wb") as f:
+                f.write(b"CHRYSALIS_QLORA_ADAPTER_WEIGHTS_VRAM_SAFE\n")
 
     def _load_curated_dataset(self) -> list[dict[str, Any]]:
         if not CURATED_EXAMPLES_FILE.exists():

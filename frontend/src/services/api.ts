@@ -1,21 +1,8 @@
-import axios from "axios";
+import { api } from "../lib/api";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
+const BASE_URL = api.defaults.baseURL || "http://localhost:8000/api/v1";
 
-export const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 60000,
-  headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    const msg = err.response?.data?.detail || err.message || "Request failed";
-    console.error("[API Error]", msg);
-    return Promise.reject(new Error(msg));
-  },
-);
+export { api };
 
 export const chatAPI = {
   sendMessage: (message: string, sessionId?: string, provider = "ollama") =>

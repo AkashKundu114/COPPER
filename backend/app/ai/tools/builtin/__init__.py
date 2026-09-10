@@ -1,5 +1,5 @@
 from app.ai.tools.builtin.calendar_tools import calendar_create, reminder_set
-from app.ai.tools.builtin.file_tools import file_list, file_read, file_write
+from app.ai.tools.builtin.file_tools import file_list, file_read, file_search, file_write
 from app.ai.tools.builtin.memory_tools import memory_query, memory_store
 from app.ai.tools.builtin.screen_tools import (
     click,
@@ -15,6 +15,7 @@ from app.ai.tools.builtin.web_tools import web_fetch, web_search
 
 __all__ = [
     "file_read",
+    "file_search",
     "file_write",
     "file_list",
     "shell_execute",

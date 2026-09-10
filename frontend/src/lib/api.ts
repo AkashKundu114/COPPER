@@ -1,8 +1,17 @@
 import axios from "axios";
 
-export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
-export const api = axios.create({ baseURL: API_BASE, timeout: 15000 });
+export const api = axios.create({ baseURL: API_BASE, timeout: 60000 });
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const msg = err.response?.data?.detail || err.message || "Request failed";
+    console.error("[API Error]", msg);
+    return Promise.reject(new Error(msg));
+  },
+);
 
 export interface MessageMetrics {
   model: string;
@@ -57,27 +66,27 @@ export interface ProfileResponse {
 }
 
 export const fetchAgents = () =>
-  api.get<AgentStats[]>("/api/v1/agents").then((r) => r.data);
+  api.get<AgentStats[]>("/agents").then((r) => r.data);
 export const fetchAgentHistory = (id: string, limit = 20) =>
   api
-    .get<InteractionRecord[]>(`/api/v1/agents/${id}/history`, {
+    .get<InteractionRecord[]>(`/agents/${id}/history`, {
       params: { limit },
     })
     .then((r) => r.data);
 export const fetchProfile = () =>
-  api.get<ProfileResponse>("/api/v1/memory/profile").then((r) => r.data);
+  api.get<ProfileResponse>("/memory/profile").then((r) => r.data);
 export const resetProfile = () =>
-  api.post("/api/v1/memory/reset").then((r) => r.data);
+  api.post("/memory/reset").then((r) => r.data);
 export const sendMessage = (message: string) =>
-  api.post("/api/v1/chat/message", { message }).then((r) => r.data);
+  api.post("/chat/message", { message }).then((r) => r.data);
 export const fetchLogs = (filter?: string) =>
   api
-    .get("/api/v1/audit/logs", { params: { filter } })
+    .get("/audit/logs", { params: { filter } })
     .then((r) => r.data)
     .catch(() => []);
 export const fetchStats = () =>
   api
-    .get("/api/v1/audit/stats")
+    .get("/audit/stats")
     .then((r) => r.data)
     .catch(() => ({}));
 
@@ -118,7 +127,7 @@ export interface SystemTelemetryData {
 }
 
 export const fetchSystemTelemetry = () =>
-  api.get<SystemTelemetryData>("/api/v1/system/telemetry").then((r) => r.data);
+  api.get<SystemTelemetryData>("/system/telemetry").then((r) => r.data);
 
 export interface EpisodeRecord {
   id: number;
@@ -137,13 +146,13 @@ export interface EpisodeRecord {
 
 export const fetchEpisodes = (context?: string, limit = 20) =>
   api
-    .get<EpisodeRecord[]>("/api/v1/episodes", { params: { context, limit } })
+    .get<EpisodeRecord[]>("/episodes", { params: { context, limit } })
     .then((r) => r.data);
 export const fetchEpisodeById = (id: number) =>
-  api.get<EpisodeRecord>(`/api/v1/episodes/${id}`).then((r) => r.data);
+  api.get<EpisodeRecord>(`/episodes/${id}`).then((r) => r.data);
 export const searchSimilarEpisodes = (query: string, limit = 5) =>
   api
-    .get("/api/v1/episodes/similar", { params: { query, limit } })
+    .get("/episodes/similar", { params: { query, limit } })
     .then((r) => r.data);
 
 export interface DocumentPage {
@@ -190,14 +199,14 @@ export const parseDocumentFile = async (
   formData.append("file", file);
   formData.append("index_to_memory", String(indexToMemory));
   const res = await api.post<ParsedDocument>(
-    "/api/v1/documents/parse",
+    "/documents/parse",
     formData,
   );
   return res.data;
 };
 
 export const searchDocuments = async (query: string, limit = 5) => {
-  const res = await api.post("/api/v1/documents/search", { query, limit });
+  const res = await api.post("/documents/search", { query, limit });
   return res.data;
 };
 
@@ -229,18 +238,18 @@ export interface DocumentGeneratePayload {
 }
 
 export const generateDocument = async (payload: DocumentGeneratePayload) => {
-  const res = await api.post("/api/v1/documents/generate", payload);
+  const res = await api.post("/documents/generate", payload);
   return res.data;
 };
 
 export const fetchDocumentTemplates = async () => {
-  const res = await api.get("/api/v1/documents/templates");
+  const res = await api.get("/documents/templates");
   return res.data;
 };
 
 export const fetchGeneratedDocuments = async () => {
   const res = await api.get<{ documents: GeneratedDocumentRecord[]; total: number }>(
-    "/api/v1/documents/generated",
+    "/documents/generated",
   );
   return res.data;
 };
@@ -260,12 +269,12 @@ export interface VramStatusResponse {
 }
 
 export const fetchVramModelsStatus = async () => {
-  const res = await api.get<VramStatusResponse>("/api/v1/system/models/vram");
+  const res = await api.get<VramStatusResponse>("/system/models/vram");
   return res.data;
 };
 
 export const enforceKeepOnlyMiniModel = async () => {
-  const res = await api.post("/api/v1/system/models/keep-mini");
+  const res = await api.post("/system/models/keep-mini");
   return res.data;
 };
 
@@ -283,15 +292,15 @@ export interface TaskItem {
 
 export const tasksAPI = {
   list: (params?: { status?: string; project?: string; priority?: string }) =>
-    api.get<TaskItem[]>("/api/v1/tasks", { params }).then((r) => r.data),
+    api.get<TaskItem[]>("/tasks", { params }).then((r) => r.data),
   get: (id: string) =>
-    api.get<TaskItem>(`/api/v1/tasks/${id}`).then((r) => r.data),
+    api.get<TaskItem>(`/tasks/${id}`).then((r) => r.data),
   create: (payload: Partial<TaskItem>) =>
-    api.post<TaskItem>("/api/v1/tasks", payload).then((r) => r.data),
+    api.post<TaskItem>("/tasks", payload).then((r) => r.data),
   update: (id: string, payload: Partial<TaskItem>) =>
-    api.patch<TaskItem>(`/api/v1/tasks/${id}`, payload).then((r) => r.data),
+    api.patch<TaskItem>(`/tasks/${id}`, payload).then((r) => r.data),
   delete: (id: string) =>
-    api.delete(`/api/v1/tasks/${id}`),
+    api.delete(`/tasks/${id}`),
 };
 
 export interface ProjectItem {
@@ -307,15 +316,15 @@ export interface ProjectItem {
 
 export const projectsAPI = {
   list: (params?: { health?: string }) =>
-    api.get<ProjectItem[]>("/api/v1/projects", { params }).then((r) => r.data),
+    api.get<ProjectItem[]>("/projects", { params }).then((r) => r.data),
   get: (id: string) =>
-    api.get<ProjectItem>(`/api/v1/projects/${id}`).then((r) => r.data),
+    api.get<ProjectItem>(`/projects/${id}`).then((r) => r.data),
   create: (payload: Partial<ProjectItem>) =>
-    api.post<ProjectItem>("/api/v1/projects", payload).then((r) => r.data),
+    api.post<ProjectItem>("/projects", payload).then((r) => r.data),
   update: (id: string, payload: Partial<ProjectItem>) =>
-    api.patch<ProjectItem>(`/api/v1/projects/${id}`, payload).then((r) => r.data),
+    api.patch<ProjectItem>(`/projects/${id}`, payload).then((r) => r.data),
   delete: (id: string) =>
-    api.delete(`/api/v1/projects/${id}`),
+    api.delete(`/projects/${id}`),
 };
 
 export interface ScheduleEvent {
@@ -331,15 +340,15 @@ export interface ScheduleEvent {
 
 export const scheduleAPI = {
   list: (params?: { category?: string; completed?: boolean; date?: string }) =>
-    api.get<ScheduleEvent[]>("/api/v1/schedule/events", { params }).then((r) => r.data),
+    api.get<ScheduleEvent[]>("/schedule/events", { params }).then((r) => r.data),
   get: (id: string) =>
-    api.get<ScheduleEvent>(`/api/v1/schedule/events/${id}`).then((r) => r.data),
+    api.get<ScheduleEvent>(`/schedule/events/${id}`).then((r) => r.data),
   create: (payload: Partial<ScheduleEvent>) =>
-    api.post<ScheduleEvent>("/api/v1/schedule/events", payload).then((r) => r.data),
+    api.post<ScheduleEvent>("/schedule/events", payload).then((r) => r.data),
   update: (id: string, payload: Partial<ScheduleEvent>) =>
-    api.patch<ScheduleEvent>(`/api/v1/schedule/events/${id}`, payload).then((r) => r.data),
+    api.patch<ScheduleEvent>(`/schedule/events/${id}`, payload).then((r) => r.data),
   delete: (id: string) =>
-    api.delete(`/api/v1/schedule/events/${id}`),
+    api.delete(`/schedule/events/${id}`),
 };
 
 export interface EpistemicMemoryItem {
@@ -357,25 +366,25 @@ export interface EpistemicMemoryItem {
 
 export const memoryCRUDAPI = {
   list: (params?: { type?: string; category?: string; search?: string; status?: string }) =>
-    api.get<EpistemicMemoryItem[]>("/api/v1/memory", { params }).then((r) => r.data),
+    api.get<EpistemicMemoryItem[]>("/memory", { params }).then((r) => r.data),
   get: (id: string) =>
-    api.get<EpistemicMemoryItem>(`/api/v1/memory/${id}`).then((r) => r.data),
+    api.get<EpistemicMemoryItem>(`/memory/${id}`).then((r) => r.data),
   create: (payload: Partial<EpistemicMemoryItem>) =>
-    api.post<EpistemicMemoryItem>("/api/v1/memory", payload).then((r) => r.data),
+    api.post<EpistemicMemoryItem>("/memory", payload).then((r) => r.data),
   update: (id: string, payload: Partial<EpistemicMemoryItem>) =>
-    api.patch<EpistemicMemoryItem>(`/api/v1/memory/${id}`, payload).then((r) => r.data),
+    api.patch<EpistemicMemoryItem>(`/memory/${id}`, payload).then((r) => r.data),
   delete: (id: string) =>
-    api.delete(`/api/v1/memory/${id}`),
+    api.delete(`/memory/${id}`),
 };
 
 export const workspaceAPI = {
   list: <T>(kind: "task" | "project" | "event" | "meal" | "grocery" | "memory") =>
-    api.get<T[]>(`/api/v1/workspace/${kind}`).then((r) => r.data),
+    api.get<T[]>(`/workspace/${kind}`).then((r) => r.data),
   create: <T>(kind: string, payload: Record<string, unknown>) =>
-    api.post<T>(`/api/v1/workspace/${kind}`, { payload }).then((r) => r.data),
+    api.post<T>(`/workspace/${kind}`, { payload }).then((r) => r.data),
   update: <T>(kind: string, id: string, payload: Record<string, unknown>) =>
-    api.patch<T>(`/api/v1/workspace/${kind}/${id}`, { payload }).then((r) => r.data),
-  remove: (kind: string, id: string) => api.delete(`/api/v1/workspace/${kind}/${id}`),
+    api.patch<T>(`/workspace/${kind}/${id}`, { payload }).then((r) => r.data),
+  remove: (kind: string, id: string) => api.delete(`/workspace/${kind}/${id}`),
 };
 
 
@@ -424,26 +433,26 @@ export interface KnowledgeStatsResponse {
 
 export const knowledgeAPI = {
   getEntities: (params?: { type?: string; min_confidence?: number; search?: string; limit?: number }) =>
-    api.get<{ data: KnowledgeEntityItem[]; count: number }>("/api/v1/knowledge/entities", { params }).then((r) => r.data),
+    api.get<{ data: KnowledgeEntityItem[]; count: number }>("/knowledge/entities", { params }).then((r) => r.data),
   createEntity: (payload: { name: string; type: string; confidence?: number; context?: string }) =>
-    api.post<{ status: string; entity: KnowledgeEntityItem }>("/api/v1/knowledge/entities", payload).then((r) => r.data),
+    api.post<{ status: string; entity: KnowledgeEntityItem }>("/knowledge/entities", payload).then((r) => r.data),
   deleteEntity: (id: number) =>
-    api.delete<{ status: string; message: string }>(`/api/v1/knowledge/entities/${id}`).then((r) => r.data),
+    api.delete<{ status: string; message: string }>(`/knowledge/entities/${id}`).then((r) => r.data),
   getRelationships: (params?: { type?: string; source?: string; target?: string; min_confidence?: number; limit?: number }) =>
-    api.get<{ data: KnowledgeRelationshipItem[]; count: number }>("/api/v1/knowledge/relationships", { params }).then((r) => r.data),
+    api.get<{ data: KnowledgeRelationshipItem[]; count: number }>("/knowledge/relationships", { params }).then((r) => r.data),
   createRelationship: (payload: { source: string; target: string; type: string; confidence?: number; context?: string }) =>
-    api.post<{ status: string; relationship: KnowledgeRelationshipItem }>("/api/v1/knowledge/relationships", payload).then((r) => r.data),
+    api.post<{ status: string; relationship: KnowledgeRelationshipItem }>("/knowledge/relationships", payload).then((r) => r.data),
   getSubgraph: (params?: { entity?: string; depth?: number; max_nodes?: number }) =>
-    api.get<KnowledgeSubgraphResponse>("/api/v1/knowledge/subgraph", { params }).then((r) => r.data),
+    api.get<KnowledgeSubgraphResponse>("/knowledge/subgraph", { params }).then((r) => r.data),
   getPath: (source: string, target: string) =>
-    api.get<{ source: string; target: string; path: any[] }>("/api/v1/knowledge/path", { params: { source, target } }).then((r) => r.data),
+    api.get<{ source: string; target: string; path: any[] }>("/knowledge/path", { params: { source, target } }).then((r) => r.data),
   extractFromText: (text: string, sessionId?: string) =>
     api.post<{ status: string; extracted: { entities: KnowledgeEntityItem[]; relationships: KnowledgeRelationshipItem[] } }>(
-      "/api/v1/knowledge/extract",
+      "/knowledge/extract",
       { text, session_id: sessionId }
     ).then((r) => r.data),
   getStats: () =>
-    api.get<KnowledgeStatsResponse>("/api/v1/knowledge/stats").then((r) => r.data),
+    api.get<KnowledgeStatsResponse>("/knowledge/stats").then((r) => r.data),
 };
 
 export interface TraceSpan {
@@ -472,10 +481,10 @@ export interface DistributedTrace {
 
 export const fetchDistributedTraces = (limit = 50) =>
   api
-    .get<{ traces: DistributedTrace[]; total: number; grafana_base_url: string }>("/api/v1/telemetry/traces", {
+    .get<{ traces: DistributedTrace[]; total: number; grafana_base_url: string }>("/telemetry/traces", {
       params: { limit },
     })
     .then((r) => r.data);
 
 export const fetchDistributedTraceById = (traceId: string) =>
-  api.get<DistributedTrace>(`/api/v1/telemetry/traces/${traceId}`).then((r) => r.data);
+  api.get<DistributedTrace>(`/telemetry/traces/${traceId}`).then((r) => r.data);

@@ -133,3 +133,93 @@ async def file_list(directory: str = ".", pattern: str = "*") -> dict[str, Any]:
     except Exception as e:
         logger.error(f"file_list error for '{directory}': {e}")
         return {"status": "error", "error": str(e)}
+
+
+@tool_registry.tool(
+    name="file_search",
+    description="Search for files by content (grep-style) and/or filename pattern recursively.",
+    parameters={
+        "type": "object",
+        "properties": {
+            "query": {"type": "string", "description": "Text to search for in file contents."},
+            "directory": {"type": "string", "description": "Root directory to search in (defaults to '.')."},
+            "pattern": {"type": "string", "description": "Glob pattern to filter filenames, e.g. '*.py' (defaults to '*')."},
+            "max_results": {"type": "integer", "description": "Maximum matches to return (defaults to 20)."},
+            "case_sensitive": {"type": "boolean", "description": "Whether search is case-sensitive (defaults to false)."},
+        },
+        "required": ["query"],
+    },
+    return_description="List of matches with file path, line number, line content, and context.",
+    guardian_level=0,
+)
+async def file_search(
+    query: str,
+    directory: str = ".",
+    pattern: str = "*",
+    max_results: int = 20,
+    case_sensitive: bool = False,
+) -> dict[str, Any]:
+    try:
+        target_dir = Path(directory).resolve()
+        if not target_dir.exists():
+            return {"status": "error", "error": f"Directory does not exist: {directory}"}
+        if not target_dir.is_dir():
+            return {"status": "error", "error": f"Path is not a directory: {directory}"}
+
+        search_query = query if case_sensitive else query.lower()
+        matches = []
+
+        for p in target_dir.rglob(pattern):
+            if not p.is_file():
+                continue
+
+            try:
+                rel_path = p.relative_to(target_dir)
+                if len(rel_path.parts) > 10:
+                    continue
+
+                size = p.stat().st_size
+                if size > 2 * 1024 * 1024:
+                    continue
+
+                with open(p, "rb") as f:
+                    chunk = f.read(1024)
+                    if b"\x00" in chunk:
+                        continue
+
+                with open(p, "r", encoding="utf-8", errors="replace") as f:
+                    lines = f.readlines()
+
+                for i, line in enumerate(lines):
+                    line_to_check = line if case_sensitive else line.lower()
+                    if search_query in line_to_check:
+                        context_above = lines[i - 1].strip() if i > 0 else None
+                        context_below = lines[i + 1].strip() if i < len(lines) - 1 else None
+
+                        matches.append({
+                            "path": str(p),
+                            "line_number": i + 1,
+                            "line_content": line.strip(),
+                            "context_above": context_above,
+                            "context_below": context_below,
+                        })
+
+                        if len(matches) >= max_results:
+                            break
+
+            except Exception as e:
+                # Silently skip files we can't read
+                continue
+
+            if len(matches) >= max_results:
+                break
+
+        return {
+            "status": "success",
+            "directory": str(target_dir),
+            "total_matches": len(matches),
+            "matches": matches,
+        }
+    except Exception as e:
+        logger.error(f"file_search error for '{directory}': {e}")
+        return {"status": "error", "error": str(e)}
