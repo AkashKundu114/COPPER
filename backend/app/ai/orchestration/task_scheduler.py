@@ -204,8 +204,23 @@ def start_scheduler():
         )
         logger.info("COPPER Prompt Optimization Cycle scheduled (weekly)")
         logger.info("CHRYSALIS Training Data Curation scheduled (daily)")
+
+        # Initialize Workflow Engine and register persistent automations
+        try:
+            from app.ai.workflows.workflow_engine import workflow_engine
+
+            workflow_engine.initialize(_scheduler)
+        except Exception as wf_err:
+            logger.error(f"Failed to initialize WorkflowEngine on scheduler start: {wf_err}")
+
     except Exception as e:
         logger.warning(f"Scheduler start deferred: {e}")
+
+
+def get_scheduler() -> AsyncIOScheduler | None:
+    """Returns the active background AsyncIOScheduler instance if running."""
+    global _scheduler
+    return _scheduler
 
 
 def stop_scheduler():
