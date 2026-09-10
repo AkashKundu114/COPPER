@@ -30,3 +30,4 @@ soundfile
 pillow
 pyautogui
 mss
+rank-bm25

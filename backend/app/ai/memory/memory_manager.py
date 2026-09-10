@@ -142,9 +142,20 @@ class MemoryManager:
             return
 
         combined = f"User: {user_message}\nAssistant: {assistant_response}"
-        await self.chat_store.add(
+        doc_id = await self.chat_store.add(
             text=combined, metadata={"session_id": session_id, "agent_type": agent_type, "type": "interaction"}
         )
+        try:
+            from app.ai.memory.bm25_index import bm25_index
+
+            bm25_index.add_document(
+                doc_id=doc_id,
+                content=combined,
+                metadata={"session_id": session_id, "agent_type": agent_type, "type": "interaction"},
+                source="chat",
+            )
+        except Exception as bm_err:
+            logger.debug(f"BM25 chat indexing skipped: {bm_err}")
 
     async def search_relevant_context(
         self, query: str, session_id: str | None = None, limit: int = MEMORY_SEARCH_LIMIT
@@ -195,9 +206,35 @@ class MemoryManager:
         meta = {"source": source, "type": "document"}
         if metadata:
             meta.update(metadata)
-        return await self.doc_store.add(text=content, metadata=meta)
+        doc_id = await self.doc_store.add(text=content, metadata=meta)
+        try:
+            from app.ai.memory.bm25_index import bm25_index
 
-    async def search_documents(self, query: str, limit: int = 5) -> list[dict]:
+            bm25_index.add_document(doc_id=doc_id, content=content, metadata=meta, source=source)
+        except Exception as bm_err:
+            logger.debug(f"BM25 document indexing skipped: {bm_err}")
+        return doc_id
+
+    async def search_documents(self, query: str, limit: int = 5, use_hybrid: bool = True) -> list[dict]:
+        if use_hybrid:
+            try:
+                from app.ai.memory.hybrid_search import hybrid_search
+
+                hybrid_results = await hybrid_search.search(query, limit=limit)
+                docs = []
+                for h in hybrid_results:
+                    docs.append(
+                        {
+                            "document": h.get("content", ""),
+                            "metadata": h.get("metadata", {}),
+                            "distance": h.get("vector_distance", 1.0),
+                            "rrf_score": h.get("rrf_score", 0.0),
+                            "source": h.get("source", "document"),
+                        }
+                    )
+                return docs
+            except Exception as e:
+                logger.warning(f"Hybrid search fallback to vector store: {e}")
         return await self.doc_store.search(query, n_results=limit)
 
     async def get_memory_stats(self) -> dict:
