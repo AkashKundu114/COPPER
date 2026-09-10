@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 
@@ -42,7 +42,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
   clearRect: vi.fn(),
   getImageData: vi.fn(() => ({ data: [] })),
   putImageData: vi.fn(),
-  createImageData: vi.fn([]),
+  createImageData: vi.fn(() => ({ data: [] })),
   setTransform: vi.fn(),
   drawImage: vi.fn(),
   save: vi.fn(),
@@ -80,5 +80,6 @@ if (!navigator.clipboard) {
       readText: vi.fn().mockResolvedValue(""),
     },
     writable: true,
+    configurable: true,
   });
 }

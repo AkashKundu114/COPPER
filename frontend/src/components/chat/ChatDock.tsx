@@ -504,6 +504,8 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     type="button"
                     onClick={submit}
                     disabled={isUploading}
+                    aria-label="Send message"
+                    title="Send message"
                     className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyber-cyan to-accent text-black hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_12px_rgba(0,240,255,0.4)]"
                   >
                     <ArrowUp size={18} strokeWidth={2.5} />
@@ -530,6 +532,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           <button
             type="button"
             onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+            aria-label="Select cognitive intelligence mode"
             className="flex items-center gap-2 px-3 py-1 rounded-md bg-black/50 border border-cyber-cyan/25 hover:border-cyber-cyan text-cyber-cyan transition-all shadow-sm"
           >
             <span className="font-bold text-accent">+</span>
