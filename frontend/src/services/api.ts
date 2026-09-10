@@ -221,4 +221,57 @@ export const trainingAPI = {
   },
 };
 
+export interface BranchItem {
+  branch_id: string;
+  parent_session_id?: string | null;
+  root_session_id?: string;
+  divergence_index?: number;
+  divergence_message?: { role: string; content: string } | null;
+  title: string;
+  messages_count?: number;
+  status: "active" | "merged";
+  is_main?: boolean;
+  created_at?: string;
+}
+
+export interface DiffComparison {
+  branch_a_id: string;
+  branch_b_id: string;
+  branch_a_title: string;
+  branch_b_title: string;
+  divergence_point: string;
+  branch_a_summary: string;
+  branch_b_summary: string;
+  key_differences: { aspect: string; branch_a: string; branch_b: string }[];
+  recommendation: string;
+  mergeable_insights: string[];
+}
+
+export const branchingAPI = {
+  createBranch: async (sessionId: string, messageIndex: number, title?: string) => {
+    const { data } = await api.post("/chat/branch", {
+      session_id: sessionId,
+      message_index: messageIndex,
+      title,
+    });
+    return data;
+  },
+  getBranches: async (sessionId: string) => {
+    const { data } = await api.get(`/chat/branches/${sessionId}`);
+    return data;
+  },
+  compareBranches: async (branchAId: string, branchBId: string) => {
+    const { data } = await api.get(
+      `/chat/branches/compare?a=${encodeURIComponent(branchAId)}&b=${encodeURIComponent(branchBId)}`
+    );
+    return data;
+  },
+  mergeBranch: async (branchId: string, targetSessionId?: string) => {
+    const { data } = await api.post(`/chat/branches/${encodeURIComponent(branchId)}/merge`, {
+      target_session_id: targetSessionId,
+    });
+    return data;
+  },
+};
+
 export default api;

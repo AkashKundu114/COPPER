@@ -19,6 +19,9 @@ import {
 } from "./lib/api";
 import { SpiderSenseToast } from "./components/alerts/SpiderSenseToast";
 import { CompanionHUDView } from "./pages/CompanionHUDView";
+import { BranchHeader } from "./components/chat/BranchHeader";
+import { BranchCompareModal } from "./components/chat/BranchCompareModal";
+import { branchingAPI, type BranchItem } from "./services/api";
 
 import { DashboardView } from "./pages/DashboardView";
 import { TodayView } from "./pages/TodayView";
@@ -47,6 +50,9 @@ function MainApp() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [guardianChallenge, setGuardianChallenge] =
     useState<GuardianChallengePayload | null>(null);
+  const [branches, setBranches] = useState<BranchItem[]>([]);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [activeBranchId, setActiveBranchId] = useState<string>("default");
 
   const refresh = useCallback(() => {
     fetchAgents()
@@ -77,7 +83,56 @@ function MainApp() {
     activeTaskGraph,
     activeComputerUse,
     clearChat,
+    setSessionId,
   } = useBrainSocket(refresh);
+
+  const refreshBranches = useCallback((targetId?: string) => {
+    const sessionToFetch = targetId || activeBranchId || "default";
+    branchingAPI
+      .getBranches(sessionToFetch)
+      .then((res) => {
+        if (res.data?.branches) {
+          setBranches(res.data.branches);
+        }
+      })
+      .catch(() => {});
+  }, [activeBranchId]);
+
+  useEffect(() => {
+    refreshBranches("default");
+  }, [refreshBranches]);
+
+  const handleBranchAtMessage = async (messageIndex: number, messageText: string) => {
+    try {
+      const title = messageText.trim().slice(0, 30) || `Branch @ #${messageIndex + 1}`;
+      const res = await branchingAPI.createBranch(activeBranchId, messageIndex, title);
+      const newBranch = res.data;
+      if (newBranch && newBranch.branch_id) {
+        setActiveBranchId(newBranch.branch_id);
+        setSessionId(newBranch.branch_id);
+        refreshBranches(newBranch.branch_id);
+      }
+    } catch (err) {
+      console.error("Failed to create branch:", err);
+    }
+  };
+
+  const handleSelectBranch = (branchId: string) => {
+    setActiveBranchId(branchId);
+    setSessionId(branchId);
+    refreshBranches(branchId);
+  };
+
+  const handleMergeBranch = async (branchId: string) => {
+    try {
+      await branchingAPI.mergeBranch(branchId, "default");
+      setActiveBranchId("default");
+      setSessionId("default");
+      refreshBranches("default");
+    } catch (err) {
+      console.error("Failed to merge branch:", err);
+    }
+  };
 
   const handleToggleDrawer = () => {
     if (drawerOpen) {
@@ -107,6 +162,15 @@ function MainApp() {
       case "chat":
         return (
           <div className="relative w-full h-full flex flex-col items-center justify-between min-h-0">
+            <div className="w-full max-w-[850px] pt-1 px-4 flex-shrink-0">
+              <BranchHeader
+                activeBranchId={activeBranchId}
+                branches={branches}
+                onSelectBranch={handleSelectBranch}
+                onOpenCompare={() => setIsCompareModalOpen(true)}
+                onMergeBranch={handleMergeBranch}
+              />
+            </div>
             <MessageFeed
               lines={lines}
               agentStats={agentStats}
@@ -114,6 +178,7 @@ function MainApp() {
               activeAgent={activeAgent}
               activeTaskGraph={activeTaskGraph}
               activeComputerUse={activeComputerUse}
+              onBranchAtMessage={handleBranchAtMessage}
             />
             <div className="w-full max-w-[850px] px-4 pb-6 mt-auto flex-shrink-0">
               <ChatDock
@@ -203,6 +268,18 @@ function MainApp() {
         onDiscuss={() => {
           setActiveSection("chat");
           setGuardianChallenge(null);
+        }}
+      />
+
+      <BranchCompareModal
+        isOpen={isCompareModalOpen}
+        onClose={() => setIsCompareModalOpen(false)}
+        branches={branches}
+        currentBranchId={activeBranchId}
+        onMerged={() => {
+          refreshBranches("default");
+          setActiveBranchId("default");
+          setSessionId("default");
         }}
       />
 

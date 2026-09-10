@@ -189,15 +189,23 @@ interface BrainState {
   activeTaskGraph: ActiveTaskGraphTrace | null;
   activeComputerUse: ComputerUseStep[] | null;
   clearChat: () => void;
+  sessionId: string;
+  setSessionId: (id: string) => void;
+  loadSessionHistory: (id: string) => Promise<void>;
 }
 
 function estimateSpeakingDuration(text: string): number {
   return Math.min(5000, Math.max(900, text.length * 45));
 }
 
-const WS_URL = API_BASE.replace(/^http/, "ws") + "/api/v1/chat/ws/default";
+export function useBrainSocket(
+  onProfileChange?: () => void,
+  initialSessionId: string = "default",
+): BrainState {
+  const [sessionId, setSessionIdState] = useState<string>(initialSessionId);
+  const sessionIdRef = useRef<string>(initialSessionId);
+  sessionIdRef.current = sessionId;
 
-export function useBrainSocket(onProfileChange?: () => void): BrainState {
   const [connected, setConnected] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
@@ -322,7 +330,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
       wsRef.current = null;
     }
 
-    const ws = new WebSocket(WS_URL);
+    const wsUrl = `${API_BASE.replace(/^http/, "ws")}/api/v1/chat/ws/${sessionIdRef.current}`;
+    const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -733,9 +742,52 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     [],
   );
 
+  const loadSessionHistory = useCallback(async (sId: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/chat/history/${sId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.history)) {
+          const historyLines: ChatLine[] = data.history.map((m: any, idx: number) => ({
+            id: m.id || `${idx}-${m.role}`,
+            agent: m.role === "user" ? "YOU" : (m.agent || "COPPER"),
+            text: m.content || "",
+            timestamp: m.timestamp ? (m.timestamp > 1e11 ? m.timestamp : m.timestamp * 1000) : Date.now(),
+            metrics: m.metrics,
+          }));
+          setLines(historyLines);
+        } else {
+          setLines([]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load history for session", sId, err);
+    }
+  }, []);
+
+  const setSessionId = useCallback((newId: string) => {
+    setSessionIdState(newId);
+    sessionIdRef.current = newId;
+    loadSessionHistory(newId);
+    if (wsRef.current) {
+      const old = wsRef.current;
+      wsRef.current = null;
+      try {
+        old.close();
+      } catch {}
+    }
+    setTimeout(() => {
+      connectRef.current();
+    }, 100);
+  }, [loadSessionHistory]);
+
+  useEffect(() => {
+    loadSessionHistory(sessionIdRef.current);
+  }, [loadSessionHistory]);
+
   const clearChat = useCallback(() => {
     setLines([]);
-    fetch(`${API_BASE}/api/v1/chat/history/default`, { method: "DELETE" }).catch(() => {});
+    fetch(`${API_BASE}/api/v1/chat/history/${sessionIdRef.current}`, { method: "DELETE" }).catch(() => {});
   }, []);
 
   return {
@@ -758,5 +810,8 @@ export function useBrainSocket(onProfileChange?: () => void): BrainState {
     activeTaskGraph,
     activeComputerUse,
     clearChat,
+    sessionId,
+    setSessionId,
+    loadSessionHistory,
   };
 }

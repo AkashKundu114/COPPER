@@ -80,7 +80,26 @@ async def get_history(session_id: str, db: Session = Depends(get_db)):
         .limit(100)
         .all()
     )
-    return [r.to_dict() for r in records]
+    if records:
+        return [r.to_dict() for r in records]
+
+    # Fallback to persistent memory / branch session history
+    from app.ai.memory.persistent_memory import persistent_memory
+
+    mem_history = persistent_memory.get_history(session_id)
+    if mem_history:
+        return [
+            {
+                "id": idx + 1,
+                "session_id": session_id,
+                "sender": m.get("role", "user"),
+                "message": m.get("content", ""),
+                "created_at": None,
+            }
+            for idx, m in enumerate(mem_history)
+        ]
+
+    return []
 
 
 @router.delete("/history/{session_id}")
@@ -177,3 +196,70 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
         if active_task and not active_task.done():
             active_task.cancel()
         manager.disconnect(websocket)
+
+
+class BranchCreateRequest(BaseModel):
+    session_id: str
+    message_index: int
+    title: str | None = None
+
+
+class BranchMergeRequest(BaseModel):
+    target_session_id: str | None = None
+
+
+@router.post("/branch")
+async def create_branch_endpoint(req: BranchCreateRequest):
+    """Creates an independent conversation branch diverging at message_index."""
+    try:
+        from app.ai.branching.branch_manager import branch_manager
+
+        branch = branch_manager.branch_conversation(
+            session_id=req.session_id,
+            message_index=req.message_index,
+            title=req.title,
+        )
+        return {"status": "success", "branch": branch}
+    except Exception as e:
+        logger.error(f"Error creating branch: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/branches/compare")
+async def compare_branches_endpoint(a: str, b: str):
+    """Compares two conversation branches using natural language semantic diff analysis."""
+    try:
+        from app.ai.branching.diff_analyzer import diff_analyzer
+
+        diff = await diff_analyzer.compare_branches(branch_a_id=a, branch_b_id=b)
+        return {"status": "success", "comparison": diff}
+    except Exception as e:
+        logger.error(f"Error comparing branches: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/branches/{session_id}")
+async def list_branches_endpoint(session_id: str):
+    """Lists all branches in the conversation tree for a session."""
+    try:
+        from app.ai.branching.branch_manager import branch_manager
+
+        branches = branch_manager.list_branches(session_id)
+        return {"status": "success", "session_id": session_id, "branches": branches}
+    except Exception as e:
+        logger.error(f"Error listing branches: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/branches/{branch_id}/merge")
+async def merge_branch_endpoint(branch_id: str, req: BranchMergeRequest | None = None):
+    """Merges branch discoveries and insights back into parent timeline."""
+    try:
+        from app.ai.branching.branch_manager import branch_manager
+
+        target_id = req.target_session_id if req else None
+        res = branch_manager.merge_branch(branch_id, target_session_id=target_id)
+        return res
+    except Exception as e:
+        logger.error(f"Error merging branch {branch_id}: {e}")
+        raise HTTPException(status_code=400, detail=str(e))

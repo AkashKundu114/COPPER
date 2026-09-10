@@ -19,6 +19,7 @@ import {
   Timer,
   Clock,
   Copy,
+  GitBranch,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MarkdownContent } from "./MarkdownContent";
@@ -34,6 +35,7 @@ interface MessageFeedProps {
   activeTaskGraph?: ActiveTaskGraphTrace | null;
   activeComputerUse?: ComputerUseStep[] | null;
   lastCorrectionAck?: { id: string; summary: string; timestamp: number } | null;
+  onBranchAtMessage?: (messageIndex: number, messageText: string) => void;
 }
 
 interface ParsedAttachment {
@@ -203,6 +205,7 @@ export function MessageFeed({
   activeTaskGraph,
   activeComputerUse,
   lastCorrectionAck,
+  onBranchAtMessage,
 }: MessageFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<ParsedDocument | null>(null);
@@ -299,7 +302,22 @@ export function MessageFeed({
                     <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan" />
                     OPERATOR // DIRECT INTENT
                   </span>
-                  <span>ENCRYPTED</span>
+                  <div className="flex items-center gap-2">
+                    {onBranchAtMessage && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onBranchAtMessage(i, cleanText);
+                        }}
+                        title="Branch conversation from this message"
+                        className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-cyan/10 hover:bg-cyber-cyan/20 text-cyber-cyan transition-all text-[9px]"
+                      >
+                        <GitBranch size={10} />
+                        <span>Branch</span>
+                      </button>
+                    )}
+                    <span>ENCRYPTED</span>
+                  </div>
                 </div>
 
                 {attachments.length > 0 && (
@@ -343,7 +361,22 @@ export function MessageFeed({
                 </span>
                 <span className="text-cyber-cyan/70">[CONFIDENCE: {dynamicConfidence}%]</span>
               </div>
-              <span className="text-zinc-600">AIR-GAPPED SYNTHESIS</span>
+              <div className="flex items-center gap-2">
+                {onBranchAtMessage && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onBranchAtMessage(i, cleanText);
+                    }}
+                    title="Branch conversation from this response"
+                    className="opacity-70 hover:opacity-100 flex items-center gap-1 px-1.5 py-0.5 rounded bg-verdigris/10 hover:bg-verdigris/20 text-verdigris transition-all text-[9px]"
+                  >
+                    <GitBranch size={10} />
+                    <span>Branch</span>
+                  </button>
+                )}
+                <span className="text-zinc-600">AIR-GAPPED SYNTHESIS</span>
+              </div>
             </div>
 
             {line.taskGraph && (
