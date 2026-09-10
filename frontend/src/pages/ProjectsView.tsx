@@ -8,19 +8,11 @@ import {
   ShieldAlert,
   X,
 } from "lucide-react";
-import { workspaceAPI } from "../lib/api";
-
-export interface ProjectItem {
-  id: string;
-  name: string;
-  health: "healthy" | "at_risk" | "blocked" | "completed";
-  reason: string;
-  completedTasks: number;
-  totalTasks: number;
-}
+import { projectsAPI, type ProjectItem } from "../lib/api";
 
 export const ProjectsView: React.FC = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -29,8 +21,19 @@ export const ProjectsView: React.FC = () => {
   const [totalTasks, setTotalTasks] = useState(5);
   const [completedTasks] = useState(0);
 
+  const loadProjects = async () => {
+    try {
+      const data = await projectsAPI.list();
+      setProjects(data);
+    } catch (err) {
+      console.error("Failed to load projects from backend:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    workspaceAPI.list<ProjectItem>("project").then(setProjects).catch(console.error);
+    loadProjects();
   }, []);
 
   const handleCreateProject = async (e: React.FormEvent) => {
@@ -45,23 +48,38 @@ export const ProjectsView: React.FC = () => {
       totalTasks: Math.max(1, Number(totalTasks) || 1),
     };
 
-    const newProject = await workspaceAPI.create<ProjectItem>("project", payload);
-    setProjects((prev) => [newProject, ...prev]);
-    setName("");
-    setReason("");
-    setIsModalOpen(false);
+    try {
+      const newProject = await projectsAPI.create(payload);
+      setProjects((prev) => [newProject, ...prev]);
+      setName("");
+      setReason("");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Failed to create project:", err);
+    }
   };
 
   const incrementTask = async (project: ProjectItem) => {
-    const completedTasks = Math.min(project.totalTasks, project.completedTasks + 1);
-    const health = completedTasks === project.totalTasks ? "completed" : project.health;
-    const updated = await workspaceAPI.update<ProjectItem>("project", project.id, { completedTasks, health });
-    setProjects((prev) => prev.map((p) => p.id === project.id ? updated : p));
+    const nextCompleted = Math.min(project.totalTasks, project.completedTasks + 1);
+    const nextHealth = nextCompleted === project.totalTasks ? "completed" : project.health;
+    try {
+      const updated = await projectsAPI.update(project.id, {
+        completedTasks: nextCompleted,
+        health: nextHealth,
+      });
+      setProjects((prev) => prev.map((p) => (p.id === project.id ? updated : p)));
+    } catch (err) {
+      console.error("Failed to increment project task:", err);
+    }
   };
 
   const deleteProject = async (id: string) => {
-    await workspaceAPI.remove("project", id);
-    setProjects((prev) => prev.filter((p) => p.id !== id));
+    try {
+      await projectsAPI.delete(id);
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error("Failed to delete project:", err);
+    }
   };
 
   return (

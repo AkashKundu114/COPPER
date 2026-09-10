@@ -8,27 +8,31 @@ import {
   X,
   Sparkles,
 } from "lucide-react";
-import { workspaceAPI } from "../lib/api";
-
-interface ScheduleEvent {
-  id: string;
-  time: string;
-  title: string;
-  category: "Focus" | "Meeting" | "Break" | "Review";
-  completed: boolean;
-}
+import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [time, setTime] = useState("10:00 AM");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ScheduleEvent["category"]>("Focus");
 
+  const loadEvents = async () => {
+    try {
+      const data = await scheduleAPI.list();
+      setEvents(data);
+    } catch (err) {
+      console.error("Failed to load schedule events from backend:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    workspaceAPI.list<ScheduleEvent>("event").then(setEvents).catch(console.error);
+    loadEvents();
   }, []);
 
   const handleCreateEvent = async (e: React.FormEvent) => {
@@ -42,20 +46,32 @@ export const TodayView: React.FC = () => {
       completed: false,
     };
 
-    const newEvent = await workspaceAPI.create<ScheduleEvent>("event", payload);
-    setEvents((prev) => [...prev, newEvent]);
-    setTitle("");
-    setIsModalOpen(false);
+    try {
+      const newEvent = await scheduleAPI.create(payload);
+      setEvents((prev) => [...prev, newEvent]);
+      setTitle("");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Failed to create schedule event:", err);
+    }
   };
 
   const toggleEvent = async (event: ScheduleEvent) => {
-    const updated = await workspaceAPI.update<ScheduleEvent>("event", event.id, { completed: !event.completed });
-    setEvents((prev) => prev.map((e) => e.id === event.id ? updated : e));
+    try {
+      const updated = await scheduleAPI.update(event.id, { completed: !event.completed });
+      setEvents((prev) => prev.map((e) => (e.id === event.id ? updated : e)));
+    } catch (err) {
+      console.error("Failed to toggle schedule event:", err);
+    }
   };
 
   const deleteEvent = async (id: string) => {
-    await workspaceAPI.remove("event", id);
-    setEvents((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await scheduleAPI.delete(id);
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("Failed to delete schedule event:", err);
+    }
   };
 
   const todayDate = new Date().toLocaleDateString("en-US", {

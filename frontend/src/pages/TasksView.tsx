@@ -8,19 +8,9 @@ import {
   X,
   Clock,
 } from "lucide-react";
-import { workspaceAPI } from "../lib/api";
+import { tasksAPI, type TaskItem } from "../lib/api";
 
 export type TaskStatus = "inbox" | "planned" | "active" | "completed";
-
-export interface TaskItem {
-  id: string;
-  title: string;
-  project: string;
-  priority: "high" | "medium" | "low";
-  duration: string;
-  status: TaskStatus;
-  createdAt: number;
-}
 
 export const TasksView: React.FC = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -34,8 +24,19 @@ export const TasksView: React.FC = () => {
   const [duration, setDuration] = useState("30m");
   const [status, setStatus] = useState<TaskStatus>("inbox");
 
+  const loadTasks = async () => {
+    try {
+      const data = await tasksAPI.list();
+      setTasks(data);
+    } catch (err) {
+      console.error("Failed to fetch tasks from backend:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    workspaceAPI.list<TaskItem>("task").then(setTasks).catch(console.error).finally(() => setLoading(false));
+    loadTasks();
   }, []);
 
   const handleCreateTask = async (e: React.FormEvent) => {
@@ -48,23 +49,34 @@ export const TasksView: React.FC = () => {
       priority,
       duration: duration.trim() || "30m",
       status,
-      createdAt: Date.now(),
     };
-    const newTask = await workspaceAPI.create<TaskItem>("task", payload);
-    setTasks((prev) => [newTask, ...prev]);
-    setTitle("");
-    setIsModalOpen(false);
+    try {
+      const newTask = await tasksAPI.create(payload);
+      setTasks((prev) => [newTask, ...prev]);
+      setTitle("");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Failed to create task:", err);
+    }
   };
 
   const toggleTaskStatus = async (task: TaskItem) => {
-    const status = task.status === "completed" ? "active" : "completed";
-    const updated = await workspaceAPI.update<TaskItem>("task", task.id, { status });
-    setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
+    const nextStatus: TaskStatus = task.status === "completed" ? "active" : "completed";
+    try {
+      const updated = await tasksAPI.update(task.id, { status: nextStatus });
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
+    } catch (err) {
+      console.error("Failed to update task status:", err);
+    }
   };
 
   const deleteTask = async (id: string) => {
-    await workspaceAPI.remove("task", id);
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+    try {
+      await tasksAPI.delete(id);
+      setTasks((prev) => prev.filter((t) => t.id !== id));
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
   };
 
   const filteredTasks =

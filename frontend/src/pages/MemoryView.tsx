@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Search, X, Network, Brain } from "lucide-react";
-import { workspaceAPI } from "../lib/api";
+import { memoryCRUDAPI, type EpistemicMemoryItem } from "../lib/api";
 import { KnowledgeGraphView } from "../components/knowledge/KnowledgeGraphView";
-
-export interface EpistemicMemoryItem {
-  id: string;
-  type: "fact" | "observation" | "hypothesis";
-  category: string;
-  content: string;
-  confidence: number;
-  evidenceCount: number;
-  lastConfirmed: string;
-}
 
 export const MemoryView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"graph" | "epistemic">("graph");
   const [memories, setMemories] = useState<EpistemicMemoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState<
@@ -27,8 +18,19 @@ export const MemoryView: React.FC = () => {
   const [content, setContent] = useState("");
   const [confidence, setConfidence] = useState(95);
 
+  const loadMemories = async () => {
+    try {
+      const data = await memoryCRUDAPI.list();
+      setMemories(data);
+    } catch (err) {
+      console.error("Failed to load epistemic memories from backend:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    workspaceAPI.list<EpistemicMemoryItem>("memory").then(setMemories).catch(console.error);
+    loadMemories();
   }, []);
 
   const handleAddMemory = async (e: React.FormEvent) => {
@@ -41,18 +43,25 @@ export const MemoryView: React.FC = () => {
       content: content.trim(),
       confidence: confidence / 100,
       evidenceCount: 1,
-      lastConfirmed: "Just now",
     };
 
-    const newMemory = await workspaceAPI.create<EpistemicMemoryItem>("memory", payload);
-    setMemories((prev) => [newMemory, ...prev]);
-    setContent("");
-    setIsModalOpen(false);
+    try {
+      const newMemory = await memoryCRUDAPI.create(payload);
+      setMemories((prev) => [newMemory, ...prev]);
+      setContent("");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Failed to create epistemic memory:", err);
+    }
   };
 
   const handleForget = async (id: string) => {
-    await workspaceAPI.remove("memory", id);
-    setMemories((prev) => prev.filter((m) => m.id !== id));
+    try {
+      await memoryCRUDAPI.delete(id);
+      setMemories((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("Failed to delete epistemic memory:", err);
+    }
   };
 
   const filtered = memories.filter((m) => {

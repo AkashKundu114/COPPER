@@ -47,6 +47,14 @@ class Settings(BaseSettings):
     SEARXNG_URL: str = "http://localhost:8888"
     WEB_SEARCH_ENABLED: bool = True
 
+    # Sandbox Isolation Configuration
+    SANDBOX_BACKEND: str = "auto"  # "auto", "pyodide", "docker"
+    SANDBOX_TIMEOUT_SECONDS: int = 15
+    SANDBOX_MEMORY_LIMIT_MB: int = 256
+    SANDBOX_CPU_LIMIT: float = 1.0
+    SANDBOX_NETWORK_ENABLED: bool = False
+    SANDBOX_DOCKER_IMAGE: str = "python:3.12-slim"
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

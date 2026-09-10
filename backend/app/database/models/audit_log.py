@@ -17,6 +17,7 @@ CATEGORY_CHOICES = (
     "security_setting_changed",
     "guardian_challenge",
     "guardian_safety_block",
+    "sandbox_execution",
 )
 
 

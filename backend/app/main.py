@@ -28,11 +28,14 @@ from app.api.routes import (
     knowledge_graph,
     memory,
     orchestration,
+    projects,
     reminders,
     routing_analytics,
+    schedule,
     self_improvement,
     self_memory,
     system,
+    tasks,
     training,
     vision,
     voice,
@@ -116,6 +119,10 @@ app.include_router(self_improvement.router, prefix="/api/v1")
 app.include_router(training.router, prefix="/api/v1")
 app.include_router(routing_analytics.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
+app.include_router(tasks.router, prefix="/api/v1")
+app.include_router(projects.router, prefix="/api/v1")
+app.include_router(schedule.router, prefix="/api/v1")
+app.include_router(schedule.events_router, prefix="/api/v1")
 
 
 @app.get("/")

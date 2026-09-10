@@ -269,6 +269,105 @@ export const enforceKeepOnlyMiniModel = async () => {
   return res.data;
 };
 
+export interface TaskItem {
+  id: string;
+  title: string;
+  project: string;
+  priority: "high" | "medium" | "low";
+  duration: string;
+  status: "inbox" | "planned" | "active" | "completed";
+  createdAt?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const tasksAPI = {
+  list: (params?: { status?: string; project?: string; priority?: string }) =>
+    api.get<TaskItem[]>("/api/v1/tasks", { params }).then((r) => r.data),
+  get: (id: string) =>
+    api.get<TaskItem>(`/api/v1/tasks/${id}`).then((r) => r.data),
+  create: (payload: Partial<TaskItem>) =>
+    api.post<TaskItem>("/api/v1/tasks", payload).then((r) => r.data),
+  update: (id: string, payload: Partial<TaskItem>) =>
+    api.patch<TaskItem>(`/api/v1/tasks/${id}`, payload).then((r) => r.data),
+  delete: (id: string) =>
+    api.delete(`/api/v1/tasks/${id}`),
+};
+
+export interface ProjectItem {
+  id: string;
+  name: string;
+  health: "healthy" | "at_risk" | "blocked" | "completed";
+  reason: string;
+  completedTasks: number;
+  totalTasks: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const projectsAPI = {
+  list: (params?: { health?: string }) =>
+    api.get<ProjectItem[]>("/api/v1/projects", { params }).then((r) => r.data),
+  get: (id: string) =>
+    api.get<ProjectItem>(`/api/v1/projects/${id}`).then((r) => r.data),
+  create: (payload: Partial<ProjectItem>) =>
+    api.post<ProjectItem>("/api/v1/projects", payload).then((r) => r.data),
+  update: (id: string, payload: Partial<ProjectItem>) =>
+    api.patch<ProjectItem>(`/api/v1/projects/${id}`, payload).then((r) => r.data),
+  delete: (id: string) =>
+    api.delete(`/api/v1/projects/${id}`),
+};
+
+export interface ScheduleEvent {
+  id: string;
+  time: string;
+  title: string;
+  category: "Focus" | "Meeting" | "Break" | "Review";
+  completed: boolean;
+  date?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const scheduleAPI = {
+  list: (params?: { category?: string; completed?: boolean; date?: string }) =>
+    api.get<ScheduleEvent[]>("/api/v1/schedule/events", { params }).then((r) => r.data),
+  get: (id: string) =>
+    api.get<ScheduleEvent>(`/api/v1/schedule/events/${id}`).then((r) => r.data),
+  create: (payload: Partial<ScheduleEvent>) =>
+    api.post<ScheduleEvent>("/api/v1/schedule/events", payload).then((r) => r.data),
+  update: (id: string, payload: Partial<ScheduleEvent>) =>
+    api.patch<ScheduleEvent>(`/api/v1/schedule/events/${id}`, payload).then((r) => r.data),
+  delete: (id: string) =>
+    api.delete(`/api/v1/schedule/events/${id}`),
+};
+
+export interface EpistemicMemoryItem {
+  id: string;
+  type: "fact" | "observation" | "hypothesis";
+  category: string;
+  content: string;
+  confidence: number;
+  evidenceCount: number;
+  lastConfirmed: string;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const memoryCRUDAPI = {
+  list: (params?: { type?: string; category?: string; search?: string; status?: string }) =>
+    api.get<EpistemicMemoryItem[]>("/api/v1/memory", { params }).then((r) => r.data),
+  get: (id: string) =>
+    api.get<EpistemicMemoryItem>(`/api/v1/memory/${id}`).then((r) => r.data),
+  create: (payload: Partial<EpistemicMemoryItem>) =>
+    api.post<EpistemicMemoryItem>("/api/v1/memory", payload).then((r) => r.data),
+  update: (id: string, payload: Partial<EpistemicMemoryItem>) =>
+    api.patch<EpistemicMemoryItem>(`/api/v1/memory/${id}`, payload).then((r) => r.data),
+  delete: (id: string) =>
+    api.delete(`/api/v1/memory/${id}`),
+};
+
 export const workspaceAPI = {
   list: <T>(kind: "task" | "project" | "event" | "meal" | "grocery" | "memory") =>
     api.get<T[]>(`/api/v1/workspace/${kind}`).then((r) => r.data),
@@ -278,6 +377,7 @@ export const workspaceAPI = {
     api.patch<T>(`/api/v1/workspace/${kind}/${id}`, { payload }).then((r) => r.data),
   remove: (kind: string, id: string) => api.delete(`/api/v1/workspace/${kind}/${id}`),
 };
+
 
 export interface KnowledgeEntityItem {
   id: number;
