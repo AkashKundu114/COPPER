@@ -70,10 +70,10 @@ export const CognitiveStatusBadge: React.FC = () => {
       className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-[10px] font-mono font-bold tracking-wider transition-all shadow-sm ${current.color}`}
       title={`Cognitive Load: ${current.label} (${Math.round(profile.confidence * 100)}% conf). Switches/min: ${profile.window_switch_rate.toFixed(1)}. Focus Streak: ${profile.current_focus_streak.toFixed(1)}m.`}
     >
-      <IconComponent size=t{12} className="animate-pulse" />
+      <IconComponent size={12} className="animate-pulse" />
       <span>{current.label}</span>
       {profile.state === "deep_focus" && (
-        <span className="flex items-senter gap-0.5 text-[9px] text-purple-300 font-normal">
+        <span className="flex items-center gap-0.5 text-[9px] text-purple-300 font-normal">
           <ShieldAlert size={9} />
           Muted
         </span>

@@ -7,8 +7,11 @@ import {
   Trash2,
   X,
   Clock,
+  Target,
+  AlertTriangle,
 } from "lucide-react";
 import { tasksAPI, type TaskItem } from "../lib/api";
+import { accountabilityAPI } from "../services/api";
 
 export type TaskStatus = "inbox" | "planned" | "active" | "completed";
 
@@ -23,6 +26,7 @@ export const TasksView: React.FC = () => {
   const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
   const [duration, setDuration] = useState("30m");
   const [status, setStatus] = useState<TaskStatus>("inbox");
+  const [accountability, setAccountability] = useState<any>(null);
 
   const loadTasks = async () => {
     try {
@@ -37,6 +41,12 @@ export const TasksView: React.FC = () => {
 
   useEffect(() => {
     loadTasks();
+    accountabilityAPI
+      .getReport()
+      .then((res: any) => {
+        if (res.data) setAccountability(res.data);
+      })
+      .catch(() => {});
   }, []);
 
   const handleCreateTask = async (e: React.FormEvent) => {
@@ -106,6 +116,35 @@ export const TasksView: React.FC = () => {
           <span>New Task</span>
         </button>
       </div>
+
+      {/* Accountability Partner & Follow-Through Tracker (Tier 4 Companion Intelligence) */}
+      {accountability && (
+        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
+              <Target size={18} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-white font-sans text-sm">Accountability Follow-Through Rate</p>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-verdigris/15 text-verdigris border border-verdigris/30">
+                  {Math.round(accountability.follow_through_rate_pct || 0)}% Completed
+                </span>
+              </div>
+              <p className="text-slate-400 text-[11px] mt-0.5">
+                {accountability.fulfilled || 0} of {accountability.total_commitments || 0} commitments delivered on time. Current streak: {accountability.current_streak || 0} days.
+              </p>
+            </div>
+          </div>
+
+          {accountability.active_nudges && accountability.active_nudges.length > 0 && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-950/60 border border-amber-800/40 text-amber-300 text-[11px]">
+              <AlertTriangle size={13} className="text-amber-400 animate-pulse flex-shrink-0" />
+              <span>{accountability.active_nudges[0]}</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-800 pb-3">

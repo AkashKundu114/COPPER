@@ -1,0 +1,9 @@
+{
+    "warmth": 0.7,
+    "formality": 0.4,
+    "verbosity": 0.5,
+    "humor": 0.3,
+    "use_emojis": true,
+    "code_first": true,
+    "custom_instructions": []
+}

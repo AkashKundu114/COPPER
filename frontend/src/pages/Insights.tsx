@@ -51,6 +51,32 @@ export function Insights() {
   const [skillStats, setSkillStats] = useState<any>(null);
   const [federatedStats, setFederatedStats] = useState<any>(null);
   const [peers, setPeers] = useState<any[]>([]);
+  const [selectedSkill, setSelectedSkill] = useState<any>(null);
+  const [execParams, setExecParams] = useState<string>("{}");
+  const [executing, setExecuting] = useState<boolean>(false);
+  const [execResult, setExecResult] = useState<any>(null);
+  const [execError, setExecError] = useState<string | null>(null);
+
+  const handleExecuteSkill = async () => {
+    if (!selectedSkill) return;
+    setExecuting(true);
+    setExecResult(null);
+    setExecError(null);
+    try {
+      let parsed = {};
+      try {
+        parsed = JSON.parse(execParams);
+      } catch {
+        parsed = { input: execParams };
+      }
+      const res = await skillsAPI.execute(selectedSkill.skill_id, parsed);
+      setExecResult(res.data);
+    } catch (err: any) {
+      setExecError(err.response?.data?.detail || err.message || "Skill execution failed");
+    } finally {
+      setExecuting(false);
+    }
+  };
 
   useEffect(() => {
     skillsAPI
@@ -216,6 +242,11 @@ export function Insights() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {skillStats && (
+              <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
+                {skillStats.total_executions || 0} Total Executions
+              </span>
+            )}
             <span className="text-[10px] text-accent-400 bg-accent-500/10 border border-accent-500/30 px-2 py-0.5 rounded-full font-bold">
               {skills.length} Reusable Skills
             </span>
@@ -231,10 +262,18 @@ export function Insights() {
             {skills.map((s) => (
               <div
                 key={s.skill_id}
-                className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 hover:border-accent-500/40 transition-all"
+                className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 hover:border-accent-500/40 transition-all cursor-pointer group"
+                onClick={() => {
+                  setSelectedSkill(s);
+                  setExecParams(s.parameters ? JSON.stringify(s.parameters, null, 2) : "{}");
+                  setExecResult(null);
+                  setExecError(null);
+                }}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-xs font-sans truncate">{s.name}</span>
+                  <span className="font-bold text-white text-xs font-sans truncate group-hover:text-accent-400 transition-colors">
+                    {s.name}
+                  </span>
                   <span className="text-[9px] text-verdigris-400 font-bold bg-verdigris-950/60 px-1.5 py-0.5 rounded border border-verdigris-800/40">
                     {Math.round((s.success_rate || 1.0) * 100)}% Pass
                   </span>
@@ -242,10 +281,77 @@ export function Insights() {
                 <p className="text-[11px] text-slate-400 line-clamp-2">{s.description || "Synthesized multi-step skill"}</p>
                 <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-900">
                   <span>Used {s.use_count || 0} times</span>
-                  <span>{s.steps?.length || 0} Steps</span>
+                  <span className="flex items-center gap-1 text-accent-400">
+                    <Play size={10} /> Execute
+                  </span>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Skill Execution Modal / Drawer */}
+        {selectedSkill && (
+          <div className="p-4 rounded-xl bg-slate-950 border border-accent-500/30 space-y-3 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div className="flex items-center gap-2">
+                <Terminal size={14} className="text-accent-400" />
+                <span className="text-xs font-bold text-white font-sans">
+                  Execute Skill: {selectedSkill.name}
+                </span>
+              </div>
+              <button
+                onClick={() => setSelectedSkill(null)}
+                className="text-slate-400 hover:text-white text-xs"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] text-slate-400 block font-mono">
+                Execution Parameters (JSON)
+              </label>
+              <textarea
+                value={execParams}
+                onChange={(e) => setExecParams(e.target.value)}
+                rows={3}
+                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-accent-500/50"
+                placeholder='{"param": "value"}'
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <div className="text-[10px] text-slate-400">
+                {selectedSkill.steps?.length || 0} composition step(s) will be executed locally.
+              </div>
+              <button
+                onClick={handleExecuteSkill}
+                disabled={executing}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all disabled:opacity-50"
+              >
+                <Play size={12} />
+                <span>{executing ? "Executing..." : "Run Skill"}</span>
+              </button>
+            </div>
+
+            {execResult && (
+              <div className="p-3 rounded-lg bg-slate-900 border border-verdigris-500/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-verdigris-400 text-xs font-bold">
+                  <CheckCircle2 size={13} />
+                  <span>Execution Succeeded</span>
+                </div>
+                <pre className="text-[10px] text-slate-300 font-mono overflow-x-auto max-h-36">
+                  {JSON.stringify(execResult, null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {execError && (
+              <div className="p-3 rounded-lg bg-danger-950/60 border border-danger-800/60 text-danger-300 text-xs">
+                {execError}
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -34,7 +34,8 @@ export const EmailView: React.FC = () => {
 
   const loadInitialState = async () => {
     try {
-      const configured = await emailAPI.isConfigured();
+      const res = await emailAPI.isConfigured();
+      const configured = Boolean(res.data?.configured);
       setIsConfigured(configured);
       if (configured) {
         fetchEmails(activeTab === 'Drafts' ? 'Urgent' : activeTab);
@@ -59,8 +60,8 @@ export const EmailView: React.FC = () => {
 
   const fetchEmails = async (priority: Priority) => {
     try {
-      const emails = await emailAPI.getInbox(priority);
-      setInbox(emails);
+      const res = await emailAPI.getInbox(priority);
+      setInbox(res.data || []);
     } catch (error) {
       console.error('Failed to fetch emails:', error);
     }
@@ -68,8 +69,8 @@ export const EmailView: React.FC = () => {
 
   const fetchDrafts = async () => {
     try {
-      const allDrafts = await emailAPI.getDrafts();
-      setDrafts(allDrafts);
+      const res = await emailAPI.getDrafts();
+      setDrafts(res.data || []);
     } catch (error) {
       console.error('Failed to fetch drafts:', error);
     }
@@ -90,7 +91,13 @@ export const EmailView: React.FC = () => {
   const handleConfigure = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await emailAPI.configure({ host: configHost, user: configUser, pass: configPass });
+      await emailAPI.configure({
+        host: configHost,
+        port: 993,
+        username: configUser,
+        password: configPass,
+        use_ssl: true,
+      });
       setIsConfigured(true);
       setShowConfigModal(false);
       handleSync();
