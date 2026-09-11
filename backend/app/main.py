@@ -19,10 +19,13 @@ from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api.routes import (
     agents,
+    ambient,
     audit,
     automation,
+    briefing,
     cache,
     chat,
+    clipboard,
     documents,
     episodes,
     guardian,
@@ -70,9 +73,17 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Telemetry init warning: {e}")
     start_scheduler()
     model_tier_manager.start()
+    
+    from app.ai.ambient.clipboard_monitor import clipboard_monitor
+    clipboard_monitor.start()
+    
     logger.info("COPPER backend ready")
     yield
     await wake_word_service.disable()
+    
+    from app.ai.ambient.clipboard_monitor import clipboard_monitor
+    clipboard_monitor.stop()
+    
     model_tier_manager.stop()
     stop_scheduler()
     await redis_close()
@@ -113,7 +124,9 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization", "Accept", "Origin"],
 )
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.include_router(ambient.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
+app.include_router(clipboard.router, prefix="/api/v1")
 app.include_router(cache.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 app.include_router(wake.router, prefix="/api/v1")
@@ -139,6 +152,7 @@ app.include_router(tasks.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(schedule.events_router, prefix="/api/v1")
+app.include_router(briefing.router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1")
 app.include_router(telemetry_routes.router, prefix="/api/v1")
 

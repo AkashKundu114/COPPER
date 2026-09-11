@@ -1,9 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 
 let mainWindow = null;
+let quickBarWindow = null;
 let backendProcess = null;
 
 function getPythonExecutable(rootDir) {
@@ -108,6 +109,79 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+function createQuickBar() {
+  quickBarWindow = new BrowserWindow({
+    width: 680,
+    height: 72,
+    frame: false,
+    transparent: true,
+    resizable: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+  if (isDev) {
+    quickBarWindow.loadURL("http://localhost:5173/#/quick-bar");
+  } else {
+    quickBarWindow.loadFile(path.join(__dirname, "dist", "index.html"), {
+      hash: "/quick-bar",
+    });
+  }
+
+  quickBarWindow.on("blur", () => {
+    if (quickBarWindow && quickBarWindow.isVisible()) {
+      quickBarWindow.hide();
+    }
+  });
+
+  quickBarWindow.on("closed", () => {
+    quickBarWindow = null;
+  });
+}
+
+function toggleQuickBar() {
+  if (!quickBarWindow) createQuickBar();
+  if (quickBarWindow.isVisible()) {
+    quickBarWindow.hide();
+  } else {
+    // Center on the active screen
+    const { screen } = require("electron");
+    const cursor = screen.getCursorScreenPoint();
+    const activeDisplay = screen.getDisplayNearestPoint(cursor);
+    const { x, y, width } = activeDisplay.workArea;
+    const barWidth = 680;
+    quickBarWindow.setPosition(
+      Math.round(x + (width - barWidth) / 2),
+      Math.round(y + 180)
+    );
+    quickBarWindow.show();
+    quickBarWindow.focus();
+  }
+}
+
+ipcMain.handle("quick-bar-hide", () => {
+  if (quickBarWindow) quickBarWindow.hide();
+});
+
+ipcMain.handle("quick-bar-resize", (_, height) => {
+  if (quickBarWindow) {
+    quickBarWindow.setSize(680, Math.min(height, 500));
+  }
+});
+
+ipcMain.handle("quick-bar-focus-main", () => {
+  if (mainWindow) {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
 
 const net = require("net");
 
@@ -226,12 +300,16 @@ app.whenReady().then(() => {
   configureAutoStart();
   createWindow();
 
+  globalShortcut.register("Alt+Space", toggleQuickBar);
+  createQuickBar();
+
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
   stopBackend();
 });
 
