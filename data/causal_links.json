@@ -19,5 +19,12 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "d30d0f0d-fd92-4886-9cc8-3deb0d443a38",
+    "effect_id": "fcf7f3b6-0b8c-440f-bc33-223af97c7569",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]
