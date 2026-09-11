@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { TrendingUp, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { TrendingUp, CheckCircle, Sparkles, Network, Terminal, Play, CheckCircle2 } from "lucide-react";
+import { skillsAPI, federatedAPI } from "../services/api";
 
 interface InsightMetric {
   id: string;
@@ -45,6 +46,38 @@ export function Insights() {
       positive: true,
     },
   ]);
+
+  const [skills, setSkills] = useState<any[]>([]);
+  const [skillStats, setSkillStats] = useState<any>(null);
+  const [federatedStats, setFederatedStats] = useState<any>(null);
+  const [peers, setPeers] = useState<any[]>([]);
+
+  useEffect(() => {
+    skillsAPI
+      .list()
+      .then((res: any) => {
+        if (Array.isArray(res.data)) setSkills(res.data);
+      })
+      .catch(() => {});
+    skillsAPI
+      .getStats()
+      .then((res: any) => {
+        if (res.data) setSkillStats(res.data);
+      })
+      .catch(() => {});
+    federatedAPI
+      .getStats()
+      .then((res: any) => {
+        if (res.data) setFederatedStats(res.data);
+      })
+      .catch(() => {});
+    federatedAPI
+      .getPeers()
+      .then((res: any) => {
+        if (Array.isArray(res.data)) setPeers(res.data);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
@@ -162,6 +195,104 @@ export function Insights() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Compositional Learned Skills Library (Phase 3 Delegation Engine) */}
+      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-accent-500/10 text-accent-400 border border-accent-500/20">
+              <Sparkles size={16} />
+            </div>
+            <div>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
+                Compositional Learned Skills Library
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Self-extracted reusable execution skills from past successful workflows
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-accent-400 bg-accent-500/10 border border-accent-500/30 px-2 py-0.5 rounded-full font-bold">
+              {skills.length} Reusable Skills
+            </span>
+          </div>
+        </div>
+
+        {skills.length === 0 ? (
+          <div className="p-6 rounded-xl bg-slate-950 border border-slate-800/80 text-center text-slate-500 text-xs">
+            No learned skills extracted yet. Skills are automatically created when complex multi-agent workflows complete successfully.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {skills.map((s) => (
+              <div
+                key={s.skill_id}
+                className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 hover:border-accent-500/40 transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-xs font-sans truncate">{s.name}</span>
+                  <span className="text-[9px] text-verdigris-400 font-bold bg-verdigris-950/60 px-1.5 py-0.5 rounded border border-verdigris-800/40">
+                    {Math.round((s.success_rate || 1.0) * 100)}% Pass
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400 line-clamp-2">{s.description || "Synthesized multi-step skill"}</p>
+                <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-900">
+                  <span>Used {s.use_count || 0} times</span>
+                  <span>{s.steps?.length || 0} Steps</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Federated Self-Improvement Mesh (Phase 5) */}
+      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/20">
+              <Network size={16} />
+            </div>
+            <div>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
+                Federated Self-Improvement Swarm
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Multi-instance FedAvg weight delta synchronization with formal Laplace noise
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] text-cyber-cyan bg-cyber-cyan/10 border border-cyber-cyan/30 px-2.5 py-0.5 rounded-full font-bold">
+            {peers.length} Mesh Peers
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span className="text-[10px] text-slate-400 block">Connected Peers</span>
+            <span className="text-lg font-bold text-white font-sans">{peers.length}</span>
+            <span className="text-[9px] text-slate-500 block">Local LAN / Direct</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span className="text-[10px] text-slate-400 block">FedAvg Rounds</span>
+            <span className="text-lg font-bold text-accent-400 font-sans">{federatedStats?.total_rounds ?? 0}</span>
+            <span className="text-[9px] text-slate-500 block">Deltas aggregated</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span className="text-[10px] text-slate-400 block">DP Privacy Epsilon</span>
+            <span className="text-lg font-bold text-purple-400 font-sans">
+              ε = {federatedStats?.total_epsilon_spent?.toFixed(1) ?? "0.0"}
+            </span>
+            <span className="text-[9px] text-slate-500 block">Weight perturbation</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span className="text-[10px] text-slate-400 block">Local Adapter Status</span>
+            <span className="text-lg font-bold text-verdigris font-sans">Synchronized</span>
+            <span className="text-[9px] text-slate-500 block">Zero-raw-data shared</span>
           </div>
         </div>
       </div>

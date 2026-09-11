@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic } from "lucide-react";
+import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles, Sliders, MessageSquare } from "lucide-react";
 import { API_BASE } from "../lib/api";
+import { personalityAPI } from "../services/api";
 
 export const SettingsView: React.FC = () => {
   const [backendRunning, setBackendRunning] = useState(false);
@@ -12,6 +13,36 @@ export const SettingsView: React.FC = () => {
     () => localStorage.getItem("copper_continuous_voice") === "true"
   );
   const [toast, setToast] = useState<string | null>(null);
+
+  // Personality & Communication Style Adaptation State
+  const [personality, setPersonality] = useState({
+    warmth: 0.7,
+    formality: 0.4,
+    verbosity: 0.5,
+    humor: 0.3,
+    use_emojis: true,
+    code_first: true,
+  });
+
+  useEffect(() => {
+    personalityAPI
+      .getConfig()
+      .then((res: any) => {
+        if (res.data) setPersonality(res.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleUpdatePersonality = async (key: string, value: any) => {
+    const updated = { ...personality, [key]: value };
+    setPersonality(updated);
+    try {
+      await personalityAPI.updateConfig(updated);
+      setToast(`Personality parameter '${key}' updated.`);
+    } catch {
+      setToast("Failed to save personality setting.");
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -258,6 +289,131 @@ export const SettingsView: React.FC = () => {
               <p className="text-white text-xs font-mono mt-0.5">
                 D:\C.O.P.P.E.R
               </p>
+            </div>
+          </div>
+        </div>
+        {/* Personality & Communication Style Adaptation (Tier 4 Companion Intelligence) */}
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm font-mono text-xs">
+          <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+            <Sparkles size={17} className="text-purple-400" />
+            <span>AI Personality & Communication Style Adaptation</span>
+          </div>
+          <p className="text-slate-400 text-[11px]">
+            Tune C.O.P.P.E.R's conversational mannerisms, technical depth, formality, and behavioral patterns.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Warmth Slider */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-300 font-bold">Warmth & Empathy</span>
+                <span className="text-accent-400 font-bold">{Math.round(personality.warmth * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={personality.warmth}
+                onChange={(e) => handleUpdatePersonality("warmth", parseFloat(e.target.value))}
+                className="w-full accent-accent-500 cursor-pointer"
+              />
+              <span className="text-[10px] text-slate-500 block">Analytical ← → Empathetic</span>
+            </div>
+
+            {/* Formality Slider */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-300 font-bold">Formality Level</span>
+                <span className="text-purple-400 font-bold">{Math.round(personality.formality * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={personality.formality}
+                onChange={(e) => handleUpdatePersonality("formality", parseFloat(e.target.value))}
+                className="w-full accent-purple-500 cursor-pointer"
+              />
+              <span className="text-[10px] text-slate-500 block">Casual Chat ← → Executive Briefing</span>
+            </div>
+
+            {/* Verbosity Slider */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-300 font-bold">Verbosity & Detail</span>
+                <span className="text-cyber-cyan font-bold">{Math.round(personality.verbosity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={personality.verbosity}
+                onChange={(e) => handleUpdatePersonality("verbosity", parseFloat(e.target.value))}
+                className="w-full accent-cyan-500 cursor-pointer"
+              />
+              <span className="text-[10px] text-slate-500 block">Terse Bullets ← → Comprehensive Explanations</span>
+            </div>
+
+            {/* Humor Slider */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-300 font-bold">Humor & Wit</span>
+                <span className="text-verdigris font-bold">{Math.round(personality.humor * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={personality.humor}
+                onChange={(e) => handleUpdatePersonality("humor", parseFloat(e.target.value))}
+                className="w-full accent-emerald-500 cursor-pointer"
+              />
+              <span className="text-[10px] text-slate-500 block">Strictly Serious ← → Playful Wit</span>
+            </div>
+          </div>
+
+          {/* Behavior Toggles */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="font-bold text-white text-xs">Code-First Responses</p>
+                <p className="text-slate-400 text-[10px]">Provide solution code immediately before prose</p>
+              </div>
+              <button
+                onClick={() => handleUpdatePersonality("code_first", !personality.code_first)}
+                className={`w-10 h-5 rounded-full p-0.5 transition-colors ${
+                  personality.code_first ? "bg-verdigris" : "bg-slate-700"
+                }`}
+              >
+                <div
+                  className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                    personality.code_first ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="font-bold text-white text-xs">Expressive Formatting & Emojis</p>
+                <p className="text-slate-400 text-[10px]">Use contextual symbols and icons in output</p>
+              </div>
+              <button
+                onClick={() => handleUpdatePersonality("use_emojis", !personality.use_emojis)}
+                className={`w-10 h-5 rounded-full p-0.5 transition-colors ${
+                  personality.use_emojis ? "bg-verdigris" : "bg-slate-700"
+                }`}
+              >
+                <div
+                  className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                    personality.use_emojis ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
             </div>
           </div>
         </div>

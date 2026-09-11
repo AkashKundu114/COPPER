@@ -22,11 +22,14 @@ import { CompanionHUDView } from "./pages/CompanionHUDView";
 import { BranchHeader } from "./components/chat/BranchHeader";
 import { BranchCompareModal } from "./components/chat/BranchCompareModal";
 import { branchingAPI, type BranchItem } from "./services/api";
+import { SmartClipboardDrawer } from "./components/ambient/SmartClipboardDrawer";
 
 import { DashboardView } from "./pages/DashboardView";
 import { TodayView } from "./pages/TodayView";
 import { TasksView } from "./pages/TasksView";
 import { ProjectsView } from "./pages/ProjectsView";
+import { MeetingsView } from "./pages/MeetingsView";
+import { EmailView } from "./pages/EmailView";
 import { MemoryView } from "./pages/MemoryView";
 import { ActivityView } from "./pages/ActivityView";
 import { SelfImprovementView } from "./pages/SelfImprovementView";
@@ -51,6 +54,7 @@ function MainApp() {
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [clipboardDrawerOpen, setClipboardDrawerOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [guardianChallenge, setGuardianChallenge] =
@@ -213,6 +217,10 @@ function MainApp() {
         return <TasksView />;
       case "projects":
         return <ProjectsView />;
+      case "meetings":
+        return <MeetingsView />;
+      case "email":
+        return <EmailView />;
       case "memory":
         return <MemoryView />;
       case "agents":
@@ -267,6 +275,8 @@ function MainApp() {
           drawerOpen={drawerOpen}
           onToggleDrawer={handleToggleDrawer}
           onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          onToggleClipboard={() => setClipboardDrawerOpen((prev) => !prev)}
+          isClipboardOpen={clipboardDrawerOpen}
         />
         <AnimatePresence mode="wait">
           <motion.div
@@ -325,6 +335,11 @@ function MainApp() {
           refresh();
           setSelectedAgent(null);
         }}
+      />
+
+      <SmartClipboardDrawer
+        isOpen={clipboardDrawerOpen}
+        onClose={() => setClipboardDrawerOpen(false)}
       />
 
       <SpiderSenseToast

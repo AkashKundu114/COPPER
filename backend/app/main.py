@@ -30,6 +30,7 @@ from app.api.routes import (
     code_review,
     cognitive,
     context_switch,
+    continuity,
     documents,
     email,
     episodes,
@@ -39,6 +40,7 @@ from app.api.routes import (
     meetings,
     memory,
     orchestration,
+    personality,
     predictions,
     privacy,
     projects,
@@ -50,6 +52,7 @@ from app.api.routes import (
     self_improvement,
     self_memory,
     skills,
+    skill_gaps,
     system,
     tasks,
     telemetry_routes,
@@ -60,6 +63,7 @@ from app.api.routes import (
     workflows,
     workspace,
     federated,
+    accountability,
 )
 from app.core.config import settings
 from app.core.logger import logger
@@ -140,6 +144,7 @@ app.include_router(ambient.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(clipboard.router, prefix="/api/v1")
 app.include_router(context_switch.router, prefix="/api/v1")
+app.include_router(continuity.router, prefix="/api/v1/continuity", tags=["context-continuity"])
 app.include_router(cognitive.router, prefix="/api/v1")
 app.include_router(cache.router, prefix="/api/v1")
 app.include_router(causal.router, prefix="/api/v1")
@@ -178,7 +183,10 @@ app.include_router(schedule.events_router, prefix="/api/v1")
 app.include_router(briefing.router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1")
 app.include_router(skills.router, prefix="/api/v1")
+app.include_router(skill_gaps.router, prefix="/api/v1")
 app.include_router(telemetry_routes.router, prefix="/api/v1")
+app.include_router(personality.router, prefix="/api/v1")
+app.include_router(accountability.router, prefix="/api/v1")
 
 # Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)

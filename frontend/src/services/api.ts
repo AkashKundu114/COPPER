@@ -418,4 +418,30 @@ export const federatedAPI = {
   getStats: () => api.get("/federated/stats"),
 };
 
+export const personalityAPI = {
+  getConfig: () => api.get("/personality/config"),
+  updateConfig: (config: any) => api.post("/personality/config", config),
+  getPromptAddon: () => api.get("/personality/prompt-addon"),
+};
+
+export const accountabilityAPI = {
+  getCommitments: () => api.get("/accountability/commitments"),
+  addCommitment: (title: string, deadline: string, urgency = "medium") =>
+    api.post("/accountability/commitments", { title, deadline, urgency }),
+  fulfill: (id: string) => api.post(`/accountability/commitments/${id}/fulfill`),
+  getReport: () => api.get("/accountability/report"),
+};
+
+export const continuityAPI = {
+  getLatest: () => api.get("/continuity/latest"),
+  saveSnapshot: (data: any) => api.post("/continuity/snapshot", data),
+  getResumePrompt: () => api.get("/continuity/resume-prompt"),
+};
+
+export const skillGapsAPI = {
+  getGaps: () => api.get("/skill-gaps"),
+  recordTopic: (topic: string) => api.post("/skill-gaps/record", { topic }),
+  updateStatus: (gapId: string, status: string) => api.patch(`/skill-gaps/${gapId}`, { status }),
+};
+
 export default api;

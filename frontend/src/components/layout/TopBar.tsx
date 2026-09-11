@@ -26,6 +26,8 @@ const SECTION_TITLES: Record<string, string> = {
   today: "Today & Schedule",
   tasks: "Tasks & Objective Queue",
   projects: "Projects & Workspaces",
+  meetings: "Meeting Intelligence & Local Audio",
+  email: "Email Delegation & Drafts",
   activity: "Activity Stream & Logs",
   insights: "System Insights & Trends",
   food: "Nutrition & Bio Tracker",
@@ -158,6 +160,23 @@ export const TopBar: React.FC<TopBarProps> = ({
           <Server size={11} className="text-cyber-cyan" aria-hidden="true" />
           <span>LOCAL</span>
         </div>
+
+        {onToggleClipboard && (
+          <button
+            onClick={onToggleClipboard}
+            aria-label="Toggle Smart Clipboard history drawer"
+            aria-expanded={isClipboardOpen}
+            className={`no-drag flex items-center gap-1.5 px-3 py-2 rounded-xl border text-[11px] font-mono whitespace-nowrap flex-shrink-0 cursor-pointer transition-all ${
+              isClipboardOpen
+                ? "bg-accent-500/20 text-accent-400 border-accent-500/50 shadow-sm shadow-accent-500/20"
+                : "bg-white/[0.045] border-white/[0.09] hover:border-accent-500/50 hover:bg-white/[0.075] text-zinc-300 hover:text-white"
+            }`}
+            title="Smart Clipboard Intelligence"
+          >
+            <Clipboard size={12} className={isClipboardOpen ? "text-accent-400" : "text-zinc-400"} />
+            <span className="hidden xl:inline font-semibold">CLIPBOARD</span>
+          </button>
+        )}
 
         <button
           onClick={onToggleDrawer}
