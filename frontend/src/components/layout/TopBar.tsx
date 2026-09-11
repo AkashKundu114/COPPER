@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Server, Search, User, Eye, Crosshair } from "lucide-react";
+import { Server, Search, User, Eye, Crosshair, Clipboard } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
 import { useSensorMode, type SensorMode } from "../../context/SensorModeContext";
+import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
 
 interface TopBarProps {
   sectionTitle: string;
@@ -9,6 +10,8 @@ interface TopBarProps {
   drawerOpen: boolean;
   onToggleDrawer: () => void;
   onOpenCommandPalette: () => void;
+  onToggleClipboard?: () => void;
+  isClipboardOpen?: boolean;
 }
 
 const SECTION_TITLES: Record<string, string> = {
@@ -35,6 +38,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   drawerOpen,
   onToggleDrawer,
   onOpenCommandPalette,
+  onToggleClipboard,
+  isClipboardOpen,
 }) => {
   const { mode, setMode } = useSensorMode();
   const [timeUtc, setTimeUtc] = useState("");
@@ -139,6 +144,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="text-zinc-400">LOC</span>
           <span className="text-accent font-bold">{timeLocal}</span>
         </div>
+
+        {/* Real-Time Ambient Cognitive Load */}
+        <CognitiveStatusBadge />
 
         {/* DEFCON / Threat Status Badge */}
         <div className="hidden lg:flex items-center gap-1 px-2 py-0.5 rounded bg-verdigris/10 border border-verdigris/40 text-verdigris text-[10px] font-bold font-mono whitespace-nowrap flex-shrink-0" role="status" aria-label="System status: DEFCON 5, all systems nominal">

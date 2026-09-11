@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Search, X, Network, Brain } from "lucide-react";
 import { memoryCRUDAPI, type EpistemicMemoryItem } from "../lib/api";
 import { KnowledgeGraphView } from "../components/knowledge/KnowledgeGraphView";
+import { CausalExplorerTab } from "../components/memory/CausalExplorerTab";
+import { MemoryProvenanceTab } from "../components/memory/MemoryProvenanceTab";
 
 export const MemoryView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"graph" | "epistemic">("graph");
+  const [activeTab, setActiveTab] = useState<"graph" | "epistemic" | "causal" | "provenance">("graph");
   const [memories, setMemories] = useState<EpistemicMemoryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -99,6 +101,28 @@ export const MemoryView: React.FC = () => {
             <Brain size={14} />
             <span>Epistemic Memories ({memories.length})</span>
           </button>
+          <button
+            onClick={() => setActiveTab("causal")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === "causal"
+                ? "bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <Network size={14} />
+            <span>Causal Explorer</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("provenance")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === "provenance"
+                ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <Brain size={14} />
+            <span>Memory Provenance</span>
+          </button>
         </div>
 
         {activeTab === "epistemic" && (
@@ -117,6 +141,10 @@ export const MemoryView: React.FC = () => {
         <div className="flex-1 w-full overflow-hidden">
           <KnowledgeGraphView />
         </div>
+      ) : activeTab === "causal" ? (
+        <CausalExplorerTab />
+      ) : activeTab === "provenance" ? (
+        <MemoryProvenanceTab />
       ) : (
         <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-6xl mx-auto w-full custom-scrollbar">
           <div className="flex items-center justify-between">

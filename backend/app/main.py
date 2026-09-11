@@ -24,6 +24,7 @@ from app.api.routes import (
     automation,
     briefing,
     cache,
+    causal,
     chat,
     clipboard,
     code_review,
@@ -39,7 +40,9 @@ from app.api.routes import (
     memory,
     orchestration,
     predictions,
+    privacy,
     projects,
+    provenance,
     reminders,
     research,
     routing_analytics,
@@ -56,6 +59,7 @@ from app.api.routes import (
     wake,
     workflows,
     workspace,
+    federated,
 )
 from app.core.config import settings
 from app.core.logger import logger
@@ -138,9 +142,12 @@ app.include_router(clipboard.router, prefix="/api/v1")
 app.include_router(context_switch.router, prefix="/api/v1")
 app.include_router(cognitive.router, prefix="/api/v1")
 app.include_router(cache.router, prefix="/api/v1")
+app.include_router(causal.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 app.include_router(wake.router, prefix="/api/v1")
 app.include_router(memory.router, prefix="/api/v1")
+app.include_router(provenance.router, prefix="/api/v1")
+app.include_router(privacy.router, prefix="/api/v1")
 app.include_router(knowledge_graph.router, prefix="/api/v1")
 app.include_router(reminders.router, prefix="/api/v1")
 app.include_router(code_review.router, prefix="/api/v1")
@@ -160,6 +167,7 @@ app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
 app.include_router(self_improvement.router, prefix="/api/v1")
 app.include_router(training.router, prefix="/api/v1")
+app.include_router(federated.router, prefix="/api/v1")
 app.include_router(routing_analytics.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
 app.include_router(tasks.router, prefix="/api/v1")

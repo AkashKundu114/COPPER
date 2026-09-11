@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   Lock,
   Download,
   ShieldAlert,
   CheckCircle2,
+  Sparkles,
+  Sliders,
+  RefreshCw,
 } from "lucide-react";
+import { privacyAPI } from "../services/api";
 
 export function SecurityCenter() {
   const [firewallToggles, setFirewallToggles] = useState({
@@ -16,6 +20,62 @@ export function SecurityCenter() {
   });
 
   const [toast, setToast] = useState<string | null>(null);
+
+  // Differential Privacy State
+  const [dpBudget, setDpBudget] = useState<{
+    epsilon: number;
+    delta: number;
+    total_spent: number;
+    remaining: number;
+    pct_used: number;
+    queries: number;
+    needs_reset: boolean;
+  } | null>(null);
+  const [dpGuarantee, setDpGuarantee] = useState<string>("");
+  const [dpConfigOpen, setDpConfigOpen] = useState(false);
+  const [newEpsilon, setNewEpsilon] = useState(1.0);
+  const [newBudgetLimit, setNewBudgetLimit] = useState(10.0);
+
+  const loadDP = () => {
+    privacyAPI
+      .getBudget()
+      .then((res: any) => {
+        if (res.data) setDpBudget(res.data);
+      })
+      .catch(() => {});
+    privacyAPI
+      .getGuarantee()
+      .then((res: any) => {
+        if (res.data?.guarantee) setDpGuarantee(res.data.guarantee);
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    loadDP();
+  }, []);
+
+  const handleResetBudget = async () => {
+    try {
+      await privacyAPI.resetBudget();
+      setToast("Differential Privacy budget reset successfully.");
+      loadDP();
+    } catch {
+      setToast("Failed to reset DP budget.");
+    }
+  };
+
+  const handleSaveConfig = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await privacyAPI.configure(newEpsilon, 1e-5, newBudgetLimit);
+      setToast("DP parameters updated.");
+      setDpConfigOpen(false);
+      loadDP();
+    } catch {
+      setToast("Failed to update DP configuration.");
+    }
+  };
 
   const toggleSwitch = (key: keyof typeof firewallToggles) => {
     setFirewallToggles((prev) => {
@@ -198,6 +258,138 @@ export function SecurityCenter() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Differential Privacy Memory Guarantees (Phase 4 Novelty) */}
+      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm font-mono text-xs">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <Sparkles size={16} />
+            </div>
+            <div>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
+                Differential Privacy Memory Shield (ε, δ)
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Mathematical privacy bounds over vector memory queries and embeddings
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setDpConfigOpen(!dpConfigOpen)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition-all"
+            >
+              <Sliders size={12} />
+              <span>Configure Budget</span>
+            </button>
+            <button
+              onClick={handleResetBudget}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-800/60 text-purple-300 text-xs transition-all"
+              title="Reset cumulative epsilon spent"
+            >
+              <RefreshCw size={12} />
+              <span>Reset Budget</span>
+            </button>
+          </div>
+        </div>
+
+        {/* DP Guarantee Statement */}
+        {dpGuarantee && (
+          <div className="p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-purple-200 text-xs">
+            <span className="font-bold text-white block mb-0.5">Formal Privacy Guarantee:</span>
+            <span>{dpGuarantee}</span>
+          </div>
+        )}
+
+        {/* DP Budget Meter */}
+        {dpBudget ? (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-[10px] text-slate-400 block">Epsilon (Per Query)</span>
+              <span className="text-lg font-bold text-white font-sans">ε = {dpBudget.epsilon}</span>
+              <span className="text-[9px] text-slate-500 block">δ = {dpBudget.delta}</span>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-[10px] text-slate-400 block">Epsilon Spent</span>
+              <span className="text-lg font-bold text-amber-400 font-sans">{dpBudget.total_spent.toFixed(2)}</span>
+              <span className="text-[9px] text-slate-500 block">of { (dpBudget.total_spent + dpBudget.remaining).toFixed(1) } max</span>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-[10px] text-slate-400 block">Budget Used</span>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex-1 h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      dpBudget.pct_used > 80 ? "bg-danger-500" : dpBudget.pct_used > 50 ? "bg-amber-500" : "bg-verdigris"
+                    }`}
+                    style={{ width: `${Math.min(dpBudget.pct_used, 100)}%` }}
+                  />
+                </div>
+                <span className="text-xs font-bold text-white">{Math.round(dpBudget.pct_used)}%</span>
+              </div>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <span className="text-[10px] text-slate-400 block">Total Queries Filtered</span>
+              <span className="text-lg font-bold text-cyber-cyan font-sans">{dpBudget.queries}</span>
+              <span className="text-[9px] text-slate-500 block">Laplace / Gaussian noised</span>
+            </div>
+          </div>
+        ) : (
+          <div className="p-4 rounded-xl bg-slate-950 text-center text-slate-500 text-xs">
+            Loading Differential Privacy status...
+          </div>
+        )}
+
+        {/* Configuration Modal / Accordion */}
+        {dpConfigOpen && (
+          <form onSubmit={handleSaveConfig} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 animate-fade-in">
+            <h4 className="font-bold text-white text-xs">Update (ε, δ) Differential Privacy Parameters</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Epsilon (Privacy Budget, lower = more noise)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="10.0"
+                  value={newEpsilon}
+                  onChange={(e) => setNewEpsilon(parseFloat(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Max Cumulative Epsilon Limit</label>
+                <input
+                  type="number"
+                  step="1.0"
+                  min="1.0"
+                  max="50.0"
+                  value={newBudgetLimit}
+                  onChange={(e) => setNewBudgetLimit(parseFloat(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-white"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDpConfigOpen(false)}
+                className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-1.5 rounded-lg bg-accent-500 text-slate-950 font-bold hover:bg-accent-400"
+              >
+                Save DP Config
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ import {
   TaskGraphVisualizer,
   type TaskGraphData,
 } from "../components/chat/TaskGraphVisualizer";
+import { PassiveActivityTimeline } from "../components/ambient/PassiveActivityTimeline";
 import {
   RoutingExplanationCard,
   type RoutingExplanationData,
@@ -617,6 +618,7 @@ export const ActivityView: React.FC = () => {
         {(
           [
             "all",
+            "ambient",
             "tracing",
             "nexus",
             "cache",
@@ -637,7 +639,9 @@ export const ActivityView: React.FC = () => {
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            {cat === "tracing"
+            {cat === "ambient"
+              ? "🖥️ Passive Context & Sessions"
+              : cat === "tracing"
               ? "📡 Distributed Traces (OTel)"
               : cat === "nexus"
               ? "NEXUS Multi-Agent DAG"
@@ -652,6 +656,13 @@ export const ActivityView: React.FC = () => {
       {showBenchmarkAnalytics && (
         <div className="transition-all animate-in fade-in duration-300">
           <RoutingBenchmarkView />
+        </div>
+      )}
+
+      {/* Passive Context & Activity Timeline View (Phase 1 Ambient Intelligence) */}
+      {filter === "ambient" && (
+        <div className="space-y-4 animate-in fade-in duration-300">
+          <PassiveActivityTimeline />
         </div>
       )}
 
