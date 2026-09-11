@@ -107,6 +107,28 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ---
 
+## Ambient Intelligence, Companion & Knowledge Architecture (v2.5)
+
+C.O.P.P.E.R. v2.5 introduces an autonomous ambient layer that runs alongside daily engineering workflows without intrusion:
+
+### 1. Frontend Command Views
+- **Research Dossier Hub (`/research`):** Autonomous multi-step deep research orchestrator with live step-by-step progress tracking, Markdown dossier viewer, source citations table, and report export.
+- **Activity & Focus Dashboard (`TodayView`):** Real-time daily timeline tracking active focus time percentage, context switch velocity, and per-application workload breakdown.
+- **Cognitive State HUD:** Dynamic cognitive load monitor (`LOW`, `NORMAL`, `HIGH`, `DEEP_FOCUS`) calculating switch rates and streak times, with automatic flow-state notification suppression.
+- **Compositional Skill Library (`Insights`):** Parameterized execution of learned workflows with live invocation telemetry, average duration tracking, and success metrics.
+- **Differential Privacy Dashboard (`SecurityCenter`):** Local Differential Privacy ($(\varepsilon, \delta)$-DP) monitor rendering a live mathematical Laplace noise curve ($P(x) = \frac{1}{2b}e^{-|x|/b}$, scale $b = \Delta f / \varepsilon$) and cumulative epsilon budget meter.
+- **Causal Explorer (`Memory`):** Counterfactual reasoning engine resolving "Why did X occur?" queries with interactive question chips and causal event attribution chains.
+- **Meeting Manager & Priority Email Inbox (`/meetings`, `/email`):** Local audio meeting recording, transcript viewer, automated task extractor, and priority-classified inbox with autonomous draft responses.
+
+### 2. Cross-System Autonomous Loops
+- **Flow Protection:** Cognitive load detector suppresses clipboard processing toasts and interruptive alerts when the user is in `DEEP_FOCUS`.
+- **Context-Aware Briefings:** Context watcher telemetry feeds morning briefings, end-of-day summaries, and next-action predictive models.
+- **Causal Auto-Recording:** Task completions, meeting summaries, and code reviews automatically record causal nodes and attribution links in `CausalEngine`.
+- **Skill Auto-Extraction:** Successful multi-agent DAG task executions automatically extract reusable parameterized skills into the `SkillLearner` library.
+- **Companion Tier:** Real-time conversational personality adaptation (warmth, formality, verbosity, code-first preference), accountability commitment tracking with fulfillment scores, and lossless cross-session context continuity snapshots.
+
+---
+
 ## Model & Subagent Topology (26 Artifacts / 39.5 GB)
 
 | Tier | Model Architecture | Quantization | Size | Core Specialization |

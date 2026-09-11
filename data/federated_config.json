@@ -1,0 +1,17 @@
+{
+    "self_peer_id": "25c8a854a1edf3a5",
+    "self_name": "COPPER-Node-Alpha",
+    "port": 8001,
+    "peers": [
+        {
+            "peer_id": "3d8ba8488a825fde",
+            "name": "COPPER-Node-Beta",
+            "host": "192.168.1.100",
+            "port": 8002,
+            "last_seen": "2026-09-11T18:11:53.771499+00:00",
+            "last_sync": null,
+            "status": "connected",
+            "rounds_participated": 0
+        }
+    ]
+}

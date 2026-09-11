@@ -1,0 +1,8 @@
+{
+  "epsilon": 1.0,
+  "delta": 1e-05,
+  "total_epsilon_spent": 0.15000000000000002,
+  "total_queries": 3,
+  "budget_limit": 10.0,
+  "last_reset": "2026-09-11T18:11:53.582815"
+}

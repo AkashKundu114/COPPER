@@ -64,6 +64,9 @@ from app.api.routes import (
     workspace,
     federated,
     accountability,
+    plugins,
+    notifications,
+    sync,
 )
 from app.core.config import settings
 from app.core.logger import logger
@@ -187,6 +190,9 @@ app.include_router(skill_gaps.router, prefix="/api/v1")
 app.include_router(telemetry_routes.router, prefix="/api/v1")
 app.include_router(personality.router, prefix="/api/v1")
 app.include_router(accountability.router, prefix="/api/v1")
+app.include_router(plugins.router, prefix="/api/v1")
+app.include_router(notifications.router, prefix="/api/v1")
+app.include_router(sync.router, prefix="/api/v1")
 
 # Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ebef8a40-1cd3-41a0-9b11-453faceb3296",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-09-11T23:42:27.937841",
+    "category": "urgent",
+    "status": "digested"
+  },
+  {
+    "id": "4bff7670-a6bc-4840-9821-02f576912828",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-09-11T23:43:44.464448",
+    "category": "urgent",
+    "status": "digested"
+  }
+]

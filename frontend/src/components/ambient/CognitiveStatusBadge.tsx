@@ -51,7 +51,7 @@ export const CognitiveStatusBadge: React.FC = () => {
       icon: Coffee,
     },
     stressed: {
-      label: "HIGG LOAD",
+      label: "HIGH LOAD",
       color: "text-danger-400 bg-danger-950/60 border-danger-800/40",
       icon: AlertTriangle,
     },
@@ -64,19 +64,67 @@ export const CognitiveStatusBadge: React.FC = () => {
 
   const current = stateConfig[profile.state] || stateConfig.normal_flow;
   const IconComponent = current.icon;
+  const [open, setOpen] = useState(false);
 
   return (
-    <div
-      className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-[10px] font-mono font-bold tracking-wider transition-all shadow-sm ${current.color}`}
-      title={`Cognitive Load: ${current.label} (${Math.round(profile.confidence * 100)}% conf). Switches/min: ${profile.window_switch_rate.toFixed(1)}. Focus Streak: ${profile.current_focus_streak.toFixed(1)}m.`}
-    >
-      <IconComponent size={12} className="animate-pulse" />
-      <span>{current.label}</span>
-      {profile.state === "deep_focus" && (
-        <span className="flex items-center gap-0.5 text-[9px] text-purple-300 font-normal">
-          <ShieldAlert size={9} />
-          Muted
-        </span>
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-[10px] font-mono font-bold tracking-wider transition-all shadow-sm cursor-pointer hover:opacity-90 ${current.color}`}
+        title={`Cognitive Load: ${current.label} (${Math.round(profile.confidence * 100)}% conf). Click to inspect.`}
+      >
+        <IconComponent size={12} className="animate-pulse" />
+        <span>{current.label}</span>
+        {profile.state === "deep_focus" && (
+          <span className="flex items-center gap-0.5 text-[9px] text-purple-300 font-normal">
+            <ShieldAlert size={9} />
+            Muted
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-10 w-72 p-3.5 rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-slate-800 shadow-2xl z-50 font-mono text-xs space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div className="flex items-center gap-2">
+              <IconComponent size={14} className="text-white" />
+              <span className="font-bold text-white text-xs font-sans">Cognitive Load State</span>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-slate-500 hover:text-white text-[10px]"
+            >
+              Close
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[10px]">
+            <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800/60">
+              <span className="text-slate-400 block">Switch Rate</span>
+              <span className="text-white font-bold">{profile.window_switch_rate.toFixed(1)}/min</span>
+            </div>
+            <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800/60">
+              <span className="text-slate-400 block">Focus Streak</span>
+              <span className="text-accent-400 font-bold">{profile.current_focus_streak.toFixed(1)} mins</span>
+            </div>
+          </div>
+
+          {profile.recommendations && profile.recommendations.length > 0 && (
+            <div className="space-y-1.5 pt-1">
+              <span className="text-[10px] text-slate-400 block uppercase tracking-wider font-semibold">
+                Autonomous Recommendations
+              </span>
+              <div className="space-y-1">
+                {profile.recommendations.map((rec, i) => (
+                  <div key={i} className="flex items-start gap-1.5 text-[10px] text-slate-300">
+                    <span className="text-accent-400 mt-0.5">•</span>
+                    <span>{rec}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

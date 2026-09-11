@@ -386,6 +386,29 @@ class TaskGraphExecutor:
         # Record trace in ContextBus
         context_bus.record_trace(dag_id, result.to_dict())
 
+        # Auto-extract reusable compositional skill after successful multi-agent DAG
+        if success and len(plan.tasks) > 1:
+            try:
+                from app.ai.ambient.skill_learner import skill_learner
+                steps = [
+                    {
+                        "action": t.title,
+                        "agent": t.agent,
+                        "description": t.description,
+                        "status": t.status,
+                        "dependencies": t.dependencies,
+                    }
+                    for t in plan.tasks
+                ]
+                skill_learner.extract_skill(
+                    task_description=plan.goal,
+                    steps_executed=steps,
+                    result={"synthesis": final_text[:500], "duration_ms": elapsed_total},
+                )
+                logger.info(f"[TaskGraphExecutor] Auto-extracted reusable skill for goal: '{plan.goal}'")
+            except Exception as se:
+                logger.warning(f"Skill auto-extraction after task graph failed: {se}")
+
         complete_payload = result.to_dict()
         await context_bus.publish_event(session_id, dag_id, "task_graph_complete", complete_payload)
         if on_event:

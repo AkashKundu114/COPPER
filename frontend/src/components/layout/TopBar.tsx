@@ -28,6 +28,8 @@ const SECTION_TITLES: Record<string, string> = {
   projects: "Projects & Workspaces",
   meetings: "Meeting Intelligence & Local Audio",
   email: "Email Delegation & Drafts",
+  research: "Autonomous Deep Research Hub",
+  automations: "Visual Automation & Workflow Builder",
   activity: "Activity Stream & Logs",
   insights: "System Insights & Trends",
   food: "Nutrition & Bio Tracker",

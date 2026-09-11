@@ -1,7 +1,7 @@
 {
-    "warmth": 0.7,
-    "formality": 0.4,
-    "verbosity": 0.5,
+    "warmth": 0.9,
+    "formality": 0.15000000000000002,
+    "verbosity": 0.3,
     "humor": 0.3,
     "use_emojis": true,
     "code_first": true,

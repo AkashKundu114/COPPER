@@ -24,6 +24,19 @@ async def stop_recording(meeting_id: str):
     """Stop recording and trigger processing pipeline."""
     try:
         record = meeting_intelligence.stop_recording(meeting_id)
+        try:
+            from app.ai.knowledge.causal_engine import causal_engine
+            from app.core.logger import logger
+            action_count = len(getattr(record, "action_items", []) or [])
+            causal_engine.record_event(
+                description=f"Meeting concluded: '{record.title}' with {action_count} auto-extracted action items",
+                category="meeting_conclusion",
+                source="meeting_intelligence",
+                entities=[record.title],
+                metadata={"meeting_id": meeting_id, "duration_seconds": getattr(record, "duration_seconds", 0)}
+            )
+        except Exception as e:
+            logger.warning(f"Causal event recording failed for meeting: {e}")
         return {"status": "success", "meeting_id": meeting_id, "record": record}
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

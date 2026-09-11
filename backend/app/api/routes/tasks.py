@@ -84,7 +84,20 @@ def update_task(task_id: str, body: TaskUpdate, db: Session = Depends(get_db)):
     if body.duration is not None:
         task.duration = body.duration.strip()
     if body.status is not None:
+        old_status = task.status
         task.status = body.status
+        if body.status in ["completed", "done"] and old_status not in ["completed", "done"]:
+            try:
+                from app.ai.knowledge.causal_engine import causal_engine
+                causal_engine.record_event(
+                    description=f"Task completed: '{task.title}' (Project: {task.project})",
+                    category="task_completion",
+                    source="task_manager",
+                    entities=[task.project] if task.project else [],
+                    metadata={"task_id": task.id, "priority": task.priority}
+                )
+            except Exception as e:
+                logger.warning(f"Causal event recording failed on task completion: {e}")
 
     db.commit()
     db.refresh(task)

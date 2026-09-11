@@ -109,6 +109,24 @@ class PredictiveEngine:
                             pattern_source="recurring_task"
                         )
                         new_predictions.append(prediction)
+
+            # Context-watcher ambient integration
+            try:
+                from app.ai.ambient.context_watcher import context_watcher
+                ctx_stats = context_watcher.get_stats(hours=24)
+                top_apps = ctx_stats.get("top_apps", [])
+                if top_apps:
+                    top_app_name = top_apps[0].get("app_name", "Primary Workspace")
+                    new_predictions.append(PredictedTask(
+                        prediction_id=str(uuid.uuid4()),
+                        title=f"Resume workflow session in {top_app_name}",
+                        confidence=0.88,
+                        predicted_time=now.strftime("%A %H:00"),
+                        pattern_source="context_watcher_ambient",
+                        prepared_result={"primary_app": top_app_name, "auto_focus": True}
+                    ))
+            except Exception as e:
+                logger.warning(f"Context watcher prediction integration skipped: {e}")
             
             existing_pending = [p for p in self._predictions if p.status == "pending"]
             final_predictions = existing_pending

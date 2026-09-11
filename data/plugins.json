@@ -1,0 +1,35 @@
+[
+    {
+        "id": "spotify-controller",
+        "name": "Spotify Controller",
+        "version": "1.0.0",
+        "description": "Control Spotify playback.",
+        "author": "COPPER",
+        "category": "media",
+        "tools": [],
+        "enabled": true,
+        "installed_at": "2026-09-11T18:05:52.067219"
+    },
+    {
+        "id": "home-assistant",
+        "name": "Home Assistant",
+        "version": "1.0.0",
+        "description": "Integrate with Home Assistant for IoT control.",
+        "author": "COPPER",
+        "category": "iot",
+        "tools": [],
+        "enabled": true,
+        "installed_at": "2026-09-11T18:05:52.067219"
+    },
+    {
+        "id": "arxiv-fetcher",
+        "name": "Arxiv Fetcher",
+        "version": "1.0.0",
+        "description": "Search and fetch papers from Arxiv.",
+        "author": "COPPER",
+        "category": "productivity",
+        "tools": [],
+        "enabled": true,
+        "installed_at": "2026-09-11T18:05:52.067219"
+    }
+]

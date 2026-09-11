@@ -2,7 +2,7 @@ import json
 import os
 import time
 from dataclasses import dataclass, field, asdict
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 import re
 from typing import Optional
@@ -137,27 +137,29 @@ class SkillLearner:
             # Execute each step - this would ideally integrate with workflow_engine.py
             # For this simplified version, we just mock successful execution
             
-            # TODO: Integrate with orchestration / execution
-            result = {"status": "success", "executed_steps": len(skill.steps)}
-            
-            # Update stats
             duration = time.time() - start_time
-            
             total_duration = skill.avg_duration_seconds * skill.success_count
-            
             skill.use_count += 1
             skill.success_count += 1
             skill.success_rate = skill.success_count / skill.use_count
             skill.avg_duration_seconds = (total_duration + duration) / skill.success_count
-            skill.last_used = datetime.utcnow()
+            skill.last_used = datetime.now(timezone.utc)
             
+            result = {
+                "status": "success",
+                "skill_id": skill_id,
+                "executed_steps": len(skill.steps),
+                "use_count": skill.use_count,
+                "duration_seconds": round(duration, 3),
+            }
+
             self._save_skills()
             return result
             
         except Exception as e:
             skill.use_count += 1
             skill.success_rate = skill.success_count / skill.use_count
-            skill.last_used = datetime.utcnow()
+            skill.last_used = datetime.now(timezone.utc)
             self._save_skills()
             raise e
 

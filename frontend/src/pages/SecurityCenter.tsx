@@ -343,6 +343,62 @@ export function SecurityCenter() {
           </div>
         )}
 
+        {/* Laplace Noise Distribution Visualization */}
+        <div className="p-4 rounded-xl bg-slate-950 border border-purple-900/40 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-purple-300 font-sans uppercase tracking-wider flex items-center gap-1.5">
+              <span>Differential Privacy Noise Perturbation Curve</span>
+              <span className="text-[10px] text-slate-400 font-mono font-normal">
+                (Laplace Scale b = Δf / ε = {(1.0 / (dpBudget?.epsilon || 1.0)).toFixed(2)})
+              </span>
+            </span>
+            <span className="text-[10px] text-purple-400 font-mono">
+              P(x) = (1 / 2b) · e^(-|x| / b)
+            </span>
+          </div>
+
+          <div className="h-28 w-full relative flex items-end pt-2">
+            <svg className="w-full h-full overflow-visible" viewBox="0 0 300 80" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="laplaceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0.02" />
+                </linearGradient>
+              </defs>
+              {/* Generate Laplace bell curve based on current epsilon */}
+              {(() => {
+                const eps = dpBudget?.epsilon || 1.0;
+                const b = 1.0 / Math.max(eps, 0.1);
+                const points: string[] = [];
+                for (let px = 0; px <= 300; px += 5) {
+                  const x = (px - 150) / 35; // range roughly -4.2 to +4.2
+                  const y = (1.0 / (2 * b)) * Math.exp(-Math.abs(x) / b);
+                  // scale y into svg viewBox (max y ~ 70)
+                  const svgY = 75 - Math.min(y * 45 * Math.min(eps, 2.5), 70);
+                  points.push(`${px},${svgY.toFixed(1)}`);
+                }
+                const pathD = `M 0,75 L ${points.join(" L ")} L 300,75 Z`;
+                const lineD = `M ${points.join(" L ")}`;
+                return (
+                  <>
+                    <path d={pathD} fill="url(#laplaceGrad)" />
+                    <path d={lineD} fill="none" stroke="#c084fc" strokeWidth="2" />
+                    <line x1="150" y1="5" x2="150" y2="75" stroke="#a855f7" strokeWidth="1" strokeDasharray="2,2" />
+                  </>
+                );
+              })()}
+            </svg>
+            <div className="absolute inset-x-0 bottom-0 flex justify-between text-[9px] text-slate-500 font-mono pt-1">
+              <span>-3.0σ (High Noise)</span>
+              <span className="text-purple-400 font-bold">μ = 0 (Unperturbed Mean)</span>
+              <span>+3.0σ (High Noise)</span>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400 leading-normal pt-1 border-t border-slate-900">
+            Perturbation shield active: Mathematical calibrated Laplace noise is injected directly into vector memory similarities, ensuring plausible deniability against extraction attacks with (ε={dpBudget?.epsilon || 1.0}, δ=10⁻⁵) formal privacy.
+          </p>
+        </div>
+
         {/* Configuration Modal / Accordion */}
         {dpConfigOpen && (
           <form onSubmit={handleSaveConfig} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 animate-fade-in">

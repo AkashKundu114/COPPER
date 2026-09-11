@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles, Sliders, MessageSquare } from "lucide-react";
+import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles } from "lucide-react";
 import { API_BASE } from "../lib/api";
 import { personalityAPI } from "../services/api";
 

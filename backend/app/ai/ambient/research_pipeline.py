@@ -75,10 +75,14 @@ class ResearchPipeline:
                 json.dump(data, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save research reports: {e}")
-
     async def start_research(self, topic: str, depth: str = "standard", deadline: str | None = None) -> ResearchReport:
         report_id = str(uuid.uuid4())
-        deadline_dt = datetime.fromisoformat(deadline) if deadline else None
+        deadline_dt = None
+        if deadline:
+            try:
+                deadline_dt = datetime.fromisoformat(deadline.replace("Z", "+00:00"))
+            except Exception:
+                deadline_dt = datetime.now()
         
         report = ResearchReport(
             report_id=report_id,

@@ -17,6 +17,8 @@ import {
   UtensilsCrossed,
   Users,
   Mail,
+  Workflow,
+  BookOpen,
 } from "lucide-react";
 
 export type NavSection =
@@ -28,6 +30,8 @@ export type NavSection =
   | "projects"
   | "meetings"
   | "email"
+  | "research"
+  | "automations"
   | "memory"
   | "agents"
   | "activity"
@@ -75,6 +79,8 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "projects", label: "Projects", icon: Layers },
       { id: "meetings", label: "Meetings & Audio", icon: Users },
       { id: "email", label: "Email Delegation", icon: Mail },
+      { id: "research", label: "Research Hub", icon: BookOpen },
+      { id: "automations", label: "Automations", icon: Workflow },
       { id: "activity", label: "Activity Stream", icon: Activity },
       { id: "insights", label: "System Insights", icon: TrendingUp },
       { id: "food", label: "Nutrition & Bio", icon: UtensilsCrossed },

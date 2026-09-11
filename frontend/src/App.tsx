@@ -30,6 +30,8 @@ import { TasksView } from "./pages/TasksView";
 import { ProjectsView } from "./pages/ProjectsView";
 import { MeetingsView } from "./pages/MeetingsView";
 import { EmailView } from "./pages/EmailView";
+import { ResearchView } from "./pages/ResearchView";
+import { AutomationBuilderView } from "./pages/AutomationBuilderView";
 import { MemoryView } from "./pages/MemoryView";
 import { ActivityView } from "./pages/ActivityView";
 import { SelfImprovementView } from "./pages/SelfImprovementView";
@@ -221,6 +223,10 @@ function MainApp() {
         return <MeetingsView />;
       case "email":
         return <EmailView />;
+      case "research":
+        return <ResearchView />;
+      case "automations":
+        return <AutomationBuilderView />;
       case "memory":
         return <MemoryView />;
       case "agents":

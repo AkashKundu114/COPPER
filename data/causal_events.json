@@ -1,0 +1,189 @@
+{
+  "399e6531-35e6-49d5-bd3e-cbce688b5dd3": {
+    "event_id": "399e6531-35e6-49d5-bd3e-cbce688b5dd3",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-09-11T23:39:04.636197",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "b0e74798-49fa-4069-8bce-34aa778fd5bc": {
+    "event_id": "b0e74798-49fa-4069-8bce-34aa778fd5bc",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-09-11T23:39:04.636832",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
+  },
+  "e15deb3b-b091-414c-910e-16e150a2d02f": {
+    "event_id": "e15deb3b-b091-414c-910e-16e150a2d02f",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-09-11T23:40:32.119306",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "654ec31f-d6d4-446e-abbc-9ac09fea214b": {
+    "event_id": "654ec31f-d6d4-446e-abbc-9ac09fea214b",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-09-11T23:40:32.120000",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
+  },
+  "bd2bccfa-d716-480f-bd67-2923a229c3a2": {
+    "event_id": "bd2bccfa-d716-480f-bd67-2923a229c3a2",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-09-11T23:41:03.053699",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "ffccb7af-e680-48e8-8707-e89bc027c826": {
+    "event_id": "ffccb7af-e680-48e8-8707-e89bc027c826",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-09-11T23:41:03.054501",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
+  },
+  "5c8acbfe-7406-4292-9f89-70900cff90fe": {
+    "event_id": "5c8acbfe-7406-4292-9f89-70900cff90fe",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-09-11T23:41:29.075287",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "01978292-56a3-40b2-82e3-545cfecf7849": {
+    "event_id": "01978292-56a3-40b2-82e3-545cfecf7849",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-09-11T23:41:29.076011",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
+  },
+  "9593fce3-92df-4507-afed-17ed9c0402c6": {
+    "event_id": "9593fce3-92df-4507-afed-17ed9c0402c6",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-09-11T23:41:35.830571",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "16fc248f-dc90-4d7f-b6a8-1869b9fd8a90": {
+    "event_id": "16fc248f-dc90-4d7f-b6a8-1869b9fd8a90",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-09-11T23:41:35.831364",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "10bc6d05-911d-41a3-ba0d-047ff26d1f0a": {
+    "event_id": "10bc6d05-911d-41a3-ba0d-047ff26d1f0a",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-09-11T23:41:44.043331",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "3b79c3df-cfdd-4304-8c0d-133d22892102": {
+    "event_id": "3b79c3df-cfdd-4304-8c0d-133d22892102",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-09-11T23:41:44.044523",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "1de08785-c275-4021-a62b-835903c5baff": {
+    "event_id": "1de08785-c275-4021-a62b-835903c5baff",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-09-11T23:41:53.767615",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "7b52d769-3ee3-47d9-a220-489e705d8f1f": {
+    "event_id": "7b52d769-3ee3-47d9-a220-489e705d8f1f",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-09-11T23:41:53.768518",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "6586f207-16ea-419b-ad9a-753dda42ded0": {
+    "event_id": "6586f207-16ea-419b-ad9a-753dda42ded0",
+    "description": "API test event",
+    "timestamp": "2026-09-11T23:43:16.512783",
+    "category": "system",
+    "source": "pytest",
+    "entities": [
+      "test_runner"
+    ],
+    "metadata": {}
+  }
+}

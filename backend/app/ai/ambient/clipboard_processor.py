@@ -140,14 +140,22 @@ class ClipboardProcessor:
             logger.error(f"Error processing clipboard entry {entry.id}: {e}")
             analysis = {"error": str(e)}
 
+        # Check cognitive load state to protect deep focus flow
+        from app.ai.ambient.cognitive_load import cognitive_load_detector, CognitiveState
+        is_deep_focus = cognitive_load_detector.current_state == CognitiveState.DEEP_FOCUS
+
         result = {
             "type": entry.content_type,
             "analysis": analysis,
-            "suggested_actions": suggested_actions
+            "suggested_actions": suggested_actions,
+            "suppressed_for_focus": is_deep_focus,
+            "notifications_suppressed": is_deep_focus,
         }
 
         entry.processed = True
         entry.processing_result = result
+        if is_deep_focus:
+            logger.info(f"[ClipboardProcessor] Cognitive load is DEEP_FOCUS. Suppressed toast notifications for entry {entry.id}")
         return result
 
 

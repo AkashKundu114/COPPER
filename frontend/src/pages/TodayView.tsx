@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 import { DailyBriefingCard } from "../components/ambient/DailyBriefingCard";
+import { ActivityDashboardWidget } from "../components/ambient/ActivityDashboardWidget";
 
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
@@ -120,6 +121,9 @@ export const TodayView: React.FC = () => {
 
       {/* Autonomous Ambient Briefing & Predictive Anticipation Card */}
       <DailyBriefingCard />
+
+      {/* Live Activity & Focus Dashboard Widget */}
+      <ActivityDashboardWidget />
 
       {/* AI Proactive Recommendation Banner */}
       <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">

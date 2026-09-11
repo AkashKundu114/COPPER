@@ -1,0 +1,14 @@
+[
+  {
+    "prediction_id": "dc744c36-2518-406f-8f12-5b7287822d24",
+    "title": "Resume workflow session in Development Environment",
+    "confidence": 0.88,
+    "predicted_time": "Friday 18:00",
+    "pattern_source": "context_watcher_ambient",
+    "prepared_result": {
+      "primary_app": "Development Environment",
+      "auto_focus": true
+    },
+    "status": "pending"
+  }
+]

@@ -46,6 +46,17 @@ async def analyze_commit(req: AnalyzeCommitRequest):
             repo_path=req.repo_path,
             commit_hash=req.commit_hash,
         )
+        try:
+            from app.ai.knowledge.causal_engine import causal_engine
+            causal_engine.record_event(
+                description=f"Git commit analyzed: {req.commit_hash[:8]} in {req.repo_path}",
+                category="git_commit",
+                source="code_review_agent",
+                entities=[req.repo_path, req.commit_hash],
+                metadata={"commit": req.commit_hash}
+            )
+        except Exception as ce:
+            logger.warning(f"Causal event recording failed for git commit: {ce}")
         return res
     except Exception as e:
         logger.error(f"Error analyzing commit: {e}")

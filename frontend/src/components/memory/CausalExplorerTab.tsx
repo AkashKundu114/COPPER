@@ -104,6 +104,26 @@ export const CausalExplorerTab: React.FC = () => {
         </button>
       </form>
 
+      {/* Suggested Causal Questions */}
+      <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+        <span className="text-slate-500">Try asking:</span>
+        {[
+          "Why was there high context switching earlier?",
+          "Why did task execution succeed?",
+          "Why did the meeting generate 3 tasks?",
+          "Why did the test suite fail?",
+        ].map((sample) => (
+          <button
+            key={sample}
+            type="button"
+            onClick={() => setQuestion(sample)}
+            className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-all"
+          >
+            {sample}
+          </button>
+        ))}
+      </div>
+
       {/* Causal Chain Visualization */}
       {whyResult && (
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">

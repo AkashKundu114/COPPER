@@ -1,0 +1,23 @@
+[
+  {
+    "cause_id": "9593fce3-92df-4507-afed-17ed9c0402c6",
+    "effect_id": "16fc248f-dc90-4d7f-b6a8-1869b9fd8a90",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "10bc6d05-911d-41a3-ba0d-047ff26d1f0a",
+    "effect_id": "3b79c3df-cfdd-4304-8c0d-133d22892102",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "1de08785-c275-4021-a62b-835903c5baff",
+    "effect_id": "7b52d769-3ee3-47d9-a220-489e705d8f1f",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  }
+]
