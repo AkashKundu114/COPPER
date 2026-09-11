@@ -161,6 +161,15 @@ async def _training_curation_cycle():
         logger.debug(f"Scheduled CHRYSALIS curation cycle skipped: {e}")
 
 
+async def _predictive_pattern_analysis():
+    try:
+        from app.ai.ambient.predictive_engine import predictive_engine
+        predictions = predictive_engine.analyze_patterns()
+        logger.info(f"[PREDICTIONS] Analyzed patterns, found {len(predictions)} predictions for today")
+    except Exception as e:
+        logger.error(f"Predictive analysis failed: {e}")
+
+
 async def _daily_morning_briefing():
     try:
         from app.ai.ambient.daily_briefing import daily_briefing_service
@@ -217,6 +226,13 @@ def start_scheduler():
         replace_existing=True,
     )
     _scheduler.add_job(
+        _predictive_pattern_analysis,
+        CronTrigger(hour=7, minute=30),
+        id="predictive_pattern_analysis",
+        name="COPPER Predictive Pattern Analysis",
+        replace_existing=True,
+    )
+    _scheduler.add_job(
         _daily_morning_briefing,
         CronTrigger(hour=8, minute=0),
         id="morning_briefing",
@@ -238,6 +254,7 @@ def start_scheduler():
         )
         logger.info("COPPER Prompt Optimization Cycle scheduled (weekly)")
         logger.info("CHRYSALIS Training Data Curation scheduled (daily)")
+        logger.info("COPPER Predictive Pattern Analysis scheduled (daily 7:30 AM)")
 
         # Initialize Workflow Engine and register persistent automations
         try:
@@ -252,6 +269,12 @@ def start_scheduler():
             context_watcher.start()
         except Exception as cw_err:
             logger.error(f"Failed to start Context Watcher: {cw_err}")
+
+        try:
+            from app.ai.ambient.cognitive_load import cognitive_load_detector
+            cognitive_load_detector.start()
+        except Exception as cl_err:
+            logger.error(f"Failed to start Cognitive Load Detector: {cl_err}")
 
     except Exception as e:
         logger.warning(f"Scheduler start deferred: {e}")

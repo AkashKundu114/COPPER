@@ -26,19 +26,27 @@ from app.api.routes import (
     cache,
     chat,
     clipboard,
+    code_review,
+    cognitive,
+    context_switch,
     documents,
+    email,
     episodes,
     guardian,
     images,
     knowledge_graph,
+    meetings,
     memory,
     orchestration,
+    predictions,
     projects,
     reminders,
+    research,
     routing_analytics,
     schedule,
     self_improvement,
     self_memory,
+    skills,
     system,
     tasks,
     telemetry_routes,
@@ -127,20 +135,26 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.include_router(ambient.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(clipboard.router, prefix="/api/v1")
+app.include_router(context_switch.router, prefix="/api/v1")
+app.include_router(cognitive.router, prefix="/api/v1")
 app.include_router(cache.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 app.include_router(wake.router, prefix="/api/v1")
 app.include_router(memory.router, prefix="/api/v1")
 app.include_router(knowledge_graph.router, prefix="/api/v1")
 app.include_router(reminders.router, prefix="/api/v1")
+app.include_router(code_review.router, prefix="/api/v1")
+app.include_router(research.router, prefix="/api/v1")
 app.include_router(automation.router, prefix="/api/v1")
 app.include_router(workflows.router, prefix="/api/v1")
 app.include_router(vision.router, prefix="/api/v1")
 app.include_router(guardian.router, prefix="/api/v1")
 app.include_router(agents.router, prefix="/api/v1")
+app.include_router(meetings.router, prefix="/api/v1")
 app.include_router(audit.router, prefix="/api/v1")
 app.include_router(episodes.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
+app.include_router(email.router, prefix="/api/v1")
 app.include_router(orchestration.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(self_memory.router, prefix="/api/v1")
@@ -149,11 +163,13 @@ app.include_router(training.router, prefix="/api/v1")
 app.include_router(routing_analytics.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
 app.include_router(tasks.router, prefix="/api/v1")
+app.include_router(predictions.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(schedule.events_router, prefix="/api/v1")
 app.include_router(briefing.router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1")
+app.include_router(skills.router, prefix="/api/v1")
 app.include_router(telemetry_routes.router, prefix="/api/v1")
 
 # Mount static files directory for generated image assets
