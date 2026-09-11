@@ -8,7 +8,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from app.core.logger import logger
 from app.ai.llm.ollama_client import ollama_client
-from app.core.guardian import guardian
+from app.core.guardian import guardian_engine, DisagreementLevel
 from email.header import decode_header
 from typing import Optional
 
@@ -212,9 +212,9 @@ class EmailAgent:
             ])
             
             # Guardian check
-            screen_result = await guardian.screen(draft)
-            if not screen_result.get("safe", True):
-                logger.warning(f"Draft rejected by Guardian: {screen_result.get('reason')}")
+            verdict = guardian_engine.evaluate(draft)
+            if verdict.level >= DisagreementLevel.SAFETY:
+                logger.warning(f"Draft rejected by Guardian: {verdict.reasoning}")
                 target_email.draft_response = "Draft blocked by Guardian."
                 target_email.draft_status = "rejected"
                 return target_email.draft_response
