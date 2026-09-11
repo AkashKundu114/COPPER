@@ -286,7 +286,7 @@ export const BenchmarkMetricsView: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
+    <div className="modern-page p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
       {/* Header Banner */}
       <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141b2d] via-[#1a1512] to-[#090d16] border border-[#C97C4C]/30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#C97C4C]/5 rounded-full blur-3xl pointer-events-none" />

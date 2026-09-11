@@ -82,7 +82,7 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight font-sans">

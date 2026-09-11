@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Calendar,
   ArrowUpRight,
@@ -19,40 +20,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
   const [intelDismissed, setIntelDismissed] = useState(false);
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto text-text select-none pb-16 font-mono">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+      className="modern-page p-5 md:p-7 space-y-6 max-w-7xl mx-auto text-text select-none pb-16 font-mono"
+    >
       {/* Top Classified Mission Banner */}
-      <div className="p-6 rounded-2xl bg-[#05080e]/90 border border-cyber-cyan/30 shadow-[0_0_25px_rgba(0,240,255,0.12)] relative overflow-hidden backdrop-blur-xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyber-cyan/5 rounded-full blur-3xl pointer-events-none" />
+      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="p-6 md:p-7 rounded-3xl bg-[linear-gradient(135deg,rgba(21,31,47,0.88),rgba(7,11,19,0.9))] border border-white/[0.11] shadow-[0_20px_48px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.06)] relative overflow-hidden backdrop-blur-2xl">
+        <div className="absolute -top-24 right-0 w-[28rem] h-[28rem] bg-cyber-cyan/[0.10] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 left-1/3 w-72 h-72 bg-accent/[0.07] rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-verdigris/15 text-verdigris border border-verdigris/40 flex items-center gap-1.5">
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-verdigris/12 text-verdigris border border-verdigris/30 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
                 DEFCON 5 // SYSTEM OPTIMAL
               </span>
-              <span className="px-2.5 py-0.5 rounded text-[10px] bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 font-bold">
-                GOD'S EYE TACTICAL SURVEILLANCE
+              <span className="px-2.5 py-1 rounded-full text-[10px] bg-cyber-cyan/12 text-cyber-cyan border border-cyber-cyan/30 font-bold">
+                PRIVATE AI WORKSPACE
               </span>
-              <span className="px-2.5 py-0.5 rounded text-[10px] bg-accent/20 text-accent border border-accent/40 font-bold">
+              <span className="px-2.5 py-1 rounded-full text-[10px] bg-accent/15 text-accent border border-accent/30 font-bold">
                 100% AIR-GAPPED LOCALHOST
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-display font-bold text-white tracking-tight">
-              Tactical Operations Center
+            <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-[-0.035em]">
+              Your intelligence, in motion.
             </h1>
             <p className="text-xs text-zinc-400 mt-1">
-              Operator: <span className="text-white font-bold">Akash</span> • Core: C.O.P.P.E.R. v1.0.0 • 26 Neural Model Artifacts Loaded • Zero Egress
+              Operator: <span className="text-white font-bold">Akash</span> • C.O.P.P.E.R. v1.0.0 • 26 local models ready • zero egress
             </p>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
-            <div className="p-2.5 rounded-xl bg-black/60 border border-cyber-cyan/20 text-right">
+            <div className="p-3 rounded-2xl bg-black/25 border border-white/[0.08] text-right shadow-inner">
               <span className="text-zinc-500 block text-[9px] uppercase tracking-wider">
                 Intent Velocity
               </span>
               <span className="text-cyber-cyan font-bold text-sm">0.105 ms</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-black/60 border border-cyber-cyan/20 text-right">
+            <div className="p-3 rounded-2xl bg-black/25 border border-white/[0.08] text-right shadow-inner">
               <span className="text-zinc-500 block text-[9px] uppercase tracking-wider">
                 Mesh Throughput
               </span>
@@ -60,15 +67,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Centerpiece: God's Eye 3D Holographic Globe & Orbital Satellite Reconnaissance */}
-      <div className="w-full">
+      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="w-full">
         <TacticalGlobe />
-      </div>
+      </motion.div>
 
       {/* 3 Tactical Mission HUD Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Mission Timeline */}
         <HudCard tag="TIMELINE" subtag="DAILY-OPS">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
@@ -145,13 +152,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => onNavigate?.("chat")}
-                className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyber-cyan to-accent text-black font-bold text-xs transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)] hover:brightness-110 cursor-pointer"
+              className="lift-on-hover px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyber-cyan to-accent text-black font-bold text-xs shadow-[0_8px_20px_rgba(0,240,255,0.22)] hover:brightness-110 cursor-pointer"
               >
                 EXECUTE PLAN
               </button>
               <button
                 onClick={() => setIntelDismissed(true)}
-                className="px-3 py-1.5 rounded-lg bg-black/60 hover:bg-zinc-800 text-zinc-400 text-xs border border-white/10 transition-all cursor-pointer"
+              className="lift-on-hover px-3.5 py-2 rounded-xl bg-white/[0.045] hover:bg-white/[0.09] text-zinc-300 text-xs border border-white/[0.1] cursor-pointer"
               >
                 DISMISS
               </button>
@@ -176,9 +183,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             </button>
           </HudCard>
         )}
-      </div>
+      </motion.div>
 
       {/* Live Hardware & Telemetry Matrix */}
+      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
       <HudCard tag="TELEMETRY" subtag="ALL-SENSORS-OK">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
@@ -193,7 +201,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-3.5 rounded-xl bg-black/60 border border-cyber-cyan/20 space-y-1">
+          <div className="lift-on-hover p-3.5 rounded-2xl bg-black/25 border border-white/[0.08] space-y-1">
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
               Router Precision
             </span>
@@ -201,7 +209,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             <span className="text-[10px] text-cyber-cyan">0.052ms Avg Latency</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-black/60 border border-cyber-cyan/20 space-y-1">
+          <div className="lift-on-hover p-3.5 rounded-2xl bg-black/25 border border-white/[0.08] space-y-1">
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
               Threat Shield
             </span>
@@ -209,7 +217,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             <span className="text-[10px] text-verdigris">0 Security Breaches</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-black/60 border border-cyber-cyan/20 space-y-1">
+          <div className="lift-on-hover p-3.5 rounded-2xl bg-black/25 border border-white/[0.08] space-y-1">
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
               RTX 5060 VRAM
             </span>
@@ -217,7 +225,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             <span className="text-[10px] text-verdigris">1.6 GB Headroom</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-black/60 border border-cyber-cyan/20 space-y-1">
+          <div className="lift-on-hover p-3.5 rounded-2xl bg-black/25 border border-white/[0.08] space-y-1">
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
               Neural Mesh Models
             </span>
@@ -226,6 +234,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </div>
         </div>
       </HudCard>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

@@ -73,7 +73,7 @@ export const MemoryView: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page flex flex-col h-full w-full overflow-hidden text-slate-200 select-none font-mono text-xs">
       {/* View Switcher Header Tab Bar */}
       <div className="px-6 pt-4 pb-2 border-b border-cyber-cyan/15 bg-black/60 backdrop-blur-xl flex items-center justify-between">
         <div className="flex items-center gap-2 p-1 bg-black/80 rounded-xl border border-zinc-800">

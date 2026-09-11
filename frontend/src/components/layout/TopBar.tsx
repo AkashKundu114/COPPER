@@ -65,13 +65,13 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header
       role="banner"
       aria-label="Top Bar Controls and Status"
-      className="drag-region h-14 bg-[#05080e]/90 backdrop-blur-xl border-b border-cyber-cyan/20 flex items-center justify-between px-4 md:px-6 z-20 select-none shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+      className="drag-region h-16 bg-[#0a0f19]/72 backdrop-blur-2xl border-b border-white/[0.08] flex items-center justify-between px-4 md:px-6 z-20 select-none shadow-[0_6px_28px_rgba(0,0,0,0.18)]"
     >
       {/* Left: Section Title & Coordinates Ticker */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_8px_rgba(0,240,255,0.8)]" aria-hidden="true" />
-          <h2 className="font-display text-xs md:text-sm font-bold text-white tracking-wider uppercase whitespace-nowrap">
+          <div className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_rgba(0,240,255,0.8)]" aria-hidden="true" />
+          <h2 className="font-display text-xs md:text-sm font-bold text-white tracking-wide uppercase whitespace-nowrap">
             {displayTitle}
           </h2>
         </div>
@@ -89,7 +89,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onOpenCommandPalette}
           aria-label="Open command palette (Ctrl+K)"
-          className="no-drag flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-black/60 border border-cyber-cyan/30 text-[11px] text-zinc-300 hover:text-white hover:border-cyber-cyan/70 transition-all w-36 sm:w-48 md:w-56 justify-between group shadow-sm flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
+          className="no-drag flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.045] border border-white/[0.09] text-[11px] text-zinc-300 hover:text-white hover:border-cyber-cyan/50 hover:bg-white/[0.075] transition-all w-36 sm:w-48 md:w-56 justify-between group shadow-sm flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
         >
           <div className="flex items-center gap-1.5 overflow-hidden">
             <Search size={12} className="text-cyber-cyan group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true" />
@@ -104,7 +104,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div
           role="radiogroup"
           aria-label="Sensor display mode"
-          className="no-drag flex items-center p-0.5 rounded-lg bg-black/60 border border-cyber-cyan/30 font-mono text-[10px] flex-shrink-0"
+          className="no-drag flex items-center p-0.5 rounded-xl bg-white/[0.045] border border-white/[0.09] font-mono text-[10px] flex-shrink-0"
         >
           <span className="hidden sm:flex px-1 text-zinc-400 text-[9px] items-center gap-0.5" aria-hidden="true">
             <Eye size={10} className="text-cyber-cyan" />
@@ -118,7 +118,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               onClick={() => setMode(btn.id)}
               className={`px-1.5 py-0.5 rounded text-[10px] transition-all font-bold whitespace-nowrap cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
                 mode === btn.id
-                  ? "bg-cyber-cyan text-black shadow-sm"
+                  ? "bg-cyber-cyan text-black shadow-[0_2px_10px_rgba(0,240,255,0.28)]"
                   : "text-zinc-300 hover:text-white hover:bg-white/5"
               }`}
               title={`Switch sensor look: ${btn.label}`}
@@ -155,7 +155,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={onToggleDrawer}
           aria-label="Toggle user profile and agent details drawer"
           aria-expanded={drawerOpen}
-          className="no-drag flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 border border-cyber-cyan/30 hover:border-cyber-cyan text-[11px] text-zinc-300 hover:text-white transition-all font-mono whitespace-nowrap flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
+          className="no-drag flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.045] border border-white/[0.09] hover:border-cyber-cyan/50 hover:bg-white/[0.075] text-[11px] text-zinc-300 hover:text-white transition-all font-mono whitespace-nowrap flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
         >
           <User size={12} className="text-accent" aria-hidden="true" />
           <span className="font-semibold text-white">

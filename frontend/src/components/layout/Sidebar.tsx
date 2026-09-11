@@ -89,13 +89,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       aria-label="Main Navigation"
-      className="w-60 h-screen bg-[#05080e]/95 backdrop-blur-2xl border-r border-cyber-cyan/20 flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_40px_rgba(0,0,0,0.5)] font-mono flex-shrink-0"
+      className="w-64 h-screen bg-[#0a0f19]/85 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(0,0,0,0.28)] font-mono flex-shrink-0"
     >
       <div className="flex-1 flex flex-col min-h-0">
         {/* Brand & Classification Header */}
-        <div className="drag-region px-2.5 py-2.5 mb-2 border-b border-cyber-cyan/15 flex-shrink-0">
+        <div className="drag-region px-3 py-3 mb-2 border-b border-white/[0.07] flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="notch-corner w-8 h-8 bg-gradient-to-br from-cyber-cyan to-accent text-black flex items-center justify-center font-display font-black text-sm shadow-[0_0_12px_rgba(0,240,255,0.4)] flex-shrink-0" aria-hidden="true">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-cyan via-[#53c9e5] to-accent text-black flex items-center justify-center font-display font-black text-sm shadow-[0_8px_22px_rgba(0,240,255,0.25)] flex-shrink-0" aria-hidden="true">
               C
             </div>
             <div className="overflow-hidden">
@@ -105,13 +105,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </h1>
                 <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping flex-shrink-0" aria-hidden="true" />
               </div>
-              <p className="text-[9px] text-cyber-cyan font-mono tracking-wider uppercase truncate">
-                GOD'S EYE OPS // TIER-1
+              <p className="text-[9px] text-cyber-cyan/80 font-mono tracking-[0.14em] uppercase truncate">
+                PERSONAL INTELLIGENCE
               </p>
             </div>
           </div>
 
-          <div className="mt-2 px-2 py-0.5 rounded bg-black/60 border border-cyber-cyan/20 flex items-center justify-between text-[9px] text-zinc-300">
+          <div className="mt-3 px-2.5 py-1 rounded-lg bg-white/[0.035] border border-white/[0.07] flex items-center justify-between text-[9px] text-zinc-300">
             <span className="text-verdigris font-bold">AIR-GAPPED</span>
             <span className="text-zinc-400">26 MODELS</span>
           </div>
@@ -120,8 +120,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Navigation Sections */}
         <nav aria-label="Application Sections" className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
           {NAV_GROUPS.map((group) => (
-            <div key={group.category} className="space-y-0.5">
-              <div className="px-2 py-1 text-[8.5px] font-mono font-semibold tracking-wider text-zinc-400 uppercase flex items-center justify-between">
+            <div key={group.category} className="space-y-1">
+              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.14em] text-zinc-500 uppercase flex items-center justify-between">
                 <span>{group.category}</span>
               </div>
               {group.items.map((item) => {
@@ -133,10 +133,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => onSelectSection(item.id)}
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`${item.label} section${isActive ? ", current page" : ""}`}
-                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-cyan ${
+                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-cyan ${
                       isActive
-                        ? "copper-trace bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 shadow-sm"
-                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-white/5"
+                        ? "bg-gradient-to-r from-cyber-cyan/18 to-cyber-cyan/[0.04] text-cyber-cyan border border-cyber-cyan/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_6px_18px_rgba(0,240,255,0.06)]"
+                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-white/[0.055] hover:translate-x-0.5"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">
@@ -162,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Telemetry & Air-Gap Status Panel */}
-      <div className="p-2 rounded-xl bg-black/60 border border-cyber-cyan/20 space-y-1 font-mono text-[9px] flex-shrink-0 mt-2">
+      <div className="p-2.5 rounded-xl bg-white/[0.035] border border-white/[0.08] space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2 shadow-inner">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-verdigris shadow-[0_0_8px_rgba(0,255,136,0.6)] animate-pulse flex-shrink-0" />

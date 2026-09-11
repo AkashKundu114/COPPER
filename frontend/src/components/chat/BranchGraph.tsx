@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { GitFork } from "lucide-react";
 import { type BranchItem } from "../../services/api";
 
 interface BranchGraphProps {

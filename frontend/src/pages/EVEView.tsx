@@ -228,7 +228,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
   const lastLines = lines.slice(-3);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-8 overflow-hidden relative">
+    <div className="modern-page w-full h-full flex flex-col items-center justify-center p-8 overflow-hidden relative">
       <div className="flex-1 flex items-center justify-center relative w-full max-w-2xl">
         <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
           <div className="w-96 h-96 bg-accent rounded-full blur-[120px]" />

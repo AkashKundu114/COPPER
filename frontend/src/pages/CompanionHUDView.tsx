@@ -252,7 +252,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   const recentLines = lines.slice(-4);
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-between p-6 select-none overflow-hidden font-mono bg-[#03060a]">
+    <div className="modern-page relative w-full h-full flex flex-col items-center justify-between p-6 select-none overflow-hidden font-mono bg-[#03060a]">
       {/* Background Radial Glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div className="w-[600px] h-[600px] bg-cyber-cyan/5 rounded-full blur-[140px]" />

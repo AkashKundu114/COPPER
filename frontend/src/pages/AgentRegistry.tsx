@@ -86,7 +86,7 @@ export function AgentRegistry() {
   const activeCount = Object.values(runtimeState).filter((s) => s.status === "active").length;
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

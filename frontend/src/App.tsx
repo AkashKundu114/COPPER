@@ -176,7 +176,7 @@ function MainApp() {
         );
       case "chat":
         return (
-          <div className="relative w-full h-full flex flex-col items-center justify-between min-h-0">
+          <div className="modern-page relative w-full h-full flex flex-col items-center justify-between min-h-0">
             <div className="w-full max-w-[850px] pt-1 px-4 flex-shrink-0">
               <BranchHeader
                 activeBranchId={activeBranchId}
@@ -259,7 +259,7 @@ function MainApp() {
         tabIndex={-1}
         role="main"
         aria-label="Main Content"
-        className="flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg focus:outline-none"
+        className="modern-workspace flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg/40 focus:outline-none"
       >
         <TopBar
           sectionTitle={activeSection}
@@ -271,10 +271,10 @@ function MainApp() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 8, scale: 0.992 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className={`flex-1 w-full min-h-0 flex flex-col ${
               activeSection === "chat" ? "overflow-hidden" : "overflow-y-auto custom-scrollbar"
             }`}
