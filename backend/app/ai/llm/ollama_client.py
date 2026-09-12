@@ -191,12 +191,17 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
+        is_heavy = any(k in target_model for k in ["14b", "12b"])
+        default_ctx = 3072 if is_heavy else 2048
+
         options = {
             "temperature": 0.7,
             "top_p": 0.9,
             "repeat_penalty": 1.18,
             "repeat_last_n": 128,
-            "num_ctx": 8192,
+            "num_ctx": default_ctx,
+            "num_gpu": 99,
+            "num_batch": 512,
         }
 
         payload: dict[str, Any] = {
@@ -241,12 +246,17 @@ class OllamaClient:
         if keep_alive is None:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
+        is_heavy = any(k in target_model for k in ["14b", "12b"])
+        default_ctx = 3072 if is_heavy else 2048
+
         options = {
             "temperature": 0.7,
             "top_p": 0.9,
             "repeat_penalty": 1.18,
             "repeat_last_n": 128,
-            "num_ctx": 8192,
+            "num_ctx": default_ctx,
+            "num_gpu": 99,
+            "num_batch": 512,
         }
 
         payload: dict[str, Any] = {

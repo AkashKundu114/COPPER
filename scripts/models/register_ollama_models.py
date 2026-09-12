@@ -100,8 +100,18 @@ def register_models(force: bool = False):
 
         print(f"[+] [LINKING] {tag:<30} from {model_path.name}...", flush=True)
 
-        # Create temporary Modelfile
-        modelfile_content = f"FROM {model_path.as_posix()}\n"
+        # Create temporary Modelfile with optimized hardware parameters
+        is_heavy = any(k in tag for k in ["14b", "12b"])
+        ctx_len = 3072 if is_heavy else 2048
+        if "embed" in tag:
+            modelfile_content = f"FROM {model_path.as_posix()}\n"
+        else:
+            modelfile_content = (
+                f"FROM {model_path.as_posix()}\n"
+                f"PARAMETER num_gpu 99\n"
+                f"PARAMETER num_ctx {ctx_len}\n"
+                f"PARAMETER num_batch 512\n"
+            )
         with tempfile.NamedTemporaryFile("w", delete=False, suffix=".Modelfile") as tmp:
             tmp.write(modelfile_content)
             tmp_path = tmp.name
@@ -119,7 +129,8 @@ def register_models(force: bool = False):
                 print(f"    [OK] Successfully linked {tag}", flush=True)
                 success_count += 1
             else:
-                print(f"    [FAIL] Could not register {tag}: {proc.stderr.strip()}", flush=True)
+                err_msg = proc.stderr.encode("ascii", "replace").decode("ascii").strip()
+                print(f"    [FAIL] Could not register {tag}: {err_msg}", flush=True)
                 failed_count += 1
         finally:
             if os.path.exists(tmp_path):
@@ -135,4 +146,45 @@ def register_models(force: bool = False):
 
 if __name__ == "__main__":
     force_rebuild = "--force" in sys.argv
-    register_models(force=force_rebuild)
+    target_tag = None
+    for i, arg in enumerate(sys.argv):
+        if arg == "--tag" and i + 1 < len(sys.argv):
+            target_tag = sys.argv[i + 1]
+            break
+
+    if target_tag:
+        # Filter mappings for this specific tag
+        with open(MANIFEST_PATH, encoding="utf-8") as f:
+            manifest = json.load(f)
+        mappings = extract_model_mappings(manifest)
+        matched = [(t, p) for t, p in mappings if t == target_tag]
+        if not matched:
+            print(f"[-] Error: Tag '{target_tag}' not found in manifest.")
+            sys.exit(1)
+        tag, model_path = matched[0]
+        is_heavy = any(k in tag for k in ["14b", "12b"])
+        ctx_len = 3072 if is_heavy else 2048
+        if "embed" in tag:
+            modelfile_content = f"FROM {model_path.as_posix()}\n"
+        else:
+            modelfile_content = (
+                f"FROM {model_path.as_posix()}\n"
+                f"PARAMETER num_gpu 99\n"
+                f"PARAMETER num_ctx {ctx_len}\n"
+                f"PARAMETER num_batch 512\n"
+            )
+        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".Modelfile") as tmp:
+            tmp.write(modelfile_content)
+            tmp_path = tmp.name
+        try:
+            print(f"[+] [UPDATING MODELFILE] {tag} (num_ctx: {ctx_len}, num_gpu: 99, num_batch: 512)...", flush=True)
+            res = subprocess.run(["ollama", "create", tag, "-f", tmp_path], capture_output=True, text=True, encoding="utf-8", errors="replace")
+            if res.returncode == 0:
+                print(f"    [OK] Successfully updated Modelfile for {tag}", flush=True)
+            else:
+                print(f"    [FAIL] Error updating {tag}: {res.stderr}", flush=True)
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+    else:
+        register_models(force=force_rebuild)

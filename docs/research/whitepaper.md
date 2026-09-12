@@ -17,6 +17,12 @@ C.O.P.P.E.R. abandons the traditional "thin-client to cloud API" architecture in
 - **Inference Engine:** Direct integration with Ollama for hosting quantized local models (`qwen2.5:14b`, `qwen2.5-coder-abliterated:14b`).
 - **Data Layer:** A hybrid storage tier utilizing SQLite for structured relational data and ChromaDB for dense vector embeddings.
 
+<p align="center">
+  <img src="figures/fig8_system_architecture_topology.png" alt="Figure 8: C.O.P.P.E.R. Architecture Topology" width="95%" />
+  <br />
+  <em><b>Figure 8:</b> C.O.P.P.E.R. End-to-End Sovereign Air-Gapped Cognitive Architecture Topology. Depicting the strict 3-tier boundary between client UI, FastAPI agent dispatch, and local Ollama inference with zero cloud egress.</em>
+</p>
+
 ---
 
 ## 3. Multi-Agent Orchestration Engine
@@ -26,13 +32,20 @@ Executing multi-agent workflows on consumer hardware requires maximizing task ac
 ### 3.1 Dynamic System Prompt Injection
 Switching Parameter-Efficient Fine-Tuning (PEFT) adapters like LoRA between agent turns introduces massive latency penalties due to GPU memory I/O. C.O.P.P.E.R. circumvents adapter-swapping entirely by utilizing **Dynamic System Prompt Injection**.
 - A small set of base quantized model pools are kept persistently loaded in VRAM.
-- Specialized domain behaviors across **14 micro-subagents** (e.g., Code Auditor, Database Architect, Task Planner) are dynamically projected onto these base models via strict system instructions and JSON schema validations.
+- Specialized domain behaviors across **15 cognitive roles** (e.g., Code Auditor, Database Architect, Task Planner) are dynamically projected onto these base models via strict system instructions and JSON schema validations.
 
 ### 3.2 The 3-Stage Self-Healing Execution Loop
 When executing OS-level operations or terminal commands, C.O.P.P.E.R. ensures execution resilience through an autonomous self-healing pattern:
 1. **Diagnostic Traversal:** The orchestration layer intercepts `stderr`, stack traces, and non-zero exit codes.
 2. **Strategy Adaptation:** The active agent runs a critique pass on its own failure, generating alternative execution flags or context corrections.
 3. **Fallback Agent Escalation:** If retry attempts exhaust the allocated budget, the task escalates to a larger frontier model pool (e.g., Qwen 14B) for complex resolution.
+
+<p align="center">
+  <img src="figures/fig5_multi_agent_routing_matrix.png" alt="Figure 5: Multi-Agent Routing Matrix" width="48%" />
+  <img src="figures/fig3_latency_throughput_pareto.png" alt="Figure 3: Latency vs Throughput Pareto Frontier" width="48%" />
+  <br />
+  <em><b>Figures 5 & 3:</b> (Left) Multi-agent intent classification and confusion matrix across 15 cognitive roles achieving 98.4% empirical accuracy. (Right) Empirical Pareto optimal frontier mapping first-token latency vs sustained throughput from the sub-second reflex tier to the heavy 14B cognitive tier.</em>
+</p>
 
 ---
 
@@ -59,6 +72,12 @@ $$\lambda_{\text{eff}}(m_i) = \frac{\lambda_T}{1 + \beta_{\text{plasticity}} \cd
 During prompt assembly, memories are ranked via a unified multi-factor relevance metric:
 $$S_{\text{unified}}(q, m_i) = 0.50 \cdot \text{Relevance}(v_q, v_{m_i}) + 0.35 \cdot C_i + 0.15 \cdot \mathcal{I}_i$$
 
+<p align="center">
+  <img src="figures/fig6_epistemic_memory_decay_dynamics.png" alt="Figure 6: Epistemic Memory Decay Dynamics" width="95%" />
+  <br />
+  <em><b>Figure 6:</b> Empirical dynamics of Epistemic Memory. (a) UMF-EDR temporal decay half-lives across Facts, Observations, and Hypotheses. (b) PW-EBR surprise-gated Bayesian log-odds jumps following congruent vs incongruent evidence.</em>
+</p>
+
 ---
 
 ## 5. Data Firewall & Zero-Trust Security
@@ -78,9 +97,15 @@ To protect user privacy during any voluntary cloud offloading (e.g., escalating 
 2. **Ephemeral Tokenization:** Sensitive entities are substituted with synthetic tokens (e.g., `[REDACTED_API_KEY_01]`). Mappings are vaulted in a volatile Redis cache with a strict 15-minute TTL.
 3. **Local De-Anonymization:** Upon receiving the cloud model output, local tokens are immediately re-hydrated with original values, ensuring zero PII egress.
 
+<p align="center">
+  <img src="figures/fig7_guardian_firewall_safety_roc.png" alt="Figure 7: Guardian Firewall Safety ROC" width="95%" />
+  <br />
+  <em><b>Figure 7:</b> Guardian Alignment Engine & Data Firewall Threat Mitigation. (a) ROC curve across 350 red-team jailbreak attacks achieving AUROC = 0.998. (b) Threat catch rate comparison across adversarial categories.</em>
+</p>
+
 ---
 
-## 6. Technical Benchmarks & Comparisons
+## 6. Technical Benchmarks & Hardware Performance
 
 When benchmarked against existing enterprise and academic frameworks, C.O.P.P.E.R. unifies isolated design patterns into a cohesive, production-ready operating system:
 
@@ -88,20 +113,36 @@ When benchmarked against existing enterprise and academic frameworks, C.O.P.P.E.
 | :--- | :--- | :--- | :--- |
 | **Primary Focus** | Task decomposition & routing | Long-term context storage | **Unified Personal AI OS** |
 | **Execution Locality** | Cloud-first default | Cloud integrations | **100% Offline Local-First** |
-| **Multi-Agent Routing** | Static execution graphs | Single-agent | **30 Sub-Agents via Dynamic Prompting** |
+| **Multi-Agent Routing** | Static execution graphs | Single-agent | **15 Cognitive Roles via Dynamic Prompting** |
 | **Memory State** | Flat conversational history | Hierarchical working memory | **Bayesian Updates & Temporal Decay** |
 | **Context Retrieval** | Dense Vector RAG | Vector search | **SQLite Relational + ChromaDB Hybrid** |
 | **Security Architecture**| Manual sandbox boundaries | Prompt-based rules | **4-Level Guardian + Zero-Trust Firewall** |
 
+### 6.1 Edge Inference Telemetry & Hardware Scaling (RTX 5060)
+
+<p align="center">
+  <img src="figures/fig1_throughput_acceleration.png" alt="Figure 1: Throughput Acceleration" width="48%" />
+  <img src="figures/fig2_vram_memory_footprint.png" alt="Figure 2: VRAM Memory Footprint" width="48%" />
+</p>
+<p align="center">
+  <img src="figures/fig4_kv_cache_layer_offload_study.png" alt="Figure 4: KV Cache Layer Offload Study" width="48%" />
+  <img src="figures/fig9_context_scaling_vram_stability.png" alt="Figure 9: Context Scaling Stability" width="48%" />
+  <br />
+  <em><b>Figures 1, 2, 4, 9:</b> Local inference performance telemetry on NVIDIA RTX 5060 Laptop GPU. Live acceleration of 14B models (+81% to +220%), dual-memory allocation profiles, KV cache quantization ablation (f16 vs q8_0 vs q4_0), and context window scaling vs physical 8.12 GB VRAM ceiling.</em>
+</p>
+
 ---
 
-## 7. Conclusion & Roadmap
+## 7. Continuous Sovereign Self-Evolution Loop
 C.O.P.P.E.R. establishes a scalable blueprint for localized, privacy-first AI operating systems. By solving the multi-agent compute overhead problem, operationalizing epistemic belief tracking, and enforcing a zero-trust data firewall, it delivers a highly capable, autonomous assistant without compromising enterprise security. 
 
-**Future Development Roadmap:**
-- Implementation of dynamic local compute allocation based on real-time hardware telemetry (VRAM usage, thermal throttling).
-- Expansion of cross-agent epistemic consensus mechanisms.
-- Integration of multimodal capabilities directly into the local inference engine.
+Furthermore, C.O.P.P.E.R. incorporates an offline self-improvement pipeline: daily execution trajectories and user corrections are consolidated via Bayesian updates, distilled into high-quality instruction pairs by reasoning subagents, and folded back into the companion model persona with zero cloud exposure.
+
+<p align="center">
+  <img src="figures/fig10_sovereign_evolution_loop.png" alt="Figure 10: Sovereign Evolution Loop" width="95%" />
+  <br />
+  <em><b>Figure 10:</b> C.O.P.P.E.R. Sovereign Self-Evolution & Continuous Experience Distillation Loop. Trajectory capture, Bayesian consolidation, autonomous synthetic generation, and edge companion adaptation without third-party exposure.</em>
+</p>
 
 ---
 

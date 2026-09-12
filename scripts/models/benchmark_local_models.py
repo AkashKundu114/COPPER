@@ -65,7 +65,7 @@ MODELS = [
         "prompt": "Extract the key user preference from: 'I always prefer dark mode with high contrast and monospace font for coding'.",
     },
     {
-        "tag": "granite-3.2-2b-instruct",
+        "tag": "granite3.2-dense:2b",
         "name": "Granite-3.2-2B-Instruct",
         "tier": "SQL & Schema Guard (ORACLE)",
         "prompt": "Validate whether these tool arguments fit schema {query: str, limit: int}: {'query': 'Find file', 'limit': 10, 'extra_flag': True}.",
@@ -136,11 +136,34 @@ def run_benchmarks():
         print(f"\n[+] Testing {tag} ({name})...", flush=True)
         t0 = time.perf_counter()
 
+        # Evict any other loaded model from VRAM
+        try:
+            ps_res = requests.get(f"{OLLAMA_API}/api/ps", timeout=3)
+            if ps_res.status_code == 200:
+                for m in ps_res.json().get("models", []):
+                    loaded_tag = m.get("name", "")
+                    if loaded_tag and loaded_tag != tag:
+                        requests.post(f"{OLLAMA_API}/api/generate", json={"model": loaded_tag, "keep_alive": 0}, timeout=3)
+        except Exception:
+            pass
+
+        is_heavy = any(k in tag for k in ["14b", "12b"])
+        ctx_len = 3072 if is_heavy else 2048
+
         try:
             res = requests.post(
                 f"{OLLAMA_API}/api/generate",
-                json={"model": tag, "prompt": prompt, "stream": False},
-                timeout=60,
+                json={
+                    "model": tag,
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {
+                        "num_gpu": 99,
+                        "num_ctx": ctx_len,
+                        "num_batch": 512,
+                    },
+                },
+                timeout=90,
             )
             t1 = time.perf_counter()
             data = res.json()

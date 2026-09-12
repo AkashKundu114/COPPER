@@ -23,6 +23,12 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 AI_MODELS_DIR = ROOT_DIR / "ai-models"
 MANIFEST_PATH = AI_MODELS_DIR / "models_manifest.json"
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Master Test Cases for Each Agent
 TEST_PROMPTS = {
     # ── Heavyweight Core Agents ────────────────────────────────────────────────
@@ -235,13 +241,32 @@ def test_agent_model(key: str, conf: dict) -> None:
     # Try querying via Ollama API if running
     try:
         import httpx
-        with httpx.Client(timeout=120.0) as client:
+        with httpx.Client(timeout=300.0) as client:
+            # Auto-evict other models from VRAM to ensure 100% GPU allocation
+            try:
+                ps_res = client.get("http://127.0.0.1:11434/api/ps")
+                if ps_res.status_code == 200:
+                    for loaded in ps_res.json().get("models", []):
+                        m_tag = loaded.get("name", "")
+                        if m_tag and m_tag != conf["ollama_tag"]:
+                            client.post("http://127.0.0.1:11434/api/generate", json={"model": m_tag, "keep_alive": 0})
+            except Exception:
+                pass
+
+            is_heavy = any(k in conf["ollama_tag"] for k in ["14b", "12b"])
+            target_ctx = 3072 if is_heavy else 2048
+
             res = client.post(
                 "http://127.0.0.1:11434/api/generate",
                 json={
                     "model": conf["ollama_tag"],
                     "prompt": conf["prompt"],
                     "stream": False,
+                    "options": {
+                        "num_gpu": 99,
+                        "num_ctx": target_ctx,
+                        "num_batch": 512,
+                    },
                 },
             )
             if res.status_code == 200:

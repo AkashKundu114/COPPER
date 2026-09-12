@@ -16,6 +16,10 @@ class CodingAgent(BaseAgent):
                 "file_list",
                 "shell_execute",
                 "memory_query",
+                "codebase_map",
+                "codebase_symbol_lookup",
+                "git_status",
+                "git_diff",
             ],
             max_tool_steps=5,
         )

@@ -108,7 +108,7 @@ class ModelManager:
         mini_cfg = self.manifest.get("always_on_mini_model", {})
         if prefer_tag and mini_cfg.get("ollama_tag"):
             return mini_cfg["ollama_tag"]
-        return mini_cfg.get("name", "llama3.2:1b")
+        return mini_cfg.get("name", "qwen2.5:1.5b")
 
     def get_document_model(self, prefer_tag: bool = True) -> str:
         """
@@ -133,14 +133,14 @@ class ModelManager:
         if clean == mini_cfg.get("name", "").lower() or clean == mini_cfg.get("ollama_tag", "").lower():
             return True
         return any(
-            clean.startswith(prefix) for prefix in ["llama3.2:1b", "qwen2.5:0.5b", "smollm2:", "qwen2.5-coder:0.5b"]
+            clean.startswith(prefix) for prefix in ["qwen2.5:1.5b", "smollm2:", "qwen2.5-coder:3b", "granite3.2-dense:2b", "deepseek-r1:1.5b"]
         )
 
     def get_model_keep_alive(self, model_name: str | None) -> int | str:
         """
         Returns the keep-alive policy:
         - Mini model: -1 (infinite residency in VRAM for instant voice turns and routing)
-        - Heavy models (7B/8B): '2m' or short duration to minimize GPU strain
+        - Heavy models (12B/14B): '2m' or short duration to minimize GPU strain
         """
         if self.is_mini_model(model_name):
             return -1
@@ -151,7 +151,7 @@ class ModelManager:
         return self.manifest.get(
             "vram_policy",
             {
-                "always_on_mini_model": "llama3.2:1b",
+                "always_on_mini_model": "qwen2.5:1.5b",
                 "mini_model_keep_alive": -1,
                 "heavy_model_keep_alive": "2m",
                 "auto_unload_heavy_after_turn": True,
@@ -167,11 +167,12 @@ class ModelManager:
         clean = alias.strip().lower()
         if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "lightweight", "fast", "instant"]):
             tag = self.get_mini_model(prefer_tag=True)
+            return tag, "MERCURY (1.5B Reflex Tier)"
         if any(w in clean for w in ["3b", "coder-micro", "shell"]):
             return "qwen2.5-coder:3b", "FORGE / WARDEN (~3B Code & Shell Tier)"
         if any(w in clean for w in ["0.5b", "1.5b", "reflex", "gatekeeper", "firewall", "router"]):
             return "qwen2.5:1.5b", "MERCURY / AEGIS (1.5B Reflex Tier)"
-        if any(w in clean for w in ["14b", "large", "full", "heavy", "atlas", "standard", "default"]):
+        if any(w in clean for w in ["14b", "large", "full", "heavy", "atlas", "standard", "default", "8b", "7b"]):
             tag = self.get_model("core_agents.chat", "qwen2.5:14b")
             return tag, "ATLAS (14B Standard Cognitive Tier)"
         if "deepseek" in clean or "reason" in clean or "math" in clean:

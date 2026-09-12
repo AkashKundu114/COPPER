@@ -41,6 +41,9 @@ class ResearchAgent(BaseAgent):
                 "file_read",
                 "file_list",
                 "memory_store",
+                "scrapling_scrape",
+                "arxiv_search",
+                "dataset_summary",
             ],
             max_tool_steps=5,
         )

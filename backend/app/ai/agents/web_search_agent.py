@@ -41,7 +41,7 @@ class WebSearchAgent(BaseAgent):
             agent_type=AgentType.WEB_SEARCH,
             name="RAPTOR (Web Search Agent)",
             description="Local privacy-preserving web search agent via SearXNG and clean-text page extraction.",
-            tools=["web_search", "web_fetch"],
+            tools=["web_search", "web_fetch", "scrapling_scrape"],
             max_tool_steps=6,
         )
         self.max_fetches_per_turn = 3

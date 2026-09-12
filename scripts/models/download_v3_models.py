@@ -111,7 +111,7 @@ MODELS = {
     },
     "oracle": {
         "agent": "ORACLE (SQL & Schema Guard)",
-        "repo": "ibm-granite/granite-3.2-2b-instruct-GGUF",
+        "repo": "ibm-research/granite-3.2-2b-instruct-GGUF",
         "filename": "granite-3.2-2b-instruct-Q4_K_M.gguf",
         "target_dir": AI_MODELS_DIR / "subagents" / "sql",
         "target_name": "granite-3.2-2b-instruct-Q4_K_M.gguf",
@@ -120,8 +120,8 @@ MODELS = {
     },
     "argus": {
         "agent": "ARGUS (Desktop Vision Eye)",
-        "repo": "Qwen/Qwen2.5-VL-3B-Instruct-GGUF",
-        "filename": "qwen2.5-vl-3b-instruct-q4_k_m.gguf",
+        "repo": "unsloth/Qwen2.5-VL-3B-Instruct-GGUF",
+        "filename": "Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf",
         "target_dir": AI_MODELS_DIR / "vision",
         "target_name": "Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf",
         "tier": "mini",

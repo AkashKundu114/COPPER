@@ -80,6 +80,10 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ## System Architecture
 
+<p align="center">
+  <img src="docs/images/fig8_system_architecture_topology.png" alt="C.O.P.P.E.R. Architecture Topology" width="100%" />
+</p>
+
 ```text
                                   ┌───────────────────────────┐
                                   │  Electron Desktop App     │
@@ -190,6 +194,44 @@ Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/bench
 *\*\* Naive Bayes failed to reach FACT threshold ($C \ge 0.85$) on authoritative user correction. PW-EBR converged instantly ($C=0.92$).*  
 *† Under UMF-EDR, 8 retrieval accesses over 45 days expanded effective half-life, maintaining $C=0.77$ vs. $0.38$ unretrieved.*  
 *‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
+
+### 3. Publication Research & Empirical Profiling Figures (IEEE / Nature Standards)
+
+All empirical benchmarks rendered at 320 DPI vector resolution using scientific publication styling:
+
+<p align="center">
+  <img src="docs/images/fig1_throughput_acceleration.png" alt="Figure 1: 14B Throughput Acceleration" width="48%" />
+  <img src="docs/images/fig2_vram_memory_footprint.png" alt="Figure 2: VRAM Allocation & Headroom" width="48%" />
+  <br />
+  <em><b>Figure 1 & 2:</b> (Left) Empirical 14B speedup (+81% to +220%) & 15-agent throughput spectrum on RTX 5060 Laptop GPU. (Right) Stacked dedicated GPU VRAM budget breakdown and host system RAM allocation with zero layer spilling.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig3_latency_throughput_pareto.png" alt="Figure 3: Pareto Frontier" width="48%" />
+  <img src="docs/images/fig4_kv_cache_layer_offload_study.png" alt="Figure 4: Layer Offloading & KV Cache Study" width="48%" />
+  <br />
+  <em><b>Figure 3 & 4:</b> (Left) Latency vs throughput Pareto optimal frontier across the 15-agent cognitive fleet. (Right) Layer offloading and KV cache quantization study (f16 vs q8_0 vs q4_0) on sustained generation throughput.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig5_multi_agent_routing_matrix.png" alt="Figure 5: Multi-Agent Intent Routing Matrix" width="48%" />
+  <img src="docs/images/fig6_epistemic_memory_decay_dynamics.png" alt="Figure 6: Epistemic Memory Decay Dynamics" width="48%" />
+  <br />
+  <em><b>Figure 5 & 6:</b> (Left) Multi-agent intent classification heatmap across 1,500 validation queries (98.4% mean accuracy). (Right) Epistemic memory dynamics: UMF-EDR half-life decay curves and PW-EBR surprise-gated Bayesian log-odds jumps.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig7_guardian_firewall_safety_roc.png" alt="Figure 7: Guardian Firewall Safety ROC" width="48%" />
+  <img src="docs/images/fig9_context_scaling_vram_stability.png" alt="Figure 9: Context Scaling Stability" width="48%" />
+  <br />
+  <em><b>Figure 7 & 9:</b> (Left) Adversarial red-teaming ROC curve (AUROC = 0.998) and category threat catch rates. (Right) Context window scaling vs 8.12 GB physical VRAM ceiling with f16 CPU spill threshold.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig10_sovereign_evolution_loop.png" alt="Figure 10: Sovereign Self-Evolution Loop" width="96%" />
+  <br />
+  <em><b>Figure 10:</b> C.O.P.P.E.R. Sovereign Self-Evolution & Continuous Experience Distillation Loop. Trajectory capture, Bayesian consolidation, autonomous synthetic generation, and edge companion adaptation without third-party exposure.</em>
+</p>
 
 | Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 - 8GB) |
 | :--- | :--- |

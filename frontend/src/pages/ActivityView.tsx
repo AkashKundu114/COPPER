@@ -125,9 +125,9 @@ const INITIAL_LOGS: ActivityLog[] = [
           status: "UNSET",
           attributes: {
             "agent.type": "coding",
-            "agent.name": "AXIS",
+            "agent.name": "VULCAN",
             "agent.mode": "auto",
-            "agent.target_model": "qwen2.5-coder-abliterated:7b",
+            "agent.target_model": "qwen2.5-coder-abliterated:14b",
           },
         },
         {
@@ -140,7 +140,7 @@ const INITIAL_LOGS: ActivityLog[] = [
           offset_ms: 12.0,
           status: "UNSET",
           attributes: {
-            "llm.model": "qwen2.5-coder-abliterated:7b",
+            "llm.model": "qwen2.5-coder-abliterated:14b",
             "llm.provider": "ollama",
             "llm.prompt_tokens": 54,
             "llm.completion_tokens": 142,

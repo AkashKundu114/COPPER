@@ -47,29 +47,30 @@ class OperatorDirectiveService:
             r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:llama3\.2:3b|llama3\.2-abliterated:3b|3b|llama\s*3b)\b",
             "3b",
         ),
-        # Micro / 0.5B
+        # Reflex / 1.5B
         (
-            r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:micro|ultra-light|0\.5b|qwen\s*0\.5b)\s+(?:models?|ai|llm)?\b",
-            "0.5b",
-        ),
-        # 1.5B
-        (
-            r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:1\.5b|qwen\s*1\.5b|deepseek\s*1\.5b)\s+(?:models?|ai|llm)?\b",
+            r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:micro|ultra-light|reflex|1\.5b|qwen\s*1\.5b)\s+(?:models?|ai|llm)?\b",
             "1.5b",
         ),
-        # Large / 8B / Heavy / Standard
+        # 3B Subagents (Forge / Warden)
         (
-            r"\b(?:use|switch to|switch back to|change to|set|restore)\s+(?:a\s+)?(?:larger?|full|heavy|8b|standard|default)\s+(?:models?|ai|llm)?\b",
-            "8b",
+            r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:3b|qwen\s*3b|coder\s*3b)\s+(?:models?|ai|llm)?\b",
+            "3b",
+        ),
+        # Standard / 14B / Heavy / Full Cognitive
+        (
+            r"\b(?:use|switch to|switch back to|change to|set|restore)\s+(?:a\s+)?(?:larger?|full|heavy|14b|standard|default|atlas)\s+(?:models?|ai|llm)?\b",
+            "14b",
         ),
         (
-            r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:llama3\.1:8b|llama3\.1-abliterated:8b|llama\s*8b|llama\s*3\.1)\b",
-            "8b",
+            r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:qwen2\.5:14b|qwen\s*14b|atlas)\b",
+            "14b",
         ),
         # Specific Model Families
-        (r"\b(?:use|switch to)\s+(?:the\s+)?deepseek(?:\s*r1|\s*7b)?\b", "deepseek"),
-        (r"\b(?:use|switch to)\s+(?:the\s+)?qwen(?:\s*coder|\s*7b)?\b", "qwen"),
-        (r"\b(?:use|switch to)\s+(?:the\s+)?mistral(?:\s*7b)?\b", "mistral"),
+        (r"\b(?:use|switch to)\s+(?:the\s+)?deepseek(?:\s*r1|\s*14b|\s*1\.5b)?\b", "deepseek"),
+        (r"\b(?:use|switch to)\s+(?:the\s+)?qwen(?:\s*coder|\s*14b|\s*3b)?\b", "coder"),
+        (r"\b(?:use|switch to)\s+(?:the\s+)?phi(?:\s*4|\s*14b)?\b", "phi"),
+        (r"\b(?:use|switch to)\s+(?:the\s+)?mistral(?:\s*nemo|\s*12b)?\b", "mistral"),
         # Reset to Adaptive Default
         (r"\b(?:reset|clear|auto|adaptive)\s+models?\b", "auto"),
     ]

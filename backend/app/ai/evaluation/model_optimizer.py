@@ -5,6 +5,16 @@ from app.core.logger import logger
 from app.database.models.response_evaluation import AgentModelPerformance
 from app.database.postgres import SessionLocal
 
+OBSOLETE_MODEL_PATTERNS = [":7b", ":8b", ":0.5b", "llama3.1", "llama3.2:1b", "falcon3"]
+
+
+def is_obsolete_model(model_name: str) -> bool:
+    if not model_name:
+        return True
+    clean = model_name.lower().strip()
+    return any(p in clean for p in OBSOLETE_MODEL_PATTERNS)
+
+
 # In-memory routing cache for microsecond lookup during chat turn execution
 _active_model_routes: dict[str, str] = {}
 
@@ -24,7 +34,8 @@ class ModelSelectionOptimizer:
                     .all()
                 )
                 for r in active_routes:
-                    _active_model_routes[r.agent_type.lower()] = r.model_name
+                    if not is_obsolete_model(r.model_name):
+                        _active_model_routes[r.agent_type.lower()] = r.model_name
                 logger.info(f"Loaded {len(_active_model_routes)} dynamic model routes: {_active_model_routes}")
             finally:
                 db.close()
@@ -35,7 +46,10 @@ class ModelSelectionOptimizer:
         """Fast in-memory lookup for dynamic model selection."""
         if not agent_type:
             return None
-        return _active_model_routes.get(agent_type.lower().strip())
+        model = _active_model_routes.get(agent_type.lower().strip())
+        if model and is_obsolete_model(model):
+            return None
+        return model
 
     def record_turn_performance(
         self,
