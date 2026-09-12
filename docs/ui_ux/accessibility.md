@@ -4,7 +4,7 @@
 
 ## 1. Accessibility (a11y) Standards
 
-C.O.P.P.E.R. strictly adheres to **WCAG 2.1 AA Standards** across web and Tauri desktop interfaces.
+C.O.P.P.E.R. strictly adheres to **WCAG 2.1 AA Standards** across web and Electron desktop interfaces.
 
 ### Key Accessibility Features
 

@@ -16,7 +16,7 @@
 - **Options under evaluation:**
   - *Option A:* Single universal 8B base model fine-tuned with LoRA adapters per agent tier.
   - *Option B:* Quantized sub-models permanently pinned in VRAM using Ollama `keep_alive`.
-- **Current Status:** Option A selected for V1 release.
+- **Current Status:** Option B (Dynamic System Prompt Injection across quantized models) selected for V1 release to eliminate GPU VRAM swapping latency.
 
 ### Question 3: Background Reflection Cycle Model Choice
 - **Issue:** Dedicated small local model (`subagents.summarizer` e.g. Qwen2.5-1.5B) vs. reusing whatever model is already warm in Ollama's `keep_alive` window to prevent GPU VRAM swapping during background thought cycles.

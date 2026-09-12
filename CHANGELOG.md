@@ -15,6 +15,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.5.0] - 2026-09-12
+
+### Ambient Intelligence & Continuous Context
+
+> **Achieved** continuous, unobtrusive background awareness **as measured by** sub-5ms acoustic wake-word detection and 100% offline multimodal analysis, **by integrating** openWakeWord, Whisper Large v3 Turbo, Kokoro-82M ONNX TTS, and SD-Turbo for 1-step local image generation.
+
+### Added
+- **Acoustic Wake-Word Engine:** Real-time "Hey COPPER" detection via openwakeword running 100% on CPU with <5ms latency and negligible VRAM impact.
+- **Multimodal AI Fleet Expansion:** Expanded from 30 agents to a 34-model fleet, integrating Qwen2.5-VL (7B/3B) for vision tasks and SD-Turbo (PICASSO) for 1-step offline image generation.
+- **Neural TTS Engine:** Switched primary text-to-speech engine to Kokoro-82M ONNX, offering <80ms latency and superior prosody over Piper (retained as fallback).
+- **Ambient Memory Capture:** Background telemetry now extracts epistemic facts, preferences, and relationships silently during day-to-day interactions.
+
+
+## [2.5.0] - 2026-09-12
+
+### Ambient Intelligence & Continuous Context
+
+> **Achieved** continuous, unobtrusive background awareness **as measured by** sub-5ms acoustic wake-word detection and 100% offline multimodal analysis, **by integrating** openWakeWord, Whisper Large v3 Turbo, Kokoro-82M ONNX TTS, and SD-Turbo for 1-step local image generation.
+
+### Added
+- **Acoustic Wake-Word Engine:** Real-time "Hey COPPER" detection via openwakeword running 100% on CPU with <5ms latency and negligible VRAM impact.
+- **Multimodal AI Fleet Expansion:** Expanded from 30 agents to a 34-model fleet, integrating Qwen2.5-VL (7B/3B) for vision tasks and SD-Turbo (PICASSO) for 1-step offline image generation.
+- **Neural TTS Engine:** Switched primary text-to-speech engine to Kokoro-82M ONNX, offering <80ms latency and superior prosody over Piper (retained as fallback).
+- **Ambient Memory Capture:** Background telemetry now extracts epistemic facts, preferences, and relationships silently during day-to-day interactions.
+
+- **Multi-Device Epistemic Memory Sync:** Peer-to-peer end-to-end encrypted memory synchronization for multi-device desktop/mobile setups.
+- **Custom Fine-Tuned LoRA Weights:** Specialized local fine-tuning scripts utilizing Unsloth for Llama 3.1 & Qwen 2.5 Coder models.
+- **Native Mobile Companion App:** React Native / Flutter companion client for mobile schedule and routine nudges.
+
+---
+
 ## [1.2.0] - 2026-09-09
 
 ### Algorithmic Novelties & Epistemic Operating System Milestones
@@ -86,7 +117,7 @@ This major release consolidates five architectural passes, resolving legacy sing
 ### Fixed
 - Fixed SVG node overlap in radial layout map with deterministic 49px minimum pairwise spacing.
 - Fixed label rotation tumbling by adding counter-rotating CSS transforms.
-- Fixed CORS preflight headers for Vite dev server (`localhost:5173`) and Tauri desktop origin (`tauri://localhost`).
+- Fixed CORS preflight headers for Vite dev server (`localhost:5173`) and Electron desktop origin (`tauri://localhost`).
 
 ### Deprecated / Removed
 - Deprecated legacy local-only single-agent specification files.
@@ -99,3 +130,11 @@ This major release consolidates five architectural passes, resolving legacy sing
 ### Pre-Reconciliation Prototype
 - Initial prototype featuring basic FastAPI backend, SQLite memory database, and flat Chat UI.
 - Local LLM connection via Ollama for single-agent conversation.
+
+
+[Unreleased]: https://github.com/AkashKundu114/COPPER/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/AkashKundu114/COPPER/compare/v1.2.0...v2.5.0
+[1.2.0]: https://github.com/AkashKundu114/COPPER/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/AkashKundu114/COPPER/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/AkashKundu114/COPPER/compare/v0.9.0...v1.0.0
+[0.9.0]: https://github.com/AkashKundu114/COPPER/releases/tag/v0.9.0

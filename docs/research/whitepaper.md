@@ -12,9 +12,9 @@ This white paper details the system architecture of **C.O.P.P.E.R.**, a 100% loc
 
 ## 2. System Architecture Overview
 C.O.P.P.E.R. abandons the traditional "thin-client to cloud API" architecture in favor of a robust, localized stack designed for hardware efficiency:
-- **Frontend:** Tauri + React ecosystem, offering a lightweight desktop footprint with native OS integrations.
+- **Frontend:** Electron + React 19 ecosystem, offering a lightweight desktop footprint with native OS integrations.
 - **Backend Services:** Asynchronous FastAPI (Python 3.11) managing task routing, memory ingestion, and system state.
-- **Inference Engine:** Direct integration with Ollama for hosting quantized local models (`llama3.1:8b`, `qwen2.5-coder:14b`).
+- **Inference Engine:** Direct integration with Ollama for hosting quantized local models (`llama3.1:8b`, `qwen2.5-coder:7b`).
 - **Data Layer:** A hybrid storage tier utilizing SQLite for structured relational data and ChromaDB for dense vector embeddings.
 
 ---
@@ -26,7 +26,7 @@ Executing multi-agent workflows on consumer hardware requires maximizing task ac
 ### 3.1 Dynamic System Prompt Injection
 Switching Parameter-Efficient Fine-Tuning (PEFT) adapters like LoRA between agent turns introduces massive latency penalties due to GPU memory I/O. C.O.P.P.E.R. circumvents adapter-swapping entirely by utilizing **Dynamic System Prompt Injection**.
 - A small set of base quantized model pools are kept persistently loaded in VRAM.
-- Specialized domain behaviors across **30 distinct sub-agents** (e.g., Code Auditor, Database Architect, Task Planner) are dynamically projected onto these base models via strict system instructions and JSON schema validations.
+- Specialized domain behaviors across **14 micro-subagents** (e.g., Code Auditor, Database Architect, Task Planner) are dynamically projected onto these base models via strict system instructions and JSON schema validations.
 
 ### 3.2 The 3-Stage Self-Healing Execution Loop
 When executing OS-level operations or terminal commands, C.O.P.P.E.R. ensures execution resilience through an autonomous self-healing pattern:

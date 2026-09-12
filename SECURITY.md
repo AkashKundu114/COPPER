@@ -29,7 +29,7 @@ We take the security and privacy of C.O.P.P.E.R. extremely seriously. If you dis
 1. **Do NOT file a public GitHub Issue** for security vulnerabilities.
 2. Submit your report privately to the maintainer:
    - **Maintainer:** Akash Kundu
-   - **Email:** `security@copper-ai.local`
+   - **Email:** `akashkundu1152@gmail.com`
    - **GitHub Security Advisory:** [Open Private Advisory](https://github.com/AkashKundu114/COPPER/security/advisories/new)
    - **Subject Line:** `[SECURITY VULNERABILITY] <Component Name>: <Brief Summary>`
 3. **Include the following information in your report:**

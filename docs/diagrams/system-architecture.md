@@ -6,7 +6,7 @@
 
 ```mermaid
 graph TD
-    User([User User / Developer]) -->|HTTP / WebSocket| UI[Tauri Desktop / React Web App]
+    User([User User / Developer]) -->|HTTP / WebSocket| UI[Electron Desktop / React Web App]
     
     subgraph Frontend ["Frontend Container / Client"]
         UI --> NeuralMap[NeuralBrain SVG Ganglia Map]
@@ -21,7 +21,7 @@ graph TD
         Router --> Guardian[Guardian Alignment Engine Levels 0-3]
         Guardian --> Firewall[Data Firewall PII Scanner]
         Firewall --> Orchestrator[Agent Orchestrator Pipeline]
-        Orchestrator --> Agents[30 Specialized Sub-Agents]
+        Orchestrator --> Agents[9 Agents + 14 Micro-Subagents]
         Orchestrator --> SelfHealing[Self-Healing Retry Loop]
         Orchestrator --> Learner[Epistemic Memory Learner]
     end

@@ -19,7 +19,7 @@ By opening a pull request, submitting code, proposing algorithmic changes, or pr
 
 ## 2. Code of Conduct
 
-All contributors and participants must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Please report any unacceptable behavior to the project maintainer at `conduct@copper-ai.local`.
+All contributors and participants must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Please report any unacceptable behavior to the project maintainer at `akashkundu1152@gmail.com`.
 
 ---
 
@@ -31,7 +31,7 @@ We adhere to strict engineering principles across the repository:
 Every pull request must leave the modified module in a cleaner, better-documented, and better-tested state than when you found it.
 
 ### Small, Atomic Pull Requests
-- Keep PRs focused on a single concern, fix, or feature ($< 400$ lines modified when feasible).
+- Keep PRs focused on a single concern, fix, or feature (< 400 lines modified when feasible).
 - Do not submit monolithic PRs combining unrelated refactors, bug fixes, and feature additions.
 
 ### Google XYZ Impact Summary Format

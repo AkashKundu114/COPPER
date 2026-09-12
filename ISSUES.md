@@ -39,7 +39,7 @@ When filing a bug report, use the GitHub **Bug Report** template. To ensure rapi
   - Python version (`python --version`)
   - Node.js & npm version (`node -v`)
   - Ollama version & loaded model (e.g., `llama3.1:8b`)
-  - Deployment mode (Tauri Desktop App vs Browser SPA vs Docker)
+  - Deployment mode (Electron Desktop App vs Browser SPA vs Docker)
 - **Steps to Reproduce:** Clear, deterministic 1-2-3 steps to trigger the bug.
 - **Expected vs Actual Behavior:** What should have happened vs what actually happened.
 - **Un-truncated Error Logs:** Include backend FastAPI log snippets or browser console errors. Use code blocks (` ``` `).
@@ -72,7 +72,7 @@ Feature requests should explain the *why* as clearly as the *what*. We use the *
 
 **DO NOT** file public GitHub issues for security vulnerabilities, zero-day data firewall leaks, or un-redacted PII egress. 
 
-Please report security concerns privately to the maintainers at **security@copper-ai.org** or via GitHub Private Vulnerability Reporting. See `.github/SECURITY.md` for response SLAs and disclosure protocols.
+Please report security concerns privately to the maintainers at **akashkundu1152@gmail.com** or via GitHub Private Vulnerability Reporting. See `.github/SECURITY.md` for response SLAs and disclosure protocols.
 
 ---
 

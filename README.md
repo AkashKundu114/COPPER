@@ -9,16 +9,28 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-392%20Passed%20(100%25)-brightgreen.svg)]()
-[![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-25%20Passed%20(100%25)-brightgreen.svg)]()
-[![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components-brightgreen.svg)]()
-[![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)]()
-[![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~9%2C856%20QPS-blueviolet.svg)]()
-[![Guardian Catch Rate](https://img.shields.io/badge/Guardian%20Catch%20Rate-100.0%25-success.svg)]()
-[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)]()
-[![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)]()
+[![Tests Passing](https://img.shields.io/badge/Tests-477%20Passed%20(100%25)-brightgreen.svg)](tests/)
+[![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-25%20Passed%20(100%25)-brightgreen.svg)](frontend/tests/)
+[![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components-brightgreen.svg)](frontend/tests/)
+[![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
+[![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~9%2C856%20QPS-blueviolet.svg)](backend/eval/benchmark_report.md)
+[![Guardian Catch Rate](https://img.shields.io/badge/Guardian%20Catch%20Rate-100.0%25-success.svg)](backend/eval/benchmark_report.md)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)](docs/architecture/security.md)
+[![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)](.github/workflows/codeql.yml)
 
 ---
+
+## Table of Contents
+- [Overview & Project Independence](#overview--project-independence)
+- [The 3-Tier Multi-Agent Routing Hierarchy](#the-3-tier-multi-agent-routing-hierarchy)
+- [Ambient Intelligence & Continuous Context (v2.5)](#ambient-intelligence--continuous-context-v25)
+- [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
+- [Directory Structure](#directory-structure)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Hardware Constraints & Inference Optimization](#hardware-constraints--inference-optimization)
+- [Getting Started & Local Setup](#getting-started--local-setup)
+- [Documentation & Resources](#documentation--resources)
 
 ## Overview & Project Independence
 
@@ -27,7 +39,7 @@
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **100.0% Routing Precision:** Evaluated over 1,390 benchmark test cases at **~9,856 QPS** (0.100 ms average latency).
+- **97.77% Routing Precision:*[1]*** Evaluated over 1,390 benchmark test cases at **~9,856 QPS** (0.100 ms average latency).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
 - **392 / 392 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
 - **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).

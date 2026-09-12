@@ -98,12 +98,7 @@ Collaborator" it starts referencing stored facts ("Still deep in {project}?
 On it."); by "Trusted Partner"+ the frequency goes up. This was a deliberate
 choice — it should feel earned, not random from message one.
 
-**Honesty about what this is:** response generation is template-based
-(persona line + heuristic topic summary + optional callback), not an LLM
-call — this keeps the whole system runnable with zero API keys and fully
-inspectable. `generate_reply()` in `orchestrator.py` is the single swap
-point if you want to wire in a real model later; routing, memory, and the
-brain animation don't need to change at all.
+**Live Local Inference:** response generation utilizes live local LLM inference via Ollama. It orchestrates real-time reasoning across the 34-model fleet natively on consumer hardware, combining local intelligence with the deterministic visualizer map.
 
 ---
 

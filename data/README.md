@@ -15,7 +15,7 @@ data/
 ├── conversations/               # Multi-turn chat session histories and transcripts
 ├── audio/                       # Offline audio buffers and voice cache
 │   ├── recordings/              # Temporary microphone input WAV files
-│   └── cache/                   # Pre-synthesized Piper TTS audio voice snippets
+│   └── cache/                   # Pre-synthesized Kokoro-82M ONNX TTS (Piper fallback) audio voice snippets
 ├── screenshots/                 # Vision agent screen captures and OCR crops
 ├── reminders/                   # Active alarms, cron schedules & scheduler persistence
 └── logs/                        # Structured application runtime logs & security audit trails

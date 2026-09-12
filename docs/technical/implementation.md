@@ -9,7 +9,7 @@ C.O.P.P.E.R/
 ├── backend/
 │   ├── app/
 │   │   ├── ai/                      # AI Core & Agent Subsystems
-│   │   │   ├── agents/              # 30 Sub-agent definitions & implementations
+│   │   │   ├── agents/              # 9 Specialized Agents + 14 Micro-Subagent configurations & implementations
 │   │   │   ├── llm/                 # Ollama & OpenAI provider connectors
 │   │   │   ├── memory/              # Epistemic learner & ChromaDB RAG logic
 │   │   │   └── orchestration/       # Pipeline: Route -> Animate -> Respond -> Remember

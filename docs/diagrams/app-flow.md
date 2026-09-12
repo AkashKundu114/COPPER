@@ -8,7 +8,7 @@
 sequenceDiagram
     autonumber
     actor User
-    participant Frontend as React / Tauri UI
+    participant Frontend as React / Electron UI
     participant Router as Agent Router
     participant Guardian as Guardian Engine
     participant Firewall as Data Firewall

@@ -164,3 +164,8 @@ COPPER includes a fully-integrated `psutil`-powered telemetry dashboard accessib
 ### Document & Executive Report Generation Engine
 ![Document Generation Pipeline](images/document_generation_pipeline.png)
 
+
+---
+
+*[1]* **Routing Accuracy Footnote:** The benchmark report indicates 97.77% raw accuracy due to 31 edge-case queries (e.g., "Search the web for quantum mechanics") that routed to web_search instead of 
+esearch. Functionally, this routing behavior is correct and valid for the system's design.

@@ -41,13 +41,13 @@ C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating en
 │                                              ▼                                              │
 │  ┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐  │
 │  │ AXIS Software Engineer  │ ──> │ Forge Sandbox Engine   │ ──> │ Local AI Model Pool    │  │
-│  │ (Coding Agent)          │     │ (Isolated Execution)   │     │ (26 GGUF / ONNX Models)│  │
+│  │ (Coding Agent)          │     │ (Isolated Execution)   │     │ (34 Local AI Models)│  │
 │  └────────────┬────────────┘     └────────────────────────┘     └───────────┬────────────┘  │
 │               │                                                             │               │
 │               ▼                                                             ▼               │
 │  ┌─────────────────────────┐                                    ┌────────────────────────┐  │
 │  │ Epistemic Fact Engine   │                                    │ Offline Audio Pipeline │  │
-│  │ (Memory & Context)      │                                    │ (Whisper STT / Piper)  │  │
+│  │ (Memory & Context)      │                                    │ (Whisper STT / Kokoro TTS)  │  │
 │  └────────────┬────────────┘                                    └────────────────────────┘  │
 └───────────────┼─────────────────────────────────────────────────────────────┼───────────────┘
                 │                                                             │

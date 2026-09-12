@@ -37,5 +37,5 @@
 | :--- | :--- | :--- | :--- |
 | **v1.0-alpha** | Aug 2026 | Full-stack chat, 30 agents, neural visualizer, epistemic memory engine. | **Delivered** |
 | **v1.0-beta** | Oct 2026 | Guardian Levels 0-3, Data Firewall, Security Center audit log. | **In Progress** |
-| **v1.0-RC** | Dec 2026 | Standalone Tauri desktop bundle, zero-trust cloud offload. | **Planned** |
+| **v1.0-RC** | Dec 2026 | Standalone Electron desktop bundle, zero-trust cloud offload. | **Planned** |
 | **v2.0-GA** | Q1 2027 | Encrypted multi-device sync, fine-tuned local models. | **Planned** |

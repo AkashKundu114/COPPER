@@ -96,10 +96,10 @@ Real-time bi-directional streaming for text generation and visualizer node state
 
 ## 5. Desktop & Web Packaging Specifications
 
-### 5.1 Tauri Desktop Packaging
+### 5.1 Electron Desktop Packaging
 - **Target OS:** Windows 10/11 x64, macOS Sonoma+ (ARM64/x64), Linux (Ubuntu 22.04+).
 - **Binary Footprint:** $< 45\text{ MB}$ standalone executable (excluding local LLM weights).
-- **Process Model:** Rust main process spawning sidecar Python FastAPI server with automatic health monitoring and graceful shutdown.
+- **Process Model:** Electron main process managing the React frontend with automatic health monitoring and graceful shutdown.
 
 ### 5.2 React Web Interface
 - **Dev Server:** Vite with HMR.

@@ -6,7 +6,7 @@ Tailored for modern laptops with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**
 
 ## 1. Model Store Architecture & Manifest
 
-All models reside under the local [`ai-models/`](file:///d:/C.O.P.P.E.R/ai-models/) directory, orchestrated dynamically via [`ai-models/models_manifest.json`](file:///d:/C.O.P.P.E.R/ai-models/models_manifest.json):
+All models reside under the local [`ai-models/`](./) directory, orchestrated dynamically via [`ai-models/models_manifest.json`](./models_manifest.json):
 
 ```
 ai-models/

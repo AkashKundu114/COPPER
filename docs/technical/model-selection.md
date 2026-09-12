@@ -41,7 +41,7 @@ C.O.P.P.E.R. utilizes **Weight Abliteration** across its core and micro-agent ti
          ┌──────────────────┬─────────────────┼─────────────────┬──────────────────┐
          │                  │                 │                 │                  │
 ┌────────▼────────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌────────▼────────┐
-│   Chat / Core   │ │ AXIS (Coding) │ │ KINESIS (Doc) │ │ FORGE (Auto)  │ │ OMNI (Reasoning) │
+│   Chat / Core   │ │ AXIS (Coding) │ │ SCRIBE (Doc) │ │ FORGE (Auto)  │ │ OMNI (Reasoning) │
 │ Llama-3.1 8B    │ │ Qwen2.5 7B    │ │ Qwen2.5 7B    │ │ Mistral 7B    │ │ DeepSeek-R1 7B   │
 │ (Abliterated)   │ │ (Abliterated) │ │ (Abliterated) │ │ (Abliterated) │ │ (Abliterated)    │
 └────────┬────────┘ └───────┬───────┘ └───────┬───────┘ └───────┬───────┘ └────────┬─────────┘
@@ -67,7 +67,7 @@ C.O.P.P.E.R. utilizes **Weight Abliteration** across its core and micro-agent ti
 | :--- | :--- | :---: | :---: | :--- |
 | **CHAT Orchestrator** | `Meta-Llama-3.1-8B-Instruct-abliterated` | Q4_K_M | 4.58 GB | Primary conversational companion, multi-turn dialogue, emotional resonance. |
 | **AXIS Coding Agent** | `Qwen2.5-Coder-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | Full-stack software engineering, reverse engineering, sandbox code execution. |
-| **KINESIS Document Agent** | `Qwen2.5-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | High-speed multi-format document generation (PDF, Word, Markdown, Excel, LaTeX). |
+| **SCRIBE Document Agent** | `Qwen2.5-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | High-speed multi-format document generation (PDF, Word, Markdown, Excel, LaTeX). |
 | **FORGE Automation Agent** | `Mistral-7B-Instruct-v0.3-abliterated` | Q4_K_M | 4.07 GB | System command generation, desktop GUI control, task automation. |
 | **OMNI Reasoning Agent** | `DeepSeek-R1-Distill-Qwen-7B-abliterated` | Q4_K_M | 4.36 GB | Deep chain-of-thought math proofs, logic puzzles, algorithm design. |
 
