@@ -1,6 +1,6 @@
-# C.O.P.P.E.R. Model Setup & Management Guide (RTX 5060 8GB VRAM Optimized)
+# C.O.P.P.E.R. Model Setup & Management Guide (v3.0 - RTX 5060 8GB VRAM)
 
-Tailored for modern laptops with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**, and **16GB–32GB System RAM** running **Q4_K_M Lossless Abliterated GGUF models**, **Local Diffusion (PICASSO)**, and **openWakeWord / Kokoro Audio Pipelines**.
+Tailored for modern hardware with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**, and **16GB–32GB System RAM** running **Quantized Lossless Abliterated 14B GGUFs**, **Resident Mini Reflex Models**, **Local Diffusion (PICASSO)**, and **openWakeWord / Kokoro Audio Pipelines**.
 
 ---
 
@@ -10,9 +10,9 @@ All models reside under the local [`ai-models/`](./) directory, orchestrated dyn
 
 ```
 ai-models/
-├── core/                  # Lossless Abliterated 7B/8B Heavyweight Models (Chat, Coding, Docs, Reasoning, Auto)
-├── subagents/             # 14 Specialized Micro-Subagents (Router, Firewall, Diagnostics, Git, SQL, etc.)
-├── vision/                # Multimodal Vision Models (Qwen2.5-VL 7B & 3B)
+├── core/                  # 12B–14B Heavy Cognitive Models (ATLAS, VULCAN, PROMETHEUS, SCRIBE, DAEMON)
+├── subagents/             # 6 Resident Mini Reflex Models (AEGIS, MERCURY, FORGE, WARDEN, CRUCIBLE, CHRONOS, ORACLE)
+├── vision/                # Desktop Vision Model (ARGUS / Qwen2.5-VL 3B)
 ├── image/                 # 100% Offline 1-Step Local Diffusion (PICASSO / SD-Turbo)
 ├── embeddings/            # ChromaDB Dense Vectors (nomic-embed-text, ModernBERT, BGE Reranker)
 ├── audio/                 # Kokoro-82M ONNX TTS, Silero VAD v5, Whisper Large v3 Turbo
@@ -23,44 +23,40 @@ ai-models/
 
 ## 2. Hardware VRAM Discipline (8GB Budget)
 
-With **8GB VRAM**, running multiple heavy models simultaneously would cause Out-Of-Memory (OOM) crashes. C.O.P.P.E.R. enforces strict **VRAM Tiering**:
+With **8GB VRAM**, running multiple heavy models simultaneously would cause Out-Of-Memory (OOM) crashes. C.O.P.P.E.R. v3.0 enforces strict **Dynamic VRAM Tiering**:
 
-1. **Always-On Gatekeeper / Router (`Llama-3.2-1B-abliterated` / `Qwen2.5-0.5B-abliterated`)**:
-   - Pinned in VRAM with `keep_alive: -1` (~770 MB VRAM footprint).
-   - Handles sub-40ms intent classification, wake-word validation, and small reflex replies.
-2. **Transient Heavyweight Tier (7B–8B Core Models)**:
-   - Loaded on-demand into GPU VRAM (4.0–4.6 GB).
-   - Automatically unloaded by `ModelTierManager` after 60s–240s of idle time.
+1. **Always-On Resident Reflex Fleet (`Qwen2.5-1.5B`)**:
+   - Pinned in VRAM with `keep_alive: -1` (~0.94 GB VRAM footprint).
+   - Handles sub-30ms intent classification, firewall security, and translation without waking heavy models.
+2. **Dynamic Heavyweight Tier (12B–14B Core Models)**:
+   - Exactly ONE active 14B model slot loaded on-demand (~5.2–6.4 GB VRAM).
+   - Offloads 44/49 layers to GPU, remainder to system RAM.
+   - Automatically unloaded by `ModelTierManager` after 60s of idle time.
 3. **Ambient Audio & Wake-Word Layer**:
-   - Silero VAD v5 and openWakeWord run strictly on CPU ($\approx 1-3\%$ CPU usage, 0 MB VRAM).
+   - Silero VAD v5 and openWakeWord run strictly on CPU (~1-3% CPU usage, 0 MB VRAM).
 
 ---
 
-## 3. Ollama Modelfile Creation for Local GGUFs
+## 3. Automated Model Registration for Local GGUFs
 
-To register downloaded GGUFs into your local Ollama instance, create a `Modelfile`:
+To register downloaded GGUFs into your local Ollama instance automatically:
 
-```dockerfile
-# Example Modelfile for AXIS Coding Agent
-FROM ./ai-models/core/Qwen2.5-Coder-7B-Instruct-abliterated-Q4_K_M.gguf
-PARAMETER temperature 0.2
-PARAMETER top_p 0.95
-PARAMETER stop "<|im_end|>"
-PARAMETER stop "<|endoftext|>"
+```powershell
+python scripts/models/register_ollama_models.py
 ```
 
-Then create and verify the model:
-```bash
-ollama create qwen2.5-coder-abliterated:7b -f Modelfile
-ollama list
+Or test all agent models with targeted prompts:
+
+```powershell
+python scripts/models/test_agents.py --all
 ```
 
 ---
 
 ## 4. Model Store Integrity Verification
 
-Run the built-in integrity verifier to validate all 34 model files and storage health across all categories:
+Run the built-in integrity verifier to validate model files and storage health across all categories:
 
 ```powershell
-python scripts/models/verify_models.py
+python scripts/models/test_agents.py --list
 ```

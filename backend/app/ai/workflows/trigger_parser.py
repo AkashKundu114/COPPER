@@ -439,7 +439,7 @@ class TriggerParser:
             return heuristic_res
 
         # Try LLM call if available
-        llm_model = model_manager.get_model("subagents.summarizer", "llama3.1:8b")
+        llm_model = model_manager.get_model("subagents.router", "qwen2.5:1.5b")
         messages = [
             {"role": "system", "content": DAEMON_SYSTEM_PROMPT},
             {"role": "user", "content": clean_prompt},

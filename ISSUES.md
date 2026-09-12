@@ -38,7 +38,7 @@ When filing a bug report, use the GitHub **Bug Report** template. To ensure rapi
   - OS & Version (e.g., Windows 11, macOS Sonoma 14.2, Ubuntu 22.04)
   - Python version (`python --version`)
   - Node.js & npm version (`node -v`)
-  - Ollama version & loaded model (e.g., `llama3.1:8b`)
+  - Ollama version & loaded model (e.g., `qwen2.5:14b`)
   - Deployment mode (Electron Desktop App vs Browser SPA vs Docker)
 - **Steps to Reproduce:** Clear, deterministic 1-2-3 steps to trigger the bug.
 - **Expected vs Actual Behavior:** What should have happened vs what actually happened.

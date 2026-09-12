@@ -186,7 +186,7 @@ class EmailAgent:
         if await ollama_client.is_available():
             try:
                 prompt = f"Classify this email into one of: urgent, needs_response, fyi, spam. Reply ONLY with the classification.\nSubject: {email_msg.subject}\nBody: {email_msg.body}"
-                res = await ollama_client.chat([{"role": "user", "content": prompt}], model="qwen2.5:0.5b")
+                res = await ollama_client.chat([{"role": "user", "content": prompt}], model="qwen2.5:1.5b")
                 ans = res.lower().strip()
                 for p in ["urgent", "needs_response", "fyi", "spam"]:
                     if p in ans:

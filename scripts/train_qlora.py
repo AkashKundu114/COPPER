@@ -54,7 +54,7 @@ async def evict_ollama_models(ollama_url: str = "http://localhost:11434") -> Non
         print(f"[!] Could not connect to Ollama for VRAM eviction: {e}")
 
 
-async def restore_mini_model(ollama_url: str = "http://localhost:11434", mini_model: str = "qwen2.5:0.5b") -> None:
+async def restore_mini_model(ollama_url: str = "http://127.0.0.1:11434", mini_model: str = "qwen2.5:1.5b") -> None:
     """Warms up the always-on mini model in VRAM after training finishes."""
     if not httpx:
         return
@@ -251,8 +251,8 @@ async def main_async():
     parser.add_argument("--lora-rank", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--lora-dropout", type=float, default=0.05)
-    parser.add_argument("--ollama-url", type=str, default="http://localhost:11434")
-    parser.add_argument("--mini-model", type=str, default="qwen2.5:0.5b")
+    parser.add_argument("--ollama-url", type=str, default="http://127.0.0.1:11434")
+    parser.add_argument("--mini-model", type=str, default="qwen2.5:1.5b")
     args = parser.parse_args()
 
     args.lora_targets = ["q_proj", "v_proj", "k_proj", "o_proj"]

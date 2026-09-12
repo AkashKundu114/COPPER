@@ -25,7 +25,7 @@ class ReminderAgent(BaseAgent):
         return super()._build_system_prompt(combined_ctx)
 
     def get_target_model(self) -> str:
-        return model_manager.get_model("core_agents.chat", "llama3.1:8b")
+        return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
 
 
 reminder_agent = ReminderAgent()

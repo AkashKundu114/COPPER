@@ -136,7 +136,7 @@ class PlanResult:
 
 class NexusPlanner:
     def __init__(self):
-        self.model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
+        self.model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
 
     def should_consider_decomposition(self, message: str, router_confidence: float = 1.0) -> bool:
         """

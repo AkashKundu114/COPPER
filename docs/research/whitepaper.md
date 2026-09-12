@@ -14,7 +14,7 @@ This white paper details the system architecture of **C.O.P.P.E.R.**, a 100% loc
 C.O.P.P.E.R. abandons the traditional "thin-client to cloud API" architecture in favor of a robust, localized stack designed for hardware efficiency:
 - **Frontend:** Electron + React 19 ecosystem, offering a lightweight desktop footprint with native OS integrations.
 - **Backend Services:** Asynchronous FastAPI (Python 3.11) managing task routing, memory ingestion, and system state.
-- **Inference Engine:** Direct integration with Ollama for hosting quantized local models (`llama3.1:8b`, `qwen2.5-coder:7b`).
+- **Inference Engine:** Direct integration with Ollama for hosting quantized local models (`qwen2.5:14b`, `qwen2.5-coder-abliterated:14b`).
 - **Data Layer:** A hybrid storage tier utilizing SQLite for structured relational data and ChromaDB for dense vector embeddings.
 
 ---

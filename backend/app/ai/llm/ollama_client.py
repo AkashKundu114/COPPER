@@ -13,7 +13,7 @@ from app.core.logger import logger
 class OllamaClient:
     def __init__(self):
         self.base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
-        self.default_model = model_manager.get_model("core_agents.chat", "llama3.1:8b")
+        self.default_model = model_manager.get_model("core_agents.chat", "qwen2.5:14b")
 
     async def is_available(self) -> bool:
         try:
@@ -164,17 +164,17 @@ class OllamaClient:
                 pass
 
         if agent_type == AgentType.CHAT:
-            return model_manager.get_model("core_agents.chat", "llama3.1:8b")
+            return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
         elif agent_type == AgentType.CODING:
-            return model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
+            return model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
         elif agent_type == AgentType.DOCUMENT:
             return model_manager.get_document_model()
         elif agent_type == AgentType.AUTOMATION:
-            return model_manager.get_model("core_agents.automation", "mistral-abliterated:7b")
+            return model_manager.get_model("core_agents.automation", "mistral-nemo:12b")
         elif agent_type == AgentType.RESEARCH:
-            return model_manager.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
+            return model_manager.get_model("core_agents.reasoning", "phi4:14b")
         elif agent_type == AgentType.VISION:
-            return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl-abliterated:7b")
+            return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl:3b")
 
         return self.default_model
 

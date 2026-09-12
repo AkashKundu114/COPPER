@@ -70,7 +70,7 @@ class ChatService:
         if any(re.search(pat, msg_clean) for pat in simple_patterns):
             return model_manager.get_mini_model(prefer_tag=True)
 
-        return model_manager.get_model("core_agents.chat", "llama3.1:8b")
+        return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
 
     async def process_message(
         self,
@@ -628,12 +628,12 @@ class ChatService:
                 "agent.history_length": len(history),
             }):
                 if mode == "reasoning":
-                    model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
+                    model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
                 elif mode == "coding":
-                    model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b")
+                    model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
@@ -643,7 +643,7 @@ class ChatService:
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
                 elif mode == "research":
-                    model_name = model_manager.get_model("core_agents.reasoning", "mistral-abliterated:7b")
+                    model_name = model_manager.get_model("core_agents.document", "phi4:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)

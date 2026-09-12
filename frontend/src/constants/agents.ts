@@ -62,7 +62,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-emerald-950/30",
     border: "border-emerald-500/40",
     text: "text-emerald-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "MNEMONIC",
@@ -75,7 +75,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-teal-950/30",
     border: "border-teal-500/40",
     text: "text-teal-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "AEGIS",
@@ -88,7 +88,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-amber-950/30",
     border: "border-amber-500/40",
     text: "text-amber-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "SYNAPSE",
@@ -101,7 +101,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-green-950/30",
     border: "border-green-500/40",
     text: "text-green-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "LUMEN",
@@ -114,7 +114,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-yellow-950/30",
     border: "border-yellow-500/40",
     text: "text-yellow-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "OMNI",
@@ -127,7 +127,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-orange-950/30",
     border: "border-orange-500/40",
     text: "text-orange-400",
-    model: "deepseek-r1:7b",
+    model: "deepseek-r1:14b",
   },
 
   // ==========================================
@@ -144,7 +144,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-cyan-950/30",
     border: "border-cyan-500/40",
     text: "text-cyan-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "CYPHER",
@@ -157,7 +157,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-sky-950/30",
     border: "border-sky-500/40",
     text: "text-sky-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "CRUCIBLE",
@@ -170,7 +170,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-red-950/30",
     border: "border-red-500/40",
     text: "text-red-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "FORGE",
@@ -183,7 +183,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-blue-950/30",
     border: "border-blue-500/40",
     text: "text-blue-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "NEXUS",
@@ -196,7 +196,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-violet-950/30",
     border: "border-violet-500/40",
     text: "text-violet-400",
-    model: "deepseek-r1:7b",
+    model: "deepseek-r1:14b",
   },
   {
     id: "ARGUS",
@@ -209,7 +209,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-rose-950/30",
     border: "border-rose-500/40",
     text: "text-rose-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "APEX",
@@ -222,7 +222,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-emerald-950/30",
     border: "border-emerald-500/40",
     text: "text-emerald-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "QUANTA",
@@ -235,7 +235,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-indigo-950/30",
     border: "border-indigo-500/40",
     text: "text-indigo-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "TENSOR",
@@ -248,7 +248,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-pink-950/30",
     border: "border-pink-500/40",
     text: "text-pink-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
   {
     id: "GOLIATH",
@@ -261,7 +261,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-slate-900/60",
     border: "border-slate-700/60",
     text: "text-slate-300",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "PIVOT",
@@ -274,7 +274,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-green-950/30",
     border: "border-green-500/40",
     text: "text-green-400",
-    model: "qwen2.5-coder:7b",
+    model: "qwen2.5-coder-abliterated:14b",
   },
 
   // ==========================================
@@ -291,7 +291,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-sky-950/30",
     border: "border-sky-500/40",
     text: "text-sky-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "KINETIC",
@@ -304,7 +304,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-amber-950/30",
     border: "border-amber-500/40",
     text: "text-amber-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "PULSE",
@@ -317,7 +317,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-emerald-950/30",
     border: "border-emerald-500/40",
     text: "text-emerald-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "ZENITH",
@@ -330,7 +330,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-violet-950/30",
     border: "border-violet-500/40",
     text: "text-violet-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "LEDGER",
@@ -343,7 +343,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-yellow-950/30",
     border: "border-yellow-500/40",
     text: "text-yellow-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "VAULT",
@@ -356,7 +356,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-red-950/30",
     border: "border-red-500/40",
     text: "text-red-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "ECHO",
@@ -369,7 +369,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-slate-900/60",
     border: "border-slate-700/60",
     text: "text-slate-300",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "WARDEN",
@@ -382,7 +382,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-red-950/30",
     border: "border-red-600/40",
     text: "text-red-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "PROXY",
@@ -395,7 +395,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-cyan-950/30",
     border: "border-cyan-500/40",
     text: "text-cyan-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
 
   // ==========================================
@@ -412,7 +412,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-pink-950/30",
     border: "border-pink-500/40",
     text: "text-pink-400",
-    model: "qwen2-vl:7b",
+    model: "qwen2.5-vl:3b",
   },
   {
     id: "TALON",
@@ -425,7 +425,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-rose-950/30",
     border: "border-rose-500/40",
     text: "text-rose-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "PORTAL",
@@ -438,7 +438,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-purple-950/30",
     border: "border-purple-500/40",
     text: "text-purple-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "IRIS",
@@ -451,7 +451,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-fuchsia-950/30",
     border: "border-fuchsia-500/40",
     text: "text-fuchsia-400",
-    model: "qwen2-vl:7b",
+    model: "qwen2.5-vl:3b",
   },
   {
     id: "CANVAS",
@@ -464,7 +464,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-blue-950/30",
     border: "border-blue-500/40",
     text: "text-blue-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "PRISM",
@@ -477,7 +477,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-violet-950/30",
     border: "border-violet-500/40",
     text: "text-violet-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "RENDER",
@@ -490,7 +490,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-orange-950/30",
     border: "border-orange-500/40",
     text: "text-orange-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "SPECTRE",
@@ -503,7 +503,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-teal-950/30",
     border: "border-teal-500/40",
     text: "text-teal-400",
-    model: "qwen2-vl:7b",
+    model: "qwen2.5-vl:3b",
   },
   {
     id: "PICASSO",
@@ -516,7 +516,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-yellow-950/30",
     border: "border-yellow-500/40",
     text: "text-yellow-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
 
   // ==========================================
@@ -533,7 +533,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-green-950/30",
     border: "border-green-500/40",
     text: "text-green-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "PHANTOM",
@@ -546,7 +546,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-indigo-950/30",
     border: "border-indigo-500/40",
     text: "text-indigo-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "VANGUARD",
@@ -559,7 +559,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-sky-950/30",
     border: "border-sky-500/40",
     text: "text-sky-400",
-    model: "deepseek-r1:7b",
+    model: "deepseek-r1:14b",
   },
   {
     id: "AETHER",
@@ -572,7 +572,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-purple-950/30",
     border: "border-purple-500/40",
     text: "text-purple-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "BEACON",
@@ -585,7 +585,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-emerald-950/30",
     border: "border-emerald-500/40",
     text: "text-emerald-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "DIRECTOR",
@@ -598,7 +598,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-rose-950/30",
     border: "border-rose-500/40",
     text: "text-rose-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "GLITCH",
@@ -611,7 +611,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-amber-950/30",
     border: "border-amber-500/40",
     text: "text-amber-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "SPIDER",
@@ -624,7 +624,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-cyan-950/30",
     border: "border-cyan-500/40",
     text: "text-cyan-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
 
   // ==========================================
@@ -641,7 +641,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-cyan-950/30",
     border: "border-cyan-500/40",
     text: "text-cyan-400",
-    model: "whisper-base",
+    model: "whisper-large-v3-turbo",
   },
   {
     id: "ORACLE",
@@ -654,7 +654,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-violet-950/30",
     border: "border-violet-500/40",
     text: "text-violet-400",
-    model: "piper-tts",
+    model: "kokoro-tts",
   },
   {
     id: "HERMES",
@@ -667,7 +667,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-blue-950/30",
     border: "border-blue-500/40",
     text: "text-blue-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "AEON",
@@ -680,7 +680,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-amber-950/30",
     border: "border-amber-500/40",
     text: "text-amber-400",
-    model: "llama3.1:8b",
+    model: "qwen2.5:14b",
   },
   {
     id: "POLYGLOT",
@@ -693,7 +693,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-emerald-950/30",
     border: "border-emerald-500/40",
     text: "text-emerald-400",
-    model: "qwen2.5:7b",
+    model: "phi4:14b",
   },
   {
     id: "SIREN",
@@ -706,7 +706,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-pink-950/30",
     border: "border-pink-500/40",
     text: "text-pink-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "VORTEX",
@@ -719,7 +719,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-teal-950/30",
     border: "border-teal-500/40",
     text: "text-teal-400",
-    model: "deepseek-r1:7b",
+    model: "deepseek-r1:14b",
   },
   {
     id: "ENIGMA",
@@ -732,7 +732,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-red-950/30",
     border: "border-red-500/40",
     text: "text-red-400",
-    model: "mistral:7b",
+    model: "mistral-nemo:12b",
   },
   {
     id: "KINESIS",
@@ -745,7 +745,7 @@ export const AGENTS: AgentMeta[] = [
     bg: "bg-purple-950/30",
     border: "border-purple-500/40",
     text: "text-purple-400",
-    model: "qwen2.5:7b",
+    model: "phi4:14b",
   },
 ];
 

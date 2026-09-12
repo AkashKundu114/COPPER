@@ -12,7 +12,7 @@ router = APIRouter(prefix="/training", tags=["Training & Adapters (CHRYSALIS)"])
 
 
 class StartTrainingRequest(BaseModel):
-    base_model: str = Field(default="llama3.1:8b", description="Base model to fine-tune")
+    base_model: str = Field(default="qwen2.5:14b", description="Base model to fine-tune")
     target_agent: str = Field(default="all", description="Target agent specialization")
 
 

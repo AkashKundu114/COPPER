@@ -41,7 +41,7 @@ class _LoadedModelState:
 
 class ModelTierManager:
     def __init__(self):
-        self.gatekeeper_model = model_manager.get_model(GATEKEEPER_MODEL_PATH, default="qwen2.5:0.5b-instruct-q4_K_M")
+        self.gatekeeper_model = model_manager.get_model(GATEKEEPER_MODEL_PATH, default="qwen2.5:1.5b")
         self._resident: dict[str, _LoadedModelState] = {}
         self._sweep_task: asyncio.Task | None = None
         self._base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")

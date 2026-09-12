@@ -23,7 +23,7 @@ class LocalReRanker:
 
     def __init__(self, model_tag: str | None = None):
         self._custom_model_tag = model_tag
-        self.fallback_model = "qwen2.5:0.5b"
+        self.fallback_model = "qwen2.5:1.5b"
 
     def get_model(self) -> str:
         if self._custom_model_tag:

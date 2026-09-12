@@ -256,11 +256,11 @@ def test_model_selection_optimization():
     from app.ai.evaluation.model_optimizer import model_optimizer
     from app.ai.llm.ollama_client import ollama_client
 
-    # Record 3 high-quality turns for deepseek-r1:7b on coding agent
+    # Record 3 high-quality turns for deepseek-r1:14b on coding agent
     for _ in range(3):
         model_optimizer.record_turn_performance(
             agent_type="coding",
-            model_name="deepseek-r1:7b",
+            model_name="deepseek-r1:14b",
             quality_score=0.98,
             latency_ms=250.0,
             has_failure=False,
@@ -268,15 +268,15 @@ def test_model_selection_optimization():
 
     # Verify optimal model promoted
     optimal = model_optimizer.get_optimal_model("coding")
-    assert optimal == "deepseek-r1:7b"
+    assert optimal == "deepseek-r1:14b"
 
     # Verify select_model routes to the optimal model
     selected = ollama_client.select_model(AgentType.CODING)
-    assert selected == "deepseek-r1:7b"
+    assert selected == "deepseek-r1:14b"
 
     # Verify model rankings endpoint returns metrics
     client = TestClient(app)
     r = client.get("/api/v1/self-improvement/model-rankings")
     assert r.status_code == 200
     rankings = r.json()
-    assert any(rank["model_name"] == "deepseek-r1:7b" for rank in rankings)
+    assert any(rank["model_name"] == "deepseek-r1:14b" for rank in rankings)

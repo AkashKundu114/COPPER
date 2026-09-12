@@ -47,7 +47,7 @@ class WebSearchAgent(BaseAgent):
         self.max_fetches_per_turn = 3
 
     def get_target_model(self) -> str:
-        return model_manager.get_model("core_agents.web_search", "mistral:7b")
+        return model_manager.get_model("core_agents.web_search", "mistral-nemo:12b")
 
     def _build_system_prompt(self, memory_context: str = "") -> str:
         # Internal memory content is kept private and not passed to web search prompts

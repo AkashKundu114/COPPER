@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.core.constants import AgentType
 from app.core.logger import logger
@@ -145,7 +146,7 @@ class CodeReviewAgent:
             return "Basic PR description (LLM offline)", [{"file": "all", "risk_level": "unknown", "issues": "LLM offline"}], []
         
         try:
-            model = "qwen2.5-coder:7b"
+            model = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
             prompt_desc = f"Generate a concise PR description for these changes:\n\n{diff_text[:4000]}"
             pr_desc = await ollama_client.chat([{"role": "user", "content": prompt_desc}], model=model)
             

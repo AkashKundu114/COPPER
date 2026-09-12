@@ -177,7 +177,7 @@ export const trainingAPI = {
     const { data } = await api.post("/training/curate", { min_score: minScore, limit });
     return data;
   },
-  startTraining: async (baseModel: string = "llama3.1:8b", targetAgent: string = "all") => {
+  startTraining: async (baseModel: string = "qwen2.5:14b", targetAgent: string = "all") => {
     const { data } = await api.post("/training/start", { base_model: baseModel, target_agent: targetAgent });
     return data;
   },

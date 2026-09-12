@@ -62,9 +62,9 @@ def test_request_lifecycle_tracing():
         g_span.set_attribute("guardian.reasoning", "Safe code generation request")
 
     # 3. Agent Span
-    with trace_span("copper.agent", attributes={"agent.type": "coding", "agent.name": "AXIS"}) as a_span:
+    with trace_span("copper.agent", attributes={"agent.type": "coding", "agent.name": "VULCAN"}) as a_span:
         # 4. LLM Span
-        with trace_span("copper.llm", attributes={"llm.model": "qwen2.5-coder-abliterated:7b"}) as l_span:
+        with trace_span("copper.llm", attributes={"llm.model": "qwen2.5-coder-abliterated:14b"}) as l_span:
             l_span.set_attribute("llm.prompt_tokens", 45)
             l_span.set_attribute("llm.completion_tokens", 120)
             l_span.set_attribute("llm.total_tokens", 165)

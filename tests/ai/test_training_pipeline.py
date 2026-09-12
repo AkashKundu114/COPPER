@@ -176,7 +176,7 @@ def test_lora_trainer_artifact_generation():
     target_dir = TEST_ADAPTERS_DIR / version
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    trainer._save_adapter_artifacts(target_dir, version, "llama3.1:8b", 0.42, 0.45)
+    trainer._save_adapter_artifacts(target_dir, version, "qwen2.5:14b", 0.42, 0.45)
 
     config_path = target_dir / "adapter_config.json"
     meta_path = target_dir / "training_meta.json"
@@ -192,7 +192,7 @@ def test_lora_trainer_artifact_generation():
     assert cfg["lora_alpha"] == 32
     assert cfg["lora_dropout"] == 0.05
     assert cfg["target_modules"] == ["q_proj", "v_proj", "k_proj", "o_proj"]
-    assert cfg["base_model_name_or_path"] == "llama3.1:8b"
+    assert cfg["base_model_name_or_path"] == "qwen2.5:14b"
 
 
 def test_adapter_manager_lifecycle():
@@ -203,7 +203,7 @@ def test_adapter_manager_lifecycle():
         adapter = LoRAAdapter(
             version=version_tag,
             adapter_dir=str(TEST_ADAPTERS_DIR / version_tag),
-            base_model="llama3.1:8b",
+            base_model="qwen2.5:14b",
             target_agent="coding",
             status=AdapterStatus.CANDIDATE.value,
             training_loss=0.48,
@@ -272,7 +272,7 @@ def test_training_api_endpoints():
     assert r_status.status_code == 200
 
     # 5. POST /api/v1/training/start
-    r_start = client.post("/api/v1/training/start", json={"base_model": "llama3.1:8b", "target_agent": "coding"})
+    r_start = client.post("/api/v1/training/start", json={"base_model": "qwen2.5:14b", "target_agent": "coding"})
     assert r_start.status_code == 200
     jdata = r_start.json()
     assert jdata["status"] == "success"

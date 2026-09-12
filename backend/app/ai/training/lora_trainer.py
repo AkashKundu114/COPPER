@@ -42,7 +42,7 @@ class QLoRATrainer:
         finally:
             db.close()
 
-    async def start_training(self, base_model: str = "llama3.1:8b", target_agent: str = "all") -> dict[str, Any]:
+    async def start_training(self, base_model: str = "qwen2.5:14b", target_agent: str = "all") -> dict[str, Any]:
         """Initiates a QLoRA fine-tuning run in the background."""
         db = SessionLocal()
         try:

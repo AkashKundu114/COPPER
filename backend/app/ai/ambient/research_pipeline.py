@@ -176,8 +176,8 @@ class ResearchPipeline:
             
             is_avail = await ollama_client.is_available()
             if is_avail:
-                messages = [{"role": "user", "content": prompt}]
-                llm_response = await ollama_client.chat(messages, "llama3.1:8b")
+                doc_model = model_manager.get_model("core_agents.document", "phi4:14b")
+                llm_response = await ollama_client.chat(messages, doc_model)
                 
                 report.markdown_report = llm_response.get("content", "") if isinstance(llm_response, dict) else str(llm_response)
                 

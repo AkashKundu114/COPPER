@@ -1107,7 +1107,7 @@ export const SelfImprovementView: React.FC = () => {
                 <div className="space-y-2 text-[11px]">
                   <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 flex items-center justify-between">
                     <span className="text-slate-400">Base Model:</span>
-                    <span className="text-white font-mono font-bold">llama3.1:8b (4-bit NF4)</span>
+                    <span className="text-white font-mono font-bold">qwen2.5:14b (4-bit NF4)</span>
                   </div>
                   <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 flex items-center justify-between">
                     <span className="text-slate-400">LoRA Rank (r) / Alpha:</span>

@@ -60,7 +60,7 @@ class TrainingJob(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     version_tag = Column(String(50), nullable=False, unique=True, index=True)
-    base_model = Column(String(100), nullable=False, default="llama3.1:8b")
+    base_model = Column(String(100), nullable=False, default="qwen2.5:14b")
     target_agent = Column(String(50), nullable=False, default="all")
     status = Column(String(20), nullable=False, default=TrainingJobStatus.PENDING.value, index=True)
     current_epoch = Column(Integer, nullable=False, default=0)
@@ -116,7 +116,7 @@ class LoRAAdapter(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     version = Column(String(50), nullable=False, unique=True, index=True)
     adapter_dir = Column(String(255), nullable=False)
-    base_model = Column(String(100), nullable=False, default="llama3.1:8b")
+    base_model = Column(String(100), nullable=False, default="qwen2.5:14b")
     target_agent = Column(String(50), nullable=False, default="all", index=True)
     status = Column(String(20), nullable=False, default=AdapterStatus.CANDIDATE.value, index=True)
     ab_test_percentage = Column(Integer, nullable=False, default=0)  # 0-100%

@@ -71,7 +71,7 @@ class DailyBriefingService:
                     }
                 ]
                 try:
-                    synthesis = await ollama_client.chat(prompt, model="qwen2.5:0.5b")
+                    synthesis = await ollama_client.chat(prompt, model="qwen2.5:1.5b")
                 except Exception as e:
                     logger.warning(f"LLM synthesis failed: {e}")
             
@@ -126,7 +126,7 @@ class DailyBriefingService:
                     }
                 ]
                 try:
-                    synthesis = await ollama_client.chat(prompt, model="qwen2.5:0.5b")
+                    synthesis = await ollama_client.chat(prompt, model="qwen2.5:1.5b")
                 except Exception as e:
                     logger.warning(f"LLM synthesis failed: {e}")
             

@@ -21,7 +21,7 @@ class CodingAgent(BaseAgent):
         )
 
     def get_target_model(self) -> str:
-        return model_manager.get_model("core_agents.coding", "qwen2.5-coder:7b")
+        return model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
 
 
 coding_agent = CodingAgent()

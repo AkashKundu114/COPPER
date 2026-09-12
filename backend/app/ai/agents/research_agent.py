@@ -46,7 +46,7 @@ class ResearchAgent(BaseAgent):
         )
 
     def get_target_model(self) -> str:
-        return model_manager.get_model("core_agents.reasoning", "deepseek-r1:7b")
+        return model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
 
     def format_ranked_sources(self, sources: list[dict[str, Any]]) -> str:
         """Formats re-ranked sources into structured citation blocks with relevance scores."""

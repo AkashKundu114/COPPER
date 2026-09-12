@@ -1,25 +1,17 @@
-# Model Selection & Orchestration Topology
+# Model Selection & Orchestration Topology (v3.0)
 
 ## 1. Local Model Architecture Strategy
 
 **C.O.P.P.E.R.** is engineered for ultra-low latency, 100% offline inference on modern consumer hardware (AMD Ryzen 9 / NVIDIA RTX 5060 Laptop GPU with 8GB VRAM).
 
-To achieve state-of-the-art responsiveness without exceeding the 8GB VRAM constraint, C.O.P.P.E.R. implements a **Tiered Model Hierarchy** featuring **Lossless Abliterated LLMs**, an **Always-On Gatekeeper (keep_alive: -1)**, and **Transient Heavyweight Execution (auto-eviction after 60–240s)**.
+To achieve maximum cognitive capability without exceeding the 8GB VRAM constraint, C.O.P.P.E.R. implements a **Tiered Model Hierarchy** featuring:
+- **5 Heavyweight 12B–14B Cognitive Specialists** (transiently loaded on demand in a single active GPU slot ~5.2–6.4 GB).
+- **6 Resident Mini Models (<=3B)** providing zero-latency firewall, reflex routing, code linting, shell safety, micro-reasoning, memory extraction, and desktop OCR.
+- **C.O.P.P.E.R Sovereign Meta-Agent** continuously fine-tuning via QLoRA from daily interaction telemetry, tools, and user preferences.
 
 ---
 
-## 2. Lossless Uncensoring Architecture (Weight Abliteration)
-
-Standard open-weight models enforce rigid safety guardrails that result in false-positive refusals during security analysis, reverse engineering, automation scripting, and desktop OCR.
-
-C.O.P.P.E.R. utilizes **Weight Abliteration** across its core and micro-agent tiers:
-- **Orthogonal Direction Removal**: Refusal activation vectors are mathematically isolated across transformer layers and removed via orthogonal weight projection.
-- **Zero Loss / No Catastrophic Forgetting**: Unlike fine-tuned "uncensored" models that degrade reasoning benchmarks, abliteration preserves 100% of the base model's MMLU, GSM8K, and HumanEval capability.
-- **Dedicated Guardrail Layer**: Safety is decoupled from the base LLM and handled by specialized micro-subagents (`guardian` and `firewall`) that inspect inputs/outputs without refusal loops.
-
----
-
-## 3. Master 34-Model Fleet Manifest
+## 2. Master Model Fleet Architecture
 
 ```
                                   ┌────────────────────────┐
@@ -35,104 +27,94 @@ C.O.P.P.E.R. utilizes **Weight Abliteration** across its core and micro-agent ti
                                   └───────────┬────────────┘
                                               │
                                   ┌───────────▼────────────┐
-                                  │   Gatekeeper / Router  │
-                                  │ (Qwen2.5 0.5B / 1B)    │ <--- Always-on (keep_alive: -1, ~770 MB VRAM)
+                                  │   AEGIS / MERCURY      │
+                                  │   (Qwen2.5 1.5B)       │ <--- Always-on (keep_alive: -1, ~940 MB VRAM)
                                   └───────────┬────────────┘
          ┌──────────────────┬─────────────────┼─────────────────┬──────────────────┐
          │                  │                 │                 │                  │
 ┌────────▼────────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐ ┌────────▼────────┐
-│   Chat / Core   │ │ AXIS (Coding) │ │ SCRIBE (Doc) │ │ FORGE (Auto)  │ │ OMNI (Reasoning) │
-│ Llama-3.1 8B    │ │ Qwen2.5 7B    │ │ Qwen2.5 7B    │ │ Mistral 7B    │ │ DeepSeek-R1 7B   │
-│ (Abliterated)   │ │ (Abliterated) │ │ (Abliterated) │ │ (Abliterated) │ │ (Abliterated)    │
-└────────┬────────┘ └───────┬───────┘ └───────┬───────┘ └───────┬───────┘ └────────┬─────────┘
+│  ATLAS / COPPER │ │ VULCAN        │ │ PROMETHEUS    │ │ SCRIBE        │ │ DAEMON          │
+│  Qwen2.5 14B    │ │ Qwen2.5-Coder │ │ DeepSeek-R1   │ │ Phi-4 14B     │ │ Mistral-Nemo    │
+│  (Chat/Meta)    │ │ 14B Abliterated│ │ 14B Distill   │ │ (Documenter)  │ │ 12B (Tool Ops)  │
+└────────┬────────┘ └───────┬───────┘ └───────┬───────┘ └───────┬───────┘ └────────┬────────┘
          │                  │                 │                 │                  │
          └──────────────────┴────────┬────────┴─────────────────┴──────────────────┘
                                      │
        ┌─────────────────────────────┼─────────────────────────────┐
        │                             │                             │
 ┌──────▼───────┐             ┌───────▼───────┐             ┌───────▼───────┐
-│ Vision Agent │             │ Image Studio  │             │ 14 Specialized│
-│ Qwen2.5-VL   │             │ PICASSO       │             │ Micro-Sub     │
-│ 7B & 3B      │             │ SD-Turbo      │             │ Agents        │
+│ ARGUS Vision │             │ PICASSO       │             │ Fast Reflex   │
+│ Qwen2.5-VL   │             │ SD-Turbo      │             │ Mini Fleet    │
+│ 3B Q4_K_M    │             │ Safetensors   │             │ 6 Quantized   │
 └──────────────┘             └───────────────┘             └───────────────┘
 ```
 
 ---
 
-### Tier 1: Primary Core Heavyweights (7B – 8B Abliterated)
+## 3. Tier Breakdown
 
-*Loaded on-demand into GPU VRAM; managed by `ModelTierManager` with automatic idle eviction after 60s–240s.*
+### Tier 1: Primary Core Heavyweights (12B – 14B Cognitive Tier)
 
-| Agent / Role | Model Name | Quantization | Size | Purpose & Specialization |
-| :--- | :--- | :---: | :---: | :--- |
-| **CHAT Orchestrator** | `Meta-Llama-3.1-8B-Instruct-abliterated` | Q4_K_M | 4.58 GB | Primary conversational companion, multi-turn dialogue, emotional resonance. |
-| **AXIS Coding Agent** | `Qwen2.5-Coder-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | Full-stack software engineering, reverse engineering, sandbox code execution. |
-| **SCRIBE Document Agent** | `Qwen2.5-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | High-speed multi-format document generation (PDF, Word, Markdown, Excel, LaTeX). |
-| **FORGE Automation Agent** | `Mistral-7B-Instruct-v0.3-abliterated` | Q4_K_M | 4.07 GB | System command generation, desktop GUI control, task automation. |
-| **OMNI Reasoning Agent** | `DeepSeek-R1-Distill-Qwen-7B-abliterated` | Q4_K_M | 4.36 GB | Deep chain-of-thought math proofs, logic puzzles, algorithm design. |
+*Loaded on-demand into GPU VRAM (1 active model slot at a time); managed by `ModelTierManager` with automatic idle eviction after 60s–120s.*
 
----
-
-### Tier 2: Multimodal Vision Agents (3B & 7B)
-
-| Agent / Role | Model Name | Quantization | Size | Capabilities |
-| :--- | :--- | :---: | :---: | :--- |
-| **IRIS Primary Vision** | `Qwen2.5-VL-7B-Instruct-abliterated` | Q4_K_M | 4.36 GB | Full-resolution screenshot analysis, architecture diagrams, document OCR. |
-| **IRIS Fast UI / OCR** | `Qwen2.5-VL-3B-Instruct-abliterated` | Q4_K_M | 1.80 GB | Real-time 60fps UI bounding box tagging, button coordinates, fast text extraction. |
+| Agent Codename | Role | Base Model | Quantization | Size | Purpose & Specialization |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **ATLAS** | Primary Orchestrator & Conversationalist | `Qwen2.5-14B-Instruct` | IQ3_XS | 5.95 GB | Multi-turn dialogue, high-level task decomposition, emotional resonance. |
+| **VULCAN** | Software Architect | `Qwen2.5-Coder-14B-Instruct-abliterated` | IQ3_XS | 6.38 GB | Full-stack software engineering, reverse engineering, sandbox code execution. |
+| **PROMETHEUS** | Cognitive Reasoner & Scientist | `DeepSeek-R1-Distill-Qwen-14B` | IQ3_XS | 6.38 GB | Deep chain-of-thought math proofs, logic verification, scientific research. |
+| **SCRIBE** | Academic Synthesis & Documenter | `phi-4` | IQ3_XS | 6.24 GB | Authoritative reports, multi-format documents (PDF, Word, LaTeX, Excel). |
+| **DAEMON** | System Automator & Tool Chainer | `Mistral-Nemo-Instruct-2407` | IQ3_M | 5.72 GB | Deterministic tool calling, OS shell control, API integration. |
+| **C.O.P.P.E.R.** | Sovereign Meta-Agent | `Qwen2.5-14B-Instruct` + QLoRA | IQ3_XS | 5.95 GB | Continuously trained on user interaction telemetry with distinct personality & dry wit. |
 
 ---
 
-### Tier 3: 100% Offline Local Image Studio (PICASSO)
+### Tier 2: Resident Reflex Mini Fleet (<=3B)
 
-| Engine | Model Artifact | Format | Size | Performance |
-| :--- | :--- | :---: | :---: | :--- |
-| **PICASSO Fast Diffusion** | `sd_turbo.safetensors` | Safetensors / UNet | 4.86 GB | 1-step real-time local image generation on RTX 5060 (<0.8s per 512x512 image). |
+*Optimized for sub-millisecond reflexes and resident memory footprints.*
+
+| Agent Codename | Role | Base Model | Quantization | Size | Responsibility |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **AEGIS** | Sentinel Firewall | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 0.94 GB | Zero-latency PII redaction, secret mask, prompt injection defense. |
+| **MERCURY** | Reflex Router | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 0.94 GB | Sub-30ms user intent classification and agent dispatch. |
+| **BABEL** | Multilingual Normalizer | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 0.94 GB | Multilingual translation to concise technical English. |
+| **FORGE** | Code Linter & Git Author | `Qwen2.5-Coder-3B-Instruct` | Q4_K_M | 1.80 GB | Real-time AST syntax linting and Conventional Commit messages. |
+| **WARDEN** | Shell Safety Gatekeeper | `Qwen2.5-Coder-3B-Instruct` | Q4_K_M | 1.80 GB | Pre-flight audit of terminal commands and Docker flags. |
+| **CRUCIBLE** | Diagnostics & Self-Healing | `DeepSeek-R1-Distill-Qwen-1.5B` | Q4_K_M | 1.04 GB | Micro-reasoner for stack trace analysis and step checklists. |
+| **CHRONOS** | Memory Consolidator | `SmolLM2-1.7B-Instruct` | Q4_K_M | 1.00 GB | User fact, preference, and relationship extraction for ChromaDB. |
+| **SPIDER** | DOM & Web Cleaner | `SmolLM2-1.7B-Instruct` | Q4_K_M | 1.00 GB | Raw HTML scraping and clean markdown fact extraction. |
+| **ORACLE** | SQL & Schema Guard | `granite-3.2-2b-instruct` | Q4_K_M | 1.44 GB | Parameterized SQL query generator and JSON schema validator. |
+| **ARGUS** | Desktop Vision Eye | `Qwen2.5-VL-3B-Instruct` | Q4_K_M | 2.10 GB | Real-time UI bounding boxes, coordinates, and document OCR. |
 
 ---
 
-### Tier 4: Real-Time Audio, VAD & Ambient Wake-Word
+### Tier 3: Real-Time Audio, VAD & Ambient Wake-Word
 
-*Runs CPU-first with $\approx 1-3\%$ CPU overhead and 0 MB VRAM footprint.*
+*Runs CPU-first with ~1-3% CPU overhead and 0 MB VRAM footprint.*
 
 | Component | Model Name | File Path | Format | Size | Latency |
-| :--- | :--- | :--- | :---: | :---: | :---: |
+| :--- | :--- | :--- | :---: | :---: | :--- |
 | **Voice Activity Detection** | Silero VAD v5 | `audio/vad/silero_vad.onnx` | ONNX | 2.2 MB | <1ms |
 | **Acoustic Wake-Word** | openWakeWord (`Hey COPPER`) | `wakeword/hey_copper.onnx` | ONNX | 1.2 MB | <5ms |
-| **Wake-Word Embedding** | openWakeWord Embeddings | `wakeword/embedding_model.onnx` | ONNX | 1.3 MB | <2ms |
 | **Neural TTS Engine** | Kokoro-82M ONNX + Voice Bank | `audio/tts/kokoro-v0_19.onnx` + `voices.bin` | ONNX Float16 | 315 MB | <80ms |
 | **Offline Speech-To-Text** | Whisper Large v3 Turbo | `audio/whisper/ggml-large-v3-turbo.bin` | GGML Q8 | 833 MB | <250ms |
-| **TTS Fallback Voices** | Piper (`amy`, `ryan`) | `audio/tts/en_US-*.onnx` | ONNX | 120 MB | <50ms |
 
 ---
 
-### Tier 5: Memory Embeddings & Semantic Reranking
+### Tier 4: Memory Embeddings & Semantic Reranking
 
 | Component | Model Name | Quantization | Size | Role in ChromaDB / Epistemic Memory |
 | :--- | :--- | :---: | :---: | :--- |
-| **Vector Memory Embeddings** | `nomic-embed-text-v1.5` | Q4_K_M | 80.2 MB | 8192-token dense semantic embeddings for long-term user memory. |
+| **Vector Memory Embeddings** | `nomic-embed-text-v1.5` | Q4_K_M | 80.2 MB | 8192-token dense semantic embeddings for long-term memory. |
 | **Cross-Encoder Reranker** | `bge-reranker-v2-m3` | Q4_K_M | 418 MB | Top-k semantic re-ranking for ultra-precise memory retrieval. |
 | **Context Embeddings** | `ModernBERT-base` | Q4_K_M | 80.2 MB | Fast transformer embeddings for local document chunks. |
 
 ---
 
-### Tier 6: Specialized Micro-Subagents (360M – 3.8B)
+### Tier 5: 100% Offline Local Image Studio (PICASSO)
 
-| Micro-Agent | Base Architecture | Quantization | Size | Functional Responsibility |
+| Engine | Model Artifact | Format | Size | Performance |
 | :--- | :--- | :---: | :---: | :--- |
-| **`router`** | `Llama-3.2-1B-Instruct-abliterated` | Q4_K_M | 911 MB | Sub-40ms intent classification and agent dispatch. |
-| **`firewall` / `gatekeeper`** | `Qwen2.5-0.5B-Instruct-abliterated` | Q4_K_M | 379 MB | PII masking, secret redaction, and instant wake-word confirmation. |
-| **`guardian`** | `Llama-3.2-3B-Instruct-abliterated` | Q4_K_M | 2.08 GB | Decoupled safety verification and content validation. |
-| **`memory`** | `SmolLM2-1.7B-Instruct-abliterated` | Q4_K_M | 1006 MB | Epistemic fact, preference, and relationship extraction. |
-| **`summarizer`** | `Qwen2.5-1.5B-Instruct-abliterated` | Q4_K_M | 940 MB | Context compression and conversational turn summarizing. |
-| **`coding_linter`** | `Qwen2.5-Coder-0.5B-Instruct-abliterated` | Q4_K_M | 379 MB | Instant AST syntax error and linter checking. |
-| **`coding_micro`** | `Qwen2.5-Coder-1.5B-Instruct-abliterated` | Q4_K_M | 1.04 GB | Unit test generation, docstring creation, and small refactors. |
-| **`shell_safety`** | `Qwen2.5-Coder-3B-Instruct-abliterated` | Q4_K_M | 1.80 GB | Shell command parameter validation and sandbox checks. |
-| **`diagnostics`** | `DeepSeek-R1-Distill-Qwen-1.5B-abliterated` | Q4_K_M | 1.04 GB | Stack trace root-cause analysis and auto-patch generation. |
-| **`schema`** | `granite-3.2-2b-instruct` | Q4_K_M | 1.44 GB | Strict JSON schema normalization and tool output parsing. |
-| **`sql`** | `granite-3.2-2b-instruct` | Q4_K_M | 1.44 GB | Parameterized SQL query drafting and SQLite syntax checking. |
-| **`git`** | `SmolLM2-360M-Instruct` | Q4_K_M | 258 MB | Git diff analysis and Conventional Commit message generation. |
-| **`planner`** | `Falcon3-3B-Instruct` | Q4_K_M | 1.87 GB | Goal decomposition and hierarchical task graph roadmapping. |
-| **`search`** | `Qwen2.5-3B-Instruct-abliterated` | Q4_K_M | 1.80 GB | Search query optimization and multi-source verification. |
+| **PICASSO Fast Diffusion** | `sd_turbo.safetensors` | Safetensors / UNet | 5.21 GB | 1-step real-time local image generation on RTX 5060 (<0.8s per 512x512 image). |
 
 ---
 
@@ -142,14 +124,14 @@ C.O.P.P.E.R. utilizes **Weight Abliteration** across its core and micro-agent ti
 +-------------------------------------------------------------+
 |              RTX 5060 8GB VRAM ALLOCATION MAP               |
 +-------------------------------------------------------------+
-| [0.0 - 0.8 GB] Always-On Gatekeeper (Llama-3.2-1B / Qwen)   |
-| [0.8 - 5.5 GB] Dynamic Transient Slot (7B/8B Core Agent)    |
-| [5.5 - 6.5 GB] Context Window & KV Cache (4k-8k Tokens)     |
-| [6.5 - 8.0 GB] OS / Display Driver & CUDA Overhead Buffer  |
+| [0.0 - 0.94 GB] Resident Reflex Router (Qwen2.5 1.5B)       |
+| [0.94 - 6.40 GB] Dynamic Heavyweight Slot (1 active 14B)    |
+| [6.40 - 7.10 GB] Quantized KV Cache (q4_0 / 4096 tokens)    |
+| [7.10 - 8.00 GB] OS / Display Driver & CUDA Headroom Buffer |
 +-------------------------------------------------------------+
 ```
 
-1. **Idle State**: Only the Gatekeeper (~770 MB VRAM) remains pinned (`keep_alive: -1`).
-2. **Active Turn**: Router routes user prompt to the appropriate 7B–8B specialist (e.g. AXIS Coding).
-3. **Execution**: The 7B–8B model loads, executes in ~4.5 GB VRAM, streams the output, and is assigned an idle countdown timer.
-4. **Post-Turn Sweep**: If no follow-up occurs within 60s–240s, `ModelTierManager` issues a `keep_alive: 0` call to evict the heavy model, restoring VRAM to <1.0 GB.
+1. **Idle State**: Only the resident mini router (~0.94 GB VRAM) remains pinned (`keep_alive: -1`).
+2. **Active Turn**: Router routes user prompt to the appropriate 14B specialist (e.g. VULCAN Coding).
+3. **Execution**: The 14B model loads in ~5.2 GB VRAM (offloading 44/49 layers to GPU, remainder to system RAM), generating at >20 tokens/second.
+4. **Post-Turn Sweep**: If no follow-up occurs within 60s, `ModelTierManager` issues eviction, restoring VRAM to <1.0 GB.

@@ -33,6 +33,11 @@ MINI_MODEL_IDENTIFIERS = {
     "qwen2.5-1.5b-instruct-abliterated",
     "qwen2.5:1.5b",
     "qwen2.5-abliterated:1.5b",
+    "qwen2.5-coder:3b",
+    "qwen2.5-coder-3b-instruct",
+    "qwen2.5-vl:3b",
+    "deepseek-r1:1.5b",
+    "deepseek-r1-distill-qwen-1.5b",
     "granite-3.2-2b-instruct",
     "granite-guardian-3.1-2b",
     "moondream",
@@ -55,10 +60,10 @@ class ModelManager:
         except Exception as e:
             logger.error(f"Failed to load models manifest: {e}")
 
-    def get_model(self, path: str, default: str = "llama3.1-abliterated:8b") -> str:
+    def get_model(self, path: str, default: str = "qwen2.5:14b") -> str:
         """
         Retrieves the Ollama tag from the manifest using dot notation (falling back to name or default).
-        Example: get_model("core_agents.chat") -> "llama3.1-abliterated:8b"
+        Example: get_model("core_agents.chat") -> "qwen2.5:14b"
         """
         try:
             parts = path.split(".")
@@ -76,10 +81,10 @@ class ModelManager:
             logger.error(f"Error resolving model path '{path}': {e}")
             return default
 
-    def get_ollama_tag(self, path: str, default: str = "llama3.1:8b") -> str:
+    def get_ollama_tag(self, path: str, default: str = "qwen2.5:14b") -> str:
         """
         Retrieves the Ollama tag from the manifest using dot notation.
-        Example: get_ollama_tag("core_agents.document") -> "qwen2.5:7b"
+        Example: get_ollama_tag("core_agents.chat") -> "qwen2.5:14b"
         """
         try:
             parts = path.split(".")
@@ -112,7 +117,7 @@ class ModelManager:
         doc_cfg = self.manifest.get("core_agents", {}).get("document", {})
         if prefer_tag and doc_cfg.get("ollama_tag"):
             return doc_cfg["ollama_tag"]
-        return doc_cfg.get("name", "qwen2.5:7b")
+        return doc_cfg.get("name", "phi4:14b")
 
     def is_mini_model(self, model_name: str | None) -> bool:
         """
@@ -162,35 +167,26 @@ class ModelManager:
         clean = alias.strip().lower()
         if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "lightweight", "fast", "instant"]):
             tag = self.get_mini_model(prefer_tag=True)
-            return tag, "Mini (Speed Tier ~1B)"
-        if any(w in clean for w in ["3b", "medium", "mid"]):
-            guardian_cfg = self.manifest.get("subagents", {}).get("guardian", {})
-            tag = guardian_cfg.get("ollama_tag", "llama3.2-abliterated:3b")
-            return tag, "Medium (~3B Tier)"
-        if any(w in clean for w in ["0.5b", "micro"]):
-            firewall_cfg = self.manifest.get("subagents", {}).get("firewall", {})
-            tag = firewall_cfg.get("ollama_tag", "qwen2.5-abliterated:0.5b")
-            return tag, "Micro (~0.5B Reflex Tier)"
-        if any(w in clean for w in ["1.5b"]):
-            summ_cfg = self.manifest.get("subagents", {}).get("summarizer", {})
-            tag = summ_cfg.get("ollama_tag", "qwen2.5-abliterated:1.5b")
-            return tag, "Lightweight (~1.5B Tier)"
-        if any(w in clean for w in ["8b", "large", "full", "heavy", "llama 3.1", "llama3.1", "standard", "default"]):
-            tag = self.get_model("core_agents.chat", "llama3.1:8b")
-            return tag, "Full (8B Standard Tier)"
-        if "deepseek" in clean:
+        if any(w in clean for w in ["3b", "coder-micro", "shell"]):
+            return "qwen2.5-coder:3b", "FORGE / WARDEN (~3B Code & Shell Tier)"
+        if any(w in clean for w in ["0.5b", "1.5b", "reflex", "gatekeeper", "firewall", "router"]):
+            return "qwen2.5:1.5b", "MERCURY / AEGIS (1.5B Reflex Tier)"
+        if any(w in clean for w in ["14b", "large", "full", "heavy", "atlas", "standard", "default"]):
+            tag = self.get_model("core_agents.chat", "qwen2.5:14b")
+            return tag, "ATLAS (14B Standard Cognitive Tier)"
+        if "deepseek" in clean or "reason" in clean or "math" in clean:
             if "1.5" in clean:
-                return "deepseek-r1-abliterated:1.5b", "DeepSeek Reasoning (~1.5B Tier)"
-            tag = self.get_model("core_agents.reasoning", "deepseek-r1-abliterated:7b")
-            return tag, "DeepSeek Reasoning (7B Tier)"
-        if "qwen" in clean:
-            if "coder" in clean:
-                return self.get_model("core_agents.coding", "qwen2.5-coder-abliterated:7b"), "Qwen Coder (7B Tier)"
-            return self.get_model("core_agents.document", "qwen2.5-abliterated:7b"), "Qwen General (7B Tier)"
-        if "mistral" in clean:
-            return self.get_model("core_agents.automation", "mistral-abliterated:7b"), "Mistral (7B Tier)"
+                return "deepseek-r1:1.5b", "CRUCIBLE Reasoning (~1.5B Tier)"
+            tag = self.get_model("core_agents.reasoning", "deepseek-r1:14b")
+            return tag, "PROMETHEUS DeepSeek Reasoning (14B Tier)"
+        if "coder" in clean or "code" in clean:
+            return self.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b"), "VULCAN Coder (14B Tier)"
+        if "phi" in clean or "document" in clean or "report" in clean:
+            return self.get_model("core_agents.document", "phi4:14b"), "SCRIBE Document Synthesis (14B Tier)"
+        if "mistral" in clean or "automation" in clean or "tool" in clean:
+            return self.get_model("core_agents.automation", "mistral-nemo:12b"), "DAEMON Task Automation (12B Tier)"
 
-        return self.get_model("core_agents.chat", "llama3.1:8b"), "Default Chat (8B Tier)"
+        return self.get_model("core_agents.chat", "qwen2.5:14b"), "ATLAS Default Chat (14B Tier)"
 
 
 model_manager = ModelManager()

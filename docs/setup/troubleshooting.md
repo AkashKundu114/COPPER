@@ -16,9 +16,9 @@
    ```bash
    docker-compose start ollama
    ```
-3. Ensure models are pulled:
+3. Ensure models are linked/registered:
    ```bash
-   ollama pull llama3.1:8b
+   python scripts/models/register_ollama_models.py
    ```
 
 ### Issue 1.2: Database Migration Errors (`Alembic Target Database Out of Date`)

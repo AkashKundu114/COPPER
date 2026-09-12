@@ -39,7 +39,7 @@ class ChrysalisDataCurator:
         self.output_path = output_path
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         self.model_identifier = "core_agents.reasoning"
-        self.fallback_model = "deepseek-r1:7b"
+        self.fallback_model = "deepseek-r1:14b"
 
     def get_model(self) -> str:
         return model_manager.get_model(self.model_identifier, self.fallback_model)

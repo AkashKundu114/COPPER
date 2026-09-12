@@ -7,74 +7,74 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 REPORT_FILE = ROOT_DIR / "docs" / "benchmarks" / "local_models_e2e_report.md"
 REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-OLLAMA_API = "http://localhost:11434"
+OLLAMA_API = "http://127.0.0.1:11434"
 
 MODELS = [
     {
-        "tag": "llama3.1:8b",
-        "name": "Meta-Llama-3.1-8B-Instruct",
-        "tier": "Core Master Orchestrator",
+        "tag": "qwen2.5:14b",
+        "name": "Qwen2.5-14B-Instruct",
+        "tier": "Core Master Orchestrator (ATLAS)",
         "prompt": "You are COPPER's primary companion orchestrator. State your operational status, architecture philosophy, and primary directive in 2 sentences.",
     },
     {
-        "tag": "qwen2.5-coder:7b",
-        "name": "Qwen2.5-Coder-7B-Instruct",
-        "tier": "Software & Code Architecture",
+        "tag": "qwen2.5-coder-abliterated:14b",
+        "name": "Qwen2.5-Coder-14B-Abliterated",
+        "tier": "Software Architect & Uncensored Code Generator (VULCAN)",
         "prompt": "Write a concise Python function to validate whether a given file path is sandboxed within a target directory.",
     },
     {
-        "tag": "deepseek-r1:7b",
-        "name": "DeepSeek-R1-Distill-Qwen-7B",
-        "tier": "Deep Cognitive Reasoning",
+        "tag": "deepseek-r1:14b",
+        "name": "DeepSeek-R1-Distill-Qwen-14B",
+        "tier": "Cognitive Reasoner & Deep Logic Engine (PROMETHEUS)",
         "prompt": "Analyze: If a system operates with 100% offline local models and zero cloud egress, what are the mathematical bounds on external exfiltration risk?",
     },
     {
-        "tag": "mistral:7b",
-        "name": "Mistral-7B-Instruct-v0.3",
-        "tier": "Task Automation & Tools",
+        "tag": "phi4:14b",
+        "name": "Phi-4-14B",
+        "tier": "Academic Synthesis & Documenter (SCRIBE)",
+        "prompt": "Summarize the key trade-offs between dense vs mixture-of-experts transformer architectures in constrained hardware environments.",
+    },
+    {
+        "tag": "mistral-nemo:12b",
+        "name": "Mistral-Nemo-12B-Instruct",
+        "tier": "Task Automation & Tools (DAEMON)",
         "prompt": "Generate a structured JSON schema for an automated tool call executing a local system backup.",
-    },
-    {
-        "tag": "llama3.2:3b",
-        "name": "Llama-3.2-3B-Instruct",
-        "tier": "Guardian Safety & Alignment",
-        "prompt": "Evaluate action: User asks to purge temp files older than 30 days. Recommend appropriate Guardian friction tier (0-3) with rationale.",
-    },
-    {
-        "tag": "llama3.2:1b",
-        "name": "Llama-3.2-1B-Instruct",
-        "tier": "Persistent Reflex Intent Router",
-        "prompt": "Route this user input to the correct agent category [coding, memory, search, vision, task]: 'Can you refactor this SQLite query for faster indexing?'",
-    },
-    {
-        "tag": "qwen2.5:3b",
-        "name": "Qwen2.5-3B-Instruct",
-        "tier": "Local Web & Synthesis",
-        "prompt": "Summarize the key architectural benefits of local-first AI systems in three bullet points.",
     },
     {
         "tag": "qwen2.5:1.5b",
         "name": "Qwen2.5-1.5B-Instruct",
-        "tier": "Subagent Coding & Diagnostics",
-        "prompt": "Explain the difference between WebSocket streaming and HTTP polling for real-time UI telemetry.",
+        "tier": "Resident Firewall, Intent Router & Polyglot (AEGIS/MERCURY/BABEL)",
+        "prompt": "Route this user input to the correct agent category [coding, memory, search, vision, task]: 'Can you refactor this SQLite query for faster indexing?'",
     },
     {
-        "tag": "qwen2.5:0.5b",
-        "name": "Qwen2.5-0.5B-Instruct",
-        "tier": "Gatekeeper Firewall & Short-Circuit",
-        "prompt": "Confirm fast reflex handshake: Respond with 'COPPER FAST REFLEX ONLINE'.",
+        "tag": "qwen2.5-coder:3b",
+        "name": "Qwen2.5-Coder-3B-Instruct",
+        "tier": "Code Hygiene & Shell Safety Gatekeeper (FORGE/WARDEN)",
+        "prompt": "Inspect this bash command for dangerous or malicious flags: 'rm -rf /tmp/cache && chmod +x ./run.sh'. Output JSON with safe (bool) and explanation.",
+    },
+    {
+        "tag": "deepseek-r1:1.5b",
+        "name": "DeepSeek-R1-Distill-Qwen-1.5B",
+        "tier": "Diagnostics & Self-Healing Planner (CRUCIBLE)",
+        "prompt": "Verify if the statement is logically valid: 'All deterministic systems are predictable. Chaos theory describes deterministic systems. Therefore chaotic systems are practically predictable.'",
     },
     {
         "tag": "smollm2:1.7b",
         "name": "SmolLM2-1.7B-Instruct",
-        "tier": "Epistemic Memory & Summarizer",
+        "tier": "Memory Consolidator & Web Content Cleaner (CHRONOS/SPIDER)",
         "prompt": "Extract the key user preference from: 'I always prefer dark mode with high contrast and monospace font for coding'.",
     },
     {
-        "tag": "falcon3:3b",
-        "name": "Falcon3-3B-Instruct",
-        "tier": "Multi-Step Planner",
-        "prompt": "Create a 3-step action plan to verify system integrity after an offline software update.",
+        "tag": "granite-3.2-2b-instruct",
+        "name": "Granite-3.2-2B-Instruct",
+        "tier": "SQL & Schema Guard (ORACLE)",
+        "prompt": "Validate whether these tool arguments fit schema {query: str, limit: int}: {'query': 'Find file', 'limit': 10, 'extra_flag': True}.",
+    },
+    {
+        "tag": "qwen2.5-vl:3b",
+        "name": "Qwen2.5-VL-3B-Instruct",
+        "tier": "Visual Perception & Document OCR (ARGUS)",
+        "prompt": "Describe the operational steps for local document OCR and multi-modal scene analysis.",
     },
 ]
 
@@ -250,7 +250,7 @@ def generate_markdown_report(results):
         "## Architectural Verification Conclusions",
         "",
         "1. **Zero-Cloud Autonomy:** All evaluated models execute exclusively on local hardware with zero network calls beyond `localhost:11434` / `127.0.0.1:8000`.",
-        "2. **Specialized Fleet Dispatch:** Deep cognitive reasoning (`deepseek-r1:7b`), high-speed coding synthesis (`qwen2.5-coder:7b`), core orchestration (`llama3.1:8b`), safety friction (`llama3.2:3b`), and sub-millisecond reflex routing (`qwen2.5:0.5b`, `llama3.2:1b`) are operational.",
+        "2. **Specialized Fleet Dispatch:** Core orchestration (`qwen2.5:14b`), software architecture (`qwen2.5-coder-abliterated:14b`), deep cognitive reasoning (`deepseek-r1:14b`), academic synthesis (`phi4:14b`), tool automation (`mistral-nemo:12b`), and sub-millisecond reflex routing (`qwen2.5:1.5b`, `qwen2.5-coder:3b`, `smollm2:1.7b`) are operational.",
         "3. **Frontend Integration:** The Playwright E2E test suite validates the full message lifecycle from the ChatDock UI through local agent streaming to the Activity Trace stream with complete trace fidelity.",
         "",
     ])

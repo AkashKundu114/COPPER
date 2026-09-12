@@ -22,7 +22,7 @@ class AutomationAgent(BaseAgent):
         )
 
     def get_target_model(self) -> str:
-        return model_manager.get_model("core_agents.automation", "mistral:7b")
+        return model_manager.get_model("core_agents.automation", "mistral-nemo:12b")
 
 
 automation_agent = AutomationAgent()

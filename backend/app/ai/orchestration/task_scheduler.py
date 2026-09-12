@@ -63,8 +63,8 @@ async def _reflection_cycle():
         if not await ollama_client.is_available():
             return
 
-        # One LLM call with the summarizer model
-        summarizer_model = model_manager.get_model("subagents.summarizer", "llama3.1:8b")
+        # One LLM call with the summarizer/memory model
+        summarizer_model = model_manager.get_model("subagents.memory", "smollm2:1.7b")
 
         # Build recent activity summary
         activity = "\n".join([f"- [{m.get('role', '?')}]: {m.get('content', '')[:150]}" for m in recent_messages[-8:]])

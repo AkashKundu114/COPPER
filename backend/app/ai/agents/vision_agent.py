@@ -71,12 +71,12 @@ class VisionAgent(BaseAgent):
         self.max_steps = max_steps
 
     def get_target_model(self) -> str:
-        """Primary model for visual reasoning and action planning (Qwen2-VL-7B)."""
-        return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl-abliterated:7b")
+        """Primary model for visual reasoning and action planning (Qwen2.5-VL-3B)."""
+        return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl:3b")
 
     def get_grounding_model(self) -> str:
-        """Fast model for rapid UI element detection and OCR (Qwen2-VL-2B)."""
-        return model_manager.get_model("vision_agents.vision_lightweight", "qwen2-vl:2b")
+        """Fast model for rapid UI element detection and OCR (Qwen2.5-VL-3B)."""
+        return model_manager.get_model("vision_agents.vision_lightweight", "qwen2.5-vl:3b")
 
     def _build_iris_system_prompt(self, screen_w: int, screen_h: int, active_window: str) -> str:
         return IRIS_SYSTEM_PROMPT.format(
