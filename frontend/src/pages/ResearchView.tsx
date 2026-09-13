@@ -10,8 +10,12 @@ import {
   ExternalLink,
   Layers,
   RefreshCw,
+  Shield,
+  Globe,
+  FlaskConical,
+  Play,
 } from "lucide-react";
-import { researchAPI } from "../services/api";
+import { researchAPI, catalogAPI } from "../services/api";
 
 interface ResearchSource {
   url: string;
@@ -47,6 +51,29 @@ export const ResearchView: React.FC = () => {
   const [depth, setDepth] = useState<"quick" | "standard" | "deep">("standard");
   const [deadline, setDeadline] = useState("");
   const [searchFilter, setSearchFilter] = useState("");
+  const [useStealthScrape, setUseStealthScrape] = useState(true);
+
+  // arXiv Live Preprint Studio
+  const [arxivQuery, setArxivQuery] = useState("");
+  const [arxivResults, setArxivResults] = useState<any[]>([]);
+  const [arxivLoading, setArxivLoading] = useState(false);
+  const [showArxivStudio, setShowArxivStudio] = useState(false);
+
+  const handleArxivSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!arxivQuery.trim()) return;
+    setArxivLoading(true);
+    try {
+      const res = await catalogAPI.searchArxiv(arxivQuery.trim(), 4);
+      if (res.data?.papers) {
+        setArxivResults(res.data.papers);
+      }
+    } catch (err) {
+      console.error("Failed to query arXiv:", err);
+    } finally {
+      setArxivLoading(false);
+    }
+  };
 
   const loadReports = async () => {
     try {
@@ -150,11 +177,36 @@ export const ResearchView: React.FC = () => {
         onSubmit={handleStartResearch}
         className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm"
       >
-        <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-accent-400" />
-          <h2 className="text-xs font-bold text-white font-sans uppercase tracking-wider">
-            Initiate Autonomous Research
-          </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-accent-400" />
+            <h2 className="text-xs font-bold text-white font-sans uppercase tracking-wider">
+              Initiate Autonomous Research
+            </h2>
+          </div>
+          <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/50 border border-cyan-800/40 px-2 py-0.5 rounded-full">
+            Autonomous Fleet + Scrapling + arXiv
+          </span>
+        </div>
+
+        {/* Quick Topic Presets */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px] font-mono">
+          <span className="text-slate-500 text-[10px] mr-1 shrink-0">Presets:</span>
+          {[
+            { label: "Rust vs Go Concurrency", topic: "Compare Rust vs Go memory models in high-concurrency stream processing" },
+            { label: "AlphaFold 3 Multimers", topic: "AlphaFold 3 biological assembly prediction capabilities and accuracy" },
+            { label: "ChEMBL Kinase Inhibitors", topic: "ChEMBL kinase inhibitors bioactivity profiles and IC50 benchmarks" },
+            { label: "DeepSeek-R1 Architecture", topic: "DeepSeek-R1 reinforcement learning reasoning architecture and GRPO" },
+          ].map((p) => (
+            <button
+              type="button"
+              key={p.label}
+              onClick={() => setTopic(p.topic)}
+              className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-cyan-300 border border-slate-800 whitespace-nowrap transition-colors"
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
 
         <div className="space-y-3">
@@ -208,7 +260,98 @@ export const ResearchView: React.FC = () => {
               />
             </div>
           </div>
+
+          {/* Stealth Scrape & arXiv Drawer Toggles */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-[11px] font-mono">
+            <button
+              type="button"
+              onClick={() => setUseStealthScrape(!useStealthScrape)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+                useStealthScrape
+                  ? "bg-cyan-950/50 border-cyan-500/50 text-cyan-300"
+                  : "bg-slate-950 border-slate-800 text-slate-500"
+              }`}
+            >
+              <Shield size={12} className={useStealthScrape ? "text-cyan-400" : "text-slate-600"} />
+              <span>Stealth Scrape (Scrapling): {useStealthScrape ? "ARMED" : "OFF"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowArxivStudio(!showArxivStudio)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+                showArxivStudio
+                  ? "bg-emerald-950/50 border-emerald-500/50 text-emerald-300"
+                  : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+              }`}
+            >
+              <FlaskConical size={12} className="text-emerald-400" />
+              <span>arXiv Preprint Studio {showArxivStudio ? "▲" : "▼"}</span>
+            </button>
+          </div>
         </div>
+
+        {/* Live arXiv Preprint Search Studio */}
+        {showArxivStudio && (
+          <div className="p-4 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-3 font-mono text-xs animate-fade-in">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Globe size={14} className="text-emerald-400" />
+                <span className="font-bold text-white text-xs">Direct arXiv Preprint Explorer</span>
+              </div>
+              <span className="text-[10px] text-slate-500">165 Scientific Skills Mesh</span>
+            </div>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={arxivQuery}
+                onChange={(e) => setArxivQuery(e.target.value)}
+                placeholder="Query scientific preprints, authors, or concepts (e.g. quantum graph neural networks)..."
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-slate-200 outline-none focus:border-emerald-500/50 text-xs font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => handleArxivSearch()}
+                disabled={arxivLoading || !arxivQuery.trim()}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              >
+                <Play size={11} fill="white" />
+                <span>{arxivLoading ? "Searching..." : "Search"}</span>
+              </button>
+            </div>
+
+            {arxivResults.length > 0 && (
+              <div className="space-y-2 pt-2 border-t border-slate-800 max-h-56 overflow-y-auto">
+                {arxivResults.map((paper: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex flex-col justify-between gap-1"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-bold text-white text-xs line-clamp-1">{paper.title}</h4>
+                      <button
+                        type="button"
+                        onClick={() => setTopic(`Research paper: "${paper.title}". Context: ${paper.summary?.slice(0, 200)}...`)}
+                        className="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold shrink-0 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40"
+                      >
+                        Use as Topic
+                      </button>
+                    </div>
+                    {paper.authors && (
+                      <span className="text-[10px] text-slate-400 truncate">
+                        By {Array.isArray(paper.authors) ? paper.authors.join(", ") : paper.authors}
+                      </span>
+                    )}
+                    <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                      {paper.summary}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex justify-end pt-1">
           <button

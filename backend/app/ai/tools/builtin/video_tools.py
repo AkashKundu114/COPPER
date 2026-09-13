@@ -7,6 +7,57 @@ from typing import Any
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
 
+OPENMONTAGE_PIPELINES = {
+    "screen-demo": {
+        "name": "Screen Demo Walkthrough",
+        "aspect_ratio": "16:9",
+        "description": "Step-by-step software walkthrough highlighting UI elements, terminal commands, and workflow transitions.",
+        "pacing_sec_per_scene": 5.0,
+    },
+    "animated-explainer": {
+        "name": "Animated Concept Explainer",
+        "aspect_ratio": "16:9",
+        "description": "Educational narrative explaining complex technical or scientific ideas with diagrams and text callouts.",
+        "pacing_sec_per_scene": 4.0,
+    },
+    "clip-factory": {
+        "name": "Short-Form Reel / Clip",
+        "aspect_ratio": "9:16",
+        "description": "High-velocity vertical video tailored for mobile viewing, featuring rapid cuts and dynamic captions.",
+        "pacing_sec_per_scene": 2.5,
+    },
+    "documentary-montage": {
+        "name": "Documentary Montage",
+        "aspect_ratio": "16:9",
+        "description": "Cinematic visual montage paired with deep neural voice narration and atmospheric pacing.",
+        "pacing_sec_per_scene": 6.0,
+    },
+    "podcast-repurpose": {
+        "name": "Audiogram & Podcast Clip",
+        "aspect_ratio": "1:1",
+        "description": "Waveform-reactive audiogram video generated from speech audio clips and key quote cards.",
+        "pacing_sec_per_scene": 4.0,
+    },
+}
+
+
+@tool_registry.tool(
+    name="video_pipeline_list",
+    description="List all available OpenMontage agentic video production pipelines and their format specifications.",
+    parameters={
+        "type": "object",
+        "properties": {},
+    },
+    return_description="List of video production pipelines.",
+    guardian_level=0,
+)
+async def video_pipeline_list() -> dict[str, Any]:
+    return {
+        "status": "success",
+        "total_pipelines": len(OPENMONTAGE_PIPELINES),
+        "pipelines": OPENMONTAGE_PIPELINES,
+    }
+
 
 @tool_registry.tool(
     name="video_create_slideshow",
@@ -31,6 +82,10 @@ from app.core.logger import logger
                 "type": "string",
                 "description": "Optional background audio or neural speech narration track (WAV/MP3).",
             },
+            "pipeline": {
+                "type": "string",
+                "description": "Optional OpenMontage pipeline preset (e.g. 'screen-demo', 'clip-factory').",
+            },
         },
         "required": ["image_paths", "output_path"],
     },
@@ -40,8 +95,9 @@ from app.core.logger import logger
 async def video_create_slideshow(
     image_paths: list[str],
     output_path: str,
-    seconds_per_image: float = 4.0,
+    seconds_per_image: float | None = None,
     audio_path: str | None = None,
+    pipeline: str | None = None,
 ) -> dict[str, Any]:
     ffmpeg_bin = shutil.which("ffmpeg")
     if not ffmpeg_bin:
@@ -50,7 +106,12 @@ async def video_create_slideshow(
             "error": "FFmpeg executable not found on system PATH. Install ffmpeg to enable local video production.",
         }
 
-    # Validate image paths
+    # Determine pacing from pipeline if specified
+    if pipeline and pipeline in OPENMONTAGE_PIPELINES and seconds_per_image is None:
+        duration_per_img = OPENMONTAGE_PIPELINES[pipeline]["pacing_sec_per_scene"]
+    else:
+        duration_per_img = seconds_per_image if seconds_per_image is not None else 4.0
+
     valid_images = [Path(p).resolve() for p in image_paths if Path(p).exists()]
     if not valid_images:
         return {"status": "error", "error": "None of the specified image paths exist."}
@@ -58,15 +119,13 @@ async def video_create_slideshow(
     out_file = Path(output_path).resolve()
     out_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Build concat demuxer file
     concat_txt = out_file.parent / f"concat_{out_file.stem}.txt"
     try:
         with open(concat_txt, "w", encoding="utf-8") as f:
             for img in valid_images:
                 escaped = str(img).replace("\\", "/")
                 f.write(f"file '{escaped}'\n")
-                f.write(f"duration {seconds_per_image}\n")
-            # Concat demuxer requirement: repeat last file without duration
+                f.write(f"duration {duration_per_img}\n")
             escaped_last = str(valid_images[-1]).replace("\\", "/")
             f.write(f"file '{escaped_last}'\n")
 
@@ -81,7 +140,6 @@ async def video_create_slideshow(
         if audio_path and Path(audio_path).exists():
             cmd.extend(["-i", str(Path(audio_path).resolve()), "-shortest"])
 
-        # Encode with H.264 & AAC, scale to even dimensions for compatibility
         cmd.extend([
             "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p",
             "-c:v", "libx264",
@@ -106,9 +164,10 @@ async def video_create_slideshow(
         return {
             "status": "success",
             "output_video": str(out_file),
+            "pipeline": pipeline or "custom",
             "size_bytes": out_file.stat().st_size,
             "slides_count": len(valid_images),
-            "estimated_duration_sec": len(valid_images) * seconds_per_image,
+            "estimated_duration_sec": len(valid_images) * duration_per_img,
         }
     except Exception as e:
         logger.error(f"video_create_slideshow error: {e}")

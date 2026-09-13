@@ -167,31 +167,37 @@ def make_vram_chart():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6.0), gridspec_kw={'width_ratios': [1.0, 1.25]})
 
     # (a) Runtime Memory Partitioning
-    labels = [
-        "Active Heavy Model\n(14B IQ3_XS: ~5.94 GB)",
-        "Always-On Reflex\n(1.5B Q4_K_M: ~1.04 GB)",
-        "KV Context Cache\n(q8_0 3k Ctx: ~0.28 GB)",
-        "CUDA Runtime Overhead\n(~0.35 GB)",
-        "Dynamic Headroom\n(~0.39 GB)",
+    components = [
+        "Active 14B Weights (IQ3_XS)",
+        "Reflex Router (1.5B Q4_K_M)",
+        "Dynamic Safety Headroom",
+        "CUDA Runtime Overhead",
+        "KV Context Cache (q8_0)",
     ]
-    sizes = [5.94, 1.04, 0.28, 0.35, 0.39]
-    colors = [ACADEMIC['navy'], ACADEMIC['teal'], ACADEMIC['purple'], ACADEMIC['slate'], ACADEMIC['emerald']]
-    explode = (0.04, 0.03, 0, 0, 0.06)
+    sizes = [5.94, 1.04, 0.39, 0.35, 0.28]
+    pcts = [s / 8.0 * 100 for s in sizes]
+    bar_colors = [ACADEMIC['navy'], ACADEMIC['teal'], ACADEMIC['emerald'], ACADEMIC['slate'], ACADEMIC['purple']]
 
-    _wedges, _texts, autotexts = ax1.pie(
-        sizes,
-        explode=explode,
-        labels=labels,
-        autopct="%1.1f%%",
-        startangle=130,
-        colors=colors,
-        textprops={"color": ACADEMIC['dark_text'], "fontsize": 9},
-        wedgeprops={"edgecolor": "#ffffff", "linewidth": 1.2}
-    )
-    for at in autotexts:
-        at.set_fontweight("bold")
-        at.set_color("#ffffff")
-    ax1.set_title("(a) RTX 5060 (8GB VRAM) Allocation Budget", fontweight='bold', pad=12)
+    y_pos = np.arange(len(components))
+    bars = ax1.barh(y_pos, sizes, color=bar_colors, edgecolor='#1e293b', height=0.55, linewidth=1.0)
+    ax1.set_yticks(y_pos)
+    ax1.set_yticklabels(components, fontsize=9)
+    ax1.invert_yaxis()
+    ax1.set_xlabel("VRAM Allocation in Gigabytes (GB)", fontweight='bold')
+    ax1.set_xlim(0, 7.5)
+    ax1.set_title("(a) Runtime RTX 5060 (8GB) Partitioning", fontweight='bold', pad=12)
+    ax1.grid(axis='x', linestyle='--', alpha=0.4, color=ACADEMIC['border'])
+
+    for bar, pct in zip(bars, pcts):
+        w = bar.get_width()
+        ax1.text(w + 0.12, bar.get_y() + bar.get_height() / 2.0, f"{w:.2f} GB ({pct:.1f}%)",
+                 ha='left', va='center', fontsize=8.5, fontweight='bold', color=ACADEMIC['dark_text'])
+
+    # Summary callout box
+    ax1.text(0.95, 0.08, "Total Dedicated VRAM: 8.00 GB\nPeak Utilization: 95.1%\nSafety Headroom: 0.39 GB",
+             transform=ax1.transAxes, ha='right', va='bottom', fontsize=8.5,
+             bbox=dict(boxstyle="round,pad=0.5", facecolor=ACADEMIC['panel_bg'], edgecolor=ACADEMIC['border'], linewidth=1.0),
+             color=ACADEMIC['body_text'])
 
     # (b) Fleet Memory Footprint vs Hardware Limit
     models = [

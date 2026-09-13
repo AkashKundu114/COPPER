@@ -4,6 +4,7 @@ from app.ai.tools.builtin.codebase_tools import codebase_map, codebase_symbol_lo
 from app.ai.tools.builtin.file_tools import file_list, file_read, file_search, file_write
 from app.ai.tools.builtin.git_tools import git_diff, git_log, git_status
 from app.ai.tools.builtin.memory_tools import memory_query, memory_store
+from app.ai.tools.builtin.science_catalog_tools import scientific_skill_list, scientific_skill_lookup
 from app.ai.tools.builtin.science_tools import arxiv_search, dataset_summary
 from app.ai.tools.builtin.scrapling_tools import scrapling_scrape
 from app.ai.tools.builtin.screen_tools import (
@@ -18,7 +19,7 @@ from app.ai.tools.builtin.screen_tools import (
 from app.ai.tools.builtin.shell_tools import python_execute, shell_execute
 from app.ai.tools.builtin.system_tools import process_status, system_hardware_stats
 from app.ai.tools.builtin.diagram_tools import workflow_diagram_render
-from app.ai.tools.builtin.video_tools import video_create_slideshow, video_probe
+from app.ai.tools.builtin.video_tools import video_create_slideshow, video_pipeline_list, video_probe
 from app.ai.tools.builtin.web_tools import web_fetch, web_search
 
 __all__ = [
@@ -55,4 +56,7 @@ __all__ = [
     "dataset_summary",
     "workflow_diagram_render",
     "agency_persona_lookup",
+    "scientific_skill_lookup",
+    "scientific_skill_list",
+    "video_pipeline_list",
 ]

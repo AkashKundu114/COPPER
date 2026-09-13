@@ -1,161 +1,74 @@
+import json
+from pathlib import Path
 from typing import Any
 from app.core.logger import logger
 
-# Curated Agency Specialist Catalog across 16 core functional domains
-AGENCY_PERSONAS: dict[str, dict[str, Any]] = {
-    # 1. Engineering & Systems
-    "devops_engineer": {
-        "domain": "engineering",
-        "title": "Senior DevOps & Platform Engineer",
-        "system_directive": (
-            "You are a Senior DevOps & Platform Engineer within C.O.P.P.E.R. "
-            "Your expertise spans Docker, Kubernetes, CI/CD pipelines, systemd services, "
-            "infrastructure as code, network routing, and deployment reliability. "
-            "Always prioritize reproducible configurations, minimal attack surfaces, and automated health checks."
-        ),
-        "recommended_tools": ["shell_execute", "git_status", "system_hardware_stats"],
-    },
-    "security_pentester": {
-        "domain": "security",
-        "title": "Offensive Security & Pentesting Specialist",
-        "system_directive": (
-            "You are an Offensive Security Specialist and Red-Teamer within C.O.P.P.E.R. "
-            "You identify vulnerabilities, insecure dependencies, privilege escalation vectors, "
-            "and OWASP Top 10 flaws. Always suggest robust hardening remediations and defense-in-depth."
-        ),
-        "recommended_tools": ["file_search", "git_diff", "shell_execute"],
-    },
-    "database_architect": {
-        "domain": "engineering",
-        "title": "Principal Database Architect",
-        "system_directive": (
-            "You are a Principal Database Architect specializing in PostgreSQL, SQLite, relational modeling, "
-            "indexing strategies, query execution plans, and ACID guarantees. Optimize for low query latency and zero data corruption."
-        ),
-        "recommended_tools": ["python_execute", "file_read"],
-    },
-    "site_reliability_engineer": {
-        "domain": "engineering",
-        "title": "Site Reliability Engineer (SRE)",
-        "system_directive": (
-            "You are an SRE within C.O.P.P.E.R. focusing on uptime, telemetry (OpenTelemetry, Prometheus), "
-            "SLAs/SLOs, graceful degradation, and root-cause postmortems."
-        ),
-        "recommended_tools": ["system_hardware_stats", "process_status"],
-    },
-
-    # 2. Code Quality & Architecture
-    "codebase_architect": {
-        "domain": "engineering",
-        "title": "Software Systems Architect",
-        "system_directive": (
-            "You are a Software Systems Architect. You analyze codebase structures, design patterns, "
-            "circular dependencies, and modularity. Use AST mapping and symbol indexing to maintain clean architecture."
-        ),
-        "recommended_tools": ["codebase_map", "codebase_symbol_lookup", "git_diff"],
-    },
-    "qa_automation_engineer": {
-        "domain": "qa_and_testing",
-        "title": "Lead QA Automation Engineer",
-        "system_directive": (
-            "You are a Lead QA Automation Engineer specializing in Pytest, Playwright, Jest, "
-            "contract testing, and boundary-condition edge cases. Ensure 100% deterministic test results."
-        ),
-        "recommended_tools": ["file_read", "python_execute", "shell_execute"],
-    },
-    "accessibility_auditor": {
-        "domain": "qa_and_testing",
-        "title": "WCAG Accessibility (a11y) Auditor",
-        "system_directive": (
-            "You are a WCAG 2.2 AA/AAA Accessibility Auditor. You audit semantic HTML, ARIA labels, "
-            "keyboard navigation traps, color contrast ratios, and screen-reader friendliness."
-        ),
-        "recommended_tools": ["file_read", "file_search"],
-    },
-
-    # 3. Data, AI & Analytics
-    "data_scientist": {
-        "domain": "data_and_ai",
-        "title": "Senior Data Scientist & Statistician",
-        "system_directive": (
-            "You are a Senior Data Scientist. You analyze distributions, conduct statistical hypothesis testing, "
-            "profile data quality, and build regression/clustering models with high mathematical rigor."
-        ),
-        "recommended_tools": ["dataset_summary", "python_execute"],
-    },
-    "quantitative_analyst": {
-        "domain": "data_and_ai",
-        "title": "Quantitative Financial Analyst",
-        "system_directive": (
-            "You are a Quantitative Analyst specializing in time-series forecasting, risk modeling, "
-            "Monte Carlo simulations, and algorithmic backtesting."
-        ),
-        "recommended_tools": ["dataset_summary", "python_execute"],
-    },
-
-    # 4. Research & Scientific
-    "scientific_researcher": {
-        "domain": "research_and_science",
-        "title": "Academic & Scientific Research Fellow",
-        "system_directive": (
-            "You are an Academic Research Fellow within C.O.P.P.E.R. You synthesize academic literature, "
-            "evaluate peer-reviewed claims on arXiv, and verify scientific formulas and citations."
-        ),
-        "recommended_tools": ["arxiv_search", "scrapling_scrape", "dataset_summary"],
-    },
-
-    # 5. Media & Creative
-    "multimedia_producer": {
-        "domain": "media_and_creative",
-        "title": "Video & Multimedia Producer",
-        "system_directive": (
-            "You are a Multimedia Producer within C.O.P.P.E.R. You script, storyboard, and direct automated "
-            "video and audio generation pipelines using local neural models and FFmpeg."
-        ),
-        "recommended_tools": ["video_create_slideshow", "video_probe"],
-    },
-
-    # 6. Workflow & Documentation
-    "technical_writer": {
-        "domain": "content_and_docs",
-        "title": "Principal Technical Writer",
-        "system_directive": (
-            "You are a Principal Technical Writer. You create clear, developer-friendly API documentation, "
-            "runbooks, and architectural specs with structured diagrams."
-        ),
-        "recommended_tools": ["workflow_diagram_render", "file_read"],
-    },
-
-    # 7. Web & Intelligence
-    "stealth_intelligence_scout": {
-        "domain": "web_and_intelligence",
-        "title": "Stealth Web Intelligence Scout",
-        "system_directive": (
-            "You are a Stealth Web Intelligence Scout. You extract crucial public web data without triggering "
-            "bot-detection walls, parsing layouts adaptively and delivering structured insights."
-        ),
-        "recommended_tools": ["scrapling_scrape", "web_search"],
-    },
-}
+CATALOG_PATH = Path(__file__).resolve().parents[3] / "data" / "agency_agents_full_catalog.json"
+_CACHED_CATALOG: dict[str, dict[str, Any]] | None = None
 
 
-def get_persona(name: str) -> dict[str, Any] | None:
-    """Retrieve persona definition by key name."""
-    return AGENCY_PERSONAS.get(name.lower())
+def _load_catalog() -> dict[str, dict[str, Any]]:
+    global _CACHED_CATALOG
+    if _CACHED_CATALOG is not None:
+        return _CACHED_CATALOG
+
+    if CATALOG_PATH.exists():
+        try:
+            with open(CATALOG_PATH, "r", encoding="utf-8") as f:
+                _CACHED_CATALOG = json.load(f)
+                return _CACHED_CATALOG
+        except Exception as e:
+            logger.error(f"Failed to load full agency catalog from {CATALOG_PATH}: {e}")
+
+    _CACHED_CATALOG = {}
+    return _CACHED_CATALOG
 
 
-def list_personas(domain: str | None = None) -> list[dict[str, Any]]:
-    """List available specialist personas, optionally filtered by domain."""
+def get_persona(identifier: str) -> dict[str, Any] | None:
+    """
+    Retrieve persona definition by key identifier.
+    Supports either 'division:agent-id' (e.g. 'engineering:engineering-software-architect')
+    or partial matching by role name / slug (e.g. 'devops_engineer', 'software_architect').
+    """
+    catalog = _load_catalog()
+    if identifier in catalog:
+        return catalog[identifier]
+
+    id_lower = identifier.lower().replace("_", "-")
+    # Search by exact key match or slug match
+    for key, p in catalog.items():
+        slug = key.split(":")[-1].lower()
+        if slug == id_lower or id_lower in slug or identifier.lower() == p.get("name", "").lower():
+            return p
+
+    return None
+
+
+def list_personas(division: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
+    """List available specialist personas, optionally filtered by division."""
+    catalog = _load_catalog()
     res = []
-    for key, val in AGENCY_PERSONAS.items():
-        if domain is None or val.get("domain") == domain:
+    div_filter = division.lower() if division else None
+
+    for key, val in catalog.items():
+        if div_filter is None or val.get("division", "").lower() == div_filter:
             res.append({
                 "id": key,
-                "title": val.get("title"),
-                "domain": val.get("domain"),
-                "tools": val.get("recommended_tools", []),
+                "name": val.get("name"),
+                "division": val.get("division"),
+                "division_label": val.get("division_label"),
+                "description": val.get("description", ""),
+                "vibe": val.get("vibe", ""),
             })
+            if len(res) >= limit:
+                break
     return res
+
+
+def list_divisions() -> list[str]:
+    """Return all unique agent divisions in C.O.P.P.E.R."""
+    catalog = _load_catalog()
+    return sorted(list({p.get("division") for p in catalog.values() if p.get("division")}))
 
 
 def inject_persona(system_prompt: str, persona_id: str) -> str:
@@ -163,4 +76,10 @@ def inject_persona(system_prompt: str, persona_id: str) -> str:
     persona = get_persona(persona_id)
     if not persona:
         return system_prompt
-    return f"{system_prompt}\n\n[SPECIALIST PERSONA ADAPTATION: {persona['title']}]\n{persona['system_directive']}"
+
+    directive = persona.get("system_prompt") or persona.get("description", "")
+    return (
+        f"{system_prompt}\n\n"
+        f"[SPECIALIST PERSONA ACTIVE: {persona.get('name', persona_id)} | Division: {persona.get('division_label', '')}]\n"
+        f"{directive}"
+    )

@@ -488,3 +488,5 @@ export const fetchDistributedTraces = (limit = 50) =>
 
 export const fetchDistributedTraceById = (traceId: string) =>
   api.get<DistributedTrace>(`/telemetry/traces/${traceId}`).then((r) => r.data);
+
+

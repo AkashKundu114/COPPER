@@ -444,4 +444,72 @@ export const skillGapsAPI = {
   updateStatus: (gapId: string, status: string) => api.patch(`/skill-gaps/${gapId}`, { status }),
 };
 
+export interface CatalogSummary {
+  total_personas: number;
+  total_divisions: number;
+  total_scientific_skills: number;
+  total_tools: number;
+  divisions: { id: string; count: number }[];
+  science_categories: { name: string; count: number }[];
+  guardian_tiers: Record<number, number>;
+}
+
+export interface AgencyPersona {
+  id: string;
+  name: string;
+  division: string;
+  division_label: string;
+  role: string;
+  description: string;
+  vibe: string;
+  system_prompt_preview: string;
+  system_prompt?: string;
+}
+
+export interface ScientificSkill {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  path: string;
+  instruction_preview: string;
+  instructions?: string;
+}
+
+export interface ToolParameter {
+  name: string;
+  type: string;
+  description: string;
+  required: boolean;
+}
+
+export interface CatalogTool {
+  name: string;
+  description: string;
+  return_description: string;
+  guardian_level: number;
+  category: string;
+  parameter_count: number;
+  parameters: ToolParameter[];
+}
+
+export const catalogAPI = {
+  getSummary: () => api.get<CatalogSummary>("/catalog/summary"),
+  getDivisions: () => api.get<Array<{ id: string; label: string; count: number; sample_roles: string[] }>>("/catalog/divisions"),
+  getPersonas: (params?: { division?: string; search?: string; limit?: number; offset?: number }) =>
+    api.get<{ total: number; offset: number; limit: number; personas: AgencyPersona[] }>("/catalog/personas", { params }),
+  getPersonaDetail: (id: string) => api.get<AgencyPersona>(`/catalog/personas/${id}`),
+  getScientificSkills: (params?: { category?: string; search?: string; limit?: number; offset?: number }) =>
+    api.get<{ total: number; offset: number; limit: number; skills: ScientificSkill[] }>("/catalog/scientific-skills", { params }),
+  getScientificSkillDetail: (id: string) => api.get<ScientificSkill>(`/catalog/scientific-skills/${id}`),
+  getTools: (params?: { search?: string; guardian_level?: number }) =>
+    api.get<{ total: number; tools: CatalogTool[] }>("/catalog/tools", { params }),
+  renderDiagram: (diagram_type: string, title: string, specification: string) =>
+    api.post("/catalog/diagram/render", { diagram_type, title, specification }),
+  getVideoPipelines: () => api.get("/catalog/video/pipelines"),
+  searchArxiv: (query: string, max_results = 5) =>
+    api.post<{ status: string; total_found?: number; query?: string; papers?: any[]; error?: string }>("/catalog/arxiv/search", { query, max_results }),
+};
+
 export default api;
+

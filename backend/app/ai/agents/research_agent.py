@@ -44,8 +44,10 @@ class ResearchAgent(BaseAgent):
                 "scrapling_scrape",
                 "arxiv_search",
                 "dataset_summary",
+                "scientific_skill_lookup",
+                "scientific_skill_list",
             ],
-            max_tool_steps=5,
+            max_tool_steps=6,
         )
 
     def get_target_model(self) -> str:
