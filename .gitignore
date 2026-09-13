@@ -22,7 +22,9 @@ service-account*.json
 *.db-journal
 *.db-wal
 *.db-shm
-backend/data/
+backend/data/*
+!backend/data/agency_agents_full_catalog.json
+!backend/data/scientific_skills_catalog.json
 postgres-data/
 redis-data/
 dump.rdb
@@ -141,6 +143,7 @@ tmp/
 temp/
 scratch/
 .tmp/
+external_repos/
 
 # ── IDE & Editor ──────────────────────────────────────────────────────────────
 .vscode/

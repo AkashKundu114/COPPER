@@ -8,9 +8,14 @@ __pycache__/
 .venv/
 venv/
 
-# Local databases
+# Local databases & runtime data
 app/data/*.db
-data/
+data/*
+!data/agency_agents_full_catalog.json
+!data/scientific_skills_catalog.json
+
+# External repos
+external_repos/
 
 # Environment
 .env

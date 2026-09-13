@@ -47,9 +47,11 @@ jspm_packages/
 # Snowpack cache (https://snowpack.dev/)
 .snowpack
 
-# Vite build output
+# Vite and Electron build output
 dist/
 dist-ssr/
+dist-electron/
+release/
 .vite/
 
 # TypeScript cache

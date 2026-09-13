@@ -26,7 +26,9 @@ service-account*.json
 *.db
 *.sqlite
 *.sqlite3
-backend/data/
+backend/data/*
+!backend/data/agency_agents_full_catalog.json
+!backend/data/scientific_skills_catalog.json
 postgres-data/
 redis-data/
 dump.rdb
@@ -81,6 +83,7 @@ temp/
 scratch/
 sandbox/
 backend/sandbox/
+external_repos/
 
 # ── Documentation & Community ─────────────────────────────────────────────────
 docs/
