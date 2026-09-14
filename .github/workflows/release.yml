@@ -77,7 +77,7 @@ jobs:
           tar -czf "copper-backend-${{ github.ref_name }}.tar.gz" backend
 
       - name: Download all desktop artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: desktop-binaries-*
           merge-multiple: true
