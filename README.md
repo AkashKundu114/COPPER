@@ -233,7 +233,7 @@ All empirical benchmarks rendered at 320 DPI vector resolution using scientific 
   <em><b>Figure 10:</b> C.O.P.P.E.R. Sovereign Self-Evolution & Continuous Experience Distillation Loop. Trajectory capture, Bayesian consolidation, autonomous synthetic generation, and edge companion adaptation without third-party exposure.</em>
 </p>
 
-| Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 - 8GB) |
+| Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 Laptop - 8GB) |
 | :--- | :--- |
 | ![Latency Percentiles](docs/images/latency_percentiles.png) | ![VRAM Allocation](docs/images/vram_memory_allocation.png) |
 
