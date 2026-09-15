@@ -24,6 +24,10 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  DISPLAY: ':99'
+  MPLBACKEND: Agg
+
 jobs:
   lint:
     name: Lint & Format (ruff)
@@ -127,6 +131,8 @@ jobs:
         env:
           DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copperdb_test
           REDIS_URL: redis://localhost:6379/0
+          DISPLAY: ':99'
+          MPLBACKEND: Agg
         run: |
           python -m pytest tests/ -v --tb=short \
             --cov=backend/app --cov-report=xml --cov-report=term-missing \

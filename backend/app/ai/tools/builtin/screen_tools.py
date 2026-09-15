@@ -2,18 +2,27 @@ import asyncio
 import base64
 import ctypes
 import io
+import os
 import sys
 from typing import Any
 
-import pyautogui
+# Ensure headless virtual display is defined before importing GUI libraries on Linux
+if not os.environ.get("DISPLAY"):
+    os.environ["DISPLAY"] = ":99"
+
+try:
+    import pyautogui
+
+    # Configure PyAutoGUI fail-safe and timings
+    pyautogui.FAILSAFE = True
+    pyautogui.PAUSE = 0.05
+except Exception:
+    pyautogui = None  # type: ignore
+
 from PIL import Image, ImageGrab
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
-
-# Configure PyAutoGUI fail-safe and timings
-pyautogui.FAILSAFE = True
-pyautogui.PAUSE = 0.05
 
 # Ensure DPI awareness on Windows so screen coordinates match physical pixels
 if sys.platform == "win32":

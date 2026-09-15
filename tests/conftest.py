@@ -1,5 +1,11 @@
+import os
 import sys
 from pathlib import Path
+
+# Ensure headless environment variables are set before any test collection
+if not os.environ.get("DISPLAY"):
+    os.environ["DISPLAY"] = ":99"
+os.environ.setdefault("MPLBACKEND", "Agg")
 
 import pytest
 

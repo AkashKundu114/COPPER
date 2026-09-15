@@ -1,11 +1,23 @@
 import os
 from contextlib import asynccontextmanager
 
+# Set headless display mode for CI/headless environments
+if not os.environ.get("DISPLAY"):
+    os.environ["DISPLAY"] = ":99"
+
 # Enforce NVIDIA dedicated GPU isolation
 os.environ.setdefault("CUDA_DEVICE_ORDER", "PCI_BUS_ID")
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 os.environ.setdefault("HIP_VISIBLE_DEVICES", "")
 os.environ.setdefault("ROCR_VISIBLE_DEVICES", "")
+
+# Set matplotlib to use non-interactive backend before any GUI imports
+try:
+    import matplotlib
+
+    matplotlib.use("Agg")
+except ImportError:
+    pass
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
