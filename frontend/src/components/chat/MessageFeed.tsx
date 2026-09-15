@@ -456,19 +456,19 @@ export function MessageFeed({
           aria-label={`Neural reasoning active: ${agentStats[activeAgent]?.name || activeAgent} executing cognitive tasks across local agent mesh`}
           className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono"
         >
-          <div className="flex items-center gap-2 text-xs text-cyber-cyan">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" aria-hidden="true" />
-            <span className="tracking-wider uppercase">Neural Reasoning & Tool Execution Active...</span>
+          <div className="flex items-center gap-2 text-xs text-blush-100">
+            <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" aria-hidden="true" />
+            <span className="font-display font-bold tracking-wider uppercase">Neural Reasoning & Tool Execution Active...</span>
           </div>
-          <div className="flex items-center gap-3 p-3.5 rounded-xl border border-cyber-cyan/30 bg-[#070d18]/80 backdrop-blur-xl shadow-hud">
-            <div className="w-7 h-7 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-              <Cpu size={14} className="text-cyber-cyan animate-pulse" />
+          <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-blush-100/25 bg-[#1A0A0F]/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)]">
+            <div className="w-8 h-8 rounded-xl bg-blush-100/15 border border-blush-100/30 flex items-center justify-center flex-shrink-0 shadow-sm" aria-hidden="true">
+              <Cpu size={14} className="text-blush-100 animate-pulse" />
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] text-white font-bold font-sans">
+              <span className="text-[13px] text-white font-display font-bold">
                 {agentStats[activeAgent]?.name || activeAgent}
               </span>
-              <span className="text-[10.5px] text-zinc-400 font-mono">
+              <span className="text-[10.5px] text-blush-300/60 font-mono">
                 Executing cognitive tasks across local agent mesh...
               </span>
             </div>

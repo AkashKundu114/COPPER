@@ -381,17 +381,17 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
 
   return (
     <div
-      className={`relative w-full rounded-2xl bg-[#05080e]/95 border border-cyber-cyan/25 overflow-hidden shadow-2xl select-none font-mono flex flex-col ${className}`}
+      className={`relative w-full rounded-3xl bg-[#1A0A0F]/95 border border-blush-100/20 overflow-hidden shadow-[0_24px_56px_rgba(10,3,6,0.6),inset_0_1px_0_rgba(246,230,234,0.12)] select-none font-mono flex flex-col ${className}`}
     >
       {/* HUD Header Bar */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-cyber-cyan/20 bg-gradient-to-r from-cyber-cyan/10 via-[#070d18] to-[#05080e]">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-blush-100/15 bg-gradient-to-r from-blush-100/10 via-[#220D16] to-[#14070B]">
         <div className="flex items-center gap-2.5">
-          <div className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-          <span className="text-[12px] font-bold text-cyber-cyan tracking-wider flex items-center gap-2">
-            <Radio size={14} className="text-cyber-cyan" />
+          <div className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" />
+          <span className="font-display text-[12px] font-bold text-white tracking-wider flex items-center gap-2">
+            <Radio size={14} className="text-blush-100" />
             GOD'S EYE // ORBITAL SPATIAL RECONNAISSANCE
           </span>
-          <span className="hidden md:inline px-2 py-0.5 rounded bg-cyber-cyan/15 border border-cyber-cyan/30 text-[9px] text-cyber-cyan font-bold">
+          <span className="hidden md:inline px-2 py-0.5 rounded-md bg-blush-100/15 border border-blush-100/30 text-[9px] text-blush-100 font-bold">
             SAT-FEED LIVE
           </span>
         </div>

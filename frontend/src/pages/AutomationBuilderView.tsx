@@ -97,7 +97,7 @@ export const AutomationBuilderView: React.FC = () => {
         <div className="lg:col-span-2 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2 pb-4">
           <h3 className="text-sm font-semibold text-white mb-2">Active Automations Canvas</h3>
           {automations.map(rule => (
-            <div key={rule.id} className="relative group bg-[#0a0f19] border border-white/10 rounded-xl p-4 flex flex-col gap-3 transition-all hover:border-cyber-cyan/40">
+            <div key={rule.id} className="relative group bg-[#1A0A0F]/85 border border-blush-100/15 rounded-2xl p-5 flex flex-col gap-3 transition-all hover:border-blush-100/40 shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.08)]">
               <div className="flex items-center justify-between">
                 <h4 className="text-white font-medium flex items-center gap-2">
                   <Play className={`w-4 h-4 ${rule.isActive ? 'text-verdigris' : 'text-zinc-600'}`} />
@@ -108,18 +108,18 @@ export const AutomationBuilderView: React.FC = () => {
                     onClick={() => toggleAutomation(rule.id)}
                     className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${rule.isActive ? 'bg-verdigris' : 'bg-zinc-700'}`}
                   >
-                    <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${rule.isActive ? 'translate-x-5' : 'translate-x-1'}`} />
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${rule.isActive ? 'translate-x-4.5' : 'translate-x-1'}`} />
                   </button>
-                  <button onClick={() => deleteAutomation(rule.id)} className="text-zinc-500 hover:text-red-400 transition-colors">
+                  <button onClick={() => deleteAutomation(rule.id)} className="text-zinc-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-1 cursor-pointer">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4 text-xs mt-2 bg-white/5 p-3 rounded-lg overflow-x-auto">
+              <div className="flex items-center gap-4 text-xs mt-2 bg-[#12060A] p-3 rounded-xl border border-blush-100/10 overflow-x-auto">
                 <div className="flex flex-col gap-1 min-w-[120px]">
                   <span className="text-zinc-500 uppercase tracking-wider text-[10px]">Trigger</span>
-                  <span className="text-cyber-cyan truncate">{rule.triggerType}</span>
+                  <span className="text-blush-200 truncate">{rule.triggerType}</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-600 flex-shrink-0" />
                 <div className="flex flex-col gap-1 min-w-[120px]">
