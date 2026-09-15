@@ -1,6 +1,53 @@
+import base64
 import math
+import re
+import unicodedata
 from dataclasses import dataclass, field
 from enum import IntEnum
+
+HOMOGLYPH_MAP = {
+    "\u0430": "a", "\u0410": "A",
+    "\u0435": "e", "\u0415": "E",
+    "\u043e": "o", "\u041e": "O",
+    "\u0440": "p", "\u0420": "P",
+    "\u0441": "c", "\u0421": "C",
+    "\u0443": "y", "\u0423": "Y",
+    "\u0445": "x", "\u0425": "X",
+    "\u0455": "s", "\u0405": "S",
+    "\u0456": "i", "\u0406": "I",
+    "\u0458": "j", "\u0408": "J",
+}
+
+INVISIBLE_CHARS_REGEX = re.compile(r"[\u200b\u200c\u200d\ufeff\u200e\u200f\u202a-\u202e]")
+
+
+def normalize_adversarial_text(text: str) -> str:
+    """
+    Normalizes text to defeat adversarial evasion techniques:
+    1. Strips zero-width and invisible directional Unicode characters.
+    2. Maps confusable Cyrillic/Greek homoglyphs to Latin ASCII.
+    3. Detects and decodes embedded base64 payloads to inspect inner commands.
+    """
+    if not text:
+        return ""
+    cleaned = INVISIBLE_CHARS_REGEX.sub("", text)
+    for cyr, lat in HOMOGLYPH_MAP.items():
+        cleaned = cleaned.replace(cyr, lat)
+    normalized = unicodedata.normalize("NFKD", cleaned)
+
+    b64_matches = re.findall(r"['\"]([A-Za-z0-9+/=]{8,})['\"]", normalized)
+    decoded_extras = []
+    for candidate in b64_matches:
+        try:
+            dec = base64.b64decode(candidate).decode("utf-8", errors="ignore")
+            if dec.strip():
+                decoded_extras.append(dec.strip())
+        except Exception:
+            pass
+    if decoded_extras:
+        normalized += " " + " ".join(decoded_extras)
+
+    return normalized.lower()
 
 
 class DisagreementLevel(IntEnum):
@@ -183,7 +230,7 @@ def compute_action_reversibility_risk(proposed_action: str) -> float:
     """
     Evaluates semantic reversibility risk R(a) in [0.0, 1.0].
     """
-    action_lower = proposed_action.lower()
+    action_lower = normalize_adversarial_text(proposed_action)
     if any(t in action_lower for t in SAFETY_TRIGGERS):
         return 1.0
     if any(
@@ -287,7 +334,7 @@ class GuardianEngine:
     def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
         if context is None:
             context = {}
-        action_lower = proposed_action.lower()
+        action_lower = normalize_adversarial_text(proposed_action)
 
         # Real-time cognitive & context telemetry
         session_hours = float(context.get("session_hours", 0.0))

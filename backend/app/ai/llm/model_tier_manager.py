@@ -26,6 +26,7 @@ import httpx
 
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
+from app.ai.llm.vram_pager import vram_pager
 from app.core.config import settings
 from app.core.logger import logger
 
@@ -51,10 +52,12 @@ class ModelTierManager:
     # ------------------------------------------------------------------ #
     async def chat_gatekeeper(self, messages: list[dict[str, str]]) -> str:
         """Always issued with keep_alive=-1. This model is never swept."""
+        await vram_pager.acquire_model(self.gatekeeper_model, lookahead_priority=1.0)
         return await self._chat_with_keep_alive(self.gatekeeper_model, messages, keep_alive=-1)
 
     async def chat_heavy(self, model: str, messages: list[dict[str, str]], idle_timeout_seconds: int = 240) -> str:
         """Issued with a numeric keep_alive window; tracked for the idle sweep."""
+        await vram_pager.acquire_model(model)
         self._touch(model, idle_timeout_seconds)
         return await self._chat_with_keep_alive(model, messages, keep_alive=f"{idle_timeout_seconds}s")
 

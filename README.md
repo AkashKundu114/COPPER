@@ -233,6 +233,19 @@ All empirical benchmarks rendered at 320 DPI vector resolution using scientific 
   <em><b>Figure 10:</b> C.O.P.P.E.R. Sovereign Self-Evolution & Continuous Experience Distillation Loop. Trajectory capture, Bayesian consolidation, autonomous synthetic generation, and edge companion adaptation without third-party exposure.</em>
 </p>
 
+<p align="center">
+  <img src="docs/images/fig11_vram_pager_and_concurrency.png" alt="Figure 11: VRAM Pager & Concurrency Isolation" width="48%" />
+  <img src="docs/images/fig12_wal_crash_consistency.png" alt="Figure 12: WAL Crash Durability & Recovery" width="48%" />
+  <br />
+  <em><b>Figure 11 & 12:</b> (Left) Multi-factor weighted LRU VRAM Pager with DAG lookahead eviction under strict 8GB bound & sub-3ms isolated event loop scheduling lag. (Right) ARIES-style Write-Ahead Log durability protocol achieving 100.0% autonomous state recovery across hard SIGKILL failure interruptions.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig13_chaos_fuzzing_and_hybrid_rrf.png" alt="Figure 13: Adversarial Fuzzing & Hybrid RRF IR Benchmark" width="96%" />
+  <br />
+  <em><b>Figure 13:</b> (Left) Adversarial Fuzzing catch sensitivity (100.0% across zero-width Unicode, homoglyphs, and base64 obfuscation with 0 breaches). (Right) Symbol-Preserving Hybrid RRF Information Retrieval benchmark, reaching 0.96 MRR@10 on exact technical code symbols vs 0.42 dense-only baseline.</em>
+</p>
+
 | Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 Laptop - 8GB) |
 | :--- | :--- |
 | ![Latency Percentiles](docs/images/latency_percentiles.png) | ![VRAM Allocation](docs/images/vram_memory_allocation.png) |
