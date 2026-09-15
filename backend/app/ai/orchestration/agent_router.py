@@ -372,9 +372,18 @@ NEGATIVE_RULES: dict[AgentType, list[tuple[str, float]]] = {
             r"\b(my name|my age|who am i|whats my name|what is my name|my files|my schedule|in my notes|my password|my memory|remember when|my habits|my calendar|my tasks|my todo|my projects|local documents|on my computer|my workstation|on my desktop|in my database)\b",
             8.0,
         ),
-        (r"\b(remind me|set an alarm|schedule a notification|schedule a time|create a reminder|add a todo|set a timer)\b", 8.0),
-        (r"\b(delete the file|open the terminal|open chrome|close all windows|kill process|close.*(tabs|windows|browser)|open.*(browser|chrome|firefox)|in google chrome)\b", 8.0),
-        (r"\b(write a python function|write a script|debug this error|fix my syntax|create a react component|implement a function)\b", 8.0),
+        (
+            r"\b(remind me|set an alarm|schedule a notification|schedule a time|create a reminder|add a todo|set a timer)\b",
+            8.0,
+        ),
+        (
+            r"\b(delete the file|open the terminal|open chrome|close all windows|kill process|close.*(tabs|windows|browser)|open.*(browser|chrome|firefox)|in google chrome)\b",
+            8.0,
+        ),
+        (
+            r"\b(write a python function|write a script|debug this error|fix my syntax|create a react component|implement a function)\b",
+            8.0,
+        ),
         (r"\b(what is on my screen|describe this screenshot|read text from this image)\b", 8.0),
         (r"\b(generate an image|create an image|draw a picture)\b", 8.0),
     ],

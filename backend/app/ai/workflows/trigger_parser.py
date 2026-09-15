@@ -9,7 +9,6 @@ from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
 from app.ai.workflows.dsl import (
     ActionFailurePolicy,
-    Condition,
     NotificationConfig,
     TriggerConfig,
     TriggerType,

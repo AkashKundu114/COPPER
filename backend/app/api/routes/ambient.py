@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter
 
@@ -20,7 +20,7 @@ async def get_sessions(hours: int = 24):
 
 
 @router.get("/stats")
-async def get_stats(hours: int = 24) -> Dict[str, Any]:
+async def get_stats(hours: int = 24) -> dict[str, Any]:
     return activity_timeline.get_productivity_stats(hours)
 
 
@@ -30,7 +30,7 @@ async def get_current_context():
 
 
 @router.get("/summary")
-async def get_summary(date: str | None = None) -> Dict[str, str]:
+async def get_summary(date: str | None = None) -> dict[str, str]:
     if date:
         try:
             target_date = datetime.fromisoformat(date)

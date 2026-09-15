@@ -1,19 +1,22 @@
 import json
 import os
-import numpy as np
 from dataclasses import dataclass, field
 from datetime import datetime
 
+import numpy as np
+
 from app.core.logger import logger
+
 
 @dataclass
 class PrivacyBudget:
     epsilon: float = 1.0  # Privacy parameter (lower = more private, range 0.1-10.0)
-    delta: float = 1e-5   # Probability of privacy failure
+    delta: float = 1e-5  # Probability of privacy failure
     total_epsilon_spent: float = 0.0
     total_queries: int = 0
     budget_limit: float = 10.0  # Max cumulative epsilon before reset required
     last_reset: datetime = field(default_factory=datetime.utcnow)
+
 
 class DifferentialPrivacyEngine:
     def __init__(self):
@@ -35,7 +38,7 @@ class DifferentialPrivacyEngine:
         eps = max(eps, 1e-6)
         sensitivity = 1.0
         scale = sensitivity / eps
-        
+
         noised_results = []
         for res in results:
             new_res = dict(res)
@@ -65,7 +68,7 @@ class DifferentialPrivacyEngine:
             "remaining": rem,
             "pct_used": pct,
             "queries": self.budget.total_queries,
-            "needs_reset": spent >= limit
+            "needs_reset": spent >= limit,
         }
 
     def reset_budget(self):
@@ -80,7 +83,9 @@ class DifferentialPrivacyEngine:
         self.budget.delta = max(1e-10, min(1e-2, delta))
         self.budget.budget_limit = max(1.0, budget_limit)
         self._save_config()
-        logger.info(f"DP Engine configured: epsilon={self.budget.epsilon}, delta={self.budget.delta}, limit={self.budget.budget_limit}")
+        logger.info(
+            f"DP Engine configured: epsilon={self.budget.epsilon}, delta={self.budget.delta}, limit={self.budget.budget_limit}"
+        )
 
     def get_privacy_guarantee(self) -> str:
         return f"This memory store satisfies (ε={self.budget.epsilon}, δ={self.budget.delta})-differential privacy. After {self.budget.total_queries} queries, cumulative privacy loss is ε_total={self.budget.total_epsilon_spent}."
@@ -88,7 +93,7 @@ class DifferentialPrivacyEngine:
     def _load_config(self):
         if os.path.exists(self._config_path):
             try:
-                with open(self._config_path, "r") as f:
+                with open(self._config_path) as f:
                     data = json.load(f)
                 self.budget.epsilon = data.get("epsilon", self.budget.epsilon)
                 self.budget.delta = data.get("delta", self.budget.delta)
@@ -102,15 +107,20 @@ class DifferentialPrivacyEngine:
         try:
             os.makedirs(os.path.dirname(self._config_path), exist_ok=True)
             with open(self._config_path, "w") as f:
-                json.dump({
-                    "epsilon": self.budget.epsilon,
-                    "delta": self.budget.delta,
-                    "total_epsilon_spent": self.budget.total_epsilon_spent,
-                    "total_queries": self.budget.total_queries,
-                    "budget_limit": self.budget.budget_limit,
-                    "last_reset": self.budget.last_reset.isoformat()
-                }, f, indent=2)
+                json.dump(
+                    {
+                        "epsilon": self.budget.epsilon,
+                        "delta": self.budget.delta,
+                        "total_epsilon_spent": self.budget.total_epsilon_spent,
+                        "total_queries": self.budget.total_queries,
+                        "budget_limit": self.budget.budget_limit,
+                        "last_reset": self.budget.last_reset.isoformat(),
+                    },
+                    f,
+                    indent=2,
+                )
         except Exception as e:
             logger.error(f"Failed to save DP config: {e}")
+
 
 dp_engine = DifferentialPrivacyEngine()

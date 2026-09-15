@@ -1,8 +1,7 @@
-import math
 import re
 import threading
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from typing import Any
 
 from app.core.constants import AgentType
@@ -174,9 +173,7 @@ class RoutingExplainer:
         return highlights
 
     @classmethod
-    def compute_score_breakdown(
-        cls, scores: dict[str, float], winning_agent: AgentType | str
-    ) -> list[ScoreItem]:
+    def compute_score_breakdown(cls, scores: dict[str, float], winning_agent: AgentType | str) -> list[ScoreItem]:
         """
         Formats normalized horizontal bar scores per agent.
         """
@@ -290,7 +287,11 @@ class RoutingExplainer:
                 decision=(
                     "Matched conversational greeting patterns -> Dispatched to COPPER"
                     if s1_matched
-                    else ("Bypassed (handled in Stage 0)" if s0_matched else "No greeting detected -> Proceeded to Stage 2")
+                    else (
+                        "Bypassed (handled in Stage 0)"
+                        if s0_matched
+                        else "No greeting detected -> Proceeded to Stage 2"
+                    )
                 ),
             )
         )
@@ -373,7 +374,9 @@ class RoutingExplainer:
         category_name = agent_key.upper()
 
         if route_stage == "fast_smalltalk_filter":
-            return f"Routed to COPPER (confidence: {conf_pct}%) because message matched conversational greeting patterns"
+            return (
+                f"Routed to COPPER (confidence: {conf_pct}%) because message matched conversational greeting patterns"
+            )
 
         if route_stage == "learned_memory_cache":
             return f"Routed to {codename} (confidence: {conf_pct}%) via exact learned memory cache match"
@@ -442,9 +445,7 @@ class RoutingExplainer:
         score_breakdown = [asdict(item) for item in cls.compute_score_breakdown(scores, agent)]
 
         # Decision summary
-        decision_summary = cls.generate_decision_summary(
-            agent, confidence, route_stage, highlights, prompt
-        )
+        decision_summary = cls.generate_decision_summary(agent, confidence, route_stage, highlights, prompt)
 
         # Confidence calibration
         calibration = cls.compute_confidence_calibration(
@@ -453,10 +454,7 @@ class RoutingExplainer:
 
         # Stage progression
         stage_progression = [
-            asdict(s)
-            for s in cls.generate_stage_progression(
-                route_stage, agent, scores, is_consequential
-            )
+            asdict(s) for s in cls.generate_stage_progression(route_stage, agent, scores, is_consequential)
         ]
 
         explanation_id = f"prism-{int(time.time() * 1000)}-{abs(hash(prompt)) % 10000:04d}"

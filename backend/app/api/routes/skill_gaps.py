@@ -1,25 +1,29 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List
 
-from app.ai.companion.skill_gap_detector import skill_gap_detector, SkillGap
+from app.ai.companion.skill_gap_detector import SkillGap, skill_gap_detector
 
 router = APIRouter(prefix="/skill-gaps", tags=["skill-gaps"])
+
 
 class RecordTopicRequest(BaseModel):
     topic: str
 
+
 class UpdateStatusRequest(BaseModel):
     status: str
 
-@router.get("", response_model=List[SkillGap])
+
+@router.get("", response_model=list[SkillGap])
 async def list_skill_gaps():
     return skill_gap_detector.get_active_gaps()
+
 
 @router.post("/record")
 async def record_query_topic(req: RecordTopicRequest):
     skill_gap_detector.record_query_topic(req.topic)
     return {"status": "recorded", "topic": req.topic}
+
 
 @router.patch("/{gap_id}")
 async def update_gap_status(gap_id: str, req: UpdateStatusRequest):

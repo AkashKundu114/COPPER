@@ -1,4 +1,5 @@
 import asyncio
+import importlib.util
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -85,25 +86,20 @@ class QLoRATrainer:
 
     @property
     def _has_real_training_support(self) -> bool:
+        if not importlib.util.find_spec("torch"):
+            return False
         try:
-            import torch
+            import torch  # noqa: F401
+
             if not torch.cuda.is_available():
                 return False
         except ImportError:
             return False
 
-        try:
-            import unsloth
+        if importlib.util.find_spec("unsloth"):
             return True
-        except ImportError:
-            pass
-            
-        try:
-            import peft
-            import trl
-            return True
-        except ImportError:
-            return False
+
+        return bool(importlib.util.find_spec("peft") and importlib.util.find_spec("trl"))
 
     async def _execute_training_pipeline(
         self, job_id: int, version_tag: str, base_model: str, target_agent: str
@@ -155,7 +151,9 @@ class QLoRATrainer:
             job.adapter_dir = str(adapter_dir)
 
             if not self._has_real_training_support:
-                logger.warning("[CHRYSALIS QLoRA] Running in SIMULATION mode — install unsloth or peft+trl for real training")
+                logger.warning(
+                    "[CHRYSALIS QLoRA] Running in SIMULATION mode — install unsloth or peft+trl for real training"
+                )
                 for epoch in range(1, self.EPOCHS + 1):
                     job.current_epoch = epoch
                     job.current_step = int((epoch / self.EPOCHS) * total_steps)
@@ -184,36 +182,45 @@ class QLoRATrainer:
                     await asyncio.sleep(0.5)
             else:
                 logger.info(f"[CHRYSALIS QLoRA] Starting real training for {base_model}...")
-                
+
                 import torch
                 from datasets import Dataset
-                from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+                from transformers import (
+                    AutoModelForCausalLM,
+                    AutoTokenizer,
+                    BitsAndBytesConfig,
+                    TrainerCallback,
+                    TrainingArguments,
+                )
                 from trl import SFTTrainer
-                
+
                 def formatting_prompts_func(example):
                     output_texts = []
-                    for i in range(len(example['messages'])):
-                        messages = example['messages'][i] if isinstance(example['messages'][0], list) else example['messages']
+                    for i in range(len(example["messages"])):
+                        messages = (
+                            example["messages"][i] if isinstance(example["messages"][0], list) else example["messages"]
+                        )
                         text = ""
                         for msg in messages:
                             text += f"<|im_start|>{msg['role']}\n{msg['content']}<|im_end|>\n"
                         output_texts.append(text)
-                        if not isinstance(example['messages'][0], list):
+                        if not isinstance(example["messages"][0], list):
                             break
                     return output_texts
-                
+
                 hf_dataset = Dataset.from_list(dataset)
                 hf_dataset = hf_dataset.train_test_split(test_size=self.VAL_SPLIT)
                 train_ds = hf_dataset["train"]
                 eval_ds = hf_dataset["test"]
-                
+
                 try:
                     from unsloth import FastLanguageModel
+
                     use_unsloth = True
                 except ImportError:
                     use_unsloth = False
                     from peft import LoraConfig, get_peft_model
-                
+
                 if use_unsloth:
                     model, tokenizer = FastLanguageModel.from_pretrained(
                         model_name=base_model,
@@ -232,16 +239,16 @@ class QLoRATrainer:
                         random_state=3407,
                     )
                 else:
-                    tokenizer = AutoTokenizer.from_pretrained(base_model)
+                    tokenizer = AutoTokenizer.from_pretrained(base_model)  # nosec B615
                     if not tokenizer.pad_token:
                         tokenizer.pad_token = tokenizer.eos_token
                     bnb_config = BitsAndBytesConfig(
                         load_in_4bit=True,
                         bnb_4bit_use_double_quant=True,
                         bnb_4bit_quant_type="nf4",
-                        bnb_4bit_compute_dtype=torch.bfloat16
+                        bnb_4bit_compute_dtype=torch.bfloat16,
                     )
-                    model = AutoModelForCausalLM.from_pretrained(
+                    model = AutoModelForCausalLM.from_pretrained(  # nosec B615
                         base_model, quantization_config=bnb_config, device_map="auto"
                     )
                     peft_config = LoraConfig(
@@ -272,7 +279,7 @@ class QLoRATrainer:
                             job.train_loss = logs["loss"]
                             job.current_step = state.global_step
                             db.commit()
-                            
+
                     def on_evaluate(self, args, state, control, metrics=None, **kwargs):
                         if metrics and "eval_loss" in metrics:
                             loss_val = metrics["eval_loss"]
@@ -281,13 +288,15 @@ class QLoRATrainer:
                             train_losses.append(job.train_loss if job.train_loss else loss_val)
                             job.current_epoch = int(state.epoch)
                             db.commit()
-                            
+
                             if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
                                 logger.warning(
                                     f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {state.epoch}: loss rising consecutively."
                                 )
                                 job.status = TrainingJobStatus.ABORTED.value
-                                job.error_message = "Early stopping: validation loss increased for 2 consecutive epochs."
+                                job.error_message = (
+                                    "Early stopping: validation loss increased for 2 consecutive epochs."
+                                )
                                 nonlocal aborted
                                 aborted = True
                                 control.should_training_stop = True
@@ -301,17 +310,17 @@ class QLoRATrainer:
                     args=training_args,
                     formatting_func=formatting_prompts_func,
                 )
-                
+
                 trainer.add_callback(ProgressCallback())
                 trainer.train()
-                
+
                 if not aborted:
                     model.save_pretrained(str(adapter_dir))
                     try:
                         tokenizer.save_pretrained(str(adapter_dir))
                     except Exception:
                         pass
-                
+
                 # Cleanup GPU Memory
                 del model
                 del trainer

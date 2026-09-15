@@ -21,9 +21,10 @@ Architecture:
 
 import asyncio
 import time
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import Any, Callable, Coroutine
+from typing import Any
 
 from app.core.logger import logger
 

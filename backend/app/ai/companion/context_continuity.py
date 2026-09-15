@@ -1,7 +1,6 @@
 import json
 import os
 from dataclasses import asdict, dataclass
-from typing import List, Optional
 
 from app.core.logger import logger
 
@@ -11,9 +10,9 @@ class SessionHandoff:
     session_id: str
     timestamp: str
     active_project: str
-    key_decisions: List[str]
-    unresolved_topics: List[str]
-    suggested_next_steps: List[str]
+    key_decisions: list[str]
+    unresolved_topics: list[str]
+    suggested_next_steps: list[str]
     summary: str
 
 
@@ -28,16 +27,16 @@ class ContextContinuityManager:
             with open(self.storage_path, "w", encoding="utf-8") as f:
                 json.dump([], f)
 
-    def _load_handoffs(self) -> List[SessionHandoff]:
+    def _load_handoffs(self) -> list[SessionHandoff]:
         try:
-            with open(self.storage_path, "r", encoding="utf-8") as f:
+            with open(self.storage_path, encoding="utf-8") as f:
                 data = json.load(f)
                 return [SessionHandoff(**item) for item in data]
         except Exception as e:
             logger.error(f"Error loading session handoffs: {e}")
             return []
 
-    def _save_handoffs(self, handoffs: List[SessionHandoff]):
+    def _save_handoffs(self, handoffs: list[SessionHandoff]):
         try:
             with open(self.storage_path, "w", encoding="utf-8") as f:
                 json.dump([asdict(h) for h in handoffs], f, indent=2)
@@ -48,9 +47,9 @@ class ContextContinuityManager:
         self,
         session_id: str,
         project: str,
-        decisions: List[str],
-        topics: List[str],
-        next_steps: List[str],
+        decisions: list[str],
+        topics: list[str],
+        next_steps: list[str],
         summary: str,
     ) -> SessionHandoff:
         from datetime import datetime
@@ -72,7 +71,7 @@ class ContextContinuityManager:
         logger.info(f"Created session handoff for session {session_id}")
         return handoff
 
-    def get_latest_handoff(self, project: Optional[str] = None) -> Optional[SessionHandoff]:
+    def get_latest_handoff(self, project: str | None = None) -> SessionHandoff | None:
         handoffs = self._load_handoffs()
         if not handoffs:
             return None
@@ -82,17 +81,17 @@ class ContextContinuityManager:
             if filtered:
                 return sorted(filtered, key=lambda x: x.timestamp, reverse=True)[0]
             return None
-        
+
         return sorted(handoffs, key=lambda x: x.timestamp, reverse=True)[0]
 
     def generate_resume_prompt(self) -> str:
         handoff = self.get_latest_handoff()
         if not handoff:
             return "No previous session data found. How can I help you today?"
-            
+
         decisions_str = ", ".join(handoff.key_decisions) if handoff.key_decisions else "nothing major"
         next_steps_str = ", ".join(handoff.suggested_next_steps) if handoff.suggested_next_steps else "explore further"
-        
+
         return f"Last time we worked on {handoff.active_project}. We decided {decisions_str} and were planning to {next_steps_str}. Ready to continue?"
 
 

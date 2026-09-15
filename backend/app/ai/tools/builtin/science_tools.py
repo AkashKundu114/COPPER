@@ -1,10 +1,15 @@
-﻿import csv
+import csv
 import json
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
-import xml.etree.ElementTree as ET
 
 import httpx
+
+try:
+    import defusedxml.ElementTree as DefusedET
+except ImportError:
+    DefusedET = None
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
@@ -45,7 +50,10 @@ async def arxiv_search(query: str, max_results: int = 5) -> dict[str, Any]:
         if resp.status_code != 200:
             return {"status": "error", "error": f"arXiv API error: HTTP {resp.status_code}"}
 
-        root = ET.fromstring(resp.text)
+        if DefusedET is not None:
+            root = DefusedET.fromstring(resp.text)
+        else:
+            root = ET.fromstring(resp.text)  # nosec B314
         ns = {"atom": "http://www.w3.org/2005/Atom"}
         entries = []
 
@@ -66,14 +74,16 @@ async def arxiv_search(query: str, max_results: int = 5) -> dict[str, Any]:
                 if link.attrib.get("title") == "pdf":
                     pdf_link = link.attrib.get("href")
 
-            entries.append({
-                "title": title.text.strip().replace("\n", " ") if title is not None else "Untitled",
-                "authors": authors[:5],
-                "published": published.text[:10] if published is not None else None,
-                "arxiv_id": id_tag.text.split("/abs/")[-1] if id_tag is not None else None,
-                "pdf_url": pdf_link,
-                "abstract": summary.text.strip()[:600] + "..." if summary is not None else "",
-            })
+            entries.append(
+                {
+                    "title": title.text.strip().replace("\n", " ") if title is not None else "Untitled",
+                    "authors": authors[:5],
+                    "published": published.text[:10] if published is not None else None,
+                    "arxiv_id": id_tag.text.split("/abs/")[-1] if id_tag is not None else None,
+                    "pdf_url": pdf_link,
+                    "abstract": summary.text.strip()[:600] + "..." if summary is not None else "",
+                }
+            )
 
         return {
             "status": "success",
@@ -115,11 +125,11 @@ async def dataset_summary(file_path: str, sample_rows: int = 5) -> dict[str, Any
     try:
         rows = []
         if ext == ".csv":
-            with open(p, "r", encoding="utf-8", errors="replace") as f:
+            with open(p, encoding="utf-8", errors="replace") as f:
                 reader = csv.DictReader(f)
                 headers = reader.fieldnames or []
                 total_rows = 0
-                null_counts = {h: 0 for h in headers}
+                null_counts = dict.fromkeys(headers, 0)
 
                 for r in reader:
                     total_rows += 1
@@ -129,7 +139,7 @@ async def dataset_summary(file_path: str, sample_rows: int = 5) -> dict[str, Any
                         if not r.get(h) or r[h].strip() == "":
                             null_counts[h] += 1
         elif ext == ".json":
-            with open(p, "r", encoding="utf-8", errors="replace") as f:
+            with open(p, encoding="utf-8", errors="replace") as f:
                 data = json.load(f)
             if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
                 headers = list(data[0].keys())

@@ -73,13 +73,15 @@ class DiffAnalyzer:
         diff_a = msgs_a[div_idx + 1 :] or msgs_a[div_idx:]
         diff_b = msgs_b[div_idx + 1 :] or msgs_b[div_idx:]
 
-        diff_a_formatted = "\n".join(
-            [f"- [{m.get('role', 'user')}]: {m.get('content', '')[:250]}" for m in diff_a]
-        ) or "No subsequent messages."
+        diff_a_formatted = (
+            "\n".join([f"- [{m.get('role', 'user')}]: {m.get('content', '')[:250]}" for m in diff_a])
+            or "No subsequent messages."
+        )
 
-        diff_b_formatted = "\n".join(
-            [f"- [{m.get('role', 'user')}]: {m.get('content', '')[:250]}" for m in diff_b]
-        ) or "No subsequent messages."
+        diff_b_formatted = (
+            "\n".join([f"- [{m.get('role', 'user')}]: {m.get('content', '')[:250]}" for m in diff_b])
+            or "No subsequent messages."
+        )
 
         # 3. LLM comparison prompt
         user_prompt = (

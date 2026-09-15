@@ -1,16 +1,17 @@
-import imaplib
-import email
-import json
 import base64
+import email
+import imaplib
+import json
 import os
-from uuid import uuid4
+from dataclasses import dataclass
 from datetime import datetime
-from dataclasses import dataclass, field
-from app.core.logger import logger
-from app.ai.llm.ollama_client import ollama_client
-from app.core.guardian import guardian_engine, DisagreementLevel
 from email.header import decode_header
-from typing import Optional
+from uuid import uuid4
+
+from app.ai.llm.ollama_client import ollama_client
+from app.core.guardian import DisagreementLevel, guardian_engine
+from app.core.logger import logger
+
 
 @dataclass
 class EmailMessage:
@@ -21,9 +22,10 @@ class EmailMessage:
     body: str
     received_at: datetime
     priority: str
-    draft_response: Optional[str] = None
+    draft_response: str | None = None
     draft_status: str = "pending"
     read: bool = False
+
 
 @dataclass
 class EmailAccount:
@@ -33,17 +35,18 @@ class EmailAccount:
     password: str
     use_ssl: bool = True
 
+
 class EmailAgent:
     def __init__(self):
         self.config_file = "data/email_config.json"
-        self.account: Optional[EmailAccount] = None
+        self.account: EmailAccount | None = None
         self.emails: list[EmailMessage] = []
         self._load_config()
 
     def _load_config(self):
         if os.path.exists(self.config_file):
             try:
-                with open(self.config_file, "r") as f:
+                with open(self.config_file) as f:
                     data = json.load(f)
                     password = base64.b64decode(data.get("password", "").encode()).decode()
                     self.account = EmailAccount(
@@ -51,7 +54,7 @@ class EmailAgent:
                         port=data.get("port"),
                         username=data.get("username"),
                         password=password,
-                        use_ssl=data.get("use_ssl", True)
+                        use_ssl=data.get("use_ssl", True),
                     )
             except Exception as e:
                 logger.error(f"Failed to load email config: {e}")
@@ -61,13 +64,16 @@ class EmailAgent:
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
         try:
             with open(self.config_file, "w") as f:
-                json.dump({
-                    "host": host,
-                    "port": port,
-                    "username": username,
-                    "password": base64.b64encode(password.encode()).decode(),
-                    "use_ssl": use_ssl
-                }, f)
+                json.dump(
+                    {
+                        "host": host,
+                        "port": port,
+                        "username": username,
+                        "password": base64.b64encode(password.encode()).decode(),
+                        "use_ssl": use_ssl,
+                    },
+                    f,
+                )
         except Exception as e:
             logger.error(f"Failed to save email config: {e}")
 
@@ -91,37 +97,37 @@ class EmailAgent:
     async def fetch_emails(self, limit: int = 20) -> list[EmailMessage]:
         if not self.is_configured():
             return []
-        
+
         mail = self._get_connection()
         if not mail:
             return []
 
         try:
-            mail.select('inbox')
-            status, messages = mail.search(None, 'ALL')
-            if status != 'OK':
+            mail.select("inbox")
+            status, messages = mail.search(None, "ALL")
+            if status != "OK":
                 return []
-            
+
             email_ids = messages[0].split()
             recent_ids = email_ids[-limit:]
-            
+
             new_emails = []
             for e_id in recent_ids:
-                status, msg_data = mail.fetch(e_id, '(RFC822)')
-                if status != 'OK':
+                status, msg_data = mail.fetch(e_id, "(RFC822)")
+                if status != "OK":
                     continue
-                
+
                 for response_part in msg_data:
                     if isinstance(response_part, tuple):
                         msg = email.message_from_bytes(response_part[1])
-                        
+
                         subject, encoding = decode_header(msg.get("Subject", ""))[0]
                         if isinstance(subject, bytes):
                             subject = subject.decode(encoding if encoding else "utf-8", errors="ignore")
-                        
+
                         from_addr = msg.get("From", "")
                         to_addr = msg.get("To", "")
-                        
+
                         # Get body
                         body = ""
                         if msg.is_multipart():
@@ -132,19 +138,19 @@ class EmailAgent:
                                     try:
                                         body = part.get_payload(decode=True).decode(errors="ignore")
                                         break
-                                    except:
+                                    except Exception:
                                         pass
                         else:
                             content_type = msg.get_content_type()
                             if content_type == "text/plain" or content_type == "text/html":
                                 try:
                                     body = msg.get_payload(decode=True).decode(errors="ignore")
-                                except:
+                                except Exception:
                                     pass
-                        
+
                         # Just basic timestamp fallback
                         received_at = datetime.now()
-                        
+
                         # Basic classification to start with
                         email_msg = EmailMessage(
                             email_id=str(uuid4()),
@@ -153,11 +159,11 @@ class EmailAgent:
                             subject=subject,
                             body=body,
                             received_at=received_at,
-                            priority="fyi"
+                            priority="fyi",
                         )
                         email_msg.priority = await self.classify_email(email_msg)
                         new_emails.append(email_msg)
-                        
+
             self.emails.extend(new_emails)
             return new_emails
         except Exception as e:
@@ -167,13 +173,13 @@ class EmailAgent:
             try:
                 mail.close()
                 mail.logout()
-            except:
+            except Exception:
                 pass
 
     async def classify_email(self, email_msg: EmailMessage) -> str:
         body_lower = email_msg.body.lower()
         subject_lower = email_msg.subject.lower()
-        
+
         # Heuristics
         if "unsubscribe" in body_lower or "viagra" in body_lower or "casino" in body_lower:
             return "spam"
@@ -181,7 +187,7 @@ class EmailAgent:
             return "fyi"
         if "?" in subject_lower or "can you" in body_lower:
             return "needs_response"
-            
+
         # Try LLM
         if await ollama_client.is_available():
             try:
@@ -193,7 +199,7 @@ class EmailAgent:
                         return p
             except Exception as e:
                 logger.error(f"LLM classification error: {e}")
-        
+
         return "fyi"
 
     async def draft_response(self, email_id: str) -> str:
@@ -203,14 +209,16 @@ class EmailAgent:
 
         if not await ollama_client.is_available():
             return "LLM not available to draft response."
-            
+
         prompt = f"Draft a professional, concise email response. Match a friendly but professional tone.\n\nOriginal Email:\nFrom: {target_email.from_addr}\nSubject: {target_email.subject}\nBody: {target_email.body}\n\nDraft:"
         try:
-            draft = await ollama_client.chat([
-                {"role": "system", "content": "You are a helpful assistant drafting emails."},
-                {"role": "user", "content": prompt}
-            ])
-            
+            draft = await ollama_client.chat(
+                [
+                    {"role": "system", "content": "You are a helpful assistant drafting emails."},
+                    {"role": "user", "content": prompt},
+                ]
+            )
+
             # Guardian check
             verdict = guardian_engine.evaluate(draft)
             if verdict.level >= DisagreementLevel.SAFETY:
@@ -226,7 +234,7 @@ class EmailAgent:
             logger.error(f"Error drafting response: {e}")
             return "Error drafting response."
 
-    def get_inbox(self, priority: Optional[str] = None) -> list[EmailMessage]:
+    def get_inbox(self, priority: str | None = None) -> list[EmailMessage]:
         if priority:
             return [e for e in self.emails if e.priority == priority]
         return self.emails
@@ -247,5 +255,6 @@ class EmailAgent:
             return {"status": "error", "message": "Email not found"}
         target.draft_status = "rejected"
         return {"status": "success", "message": "Draft rejected"}
+
 
 email_agent = EmailAgent()

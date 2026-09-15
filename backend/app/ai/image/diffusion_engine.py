@@ -7,13 +7,12 @@ and clean VRAM release.
 
 import gc
 import logging
-import os
 import time
 import uuid
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from app.core.config import settings
 
@@ -23,9 +22,9 @@ logger = logging.getLogger("copper.image.diffusion")
 class LocalDiffusionEngine:
     def __init__(
         self,
-        model_path: Optional[str] = None,
-        output_dir: Optional[str] = None,
-        device: Optional[str] = None,
+        model_path: str | None = None,
+        output_dir: str | None = None,
+        device: str | None = None,
         default_steps: int = 1,
         default_width: int = 512,
         default_height: int = 512,
@@ -39,7 +38,7 @@ class LocalDiffusionEngine:
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self._pipeline = None
-        self._loaded_device: Optional[str] = None
+        self._loaded_device: str | None = None
 
     def is_model_available(self) -> bool:
         """Check if local SD-Turbo weights exist on disk."""
@@ -91,9 +90,7 @@ class LocalDiffusionEngine:
             device = self.resolve_device()
             dtype = torch.float16 if device == "cuda" else torch.float32
 
-            logger.info(
-                f"[PICASSO] Loading SD-Turbo from {self.model_path.name} on {device.upper()} ({dtype})..."
-            )
+            logger.info(f"[PICASSO] Loading SD-Turbo from {self.model_path.name} on {device.upper()} ({dtype})...")
 
             pipeline = AutoPipelineForText2Image.from_single_file(
                 str(self.model_path),
@@ -141,10 +138,10 @@ class LocalDiffusionEngine:
     def generate(
         self,
         prompt: str,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        steps: Optional[int] = None,
-        seed: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
+        steps: int | None = None,
+        seed: int | None = None,
     ) -> dict[str, Any]:
         """
         Generate image locally.
@@ -227,9 +224,7 @@ class LocalDiffusionEngine:
             "offline": True,
         }
 
-    def _generate_fallback_image(
-        self, prompt: str, width: int, height: int, output_file: Path
-    ) -> None:
+    def _generate_fallback_image(self, prompt: str, width: int, height: int, output_file: Path) -> None:
         """
         Generate a high-contrast dark cyberpunk procedural canvas as an offline fallback.
         Ensures 100% offline uptime and visual feedback even if torch/diffusers is not loaded.
@@ -313,9 +308,7 @@ class LocalDiffusionEngine:
             "model_path": str(self.model_path),
             "model_exists": self.is_model_available(),
             "model_size_mb": (
-                round(self.model_path.stat().st_size / (1024 * 1024), 2)
-                if self.is_model_available()
-                else 0
+                round(self.model_path.stat().st_size / (1024 * 1024), 2) if self.is_model_available() else 0
             ),
             "torch_available": self.is_torch_available(),
             "cuda_available": self.is_cuda_available(),

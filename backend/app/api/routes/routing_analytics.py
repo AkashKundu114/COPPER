@@ -1,5 +1,4 @@
 import json
-import math
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +11,13 @@ from app.core.logger import logger
 router = APIRouter(prefix="/routing", tags=["routing_analytics"])
 
 BENCHMARK_METRICS_PATH = Path(__file__).resolve().parent.parent.parent.parent / "eval" / "benchmark_metrics.json"
-ROUTING_DATASET_PATH = Path(__file__).resolve().parent.parent.parent.parent / "eval" / "datasets" / "routing" / "master_routing_dataset.json"
+ROUTING_DATASET_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "eval"
+    / "datasets"
+    / "routing"
+    / "master_routing_dataset.json"
+)
 
 
 def _seed_initial_history_if_empty():
@@ -94,11 +99,20 @@ async def get_confusion_matrix() -> dict[str, Any]:
             logger.warning(f"Error reading benchmark metrics: {e}")
 
     # Robust fallback data if benchmark metrics file has not yet been generated
-    standard_classes = ["automation", "chat", "coding", "document", "image", "planner", "reminder", "research", "vision"]
+    standard_classes = [
+        "automation",
+        "chat",
+        "coding",
+        "document",
+        "image",
+        "planner",
+        "reminder",
+        "research",
+        "vision",
+    ]
     fallback_matrix = {c: {other: (150 if other == c else 0) for other in standard_classes} for c in standard_classes}
     fallback_metrics = {
-        c: {"precision": 100.0, "recall": 100.0, "f1_score": 100.0, "support": 150}
-        for c in standard_classes
+        c: {"precision": 100.0, "recall": 100.0, "f1_score": 100.0, "support": 150} for c in standard_classes
     }
 
     return {
@@ -109,7 +123,14 @@ async def get_confusion_matrix() -> dict[str, Any]:
         "macro_f1_score_pct": 100.0,
         "weighted_f1_score_pct": 100.0,
         "throughput_qps": 19250.0,
-        "latency_metrics_ms": {"avg": 0.052, "median_p50": 0.048, "p95": 0.095, "p99": 0.140, "min": 0.008, "max": 0.220},
+        "latency_metrics_ms": {
+            "avg": 0.052,
+            "median_p50": 0.048,
+            "p95": 0.095,
+            "p99": 0.140,
+            "min": 0.008,
+            "max": 0.220,
+        },
         "classes": standard_classes,
         "confusion_matrix": fallback_matrix,
         "per_class_metrics": fallback_metrics,
@@ -158,16 +179,18 @@ async def get_confidence_calibration() -> dict[str, Any]:
         else:
             gap = 0.0
 
-        calibration_bins.append({
-            "bin_label": b["label"],
-            "bin_range": b["range"],
-            "bin_midpoint": b["midpoint"],
-            "sample_count": count,
-            "avg_confidence": b["avg_conf"],
-            "observed_accuracy": b["accuracy"],
-            "expected_accuracy": b["midpoint"],
-            "calibration_gap": round(gap, 3),
-        })
+        calibration_bins.append(
+            {
+                "bin_label": b["label"],
+                "bin_range": b["range"],
+                "bin_midpoint": b["midpoint"],
+                "sample_count": count,
+                "avg_confidence": b["avg_conf"],
+                "observed_accuracy": b["accuracy"],
+                "expected_accuracy": b["midpoint"],
+                "calibration_gap": round(gap, 3),
+            }
+        )
 
     ece = round(weighted_ece, 4)
     mce = round(max_ce, 4)

@@ -1,5 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
@@ -17,22 +16,22 @@ class MemoryCreateInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     content: str
-    type: Optional[str] = "observation"  # fact, observation, hypothesis
-    category: Optional[str] = "General"
-    confidence: Optional[float] = 0.95
-    evidenceCount: Optional[int] = Field(default=None, alias="evidence_count")
-    lastConfirmed: Optional[str] = Field(default=None, alias="last_confirmed")
+    type: str | None = "observation"  # fact, observation, hypothesis
+    category: str | None = "General"
+    confidence: float | None = 0.95
+    evidenceCount: int | None = Field(default=None, alias="evidence_count")
+    lastConfirmed: str | None = Field(default=None, alias="last_confirmed")
 
 
 class MemoryUpdateInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    content: Optional[str] = None
-    type: Optional[str] = None
-    category: Optional[str] = None
-    confidence: Optional[float] = None
-    evidenceCount: Optional[int] = Field(default=None, alias="evidence_count")
-    status: Optional[str] = None
+    content: str | None = None
+    type: str | None = None
+    category: str | None = None
+    confidence: float | None = None
+    evidenceCount: int | None = Field(default=None, alias="evidence_count")
+    status: str | None = None
 
 
 def serialize_memory(m: UserMemoryV2) -> dict:
@@ -54,10 +53,10 @@ def serialize_memory(m: UserMemoryV2) -> dict:
 
 @router.get("")
 def list_memories(
-    type: Optional[str] = Query(None, description="Filter by memory type"),
-    category: Optional[str] = Query(None, description="Filter by category"),
-    search: Optional[str] = Query(None, description="Search keyword in content or category"),
-    status: Optional[str] = Query("active", description="Filter by status (default active, or 'all')"),
+    type: str | None = Query(None, description="Filter by memory type"),
+    category: str | None = Query(None, description="Filter by category"),
+    search: str | None = Query(None, description="Search keyword in content or category"),
+    status: str | None = Query("active", description="Filter by status (default active, or 'all')"),
     db: Session = Depends(get_db),
 ):
     query = db.query(UserMemoryV2)
@@ -135,7 +134,9 @@ async def get_profile(db: Session = Depends(get_db)):
                 "value": f.content,
                 "confidence": f.confidence,
                 "observed_n": f.evidence_count,
-                "updated_at": f.updated_at.isoformat() if f.updated_at else (f.created_at.isoformat() if f.created_at else ""),
+                "updated_at": f.updated_at.isoformat()
+                if f.updated_at
+                else (f.created_at.isoformat() if f.created_at else ""),
             }
             for f in facts
         ],

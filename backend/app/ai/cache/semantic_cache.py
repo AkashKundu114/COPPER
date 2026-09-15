@@ -470,11 +470,7 @@ class SemanticResponseCache:
             except Exception:
                 pass
 
-        avg_savings_sec = (
-            round((self._total_time_saved_ms / 1000.0) / max(1, self._hits), 2)
-            if self._hits > 0
-            else 4.5
-        )
+        avg_savings_sec = round((self._total_time_saved_ms / 1000.0) / max(1, self._hits), 2) if self._hits > 0 else 4.5
 
         return {
             "status": "active",

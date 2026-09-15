@@ -1,5 +1,4 @@
-﻿import asyncio
-import os
+import asyncio
 import shutil
 from pathlib import Path
 from typing import Any
@@ -132,21 +131,30 @@ async def video_create_slideshow(
         cmd = [
             ffmpeg_bin,
             "-y",
-            "-f", "concat",
-            "-safe", "0",
-            "-i", str(concat_txt),
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            str(concat_txt),
         ]
 
         if audio_path and Path(audio_path).exists():
             cmd.extend(["-i", str(Path(audio_path).resolve()), "-shortest"])
 
-        cmd.extend([
-            "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p",
-            "-c:v", "libx264",
-            "-r", "24",
-            "-movflags", "+faststart",
-            str(out_file),
-        ])
+        cmd.extend(
+            [
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p",
+                "-c:v",
+                "libx264",
+                "-r",
+                "24",
+                "-movflags",
+                "+faststart",
+                str(out_file),
+            ]
+        )
 
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -208,15 +216,19 @@ async def video_probe(file_path: str) -> dict[str, Any]:
     try:
         proc = await asyncio.create_subprocess_exec(
             ffprobe_bin,
-            "-v", "error",
-            "-show_entries", "format=duration,size,bit_rate:stream=codec_name,codec_type,width,height",
-            "-of", "json",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration,size,bit_rate:stream=codec_name,codec_type,width,height",
+            "-of",
+            "json",
             str(p),
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
         stdout, _ = await proc.communicate()
         import json
+
         data = json.loads(stdout.decode("utf-8", errors="replace"))
         return {"status": "success", "file": str(p), "metadata": data}
     except Exception as e:

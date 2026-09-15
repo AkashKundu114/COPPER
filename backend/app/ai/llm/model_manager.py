@@ -133,7 +133,8 @@ class ModelManager:
         if clean == mini_cfg.get("name", "").lower() or clean == mini_cfg.get("ollama_tag", "").lower():
             return True
         return any(
-            clean.startswith(prefix) for prefix in ["qwen2.5:1.5b", "smollm2:", "qwen2.5-coder:3b", "granite3.2-dense:2b", "deepseek-r1:1.5b"]
+            clean.startswith(prefix)
+            for prefix in ["qwen2.5:1.5b", "smollm2:", "qwen2.5-coder:3b", "granite3.2-dense:2b", "deepseek-r1:1.5b"]
         )
 
     def get_model_keep_alive(self, model_name: str | None) -> int | str:

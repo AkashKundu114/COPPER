@@ -393,7 +393,12 @@ class TaskGraphExecutor:
         else:
             wal.append_record(
                 RecordType.DAG_ABORT,
-                {"dag_id": dag_id, "goal": plan.goal, "failed_tasks": list(failed_task_ids), "duration_ms": elapsed_total},
+                {
+                    "dag_id": dag_id,
+                    "goal": plan.goal,
+                    "failed_tasks": list(failed_task_ids),
+                    "duration_ms": elapsed_total,
+                },
             )
 
         inter_agent_msgs = context_bus.get_messages(dag_id)
@@ -419,6 +424,7 @@ class TaskGraphExecutor:
         if success and len(plan.tasks) > 1:
             try:
                 from app.ai.ambient.skill_learner import skill_learner
+
                 steps = [
                     {
                         "action": t.title,

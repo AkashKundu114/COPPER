@@ -18,10 +18,8 @@ Features:
 
 import json
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from typing import Any
-
-from app.core.logger import logger
 
 
 @dataclass

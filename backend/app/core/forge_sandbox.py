@@ -7,7 +7,7 @@ import time
 import uuid
 from collections import deque
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.core.config import settings
 from app.core.data_firewall import redact
@@ -45,7 +45,7 @@ class BaseSandboxRunner:
 
 class PyodideWasmRunner(BaseSandboxRunner):
     """Executes Python code inside an isolated WebAssembly (Pyodide) VM.
-    
+
     Provides memory isolation via V8 engine memory limits, zero host filesystem access
     via Emscripten in-memory virtual filesystem (MEMFS), and blocks network access primitives.
     """
@@ -140,7 +140,7 @@ class PyodideWasmRunner(BaseSandboxRunner):
 
 class DockerContainerRunner(BaseSandboxRunner):
     """Executes Python code inside an isolated Docker container.
-    
+
     Provides strict Linux container isolation:
     - Resource limits: CPU limit (--cpus), memory limit (-m), PIDs limit (--pids-limit)
     - Network isolation: disabled (--network none) by default
@@ -150,7 +150,7 @@ class DockerContainerRunner(BaseSandboxRunner):
 
     name: str = "docker"
 
-    def __init__(self, docker_executable: str = "docker", image: Optional[str] = None):
+    def __init__(self, docker_executable: str = "docker", image: str | None = None):
         self.docker_executable = docker_executable
         self.image = image or getattr(settings, "SANDBOX_DOCKER_IMAGE", "python:3.12-slim")
 
@@ -185,7 +185,7 @@ class DockerContainerRunner(BaseSandboxRunner):
             "--pids-limit=64",
             "--read-only",
             "--tmpfs",
-            "/tmp:rw,noexec,nosuid,size=64m",
+            "/tmp:rw,noexec,nosuid,size=64m",  # nosec: B108
             "--cap-drop=ALL",
             self.image,
             "python",
@@ -314,9 +314,9 @@ class ForgeSandbox:
         self.docker_runner = DockerContainerRunner()
         self.kernel_runner = KernelSandboxRunner()
         self.subprocess_runner = SubprocessSanitizedRunner()
-        self._audit_history: deque[Dict[str, Any]] = deque(maxlen=100)
+        self._audit_history: deque[dict[str, Any]] = deque(maxlen=100)
 
-    def _select_runner(self, backend: Optional[str] = None) -> BaseSandboxRunner:
+    def _select_runner(self, backend: str | None = None) -> BaseSandboxRunner:
         selected_backend = (backend or getattr(settings, "SANDBOX_BACKEND", "auto")).lower()
         if selected_backend in ["kernel", "job_object"]:
             if self.kernel_runner.is_available():
@@ -352,13 +352,13 @@ class ForgeSandbox:
         result: dict,
         backend_used: str,
         duration_ms: float,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
         is_blocked: bool = False,
     ) -> None:
         """Persists audit record of execution to PostgreSQL and memory history."""
         category = "guardian_safety_block" if is_blocked else "sandbox_execution"
         summary = (
-            f"Sandbox blocked dangerous code pattern"
+            "Sandbox blocked dangerous code pattern"
             if is_blocked
             else f"Sandbox executed via {backend_used} (exit {result.get('exit_code')}) in {duration_ms:.1f}ms"
         )
@@ -407,16 +407,16 @@ class ForgeSandbox:
         except Exception as e:
             logger.debug(f"Audit log DB persistence skipped/failed: {e}")
 
-    def get_recent_executions(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_recent_executions(self, limit: int = 50) -> list[dict[str, Any]]:
         """Retrieve recent in-memory audit execution logs."""
         return list(self._audit_history)[-limit:]
 
     def run_python_code(
         self,
         code: str,
-        timeout: Optional[int] = None,
-        backend: Optional[str] = None,
-        session_id: Optional[str] = None,
+        timeout: int | None = None,
+        backend: str | None = None,
+        session_id: str | None = None,
     ) -> dict:
         """Executes Python code with sandbox isolation, resource limits, and audit logging."""
         effective_timeout = timeout or getattr(settings, "SANDBOX_TIMEOUT_SECONDS", 15)
@@ -478,9 +478,9 @@ class ForgeSandbox:
     def execute_python(
         self,
         code: str,
-        timeout_seconds: Optional[int] = None,
-        backend: Optional[str] = None,
-        session_id: Optional[str] = None,
+        timeout_seconds: int | None = None,
+        backend: str | None = None,
+        session_id: str | None = None,
     ) -> dict:
         """Legacy helper matching execute_python interface with status flag."""
         res = self.run_python_code(

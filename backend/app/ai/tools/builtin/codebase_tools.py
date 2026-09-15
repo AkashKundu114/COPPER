@@ -1,4 +1,4 @@
-﻿import ast
+import ast
 import os
 import re
 from pathlib import Path
@@ -39,28 +39,28 @@ def _parse_python_file(path: Path) -> dict[str, Any]:
 
     for node in tree.body:
         if isinstance(node, ast.ClassDef):
-            methods = [
-                m.name
-                for m in node.body
-                if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef))
-            ]
+            methods = [m.name for m in node.body if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef))]
             doc = ast.get_docstring(node)
-            classes.append({
-                "name": node.name,
-                "line": node.lineno,
-                "methods": methods,
-                "doc": doc.strip() if doc else None,
-            })
+            classes.append(
+                {
+                    "name": node.name,
+                    "line": node.lineno,
+                    "methods": methods,
+                    "doc": doc.strip() if doc else None,
+                }
+            )
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             args = [a.arg for a in node.args.args]
             doc = ast.get_docstring(node)
-            functions.append({
-                "name": node.name,
-                "line": node.lineno,
-                "is_async": isinstance(node, ast.AsyncFunctionDef),
-                "args": args,
-                "doc": doc.strip() if doc else None,
-            })
+            functions.append(
+                {
+                    "name": node.name,
+                    "line": node.lineno,
+                    "is_async": isinstance(node, ast.AsyncFunctionDef),
+                    "args": args,
+                    "doc": doc.strip() if doc else None,
+                }
+            )
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 imports.append(alias.name)
@@ -100,20 +100,24 @@ def _parse_javascript_file(path: Path) -> dict[str, Any]:
 
         f_match = func_pattern.search(line)
         if f_match:
-            functions.append({
-                "name": f_match.group(1),
-                "line": i,
-                "args": [a.strip() for a in f_match.group(2).split(",") if a.strip()],
-            })
+            functions.append(
+                {
+                    "name": f_match.group(1),
+                    "line": i,
+                    "args": [a.strip() for a in f_match.group(2).split(",") if a.strip()],
+                }
+            )
             continue
 
         cf_match = const_func_pattern.search(line)
         if cf_match:
-            functions.append({
-                "name": cf_match.group(1),
-                "line": i,
-                "args": [a.strip() for a in cf_match.group(2).split(",") if a.strip()],
-            })
+            functions.append(
+                {
+                    "name": cf_match.group(1),
+                    "line": i,
+                    "args": [a.strip() for a in cf_match.group(2).split(",") if a.strip()],
+                }
+            )
 
     return {
         "classes": classes,
@@ -251,44 +255,52 @@ async def codebase_symbol_lookup(
                     parsed = _parse_python_file(p)
                     for c in parsed.get("classes", []):
                         if symbol_lower in c["name"].lower():
-                            matches.append({
-                                "type": "class",
-                                "name": c["name"],
-                                "file": str(p.relative_to(base)).replace("\\", "/"),
-                                "line": c["line"],
-                                "methods": c.get("methods", []),
-                                "doc": c.get("doc"),
-                            })
+                            matches.append(
+                                {
+                                    "type": "class",
+                                    "name": c["name"],
+                                    "file": str(p.relative_to(base)).replace("\\", "/"),
+                                    "line": c["line"],
+                                    "methods": c.get("methods", []),
+                                    "doc": c.get("doc"),
+                                }
+                            )
                     for fn in parsed.get("functions", []):
                         if symbol_lower in fn["name"].lower():
-                            matches.append({
-                                "type": "function",
-                                "name": fn["name"],
-                                "file": str(p.relative_to(base)).replace("\\", "/"),
-                                "line": fn["line"],
-                                "args": fn.get("args", []),
-                                "is_async": fn.get("is_async", False),
-                                "doc": fn.get("doc"),
-                            })
+                            matches.append(
+                                {
+                                    "type": "function",
+                                    "name": fn["name"],
+                                    "file": str(p.relative_to(base)).replace("\\", "/"),
+                                    "line": fn["line"],
+                                    "args": fn.get("args", []),
+                                    "is_async": fn.get("is_async", False),
+                                    "doc": fn.get("doc"),
+                                }
+                            )
                 elif p.suffix in {".js", ".jsx", ".ts", ".tsx"}:
                     parsed = _parse_javascript_file(p)
                     for c in parsed.get("classes", []):
                         if symbol_lower in c["name"].lower():
-                            matches.append({
-                                "type": "class",
-                                "name": c["name"],
-                                "file": str(p.relative_to(base)).replace("\\", "/"),
-                                "line": c["line"],
-                            })
+                            matches.append(
+                                {
+                                    "type": "class",
+                                    "name": c["name"],
+                                    "file": str(p.relative_to(base)).replace("\\", "/"),
+                                    "line": c["line"],
+                                }
+                            )
                     for fn in parsed.get("functions", []):
                         if symbol_lower in fn["name"].lower():
-                            matches.append({
-                                "type": "function",
-                                "name": fn["name"],
-                                "file": str(p.relative_to(base)).replace("\\", "/"),
-                                "line": fn["line"],
-                                "args": fn.get("args", []),
-                            })
+                            matches.append(
+                                {
+                                    "type": "function",
+                                    "name": fn["name"],
+                                    "file": str(p.relative_to(base)).replace("\\", "/"),
+                                    "line": fn["line"],
+                                    "args": fn.get("args", []),
+                                }
+                            )
 
         return {
             "status": "success",

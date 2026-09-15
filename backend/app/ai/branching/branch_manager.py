@@ -225,10 +225,7 @@ class BranchManager:
                 role = m.get("role", "assistant").capitalize()
                 content = m.get("content", "").strip().replace("\n", " ")
                 disc_lines.append(f"- {role}: {content[:180]}")
-            summary = (
-                f"Merged {len(divergent_msgs)} turn(s) from [{branch['title']}]:\n"
-                + "\n".join(disc_lines[:6])
-            )
+            summary = f"Merged {len(divergent_msgs)} turn(s) from [{branch['title']}]:\n" + "\n".join(disc_lines[:6])
 
         # Inject into target session history
         merge_notification = f"🔀 [Branch Merged: {branch['title']}]\n\n{summary}"

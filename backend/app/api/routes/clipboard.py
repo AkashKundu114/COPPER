@@ -1,9 +1,7 @@
-from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 
 from app.ai.ambient.clipboard_monitor import clipboard_monitor
 from app.ai.ambient.clipboard_processor import clipboard_processor
-from app.core.logger import logger
 
 router = APIRouter(prefix="/clipboard", tags=["clipboard"])
 
@@ -38,7 +36,7 @@ async def process_entry(entry_id: str):
     """Trigger processing on a specific entry."""
     for entry in clipboard_monitor.history:
         if entry.id == entry_id:
-            result = clipboard_processor.process_entry(entry)
+            clipboard_processor.process_entry(entry)
             return {"status": "success", "entry": entry}
     raise HTTPException(status_code=404, detail="Entry not found")
 

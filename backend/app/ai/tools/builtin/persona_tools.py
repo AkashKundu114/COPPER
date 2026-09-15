@@ -1,6 +1,7 @@
-﻿from typing import Any
-from app.ai.tools.registry import tool_registry
+from typing import Any
+
 from app.ai.agents.agency_catalog import get_persona, list_personas
+from app.ai.tools.registry import tool_registry
 
 
 @tool_registry.tool(

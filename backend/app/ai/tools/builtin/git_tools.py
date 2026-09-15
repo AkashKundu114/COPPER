@@ -1,9 +1,8 @@
-﻿import asyncio
+import asyncio
 from pathlib import Path
 from typing import Any
 
 from app.ai.tools.registry import tool_registry
-from app.core.logger import logger
 
 
 async def _run_git_cmd(args: list[str], repo_path: str) -> tuple[int, str, str]:
@@ -149,12 +148,14 @@ async def git_log(repo_path: str = ".", max_count: int = 10) -> dict[str, Any]:
     for line in stdout.splitlines():
         parts = line.split("|", 3)
         if len(parts) == 4:
-            commits.append({
-                "hash": parts[0],
-                "author": parts[1],
-                "date": parts[2],
-                "message": parts[3],
-            })
+            commits.append(
+                {
+                    "hash": parts[0],
+                    "author": parts[1],
+                    "date": parts[2],
+                    "message": parts[3],
+                }
+            )
 
     return {
         "status": "success",

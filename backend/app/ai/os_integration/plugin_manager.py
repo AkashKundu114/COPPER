@@ -1,10 +1,11 @@
 import json
 import os
-from dataclasses import dataclass, asdict
-from typing import List, Dict, Any, Optional
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any
 
 from app.core.logger import logger
+
 
 @dataclass
 class PluginManifest:
@@ -14,14 +15,15 @@ class PluginManifest:
     description: str
     author: str
     category: str
-    tools: List[Dict[str, Any]]
+    tools: list[dict[str, Any]]
     enabled: bool
     installed_at: str
+
 
 class PluginManager:
     def __init__(self):
         self.data_path = os.path.join("data", "plugins.json")
-        self.plugins: Dict[str, PluginManifest] = {}
+        self.plugins: dict[str, PluginManifest] = {}
         self._ensure_data_dir()
         self.load_plugins()
 
@@ -31,7 +33,7 @@ class PluginManager:
     def load_plugins(self):
         if os.path.exists(self.data_path):
             try:
-                with open(self.data_path, "r", encoding="utf-8") as f:
+                with open(self.data_path, encoding="utf-8") as f:
                     data = json.load(f)
                     for item in data:
                         self.plugins[item["id"]] = PluginManifest(**item)
@@ -61,7 +63,7 @@ class PluginManager:
                 category="media",
                 tools=[],
                 enabled=True,
-                installed_at=now
+                installed_at=now,
             ),
             PluginManifest(
                 id="home-assistant",
@@ -72,7 +74,7 @@ class PluginManager:
                 category="iot",
                 tools=[],
                 enabled=True,
-                installed_at=now
+                installed_at=now,
             ),
             PluginManifest(
                 id="arxiv-fetcher",
@@ -83,17 +85,17 @@ class PluginManager:
                 category="productivity",
                 tools=[],
                 enabled=True,
-                installed_at=now
-            )
+                installed_at=now,
+            ),
         ]
         for p in defaults:
             self.plugins[p.id] = p
         self.save_plugins()
 
-    def list_plugins(self) -> List[PluginManifest]:
+    def list_plugins(self) -> list[PluginManifest]:
         return list(self.plugins.values())
 
-    def install_plugin(self, manifest_dict: Dict[str, Any]) -> PluginManifest:
+    def install_plugin(self, manifest_dict: dict[str, Any]) -> PluginManifest:
         manifest_dict.setdefault("enabled", True)
         manifest_dict.setdefault("installed_at", datetime.utcnow().isoformat())
         if "tools" not in manifest_dict:
@@ -103,7 +105,7 @@ class PluginManager:
         self.save_plugins()
         return plugin
 
-    def toggle_plugin(self, plugin_id: str, enabled: bool) -> Optional[PluginManifest]:
+    def toggle_plugin(self, plugin_id: str, enabled: bool) -> PluginManifest | None:
         plugin = self.plugins.get(plugin_id)
         if plugin:
             plugin.enabled = enabled
@@ -118,11 +120,12 @@ class PluginManager:
             return True
         return False
 
-    def get_registered_tools(self) -> List[Dict[str, Any]]:
+    def get_registered_tools(self) -> list[dict[str, Any]]:
         tools = []
         for p in self.plugins.values():
             if p.enabled and p.tools:
                 tools.extend(p.tools)
         return tools
+
 
 plugin_manager = PluginManager()

@@ -1,9 +1,13 @@
-﻿import re
+import re
 from typing import Any
 from urllib.parse import urlparse
 
 import httpx
-from bs4 import BeautifulSoup
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None  # type: ignore
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
@@ -40,7 +44,7 @@ def _clean_extracted_text(text: str) -> str:
     return text.strip()
 
 
-def _adaptive_content_extract(soup: BeautifulSoup, target_hint: str | None = None) -> str:
+def _adaptive_content_extract(soup: Any, target_hint: str | None = None) -> str:
     """
     Self-healing element extraction.
     If target_hint is given, attempts direct lookup, then falls back to semantic
@@ -135,6 +139,12 @@ async def scrapling_scrape(
                 "error": f"HTTP {response.status_code} while fetching {url}",
             }
 
+        if BeautifulSoup is None:
+            return {
+                "status": "error",
+                "error": "beautifulsoup4 is required for web content extraction. Install with pip install beautifulsoup4",
+            }
+
         soup = BeautifulSoup(response.text, "html.parser")
 
         # Extract title and meta description
@@ -142,7 +152,9 @@ async def scrapling_scrape(
         title = title_tag.get_text(strip=True) if title_tag else None
 
         meta_desc = None
-        desc_tag = soup.find("meta", attrs={"name": "description"}) or soup.find("meta", attrs={"property": "og:description"})
+        desc_tag = soup.find("meta", attrs={"name": "description"}) or soup.find(
+            "meta", attrs={"property": "og:description"}
+        )
         if desc_tag and desc_tag.get("content"):
             meta_desc = desc_tag["content"].strip()
 

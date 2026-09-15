@@ -297,7 +297,9 @@ class WorkflowEngine:
         except Exception as e:
             logger.error(f"Failed to dispatch workflow notification: {e}")
 
-        logger.info(f"Completed workflow '{wf.name}' with status '{overall_status}' in {round(completed_time - start_time, 2)}s.")
+        logger.info(
+            f"Completed workflow '{wf.name}' with status '{overall_status}' in {round(completed_time - start_time, 2)}s."
+        )
         return record
 
     def _interpolate_args(self, args: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:

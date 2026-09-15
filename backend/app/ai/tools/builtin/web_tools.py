@@ -266,12 +266,15 @@ async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
             extracted_text = ""
             if trafilatura is not None:
                 try:
-                    extracted_text = trafilatura.extract(
-                        html_content,
-                        include_links=False,
-                        include_images=False,
-                        favor_precision=True,
-                    ) or ""
+                    extracted_text = (
+                        trafilatura.extract(
+                            html_content,
+                            include_links=False,
+                            include_images=False,
+                            favor_precision=True,
+                        )
+                        or ""
+                    )
                 except Exception as ex:
                     logger.debug(f"trafilatura extraction error on {clean_url}: {ex}")
 

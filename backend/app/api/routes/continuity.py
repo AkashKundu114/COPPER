@@ -1,22 +1,22 @@
-from typing import List, Optional
+from fastapi import APIRouter
 from pydantic import BaseModel
-from fastapi import APIRouter, HTTPException
 
-from app.ai.companion.context_continuity import context_continuity, SessionHandoff
+from app.ai.companion.context_continuity import SessionHandoff, context_continuity
 
 router = APIRouter()
+
 
 class HandoffSnapshotRequest(BaseModel):
     session_id: str
     project: str
-    decisions: List[str]
-    topics: List[str]
-    next_steps: List[str]
+    decisions: list[str]
+    topics: list[str]
+    next_steps: list[str]
     summary: str
 
 
-@router.get("/latest", response_model=Optional[SessionHandoff])
-async def get_latest_handoff(project: Optional[str] = None):
+@router.get("/latest", response_model=SessionHandoff | None)
+async def get_latest_handoff(project: str | None = None):
     return context_continuity.get_latest_handoff(project)
 
 

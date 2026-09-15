@@ -1,7 +1,7 @@
 import json
 import time
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -105,7 +105,9 @@ class WorkflowAction:
         return {
             "tool": self.tool,
             "arguments": self.arguments,
-            "on_failure": self.on_failure.value if isinstance(self.on_failure, ActionFailurePolicy) else str(self.on_failure),
+            "on_failure": self.on_failure.value
+            if isinstance(self.on_failure, ActionFailurePolicy)
+            else str(self.on_failure),
             "max_retries": self.max_retries,
             "retry_delay_seconds": self.retry_delay_seconds,
         }
@@ -182,16 +184,14 @@ class Workflow:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Workflow":
         trigger_raw = data.get("trigger", {})
-        trigger = TriggerConfig.from_dict(trigger_raw) if isinstance(trigger_raw, dict) else TriggerConfig(type=TriggerType.MANUAL)
+        trigger = (
+            TriggerConfig.from_dict(trigger_raw)
+            if isinstance(trigger_raw, dict)
+            else TriggerConfig(type=TriggerType.MANUAL)
+        )
 
-        conditions = [
-            Condition.from_dict(c) if isinstance(c, dict) else c
-            for c in data.get("conditions", [])
-        ]
-        actions = [
-            WorkflowAction.from_dict(a) if isinstance(a, dict) else a
-            for a in data.get("actions", [])
-        ]
+        conditions = [Condition.from_dict(c) if isinstance(c, dict) else c for c in data.get("conditions", [])]
+        actions = [WorkflowAction.from_dict(a) if isinstance(a, dict) else a for a in data.get("actions", [])]
         notif_raw = data.get("notification", {})
         notification = NotificationConfig.from_dict(notif_raw) if isinstance(notif_raw, dict) else NotificationConfig()
 
@@ -280,7 +280,7 @@ class WorkflowStore:
         # Load workflows
         if self.storage_path.exists():
             try:
-                with open(self.storage_path, "r", encoding="utf-8") as f:
+                with open(self.storage_path, encoding="utf-8") as f:
                     data = json.load(f)
                     if isinstance(data, list):
                         self._workflows = {item["id"]: Workflow.from_dict(item) for item in data if "id" in item}
@@ -296,7 +296,7 @@ class WorkflowStore:
         # Load history
         if self.history_path.exists():
             try:
-                with open(self.history_path, "r", encoding="utf-8") as f:
+                with open(self.history_path, encoding="utf-8") as f:
                     hist_data = json.load(f)
                     if isinstance(hist_data, list):
                         self._history = [ExecutionRecord.from_dict(item) for item in hist_data]

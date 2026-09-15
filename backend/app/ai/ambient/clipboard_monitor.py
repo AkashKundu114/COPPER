@@ -7,7 +7,6 @@ import uuid
 from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Deque, Optional
 
 from app.core.logger import logger
 
@@ -20,12 +19,12 @@ class ClipboardEntry:
     content_type: str
     content_preview: str
     processed: bool = False
-    processing_result: Optional[dict] = None
+    processing_result: dict | None = None
 
 
 class ClipboardMonitor:
     def __init__(self):
-        self.history: Deque[ClipboardEntry] = deque(maxlen=200)
+        self.history: deque[ClipboardEntry] = deque(maxlen=200)
         self.is_running = False
         self._task = None
         self._last_sequence_number = 0
@@ -37,15 +36,17 @@ class ClipboardMonitor:
             return "plain_text"
 
         # URL
-        if re.match(r"^(https?://|www\.)[^\s/$.?#].[^\s]*$", text, re.IGNORECASE) or \
-           re.match(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[^\s]*)?$", text):
+        if re.match(r"^(https?://|www\.)[^\s/$.?#].[^\s]*$", text, re.IGNORECASE) or re.match(
+            r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[^\s]*)?$", text
+        ):
             return "url"
 
         # Error Message
         error_keywords = ["error", "exception", "traceback", "failed", "stack trace", "fatal"]
         lower_text = text.lower()
-        if any(kw in lower_text for kw in error_keywords) and \
-           ("line " in lower_text or "file " in lower_text or " at " in lower_text):
+        if any(kw in lower_text for kw in error_keywords) and (
+            "line " in lower_text or "file " in lower_text or " at " in lower_text
+        ):
             return "error_message"
 
         # Email
@@ -63,18 +64,22 @@ class ClipboardMonitor:
                 pass
 
         # File Path
-        if re.match(r"^[a-zA-Z]:\\[^*|\"<>?]*$", text) or \
-           re.match(r"^/[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$", text):
+        if re.match(r"^[a-zA-Z]:\\[^*|\"<>?]*$", text) or re.match(r"^/[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$", text):
             return "file_path"
 
         # Code
         code_patterns = [
-            r"def\s+\w+\s*\(", r"class\s+\w+", r"function\s+\w+\s*\(",
-            r"import\s+[\w\.]+", r"#include\s+<.*>", r"console\.log",
-            r"=>", r"public\s+class", r"func\s+\w+\s*\("
+            r"def\s+\w+\s*\(",
+            r"class\s+\w+",
+            r"function\s+\w+\s*\(",
+            r"import\s+[\w\.]+",
+            r"#include\s+<.*>",
+            r"console\.log",
+            r"=>",
+            r"public\s+class",
+            r"func\s+\w+\s*\(",
         ]
-        if any(re.search(pattern, text) for pattern in code_patterns) or \
-           ("{" in text and "}" in text and ";" in text):
+        if any(re.search(pattern, text) for pattern in code_patterns) or ("{" in text and "}" in text and ";" in text):
             return "code"
 
         return "plain_text"
@@ -125,7 +130,7 @@ class ClipboardMonitor:
                             timestamp=datetime.utcnow(),
                             content=text,
                             content_type=self.detect_type(text),
-                            content_preview=text[:200]
+                            content_preview=text[:200],
                         )
                         self.history.appendleft(entry)
                         logger.debug(f"New clipboard entry detected: {entry.content_type}")

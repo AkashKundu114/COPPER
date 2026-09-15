@@ -1,15 +1,13 @@
-import os
 import json
+import os
 import uuid
-from dataclasses import dataclass, asdict
-from datetime import datetime, timedelta, UTC
-from typing import Optional
-
-from sqlalchemy import select
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime, timedelta
 
 from app.core.logger import logger
-from app.database.postgres import SessionLocal
 from app.database.models.task import Task
+from app.database.postgres import SessionLocal
+
 
 @dataclass
 class PredictedTask:
@@ -18,8 +16,9 @@ class PredictedTask:
     confidence: float
     predicted_time: str
     pattern_source: str
-    prepared_result: Optional[dict] = None
+    prepared_result: dict | None = None
     status: str = "pending"
+
 
 class PredictiveEngine:
     def __init__(self):
@@ -28,11 +27,11 @@ class PredictiveEngine:
         self.predictions_file = os.path.join(self.data_dir, "predictions.json")
         self.history_file = os.path.join(self.data_dir, "pattern_history.json")
         self._predictions: list[PredictedTask] = self._load_predictions()
-        
+
     def _load_predictions(self) -> list[PredictedTask]:
         if os.path.exists(self.predictions_file):
             try:
-                with open(self.predictions_file, "r") as f:
+                with open(self.predictions_file) as f:
                     data = json.load(f)
                     return [PredictedTask(**item) for item in data]
             except Exception as e:
@@ -55,88 +54,89 @@ class PredictiveEngine:
         try:
             now = datetime.now(UTC)
             thirty_days_ago = now - timedelta(days=30)
-            
+
             with SessionLocal() as session:
-                tasks = session.query(Task).filter(
-                    Task.created_at >= thirty_days_ago,
-                    Task.status == "completed"
-                ).all()
+                tasks = session.query(Task).filter(Task.created_at >= thirty_days_ago, Task.status == "completed").all()
 
             from collections import defaultdict
+
             dow_tasks = defaultdict(list)
-            
+
             for task in tasks:
                 if task.created_at:
                     dow = task.created_at.weekday()
                     dow_tasks[dow].append(task)
-            
+
             new_predictions = []
-            
+
             for offset in range(7):
                 target_date = now + timedelta(days=offset)
                 target_dow = target_date.weekday()
-                
+
                 tasks_for_dow = dow_tasks.get(target_dow, [])
                 if not tasks_for_dow:
                     continue
-                    
+
                 matched_groups = []
                 processed = set()
-                
+
                 for i, t1 in enumerate(tasks_for_dow):
                     if i in processed:
                         continue
                     current_group = [t1]
-                    for j, t2 in enumerate(tasks_for_dow[i+1:], start=i+1):
+                    for j, t2 in enumerate(tasks_for_dow[i + 1 :], start=i + 1):
                         if j not in processed and self._fuzzy_title_match(t1.title, t2.title):
                             current_group.append(t2)
                             processed.add(j)
-                    
+
                     if len(current_group) >= 3:
                         matched_groups.append(current_group)
-                        
+
                 for group in matched_groups:
                     avg_hour = int(sum(t.created_at.hour for t in group) / len(group))
-                    
+
                     target_time = target_date.replace(hour=avg_hour, minute=0, second=0, microsecond=0)
-                    
+
                     if target_time > now:
                         prediction = PredictedTask(
                             prediction_id=str(uuid.uuid4()),
                             title=group[0].title,
                             confidence=min(1.0, 0.5 + (len(group) * 0.1)),
                             predicted_time=target_time.strftime("%A %H:00"),
-                            pattern_source="recurring_task"
+                            pattern_source="recurring_task",
                         )
                         new_predictions.append(prediction)
 
             # Context-watcher ambient integration
             try:
                 from app.ai.ambient.context_watcher import context_watcher
+
                 ctx_stats = context_watcher.get_stats(hours=24)
                 top_apps = ctx_stats.get("top_apps", [])
                 if top_apps:
                     top_app_name = top_apps[0].get("app_name", "Primary Workspace")
-                    new_predictions.append(PredictedTask(
-                        prediction_id=str(uuid.uuid4()),
-                        title=f"Resume workflow session in {top_app_name}",
-                        confidence=0.88,
-                        predicted_time=now.strftime("%A %H:00"),
-                        pattern_source="context_watcher_ambient",
-                        prepared_result={"primary_app": top_app_name, "auto_focus": True}
-                    ))
+                    new_predictions.append(
+                        PredictedTask(
+                            prediction_id=str(uuid.uuid4()),
+                            title=f"Resume workflow session in {top_app_name}",
+                            confidence=0.88,
+                            predicted_time=now.strftime("%A %H:00"),
+                            pattern_source="context_watcher_ambient",
+                            prepared_result={"primary_app": top_app_name, "auto_focus": True},
+                        )
+                    )
             except Exception as e:
                 logger.warning(f"Context watcher prediction integration skipped: {e}")
-            
+
             existing_pending = [p for p in self._predictions if p.status == "pending"]
             final_predictions = existing_pending
             for np in new_predictions:
                 if not any(self._fuzzy_title_match(np.title, ep.title) for ep in final_predictions):
                     final_predictions.append(np)
-                    
+
             self._predictions = final_predictions
             self._save_predictions()
-            
+
             # Save history
             try:
                 history_data = {"last_analyzed": now.isoformat(), "patterns_found": len(new_predictions)}
@@ -144,9 +144,9 @@ class PredictiveEngine:
                     json.dump(history_data, f)
             except Exception as e:
                 logger.error(f"Failed to save pattern history: {e}")
-                
+
             return new_predictions
-            
+
         except Exception as e:
             logger.error(f"Pattern analysis failed: {e}")
             return []
@@ -154,10 +154,9 @@ class PredictiveEngine:
     def get_predictions_for_today(self) -> list[PredictedTask]:
         now = datetime.now(UTC)
         today_str = now.strftime("%A")
-        
+
         today_predictions = [
-            p for p in self._predictions 
-            if p.status == "pending" and p.predicted_time.startswith(today_str)
+            p for p in self._predictions if p.status == "pending" and p.predicted_time.startswith(today_str)
         ]
         return today_predictions
 
@@ -167,8 +166,9 @@ class PredictiveEngine:
                 p.status = status
                 break
         self._save_predictions()
-        
+
     def get_all_patterns(self) -> list[dict]:
         return [asdict(p) for p in self._predictions]
+
 
 predictive_engine = PredictiveEngine()

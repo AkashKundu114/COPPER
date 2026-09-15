@@ -1,7 +1,7 @@
 try:
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
-    from apscheduler.triggers.interval import IntervalTrigger
     from apscheduler.triggers.cron import CronTrigger
+    from apscheduler.triggers.interval import IntervalTrigger
 
     APSCHEDULER_AVAILABLE = True
 except ImportError:
@@ -164,6 +164,7 @@ async def _training_curation_cycle():
 async def _predictive_pattern_analysis():
     try:
         from app.ai.ambient.predictive_engine import predictive_engine
+
         predictions = predictive_engine.analyze_patterns()
         logger.info(f"[PREDICTIONS] Analyzed patterns, found {len(predictions)} predictions for today")
     except Exception as e:
@@ -173,6 +174,7 @@ async def _predictive_pattern_analysis():
 async def _daily_morning_briefing():
     try:
         from app.ai.ambient.daily_briefing import daily_briefing_service
+
         await daily_briefing_service.generate_morning_briefing()
         logger.info("[BRIEFING] Morning briefing generated")
     except Exception as e:
@@ -182,6 +184,7 @@ async def _daily_morning_briefing():
 async def _daily_eod_summary():
     try:
         from app.ai.ambient.daily_briefing import daily_briefing_service
+
         await daily_briefing_service.generate_eod_summary()
         logger.info("[BRIEFING] EOD Summary generated")
     except Exception as e:
@@ -266,12 +269,14 @@ def start_scheduler():
 
         try:
             from app.ai.ambient.context_watcher import context_watcher
+
             context_watcher.start()
         except Exception as cw_err:
             logger.error(f"Failed to start Context Watcher: {cw_err}")
 
         try:
             from app.ai.ambient.cognitive_load import cognitive_load_detector
+
             cognitive_load_detector.start()
         except Exception as cl_err:
             logger.error(f"Failed to start Cognitive Load Detector: {cl_err}")

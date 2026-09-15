@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 
 from app.core.config import settings
-from app.core.telemetry import format_grafana_tempo_url, get_recent_traces, get_trace_by_id
+from app.core.telemetry import get_recent_traces, get_trace_by_id
 
 router = APIRouter(prefix="/telemetry", tags=["telemetry"])
 

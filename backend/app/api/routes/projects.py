@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
@@ -14,25 +12,25 @@ class ProjectCreate(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     name: str
-    health: Optional[str] = "healthy"
-    reason: Optional[str] = "Project milestone tracking active."
-    completedTasks: Optional[int] = Field(default=None, alias="completed_tasks")
-    totalTasks: Optional[int] = Field(default=None, alias="total_tasks")
+    health: str | None = "healthy"
+    reason: str | None = "Project milestone tracking active."
+    completedTasks: int | None = Field(default=None, alias="completed_tasks")
+    totalTasks: int | None = Field(default=None, alias="total_tasks")
 
 
 class ProjectUpdate(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    name: Optional[str] = None
-    health: Optional[str] = None
-    reason: Optional[str] = None
-    completedTasks: Optional[int] = Field(default=None, alias="completed_tasks")
-    totalTasks: Optional[int] = Field(default=None, alias="total_tasks")
+    name: str | None = None
+    health: str | None = None
+    reason: str | None = None
+    completedTasks: int | None = Field(default=None, alias="completed_tasks")
+    totalTasks: int | None = Field(default=None, alias="total_tasks")
 
 
 @router.get("")
 def list_projects(
-    health: Optional[str] = Query(None, description="Filter by project health"),
+    health: str | None = Query(None, description="Filter by project health"),
     db: Session = Depends(get_db),
 ):
     query = db.query(Project)

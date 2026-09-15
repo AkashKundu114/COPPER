@@ -1,9 +1,8 @@
-from typing import Optional
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core.logger import logger
 from app.database.models.task import Task
 from app.database.postgres import get_db
 
@@ -12,25 +11,25 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 class TaskCreate(BaseModel):
     title: str
-    project: Optional[str] = "General"
-    priority: Optional[str] = "medium"
-    duration: Optional[str] = "30m"
-    status: Optional[str] = "inbox"
+    project: str | None = "General"
+    priority: str | None = "medium"
+    duration: str | None = "30m"
+    status: str | None = "inbox"
 
 
 class TaskUpdate(BaseModel):
-    title: Optional[str] = None
-    project: Optional[str] = None
-    priority: Optional[str] = None
-    duration: Optional[str] = None
-    status: Optional[str] = None
+    title: str | None = None
+    project: str | None = None
+    priority: str | None = None
+    duration: str | None = None
+    status: str | None = None
 
 
 @router.get("")
 def list_tasks(
-    status: Optional[str] = Query(None, description="Filter by task status"),
-    project: Optional[str] = Query(None, description="Filter by project name"),
-    priority: Optional[str] = Query(None, description="Filter by priority"),
+    status: str | None = Query(None, description="Filter by task status"),
+    project: str | None = Query(None, description="Filter by project name"),
+    priority: str | None = Query(None, description="Filter by priority"),
     db: Session = Depends(get_db),
 ):
     query = db.query(Task)
@@ -89,12 +88,13 @@ def update_task(task_id: str, body: TaskUpdate, db: Session = Depends(get_db)):
         if body.status in ["completed", "done"] and old_status not in ["completed", "done"]:
             try:
                 from app.ai.knowledge.causal_engine import causal_engine
+
                 causal_engine.record_event(
                     description=f"Task completed: '{task.title}' (Project: {task.project})",
                     category="task_completion",
                     source="task_manager",
                     entities=[task.project] if task.project else [],
-                    metadata={"task_id": task.id, "priority": task.priority}
+                    metadata={"task_id": task.id, "priority": task.priority},
                 )
             except Exception as e:
                 logger.warning(f"Causal event recording failed on task completion: {e}")

@@ -1,13 +1,13 @@
+import hashlib
 import json
 import uuid
-import hashlib
+from dataclasses import dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
-from typing import Dict, List, Any
-import os
 from pathlib import Path
+from typing import Any
 
 from app.core.logger import logger
+
 
 @dataclass
 class SyncPayload:
@@ -16,10 +16,11 @@ class SyncPayload:
     device_name: str
     timestamp: str
     active_project: str
-    recent_tasks: List[Dict[str, Any]]
-    unresolved_queries: List[str]
+    recent_tasks: list[dict[str, Any]]
+    unresolved_queries: list[str]
     memory_hash: str
     checksum: str
+
 
 class DeviceSyncCoordinator:
     def __init__(self):
@@ -27,15 +28,11 @@ class DeviceSyncCoordinator:
         self.sync_file = self.data_dir / "device_sync.json"
         self._ensure_data_dir()
         self.device_id = self._get_or_create_device_id()
-    
+
     def _ensure_data_dir(self):
         self.data_dir.mkdir(parents=True, exist_ok=True)
         if not self.sync_file.exists():
-            self._save_state({
-                "device_id": str(uuid.uuid4()),
-                "connected_devices": {},
-                "last_sync": None
-            })
+            self._save_state({"device_id": str(uuid.uuid4()), "connected_devices": {}, "last_sync": None})
 
     def _get_or_create_device_id(self) -> str:
         state = self._load_state()
@@ -44,16 +41,16 @@ class DeviceSyncCoordinator:
             self._save_state(state)
         return state["device_id"]
 
-    def _load_state(self) -> Dict[str, Any]:
+    def _load_state(self) -> dict[str, Any]:
         try:
             if self.sync_file.exists():
-                with open(self.sync_file, "r", encoding="utf-8") as f:
+                with open(self.sync_file, encoding="utf-8") as f:
                     return json.load(f)
         except Exception as e:
             logger.error(f"Error loading sync state: {e}")
         return {"device_id": str(uuid.uuid4()), "connected_devices": {}, "last_sync": None}
 
-    def _save_state(self, state: Dict[str, Any]):
+    def _save_state(self, state: dict[str, Any]):
         try:
             with open(self.sync_file, "w", encoding="utf-8") as f:
                 json.dump(state, f, indent=4)
@@ -70,37 +67,37 @@ class DeviceSyncCoordinator:
             "active_project": "default",
             "recent_tasks": [],
             "unresolved_queries": [],
-            "memory_hash": "mock_hash"
+            "memory_hash": "mock_hash",
         }
-        
+
         checksum_str = json.dumps(payload_data, sort_keys=True)
         payload_data["checksum"] = hashlib.sha256(checksum_str.encode()).hexdigest()
-        
+
         return SyncPayload(**payload_data)
 
     def receive_handoff_payload(self, payload: dict) -> dict:
         logger.info(f"Receiving handoff payload from device: {payload.get('device_name')}")
-        
+
         # Verify checksum
         provided_checksum = payload.pop("checksum", None)
         checksum_str = json.dumps(payload, sort_keys=True)
         expected_checksum = hashlib.sha256(checksum_str.encode()).hexdigest()
-        
+
         if provided_checksum != expected_checksum:
             logger.warning("Checksum validation failed for handoff payload")
             raise ValueError("Invalid checksum")
-        
+
         # Apply state
         state = self._load_state()
         device_id = payload.get("device_id")
         if device_id:
             state.setdefault("connected_devices", {})[device_id] = {
                 "name": payload.get("device_name"),
-                "last_seen": payload.get("timestamp")
+                "last_seen": payload.get("timestamp"),
             }
             state["last_sync"] = datetime.utcnow().isoformat()
             self._save_state(state)
-        
+
         # Return back the checksum for consistency
         payload["checksum"] = provided_checksum
         return {"status": "success", "applied_payload": payload}
@@ -111,7 +108,8 @@ class DeviceSyncCoordinator:
             "current_device": self.device_id,
             "last_sync": state.get("last_sync"),
             "connected_devices": state.get("connected_devices", {}),
-            "sync_health": "healthy"
+            "sync_health": "healthy",
         }
+
 
 device_sync = DeviceSyncCoordinator()

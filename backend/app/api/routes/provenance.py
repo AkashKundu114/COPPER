@@ -1,5 +1,4 @@
 from dataclasses import asdict
-from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
@@ -13,19 +12,19 @@ class FactCreate(BaseModel):
     fact: str
     source_type: str
     source_id: str
-    confidence: Optional[float] = 0.8
-    tags: Optional[List[str]] = None
+    confidence: float | None = 0.8
+    tags: list[str] | None = None
 
 
 class ConfirmInput(BaseModel):
     source_id: str
-    confidence: Optional[float] = 0.9
+    confidence: float | None = 0.9
 
 
 class ContradictInput(BaseModel):
     source_id: str
     counter_evidence: str
-    confidence: Optional[float] = 0.7
+    confidence: float | None = 0.7
 
 
 class ReviseInput(BaseModel):
@@ -81,9 +80,7 @@ def contradict_fact(record_id: str, body: ContradictInput):
     record = provenance_tracker.get_provenance(record_id)
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
-    provenance_tracker.contradict_fact(
-        record.fact_hash, body.source_id, body.counter_evidence, body.confidence
-    )
+    provenance_tracker.contradict_fact(record.fact_hash, body.source_id, body.counter_evidence, body.confidence)
     return asdict(provenance_tracker.get_provenance(record_id))
 
 

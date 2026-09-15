@@ -6,7 +6,6 @@ from typing import Any
 from fastapi import FastAPI
 from opentelemetry import context, trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter as OTLPGrpcSpanExporter
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter as OTLPHttpSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import ReadableSpan, Span, SpanProcessor, TracerProvider
@@ -97,22 +96,26 @@ class LiveSpanCollector(SpanProcessor):
             formatted_spans = []
             for s in spans:
                 offset_ms = round(max(0.0, s["start_time_ms"] - overall_start), 2)
-                formatted_spans.append({
-                    **s,
-                    "offset_ms": offset_ms,
-                })
+                formatted_spans.append(
+                    {
+                        **s,
+                        "offset_ms": offset_ms,
+                    }
+                )
 
-            result.append({
-                "trace_id": trace_id,
-                "root_name": root_span["name"],
-                "timestamp": root_span["start_time_ms"],
-                "duration_ms": total_duration_ms,
-                "status": "error" if any(s["status"] == "ERROR" for s in spans) else "success",
-                "spans_count": len(spans),
-                "spans": formatted_spans,
-                "root_attributes": root_span.get("attributes", {}),
-                "grafana_url": format_grafana_tempo_url(trace_id),
-            })
+            result.append(
+                {
+                    "trace_id": trace_id,
+                    "root_name": root_span["name"],
+                    "timestamp": root_span["start_time_ms"],
+                    "duration_ms": total_duration_ms,
+                    "status": "error" if any(s["status"] == "ERROR" for s in spans) else "success",
+                    "spans_count": len(spans),
+                    "spans": formatted_spans,
+                    "root_attributes": root_span.get("attributes", {}),
+                    "grafana_url": format_grafana_tempo_url(trace_id),
+                }
+            )
         return result
 
     def get_trace_by_id(self, trace_id: str) -> dict[str, Any] | None:
@@ -128,10 +131,12 @@ class LiveSpanCollector(SpanProcessor):
         formatted_spans = []
         for s in spans:
             offset_ms = round(max(0.0, s["start_time_ms"] - overall_start), 2)
-            formatted_spans.append({
-                **s,
-                "offset_ms": offset_ms,
-            })
+            formatted_spans.append(
+                {
+                    **s,
+                    "offset_ms": offset_ms,
+                }
+            )
 
         return {
             "trace_id": trace_id,

@@ -1,5 +1,3 @@
-from typing import Any, Dict, List
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -27,13 +25,14 @@ async def stop_recording(meeting_id: str):
         try:
             from app.ai.knowledge.causal_engine import causal_engine
             from app.core.logger import logger
+
             action_count = len(getattr(record, "action_items", []) or [])
             causal_engine.record_event(
                 description=f"Meeting concluded: '{record.title}' with {action_count} auto-extracted action items",
                 category="meeting_conclusion",
                 source="meeting_intelligence",
                 entities=[record.title],
-                metadata={"meeting_id": meeting_id, "duration_seconds": getattr(record, "duration_seconds", 0)}
+                metadata={"meeting_id": meeting_id, "duration_seconds": getattr(record, "duration_seconds", 0)},
             )
         except Exception as e:
             logger.warning(f"Causal event recording failed for meeting: {e}")

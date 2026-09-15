@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
 from typing import Any
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.ai.ambient.predictive_engine import predictive_engine
@@ -7,8 +8,10 @@ from app.core.logger import logger
 
 router = APIRouter(prefix="/predictions", tags=["predictions"])
 
+
 class PredictionStatusUpdate(BaseModel):
     status: str
+
 
 @router.get("/today")
 async def get_today_predictions() -> Any:
@@ -19,6 +22,7 @@ async def get_today_predictions() -> Any:
         logger.error(f"Failed to get today's predictions: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+
 @router.get("/patterns")
 async def get_all_patterns() -> Any:
     try:
@@ -28,6 +32,7 @@ async def get_all_patterns() -> Any:
         logger.error(f"Failed to get patterns: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+
 @router.post("/analyze")
 async def analyze_patterns() -> Any:
     try:
@@ -36,6 +41,7 @@ async def analyze_patterns() -> Any:
     except Exception as e:
         logger.error(f"Failed to analyze patterns: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
 
 @router.patch("/{prediction_id}")
 async def update_prediction(prediction_id: str, update: PredictionStatusUpdate) -> Any:

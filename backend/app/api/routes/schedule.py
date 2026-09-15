@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -14,23 +12,23 @@ events_router = APIRouter(prefix="/events", tags=["events"])
 class ScheduleEventCreate(BaseModel):
     time: str
     title: str
-    category: Optional[str] = "Focus"
-    completed: Optional[bool] = False
-    date: Optional[str] = None
+    category: str | None = "Focus"
+    completed: bool | None = False
+    date: str | None = None
 
 
 class ScheduleEventUpdate(BaseModel):
-    time: Optional[str] = None
-    title: Optional[str] = None
-    category: Optional[str] = None
-    completed: Optional[bool] = None
-    date: Optional[str] = None
+    time: str | None = None
+    title: str | None = None
+    category: str | None = None
+    completed: bool | None = None
+    date: str | None = None
 
 
 def _list_events(
-    category: Optional[str],
-    completed: Optional[bool],
-    date: Optional[str],
+    category: str | None,
+    completed: bool | None,
+    date: str | None,
     db: Session,
 ):
     query = db.query(ScheduleEvent)
@@ -102,9 +100,9 @@ def _delete_event(event_id: str, db: Session):
 
 @router.get("/events")
 def list_schedule_events(
-    category: Optional[str] = Query(None, description="Filter by event category"),
-    completed: Optional[bool] = Query(None, description="Filter by completion status"),
-    date: Optional[str] = Query(None, description="Filter by event date"),
+    category: str | None = Query(None, description="Filter by event category"),
+    completed: bool | None = Query(None, description="Filter by completion status"),
+    date: str | None = Query(None, description="Filter by event date"),
     db: Session = Depends(get_db),
 ):
     return _list_events(category, completed, date, db)
@@ -133,9 +131,9 @@ def delete_schedule_event(event_id: str, db: Session = Depends(get_db)):
 # Also provide the same endpoints under /events for direct access
 @events_router.get("")
 def list_events_direct(
-    category: Optional[str] = Query(None),
-    completed: Optional[bool] = Query(None),
-    date: Optional[str] = Query(None),
+    category: str | None = Query(None),
+    completed: bool | None = Query(None),
+    date: str | None = Query(None),
     db: Session = Depends(get_db),
 ):
     return _list_events(category, completed, date, db)

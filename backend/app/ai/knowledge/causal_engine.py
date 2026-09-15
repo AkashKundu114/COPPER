@@ -1,11 +1,11 @@
 import json
 import os
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, timedelta
 import uuid
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timedelta
 
-from app.core.logger import logger
 from app.ai.llm.ollama_client import ollama_client
+from app.core.logger import logger
 
 
 @dataclass
@@ -74,18 +74,18 @@ class CausalEngine:
             with open(self.events_file, "w") as f:
                 json.dump({k: v.to_dict() for k, v in self.events.items()}, f, indent=2)
             with open(self.links_file, "w") as f:
-                json.dump([l.to_dict() for l in self.links], f, indent=2)
+                json.dump([link.to_dict() for link in self.links], f, indent=2)
         except Exception as e:
             logger.error(f"[CausalEngine] Error saving data: {e}")
 
     def _load(self):
         try:
             if os.path.exists(self.events_file):
-                with open(self.events_file, "r") as f:
+                with open(self.events_file) as f:
                     data = json.load(f)
                     self.events = {k: CausalEvent.from_dict(v) for k, v in data.items()}
             if os.path.exists(self.links_file):
-                with open(self.links_file, "r") as f:
+                with open(self.links_file) as f:
                     data = json.load(f)
                     self.links = [CausalLink.from_dict(v) for v in data]
         except Exception as e:
@@ -142,7 +142,7 @@ class CausalEngine:
         }
 
         for i, earlier_event in enumerate(recent_events):
-            for later_event in recent_events[i + 1:]:
+            for later_event in recent_events[i + 1 :]:
                 time_diff = later_event.timestamp - earlier_event.timestamp
                 if time_diff > timedelta(minutes=30):
                     continue
@@ -157,12 +157,14 @@ class CausalEngine:
                 entity_overlap_pct = len(shared_entities) / max(
                     len(set(earlier_event.entities).union(set(later_event.entities))), 1
                 )
-                
+
                 # temporal proximity score: 1.0 at 0 minutes, 0.0 at 30 minutes
                 temporal_proximity_score = max(0, 1.0 - (time_diff.total_seconds() / 1800.0))
                 category_compatibility = 1.0
 
-                confidence = (entity_overlap_pct * 0.5) + (temporal_proximity_score * 0.3) + (category_compatibility * 0.2)
+                confidence = (
+                    (entity_overlap_pct * 0.5) + (temporal_proximity_score * 0.3) + (category_compatibility * 0.2)
+                )
 
                 if confidence > 0.4:
                     link = CausalLink(
@@ -172,11 +174,9 @@ class CausalEngine:
                         confidence=confidence,
                         evidence=f"Inferred: shared entities {list(shared_entities)} within {int(time_diff.total_seconds() / 60)} mins.",
                     )
-                    
+
                     # Avoid duplicates
-                    if not any(
-                        l.cause_id == link.cause_id and l.effect_id == link.effect_id for l in self.links
-                    ):
+                    if not any(lnk.cause_id == link.cause_id and lnk.effect_id == link.effect_id for lnk in self.links):
                         self.links.append(link)
                         new_links.append(link)
 
@@ -187,38 +187,40 @@ class CausalEngine:
         return new_links
 
     async def query_why(self, question: str) -> CausalChain:
-        keywords = set(word.lower() for word in question.split() if len(word) > 3)
-        
+        keywords = {word.lower() for word in question.split() if len(word) > 3}
+
         matches = []
         for e in self.events.values():
             text_to_search = (e.description + " " + " ".join(e.entities)).lower()
             if any(k in text_to_search for k in keywords):
                 matches.append(e)
-                
+
         matches.sort(key=lambda x: x.timestamp, reverse=True)
-        
+
         if not matches:
             return CausalChain(
                 query=question,
                 chain=[],
                 links=[],
                 explanation="Could not find relevant events for this query.",
-                confidence=0.0
+                confidence=0.0,
             )
 
         target_event = matches[0]
         chain_events = self.get_event_causes(target_event.event_id, depth=3)
         chain_events.insert(0, target_event)  # Prepend the target event
         chain_events.sort(key=lambda x: x.timestamp)
-        
+
         event_ids = {e.event_id for e in chain_events}
-        chain_links = [l for l in self.links if l.cause_id in event_ids and l.effect_id in event_ids]
-        
-        overall_confidence = sum(l.confidence for l in chain_links) / max(len(chain_links), 1) if chain_links else 0.5
-        
+        chain_links = [lnk for lnk in self.links if lnk.cause_id in event_ids and lnk.effect_id in event_ids]
+
+        overall_confidence = (
+            sum(lnk.confidence for lnk in chain_links) / max(len(chain_links), 1) if chain_links else 0.5
+        )
+
         timeline_strs = [f"{e.timestamp.strftime('%H:%M:%S')}: {e.description}" for e in chain_events]
         basic_expl = "Timeline:\n" + "\n".join(timeline_strs)
-        
+
         explanation = basic_expl
         if await ollama_client.is_available():
             prompt = f"Explain the causal chain for the question '{question}' based on these events:\n{basic_expl}\nKeep it brief and clear."
@@ -232,13 +234,13 @@ class CausalEngine:
             chain=chain_events,
             links=chain_links,
             explanation=explanation,
-            confidence=overall_confidence
+            confidence=overall_confidence,
         )
 
     def get_event_causes(self, event_id: str, depth: int = 5) -> list[CausalEvent]:
         causes = set()
         current_layer = {event_id}
-        
+
         for _ in range(depth):
             next_layer = set()
             for eid in current_layer:
@@ -249,13 +251,13 @@ class CausalEngine:
             current_layer = next_layer
             if not current_layer:
                 break
-                
+
         return [self.events[eid] for eid in causes]
 
     def get_event_effects(self, event_id: str, depth: int = 5) -> list[CausalEvent]:
         effects = set()
         current_layer = {event_id}
-        
+
         for _ in range(depth):
             next_layer = set()
             for eid in current_layer:
@@ -266,7 +268,7 @@ class CausalEngine:
             current_layer = next_layer
             if not current_layer:
                 break
-                
+
         return [self.events[eid] for eid in effects]
 
     def get_timeline(self, hours: int = 24, category: str | None = None) -> list[CausalEvent]:
@@ -281,12 +283,12 @@ class CausalEngine:
         categories = {}
         for e in self.events.values():
             categories[e.category] = categories.get(e.category, 0) + 1
-            
+
         return {
             "total_events": len(self.events),
             "total_links": len(self.links),
-            "avg_chain_length": 0, # Placeholder
-            "categories_breakdown": categories
+            "avg_chain_length": 0,  # Placeholder
+            "categories_breakdown": categories,
         }
 
 

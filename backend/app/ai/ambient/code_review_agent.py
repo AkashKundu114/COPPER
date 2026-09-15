@@ -9,13 +9,13 @@ from typing import Any
 
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
-from app.core.constants import AgentType
 from app.core.logger import logger
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent.parent / "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 WATCHED_REPOS_FILE = DATA_DIR / "watched_repos.json"
 CODE_REVIEWS_FILE = DATA_DIR / "code_reviews.json"
+
 
 @dataclass
 class ReviewResult:
@@ -41,7 +41,7 @@ class CodeReviewAgent:
     def _load_json(self, path: Path, default: Any) -> Any:
         try:
             if path.exists():
-                with open(path, "r", encoding="utf-8") as f:
+                with open(path, encoding="utf-8") as f:
                     return json.load(f)
         except Exception as e:
             logger.error(f"Error loading {path}: {e}")
@@ -94,13 +94,14 @@ class CodeReviewAgent:
     async def _run_git(self, repo_path: str, *args) -> tuple[int, str, str]:
         try:
             proc = await asyncio.create_subprocess_exec(
-                "git", *args,
-                cwd=repo_path,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+                "git", *args, cwd=repo_path, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
             )
             stdout, stderr = await proc.communicate()
-            return proc.returncode or 0, stdout.decode("utf-8", errors="ignore"), stderr.decode("utf-8", errors="ignore")
+            return (
+                proc.returncode or 0,
+                stdout.decode("utf-8", errors="ignore"),
+                stderr.decode("utf-8", errors="ignore"),
+            )
         except FileNotFoundError:
             logger.error("Git is not installed or not in PATH")
             return 1, "", "Git is not installed"
@@ -129,57 +130,63 @@ class CodeReviewAgent:
         return list(set(files))
 
     def _detect_test_gaps(self, changed_files: list[str]) -> list[str]:
-        gaps = []
         # Filter for source files
         src_files = [f for f in changed_files if (f.startswith("src/") or f.startswith("app/")) and f.endswith(".py")]
         # Any test files changed?
         test_files = [f for f in changed_files if "test" in f]
-        
+
         if src_files and not test_files:
             return src_files
-        
+
         return []
 
     async def _analyze_with_llm(self, diff_text: str) -> tuple[str, list[dict], list[dict]]:
         llm_avail = await ollama_client.is_available()
         if not llm_avail:
-            return "Basic PR description (LLM offline)", [{"file": "all", "risk_level": "unknown", "issues": "LLM offline"}], []
-        
+            return (
+                "Basic PR description (LLM offline)",
+                [{"file": "all", "risk_level": "unknown", "issues": "LLM offline"}],
+                [],
+            )
+
         try:
             model = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
             prompt_desc = f"Generate a concise PR description for these changes:\n\n{diff_text[:4000]}"
             pr_desc = await ollama_client.chat([{"role": "user", "content": prompt_desc}], model=model)
-            
+
             prompt_risk = f"Identify potential bugs or issues in these changes. Rate risk as low/medium/high. Respond in JSON array format [{{'file': '...', 'risk_level': '...', 'issues': '...'}}]. Diff:\n\n{diff_text[:4000]}"
             risk_text = await ollama_client.chat([{"role": "user", "content": prompt_risk}], model=model)
-            
+
             prompt_sugg = f"Suggest improvements for code quality, performance, or readability. Respond in JSON array format [{{'file': '...', 'line': '...', 'suggestion': '...', 'reason': '...'}}]. Diff:\n\n{diff_text[:4000]}"
             sugg_text = await ollama_client.chat([{"role": "user", "content": prompt_sugg}], model=model)
-            
+
             # Simple JSON extraction (best effort)
             def _extract_json(text: str) -> list[dict]:
                 import re
+
                 try:
-                    match = re.search(r'\[.*\]', text.replace('\n', ' '))
+                    match = re.search(r"\[.*\]", text.replace("\n", " "))
                     if match:
                         return json.loads(match.group(0))
-                except:
+                except Exception:
                     pass
                 return []
-            
+
             return pr_desc, _extract_json(risk_text), _extract_json(sugg_text)
         except Exception as e:
             logger.error(f"Error in LLM analysis: {e}")
             return "Error generating description", [], []
 
-    async def analyze_diff(self, repo_path: str, base_branch: str = "main", head_branch: str | None = None) -> ReviewResult:
+    async def analyze_diff(
+        self, repo_path: str, base_branch: str = "main", head_branch: str | None = None
+    ) -> ReviewResult:
         if head_branch:
             code, diff_out, err = await self._run_git(repo_path, "diff", f"{base_branch}...{head_branch}")
             branch = head_branch
         else:
             code, diff_out, err = await self._run_git(repo_path, "diff", "--staged")
             branch = "staged"
-            
+
         if code != 0:
             logger.error(f"Git diff failed: {err}")
             diff_out = ""
@@ -187,13 +194,13 @@ class CodeReviewAgent:
         files_changed, insertions, deletions = self._parse_diff_stats(diff_out)
         changed_file_list = self._get_changed_files(diff_out)
         test_gaps = self._detect_test_gaps(changed_file_list)
-        
+
         pr_description, risk_analysis, suggestions = await self._analyze_with_llm(diff_out)
-        
+
         # Get latest commit hash
         c_code, c_out, c_err = await self._run_git(repo_path, "rev-parse", "HEAD")
         commit_hash = c_out.strip() if c_code == 0 else "unknown"
-        
+
         review = ReviewResult(
             review_id=str(uuid.uuid4()),
             repo_path=repo_path,
@@ -206,9 +213,9 @@ class CodeReviewAgent:
             risk_analysis=risk_analysis,
             suggestions=suggestions,
             test_gaps=test_gaps,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
-        
+
         self.reviews[review.review_id] = review
         self._save_reviews()
         return review
@@ -222,9 +229,9 @@ class CodeReviewAgent:
         files_changed, insertions, deletions = self._parse_diff_stats(diff_out)
         changed_file_list = self._get_changed_files(diff_out)
         test_gaps = self._detect_test_gaps(changed_file_list)
-        
+
         pr_description, risk_analysis, suggestions = await self._analyze_with_llm(diff_out)
-        
+
         review = ReviewResult(
             review_id=str(uuid.uuid4()),
             repo_path=repo_path,
@@ -237,11 +244,12 @@ class CodeReviewAgent:
             risk_analysis=risk_analysis,
             suggestions=suggestions,
             test_gaps=test_gaps,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
-        
+
         self.reviews[review.review_id] = review
         self._save_reviews()
         return review
+
 
 code_review_agent = CodeReviewAgent()

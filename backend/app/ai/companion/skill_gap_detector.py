@@ -1,11 +1,11 @@
-import os
 import json
+import os
 import uuid
-from datetime import datetime, timezone
-from dataclasses import dataclass, asdict
-from typing import List, Optional
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 
 from app.core.logger import logger
+
 
 @dataclass
 class SkillGap:
@@ -14,7 +14,7 @@ class SkillGap:
     query_count: int
     first_observed: str
     last_observed: str
-    recommended_guide: Optional[str]
+    recommended_guide: str | None
     difficulty_level: str
     status: str
 
@@ -33,7 +33,7 @@ class SkillGapDetector:
         if not os.path.exists(self.data_file):
             return
         try:
-            with open(self.data_file, "r") as f:
+            with open(self.data_file) as f:
                 data = json.load(f)
                 for item in data:
                     self.gaps[item["topic"].lower()] = SkillGap(**item)
@@ -48,7 +48,7 @@ class SkillGapDetector:
             logger.error(f"Failed to save skill gaps: {e}")
 
     def record_query_topic(self, topic: str):
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         key = topic.lower()
         if key in self.gaps:
             gap = self.gaps[key]
@@ -63,17 +63,19 @@ class SkillGapDetector:
                 last_observed=now,
                 recommended_guide=None,
                 difficulty_level="beginner",
-                status="detected"
+                status="detected",
             )
             self.gaps[key] = gap
 
         if gap.query_count >= 3 and not gap.recommended_guide:
-            gap.recommended_guide = f"Tutorial outline for {gap.topic}: 1. Basics 2. Intermediate concepts 3. Advanced usage"
+            gap.recommended_guide = (
+                f"Tutorial outline for {gap.topic}: 1. Basics 2. Intermediate concepts 3. Advanced usage"
+            )
             logger.info(f"Generated guide for {gap.topic}")
 
         self._save()
 
-    def get_active_gaps(self) -> List[SkillGap]:
+    def get_active_gaps(self) -> list[SkillGap]:
         return list(self.gaps.values())
 
     def mark_gap_status(self, gap_id: str, status: str):
@@ -83,5 +85,6 @@ class SkillGapDetector:
                 self._save()
                 return True
         return False
+
 
 skill_gap_detector = SkillGapDetector()

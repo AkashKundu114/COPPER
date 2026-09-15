@@ -13,7 +13,6 @@ Unpinned models with the lowest composite score are evicted (keep_alive=0)
 to free memory frames before loading target models. The Gatekeeper model is pinned.
 """
 
-import asyncio
 import time
 from dataclasses import dataclass, field
 from typing import Any
@@ -238,11 +237,7 @@ class VRAMPager:
     def get_telemetry(self) -> dict[str, Any]:
         """Provides real-time systems telemetry for interview demo and monitoring."""
         now = time.time()
-        hit_ratio = (
-            self.stats["cache_hits"] / self.stats["total_requests"]
-            if self.stats["total_requests"] > 0
-            else 1.0
-        )
+        hit_ratio = self.stats["cache_hits"] / self.stats["total_requests"] if self.stats["total_requests"] > 0 else 1.0
         return {
             "capacity_gb": self.capacity_gb,
             "allocated_vram_gb": round(self.current_allocated_vram_gb, 2),

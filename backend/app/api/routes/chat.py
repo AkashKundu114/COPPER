@@ -3,20 +3,19 @@ import base64
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
+from opentelemetry.trace import Status, StatusCode
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.api.websocket.socket_manager import manager
 from app.core.constants import LLMProvider
 from app.core.logger import logger
+from app.core.telemetry import start_request_trace
 from app.database.models.history import ChatHistory
 from app.database.postgres import get_db
 from app.services.chat_service import chat_service
 from app.utils.helpers import generate_session_id
 from app.utils.validators import validate_message
-
-from app.core.telemetry import start_request_trace
-from opentelemetry.trace import Status, StatusCode
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 

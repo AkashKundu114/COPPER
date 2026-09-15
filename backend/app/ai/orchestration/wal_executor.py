@@ -75,7 +75,9 @@ class WALRecord:
         )
         expected = rec.calculate_checksum()
         if rec.checksum != expected:
-            raise ValueError(f"Corrupt WAL entry detected at seq {rec.seq_num}: checksum mismatch ({rec.checksum} != {expected})")
+            raise ValueError(
+                f"Corrupt WAL entry detected at seq {rec.seq_num}: checksum mismatch ({rec.checksum} != {expected})"
+            )
         return rec
 
 
@@ -112,7 +114,7 @@ class TaskWAL:
         if not self.file_path.exists():
             return []
         records = []
-        with open(self.file_path, "r", encoding="utf-8") as f:
+        with open(self.file_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:

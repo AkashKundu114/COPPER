@@ -1,15 +1,14 @@
-import json
-from pathlib import Path
-from typing import Any, Optional
+from typing import Any
+
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
-from app.ai.agents.agency_catalog import _load_catalog, get_persona, list_divisions
-from app.ai.tools.builtin.science_catalog_tools import _load_science_skills
-from app.ai.tools.registry import tool_registry
+from app.ai.agents.agency_catalog import _load_catalog, get_persona
 from app.ai.tools.builtin.diagram_tools import workflow_diagram_render
-from app.ai.tools.builtin.video_tools import video_pipeline_list
+from app.ai.tools.builtin.science_catalog_tools import _load_science_skills
 from app.ai.tools.builtin.science_tools import arxiv_search
+from app.ai.tools.builtin.video_tools import video_pipeline_list
+from app.ai.tools.registry import tool_registry
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
 
@@ -50,9 +49,7 @@ async def get_catalog_summary():
         "total_divisions": len(division_counts),
         "total_scientific_skills": len(science_data),
         "total_tools": len(tools),
-        "divisions": [
-            {"id": k, "count": v} for k, v in sorted(division_counts.items(), key=lambda x: -x[1])
-        ],
+        "divisions": [{"id": k, "count": v} for k, v in sorted(division_counts.items(), key=lambda x: -x[1])],
         "science_categories": [
             {"name": k, "count": v} for k, v in sorted(science_categories.items(), key=lambda x: -x[1])
         ],
@@ -85,8 +82,8 @@ async def get_divisions():
 
 @router.get("/personas")
 async def get_personas(
-    division: Optional[str] = None,
-    search: Optional[str] = None,
+    division: str | None = None,
+    search: str | None = None,
     limit: int = Query(50, ge=1, le=300),
     offset: int = Query(0, ge=0),
 ):
@@ -105,19 +102,27 @@ async def get_personas(
             role = p.get("role", "").lower()
             desc = p.get("description", "").lower()
             vibe = p.get("vibe", "").lower()
-            if search_term not in name and search_term not in role and search_term not in desc and search_term not in vibe and search_term not in key.lower():
+            if (
+                search_term not in name
+                and search_term not in role
+                and search_term not in desc
+                and search_term not in vibe
+                and search_term not in key.lower()
+            ):
                 continue
 
-        filtered.append({
-            "id": key,
-            "name": p.get("name", key),
-            "division": p.get("division", "general"),
-            "division_label": p.get("division_label", ""),
-            "role": p.get("role", p.get("name", "")),
-            "description": p.get("description", ""),
-            "vibe": p.get("vibe", "Professional, autonomous, focused"),
-            "system_prompt_preview": (p.get("system_prompt", "")[:180] + "...") if p.get("system_prompt") else "",
-        })
+        filtered.append(
+            {
+                "id": key,
+                "name": p.get("name", key),
+                "division": p.get("division", "general"),
+                "division_label": p.get("division_label", ""),
+                "role": p.get("role", p.get("name", "")),
+                "description": p.get("description", ""),
+                "vibe": p.get("vibe", "Professional, autonomous, focused"),
+                "system_prompt_preview": (p.get("system_prompt", "")[:180] + "...") if p.get("system_prompt") else "",
+            }
+        )
 
     total = len(filtered)
     paginated = filtered[offset : offset + limit]
@@ -141,8 +146,8 @@ async def get_persona_detail(persona_id: str):
 
 @router.get("/scientific-skills")
 async def get_scientific_skills(
-    category: Optional[str] = None,
-    search: Optional[str] = None,
+    category: str | None = None,
+    search: str | None = None,
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
 ):
@@ -160,17 +165,24 @@ async def get_scientific_skills(
             name = s.get("name", "").lower()
             desc = s.get("description", "").lower()
             path = s.get("path", "").lower()
-            if search_term not in name and search_term not in desc and search_term not in key.lower() and search_term not in path:
+            if (
+                search_term not in name
+                and search_term not in desc
+                and search_term not in key.lower()
+                and search_term not in path
+            ):
                 continue
 
-        filtered.append({
-            "id": key,
-            "name": s.get("name", key),
-            "category": s.get("category", "General"),
-            "description": s.get("description", ""),
-            "path": s.get("path", ""),
-            "instruction_preview": (s.get("instructions", "")[:160] + "...") if s.get("instructions") else "",
-        })
+        filtered.append(
+            {
+                "id": key,
+                "name": s.get("name", key),
+                "category": s.get("category", "General"),
+                "description": s.get("description", ""),
+                "path": s.get("path", ""),
+                "instruction_preview": (s.get("instructions", "")[:160] + "...") if s.get("instructions") else "",
+            }
+        )
 
     total = len(filtered)
     paginated = filtered[offset : offset + limit]
@@ -201,8 +213,8 @@ async def get_scientific_skill_detail(skill_id: str):
 
 @router.get("/tools")
 async def get_tools_catalog(
-    search: Optional[str] = None,
-    guardian_level: Optional[int] = None,
+    search: str | None = None,
+    guardian_level: int | None = None,
 ):
     """List all registered tools in C.O.P.P.E.R. with guardian safety metadata."""
     tools = tool_registry.list_tools()
@@ -232,15 +244,17 @@ async def get_tools_catalog(
             for p_name, p_data in props.items()
         ]
 
-        result.append({
-            "name": t.name,
-            "description": t.description,
-            "return_description": getattr(t, "return_description", "Tool execution result"),
-            "guardian_level": getattr(t, "guardian_level", 0),
-            "parameters": param_list,
-            "parameter_count": len(param_list),
-            "category": _infer_tool_category(t.name),
-        })
+        result.append(
+            {
+                "name": t.name,
+                "description": t.description,
+                "return_description": getattr(t, "return_description", "Tool execution result"),
+                "guardian_level": getattr(t, "guardian_level", 0),
+                "parameters": param_list,
+                "parameter_count": len(param_list),
+                "category": _infer_tool_category(t.name),
+            }
+        )
 
     # Sort tools by category, then by name
     result.sort(key=lambda x: (x["category"], x["name"]))
@@ -295,4 +309,3 @@ class ArxivSearchRequest(BaseModel):
 async def search_arxiv_api(req: ArxivSearchRequest):
     """Search arXiv preprints directly using science tools."""
     return await arxiv_search(query=req.query, max_results=req.max_results)
-

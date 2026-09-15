@@ -18,12 +18,14 @@ from starlette.responses import Response
 from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api.routes import (
+    accountability,
     agents,
     ambient,
     audit,
     automation,
     briefing,
     cache,
+    catalog,
     causal,
     chat,
     clipboard,
@@ -34,13 +36,16 @@ from app.api.routes import (
     documents,
     email,
     episodes,
+    federated,
     guardian,
     images,
     knowledge_graph,
     meetings,
     memory,
+    notifications,
     orchestration,
     personality,
+    plugins,
     predictions,
     privacy,
     projects,
@@ -51,8 +56,9 @@ from app.api.routes import (
     schedule,
     self_improvement,
     self_memory,
-    skills,
     skill_gaps,
+    skills,
+    sync,
     system,
     tasks,
     telemetry_routes,
@@ -62,12 +68,6 @@ from app.api.routes import (
     wake,
     workflows,
     workspace,
-    federated,
-    accountability,
-    plugins,
-    notifications,
-    sync,
-    catalog,
 )
 from app.core.config import settings
 from app.core.logger import logger
@@ -93,17 +93,19 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Telemetry init warning: {e}")
     start_scheduler()
     model_tier_manager.start()
-    
+
     from app.ai.ambient.clipboard_monitor import clipboard_monitor
+
     clipboard_monitor.start()
-    
+
     logger.info("COPPER backend ready")
     yield
     await wake_word_service.disable()
-    
+
     from app.ai.ambient.clipboard_monitor import clipboard_monitor
+
     clipboard_monitor.stop()
-    
+
     model_tier_manager.stop()
     stop_scheduler()
     await redis_close()

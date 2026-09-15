@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -12,7 +10,7 @@ router = APIRouter(prefix="/code-review", tags=["code-review"])
 class AnalyzeDiffRequest(BaseModel):
     repo_path: str
     base_branch: str = "main"
-    head_branch: Optional[str] = None
+    head_branch: str | None = None
 
 
 class AnalyzeCommitRequest(BaseModel):
@@ -22,7 +20,7 @@ class AnalyzeCommitRequest(BaseModel):
 
 class AddRepoRequest(BaseModel):
     path: str
-    name: Optional[str] = None
+    name: str | None = None
 
 
 @router.post("/analyze")
@@ -48,12 +46,13 @@ async def analyze_commit(req: AnalyzeCommitRequest):
         )
         try:
             from app.ai.knowledge.causal_engine import causal_engine
+
             causal_engine.record_event(
                 description=f"Git commit analyzed: {req.commit_hash[:8]} in {req.repo_path}",
                 category="git_commit",
                 source="code_review_agent",
                 entities=[req.repo_path, req.commit_hash],
-                metadata={"commit": req.commit_hash}
+                metadata={"commit": req.commit_hash},
             )
         except Exception as ce:
             logger.warning(f"Causal event recording failed for git commit: {ce}")
@@ -64,7 +63,7 @@ async def analyze_commit(req: AnalyzeCommitRequest):
 
 
 @router.get("/reviews")
-async def list_reviews(repo_path: Optional[str] = None, limit: int = 20):
+async def list_reviews(repo_path: str | None = None, limit: int = 20):
     return code_review_agent.list_reviews(repo_path=repo_path, limit=limit)
 
 

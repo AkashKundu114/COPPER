@@ -20,8 +20,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
-from pathlib import Path
 from typing import Any
 
 from app.core.logger import logger
@@ -85,7 +83,7 @@ class WindowsKernelJob:
         self.memory_limit_mb = memory_limit_mb
         self.cpu_rate_pct = cpu_rate_pct
         self.handle = None
-        self.is_supported = (sys.platform == "win32")
+        self.is_supported = sys.platform == "win32"
 
         if self.is_supported:
             self._create_job_object()

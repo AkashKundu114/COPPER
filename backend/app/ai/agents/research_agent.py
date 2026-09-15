@@ -64,16 +64,12 @@ class ResearchAgent(BaseAgent):
             meta = s.get("metadata") or {}
             source_label = meta.get("filename") or meta.get("source") or s.get("source") or "document"
             content = s.get("content", "").strip()
-            blocks.append(
-                f"[Source {idx}] (Relevance: {rel:.2f}, Source: {source_label}):\n{content}"
-            )
+            blocks.append(f"[Source {idx}] (Relevance: {rel:.2f}, Source: {source_label}):\n{content}")
         return "\n\n".join(blocks)
 
     def _build_citation_system_prompt(self, ranked_sources_text: str) -> str:
         """Builds system prompt integrating citation grounding and available tool specifications."""
-        citation_core = CITATION_GROUNDED_RESEARCH_PROMPT_TEMPLATE.format(
-            ranked_sources=ranked_sources_text
-        )
+        citation_core = CITATION_GROUNDED_RESEARCH_PROMPT_TEMPLATE.format(ranked_sources=ranked_sources_text)
         if not self.tools:
             return citation_core
 

@@ -5,9 +5,11 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 
-from app.ai.tools.builtin.web_tools import web_search, web_fetch
+from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
+from app.ai.tools.builtin.web_tools import web_fetch, web_search
 from app.core.logger import logger
+
 
 @dataclass
 class ResearchSource:
@@ -16,6 +18,7 @@ class ResearchSource:
     snippet: str
     content: str | None = None
     relevance_score: float = 0.0
+
 
 @dataclass
 class ResearchReport:
@@ -32,6 +35,7 @@ class ResearchReport:
     progress_pct: int = 0
     error: str | None = None
 
+
 class ResearchPipeline:
     def __init__(self):
         self.reports: dict[str, ResearchReport] = {}
@@ -46,17 +50,17 @@ class ResearchPipeline:
         if not os.path.exists(self.db_path):
             return
         try:
-            with open(self.db_path, "r", encoding="utf-8") as f:
+            with open(self.db_path, encoding="utf-8") as f:
                 data = json.load(f)
                 for item in data:
-                    item['started_at'] = datetime.fromisoformat(item['started_at'])
-                    if item.get('completed_at'):
-                        item['completed_at'] = datetime.fromisoformat(item['completed_at'])
-                    if item.get('deadline'):
-                        item['deadline'] = datetime.fromisoformat(item['deadline'])
-                    sources_data = item.pop('sources', [])
-                    item['sources'] = [ResearchSource(**s) for s in sources_data]
-                    self.reports[item['report_id']] = ResearchReport(**item)
+                    item["started_at"] = datetime.fromisoformat(item["started_at"])
+                    if item.get("completed_at"):
+                        item["completed_at"] = datetime.fromisoformat(item["completed_at"])
+                    if item.get("deadline"):
+                        item["deadline"] = datetime.fromisoformat(item["deadline"])
+                    sources_data = item.pop("sources", [])
+                    item["sources"] = [ResearchSource(**s) for s in sources_data]
+                    self.reports[item["report_id"]] = ResearchReport(**item)
         except Exception as e:
             logger.error(f"Failed to load research reports: {e}")
 
@@ -66,15 +70,16 @@ class ResearchPipeline:
                 data = []
                 for r in self.reports.values():
                     d = asdict(r)
-                    d['started_at'] = d['started_at'].isoformat()
-                    if d['completed_at']:
-                        d['completed_at'] = d['completed_at'].isoformat()
-                    if d['deadline']:
-                        d['deadline'] = d['deadline'].isoformat()
+                    d["started_at"] = d["started_at"].isoformat()
+                    if d["completed_at"]:
+                        d["completed_at"] = d["completed_at"].isoformat()
+                    if d["deadline"]:
+                        d["deadline"] = d["deadline"].isoformat()
                     data.append(d)
                 json.dump(data, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save research reports: {e}")
+
     async def start_research(self, topic: str, depth: str = "standard", deadline: str | None = None) -> ResearchReport:
         report_id = str(uuid.uuid4())
         deadline_dt = None
@@ -83,28 +88,19 @@ class ResearchPipeline:
                 deadline_dt = datetime.fromisoformat(deadline.replace("Z", "+00:00"))
             except Exception:
                 deadline_dt = datetime.now()
-        
+
         report = ResearchReport(
-            report_id=report_id,
-            topic=topic,
-            status="queued",
-            started_at=datetime.utcnow(),
-            deadline=deadline_dt
+            report_id=report_id, topic=topic, status="queued", started_at=datetime.utcnow(), deadline=deadline_dt
         )
         self.reports[report_id] = report
         self._save_reports()
-        
+
         task = asyncio.create_task(self._research_pipeline(report_id))
         self.tasks[report_id] = task
         return report
 
     def _generate_search_queries(self, topic: str) -> list[str]:
-        return [
-            topic,
-            f"{topic} best practices",
-            f"{topic} recent developments 2025",
-            f"{topic} comparison"
-        ]
+        return [topic, f"{topic} best practices", f"{topic} recent developments 2025", f"{topic} comparison"]
 
     async def _safe_execute(self, func, *args):
         if asyncio.iscoroutinefunction(func):
@@ -118,7 +114,7 @@ class ResearchPipeline:
 
         report.status = "researching"
         self._save_reports()
-        
+
         try:
             # 1. Search phase
             queries = self._generate_search_queries(report.topic)
@@ -130,33 +126,31 @@ class ResearchPipeline:
                         all_results.extend(res)
                 except Exception as e:
                     logger.warning(f"Search failed for query '{query}': {e}")
-            
+
             seen_urls = set()
             unique_sources = []
             for item in all_results:
-                url = item.get('url', '')
+                url = item.get("url", "")
                 if url and url not in seen_urls:
                     seen_urls.add(url)
-                    unique_sources.append(ResearchSource(
-                        url=url,
-                        title=item.get('title', ''),
-                        snippet=item.get('snippet', '')
-                    ))
-            
+                    unique_sources.append(
+                        ResearchSource(url=url, title=item.get("title", ""), snippet=item.get("snippet", ""))
+                    )
+
             report.sources = unique_sources[:10]
             report.progress_pct = 30
             self._save_reports()
 
             # 2. Fetch phase
             report.status = "synthesizing"
-            
+
             for source in report.sources[:5]:
                 try:
                     content = await self._safe_execute(web_fetch, source.url)
                     source.content = content if isinstance(content, str) else str(content)
                 except Exception as e:
                     logger.warning(f"Fetch failed for URL '{source.url}': {e}")
-            
+
             report.progress_pct = 60
             self._save_reports()
 
@@ -164,29 +158,34 @@ class ResearchPipeline:
             collected_text = []
             for i, src in enumerate(report.sources[:5]):
                 if src.content:
-                    collected_text.append(f"Source {i+1} ({src.url}):\n{src.content[:2000]}")
-            
+                    collected_text.append(f"Source {i + 1} ({src.url}):\n{src.content[:2000]}")
+
             context = "\n\n".join(collected_text)
-            
+
             prompt = (
                 "You are a research analyst. Synthesize these sources into a structured research report "
                 "with sections: Executive Summary, Key Findings, Detailed Analysis, Conclusions, and References.\n\n"
                 f"Topic: {report.topic}\n\nSources:\n{context}"
             )
-            
+
             is_avail = await ollama_client.is_available()
             if is_avail:
                 doc_model = model_manager.get_model("core_agents.document", "phi4:14b")
+                messages = [{"role": "user", "content": prompt}]
                 llm_response = await ollama_client.chat(messages, doc_model)
-                
-                report.markdown_report = llm_response.get("content", "") if isinstance(llm_response, dict) else str(llm_response)
-                
+
+                report.markdown_report = (
+                    llm_response.get("content", "") if isinstance(llm_response, dict) else str(llm_response)
+                )
+
                 if "Executive Summary" in report.markdown_report:
                     parts = report.markdown_report.split("Executive Summary", 1)
                     if len(parts) > 1:
                         report.executive_summary = parts[1].split("\n\n")[0].strip(": \n")
             else:
-                report.markdown_report = f"# Research Report: {report.topic}\n\nLLM unavailable. Raw collected data:\n\n{context}"
+                report.markdown_report = (
+                    f"# Research Report: {report.topic}\n\nLLM unavailable. Raw collected data:\n\n{context}"
+                )
                 report.executive_summary = "LLM unavailable for synthesis."
 
             report.progress_pct = 90
@@ -196,11 +195,11 @@ class ResearchPipeline:
             report.status = "completed"
             report.completed_at = datetime.utcnow()
             report.progress_pct = 100
-            
+
             md_path = os.path.join(self.research_dir, f"{report.report_id}.md")
             with open(md_path, "w", encoding="utf-8") as f:
                 f.write(report.markdown_report)
-                
+
             self._save_reports()
 
         except Exception as e:
@@ -231,5 +230,6 @@ class ResearchPipeline:
                 self._save_reports()
             return True
         return False
+
 
 research_pipeline = ResearchPipeline()

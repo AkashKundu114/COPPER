@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Any
+
 from app.core.logger import logger
 
 CATALOG_PATH = Path(__file__).resolve().parents[3] / "data" / "agency_agents_full_catalog.json"
@@ -14,7 +15,7 @@ def _load_catalog() -> dict[str, dict[str, Any]]:
 
     if CATALOG_PATH.exists():
         try:
-            with open(CATALOG_PATH, "r", encoding="utf-8") as f:
+            with open(CATALOG_PATH, encoding="utf-8") as f:
                 _CACHED_CATALOG = json.load(f)
                 return _CACHED_CATALOG
         except Exception as e:
@@ -52,14 +53,16 @@ def list_personas(division: str | None = None, limit: int = 50) -> list[dict[str
 
     for key, val in catalog.items():
         if div_filter is None or val.get("division", "").lower() == div_filter:
-            res.append({
-                "id": key,
-                "name": val.get("name"),
-                "division": val.get("division"),
-                "division_label": val.get("division_label"),
-                "description": val.get("description", ""),
-                "vibe": val.get("vibe", ""),
-            })
+            res.append(
+                {
+                    "id": key,
+                    "name": val.get("name"),
+                    "division": val.get("division"),
+                    "division_label": val.get("division_label"),
+                    "description": val.get("description", ""),
+                    "vibe": val.get("vibe", ""),
+                }
+            )
             if len(res) >= limit:
                 break
     return res
@@ -68,7 +71,7 @@ def list_personas(division: str | None = None, limit: int = 50) -> list[dict[str
 def list_divisions() -> list[str]:
     """Return all unique agent divisions in C.O.P.P.E.R."""
     catalog = _load_catalog()
-    return sorted(list({p.get("division") for p in catalog.values() if p.get("division")}))
+    return sorted({p.get("division") for p in catalog.values() if p.get("division")})
 
 
 def inject_persona(system_prompt: str, persona_id: str) -> str:

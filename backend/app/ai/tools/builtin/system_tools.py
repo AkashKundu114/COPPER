@@ -1,4 +1,4 @@
-﻿import os
+import os
 import platform
 import shutil
 from typing import Any
@@ -98,12 +98,14 @@ async def process_status(filter_name: str | None = None, limit: int = 15) -> dic
                 if name_filter and name_filter not in p_name.lower():
                     continue
 
-                procs.append({
-                    "pid": p.info.get("pid"),
-                    "name": p_name,
-                    "memory_percent": round(p.info.get("memory_percent") or 0.0, 2),
-                    "cpu_percent": round(p.info.get("cpu_percent") or 0.0, 1),
-                })
+                procs.append(
+                    {
+                        "pid": p.info.get("pid"),
+                        "name": p_name,
+                        "memory_percent": round(p.info.get("memory_percent") or 0.0, 2),
+                        "cpu_percent": round(p.info.get("cpu_percent") or 0.0, 1),
+                    }
+                )
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 

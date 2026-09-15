@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from app.ai.ambient.context_watcher import context_watcher
 
@@ -20,7 +20,7 @@ class ActivityTimeline:
                 return cat
         return "other"
 
-    def get_productivity_stats(self, hours: int = 24) -> Dict[str, Any]:
+    def get_productivity_stats(self, hours: int = 24) -> dict[str, Any]:
         sessions = context_watcher.get_sessions(hours)
 
         focus_time_mins = 0.0
@@ -29,7 +29,7 @@ class ActivityTimeline:
 
         current_streak = 0.0
 
-        app_breakdown: Dict[str, float] = {}
+        app_breakdown: dict[str, float] = {}
 
         for s in sessions:
             cat = self._categorize_app(s.app_name)
@@ -60,12 +60,8 @@ class ActivityTimeline:
         if not day_sessions:
             return "No activity recorded for this day."
 
-        coding_time = sum(
-            s.duration_minutes for s in day_sessions if self._categorize_app(s.app_name) == "coding"
-        )
-        browsing_time = sum(
-            s.duration_minutes for s in day_sessions if self._categorize_app(s.app_name) == "browsing"
-        )
+        coding_time = sum(s.duration_minutes for s in day_sessions if self._categorize_app(s.app_name) == "coding")
+        browsing_time = sum(s.duration_minutes for s in day_sessions if self._categorize_app(s.app_name) == "browsing")
 
         c_h = int(coding_time // 60)
         c_m = int(coding_time % 60)

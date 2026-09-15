@@ -117,9 +117,7 @@ class LocalReRanker:
 
         raise ValueError("Could not parse JSON from micro-model response")
 
-    def _score_heuristic(
-        self, query: str, passage: str, candidate: dict[str, Any]
-    ) -> tuple[float, str]:
+    def _score_heuristic(self, query: str, passage: str, candidate: dict[str, Any]) -> tuple[float, str]:
         """
         Calibrated lexical & rank prior heuristic fallback:
         Combines token coverage, term density, vector similarity, and RRF rank prior.

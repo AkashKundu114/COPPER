@@ -1,10 +1,9 @@
-import json
 import hashlib
+import json
 import uuid
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, UTC
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 from app.core.logger import logger
 
@@ -44,7 +43,7 @@ class ProvenanceRecord:
             confidence=confidence,
             current_confidence=confidence,
             last_accessed=now,
-            tags=tags or []
+            tags=tags or [],
         )
 
 
@@ -59,7 +58,7 @@ class ProvenanceTracker:
         if not PROVENANCE_FILE.exists():
             return
         try:
-            with open(PROVENANCE_FILE, "r", encoding="utf-8") as f:
+            with open(PROVENANCE_FILE, encoding="utf-8") as f:
                 data = json.load(f)
                 for item in data:
                     record = ProvenanceRecord(**item)
@@ -84,7 +83,7 @@ class ProvenanceTracker:
         self, fact: str, source_type: str, source_id: str, confidence: float = 0.8, tags: list[str] = None
     ) -> ProvenanceRecord:
         fact_hash = hashlib.sha256(fact.strip().lower().encode("utf-8")).hexdigest()
-        
+
         if fact_hash in self.hash_index:
             record_id = self.hash_index[fact_hash]
             self.confirm_fact(fact_hash, source_id, confidence)
@@ -101,20 +100,22 @@ class ProvenanceTracker:
         record_id = self.hash_index.get(fact_hash)
         if not record_id:
             return
-        
+
         record = self.records[record_id]
         old_conf = record.current_confidence
         new_conf = 1.0 - (1.0 - old_conf) * (1.0 - confidence)
-        
-        record.revision_history.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "action": "confirm",
-            "old_confidence": old_conf,
-            "new_confidence": new_conf,
-            "reason": "Confirmed by another source",
-            "source_id": source_id
-        })
-        
+
+        record.revision_history.append(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "action": "confirm",
+                "old_confidence": old_conf,
+                "new_confidence": new_conf,
+                "reason": "Confirmed by another source",
+                "source_id": source_id,
+            }
+        )
+
         record.current_confidence = new_conf
         record.confirmations += 1
         record.status = "active"
@@ -128,45 +129,49 @@ class ProvenanceTracker:
 
         record = self.records[record_id]
         old_conf = record.current_confidence
-        
+
         # Bayesian downgrade approximation
         new_conf = old_conf * (1.0 - confidence)
-        
-        record.revision_history.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "action": "contradict",
-            "old_confidence": old_conf,
-            "new_confidence": new_conf,
-            "reason": counter_evidence,
-            "source_id": source_id
-        })
-        
+
+        record.revision_history.append(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "action": "contradict",
+                "old_confidence": old_conf,
+                "new_confidence": new_conf,
+                "reason": counter_evidence,
+                "source_id": source_id,
+            }
+        )
+
         record.current_confidence = new_conf
         record.contradictions += 1
-        
+
         if new_conf < 0.1:
             record.status = "retracted"
         elif new_conf < 0.3:
             record.status = "uncertain"
-            
+
         self._mark_accessed(record)
         logger.info(f"Contradicted fact {record_id}, conf {old_conf:.2f}->{new_conf:.2f}")
 
-    def revise_fact(self, record_id: str, new_fact: str, reason: str, source_id: str) -> Optional[ProvenanceRecord]:
+    def revise_fact(self, record_id: str, new_fact: str, reason: str, source_id: str) -> ProvenanceRecord | None:
         if record_id not in self.records:
             return None
-            
+
         old_record = self.records[record_id]
         old_record.status = "superseded"
-        old_record.revision_history.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "action": "superseded",
-            "old_confidence": old_record.current_confidence,
-            "new_confidence": 0.0,
-            "reason": reason,
-            "source_id": source_id
-        })
-        
+        old_record.revision_history.append(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "action": "superseded",
+                "old_confidence": old_record.current_confidence,
+                "new_confidence": 0.0,
+                "reason": reason,
+                "source_id": source_id,
+            }
+        )
+
         new_record = self.record_fact(
             new_fact, old_record.source_type, source_id, old_record.current_confidence, old_record.tags
         )
@@ -174,7 +179,7 @@ class ProvenanceTracker:
         logger.info(f"Revised fact {record_id} to new fact {new_record.record_id}")
         return new_record
 
-    def get_provenance(self, record_id: str) -> Optional[ProvenanceRecord]:
+    def get_provenance(self, record_id: str) -> ProvenanceRecord | None:
         record = self.records.get(record_id)
         if record:
             self._mark_accessed(record)
@@ -183,7 +188,7 @@ class ProvenanceTracker:
     def explain_belief(self, fact: str) -> dict:
         fact_hash = hashlib.sha256(fact.strip().lower().encode("utf-8")).hexdigest()
         record_id = self.hash_index.get(fact_hash)
-        
+
         if not record_id:
             # Try partial match
             matches = [r for r in self.records.values() if fact.lower() in r.fact.lower()]
@@ -192,9 +197,9 @@ class ProvenanceTracker:
             record = matches[0]
         else:
             record = self.records[record_id]
-            
+
         self._mark_accessed(record)
-        
+
         trend = "stable"
         if len(record.revision_history) > 0:
             last_rev = record.revision_history[-1]
@@ -202,7 +207,7 @@ class ProvenanceTracker:
                 trend = "increasing"
             elif last_rev["new_confidence"] < last_rev["old_confidence"]:
                 trend = "decreasing"
-                
+
         return {
             "fact": record.fact,
             "how_we_know": f"First recorded from {record.source_type} on {record.created_at}",
@@ -212,15 +217,12 @@ class ProvenanceTracker:
             "contradictions": record.contradictions,
             "sources": [{"type": record.source_type, "id": record.source_id, "date": record.created_at}],
             "revision_history": record.revision_history,
-            "status": record.status
+            "status": record.status,
         }
 
     def search_facts(self, query: str, min_confidence: float = 0.0) -> list[ProvenanceRecord]:
         q = query.lower()
-        results = [
-            r for r in self.records.values()
-            if q in r.fact.lower() and r.current_confidence >= min_confidence
-        ]
+        results = [r for r in self.records.values() if q in r.fact.lower() and r.current_confidence >= min_confidence]
         return results
 
     def get_uncertain_facts(self) -> list[ProvenanceRecord]:
@@ -232,12 +234,12 @@ class ProvenanceTracker:
         superseded = sum(1 for r in self.records.values() if r.status == "superseded")
         retracted = sum(1 for r in self.records.values() if r.status == "retracted")
         uncertain = sum(1 for r in self.records.values() if r.status == "uncertain")
-        
+
         total_conf = sum(r.current_confidence for r in self.records.values())
         avg_conf = total_conf / total if total > 0 else 0.0
-        
+
         total_revisions = sum(len(r.revision_history) for r in self.records.values())
-        
+
         return {
             "total_facts": total,
             "active": active,
@@ -245,7 +247,7 @@ class ProvenanceTracker:
             "retracted": retracted,
             "uncertain": uncertain,
             "avg_confidence": avg_conf,
-            "total_revisions": total_revisions
+            "total_revisions": total_revisions,
         }
 
     def decay_confidence(self, decay_rate: float = 0.001):
@@ -262,5 +264,6 @@ class ProvenanceTracker:
                     r.current_confidence = new_conf
                     r.last_accessed = now.isoformat()
         self._save()
+
 
 provenance_tracker = ProvenanceTracker()

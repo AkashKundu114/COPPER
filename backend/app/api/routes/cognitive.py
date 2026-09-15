@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
 
-from app.ai.ambient.cognitive_load import cognitive_load_detector, CognitiveProfile
+from app.ai.ambient.cognitive_load import CognitiveProfile, cognitive_load_detector
 
 router = APIRouter(prefix="/cognitive", tags=["cognitive-load"])
+
 
 @router.get("/state", response_model=CognitiveProfile)
 async def get_state():
@@ -14,12 +14,14 @@ async def get_state():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/history", response_model=List[CognitiveProfile])
+
+@router.get("/history", response_model=list[CognitiveProfile])
 async def get_history(hours: int = 24):
     try:
         return cognitive_load_detector.get_history(hours)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/should-suppress")
 async def get_should_suppress():

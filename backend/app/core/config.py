@@ -23,9 +23,7 @@ class Settings(BaseSettings):
     WHISPER_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "whisper")
     TTS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "audio" / "tts")
     IMAGE_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "image")
-    IMAGE_MODEL_PATH: str = str(
-        Path(__file__).resolve().parents[3] / "ai-models" / "image" / "sd_turbo.safetensors"
-    )
+    IMAGE_MODEL_PATH: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "image" / "sd_turbo.safetensors")
     IMAGE_OUTPUT_DIR: str = str(Path(__file__).resolve().parents[3] / "frontend" / "public" / "generated")
     IMAGE_DEVICE: str = "auto"  # "auto", "cuda", "cpu"
     IMAGE_WIDTH: int = 512

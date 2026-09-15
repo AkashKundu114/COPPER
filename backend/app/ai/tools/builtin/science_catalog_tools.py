@@ -16,7 +16,7 @@ def _load_science_skills() -> dict[str, dict[str, Any]]:
 
     if CATALOG_PATH.exists():
         try:
-            with open(CATALOG_PATH, "r", encoding="utf-8") as f:
+            with open(CATALOG_PATH, encoding="utf-8") as f:
                 _SKILLS_CACHE = json.load(f)
                 return _SKILLS_CACHE
         except Exception as e:
@@ -98,11 +98,13 @@ async def scientific_skill_list(filter_query: str | None = None, limit: int = 30
 
     for k, v in catalog.items():
         if fq is None or fq in k or fq in v.get("name", "").lower() or fq in v.get("description", "").lower():
-            results.append({
-                "id": k,
-                "name": v.get("name"),
-                "description": v.get("description", "")[:120],
-            })
+            results.append(
+                {
+                    "id": k,
+                    "name": v.get("name"),
+                    "description": v.get("description", "")[:120],
+                }
+            )
             if len(results) >= limit:
                 break
 

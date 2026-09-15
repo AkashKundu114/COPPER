@@ -1,4 +1,5 @@
-﻿from typing import Any
+from typing import Any
+
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
 
@@ -39,7 +40,7 @@ def generate_mermaid_sequence(participants: list[str], messages: list[dict[str, 
     """Generate Mermaid sequence diagram syntax."""
     lines = ["sequenceDiagram", "    autonumber"]
     for p in participants:
-        lines.append(f'    participant {p.replace(" ", "_")} as {p}')
+        lines.append(f"    participant {p.replace(' ', '_')} as {p}")
     for m in messages:
         sender = m.get("from", "").replace(" ", "_")
         recipient = m.get("to", "").replace(" ", "_")

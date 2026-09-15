@@ -5,7 +5,7 @@ import sqlite3
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from typing import Any
 
 import psutil
 
@@ -32,11 +32,11 @@ class ActivitySession:
 class ContextWatcher:
     def __init__(self):
         self.is_running = False
-        self._task: Optional[asyncio.Task] = None
+        self._task: asyncio.Task | None = None
         self.poll_interval = 5.0
         self.buffer_size = 2000
-        self.buffer: List[ActivityEntry] = []
-        self._unflushed: List[ActivityEntry] = []
+        self.buffer: list[ActivityEntry] = []
+        self._unflushed: list[ActivityEntry] = []
 
         self.db_path = os.path.join(os.path.dirname(__file__), "ambient_history.db")
         self._init_db()
@@ -76,7 +76,7 @@ class ContextWatcher:
             self._flush_to_db()
             logger.info("Context Watcher stopped.")
 
-    def get_current_context(self) -> Optional[ActivityEntry]:
+    def get_current_context(self) -> ActivityEntry | None:
         try:
             if os.name != "nt":
                 return None
@@ -154,11 +154,11 @@ class ContextWatcher:
             logger.error(f"Failed to flush ContextWatcher DB: {e}")
             self._unflushed.extend(entries)
 
-    def get_timeline(self, hours: int = 24) -> List[ActivityEntry]:
+    def get_timeline(self, hours: int = 24) -> list[ActivityEntry]:
         cutoff = datetime.now() - timedelta(hours=hours)
         return [e for e in self.buffer if e.timestamp >= cutoff]
 
-    def get_sessions(self, hours: int = 24) -> List[ActivitySession]:
+    def get_sessions(self, hours: int = 24) -> list[ActivitySession]:
         entries = self.get_timeline(hours)
         if not entries:
             return []
@@ -213,19 +213,23 @@ class ContextWatcher:
 
         return sessions
 
-    def get_app_usage_stats(self, hours: int = 24) -> Dict[str, float]:
+    def get_app_usage_stats(self, hours: int = 24) -> dict[str, float]:
         sessions = self.get_sessions(hours)
-        stats: Dict[str, float] = {}
+        stats: dict[str, float] = {}
         for s in sessions:
             stats[s.app_name] = stats.get(s.app_name, 0.0) + s.duration_minutes
         return stats
 
-    def get_stats(self, hours: int = 24) -> Dict[str, Any]:
+    def get_stats(self, hours: int = 24) -> dict[str, Any]:
         sessions = self.get_sessions(hours)
         total_active = sum(s.duration_minutes for s in sessions)
         app_stats = self.get_app_usage_stats(hours)
         top_apps = [
-            {"app_name": app, "duration_minutes": round(mins), "percentage": round((mins / max(total_active, 1.0)) * 100)}
+            {
+                "app_name": app,
+                "duration_minutes": round(mins),
+                "percentage": round((mins / max(total_active, 1.0)) * 100),
+            }
             for app, mins in sorted(app_stats.items(), key=lambda x: x[1], reverse=True)[:5]
         ]
         if not top_apps:

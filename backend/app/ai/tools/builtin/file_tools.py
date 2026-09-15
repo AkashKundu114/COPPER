@@ -143,9 +143,15 @@ async def file_list(directory: str = ".", pattern: str = "*") -> dict[str, Any]:
         "properties": {
             "query": {"type": "string", "description": "Text to search for in file contents."},
             "directory": {"type": "string", "description": "Root directory to search in (defaults to '.')."},
-            "pattern": {"type": "string", "description": "Glob pattern to filter filenames, e.g. '*.py' (defaults to '*')."},
+            "pattern": {
+                "type": "string",
+                "description": "Glob pattern to filter filenames, e.g. '*.py' (defaults to '*').",
+            },
             "max_results": {"type": "integer", "description": "Maximum matches to return (defaults to 20)."},
-            "case_sensitive": {"type": "boolean", "description": "Whether search is case-sensitive (defaults to false)."},
+            "case_sensitive": {
+                "type": "boolean",
+                "description": "Whether search is case-sensitive (defaults to false).",
+            },
         },
         "required": ["query"],
     },
@@ -187,7 +193,7 @@ async def file_search(
                     if b"\x00" in chunk:
                         continue
 
-                with open(p, "r", encoding="utf-8", errors="replace") as f:
+                with open(p, encoding="utf-8", errors="replace") as f:
                     lines = f.readlines()
 
                 for i, line in enumerate(lines):
@@ -196,18 +202,20 @@ async def file_search(
                         context_above = lines[i - 1].strip() if i > 0 else None
                         context_below = lines[i + 1].strip() if i < len(lines) - 1 else None
 
-                        matches.append({
-                            "path": str(p),
-                            "line_number": i + 1,
-                            "line_content": line.strip(),
-                            "context_above": context_above,
-                            "context_below": context_below,
-                        })
+                        matches.append(
+                            {
+                                "path": str(p),
+                                "line_number": i + 1,
+                                "line_content": line.strip(),
+                                "context_above": context_above,
+                                "context_below": context_below,
+                            }
+                        )
 
                         if len(matches) >= max_results:
                             break
 
-            except Exception as e:
+            except Exception:
                 # Silently skip files we can't read
                 continue
 

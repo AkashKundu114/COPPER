@@ -13,9 +13,7 @@ Information Retrieval (IR) & Search Engine Concepts:
    RRF_Score(d) = w_dense * (1 / (k + rank_dense(d))) + w_lexical * (1 / (k + rank_lexical(d)))
 """
 
-import math
 import re
-from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 

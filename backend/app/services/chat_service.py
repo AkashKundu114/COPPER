@@ -12,13 +12,13 @@ from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.agents.web_search_agent import web_search_agent
+from app.ai.cache.semantic_cache import semantic_cache
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
 from app.ai.memory.persistent_memory import persistent_memory
 from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
-from app.ai.cache.semantic_cache import semantic_cache
 from app.ai.orchestration.context_bus import context_bus
 from app.ai.orchestration.langchain_manager import langchain_manager
 from app.ai.orchestration.planner import nexus_planner
@@ -159,9 +159,7 @@ class ChatService:
                 model_name="cache:instant-recall",
                 latency_ms=hit_latency_ms,
             )
-            await memory_manager.save_interaction(
-                session_id, message, cached_text, cache_match.agent_type or "chat"
-            )
+            await memory_manager.save_interaction(session_id, message, cached_text, cache_match.agent_type or "chat")
 
             return {
                 "response": cached_text,
@@ -180,15 +178,19 @@ class ChatService:
 
         try:
             from app.api.websocket.manager import manager
+
             await manager.send_routing_decision(session_id, routing_res.to_dict())
         except Exception as ws_err:
             logger.debug(f"Could not broadcast routing event: {ws_err}")
 
         guardian_ctx = self._build_guardian_context(message, agent_type)
-        with trace_span("copper.guardian", attributes={
-            "guardian.action": message[:200],
-            "guardian.is_consequential": is_consequential_action(message),
-        }) as guardian_span:
+        with trace_span(
+            "copper.guardian",
+            attributes={
+                "guardian.action": message[:200],
+                "guardian.is_consequential": is_consequential_action(message),
+            },
+        ) as guardian_span:
             verdict = guardian_engine.evaluate(message, guardian_ctx)
             guardian_span.set_attribute("guardian.verdict_level", verdict.level.name)
             guardian_span.set_attribute("guardian.reasoning", verdict.reasoning or "Safety evaluation passed")
@@ -264,16 +266,22 @@ class ChatService:
         ollama_metrics: dict = {}
         target_model = self._resolve_chat_model(agent_type, message, agent=agent)
         try:
-            with trace_span("copper.agent", attributes={
-                "agent.type": str(agent_type),
-                "agent.name": getattr(agent, "name", str(agent_type)),
-                "agent.target_model": target_model,
-                "agent.history_length": len(history),
-            }):
-                with trace_span("copper.llm", attributes={
-                    "llm.model": target_model,
-                    "llm.provider": provider.value if hasattr(provider, "value") else str(provider),
-                }) as llm_span:
+            with trace_span(
+                "copper.agent",
+                attributes={
+                    "agent.type": str(agent_type),
+                    "agent.name": getattr(agent, "name", str(agent_type)),
+                    "agent.target_model": target_model,
+                    "agent.history_length": len(history),
+                },
+            ):
+                with trace_span(
+                    "copper.llm",
+                    attributes={
+                        "llm.model": target_model,
+                        "llm.provider": provider.value if hasattr(provider, "value") else str(provider),
+                    },
+                ) as llm_span:
                     if agent:
                         response = await agent.run(message, history, memory_context, provider, session_id=session_id)
                     else:
@@ -302,11 +310,14 @@ class ChatService:
                     llm_span.set_attribute("llm.ttft_ms", ttft_ms)
                     llm_span.set_attribute("llm.latency_ms", total_time_ms)
 
-            with trace_span("copper.response", attributes={
-                "response.length": len(response),
-                "response.total_time_ms": total_time_ms,
-                "response.tokens_per_sec": tokens_per_sec,
-            }):
+            with trace_span(
+                "copper.response",
+                attributes={
+                    "response.length": len(response),
+                    "response.total_time_ms": total_time_ms,
+                    "response.tokens_per_sec": tokens_per_sec,
+                },
+            ):
                 metrics = {
                     "model": model_selected,
                     "prompt_tokens": prompt_tokens,
@@ -488,20 +499,22 @@ class ChatService:
             )
 
             if metrics_collector is not None:
-                metrics_collector.update({
-                    "model": "cache:instant-recall",
-                    "prompt_tokens": max(1, len(message.split())),
-                    "completion_tokens": max(1, len(cached_text.split())),
-                    "total_tokens": max(2, len(message.split()) + len(cached_text.split())),
-                    "tokens_per_sec": 2000.0,
-                    "ttft_ms": hit_latency_ms,
-                    "total_time_sec": round(hit_latency_ms / 1000.0, 4),
-                    "total_time_ms": hit_latency_ms,
-                    "confidence": 1.0,
-                    "cached": True,
-                    "instant_recall": True,
-                    "similarity": cache_match.similarity,
-                })
+                metrics_collector.update(
+                    {
+                        "model": "cache:instant-recall",
+                        "prompt_tokens": max(1, len(message.split())),
+                        "completion_tokens": max(1, len(cached_text.split())),
+                        "total_tokens": max(2, len(message.split()) + len(cached_text.split())),
+                        "tokens_per_sec": 2000.0,
+                        "ttft_ms": hit_latency_ms,
+                        "total_time_sec": round(hit_latency_ms / 1000.0, 4),
+                        "total_time_ms": hit_latency_ms,
+                        "confidence": 1.0,
+                        "cached": True,
+                        "instant_recall": True,
+                        "similarity": cache_match.similarity,
+                    }
+                )
 
             await context_engine.append_message(session_id, "user", message)
             await context_engine.append_message(
@@ -512,9 +525,7 @@ class ChatService:
                 model_name="cache:instant-recall",
                 latency_ms=hit_latency_ms,
             )
-            await memory_manager.save_interaction(
-                session_id, message, cached_text, cache_match.agent_type or "chat"
-            )
+            await memory_manager.save_interaction(session_id, message, cached_text, cache_match.agent_type or "chat")
             yield cached_text
             return
 
@@ -528,15 +539,19 @@ class ChatService:
 
         try:
             from app.api.websocket.manager import manager
+
             await manager.send_routing_decision(session_id, routing_res.to_dict())
         except Exception as ws_err:
             logger.debug(f"Could not broadcast routing event: {ws_err}")
 
         guardian_ctx = self._build_guardian_context(message, agent_type)
-        with trace_span("copper.guardian", attributes={
-            "guardian.action": message[:200],
-            "guardian.is_consequential": is_consequential_action(message),
-        }) as guardian_span:
+        with trace_span(
+            "copper.guardian",
+            attributes={
+                "guardian.action": message[:200],
+                "guardian.is_consequential": is_consequential_action(message),
+            },
+        ) as guardian_span:
             verdict = guardian_engine.evaluate(message, guardian_ctx)
             guardian_span.set_attribute("guardian.verdict_level", verdict.level.name)
             guardian_span.set_attribute("guardian.reasoning", verdict.reasoning or "Safety evaluation passed")
@@ -621,53 +636,76 @@ class ChatService:
         try:
             from app.ai.llm.model_manager import model_manager
 
-            with trace_span("copper.agent", attributes={
-                "agent.type": str(agent_type),
-                "agent.name": getattr(agent, "name", str(agent_type)),
-                "agent.mode": mode,
-                "agent.history_length": len(history),
-            }):
+            with trace_span(
+                "copper.agent",
+                attributes={
+                    "agent.type": str(agent_type),
+                    "agent.name": getattr(agent, "name", str(agent_type)),
+                    "agent.mode": mode,
+                    "agent.history_length": len(history),
+                },
+            ):
                 if mode == "reasoning":
                     model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
                 elif mode == "coding":
                     model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
                 elif mode == "document":
                     model_name = model_manager.get_document_model()
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
                 elif mode == "research":
                     model_name = model_manager.get_model("core_agents.document", "phi4:14b")
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
                 elif mode == "fast":
                     model_name = model_manager.get_mini_model()
                     system = get_mode_prompt(mode, memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
                 elif agent and hasattr(agent, "stream"):
                     model_name = self._resolve_chat_model(agent_type, message, agent=agent)
                     gen = agent.stream(
-                        message, history, memory_context, provider, metrics_collector=ollama_metrics, session_id=session_id
+                        message,
+                        history,
+                        memory_context,
+                        provider,
+                        metrics_collector=ollama_metrics,
+                        session_id=session_id,
                     )
                 else:
                     model_name = self._resolve_chat_model(agent_type, message, agent=agent)
                     system = get_mode_prompt("auto", memory_context, self_context)
                     messages = build_messages(system, history, message)
-                    gen = langchain_manager.astream(messages, provider, model=model_name, metrics_collector=ollama_metrics)
+                    gen = langchain_manager.astream(
+                        messages, provider, model=model_name, metrics_collector=ollama_metrics
+                    )
 
-                with trace_span("copper.llm", attributes={
-                    "llm.model": model_name,
-                    "llm.provider": provider.value if hasattr(provider, "value") else str(provider),
-                    "llm.mode": mode,
-                }) as llm_span:
+                with trace_span(
+                    "copper.llm",
+                    attributes={
+                        "llm.model": model_name,
+                        "llm.provider": provider.value if hasattr(provider, "value") else str(provider),
+                        "llm.mode": mode,
+                    },
+                ) as llm_span:
                     async for chunk in gen:
                         if first_token_time is None and chunk.strip():
                             first_token_time = time.perf_counter()
@@ -707,11 +745,14 @@ class ChatService:
                     llm_span.set_attribute("llm.ttft_ms", ttft_ms)
                     llm_span.set_attribute("llm.latency_ms", total_time_ms)
 
-            with trace_span("copper.response", attributes={
-                "response.length": len(complete),
-                "response.total_time_ms": total_time_ms,
-                "response.tokens_per_sec": tokens_per_sec,
-            }):
+            with trace_span(
+                "copper.response",
+                attributes={
+                    "response.length": len(complete),
+                    "response.total_time_ms": total_time_ms,
+                    "response.tokens_per_sec": tokens_per_sec,
+                },
+            ):
                 metrics = {
                     "model": model_selected,
                     "prompt_tokens": prompt_tokens,

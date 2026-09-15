@@ -3,7 +3,6 @@ Image Generation API endpoints for C.O.P.P.E.R. Local PICASSO Studio.
 """
 
 import asyncio
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
@@ -15,10 +14,10 @@ router = APIRouter(prefix="/images", tags=["images"])
 
 class ImageGenerateRequest(BaseModel):
     prompt: str = Field(..., description="Text prompt describing the desired image")
-    width: Optional[int] = Field(512, ge=256, le=1024, description="Image width")
-    height: Optional[int] = Field(512, ge=256, le=1024, description="Image height")
-    steps: Optional[int] = Field(1, ge=1, le=50, description="Inference steps")
-    seed: Optional[int] = Field(None, description="Random seed for deterministic generation")
+    width: int | None = Field(512, ge=256, le=1024, description="Image width")
+    height: int | None = Field(512, ge=256, le=1024, description="Image height")
+    steps: int | None = Field(1, ge=1, le=50, description="Inference steps")
+    seed: int | None = Field(None, description="Random seed for deterministic generation")
 
 
 @router.get("/status")

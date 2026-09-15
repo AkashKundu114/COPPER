@@ -17,12 +17,9 @@ Speculative Decoding (Leviathan et al. 2023 / Chen et al. 2023) breaks this sequ
 
 import asyncio
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Coroutine
-
-from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
-from app.core.logger import logger
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -117,7 +114,7 @@ class SpeculativeDecodingEngine:
         async def default_verify(p: str, candidates: list[str]) -> list[float]:
             # Batched target verification: ~80% acceptance probability
             await asyncio.sleep(0.04)  # Single forward pass latency
-            return [0.85, 0.82, 0.78, 0.65][:len(candidates)]
+            return [0.85, 0.82, 0.78, 0.65][: len(candidates)]
 
         _draft = draft_fn or default_draft
         _verify = verify_fn or default_verify
