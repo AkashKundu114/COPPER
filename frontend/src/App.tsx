@@ -257,7 +257,7 @@ function MainApp() {
       {/* Accessible Skip to Content Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-cyber-cyan focus:text-black focus:font-bold focus:rounded-md focus:shadow-[0_0_15px_rgba(0,240,255,0.8)] focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-blush-100 focus:text-burgundy-950 focus:font-bold focus:rounded-xl focus:shadow-[0_0_20px_rgba(246,230,234,0.85)] focus:outline-none"
       >
         Skip to main content
       </a>

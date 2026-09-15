@@ -101,31 +101,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       aria-label="Main Navigation"
-      className="w-64 h-screen bg-[#0a0f19]/85 backdrop-blur-2xl border-r border-white/[0.08] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(0,0,0,0.28)] font-mono flex-shrink-0"
+      className="w-64 h-screen bg-[#16080D]/90 backdrop-blur-2xl border-r border-[#F6E6EA]/[0.10] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(10,3,6,0.55)] font-mono flex-shrink-0"
     >
       <div className="flex-1 flex flex-col min-h-0">
         {/* Brand & Classification Header */}
-        <div className="drag-region px-3 py-3 mb-2 border-b border-white/[0.07] flex-shrink-0">
+        <div className="drag-region px-3 py-3 mb-2 border-b border-[#F6E6EA]/[0.08] flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-cyan via-[#53c9e5] to-accent text-black flex items-center justify-center font-display font-black text-sm shadow-[0_8px_22px_rgba(0,240,255,0.25)] flex-shrink-0" aria-hidden="true">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blush-100 via-accent to-burgundy-700 text-burgundy-950 flex items-center justify-center font-display font-black text-base shadow-[0_8px_24px_rgba(246,230,234,0.22)] flex-shrink-0" aria-hidden="true">
               C
             </div>
             <div className="overflow-hidden">
               <div className="flex items-center gap-1.5">
-                <h1 className="font-display font-bold text-[14px] tracking-tight text-white truncate">
+                <h1 className="font-display font-bold text-[15px] tracking-tight text-white truncate">
                   C.O.P.P.E.R.
                 </h1>
-                <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping flex-shrink-0" aria-hidden="true" />
+                <span className="w-1.5 h-1.5 rounded-full bg-blush-100 animate-pulse shadow-[0_0_8px_rgba(246,230,234,0.8)] flex-shrink-0" aria-hidden="true" />
               </div>
-              <p className="text-[9px] text-cyber-cyan/80 font-mono tracking-[0.14em] uppercase truncate">
+              <p className="text-[8.5px] text-blush-200/75 font-mono tracking-[0.16em] uppercase truncate font-semibold">
                 PERSONAL INTELLIGENCE
               </p>
             </div>
           </div>
 
-          <div className="mt-3 px-2.5 py-1 rounded-lg bg-white/[0.035] border border-white/[0.07] flex items-center justify-between text-[9px] text-zinc-300">
+          <div className="mt-3 px-2.5 py-1 rounded-lg bg-blush-100/[0.04] border border-blush-100/[0.09] flex items-center justify-between text-[9px] text-zinc-300">
             <span className="text-verdigris font-bold">AIR-GAPPED</span>
-            <span className="text-zinc-400">26 MODELS</span>
+            <span className="text-blush-200/70 font-semibold">26 MODELS</span>
           </div>
         </div>
 
@@ -133,7 +133,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <nav aria-label="Application Sections" className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
           {NAV_GROUPS.map((group) => (
             <div key={group.category} className="space-y-1">
-              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.14em] text-zinc-500 uppercase flex items-center justify-between">
+              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.16em] text-blush-300/50 uppercase flex items-center justify-between">
                 <span>{group.category}</span>
               </div>
               {group.items.map((item) => {
@@ -145,10 +145,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => onSelectSection(item.id)}
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`${item.label} section${isActive ? ", current page" : ""}`}
-                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-cyan ${
+                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-100 ${
                       isActive
-                        ? "bg-gradient-to-r from-cyber-cyan/18 to-cyber-cyan/[0.04] text-cyber-cyan border border-cyber-cyan/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_6px_18px_rgba(0,240,255,0.06)]"
-                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-white/[0.055] hover:translate-x-0.5"
+                        ? "bg-gradient-to-r from-blush-100/18 via-accent/10 to-transparent text-white border border-blush-100/30 shadow-[inset_0_1px_0_rgba(246,230,234,0.18),0_6px_20px_rgba(246,230,234,0.08)]"
+                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-blush-100/[0.06] hover:translate-x-0.5"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">
@@ -156,14 +156,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         aria-hidden="true"
                         className={`w-[14px] h-[14px] flex-shrink-0 transition-colors ${
                           isActive
-                            ? "text-cyber-cyan drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]"
-                            : "text-zinc-400 group-hover:text-zinc-200"
+                            ? "text-blush-100 drop-shadow-[0_0_8px_rgba(246,230,234,0.6)]"
+                            : "text-zinc-400 group-hover:text-blush-100/80"
                         }`}
                       />
                       <span className="tracking-tight truncate">{item.label}</span>
                     </div>
                     {isActive && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_rgba(0,240,255,0.8)] flex-shrink-0 ml-1" aria-hidden="true" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-blush-100 shadow-[0_0_8px_rgba(246,230,234,0.9)] flex-shrink-0 ml-1" aria-hidden="true" />
                     )}
                   </button>
                 );
@@ -174,19 +174,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Telemetry & Air-Gap Status Panel */}
-      <div className="p-2.5 rounded-xl bg-white/[0.035] border border-white/[0.08] space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2 shadow-inner">
+      <div className="p-2.5 rounded-xl bg-[#220D15]/80 border border-blush-100/[0.10] space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2 shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-verdigris shadow-[0_0_8px_rgba(0,255,136,0.6)] animate-pulse flex-shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-verdigris shadow-[0_0_8px_rgba(95,168,143,0.7)] animate-pulse flex-shrink-0" />
             <span className="font-bold text-white tracking-wider">
               100% OFFLINE
             </span>
           </div>
-          <span className="text-zinc-500">0.05ms</span>
+          <span className="text-blush-300/60">0.05ms</span>
         </div>
 
-        <div className="w-full bg-zinc-900 rounded-full h-1 overflow-hidden border border-white/5">
-          <div className="bg-gradient-to-r from-cyber-cyan to-accent h-full w-[80%]" />
+        <div className="w-full bg-[#12060A] rounded-full h-1 overflow-hidden border border-blush-100/10">
+          <div className="bg-gradient-to-r from-accent via-blush-300 to-blush-100 h-full w-[80%]" />
         </div>
 
         <div className="flex justify-between text-[9px] text-zinc-400">

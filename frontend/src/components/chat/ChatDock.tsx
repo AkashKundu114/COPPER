@@ -306,11 +306,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           role="listbox"
           id="cognitive-mode-listbox"
           aria-label="Cognitive Intelligence Modes"
-          className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-2.5 z-50 animate-slide-up font-mono text-xs"
+          className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-[#1A0A0F]/95 backdrop-blur-2xl border border-blush-100/20 shadow-[0_20px_50px_rgba(10,3,6,0.65),inset_0_1px_0_rgba(246,230,234,0.12)] p-2.5 z-50 animate-slide-up font-mono text-xs"
         >
-          <div className="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800 flex items-center justify-between">
+          <div className="px-3 py-2 text-[10px] font-semibold text-blush-300/60 uppercase tracking-wider border-b border-blush-100/10 flex items-center justify-between">
             <span>Cognitive Intelligence Mode</span>
-            <span className="text-accent-400">5 Active Squads</span>
+            <span className="text-blush-100 font-bold">5 Active Squads</span>
           </div>
           <div className="space-y-1.5 mt-2 max-h-80 overflow-y-auto custom-scrollbar">
             {COGNITIVE_MODES.map((m) => {
@@ -326,13 +326,13 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     setModelDropdownOpen(false);
                     dropdownTriggerRef.current?.focus();
                   }}
-                  className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
+                  className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100 ${
                     isSelected
-                      ? "bg-accent-500/15 text-accent-400 border border-accent-500/40 shadow-sm"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent"
+                      ? "bg-gradient-to-r from-blush-100/18 via-accent/10 to-transparent text-white border border-blush-100/30 shadow-sm"
+                      : "text-zinc-300 hover:text-white hover:bg-blush-100/[0.06] border border-transparent"
                   }`}
                 >
-                  <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? "bg-accent-500/20 text-accent-400" : "bg-slate-800 text-slate-400"}`} aria-hidden="true">
+                  <div className={`p-2 rounded-xl mt-0.5 ${isSelected ? "bg-blush-100/20 text-blush-100 shadow-[0_0_10px_rgba(246,230,234,0.3)]" : "bg-white/[0.04] text-zinc-400"}`} aria-hidden="true">
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -436,17 +436,17 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
       {/* Main God's Eye Tactical Input Capsule */}
       <div className="w-full flex flex-col items-center">
         <div
-          className={`w-full relative flex flex-row items-end rounded-2xl bg-[#080d18]/90 backdrop-blur-xl transition-all duration-300 shadow-hud border py-1 px-3 ${
+          className={`w-full relative flex flex-row items-end rounded-2xl bg-[#1A0A0F]/90 backdrop-blur-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.1)] border py-1.5 px-3.5 ${
             thinking
-              ? "border-cyber-cyan/50 shadow-[0_0_20px_rgba(0,240,255,0.2)]"
-              : "border-cyber-cyan/30 focus-within:border-cyber-cyan focus-within:shadow-[0_0_25px_rgba(0,240,255,0.25)]"
+              ? "border-blush-100/50 shadow-[0_0_24px_rgba(246,230,234,0.22)]"
+              : "border-blush-100/20 focus-within:border-blush-100/50 focus-within:shadow-[0_0_24px_rgba(246,230,234,0.18)]"
           }`}
         >
-          {/* 4 HUD Chamfer Corner Brackets */}
-          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-cyan pointer-events-none rounded-tl-sm" aria-hidden="true" />
-          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-cyber-cyan pointer-events-none rounded-tr-sm" aria-hidden="true" />
-          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-cyber-cyan pointer-events-none rounded-bl-sm" aria-hidden="true" />
-          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-cyber-cyan pointer-events-none rounded-br-sm" aria-hidden="true" />
+          {/* 4 HUD Chamfer Corner Brackets in Blush Pink */}
+          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-blush-100 pointer-events-none rounded-tl-sm" aria-hidden="true" />
+          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-blush-100 pointer-events-none rounded-tr-sm" aria-hidden="true" />
+          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-blush-100 pointer-events-none rounded-bl-sm" aria-hidden="true" />
+          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-blush-100 pointer-events-none rounded-br-sm" aria-hidden="true" />
 
           {isRecording ? (
             <div role="status" aria-live="polite" className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
@@ -459,7 +459,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
               <button
                 onClick={stopRecording}
                 aria-label="Stop recording and transcribe voice"
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-danger-500 hover:bg-danger-600 text-white transition-all shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
+                className="w-8 h-8 flex items-center justify-center rounded-xl bg-danger-500 hover:bg-danger-600 text-white transition-all shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
               >
                 <div className="w-3 h-3 bg-white rounded-sm" aria-hidden="true" />
               </button>
@@ -472,18 +472,18 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || thinking}
                 aria-label="Attach reconnaissance documents or files"
-                className="p-2 mb-1 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+                className="p-2 mb-1 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                 title="Attach Recon Documents / Files"
               >
                 {isUploading ? (
-                  <Loader2 size={18} className="animate-spin text-cyber-cyan" aria-hidden="true" />
+                  <Loader2 size={18} className="animate-spin text-blush-100" aria-hidden="true" />
                 ) : (
-                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-cyber-cyan" aria-hidden="true">+</div>
+                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-blush-100" aria-hidden="true">+</div>
                 )}
               </button>
 
               {/* Input Text Area */}
-              <div className="flex-1 py-2.5 px-2">
+              <div className="flex-1 py-2 px-2">
                 <textarea
                   id="chat-message-input"
                   ref={textareaRef}
@@ -505,19 +505,19 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                   disabled={thinking || isUploading}
                   aria-label="Message input for COPPER intelligence"
                   aria-multiline="true"
-                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-zinc-400 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans focus-visible:ring-1 focus-visible:ring-cyber-cyan rounded"
+                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-blush-300/40 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans focus-visible:ring-1 focus-visible:ring-blush-100 rounded"
                   rows={1}
                 />
               </div>
 
               {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
               {(thinking || speaking) && (
-                <div aria-hidden="true" className="flex items-center gap-1 mb-3 px-2 py-1 rounded bg-black/50 border border-cyber-cyan/30 text-cyber-cyan" title="Audio / Neural Telemetry Stream">
-                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-1" />
-                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-2" />
-                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-3" />
-                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-4" />
-                  <div className="w-1 bg-cyber-cyan rounded-full eq-bar-5" />
+                <div aria-hidden="true" className="flex items-center gap-1 mb-2.5 px-2 py-1 rounded-lg bg-[#14070B] border border-blush-100/30 text-blush-100 shadow-sm" title="Audio / Neural Telemetry Stream">
+                  <div className="w-1 bg-blush-100 rounded-full eq-bar-1" />
+                  <div className="w-1 bg-blush-100 rounded-full eq-bar-2" />
+                  <div className="w-1 bg-blush-100 rounded-full eq-bar-3" />
+                  <div className="w-1 bg-blush-100 rounded-full eq-bar-4" />
+                  <div className="w-1 bg-blush-100 rounded-full eq-bar-5" />
                 </div>
               )}
 
@@ -529,7 +529,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     onClick={toggleRecording}
                     aria-label="Start voice recording"
                     aria-pressed={false}
-                    className="p-2 rounded-lg text-zinc-400 hover:text-cyber-cyan hover:bg-cyber-cyan/10 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+                    className="p-2 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                     title="Voice Intercept Mic"
                   >
                     <Mic size={18} aria-hidden="true" />
@@ -543,7 +543,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     disabled={isUploading}
                     aria-label="Send message"
                     title="Send message"
-                    className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyber-cyan to-accent text-black hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_12px_rgba(0,240,255,0.4)] cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
+                    className="w-8 h-8 rounded-xl bg-gradient-to-br from-blush-100 via-blush-200 to-accent text-burgundy-950 hover:brightness-110 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_14px_rgba(246,230,234,0.4)] cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                   >
                     <ArrowUp size={18} strokeWidth={2.5} aria-hidden="true" />
                   </button>
@@ -554,7 +554,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     type="button"
                     onClick={onStop}
                     aria-label="Stop response generation"
-                    className="w-8 h-8 rounded-lg bg-black/80 border border-danger/40 text-danger-400 hover:bg-danger/20 hover:text-danger-300 transition-all flex items-center justify-center shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-cyber-cyan"
+                    className="w-8 h-8 rounded-xl bg-black/80 border border-danger/40 text-danger-400 hover:bg-danger/20 hover:text-danger-300 transition-all flex items-center justify-center shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                     title="Stop generation"
                   >
                     <div className="w-3 h-3 bg-danger-400 rounded-sm" aria-hidden="true" />
@@ -575,11 +575,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
             aria-expanded={modelDropdownOpen}
             aria-controls="cognitive-mode-listbox"
             aria-label={`Cognitive intelligence mode: ${selectedModel.name}`}
-            className="flex items-center gap-2 px-3 py-1 rounded-md bg-black/50 border border-cyber-cyan/25 hover:border-cyber-cyan text-cyber-cyan transition-all shadow-sm cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#14070B]/85 border border-blush-100/20 hover:border-blush-100/50 text-blush-100 transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
           >
             <span className="font-bold text-accent" aria-hidden="true">+</span>
             <span className="font-semibold text-white tracking-tight">{selectedModel.name}</span>
-            <span className="px-1.5 py-0.2 rounded bg-cyber-cyan/15 text-[9px] font-bold text-cyber-cyan uppercase">
+            <span className="px-1.5 py-0.2 rounded-md bg-blush-100/15 text-[9px] font-bold text-blush-100 uppercase border border-blush-100/20">
               {selectedModel.badge}
             </span>
             <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -591,7 +591,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 type="button"
                 onClick={onClear}
                 aria-label="Purge session memory and reset chat logs"
-                className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-blush-100/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100"
                 title="Purge session memory & reset chat"
               >
                 <RotateCcw size={10} aria-hidden="true" />

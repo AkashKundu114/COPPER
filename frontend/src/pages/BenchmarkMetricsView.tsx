@@ -288,20 +288,20 @@ export const BenchmarkMetricsView: React.FC = () => {
   return (
     <div className="modern-page p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141b2d] via-[#1a1512] to-[#090d16] border border-[#C97C4C]/30 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#C97C4C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="p-6 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blush-100/[0.08] rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#C97C4C] animate-ping" />
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blush-100/15 text-blush-100 border border-blush-100/30 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping" />
                 LIVE HARDWARE TELEMETRY
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-accent-950 text-accent-400 border border-accent-500/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-accent/20 text-accent border border-accent/40 font-bold">
                 RTX 5060 (8GB VRAM)
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+            <h1 className="text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
               <BarChart2 className="w-6 h-6 text-[#C97C4C]" /> Live System
               Telemetry, VRAM & Token Usage
             </h1>

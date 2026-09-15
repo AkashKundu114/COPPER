@@ -4,25 +4,68 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: { DEFAULT: "#0B0C0E", panel: "#15171A", raised: "#1D2023" },
-        border: { DEFAULT: "#26292E", subtle: "#1C1E22", strong: "#34383F" },
-        text: { DEFAULT: "#EDEDEA", muted: "#8B8D93" },
+        // Core background hierarchy - Burgundy velvet noir
+        bg: {
+          DEFAULT: "#12060A",
+          canvas: "#0E0407",
+          burgundy: "#1A0A0F",
+          panel: "#1A0A0F",
+          raised: "#270F18",
+          subtle: "#16070D",
+          highlight: "#351421",
+        },
+        // Signature Palette: Burgundy (#1A0A0F) & Blush Pink (#F6E6EA)
+        burgundy: {
+          DEFAULT: "#1A0A0F",
+          50: "#F5E8ED",
+          100: "#E6C5D2",
+          200: "#D39EB3",
+          300: "#BC7390",
+          400: "#9E4869",
+          500: "#752A47",
+          600: "#591D34",
+          700: "#3D1323",
+          800: "#290C17",
+          900: "#1A0A0F",
+          950: "#0F0408",
+        },
+        blush: {
+          DEFAULT: "#F6E6EA",
+          50: "#FDF8F9",
+          100: "#F6E6EA",
+          200: "#ECD0D7",
+          300: "#DFB2BF",
+          400: "#CD8AA0",
+          500: "#B96481",
+          600: "#9F4965",
+          700: "#7E354D",
+          800: "#5A2336",
+          900: "#381421",
+          950: "#1A0A0F",
+        },
+        border: {
+          DEFAULT: "rgba(246, 230, 234, 0.12)",
+          subtle: "rgba(246, 230, 234, 0.06)",
+          strong: "rgba(246, 230, 234, 0.22)",
+          glow: "rgba(246, 230, 234, 0.38)",
+        },
+        text: {
+          DEFAULT: "#F6E6EA",
+          muted: "#BCA3AA",
+          dim: "#886B74",
+        },
 
         // Legacy-token aliases — several components still reference an
         // earlier "void/ink" naming that was dropped from this config.
-        // Aliasing them here means those components render correctly
-        // with zero edits, instead of silently emitting no styles.
-        void: { DEFAULT: "#0B0C0E", panel: "#15171A", raised: "#1D2023" },
+        void: { DEFAULT: "#12060A", panel: "#1A0A0F", raised: "#270F18" },
         ink: {
-          DEFAULT: "#EDEDEA",
-          primary: "#EDEDEA",
-          secondary: "#B4B6BC",
-          faint: "#6C6F76",
+          DEFAULT: "#F6E6EA",
+          primary: "#F6E6EA",
+          secondary: "#BCA3AA",
+          faint: "#755861",
         },
 
-        // Copper — full ramp so every existing `sky-050…950` / `cyan-050…950`
-        // utility class can be mechanically renamed to `accent-050…950`
-        // (via the codemod script) and still resolve to a real color.
+        // Copper — signature metallic accent
         accent: {
           DEFAULT: "#C97C4C",
           hover: "#DB9563",
@@ -57,7 +100,7 @@ export default {
           950: "#301007",
         },
 
-        // Verdigris — copper's oxidation patina; success/positive (replaces emerald).
+        // Verdigris — copper's oxidation patina; success/positive
         verdigris: {
           DEFAULT: "#5FA88F",
           dim: "#3F6F5F",
@@ -98,8 +141,8 @@ export default {
           blue: "#0088FF",
           emerald: "#00FF88",
           amber: "#FFAA00",
-          void: "#04060A",
-          grid: "rgba(0, 240, 255, 0.04)",
+          void: "#0D0407",
+          grid: "rgba(246, 230, 234, 0.04)",
         },
       },
       borderRadius: {
@@ -114,22 +157,25 @@ export default {
         full: "9999px",
       },
       boxShadow: {
-        sm: "0 1px 2px rgba(0,0,0,0.35)",
-        DEFAULT: "0 2px 8px rgba(0,0,0,0.35)",
-        md: "0 4px 16px rgba(0,0,0,0.40)",
-        lg: "0 8px 32px rgba(0,0,0,0.45)",
-        xl: "0 16px 48px rgba(0,0,0,0.50)",
-        inner: "inset 0 1px 2px rgba(0,0,0,0.30)",
-        neon: "0 0 0 1px rgba(201,124,76,0.45)",
-        "neon-copper": "0 0 24px rgba(201,124,76,0.16)",
-        hud: "0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.35)",
+        sm: "0 1px 2px rgba(10,3,6,0.35)",
+        DEFAULT: "0 2px 8px rgba(10,3,6,0.35)",
+        md: "0 4px 16px rgba(10,3,6,0.40)",
+        lg: "0 8px 32px rgba(10,3,6,0.45)",
+        xl: "0 16px 48px rgba(10,3,6,0.50)",
+        inner: "inset 0 1px 2px rgba(246,230,234,0.08)",
+        neon: "0 0 0 1px rgba(246,230,234,0.35), 0 0 18px rgba(246,230,234,0.18)",
+        "neon-copper": "0 0 24px rgba(201,124,76,0.22)",
+        "neon-blush": "0 0 24px rgba(246,230,234,0.26), 0 0 48px rgba(195,100,128,0.16)",
+        hud: "0 1px 0 rgba(246,230,234,0.12) inset, 0 8px 26px rgba(10,3,6,0.45)",
+        "hud-card": "0 12px 36px rgba(10,3,6,0.55), inset 0 1px 0 rgba(246,230,234,0.14)",
+        "hud-blush": "0 0 20px rgba(246,230,234,0.28), inset 0 0 8px rgba(246,230,234,0.08)",
         "hud-cyan": "0 0 16px rgba(0,240,255,0.22), inset 0 0 8px rgba(0,240,255,0.04)",
         "hud-amber": "0 0 16px rgba(255,170,0,0.22), inset 0 0 8px rgba(255,170,0,0.04)",
         "hud-green": "0 0 16px rgba(0,255,136,0.22), inset 0 0 8px rgba(0,255,136,0.04)",
-        "hud-card": "0 8px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(0,240,255,0.12)",
       },
       fontFamily: {
-        display: ["'Space Grotesk'", "Inter", "'Helvetica Neue'", "sans-serif"],
+        display: ["'Moon Walk'", "'Space Grotesk'", "Inter", "sans-serif"],
+        brand: ["'Moon Walk'", "'Space Grotesk'", "sans-serif"],
         body: ["Inter", "'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
         mono: ["'IBM Plex Mono'", "'Courier New'", "Courier", "monospace"],
       },
@@ -152,14 +198,19 @@ export default {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "0.45", transform: "scale(0.97)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "0.7", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.04)" },
+        },
       },
       animation: {
-        "fade-in": "fade-in 0.2s ease-out",
-        "slide-up": "slide-up 0.2s ease-out",
-        trace: "trace 2.4s linear infinite",
+        "fade-in": "fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-up": "slide-up 0.26s cubic-bezier(0.16, 1, 0.3, 1)",
+        trace: "trace 3.2s linear infinite",
         "radar-spin": "radar-spin 4s linear infinite",
         "scanline-sweep": "scanline-sweep 8s linear infinite",
         "reticle-pulse": "reticle-pulse 2.2s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
       },
     },
   },

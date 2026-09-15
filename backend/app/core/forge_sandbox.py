@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from app.core.config import settings
 from app.core.data_firewall import redact
+from app.core.kernel_sandbox import KernelSandboxRunner
 from app.core.logger import logger
 
 SANDBOX_DIR = Path(__file__).parent.parent.parent / "sandbox"
@@ -311,30 +312,38 @@ class ForgeSandbox:
         os.makedirs(SANDBOX_DIR, exist_ok=True)
         self.pyodide_runner = PyodideWasmRunner()
         self.docker_runner = DockerContainerRunner()
+        self.kernel_runner = KernelSandboxRunner()
         self.subprocess_runner = SubprocessSanitizedRunner()
         self._audit_history: deque[Dict[str, Any]] = deque(maxlen=100)
 
     def _select_runner(self, backend: Optional[str] = None) -> BaseSandboxRunner:
         selected_backend = (backend or getattr(settings, "SANDBOX_BACKEND", "auto")).lower()
+        if selected_backend in ["kernel", "job_object"]:
+            if self.kernel_runner.is_available():
+                return self.kernel_runner
+            return self.subprocess_runner
+
         if selected_backend == "docker":
             if self.docker_runner.is_available():
                 return self.docker_runner
             logger.warning("Docker backend requested but Docker daemon unavailable; falling back to Pyodide WASM.")
             if self.pyodide_runner.is_available():
                 return self.pyodide_runner
-            return self.subprocess_runner
+            return self.kernel_runner if self.kernel_runner.is_available() else self.subprocess_runner
 
         if selected_backend == "pyodide":
             if self.pyodide_runner.is_available():
                 return self.pyodide_runner
-            logger.warning("Pyodide WASM runner unavailable; falling back to sanitized subprocess runner.")
-            return self.subprocess_runner
+            logger.warning("Pyodide WASM runner unavailable; falling back to kernel sandbox runner.")
+            return self.kernel_runner if self.kernel_runner.is_available() else self.subprocess_runner
 
-        # Auto detection: prefer Docker if running, otherwise Pyodide WASM
+        # Auto detection: prefer Docker if running, otherwise Pyodide WASM, otherwise Kernel Job Object
         if self.docker_runner.is_available():
             return self.docker_runner
         if self.pyodide_runner.is_available():
             return self.pyodide_runner
+        if self.kernel_runner.is_available():
+            return self.kernel_runner
         return self.subprocess_runner
 
     def _log_audit_entry(

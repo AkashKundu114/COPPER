@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+@font-face {
+  font-family: "Moon Walk";
+  src: url("/fonts/MoonWalk.otf") format("opentype"),
+       url("/fonts/MoonWalk.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,36 +19,47 @@ body,
 #root {
   height: 100%;
   margin: 0;
-  background-color: #080b12;
-  /* A restrained command-center canvas: depth first, decoration second. */
+  background-color: #12060A;
+  /* Multi-layered luxury velvet burgundy canvas with soft blush and warm copper atmospheric bloom */
   background-image:
-    radial-gradient(ellipse 75% 55% at 55% -12%, rgba(0, 210, 255, 0.13), transparent 68%),
-    radial-gradient(ellipse 48% 45% at 92% 100%, rgba(201, 124, 76, 0.12), transparent 72%),
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(ellipse 65% 50% at 50% -12%, rgba(195, 100, 128, 0.16), transparent 70%),
+    radial-gradient(ellipse 48% 45% at 94% 98%, rgba(201, 124, 76, 0.15), transparent 72%),
+    radial-gradient(ellipse 55% 50% at 6% 92%, rgba(246, 230, 234, 0.09), transparent 68%),
+    linear-gradient(rgba(246, 230, 234, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 230, 234, 0.022) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
   background-attachment: fixed;
-  color: #ededfa;
+  color: #F6E6EA;
   font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
 
 body {
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
+h1, h2, h3, .font-display, .font-brand {
+  font-family: "Moon Walk", "Space Grotesk", "Inter", sans-serif !important;
+  letter-spacing: -0.02em;
+}
+
+/* Microkit / Neuform tactile physics transitions */
 button,
 a,
 input,
 select,
 textarea {
-  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease,
-    box-shadow 160ms ease, transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 160ms ease;
+  transition: color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease;
 }
 
 button:not(:disabled):active {
-  transform: translateY(1px) scale(0.985);
+  transform: translateY(1px) scale(0.98);
 }
 
 .drag-region {
@@ -50,8 +70,16 @@ button:not(:disabled):active {
   -webkit-app-region: no-drag;
 }
 
+.glow-blush {
+  text-shadow: 0 0 14px rgba(246, 230, 234, 0.65);
+}
+
+.glow-copper {
+  text-shadow: 0 0 14px rgba(201, 124, 76, 0.65);
+}
+
 .glow-text {
-  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+  text-shadow: 0 0 12px rgba(246, 230, 234, 0.55);
 }
 
 .glow-amber {
@@ -59,27 +87,29 @@ button:not(:disabled):active {
 }
 
 .glow-green {
-  text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
+  text-shadow: 0 0 12px rgba(95, 168, 143, 0.6);
 }
 
+/* Burgundy & Blush Velvet Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(5, 8, 14, 0.6);
+  background: rgba(18, 6, 10, 0.7);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #361421;
   border-radius: 4px;
+  border: 1px solid rgba(246, 230, 234, 0.08);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f0ff;
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  background: #F6E6EA;
+  box-shadow: 0 0 10px rgba(246, 230, 234, 0.6);
 }
 
 ::selection {
-  background: rgba(0, 240, 255, 0.35);
+  background: rgba(246, 230, 234, 0.3);
   color: #ffffff;
 }
 
@@ -92,7 +122,7 @@ input:focus {
   outline: none;
 }
 
-/* WCAG 2.1 AA Compliant High-Contrast Focus Visible Ring */
+/* WCAG 2.1 AA Compliant High-Contrast Focus Visible Ring in Luminous Blush Pink */
 *:focus-visible,
 button:focus-visible,
 select:focus-visible,
@@ -101,9 +131,9 @@ input:focus-visible,
 [role="button"]:focus-visible,
 [role="tab"]:focus-visible,
 [role="option"]:focus-visible {
-  outline: 2px solid #00f0ff !important;
+  outline: 2px solid #F6E6EA !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4) !important;
+  box-shadow: 0 0 14px rgba(246, 230, 234, 0.5) !important;
 }
 
 button {
@@ -111,39 +141,41 @@ button {
 }
 
 input, textarea, select {
-  accent-color: #00f0ff;
+  accent-color: #F6E6EA;
 }
 
-/* ── Tactical God's Eye Surface ────────────────────────────────────────── */
+/* ── Velvet Burgundy Glass Surface (microkit.co / neuform.ai inspired) ─── */
 .app-surface {
-  background: linear-gradient(135deg, rgba(19, 26, 39, 0.82), rgba(7, 11, 19, 0.9));
-  border: 1px solid rgba(148, 180, 209, 0.15);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px) saturate(1.1);
+  background: linear-gradient(135deg, rgba(26, 10, 15, 0.86), rgba(18, 6, 10, 0.94));
+  border: 1px solid rgba(246, 230, 234, 0.14);
+  box-shadow: 0 20px 52px rgba(10, 3, 6, 0.48), inset 0 1px 0 rgba(246, 230, 234, 0.12);
+  backdrop-filter: blur(24px) saturate(1.15);
 }
 
-/* Tactical HUD Card with Chamfered Tech Corners */
+/* Tactical HUD Card with Burgundy/Blush Glass and Inner Bevel */
 .hud-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(22, 29, 43, 0.78), rgba(9, 13, 22, 0.86));
-  border: 1px solid rgba(148, 180, 209, 0.16);
-  backdrop-filter: blur(18px) saturate(1.08);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.045);
-  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: linear-gradient(145deg, rgba(30, 12, 19, 0.82), rgba(18, 6, 10, 0.9));
+  border: 1px solid rgba(246, 230, 234, 0.13);
+  backdrop-filter: blur(20px) saturate(1.1);
+  box-shadow: 0 14px 36px rgba(10, 3, 6, 0.35), inset 0 1px 0 rgba(246, 230, 234, 0.1);
+  transition: border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hud-card:hover {
-  border-color: rgba(0, 240, 255, 0.32);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 22px rgba(0, 240, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(246, 230, 234, 0.34);
+  box-shadow: 0 20px 48px rgba(10, 3, 6, 0.45), 0 0 24px rgba(246, 230, 234, 0.12), inset 0 1px 0 rgba(246, 230, 234, 0.2);
   transform: translateY(-2px);
 }
 
 .hud-card-active {
-  border-color: rgba(0, 240, 255, 0.45);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.18), inset 0 1px 0 rgba(0, 240, 255, 0.3);
+  border-color: rgba(246, 230, 234, 0.5);
+  box-shadow: 0 0 24px rgba(246, 230, 234, 0.22), inset 0 1px 0 rgba(246, 230, 234, 0.35);
 }
 
-/* HUD Corner Reticle Crosshairs */
+/* HUD Corner Reticle Crosshairs in Blush Pink */
 .hud-bracket {
   position: relative;
 }
@@ -160,15 +192,15 @@ input, textarea, select {
 .hud-bracket::before {
   top: -1px;
   left: -1px;
-  border-top: 2px solid #00f0ff;
-  border-left: 2px solid #00f0ff;
+  border-top: 2px solid #F6E6EA;
+  border-left: 2px solid #F6E6EA;
 }
 
 .hud-bracket::after {
   bottom: -1px;
   right: -1px;
-  border-bottom: 2px solid #00f0ff;
-  border-right: 2px solid #00f0ff;
+  border-bottom: 2px solid #F6E6EA;
+  border-right: 2px solid #F6E6EA;
 }
 
 /* Tactical HUD Badge */
@@ -179,11 +211,11 @@ input, textarea, select {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid;
 }
 
-/* ── Signature Copper Trace ─────────────────────────────────────────── */
+/* ── Signature Copper & Blush Trace ─────────────────────────────────── */
 .copper-trace {
   position: relative;
 }
@@ -194,11 +226,11 @@ input, textarea, select {
   left: 6%;
   right: 6%;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, #00f0ff, #c97c4c, #00f0ff, transparent);
+  background: linear-gradient(90deg, transparent, #F6E6EA, #C97C4C, #F6E6EA, transparent);
   background-size: 200% 100%;
-  opacity: 0.78;
+  opacity: 0.85;
   animation: trace 3.6s linear infinite;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.42);
+  box-shadow: 0 0 12px rgba(246, 230, 234, 0.45);
 }
 
 .page-enter {
@@ -206,46 +238,51 @@ input, textarea, select {
 }
 
 .lift-on-hover {
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 180ms ease;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
 }
 
 .lift-on-hover:hover {
   transform: translateY(-2px);
 }
 
-/* Shared polish for every product view.  Individual pages keep their
-   information architecture, while cards, controls and dense data surfaces
-   resolve into the same calm, layered visual language. */
+/* Shared polish for every product view: Burgundy velvet cards, subtle blush borders, tactile buttons */
 .modern-page {
   animation: page-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .modern-page :is([class*="bg-slate-900"], [class*="bg-bg-panel"], [class*="bg-zinc-900"]) {
-  background-color: rgba(20, 28, 42, 0.72) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  background-color: rgba(26, 10, 15, 0.78) !important;
+  box-shadow: inset 0 1px 0 rgba(246, 230, 234, 0.08), 0 12px 32px rgba(10, 3, 6, 0.25);
+  backdrop-filter: blur(16px);
 }
 
 .modern-page :is([class*="border-slate-800"], [class*="border-zinc-800"], [class*="border-border"]) {
-  border-color: rgba(148, 180, 209, 0.13) !important;
+  border-color: rgba(246, 230, 234, 0.12) !important;
 }
 
 .modern-page :is(button, [role="button"]) {
   border-radius: 0.75rem;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms ease, border-color 180ms ease;
 }
 
 .modern-page :is(button, [role="button"]):not(:disabled):hover {
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
+}
+
+.modern-page :is(button, [role="button"]):not(:disabled):active {
+  transform: translateY(0.5px) scale(0.985);
 }
 
 .modern-page :is(input, textarea, select) {
-  background-color: rgba(8, 13, 22, 0.68) !important;
-  border-color: rgba(148, 180, 209, 0.16) !important;
+  background-color: rgba(18, 6, 10, 0.75) !important;
+  border-color: rgba(246, 230, 234, 0.14) !important;
   border-radius: 0.75rem;
+  color: #F6E6EA !important;
 }
 
 .modern-page :is(input, textarea, select):focus {
-  border-color: rgba(0, 240, 255, 0.55) !important;
-  box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.09) !important;
+  border-color: rgba(246, 230, 234, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(246, 230, 234, 0.12), 0 0 16px rgba(246, 230, 234, 0.2) !important;
 }
 
 .modern-page :is(table, [role="table"]) {
@@ -254,7 +291,7 @@ input, textarea, select {
 }
 
 .modern-workspace .modern-page :is([class*="shadow-hud"], [class*="shadow-lg"], [class*="shadow-xl"]) {
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  box-shadow: 0 16px 40px rgba(10, 3, 6, 0.38), inset 0 1px 0 rgba(246, 230, 234, 0.08);
 }
 
 @keyframes page-enter {

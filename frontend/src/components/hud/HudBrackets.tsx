@@ -6,7 +6,7 @@ interface HudCardProps {
   tag?: string;
   subtag?: string;
   active?: boolean;
-  glow?: "cyan" | "amber" | "green";
+  glow?: "blush" | "copper" | "cyan" | "amber" | "green";
 }
 
 export const HudCard: React.FC<HudCardProps> = ({
@@ -15,25 +15,33 @@ export const HudCard: React.FC<HudCardProps> = ({
   tag,
   subtag,
   active = false,
-  glow = "cyan",
+  glow = "blush",
 }) => {
   const cornerBorder =
-    glow === "amber"
+    glow === "copper"
+      ? "border-accent"
+      : glow === "amber"
       ? "border-[#ffaa00]"
       : glow === "green"
-      ? "border-[#00ff88]"
-      : "border-cyber-cyan";
+      ? "border-[#5fa88f]"
+      : glow === "cyan"
+      ? "border-cyber-cyan"
+      : "border-blush-100";
 
   const borderClass =
-    glow === "amber"
+    glow === "copper"
+      ? "border-accent/35 hover:border-accent/65"
+      : glow === "amber"
       ? "border-molten/30 hover:border-molten/60"
       : glow === "green"
       ? "border-verdigris/30 hover:border-verdigris/60"
-      : "border-cyber-cyan/25 hover:border-cyber-cyan/50";
+      : glow === "cyan"
+      ? "border-cyber-cyan/25 hover:border-cyber-cyan/50"
+      : "border-blush-100/20 hover:border-blush-100/45";
 
   return (
     <div
-      className={`relative bg-[#070b13]/85 backdrop-blur-xl border ${borderClass} transition-all duration-300 rounded-xl p-5 shadow-hud ${
+      className={`relative bg-[#1A0A0F]/85 backdrop-blur-2xl border ${borderClass} transition-all duration-200 rounded-2xl p-5 shadow-[0_12px_36px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)] ${
         active ? "hud-card-active" : ""
       } ${className}`}
     >
@@ -45,14 +53,14 @@ export const HudCard: React.FC<HudCardProps> = ({
 
       {/* Optional Top Right Technical Metadata Badge */}
       {(tag || subtag) && (
-        <div className="absolute top-2.5 right-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-text-muted select-none pointer-events-none">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-text-muted select-none pointer-events-none">
           {tag && (
-            <span className="px-1.5 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-semibold">
+            <span className="px-2 py-0.5 rounded-md bg-blush-100/10 border border-blush-100/25 text-blush-100 font-semibold shadow-sm">
               {tag}
             </span>
           )}
           {subtag && (
-            <span className="text-zinc-500 hidden sm:inline">[{subtag}]</span>
+            <span className="text-blush-300/40 hidden sm:inline">[{subtag}]</span>
           )}
         </div>
       )}
