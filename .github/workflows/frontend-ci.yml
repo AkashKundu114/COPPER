@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["20", "22"]
+        node-version: ["22"]
     steps:
       - uses: actions/checkout@v7
 
@@ -81,7 +81,7 @@ jobs:
         run: cd frontend && npm run build
 
       - name: Report bundle size
-        if: matrix.node-version == '20'
+        if: matrix.node-version == '22'
         run: |
           cd frontend
           echo "### Bundle size report" >> "$GITHUB_STEP_SUMMARY"
@@ -91,7 +91,7 @@ jobs:
           echo '```' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload build artifact
-        if: matrix.node-version == '20'
+        if: matrix.node-version == '22'
         uses: actions/upload-artifact@v7
         with:
           name: frontend-dist
@@ -106,7 +106,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -131,7 +131,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -160,7 +160,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 

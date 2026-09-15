@@ -54,5 +54,33 @@
     "markdown_report": "",
     "progress_pct": 0,
     "error": null
+  },
+  {
+    "report_id": "f3eeacdb-6129-4055-a2b9-33183b504494",
+    "topic": "Evaluate Microservices vs Monolith architectures",
+    "status": "researching",
+    "started_at": "2026-09-15T18:01:47.121599",
+    "completed_at": null,
+    "deadline": "2026-09-15T23:31:47.121583",
+    "sources": [],
+    "sections": [],
+    "executive_summary": "",
+    "markdown_report": "",
+    "progress_pct": 0,
+    "error": null
+  },
+  {
+    "report_id": "cf4796be-75af-4627-a810-9b9690e2204c",
+    "topic": "Evaluate Microservices vs Monolith architectures",
+    "status": "researching",
+    "started_at": "2026-09-15T18:04:55.492232",
+    "completed_at": null,
+    "deadline": "2026-09-15T23:34:55.492214",
+    "sources": [],
+    "sections": [],
+    "executive_summary": "",
+    "markdown_report": "",
+    "progress_pct": 0,
+    "error": null
   }
 ]

@@ -48,5 +48,45 @@
     "recommended_guide": "Tutorial outline for asyncio-distributed-locks-d75b2950-512f-44dc-9fd0-5ffdf55507a1: 1. Basics 2. Intermediate concepts 3. Advanced usage",
     "difficulty_level": "beginner",
     "status": "resolved"
+  },
+  {
+    "gap_id": "25c182c9-fccf-4a79-a981-550bec1369a8",
+    "topic": "asyncio-distributed-locks-f92cb42d-6704-4fdf-ae19-4df51be3476a",
+    "query_count": 3,
+    "first_observed": "2026-09-15T17:59:32.032085+00:00",
+    "last_observed": "2026-09-15T17:59:32.033081+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-f92cb42d-6704-4fdf-ae19-4df51be3476a: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "752a9f08-3c51-48da-b4ea-6cd8f4421c10",
+    "topic": "api_test_topic_db690ab1-a36c-4b39-9df3-c71598709a47",
+    "query_count": 1,
+    "first_observed": "2026-09-15T18:00:32.040238+00:00",
+    "last_observed": "2026-09-15T18:00:32.040238+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "2e28f9c1-26e4-4318-9009-fd4f74a4f7e6",
+    "topic": "asyncio-distributed-locks-618d9f40-8ee1-41c5-a3bc-b4e0beca824c",
+    "query_count": 3,
+    "first_observed": "2026-09-15T18:02:59.595521+00:00",
+    "last_observed": "2026-09-15T18:02:59.605774+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-618d9f40-8ee1-41c5-a3bc-b4e0beca824c: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "ed103515-8585-4c38-8974-918ce13c968e",
+    "topic": "api_test_topic_e1925974-6f58-4c06-9d58-e44b14a6005d",
+    "query_count": 1,
+    "first_observed": "2026-09-15T18:03:55.182343+00:00",
+    "last_observed": "2026-09-15T18:03:55.182343+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
   }
 ]

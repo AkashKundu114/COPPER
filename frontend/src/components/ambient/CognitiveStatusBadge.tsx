@@ -13,6 +13,7 @@ interface CognitiveProfile {
 
 export const CognitiveStatusBadge: React.FC = () => {
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
+  const [open, setOpen] = useState(false);
 
   const fetchStatus = () => {
     cognitiveAPI
@@ -30,7 +31,6 @@ export const CognitiveStatusBadge: React.FC = () => {
     const interval = setInterval(fetchStatus, 30000);
     return () => clearInterval(interval);
   }, []);
-
 
   if (!profile) return null;
 
@@ -64,7 +64,6 @@ export const CognitiveStatusBadge: React.FC = () => {
 
   const current = stateConfig[profile.state] || stateConfig.normal_flow;
   const IconComponent = current.icon;
-  const [open, setOpen] = useState(false);
 
   return (
     <div className="relative">

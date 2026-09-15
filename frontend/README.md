@@ -1,4 +1,4 @@
-﻿# C.O.P.P.E.R. Frontend (Electron Desktop Application)
+# C.O.P.P.E.R. Frontend (Electron Desktop Application)
 
 This directory contains the front-end source code and Electron container for **C.O.P.P.E.R.** (Centralized Omnifunctional Personal Productivity and Execution Routine).
 
@@ -22,21 +22,21 @@ The UI is built around a persistent 13-section left sidebar and a dynamic worksp
   - BenchmarkMetricsView.tsx, SecurityCenter.tsx, SelfImprovementView.tsx
   - AgentRegistry.tsx, AutomationBuilderView.tsx, TasksView.tsx, ProjectsView.tsx
   - MeetingsView.tsx, EmailView.tsx, Insights.tsx, SettingsView.tsx, FoodView.tsx, EVEView.tsx
-- **src/components/ (14 Subsystems):** Includes the chat dock, speaking bar, widget rail (Clock, Calendar, Weather, Network), and the rain/ directory containing the SVG Neural Brain Map.
-- **src/lib/:** WebSocket hooks (useBrainSocket.ts) for real-time agent dispatch and hardware metrics, plus the Axios API client (pi.ts).
+- **src/components/ (14 Subsystems):** Includes the chat dock, speaking bar, widget rail (Clock, Calendar, Weather, Network), and the brain/ directory containing the SVG Neural Brain Map.
+- **src/lib/:** WebSocket hooks (useBrainSocket.ts) for real-time agent dispatch and hardware metrics, plus the Axios API client (api.ts).
 
 ## The Neural Brain Visualizer (src/components/brain/)
 
 A core feature of the UI is the **30-agent radial SVG ganglia map**. 
 - It uses deterministic layout math (guaranteeing a minimum of 49px spacing between nodes) rather than unpredictable force-directed physics.
 - The map animates organically with CSS orbital rotations and breathing opacities.
-- When an agent is invoked via the FastAPI backend, WebSockets stream copper_thinking, oute_decision, and gent_active events to trigger electric "molten wire" animations in real-time.
+- When an agent is invoked via the FastAPI backend, WebSockets stream `copper_thinking`, `route_decision`, and `agent_active` events to trigger electric "molten wire" animations in real-time.
 
 ## Development & Build Commands
 
 Ensure you are using **Node.js 20+** and **npm 9+**.
 
-`ash
+```bash
 # Install dependencies
 npm install
 
@@ -51,20 +51,20 @@ npm run build
 
 # Package the Electron standalone executable (Windows/macOS/Linux)
 npm run dist
-`
+```
 
 ## Testing & Quality Gates
 
 The frontend enforces strict quality gates via Oxlint and comprehensive testing:
 
-`ash
+```bash
 # Run unit tests and component coverage
 npx vitest run
 
 # Run end-to-end desktop verification
 npx playwright test
-`
+```
 
 ## Theme & Accessibility (a11y)
 
-The UI uses a custom **Molten Copper** color palette defined in 	ailwind.config.js. It fully supports prefers-reduced-motion queries, disabling all particle drifts and SVG orbital animations in favor of static, accessible layouts when requested by the OS. Keyboard navigation and contrast thresholds strictly adhere to WCAG 2.1 AA standards.
+The UI uses a custom **Molten Copper** color palette defined in `tailwind.config.js`. It fully supports `prefers-reduced-motion` queries, disabling all particle drifts and SVG orbital animations in favor of static, accessible layouts when requested by the OS. Keyboard navigation and contrast thresholds strictly adhere to WCAG 2.1 AA standards.

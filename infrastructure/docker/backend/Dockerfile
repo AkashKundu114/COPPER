@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /app/ai-models /app/data
 COPY backend/ /app/backend/
 COPY ai-models/ /app/ai-models/
 

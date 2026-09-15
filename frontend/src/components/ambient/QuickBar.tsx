@@ -3,8 +3,16 @@ import { Zap, Loader2 } from "lucide-react";
 import { api } from "../../lib/api";
 import { MarkdownContent } from "../chat/MarkdownContent";
 
-// @ts-ignore
-const { ipcRenderer } = window.require("electron");
+function getIpcRenderer() {
+  if (typeof window !== "undefined" && typeof (window as any).require === "function") {
+    try {
+      return (window as any).require("electron")?.ipcRenderer;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
 
 export function QuickBar() {
   const [query, setQuery] = useState("");
@@ -18,7 +26,7 @@ export function QuickBar() {
     
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        ipcRenderer.invoke("quick-bar-hide");
+        getIpcRenderer()?.invoke("quick-bar-hide");
       }
     };
     
@@ -30,7 +38,7 @@ export function QuickBar() {
     // Resize the window based on content
     if (containerRef.current) {
       const height = containerRef.current.offsetHeight;
-      ipcRenderer.invoke("quick-bar-resize", height + 16);
+      getIpcRenderer()?.invoke("quick-bar-resize", height + 16);
     }
   }, [response, loading]);
 
@@ -75,8 +83,9 @@ export function QuickBar() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.ctrlKey) {
-      ipcRenderer.invoke("quick-bar-focus-main");
-      ipcRenderer.invoke("quick-bar-hide");
+      const ipc = getIpcRenderer();
+      ipc?.invoke("quick-bar-focus-main");
+      ipc?.invoke("quick-bar-hide");
     } else if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);

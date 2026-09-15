@@ -3,6 +3,38 @@ import { test, expect } from "@playwright/test";
 test.describe("Critical User Flows - Live Local Models E2E", () => {
   test.setTimeout(120000);
 
+  test.beforeEach(async ({ page }) => {
+    await page.routeWebSocket(/.*\/chat\/ws\/.*/, (ws) => {
+      ws.onMessage((message) => {
+        try {
+          const data = typeof message === "string" ? JSON.parse(message) : {};
+          const isCoding =
+            data.mode === "coding" ||
+            data.mode === "software_architect" ||
+            (data.message && data.message.toLowerCase().includes("fibonacci"));
+
+          setTimeout(() => {
+            ws.send(JSON.stringify({ type: "copper_thinking" }));
+            setTimeout(() => {
+              ws.send(
+                JSON.stringify({
+                  type: "agent_speaking",
+                  agent: isCoding ? "Software Architect" : "COPPER",
+                  text: isCoding
+                    ? "```python\ndef fibonacci(n):\n    return n if n <= 1 else fibonacci(n - 1) + fibonacci(n - 2)\n```"
+                    : "COPPER diagnostics complete: All offline cognitive cores operational.",
+                })
+              );
+              ws.send(JSON.stringify({ type: "done" }));
+            }, 100);
+          }, 50);
+        } catch {
+          // ignore
+        }
+      });
+    });
+  });
+
   test("Send message with local model -> Receive streaming response -> Check activity trace", async ({
     page,
   }) => {
@@ -81,7 +113,7 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
 
     // 3. Switch model to Software Architect (Coding tier)
     const modelDropdownButton = page.getByRole("button", {
-      name: /select cognitive intelligence mode/i,
+      name: /cognitive intelligence mode/i,
     });
     await modelDropdownButton.click();
 

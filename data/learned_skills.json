@@ -251,5 +251,117 @@
     "avg_duration_seconds": 5.602836608886719e-05,
     "tags": [],
     "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "a8521e1a-8143-40a5-b914-b6b749716ae7",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-15T17:59:45.074634",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "e0729bcc-c1c3-4f0f-a6fe-f3abf3b35b4d",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-15T18:01:47.160868",
+    "last_used": "2026-09-15T18:01:47.164548+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.00019884109497070312,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "b4b24545-9622-46ab-ae37-88fa2a39d12e",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-15T18:03:16.752099",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "ac4842be-e71a-4c47-b933-3a1c749c3e05",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-15T18:04:55.508343",
+    "last_used": "2026-09-15T18:04:55.510781+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 9.274482727050781e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
   }
 ]

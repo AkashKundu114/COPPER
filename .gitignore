@@ -42,8 +42,10 @@ frontend/public/generated/*.png
 !frontend/public/generated/.gitkeep
 
 # ── Model Binaries & Quantized Weights ────────────────────────────────────────
-ai-models/
+ai-models/*
 !ai-models/models_manifest.json
+!ai-models/**/
+!ai-models/**/.gitkeep
 /models/
 *.gguf
 *.bin

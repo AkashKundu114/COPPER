@@ -81,10 +81,10 @@ cd ..
 Before opening a pull request, you **MUST** pass all quality gates locally:
 
 ```bash
-# Gate 1: Full Pytest Test Suite (All 213+ unit and integration tests must pass)
+# Gate 1: Full Pytest Test Suite (All 500+ unit and integration tests must pass)
 python -m pytest tests/ -v
 
-# Gate 2: Benchmark Evaluation Suite (100% Routing & Guardian accuracy across 1,360 cases)
+# Gate 2: Benchmark Evaluation Suite (100% Routing & Guardian accuracy across 1,740 samples)
 python backend/eval/benchmark.py
 
 # Gate 3: AI Model Manifest Verification

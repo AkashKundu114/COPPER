@@ -8,8 +8,15 @@ Welcome to the official technical documentation and architectural reference for 
 
 ![System Performance & Safety](images/routing_accuracy_benchmark.png)
 
-| Performance & Hardware | Architecture & Security |
+| Performance & Hardware Telemetry | Architecture, Security & Memory |
 | :--- | :--- |
+| ![Throughput Acceleration](images/fig1_throughput_acceleration.png) | ![System Architecture Topology](images/fig8_system_architecture_topology.png) |
+| ![VRAM Memory Footprint](images/fig2_vram_memory_footprint.png) | ![Guardian & Firewall Safety ROC](images/fig7_guardian_firewall_safety_roc.png) |
+| ![Latency Throughput Pareto](images/fig3_latency_throughput_pareto.png) | ![Epistemic Memory Decay Dynamics](images/fig6_epistemic_memory_decay_dynamics.png) |
+| ![KV Cache Layer Offload Study](images/fig4_kv_cache_layer_offload_study.png) | ![Multi-Agent Routing Matrix](images/fig5_multi_agent_routing_matrix.png) |
+| ![Context Scaling & VRAM Stability](images/fig9_context_scaling_vram_stability.png) | ![Sovereign Evolution Loop](images/fig10_sovereign_evolution_loop.png) |
+| ![VRAM Pager & Concurrency](images/fig11_vram_pager_and_concurrency.png) | ![WAL Crash Consistency](images/fig12_wal_crash_consistency.png) |
+| ![Chaos Fuzzing & Hybrid RRF](images/fig13_chaos_fuzzing_and_hybrid_rrf.png) | ![Model Comparison Radar](images/model_comparison_radar.png) |
 | ![Latency Percentiles](images/latency_percentiles.png) | ![Guardian Protocol](images/guardian_intervention_levels.png) |
 | ![VRAM Allocation](images/vram_memory_allocation.png) | ![Data Firewall](images/data_firewall_pipeline.png) |
 | ![Token Throughput](images/token_generation_throughput.png) | ![Epistemic Memory](images/epistemic_memory_layers.png) |

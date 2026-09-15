@@ -26,5 +26,19 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "d645ac84-43f6-4456-92bb-7ae460f3a314",
+    "effect_id": "3d6577aa-6226-4cd9-b574-9d778f05d22d",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "4d40209b-3fd5-4bd6-aa49-4e347001e9ed",
+    "effect_id": "ced33c6a-2ab1-4aa6-af3d-fb37657478ab",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]

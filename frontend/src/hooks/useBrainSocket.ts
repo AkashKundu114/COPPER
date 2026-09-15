@@ -335,7 +335,8 @@ export function useBrainSocket(
       wsRef.current = null;
     }
 
-    const wsUrl = `${API_BASE.replace(/^http/, "ws")}/api/v1/chat/ws/${sessionIdRef.current}`;
+    const wsBase = API_BASE.replace(/\/api\/v1\/?$/, "");
+    const wsUrl = `${wsBase.replace(/^http/, "ws")}/api/v1/chat/ws/${sessionIdRef.current}`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
@@ -755,7 +756,7 @@ export function useBrainSocket(
 
   const loadSessionHistory = useCallback(async (sId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/api/v1/chat/history/${sId}`);
+      const res = await fetch(`${API_BASE}/chat/history/${sId}`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.history)) {
@@ -798,7 +799,7 @@ export function useBrainSocket(
 
   const clearChat = useCallback(() => {
     setLines([]);
-    fetch(`${API_BASE}/api/v1/chat/history/${sessionIdRef.current}`, { method: "DELETE" }).catch(() => {});
+    fetch(`${API_BASE}/chat/history/${sessionIdRef.current}`, { method: "DELETE" }).catch(() => {});
   }, []);
 
   return {

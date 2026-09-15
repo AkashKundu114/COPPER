@@ -9,7 +9,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-477%20Passed%20(100%25)-brightgreen.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-501+%20Passed%20(100%25%20Core)-brightgreen.svg)](tests/)
 [![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-25%20Passed%20(100%25)-brightgreen.svg)](frontend/tests/)
 [![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components-brightgreen.svg)](frontend/tests/)
 [![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
@@ -39,9 +39,10 @@
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **97.77% Routing Precision:*[1]*** Evaluated over 1,390 benchmark test cases at **~9,856 QPS** (0.100 ms average latency).
+- **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases at **~2,050 QPS** full combinatorial throughput (< 0.49 ms average latency) and **~9,856 QPS** on Stage 0/1 regex & memory cache dispatch (< 0.10 ms).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
-- **392 / 392 Pytest Tests Passing (100%):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
+- **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback.
+- **501+ Pytest Tests Passing:** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
 - **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
@@ -49,7 +50,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress and 392 passing unit/integration tests, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 501+ passing unit/integration tests, and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
@@ -328,7 +329,7 @@ COPPER/
 ├── frontend/                      # Standalone Electron desktop app (React 19 + Vite)
 │   ├── src/                       # React components, state stores, styling
 │   └── electron-main.cjs          # Electron lifecycle, navigation guards, single-instance lock
-├── tests/                         # 213 Pytest unit and integration test suites
+├── tests/                         # 500+ Pytest unit and integration test suites
 │   ├── ai/                        # Agent router, prompts, LLM clients, task scheduler
 │   ├── api/                       # REST API route integration tests
 │   ├── audio/                     # Whisper STT, Piper TTS, and PCM stream tests
@@ -367,5 +368,9 @@ COPPER/
 - **Security Policy & Vulnerability Disclosure:** Consult [`SECURITY.md`](SECURITY.md) for reporting vulnerabilities and threat model specifications.
 - **Code of Conduct:** Review [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community participation standards.
 - **Contributing Guidelines:** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for pull request requirements, contributor license terms, and quality gate criteria.
+- **Privacy Policy:** Review [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md) for local-first zero-egress commitments.
+- **Terms & Conditions:** Read [`TERMS_AND_CONDITIONS.md`](TERMS_AND_CONDITIONS.md) for licensing, usage, and liability terms.
 - **Support:** Visit [`SUPPORT.md`](SUPPORT.md) for troubleshooting guides and issue submission workflows.
+- **Known Issues:** Review [`ISSUES.md`](ISSUES.md) for current operational items and workarounds.
+
 

@@ -1,0 +1,229 @@
+{
+  "version": "3.0-autonomous-sovereign-14b",
+  "base_path": "ai-models",
+  "sovereign_meta_agent": {
+    "name": "C.O.P.P.E.R",
+    "full_title": "Cognitive Offline Partner for Personalized Execution & Reasoning",
+    "personality_config": "data/personality_config.json",
+    "telemetry_dataset": "data/training/telemetry.jsonl",
+    "training_pipeline": "scripts/train_qlora.py",
+    "adapter_export_dir": "data/training/adapters/copper_v3",
+    "self_evolution_enabled": true,
+    "role": "Central cognitive orchestrator, learning from daily system feedback, interactions, tool runs, and user preferences with dynamic personality and dry humor"
+  },
+  "vram_policy": {
+    "always_on_mini_model": "subagents.mercury",
+    "mini_model_keep_alive": -1,
+    "heavy_model_keep_alive": "2m",
+    "auto_unload_heavy_after_turn": true,
+    "max_idle_heavy_seconds": 60,
+    "target_idle_vram_gb": 1.2,
+    "kv_cache_type": "q4_0"
+  },
+  "gatekeeper": {
+    "mini": {
+      "name": "Qwen2.5-1.5B-Instruct",
+      "agent_codename": "AEGIS",
+      "ollama_tag": "qwen2.5:1.5b",
+      "file": "subagents/firewall/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+      "role": "Always-resident zero-latency firewall, PII redaction, secret filter, and prompt injection defense",
+      "size_gb": 0.94,
+      "keep_alive": -1,
+      "pinned": true
+    }
+  },
+  "always_on_mini_model": {
+    "name": "Qwen2.5-1.5B-Instruct",
+    "agent_codename": "MERCURY",
+    "ollama_tag": "qwen2.5:1.5b",
+    "file": "subagents/router/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+    "quantization": "Q4_K_M",
+    "size_gb": 0.94,
+    "keep_alive": -1,
+    "pinned": true,
+    "role": "Persistent reflex intent routing, task dispatch, and instant short-circuit for trivial queries"
+  },
+  "core_agents": {
+    "chat": {
+      "name": "Qwen2.5-14B-Instruct",
+      "agent_codename": "ATLAS",
+      "ollama_tag": "qwen2.5:14b",
+      "hf_repo": "bartowski/Qwen2.5-14B-Instruct-GGUF",
+      "file": "core/Qwen2.5-14B-Instruct-IQ3_XS.gguf",
+      "quantization": "IQ3_XS",
+      "size_gb": 6.38,
+      "role": "Primary conversational companion, high-level intent decomposition, and dialogue orchestrator"
+    },
+    "coding": {
+      "name": "Qwen2.5-Coder-14B-Instruct-abliterated",
+      "agent_codename": "VULCAN",
+      "ollama_tag": "qwen2.5-coder-abliterated:14b",
+      "hf_repo": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",
+      "file": "core/Qwen2.5-Coder-14B-Instruct-abliterated-IQ3_XS.gguf",
+      "quantization": "IQ3_XS",
+      "size_gb": 6.38,
+      "role": "Full-stack code generation, refactoring, reverse engineering, and sandbox debugging"
+    },
+    "reasoning": {
+      "name": "DeepSeek-R1-Distill-Qwen-14B",
+      "agent_codename": "PROMETHEUS",
+      "ollama_tag": "deepseek-r1:14b",
+      "hf_repo": "bartowski/DeepSeek-R1-Distill-Qwen-14B-GGUF",
+      "file": "core/DeepSeek-R1-Distill-Qwen-14B-IQ3_XS.gguf",
+      "quantization": "IQ3_XS",
+      "size_gb": 6.38,
+      "role": "Deep multi-step chain-of-thought reasoning, mathematical proofing, and scientific analysis"
+    },
+    "document": {
+      "name": "phi-4",
+      "agent_codename": "SCRIBE",
+      "ollama_tag": "phi4:14b",
+      "hf_repo": "bartowski/phi-4-GGUF",
+      "file": "core/phi-4-IQ3_XS.gguf",
+      "quantization": "IQ3_XS",
+      "size_gb": 6.24,
+      "role": "Authoritative document authoring, academic synthesis, research briefs, and structured reports"
+    },
+    "automation": {
+      "name": "Mistral-Nemo-Instruct-2407",
+      "agent_codename": "DAEMON",
+      "ollama_tag": "mistral-nemo:12b",
+      "hf_repo": "bartowski/Mistral-Nemo-Instruct-2407-GGUF",
+      "file": "core/Mistral-Nemo-Instruct-2407-IQ3_M.gguf",
+      "quantization": "IQ3_M",
+      "size_gb": 5.72,
+      "role": "Deterministic function calling, CLI execution, API coordination, and task automation"
+    }
+  },
+  "subagents": {
+    "firewall": {
+      "name": "Qwen2.5-1.5B-Instruct",
+      "agent_codename": "AEGIS",
+      "ollama_tag": "qwen2.5:1.5b",
+      "file": "subagents/firewall/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 0.94,
+      "role": "PII redaction, secret filter, and safety firewall"
+    },
+    "router": {
+      "name": "Qwen2.5-1.5B-Instruct",
+      "agent_codename": "MERCURY",
+      "ollama_tag": "qwen2.5:1.5b",
+      "file": "subagents/router/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 0.94,
+      "role": "Sub-30ms user intent classifier and dispatcher"
+    },
+    "translation": {
+      "name": "Qwen2.5-1.5B-Instruct",
+      "agent_codename": "BABEL",
+      "ollama_tag": "qwen2.5:1.5b",
+      "file": "subagents/router/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 0.94,
+      "role": "Cross-lingual prompt normalizer into technical English"
+    },
+    "coding_micro": {
+      "name": "Qwen2.5-Coder-3B-Instruct",
+      "agent_codename": "FORGE",
+      "ollama_tag": "qwen2.5-coder:3b",
+      "file": "subagents/coding/Qwen2.5-Coder-3B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.80,
+      "role": "Syntax linting, docstrings, unit test scaffolds, and conventional git commit messages"
+    },
+    "shell_safety": {
+      "name": "Qwen2.5-Coder-3B-Instruct",
+      "agent_codename": "WARDEN",
+      "ollama_tag": "qwen2.5-coder:3b",
+      "file": "subagents/coding/Qwen2.5-Coder-3B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.80,
+      "role": "Pre-flight terminal and Docker command flag validator"
+    },
+    "diagnostics": {
+      "name": "DeepSeek-R1-Distill-Qwen-1.5B",
+      "agent_codename": "CRUCIBLE",
+      "ollama_tag": "deepseek-r1:1.5b",
+      "file": "subagents/diagnostics/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.04,
+      "role": "Stack trace analyzer, self-healing patch proposer, and step checklist planner"
+    },
+    "memory": {
+      "name": "SmolLM2-1.7B-Instruct",
+      "agent_codename": "CHRONOS",
+      "ollama_tag": "smollm2:1.7b",
+      "file": "subagents/memory/SmolLM2-1.7B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.00,
+      "role": "Epistemic fact, preference, and user state extraction for ChromaDB"
+    },
+    "dom_cleaner": {
+      "name": "SmolLM2-1.7B-Instruct",
+      "agent_codename": "SPIDER",
+      "ollama_tag": "smollm2:1.7b",
+      "file": "subagents/memory/SmolLM2-1.7B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.00,
+      "role": "Web scrape HTML/DOM cleaning and markdown fact sheet compression"
+    },
+    "sql_schema": {
+      "name": "granite-3.2-2b-instruct",
+      "agent_codename": "ORACLE",
+      "ollama_tag": "granite3.2-dense:2b",
+      "file": "subagents/sql/granite-3.2-2b-instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 1.44,
+      "role": "Parameterized SQL generator, JSON schema validator, and hallucination verifier"
+    }
+  },
+  "vision_agents": {
+    "vision_lightweight": {
+      "name": "Qwen2.5-VL-3B-Instruct",
+      "agent_codename": "ARGUS",
+      "ollama_tag": "qwen2.5-vl:3b",
+      "file": "vision/Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 2.10,
+      "role": "Rapid UI bounding box coordinate detector, OCR reader, and screen element tagger"
+    }
+  },
+  "image_studio": {
+    "engine": "local_diffusion",
+    "primary_model_path": "ai-models/image/sd_turbo.safetensors",
+    "size_gb": 4.86,
+    "role": "100% offline 1-step real-time image generation studio (PICASSO)"
+  },
+  "embeddings": {
+    "vector_memory": {
+      "name": "nomic-embed-text-v1.5",
+      "ollama_tag": "nomic-embed-text",
+      "file": "embeddings/nomic-embed-text-v1.5.Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_gb": 0.14,
+      "role": "ChromaDB vector embedding generator"
+    },
+    "reranker": {
+      "name": "bge-reranker-v2-m3",
+      "file": "embeddings/bge-reranker-v2-m3-Q4_K_M.gguf",
+      "size_gb": 0.32,
+      "role": "Cross-encoder semantic reranker for memory retrieval precision"
+    }
+  },
+  "audio": {
+    "vad_engine": "silero_vad",
+    "vad_model_path": "ai-models/audio/vad/silero_vad.onnx",
+    "tts_engine": "kokoro_onnx",
+    "tts_model_path": "ai-models/audio/tts/kokoro-v0_19.onnx",
+    "tts_voices_path": "ai-models/audio/tts/voices.bin",
+    "stt_engine": "whisper_turbo",
+    "stt_model_path": "ai-models/audio/whisper/ggml-large-v3-turbo.bin"
+  },
+  "wakeword": {
+    "engine_default": "openwakeword",
+    "openwakeword_model_path": "ai-models/wakeword/hey_copper.onnx",
+    "openwakeword_embedding_path": "ai-models/wakeword/embedding_model.onnx",
+    "openwakeword_model_status": "ready"
+  }
+}

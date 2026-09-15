@@ -41,10 +41,8 @@ if (!gotTheLock) {
 function configureAutoStart() {
   if (process.platform === "win32") {
     app.setLoginItemSettings({
-      openAtLogin: true,
+      openAtLogin: false,
       openAsHidden: false,
-      path: process.execPath,
-      args: ["--autostart"],
     });
   }
 }

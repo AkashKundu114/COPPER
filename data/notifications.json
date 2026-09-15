@@ -25,5 +25,23 @@
     "timestamp": "2026-09-12T16:37:39.735511",
     "category": "urgent",
     "status": "digested"
+  },
+  {
+    "id": "98aaacfa-c211-45ae-86ad-667b29eed43b",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-09-15T23:29:32.034866",
+    "category": "urgent",
+    "status": "digested"
+  },
+  {
+    "id": "85bac058-6638-487a-8d7d-e147fa0c2718",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-09-15T23:32:59.628595",
+    "category": "urgent",
+    "status": "digested"
   }
 ]
