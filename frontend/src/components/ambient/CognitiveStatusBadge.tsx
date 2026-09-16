@@ -69,7 +69,7 @@ export const CognitiveStatusBadge: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-[10px] font-mono font-bold tracking-wider transition-all shadow-sm cursor-pointer hover:opacity-90 ${current.color}`}
+        className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold tracking-wider transition-all shadow-sm cursor-pointer hover:opacity-90 focus-visible:ring-1 focus-visible:ring-accent ${current.color}`}
         title={`Cognitive Load: ${current.label} (${Math.round(profile.confidence * 100)}% conf). Click to inspect.`}
       >
         <IconComponent size={12} className="animate-pulse" />

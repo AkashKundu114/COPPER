@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Zap, Loader2 } from "lucide-react";
+import { Zap } from "lucide-react";
+import { ThinkingOrb } from "thinking-orbs";
 import { api } from "../../lib/api";
 import { MarkdownContent } from "../chat/MarkdownContent";
 
@@ -110,7 +111,7 @@ export function QuickBar() {
           autoFocus
         />
         {loading && (
-          <Loader2 className="w-5 h-5 text-slate-400 animate-spin shrink-0" />
+          <ThinkingOrb state="searching" size={20} theme="dark" />
         )}
       </div>
 

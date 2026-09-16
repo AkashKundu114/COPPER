@@ -8,23 +8,18 @@ import {
 export const SensorModeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [mode, setModeState] = useState<SensorMode>(() => {
-    const saved = localStorage.getItem("copper_sensor_mode");
-    return (saved as SensorMode) || "eo";
-  });
+  const [mode, setModeState] = useState<SensorMode>("crt");
 
   useEffect(() => {
-    localStorage.setItem("copper_sensor_mode", mode);
+    localStorage.setItem("copper_sensor_mode", "crt");
   }, [mode]);
 
   const setMode = (newMode: SensorMode) => {
-    setModeState(newMode);
+    setModeState(newMode || "crt");
   };
 
   const cycleMode = () => {
-    const idx = SENSOR_MODES.findIndex((m) => m.id === mode);
-    const nextIdx = (idx + 1) % SENSOR_MODES.length;
-    setModeState(SENSOR_MODES[nextIdx].id);
+    setModeState("crt");
   };
 
   const activeMeta =

@@ -192,7 +192,7 @@ class OllamaClient:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
         is_heavy = any(k in target_model for k in ["14b", "12b"])
-        default_ctx = 3072 if is_heavy else 2048
+        default_ctx = 4096 if is_heavy else 8192
 
         options = {
             "temperature": 0.7,
@@ -247,7 +247,7 @@ class OllamaClient:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
         is_heavy = any(k in target_model for k in ["14b", "12b"])
-        default_ctx = 3072 if is_heavy else 2048
+        default_ctx = 4096 if is_heavy else 8192
 
         options = {
             "temperature": 0.7,
@@ -299,7 +299,10 @@ class OllamaClient:
                                     metrics_collector["eval_duration"] = chunk.get("eval_duration")
                                     metrics_collector["total_duration"] = chunk.get("total_duration")
                     else:
-                        yield f"Ollama returned status {resp.status_code} for '{target_model}'. Run 'ollama pull {target_model}' to download the model into Ollama."
+                        err_body = await resp.aread()
+                        err_text = err_body.decode(errors="replace")
+                        logger.warning(f"Ollama stream non-200 ({resp.status_code}): {err_text}")
+                        yield f"Ollama returned status {resp.status_code} for '{target_model}': {err_text}"
         except Exception as e:
             logger.warning(f"Ollama stream error: {e}")
             yield f"Cannot reach local Ollama server at {self.base_url}. Please start Ollama to chat with C.O.P.P.E.R."

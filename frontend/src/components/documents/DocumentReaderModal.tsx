@@ -171,14 +171,14 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
         </div>
 
         {/* Tab Navigation Toolbar */}
-        <div className="flex items-center justify-between px-6 py-2 bg-slate-950/60 border-b border-slate-800/80 text-xs font-mono">
-          <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-between px-6 py-2 bg-[#14060B]/90 border-b border-blush-100/[0.10] text-xs font-mono">
+          <div className="flex items-center gap-1 p-0.5 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.08]">
             <button
               onClick={() => setActiveTab("reader")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
                 activeTab === "reader"
-                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                  ? "bg-blush-100 text-burgundy-950 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
               <Eye size={13} />
@@ -187,10 +187,10 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={() => setActiveTab("search")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
                 activeTab === "search"
-                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                  ? "bg-blush-100 text-burgundy-950 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
               <Search size={13} />
@@ -199,10 +199,10 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={() => setActiveTab("analytics")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
                 activeTab === "analytics"
-                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                  ? "bg-blush-100 text-burgundy-950 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
               <ListFilter size={13} />
@@ -211,10 +211,10 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={() => setActiveTab("raw")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
                 activeTab === "raw"
-                  ? "bg-accent-500/20 text-accent-400 border border-accent-500/40 font-bold"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                  ? "bg-blush-100 text-burgundy-950 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
               <FileText size={13} />

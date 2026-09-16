@@ -198,6 +198,29 @@ class SemanticResponseCache:
         payload = f"{memory_context.strip()}::{temporal_date}"
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
+    @staticmethod
+    def is_error_response(text: str | None) -> bool:
+        if not text:
+            return True
+        t = text.strip()
+        if len(t) < 5 or t.startswith("[Error:"):
+            return True
+        lower = t.lower()
+        error_indicators = [
+            "cannot reach local ollama",
+            "cannot reach the local ollama",
+            "please start ollama",
+            "please launch ollama",
+            "ollama returned status",
+            "ollama model",
+            "make sure to run 'ollama pull",
+            "run 'ollama pull",
+            "ollama connection error",
+            "ollama stream error",
+            "connection refused",
+        ]
+        return any(ind in lower for ind in error_indicators)
+
     async def lookup(self, query: str, context_hash: str = "") -> CacheLookupResult:
         """
         Before inference, compute query embedding and search cache with cosine similarity.
@@ -217,16 +240,19 @@ class SemanticResponseCache:
         # 1. Fast in-memory exact match (<0.1ms)
         if norm_query in self._exact_cache:
             entry = self._exact_cache[norm_query]
-            if now - entry.get("timestamp", 0) <= entry.get("ttl", self.TTL_FACTUAL):
+            resp_text = entry.get("response_text", "")
+            if self.is_error_response(resp_text):
+                self._exact_cache.pop(norm_query, None)
+            elif now - entry.get("timestamp", 0) <= entry.get("ttl", self.TTL_FACTUAL):
                 if not entry.get("is_context_dependent") or entry.get("context_hash") == context_hash:
                     t1 = time.perf_counter()
                     latency_ms = round((t1 - t0) * 1000, 3)
                     self._hits += 1
                     self._total_time_saved_ms += 4500.0
-                    self._tokens_saved += len(entry.get("response_text", "").split())
+                    self._tokens_saved += len(resp_text.split())
                     return CacheLookupResult(
                         status="hit",
-                        cached_response=entry.get("response_text"),
+                        cached_response=resp_text,
                         agent_type=entry.get("agent_type"),
                         similarity=1.0,
                         category=entry.get("category"),
@@ -240,17 +266,20 @@ class SemanticResponseCache:
         if exact_raw:
             try:
                 exact_data = json.loads(exact_raw)
-                if now - exact_data.get("timestamp", 0) <= exact_data.get("ttl", self.TTL_FACTUAL):
+                resp_text = exact_data.get("response_text", "")
+                if self.is_error_response(resp_text):
+                    pass
+                elif now - exact_data.get("timestamp", 0) <= exact_data.get("ttl", self.TTL_FACTUAL):
                     if not exact_data.get("is_context_dependent") or exact_data.get("context_hash") == context_hash:
                         t1 = time.perf_counter()
                         latency_ms = round((t1 - t0) * 1000, 3)
                         self._hits += 1
                         self._total_time_saved_ms += 4500.0
-                        self._tokens_saved += len(exact_data.get("response_text", "").split())
+                        self._tokens_saved += len(resp_text.split())
                         self._exact_cache[norm_query] = exact_data
                         return CacheLookupResult(
                             status="hit",
-                            cached_response=exact_data.get("response_text"),
+                            cached_response=resp_text,
                             agent_type=exact_data.get("agent_type"),
                             similarity=1.0,
                             category=exact_data.get("category"),
@@ -289,6 +318,17 @@ class SemanticResponseCache:
             is_context_dep = meta.get("is_context_dependent", False)
             stored_hash = meta.get("context_hash", "")
             agent_type = meta.get("agent_type", "chat")
+
+            # Invalidation Rule 0: Corrupted / Error Response Eviction
+            if self.is_error_response(doc):
+                try:
+                    if match_id:
+                        self.collection.delete(ids=[match_id])
+                except Exception:
+                    pass
+                self._exact_cache.pop(norm_query, None)
+                self._misses += 1
+                return CacheLookupResult(status="miss", similarity=similarity)
 
             # Invalidation Rule 1: TTL Expiration
             if now - created_at > ttl:
@@ -375,7 +415,7 @@ class SemanticResponseCache:
             return None
 
         # Ignore trivial short responses or errors
-        if len(response.strip()) < 5 or response.strip().startswith("[Error:"):
+        if self.is_error_response(response):
             return None
 
         try:

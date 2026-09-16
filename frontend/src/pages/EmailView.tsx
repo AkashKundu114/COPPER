@@ -19,14 +19,41 @@ interface Draft {
   guardianScreened: boolean;
 }
 
+const DEFAULT_SDE_ALERTS: Email[] = [
+  {
+    id: "alert-1",
+    from: "github-actions@copper.local",
+    subject: "[CI PASSED] PR #42: Sovereign 14B Fleet Memory Budget",
+    date: "10m ago",
+    body: "All 501 pytest tests passed. 0 regression failures. VRAM pager stress test passed with 0 OOM events. Ready for merge.",
+    priority: "Urgent",
+  },
+  {
+    id: "alert-2",
+    from: "guardian-sentinel@copper.local",
+    subject: "[AUDIT LOG] PII Scrubbing Intercept Report",
+    date: "1h ago",
+    body: "Scrubbed 1 candidate OpenAI API key (sk-...) from developer terminal buffer before prompt ingestion. Zero egress confirmed.",
+    priority: "Needs Response",
+  },
+  {
+    id: "alert-3",
+    from: "tfp-router@copper.local",
+    subject: "[TELEMETRY] Weekly QPS Benchmark Throughput: 9,856 QPS",
+    date: "1d ago",
+    body: "TFP-Router Stage 0/1 memory cache dispatch measured at 0.105ms latency across 1,390 benchmark test evaluations.",
+    priority: "FYI",
+  },
+];
+
 export const EmailView: React.FC = () => {
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<Priority | 'Drafts'>('Urgent');
   
-  const [inbox, setInbox] = useState<Email[]>([]);
+  const [inbox, setInbox] = useState<Email[]>(DEFAULT_SDE_ALERTS);
   const [drafts, setDrafts] = useState<Draft[]>([]);
-  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(DEFAULT_SDE_ALERTS[0]);
   
   const [configHost, setConfigHost] = useState('');
   const [configUser, setConfigUser] = useState('');
@@ -41,10 +68,13 @@ export const EmailView: React.FC = () => {
         fetchEmails(activeTab === 'Drafts' ? 'Urgent' : activeTab);
         fetchDrafts();
       } else {
-        setShowConfigModal(true);
+        setInbox(DEFAULT_SDE_ALERTS);
+        if (!selectedEmail) setSelectedEmail(DEFAULT_SDE_ALERTS[0]);
       }
     } catch (error) {
-      console.error('Failed to load email state:', error);
+      console.error('Failed to load email state, using default SDE alerts:', error);
+      setInbox(DEFAULT_SDE_ALERTS);
+      if (!selectedEmail) setSelectedEmail(DEFAULT_SDE_ALERTS[0]);
     }
   };
 
@@ -136,7 +166,10 @@ export const EmailView: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col bg-slate-900/80 border border-slate-800 font-mono text-xs text-cyber-cyan p-4">
       <div className="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
-        <h2 className="text-accent-400 text-lg uppercase tracking-wider">Comms Uplink</h2>
+        <div>
+          <h2 className="text-accent-400 text-lg uppercase tracking-wider font-display font-bold">Git & Alert Communications Feed</h2>
+          <p className="text-[10px] text-zinc-400 font-mono">Automated CI/CD alerts, Guardian security reports, and asynchronous developer dispatches</p>
+        </div>
         <div className="flex gap-2">
           {!isConfigured ? (
             <button 

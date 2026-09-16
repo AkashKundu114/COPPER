@@ -22,6 +22,7 @@ import {
   GitBranch,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThinkingOrb, type OrbState } from "thinking-orbs";
 import { MarkdownContent } from "./MarkdownContent";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
 import { TaskGraphVisualizer } from "./TaskGraphVisualizer";
@@ -449,32 +450,49 @@ export function MessageFeed({
         </div>
       )}
 
-      {thinking && activeAgent && !activeTaskGraph && (
-        <div
-          role="status"
-          aria-live="polite"
-          aria-label={`Neural reasoning active: ${agentStats[activeAgent]?.name || activeAgent} executing cognitive tasks across local agent mesh`}
-          className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono"
-        >
-          <div className="flex items-center gap-2 text-xs text-blush-100">
-            <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" aria-hidden="true" />
-            <span className="font-display font-bold tracking-wider uppercase">Neural Reasoning & Tool Execution Active...</span>
-          </div>
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-blush-100/25 bg-[#1A0A0F]/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)]">
-            <div className="w-8 h-8 rounded-xl bg-blush-100/15 border border-blush-100/30 flex items-center justify-center flex-shrink-0 shadow-sm" aria-hidden="true">
-              <Cpu size={14} className="text-blush-100 animate-pulse" />
+      {thinking && activeAgent && !activeTaskGraph && (() => {
+        const lower = activeAgent.toLowerCase();
+        let orbState: OrbState = "working";
+        if (lower.includes("research") || lower.includes("doc") || lower.includes("search")) orbState = "searching";
+        else if (lower.includes("code") || lower.includes("developer") || lower.includes("eval")) orbState = "solving";
+        else if (lower.includes("voice") || lower.includes("audio") || lower.includes("mic")) orbState = "listening";
+        else if (lower.includes("sync") || lower.includes("mesh") || lower.includes("fleet")) orbState = "connecting";
+        else if (lower.includes("rfc") || lower.includes("write") || lower.includes("synth")) orbState = "weaving";
+        else if (lower.includes("creative") || lower.includes("prompt")) orbState = "composing";
+        else if (lower.includes("atlas") || lower.includes("graph") || lower.includes("shape")) orbState = "shaping";
+
+        return (
+          <div
+            role="status"
+            aria-live="polite"
+            aria-label={`Neural reasoning active: ${agentStats[activeAgent]?.name || activeAgent} executing cognitive tasks across local agent mesh`}
+            className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono"
+          >
+            <div className="flex items-center gap-2 text-xs text-blush-100">
+              <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" aria-hidden="true" />
+              <span className="font-display font-bold tracking-wider uppercase">Neural Reasoning Active...</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[13px] text-white font-display font-bold">
-                {agentStats[activeAgent]?.name || activeAgent}
-              </span>
-              <span className="text-[10.5px] text-blush-300/60 font-mono">
-                Executing cognitive tasks across local agent mesh...
-              </span>
+            <div className="flex items-center gap-4 p-4 rounded-2xl border border-blush-100/25 bg-[#1A0A0F]/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)]">
+              <div className="w-16 h-16 rounded-2xl bg-black/50 border border-blush-100/20 flex items-center justify-center flex-shrink-0 shadow-inner overflow-hidden">
+                <ThinkingOrb state={orbState} size={64} theme="dark" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[13.5px] text-white font-display font-bold truncate">
+                    {agentStats[activeAgent]?.name || activeAgent}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-blush-100/10 text-blush-200 border border-blush-100/20 uppercase">
+                    {orbState}
+                  </span>
+                </div>
+                <span className="text-[11px] text-blush-300/70 font-mono mt-0.5">
+                  Hand-tuned neural cognitive synthesis in progress...
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

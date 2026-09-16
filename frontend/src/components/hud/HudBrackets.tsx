@@ -17,17 +17,6 @@ export const HudCard: React.FC<HudCardProps> = ({
   active = false,
   glow = "blush",
 }) => {
-  const cornerBorder =
-    glow === "copper"
-      ? "border-accent"
-      : glow === "amber"
-      ? "border-[#ffaa00]"
-      : glow === "green"
-      ? "border-[#5fa88f]"
-      : glow === "cyan"
-      ? "border-cyber-cyan"
-      : "border-blush-100";
-
   const borderClass =
     glow === "copper"
       ? "border-accent/35 hover:border-accent/65"
@@ -45,12 +34,6 @@ export const HudCard: React.FC<HudCardProps> = ({
         active ? "hud-card-active" : ""
       } ${className}`}
     >
-      {/* 4 Tech Corner Brackets */}
-      <span className={`absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 ${cornerBorder} pointer-events-none rounded-tl-sm`} />
-      <span className={`absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 ${cornerBorder} pointer-events-none rounded-tr-sm`} />
-      <span className={`absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 ${cornerBorder} pointer-events-none rounded-bl-sm`} />
-      <span className={`absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 ${cornerBorder} pointer-events-none rounded-br-sm`} />
-
       {/* Optional Top Right Technical Metadata Badge */}
       {(tag || subtag) && (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-text-muted select-none pointer-events-none">

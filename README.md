@@ -43,14 +43,14 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback.
 - **501+ Pytest Tests Passing:** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization.
-- **34 Quantized Local GGUF / ONNX Models (51.08 GB):** Complete master fleet (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Qwen2.5-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and 14 micro-subagents).
+- **Local GGUF / ONNX Model Fleet (~47 GB / 30 Orchestrated Agents):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
 ---
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 501+ passing unit/integration tests, and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework across 34 quantized local models (`Llama-3.1-8B-abliterated`, `Qwen2.5-Coder-7B-abliterated`, `Mistral-7B-abliterated`, `DeepSeek-R1-7B-abliterated`, `Qwen2.5-VL-7B/3B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 501+ passing unit/integration tests, and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS dispatch)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
@@ -146,18 +146,42 @@ C.O.P.P.E.R. v2.5 introduces an autonomous ambient layer that runs alongside dai
 
 ---
 
-## Model & Subagent Topology (26 Artifacts / 39.5 GB)
+## Model & Subagent Topology (Master Fleet: ~47 GB Local Footprint)
 
-| Tier | Model Architecture | Quantization | Size | Core Specialization |
+### 1. Sovereign Core Heavyweights (12B – 14B Cognitive Tier)
+*Loaded on-demand into single active GPU slot (5.2–6.4 GB VRAM) with automatic idle eviction after turn:*
+
+| Role / Agent Codename | Base Model Architecture | Quantization | Disk Size | Core Specialization |
 | :--- | :--- | :---: | :---: | :--- |
-| **Chat / Core** | `Meta-Llama-3.1-8B-Instruct` | Q4_K_M | 4.58 GB | Primary conversational companion & task coordinator |
-| **Coding (AXIS)** | `Qwen2.5-Coder-7B-Instruct` | Q4_K_M | 4.36 GB | Full-stack software engineering & sandbox testing |
-| **Automation** | `Mistral-7B-Instruct-v0.3` | Q4_K_M | 4.07 GB | OS file operations, window management & system tools |
-| **Reasoning** | `DeepSeek-R1-Distill-Qwen-7B` | Q4_K_M | 4.36 GB | Complex multi-step reasoning & research synthesis |
-| **Vision Primary** | `Qwen2-VL-7B-Instruct` | Q4_K_M | 4.36 GB | Full screenshot inspection & architectural diagrams |
-| **Vision Fast** | `Qwen2-VL-2B-Instruct` | Q4_K_M | 940 MB | Fast UI bounding box localization & OCR extraction |
-| **Embeddings** | `nomic-embed-text-v1.5` | Q4_K_M | 80 MB | ChromaDB 8192-dim semantic vector memory |
-| **14 Micro-Subagents** | `Llama-3.2`, `Qwen2.5`, `SmolLM2`, `Falcon3`, `Gemma-2`, `Granite-3.1` (360M - 3B) | Q4_K_M | ~16 GB total | Micro-routing, AST linting, git commits, SQL queries, shell validation |
+| **Chat & Meta (ATLAS / COPPER)** | `Qwen2.5-14B-Instruct` (+ QLoRA) | IQ3_XS | 5.95 GB | Primary conversational companion, intent decomposition & self-evolution |
+| **Coding Architect (VULCAN / AXIS)** | `Qwen2.5-Coder-14B-Instruct-abliterated` | IQ3_XS | 5.95 GB | Full-stack software engineering, refactoring & sandbox debugging |
+| **Cognitive Reasoner (PROMETHEUS)** | `DeepSeek-R1-Distill-Qwen-14B` | IQ3_XS | 5.95 GB | Deep chain-of-thought mathematical proofing & scientific research |
+| **Documenter & Synthesis (SCRIBE)** | `phi-4` (14B) | IQ3_XS | 5.82 GB | Authoritative reports, multi-format synthesis (PDF, LaTeX, Markdown) |
+| **System Automator (DAEMON)** | `Mistral-Nemo-Instruct-2407` (12.2B) | IQ3_M | 5.33 GB | Deterministic tool calling, OS shell execution & CLI pipeline coordination |
+
+### 2. Resident Mini Models & Specialized Subagents ($\le$ 3B)
+*Resident in background for sub-millisecond reflexes, safety checks, and memory extraction:*
+
+| Role / Agent Codename | Base Model Architecture | Quantization | Disk Size | Core Specialization |
+| :--- | :--- | :---: | :---: | :--- |
+| **Gatekeeper & Firewall (AEGIS)** | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 1.04 GB | Always-on zero-latency firewall, PII redaction & prompt injection defense |
+| **Always-On Router (MERCURY)** | `Qwen2.5-1.5B-Instruct` | Q4_K_M | 1.04 GB | Reflex intent classification, task dispatch & trivial query short-circuiting |
+| **Code Linter (FORGE)** | `Qwen2.5-Coder-3B-Instruct` | Q4_K_M | 1.96 GB | AST syntax linting, docstring generation & git commit formatting |
+| **Shell Safety Validator (WARDEN)** | `Qwen2.5-Coder-3B-Instruct` | Q4_K_M | 1.96 GB | Pre-flight terminal and Docker command parameter validation |
+| **Diagnostics & Patching (CRUCIBLE)**| `DeepSeek-R1-Distill-Qwen-1.5B` | Q4_K_M | 1.04 GB | Stack trace analysis, self-healing patch proposals & step execution planning |
+| **Epistemic Memory (CHRONOS / SPIDER)**| `SmolLM2-1.7B-Instruct` | Q4_K_M | 0.98 GB | Continuous fact extraction for ChromaDB & HTML/DOM content compression |
+| **SQL & Schema (ORACLE)** | `granite-3.2-2b-instruct` | Q4_K_M | 1.44 GB | Parameterized SQL query generation & JSON schema verification |
+
+### 3. Vision, Multimodal Audio & Local Image Studio
+
+| Capability | Engine / Architecture | Format | Disk Size | Specialization |
+| :--- | :--- | :---: | :---: | :--- |
+| **Vision Primary (ARGUS)** | `Qwen2.5-VL-3B-Instruct` | Q4_K_M | 1.80 GB | UI coordinate localization, bounding boxes & desktop OCR |
+| **Image Studio (PICASSO)** | `SD-Turbo` (`sd_turbo.safetensors`)| FP16 | 4.86 GB | 100% offline 1-step real-time local image generation studio |
+| **Speech-to-Text (STT)** | `Whisper Large v3 Turbo` | GGUF/Bin | 834 MB | Zero-egress high-accuracy local voice transcription |
+| **Neural Speech (TTS)** | `Kokoro-82M` + `Piper ONNX` | ONNX | 436 MB | Natural voice synthesis with real-time waveform equalization |
+| **Acoustic Wake Word** | `openWakeWord` (`hey_copper`) | ONNX | 2.5 MB | Always-listening CPU-only "Hey COPPER" acoustic trigger |
+| **Vector Embeddings** | `bge-reranker-v2-m3` + `nomic-embed` | GGUF | 498 MB | 8192-dim vector memory indexing & semantic reranking |
 
 ---
 

@@ -9,9 +9,14 @@ import {
   Radio,
   Eye,
   Trash2,
+  Sliders,
+  Sparkles,
 } from "lucide-react";
-import { HolographicCore, type CompanionCoreState } from "../components/hud/HolographicCore";
+import { ThinkingOrb, type CompanionCoreState } from "../components/hud/ThinkingOrb";
+import { ThinkingOrb as OfficialThinkingOrb, type OrbState } from "thinking-orbs";
+import { TactileDial } from "../components/common/TactileDial";
 import { VisionViewfinder } from "../components/hud/VisionViewfinder";
+import { soundFX } from "../lib/soundFX";
 import { type ChatLine } from "../hooks/useBrainSocket";
 import { API_BASE } from "../lib/api";
 
@@ -25,6 +30,18 @@ interface CompanionHUDViewProps {
   clearChat?: () => void;
 }
 
+const NINE_ORB_STATES: OrbState[] = [
+  "working",
+  "searching",
+  "solving",
+  "listening",
+  "connecting",
+  "weaving",
+  "composing",
+  "breathing",
+  "shaping",
+];
+
 export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   lines,
   thinking,
@@ -37,10 +54,20 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   const [handsFree, setHandsFree] = useState<boolean>(() => {
     return localStorage.getItem("copper_continuous_voice") === "true";
   });
+  const [orbEngine, setOrbEngine] = useState<"dots" | "plasma">(() => {
+    return (localStorage.getItem("copper_orb_engine") as "dots" | "plasma") || "dots";
+  });
+  const [activeDotsPreset, setActiveDotsPreset] = useState<OrbState | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [showVision, setShowVision] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [showDials, setShowDials] = useState(true);
+  const [muted, setMuted] = useState(() => soundFX.isMuted());
+
+  // Tactile Dials parameters (inspired by dialkit.dev)
+  const [speechRate, setSpeechRate] = useState(1.0);
+  const [micSensitivity, setMicSensitivity] = useState(75);
+  const [volumeLevel, setVolumeLevel] = useState(85);
 
   // Audio & VAD Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -65,6 +92,15 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   if (speaking) coreState = "speaking";
   else if (thinking) coreState = "thinking";
   else if (isRecording) coreState = "listening";
+
+  // Determine official hand-tuned ThinkingOrb state (from libraries.dev/orbs)
+  let autoDotsState: OrbState = "breathing";
+  if (speaking) autoDotsState = "weaving";
+  else if (thinking) autoDotsState = "solving";
+  else if (isRecording) autoDotsState = "listening";
+  else if (handsFree) autoDotsState = "connecting";
+
+  const effectiveDotsState: OrbState = activeDotsPreset || autoDotsState;
 
   // Toggle Hands-Free Continuous Voice Mode
   const toggleHandsFree = () => {
@@ -151,7 +187,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
                   formData.append("file", blob, "voice.webm");
 
                   try {
-                    const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+                    const res = await fetch(`${API_BASE}/voice/transcribe`, {
                       method: "POST",
                       body: formData,
                     });
@@ -228,7 +264,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           const formData = new FormData();
           formData.append("file", blob, "voice.webm");
           try {
-            const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+            const res = await fetch(`${API_BASE}/voice/transcribe`, {
               method: "POST",
               body: formData,
             });
@@ -283,7 +319,42 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowVision(!showVision)}
+            onClick={() => {
+              soundFX.play("toggle");
+              const next = orbEngine === "dots" ? "plasma" : "dots";
+              setOrbEngine(next);
+              localStorage.setItem("copper_orb_engine", next);
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              orbEngine === "dots"
+                ? "bg-blush-100/20 border-blush-100 text-blush-100 shadow-[0_0_15px_rgba(246,230,234,0.25)]"
+                : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
+            }`}
+            title="Toggle between Libraries.dev Dotted Orb and Fluid Plasma HUD Core"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{orbEngine === "dots" ? "ORB: DOTTED" : "ORB: PLASMA"}</span>
+          </button>
+          <button
+            onClick={() => {
+              soundFX.play("toggle");
+              setShowDials(!showDials);
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              showDials
+                ? "bg-accent/15 border-accent text-accent shadow-[0_0_12px_rgba(201,124,76,0.25)]"
+                : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
+            }`}
+            title="Toggle Tactile Telemetry Dials"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">CONTROLS</span>
+          </button>
+          <button
+            onClick={() => {
+              soundFX.play("toggle");
+              setShowVision(!showVision);
+            }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
               showVision
                 ? "bg-blush-100/20 border-blush-100 text-blush-100 shadow-[0_0_15px_rgba(246,230,234,0.25)]"
@@ -295,8 +366,9 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           </button>
           <button
             onClick={() => {
-              setMuted(!muted);
-              onSend(muted ? "unmute voice" : "mute voice");
+              const nextMuted = soundFX.toggleMute();
+              setMuted(nextMuted);
+              onSend(nextMuted ? "mute voice" : "unmute voice");
             }}
             className={`p-2 rounded-xl border transition-all cursor-pointer ${
               muted ? "bg-red-500/20 border-red-500 text-red-400" : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
@@ -308,24 +380,130 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </div>
       </div>
 
-      {/* Main Center Stage: 3D Holographic Core & Vision Viewfinder */}
-      <div className="flex-1 w-full max-w-6xl flex items-center justify-center relative my-4">
-        {/* Holographic Core Centered */}
+      {/* Main Center Stage: Thinking Orb Visualizer & Tactile Dials Shelf */}
+      <div className="flex-1 w-full max-w-6xl flex items-center justify-center relative my-2">
+        {/* Thinking Orb Centered */}
         <div className="relative flex flex-col items-center justify-center">
-          <HolographicCore
-            state={coreState}
-            audioLevel={audioLevel}
-            size={420}
-            className="transition-transform duration-300 hover:scale-105"
-            onInteractivityClick={() => {
-              if (speaking) stopAudio();
-              else handleManualPushToTalk();
-            }}
-          />
+          {orbEngine === "dots" ? (
+            <div className="flex flex-col items-center justify-center p-6 rounded-3xl liquid-glass-card shadow-[0_0_50px_rgba(246,230,234,0.15)] border border-blush-100/25 max-w-md w-full">
+              <div
+                className="scale-[2.4] my-10 cursor-pointer transition-transform hover:scale-[2.5] active:scale-[2.3]"
+                onClick={() => {
+                  soundFX.play("click");
+                  if (speaking) stopAudio();
+                  else handleManualPushToTalk();
+                }}
+                title="Click to interact with Companion"
+              >
+                <OfficialThinkingOrb
+                  state={effectiveDotsState}
+                  size={64}
+                  theme="dark"
+                  speed={speechRate}
+                />
+              </div>
+
+              {/* 9 Hand-Tuned States Interactive Selector */}
+              <div className="flex flex-col items-center gap-2 mt-4 w-full">
+                <div className="flex items-center justify-between w-full px-1 text-[10px] font-mono text-zinc-400">
+                  <span>STATE: <strong className="text-blush-100 uppercase">{effectiveDotsState}</strong></span>
+                  {activeDotsPreset && (
+                    <button
+                      onClick={() => setActiveDotsPreset(null)}
+                      className="text-accent hover:underline cursor-pointer"
+                    >
+                      RESET TO AUTO
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-1.5 w-full">
+                  {NINE_ORB_STATES.map((st) => (
+                    <button
+                      key={st}
+                      onClick={() => {
+                        soundFX.play("tab");
+                        setActiveDotsPreset(st);
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
+                        effectiveDotsState === st
+                          ? "bg-blush-100 text-burgundy-950 font-bold shadow-md"
+                          : "bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/5"
+                      }`}
+                    >
+                      {st}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <ThinkingOrb
+              state={coreState}
+              audioLevel={audioLevel}
+              size={380}
+              className="transition-transform duration-300 hover:scale-[1.03]"
+              onInteractivityClick={() => {
+                if (speaking) stopAudio();
+                else handleManualPushToTalk();
+              }}
+            />
+          )}
           <span className="font-display text-[12px] font-bold text-blush-200/80 tracking-[0.22em] uppercase mt-3">
-            {speaking ? "COPPER SPEAKING" : thinking ? "SYNAPSE PROCESSING" : isRecording ? "LISTENING // DUPLEX" : "STANDBY // AKASH"}
+            {speaking
+              ? "COPPER SPEAKING"
+              : thinking
+              ? "SYNAPSE PROCESSING"
+              : isRecording
+              ? "LISTENING // DUPLEX"
+              : "STANDBY // AKASH"}
           </span>
         </div>
+
+        {/* Tactile Dials Shelf (dialkit.dev inspiration) */}
+        <AnimatePresence>
+          {showDials && (
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              className="hidden lg:flex flex-col gap-5 absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl liquid-glass-card shadow-2xl z-10"
+            >
+              <span className="text-[10px] font-mono font-bold text-accent tracking-wider uppercase border-b border-white/10 pb-1.5 text-center">
+                ACOUSTIC DIALS
+              </span>
+              <TactileDial
+                label="VAD GAIN"
+                value={micSensitivity}
+                min={10}
+                max={100}
+                step={5}
+                unit="%"
+                size={76}
+                onChange={setMicSensitivity}
+              />
+              <TactileDial
+                label="VOICE RATE"
+                value={speechRate}
+                min={0.8}
+                max={1.6}
+                step={0.1}
+                size={76}
+                onChange={setSpeechRate}
+                formatValue={(v) => `${v.toFixed(1)}x`}
+              />
+              <TactileDial
+                label="PRESENCE"
+                value={volumeLevel}
+                min={0}
+                max={100}
+                step={5}
+                unit="%"
+                size={76}
+                onChange={setVolumeLevel}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Ambient Vision Dock (Right Drawer overlay) */}
         <AnimatePresence>
@@ -347,7 +525,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
       </div>
 
       {/* Recent Conversational Dialogue Overlays */}
-      <div className="w-full max-w-3xl flex flex-col gap-2.5 mb-4 z-10">
+      <div className="w-full max-w-3xl flex flex-col gap-2.5 mb-3 z-10">
         <AnimatePresence>
           {recentLines.map((line) => {
             const isUser = line.agent === "YOU" || line.agent === "user";
@@ -362,8 +540,8 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
                 <div
                   className={`max-w-[85%] px-4 py-2.5 rounded-2xl backdrop-blur-md text-sm border shadow-lg ${
                     isUser
-                      ? "bg-accent/20 border-accent/35 text-white rounded-br-sm"
-                      : "bg-[#1A0A0F]/90 border-blush-100/30 text-blush-100 rounded-bl-sm shadow-[0_0_20px_rgba(246,230,234,0.1)]"
+                      ? "bg-accent/20 border-accent/35 text-white rounded-br-sm shadow-[0_4px_16px_rgba(201,124,76,0.2)]"
+                      : "liquid-glass text-blush-100 rounded-bl-sm shadow-[0_0_20px_rgba(246,230,234,0.1)]"
                   }`}
                 >
                   <p className="leading-relaxed font-sans">{line.text}</p>
@@ -374,20 +552,26 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Bottom Control Deck */}
-      <div className="w-full max-w-4xl flex items-center justify-between gap-4 z-10 bg-[#1A0A0F]/85 p-3.5 rounded-2xl border border-blush-100/15 backdrop-blur-2xl shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.1)]">
+      {/* Bottom Control Deck (Liquid Glass) */}
+      <div className="w-full max-w-4xl flex items-center justify-between gap-4 z-10 liquid-glass p-3 rounded-2xl shadow-[0_16px_40px_rgba(10,3,6,0.5)]">
         {/* Quick Directives */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => onSend("use a smaller model")}
-            className="px-3 py-1.5 rounded-xl bg-blush-100/[0.05] border border-blush-100/15 hover:border-blush-100/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            onClick={() => {
+              soundFX.play("click");
+              onSend("use a smaller model");
+            }}
+            className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:border-blush-100/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <Cpu className="w-3 h-3 text-blush-100" />
             1B MINI
           </button>
           <button
-            onClick={() => onSend("clear vram")}
-            className="px-3 py-1.5 rounded-xl bg-blush-100/[0.05] border border-blush-100/15 hover:border-red-500/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            onClick={() => {
+              soundFX.play("click");
+              onSend("clear vram");
+            }}
+            className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:border-red-500/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <Trash2 className="w-3 h-3 text-red-400" />
             PURGE VRAM
@@ -409,7 +593,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
 
           {speaking && (
             <button
-              onClick={stopAudio}
+              onClick={() => {
+                soundFX.play("click");
+                stopAudio();
+              }}
               className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-400 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
             >
               BARGE-IN
@@ -419,8 +606,11 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
 
         {/* Clean Dialogue button */}
         <button
-          onClick={clearChat}
-          className="px-3 py-1.5 rounded-xl bg-blush-100/[0.05] border border-blush-100/15 hover:bg-blush-100/[0.1] text-zinc-400 hover:text-white text-[10.5px] transition-all cursor-pointer"
+          onClick={() => {
+            soundFX.play("click");
+            clearChat?.();
+          }}
+          className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:bg-white/[0.08] text-zinc-400 hover:text-white text-[10.5px] transition-all cursor-pointer"
         >
           CLEAR LOG
         </button>

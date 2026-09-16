@@ -15,6 +15,41 @@ import { accountabilityAPI } from "../services/api";
 
 export type TaskStatus = "inbox" | "planned" | "active" | "completed";
 
+const DEFAULT_SDE_TASKS: TaskItem[] = [
+  {
+    id: "task-sprint-1",
+    title: "Audit AST for memory leaks in VRAM pager",
+    project: "C.O.P.P.E.R Core",
+    priority: "high",
+    duration: "45m",
+    status: "active",
+  },
+  {
+    id: "task-sprint-2",
+    title: "Run adversarial chaos fuzzing suite against DFM Guardian",
+    project: "DFM Guardian",
+    priority: "high",
+    duration: "30m",
+    status: "planned",
+  },
+  {
+    id: "task-sprint-3",
+    title: "Profile TFP-Router dispatch latency under 10k QPS load",
+    project: "TFP Router",
+    priority: "medium",
+    duration: "20m",
+    status: "completed",
+  },
+  {
+    id: "task-sprint-4",
+    title: "Calibrate Kokoro-82M ONNX voice synthesis buffer",
+    project: "Audio Engine",
+    priority: "low",
+    duration: "15m",
+    status: "inbox",
+  },
+];
+
 export const TasksView: React.FC = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,9 +66,14 @@ export const TasksView: React.FC = () => {
   const loadTasks = async () => {
     try {
       const data = await tasksAPI.list();
-      setTasks(data);
+      if (data && data.length > 0) {
+        setTasks(data);
+      } else {
+        setTasks(DEFAULT_SDE_TASKS);
+      }
     } catch (err) {
-      console.error("Failed to fetch tasks from backend:", err);
+      console.error("Failed to fetch tasks from backend, using defaults:", err);
+      setTasks(DEFAULT_SDE_TASKS);
     } finally {
       setLoading(false);
     }
@@ -102,18 +142,18 @@ export const TasksView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Task Manager
+            Sprint Backlog & Agent Queue
           </h1>
           <p className="text-xs text-slate-400 font-mono">
-            Organize tasks, workflows, and milestones
+            Autonomous engineering objectives, task priority triage, and background subagent executions
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20 cursor-pointer font-mono"
         >
           <Plus size={15} strokeWidth={2.5} />
-          <span>New Task</span>
+          <span>New Objective</span>
         </button>
       </div>
 

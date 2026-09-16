@@ -142,53 +142,53 @@ export function AgentRegistry() {
       </div>
 
       {/* Main Tab Switcher Bar */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] w-fit overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab("core")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "core"
-              ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
           <Cpu size={14} />
-          <span>Core Fleet & Cognitive Tiers ({AGENTS.length})</span>
+          <span>Core Agents ({AGENTS.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("personas")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "personas"
-              ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
           <Users size={14} />
-          <span>Agency Specialist Personas ({catalogSummary?.total_personas || 264})</span>
+          <span>Specialist Personas ({catalogSummary?.total_personas || 264})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("scientific")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "scientific"
-              ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
           <FlaskConical size={14} />
-          <span>Scientific Agent Skills ({catalogSummary?.total_scientific_skills || 165})</span>
+          <span>Scientific Skills ({catalogSummary?.total_scientific_skills || 165})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("tools")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "tools"
-              ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20"
-              : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
           <Wrench size={14} />
-          <span>Active Tools Armor ({catalogSummary?.total_tools || 36})</span>
+          <span>Tools & MCP ({catalogSummary?.total_tools || 36})</span>
         </button>
       </div>
 

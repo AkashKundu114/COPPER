@@ -291,7 +291,7 @@ describe("Accessibility (a11y) Audit Suite", () => {
       expect(activeBtn).toHaveAttribute("aria-current", "page");
     });
 
-    it("renders TopBar with role='banner' and radiogroup for sensor modes", () => {
+    it("renders TopBar with role='banner' and command palette button", () => {
       render(
         <TopBar
           sectionTitle="dashboard"
@@ -305,11 +305,8 @@ describe("Accessibility (a11y) Audit Suite", () => {
       const banner = screen.getByRole("banner", { name: /top bar controls and status/i });
       expect(banner).toBeInTheDocument();
 
-      const radiogroup = screen.getByRole("radiogroup", { name: /sensor display mode/i });
-      expect(radiogroup).toBeInTheDocument();
-
-      const radioOptions = screen.getAllByRole("radio");
-      expect(radioOptions.length).toBe(4);
+      const commandBtn = screen.getByRole("button", { name: /open command palette/i });
+      expect(commandBtn).toBeInTheDocument();
     });
   });
 });

@@ -252,7 +252,7 @@ function MainApp() {
 
   return (
     <div
-      className={`relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body transition-all duration-500 sensor-${mode}`}
+      className={`relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body transition-all duration-500 sensor-crt sensor-${mode}`}
     >
       {/* Accessible Skip to Content Link */}
       <a
@@ -262,10 +262,8 @@ function MainApp() {
         Skip to main content
       </a>
 
-      {/* CRT Scanline Overlay Strip */}
-      {mode === "crt" && (
-        <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-60" aria-hidden="true" />
-      )}
+      {/* Cyber CRT Scanline Overlay Strip & Vignette (Calm retro texture) */}
+      <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-12" aria-hidden="true" />
 
       <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
       <main

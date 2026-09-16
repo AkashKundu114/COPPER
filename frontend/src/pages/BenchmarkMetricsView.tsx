@@ -378,47 +378,47 @@ export const BenchmarkMetricsView: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex gap-2 border-b border-border pb-2 text-xs font-mono">
+      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] w-fit overflow-x-auto scrollbar-none text-xs font-mono">
         <button
           onClick={() => setActiveTab("live-telemetry")}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === "live-telemetry"
-              ? "bg-[#C97C4C]/20 text-[#C97C4C] border border-[#C97C4C]/40 shadow-sm"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
-          <Activity className="w-3.5 h-3.5 text-[#C97C4C]" /> Live Hardware
-          &amp; Tokens
+          <Activity className="w-3.5 h-3.5" />
+          <span>Hardware & Tokens</span>
         </button>
         <button
           onClick={() => setActiveTab("overview")}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+          className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
             activeTab === "overview"
-              ? "bg-accent/20 text-accent border border-accent/40 shadow-sm"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
-          Telemetry &amp; Latency Profiles
+          Latency Profiles
         </button>
         <button
           onClick={() => setActiveTab("models")}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+          className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
             activeTab === "models"
-              ? "bg-accent/20 text-accent border border-accent/40 shadow-sm"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
-          Model Comparison Matrix
+          Model Matrix
         </button>
         <button
           onClick={() => setActiveTab("prompts")}
-          className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+          className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
             activeTab === "prompts"
-              ? "bg-accent/20 text-accent border border-accent/40 shadow-sm"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+              ? "bg-blush-100 text-burgundy-950 shadow-sm"
+              : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
           }`}
         >
-          Prompt Evaluations &amp; Rationale
+          Prompt Evaluations
         </button>
       </div>
 

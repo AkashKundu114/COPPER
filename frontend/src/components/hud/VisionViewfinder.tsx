@@ -89,7 +89,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const base64Data = canvas.toDataURL("image/jpeg", 0.8).split(",")[1];
 
-        const res = await fetch(`${API_BASE}/api/v1/vision/observe`, {
+        const res = await fetch(`${API_BASE}/vision/observe`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

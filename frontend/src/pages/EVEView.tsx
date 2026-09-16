@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { Mic, Square, Loader2 } from "lucide-react";
+import { Mic, Square } from "lucide-react";
+import { ThinkingOrb } from "thinking-orbs";
 import { type ChatLine } from "../hooks/useBrainSocket";
 import { API_BASE } from "../lib/api";
 
@@ -88,7 +89,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
                 formData.append("file", audioBlob, "voice.webm");
                 
                 try {
-                  const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+                  const res = await fetch(`${API_BASE}/voice/transcribe`, {
                     method: "POST",
                     body: formData,
                   });
@@ -154,7 +155,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
         formData.append("file", audioBlob, "voice.webm");
 
         try {
-          const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+          const res = await fetch(`${API_BASE}/voice/transcribe`, {
             method: "POST",
             body: formData,
           });
@@ -268,7 +269,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
         {thinking && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex justify-start">
              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/10 rounded-tl-sm flex items-center gap-3">
-               <Loader2 className="w-5 h-5 text-accent animate-spin" />
+               <ThinkingOrb state="working" size={20} theme="dark" />
                <span className="text-accent/70 font-medium">Processing...</span>
              </div>
           </motion.div>

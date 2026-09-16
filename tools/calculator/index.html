@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C.O.P.P.E.R // Cyber-Scientific Calculator</title>
+  <style>
+    :root {
+      --bg: #0D0508;
+      --card: #170A0F;
+      --card-border: #3A1924;
+      --accent: #EE8C65;
+      --accent-glow: rgba(229, 140, 101, 0.4);
+      --text: #F6E6EA;
+      --text-muted: #8E717B;
+      --btn-num: #231018;
+      --btn-num-hover: #331823;
+      --btn-op: #381622;
+      --btn-op-hover: #4D1E2F;
+      --btn-action: #EE5C65;
+      --btn-action-text: #170A0F;
+      --btn-sci: #1E0E15;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent-glow);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .status-tag {
+      font-size: 10px;
+      background: rgba(229, 140, 101, 0.12);
+      border: 1px solid rgba(229, 140, 101, 0.3);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .display-screen {
+      background: rgba(9, 3, 5, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 100px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+    }
+
+    .display-screen:hover {
+      border-color: var(--accent);
+    }
+
+    .history-preview {
+      font-size: 13px;
+      color: var(--text-muted);
+      min-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 6px;
+    }
+
+    .main-value {
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--text);
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .sci-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 10px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:{
+      transform: scale(0.95);
+    }
+
+    .btn-num {
+      background: var(--btn-num);
+      color: var(--text);
+      border: 1px solid rgba(246, 230, 234, 0.05);
+    }
+
+    .btn-num:hover {
+      background: var(--btn-num-hover);
+      border-color: rgba(229, 140, 101, 0.2);
+    }
+
+    .btn-op {
+      background: var(--btn-op);
+      color: var(--accent);
+      border: 1px solid rgba(229, 140, 101, 0.15);
+    }
+
+    .btn-top-op {
+      background: #4A1521;
+      color: #FF7B8E;
+    }
+
+    .btn-sci {
+      background: var(--btn-sci);
+      color: var(--text-muted);
+      border: 1px solid rgba(246, 230, 234, 0.04);
+      font-size: 12px;
+      padding: 10px 6px;
+    }
+
+    .btn-action {
+      background: var(--btn-action);
+      color: var(--btn-action-text);
+      font-weight: 800;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .btn-span-2 {
+      grid-column: span 2;
+    }
+
+    .history-section {
+      margin-top: 16px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 14px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .history-list {
+      max-height: 110px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      background: var(--accent);
+      color: var(--btn-action-text);
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      opacity: 0;
+      transition: all 0.25s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span>C�OP P E R // CALC</span>
+      </div>
+      <span class="status-tag">LIVE : 5055</span>
+    </div>
+
+    <div class="display-screen" id="screen" onclick="copyCurrentResult()">
+      <div class="history-preview" id="expression"></div>
+      <div class="main-value" id="result">0</div>
+    </div>
+
+    <div class="sci-row">
+      <button class="btn-sci" onclick="inputSci('sin')">sin</button>
+      <button class="btn-sci" onclick="inputSci('cos')">cos</button>
+      <button class="btn-sci" onclick="inputSci('tan')">tan</button>
+      <button class="btn-sci" onclick="inputSci('sqrt')">√</button>
+      <button class="btn-sci" onclick="inputOp('^')">x�</button>
+      <button class="btn-sci" onclick="inputSci('log')">log</button>
+      <button class="btn-sci" onclick="inputSci('ln')">ln</button>
+      <button class="btn-sci" onclick="inputConst('pi')">π</button>
+    </div>
+
+    <div class="keypad">
+      <button class="btn-top-op" onclick="clearAll()">AC</button>
+      <button class="btn-op" onclick="deleteLast()">DEL</button>
+      <button class="btn-op" onclick="inputOp('%')">%</button>
+      <button class="btn-op" onclick="inputOp('/')">÷</button>
+
+      <button class="btn-num" onclick="inputNum('7')">7</button>
+      <button class="btn-num" onclick="inputNum('8')">8</button>
+      <button class="btn-num" onclick="inputNum('9')">9</button>
+      <button class="btn-op" onclick="inputOp('*')">×</button>
+
+      <button class="btn-num" onclick="inputNum('4')">4</button>
+      <button class="btn-num" onclick="inputNum('5')">5</button>
+      <button class="btn-num" onclick="inputNum('6')">6</button>
+      <button class="btn-op" onclick="inputOp('-')">−</button>
+
+      <button class="btn-num" onclick="inputNum('1')">1</button>
+      <button class="btn-num" onclick="inputNum('2')">2</button>
+      <button class="btn-num" onclick="inputNum('3')">3</button>
+      <button class="btn-op" onclick="inputOp('+')">+</button>
+
+      <button class="btn-num" onclick="inputNum('0')">0</button>
+      <button class="btn-num" onclick="inputNum('.')">.</button>
+      <button class="btn-action btn-span-2" onclick="calculate()">=</button>
+    </div>
+
+    <div class="history-section">
+      <div class="history-header">
+        <span>Session Tape</span>
+        <span style="cursor:pointer" onclick="clearHistoryLog()">Clear</span>
+      </div>
+      <div class="history-list" id="historyList">
+        <div style="font-size:11px; color: var(--text-muted); text-align:center; padding: 8px;">Ready for calculation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    let currentInput = '0';
+    let currentExpr = '';
+    let evaluated = false;
+    const historyData = [];
+
+    function updateDisplay() {
+      document.getElementById('result').innerText = currentInput;
+      document.getElementById('expression').innerText = currentExpr;
+    }
+
+    function inputNum(digit) {
+      if (evaluated) {
+        currentInput = digit;
+        currentExpr = '';
+        evaluated = false;
+      } else {
+        if (currentInput === '0' && digit !== '.') {
+          currentInput = digit;
+        } else {
+          if (digit === '.' && currentInput.includes('.')) return;
+          currentInput += digit;
+        }
+      }
+      updateDisplay();
+    }
+
+    function inputOp(op) {
+      if (evaluated) {
+        currentExpr = currentInput + ' ' + op + ' ';
+        currentInput = '0';
+        evaluated = false;
+      } else {
+        currentExpr += currentInput + ' ' + op + ' ';
+        currentInput = '0';
+      }
+      updateDisplay();
+    }
+
+    function inputSci(fn) {
+      const val = parseFloat(currentInput);
+      let res = 0;
+      switch (fn) {
+        case 'sin': res = Math.sin((val * Math.PI) / 180); break;
+        case 'cos': res = Math.cos((val * Math.PI) / 180); break;
+        case 'tan': res = Math.tan((val * Math.PI) / 180); break;
+        case 'sqrt': res = Math.sqrt(val); break;
+        case 'log': res = Math.log10(val); break;
+        case 'ln': res = Math.log(val); break;
+      }
+      res = parseFloat(res.toFixed(8));
+      currentExpr = fn + '(' + val + ')';
+      currentInput = String(res);
+      evaluated = true;
+      pushHistory(currentExpr, currentInput);
+      updateDisplay();
+    }
+
+    function inputConst(c) {
+      if (c === 'pi') currentInput = String(parseFloat(Math.PI.toFixed(8)));
+      if (c === 'e') currentInput = String(parseFloat(Math.E.toFixed(8)));
+      evaluated = false;
+      updateDisplay();
+    }
+
+    function clearAll() {
+      currentInput = '0';
+      currentExpr = '';
+      evaluated = false;
+      updateDisplay();
+    }
+
+    function deleteLast() {
+      if (currentInput.length > 1) currentInput = currentInput.slice(0, -1);
+      else currentInput = '0';
+      updateDisplay();
+    }
+
+    function calculate() {
+      let fullExpr = currentExpr + currentInput;
+      try {
+        let sanitized = fullExpr
+          .replace(÷/g, '/')
+          .replace(×p/g, '*')
+          .replace(−/g, '-')
+          .replace(/^/g, '**')
+          .replace(/%/g, '/100');
+
+        let result = Function('\"use strict\";return (' + sanitized + ')')();
+        if (!isFinite(result) || isNaN(result)) {
+          currentInput = 'Error';
+        } else {
+          result = Math.round(result * 1e10) / 1e10;
+          pushHistory(fullExpr, result);
+          currentExpr = fullExpr + ' =';
+          currentInput = String(result);
+        }
+      } catch (err) {
+        currentInput = 'Error';
+      }
+      evaluated = true;
+      updateDisplay();
+    }
+
+    function pushHistory(expr, res) {
+      historyData.unshift({ expr, res });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      if (historyData.length === 0) {
+        container.innerHTML = '<div style="font-size:11px; color: var(--text-muted); text-align:center; padding: 8px;">No calculations yet.</div>';
+        return;
+      }
+      container.innerHTML = historyData.map((h, i) => 
+        '<div class="history-item" onclick="recallHistory(' + i + ')">' +
+        'span>' + h.expr + '</span>' +
+        '<strong style="color:var(--accent)">= ' + h.res + '</strong>' +
+        '</div>'
+      ).join('');
+    }
+
+    function recallHistory(idx) {
+      const h = historyData[itx];
+      if (h) {
+        currentInput = String(h.res);
+        currentExpr = '';
+        evaluated = false;
+        updateDisplay();
+      }
+    }
+
+    function clearHistoryLog() {
+      historyData.length = 0;
+      renderHistory();
+    }
+
+    function copyCurrentResult() {
+      const text = document.getElementById('result').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const t = document.getElementById('toast');
+        t.innerText = 'Copied: ' + text;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2000);
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') inputNum(e.key);
+      else if (e.key === '.') inputNum('.');
+      else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') inputOp(e.key);
+      else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); calculate(); }
+      else if (e.key === 'Backspace') deleteLast();
+      else if (e.key === 'Escape') clearAll();
+    });
+  </script>
+</body>
+</html>

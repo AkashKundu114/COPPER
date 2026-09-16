@@ -7,8 +7,13 @@ import {
   Sparkles,
   Activity,
   Clock,
+  Code2,
+  GitBranch,
+  CheckSquare,
+  Brain,
+  Shield,
+  Layers,
 } from "lucide-react";
-import { TacticalGlobe } from "../components/hud/TacticalGlobe";
 import { HudCard } from "../components/hud/HudBrackets";
 import type { NavSection } from "../components/layout/Sidebar";
 
@@ -26,7 +31,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
       className="modern-page p-5 md:p-7 space-y-6 max-w-7xl mx-auto text-text select-none pb-16 font-mono"
     >
-      {/* Top Classified Mission Banner */}
+      {/* SDE Mission Command Header */}
       <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="p-6 md:p-7 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl">
         <div className="absolute -top-24 right-0 w-[28rem] h-[28rem] bg-blush-100/[0.08] rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 left-1/3 w-72 h-72 bg-accent/[0.09] rounded-full blur-3xl pointer-events-none" />
@@ -37,25 +42,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                 <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
                 DEFCON 5 // SYSTEM OPTIMAL
               </span>
-              <span className="px-2.5 py-1 rounded-full text-[10px] bg-blush-100/12 text-blush-100 border border-blush-100/30 font-bold">
-                PRIVATE AI WORKSPACE
+              <span className="px-2.5 py-1 rounded-full text-[10px] bg-blush-100/12 text-blush-100 border border-blush-100/30 font-bold flex items-center gap-1">
+                <GitBranch className="w-3 h-3 text-accent" /> COPPER (MAIN)
               </span>
               <span className="px-2.5 py-1 rounded-full text-[10px] bg-accent/15 text-accent border border-accent/30 font-bold">
-                100% AIR-GAPPED LOCALHOST
+                100% AIR-GAPPED SDE SUITE
               </span>
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-[-0.03em]">
-              Your intelligence, in motion.
+              Sovereign Engineering Cockpit
             </h1>
             <p className="text-xs text-blush-300/70 mt-1">
-              Operator: <span className="text-white font-bold">Akash</span> • C.O.P.P.E.R. v1.0.0 • 26 local models ready • zero egress
+              Autonomous 30-agent fleet ready • 14B Sovereign models loaded • Zero external egress
             </p>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
             <div className="p-3 rounded-2xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
               <span className="text-blush-300/60 block text-[9px] uppercase tracking-wider">
-                Intent Velocity
+                Router Velocity
               </span>
               <span className="text-blush-100 font-display font-bold text-sm">0.105 ms</span>
             </div>
@@ -67,14 +72,48 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             </div>
           </div>
         </div>
+
+        {/* Quick Developer Action Strip */}
+        <div className="mt-5 pt-4 border-t border-blush-100/[0.10] flex flex-wrap gap-2 relative z-10">
+          <button
+            onClick={() => onNavigate?.("chat")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold text-xs shadow-md hover:brightness-110 cursor-pointer font-mono"
+          >
+            <Code2 className="w-3.5 h-3.5" /> Start Coding Session
+          </button>
+          <button
+            onClick={() => onNavigate?.("projects")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+          >
+            <Layers className="w-3.5 h-3.5 text-accent" /> Repos & Workspaces
+          </button>
+          <button
+            onClick={() => onNavigate?.("tasks")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+          >
+            <CheckSquare className="w-3.5 h-3.5 text-blush-200" /> Sprint Queue
+          </button>
+          <button
+            onClick={() => onNavigate?.("security")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+          >
+            <Shield className="w-3.5 h-3.5 text-verdigris" /> Security Audit
+          </button>
+          <button
+            onClick={() => onNavigate?.("memory")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+          >
+            <Brain className="w-3.5 h-3.5 text-cyan-400" /> Epistemic Memory
+          </button>
+          <button
+            onClick={() => onNavigate?.("benchmarks")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+          >
+            <Activity className="w-3.5 h-3.5 text-amber-400" /> Live Telemetry & QPS
+          </button>
+        </div>
       </motion.div>
 
-      {/* Centerpiece: God's Eye 3D Holographic Globe & Orbital Satellite Reconnaissance */}
-      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="w-full">
-        <TacticalGlobe />
-      </motion.div>
-
-      {/* 3 Tactical Mission HUD Cards */}
       <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }} className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Mission Timeline */}
         <HudCard tag="TIMELINE" subtag="DAILY-OPS" glow="blush">

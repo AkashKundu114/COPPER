@@ -58,8 +58,8 @@ export const RoutingBenchmarkView: React.FC = () => {
     setLoading(true);
     try {
       const [cmRes, calRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/routing/confusion-matrix`).then((r) => r.json()),
-        fetch(`${API_BASE}/api/v1/routing/confidence-calibration`).then((r) => r.json()),
+        fetch(`${API_BASE}/routing/confusion-matrix`).then((r) => r.json()),
+        fetch(`${API_BASE}/routing/confidence-calibration`).then((r) => r.json()),
       ]);
       setCmData(cmRes);
       setCalData(calRes);

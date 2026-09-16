@@ -20,6 +20,7 @@ import {
   Workflow,
   BookOpen,
 } from "lucide-react";
+import { soundFX } from "../../lib/soundFX";
 
 export type NavSection =
   | "dashboard"
@@ -54,41 +55,36 @@ interface NavGroup {
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    category: "COMMAND & HUD",
+    category: "WORKSPACE",
     items: [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { id: "companion", label: "Companion HUD", icon: Radio },
-      { id: "chat", label: "Conversation", icon: MessageSquare },
-    ],
-  },
-  {
-    category: "COGNITIVE MESH",
-    items: [
-      { id: "agents", label: "Agent Registry", icon: Bot },
-      { id: "memory", label: "Memory Center", icon: Brain },
-      { id: "benchmarks", label: "Benchmarks", icon: BarChart3 },
-      { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
-      { id: "security", label: "Security Center", icon: Shield },
-    ],
-  },
-  {
-    category: "MISSION OPS",
-    items: [
-      { id: "today", label: "Today & Schedule", icon: Calendar },
-      { id: "tasks", label: "Tasks & Queue", icon: CheckSquare },
-      { id: "projects", label: "Projects", icon: Layers },
-      { id: "meetings", label: "Meetings & Audio", icon: Users },
-      { id: "email", label: "Email Delegation", icon: Mail },
-      { id: "research", label: "Research Hub", icon: BookOpen },
+      { id: "chat", label: "Pair-Programmer", icon: MessageSquare },
+      { id: "companion", label: "Voice Companion", icon: Radio },
+      { id: "projects", label: "Repositories", icon: Layers },
+      { id: "tasks", label: "Sprint Backlog", icon: CheckSquare },
+      { id: "research", label: "Research & Docs", icon: BookOpen },
       { id: "automations", label: "Automations", icon: Workflow },
-      { id: "activity", label: "Activity Stream", icon: Activity },
-      { id: "insights", label: "System Insights", icon: TrendingUp },
-      { id: "food", label: "Nutrition & Bio", icon: UtensilsCrossed },
     ],
   },
   {
-    category: "SYSTEM",
+    category: "OPERATIONS",
     items: [
+      { id: "today", label: "Daily Standup", icon: Calendar },
+      { id: "meetings", label: "Meetings & Audio", icon: Users },
+      { id: "email", label: "Alerts & Feeds", icon: Mail },
+      { id: "food", label: "Wellness", icon: UtensilsCrossed },
+    ],
+  },
+  {
+    category: "TECHNICAL TELEMETRY",
+    items: [
+      { id: "memory", label: "Memory Graph", icon: Brain },
+      { id: "agents", label: "Agent Fleet", icon: Bot },
+      { id: "benchmarks", label: "Benchmarks", icon: BarChart3 },
+      { id: "security", label: "Zero-Trust Security", icon: Shield },
+      { id: "activity", label: "Activity Log", icon: Activity },
+      { id: "insights", label: "System Insights", icon: TrendingUp },
+      { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
       { id: "settings", label: "Settings", icon: Settings },
     ],
   },
@@ -101,39 +97,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       aria-label="Main Navigation"
-      className="w-64 h-screen bg-[#16080D]/90 backdrop-blur-2xl border-r border-[#F6E6EA]/[0.10] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(10,3,6,0.55)] font-mono flex-shrink-0"
+      className="w-60 h-screen bg-[#14060B]/95 backdrop-blur-2xl border-r border-[#F6E6EA]/[0.08] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(10,3,6,0.55)] font-mono flex-shrink-0"
     >
       <div className="flex-1 flex flex-col min-h-0">
         {/* Brand & Classification Header */}
         <div className="drag-region px-3 py-3 mb-2 border-b border-[#F6E6EA]/[0.08] flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blush-100 via-accent to-burgundy-700 text-burgundy-950 flex items-center justify-center font-display font-black text-base shadow-[0_8px_24px_rgba(246,230,234,0.22)] flex-shrink-0" aria-hidden="true">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blush-100 via-accent to-burgundy-700 text-burgundy-950 flex items-center justify-center font-display font-black text-sm shadow-md flex-shrink-0" aria-hidden="true">
               C
             </div>
             <div className="overflow-hidden">
               <div className="flex items-center gap-1.5">
-                <h1 className="font-display font-bold text-[15px] tracking-tight text-white truncate">
+                <h1 className="font-display font-bold text-[14px] tracking-tight text-white truncate">
                   C.O.P.P.E.R.
                 </h1>
-                <span className="w-1.5 h-1.5 rounded-full bg-blush-100 animate-pulse shadow-[0_0_8px_rgba(246,230,234,0.8)] flex-shrink-0" aria-hidden="true" />
+                <span className="w-1.5 h-1.5 rounded-full bg-verdigris flex-shrink-0" aria-hidden="true" />
               </div>
-              <p className="text-[8.5px] text-blush-200/75 font-mono tracking-[0.16em] uppercase truncate font-semibold">
-                PERSONAL INTELLIGENCE
+              <p className="text-[8.5px] text-zinc-400 font-mono tracking-[0.14em] uppercase truncate font-semibold">
+                AI DEV WORKSTATION
               </p>
             </div>
           </div>
 
-          <div className="mt-3 px-2.5 py-1 rounded-lg bg-blush-100/[0.04] border border-blush-100/[0.09] flex items-center justify-between text-[9px] text-zinc-300">
-            <span className="text-verdigris font-bold">AIR-GAPPED</span>
-            <span className="text-blush-200/70 font-semibold">26 MODELS</span>
+          <div className="mt-2.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[9px] text-zinc-400 font-mono">
+            <span className="text-verdigris font-semibold">AIR-GAPPED</span>
+            <span className="text-zinc-300">30 AGENTS</span>
           </div>
         </div>
 
         {/* Navigation Sections */}
         <nav aria-label="Application Sections" className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
           {NAV_GROUPS.map((group) => (
-            <div key={group.category} className="space-y-1">
-              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.16em] text-blush-300/50 uppercase flex items-center justify-between">
+            <div key={group.category} className="space-y-0.5">
+              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.14em] text-zinc-500 uppercase">
                 <span>{group.category}</span>
               </div>
               {group.items.map((item) => {
@@ -142,29 +138,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 return (
                   <button
                     key={item.id}
-                    onClick={() => onSelectSection(item.id)}
+                    onClick={() => {
+                      soundFX.play("tab");
+                      onSelectSection(item.id);
+                    }}
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`${item.label} section${isActive ? ", current page" : ""}`}
-                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-[12px] font-medium transition-all duration-200 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-100 ${
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-100 ${
                       isActive
-                        ? "bg-gradient-to-r from-blush-100/18 via-accent/10 to-transparent text-white border border-blush-100/30 shadow-[inset_0_1px_0_rgba(246,230,234,0.18),0_6px_20px_rgba(246,230,234,0.08)]"
-                        : "text-zinc-300 border border-transparent hover:text-white hover:bg-blush-100/[0.06] hover:translate-x-0.5"
+                        ? "bg-blush-100/12 text-white border-l-2 border-blush-100 font-semibold"
+                        : "text-zinc-400 border-l-2 border-transparent hover:text-white hover:bg-white/[0.04]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       <Icon
                         aria-hidden="true"
-                        className={`w-[14px] h-[14px] flex-shrink-0 transition-colors ${
+                        className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
                           isActive
-                            ? "text-blush-100 drop-shadow-[0_0_8px_rgba(246,230,234,0.6)]"
-                            : "text-zinc-400 group-hover:text-blush-100/80"
+                            ? "text-blush-100"
+                            : "text-zinc-500 group-hover:text-zinc-300"
                         }`}
                       />
                       <span className="tracking-tight truncate">{item.label}</span>
                     </div>
-                    {isActive && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-blush-100 shadow-[0_0_8px_rgba(246,230,234,0.9)] flex-shrink-0 ml-1" aria-hidden="true" />
-                    )}
                   </button>
                 );
               })}

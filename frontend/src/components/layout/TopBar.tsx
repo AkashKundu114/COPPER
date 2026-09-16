@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Server, Search, User, Eye, Crosshair, Clipboard } from "lucide-react";
+import { Search, User, Clipboard, GitBranch, Volume2, VolumeX } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
-import { useSensorMode, type SensorMode } from "../../context/SensorModeContext";
 import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
+import { soundFX } from "../../lib/soundFX";
 
 interface TopBarProps {
   sectionTitle: string;
@@ -15,25 +15,25 @@ interface TopBarProps {
 }
 
 const SECTION_TITLES: Record<string, string> = {
-  dashboard: "Operations Center",
-  companion: "Companion HUD // VAD",
-  chat: "Multi-Agent Conversation",
-  agents: "Agent Registry & Swarm",
-  memory: "Memory Center & Atlas",
-  benchmarks: "System Benchmarks",
-  "self-improvement": "Self-Improvement & LoRA",
-  security: "Security Center & Audit",
-  today: "Today & Schedule",
-  tasks: "Tasks & Objective Queue",
-  projects: "Projects & Workspaces",
-  meetings: "Meeting Intelligence & Local Audio",
-  email: "Email Delegation & Drafts",
-  research: "Autonomous Deep Research Hub",
-  automations: "Visual Automation & Workflow Builder",
-  activity: "Activity Stream & Logs",
-  insights: "System Insights & Trends",
-  food: "Nutrition & Bio Tracker",
-  settings: "System Diagnostics & Settings",
+  dashboard: "Mission Cockpit",
+  companion: "Voice Companion",
+  chat: "Pair Programmer",
+  agents: "Agent Fleet",
+  memory: "Memory Graph",
+  benchmarks: "Routing & Benchmarks",
+  "self-improvement": "Self-Improvement",
+  security: "Security Center",
+  today: "Daily Standup",
+  tasks: "Sprint Backlog",
+  projects: "Workspaces",
+  meetings: "Architecture Notes",
+  email: "Alerts & Feeds",
+  research: "Documentation",
+  automations: "Automations",
+  activity: "System Activity",
+  insights: "Analytics",
+  food: "Wellness",
+  settings: "Settings",
 };
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -45,11 +45,20 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleClipboard,
   isClipboardOpen,
 }) => {
-  const { mode, setMode } = useSensorMode();
   const [timeUtc, setTimeUtc] = useState("");
   const [timeLocal, setTimeLocal] = useState("");
+  const [isElectron, setIsElectron] = useState(false);
+  const [sfxMuted, setSfxMuted] = useState(() => soundFX.isMuted());
 
   useEffect(() => {
+    const isRunningInElectron =
+      typeof window !== "undefined" &&
+      (Boolean((window as any).ipcRenderer) ||
+        Boolean((window as any).require) ||
+        (typeof navigator !== "undefined" &&
+          navigator.userAgent.toLowerCase().includes("electron")));
+    setIsElectron(isRunningInElectron);
+
     const updateTime = () => {
       const now = new Date();
       setTimeUtc(now.toISOString().slice(11, 19) + "Z");
@@ -60,13 +69,6 @@ export const TopBar: React.FC<TopBarProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  const sensorButtons: { id: SensorMode; label: string }[] = [
-    { id: "eo", label: "EO" },
-    { id: "flir", label: "FLIR" },
-    { id: "nvg", label: "NVG" },
-    { id: "crt", label: "CRT" },
-  ];
-
   const displayTitle =
     SECTION_TITLES[sectionTitle] || sectionTitle.replace(/-/g, " ");
 
@@ -74,120 +76,122 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header
       role="banner"
       aria-label="Top Bar Controls and Status"
-      className="drag-region h-16 bg-[#16080D]/80 backdrop-blur-2xl border-b border-[#F6E6EA]/[0.10] flex items-center justify-between px-4 md:px-6 z-20 select-none shadow-[0_6px_28px_rgba(10,3,6,0.35)]"
+      className="drag-region h-14 bg-[#16080D]/90 backdrop-blur-xl border-b border-[#F6E6EA]/[0.08] flex items-center justify-between px-3 md:px-5 z-20 select-none shadow-[0_4px_20px_rgba(10,3,6,0.25)]"
     >
-      {/* Left: Section Title & Coordinates Ticker */}
+      {/* Left: Section Title & Repository context */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-blush-100 animate-pulse shadow-[0_0_10px_rgba(246,230,234,0.9)]" aria-hidden="true" />
-          <h2 className="font-display text-xs md:text-sm font-bold text-white tracking-wide uppercase whitespace-nowrap">
+          <span className="w-2 h-2 rounded-full bg-accent ring-2 ring-accent/20" aria-hidden="true" />
+          <h2 className="font-display text-xs md:text-sm font-semibold text-white tracking-wide uppercase whitespace-nowrap">
             {displayTitle}
           </h2>
         </div>
 
-        <div className="hidden 2xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-[#1A0A0F]/80 border border-blush-100/20 font-mono text-[10px] text-blush-200 whitespace-nowrap flex-shrink-0 shadow-sm" aria-label="GPS Coordinates 37 degrees 46 minutes North, 122 degrees 25 minutes West, Altitude 420 Kilometers">
-          <Crosshair size={10} className="text-blush-100 animate-spin" aria-hidden="true" />
-          <span>37°46'N 122°25'W</span>
-          <span className="text-blush-300/40" aria-hidden="true">|</span>
-          <span className="text-zinc-400">420KM</span>
+        <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-[10px] text-zinc-400">
+          <GitBranch size={11} className="text-accent" />
+          <span className="text-zinc-200 font-medium">main</span>
+          <span className="text-zinc-600">/</span>
+          <span className="text-zinc-300">COPPER</span>
+          <span className="text-zinc-600">·</span>
+          <span className="px-1.5 py-0.2 rounded bg-verdigris/15 text-verdigris text-[9px] font-bold">14B</span>
         </div>
       </div>
 
-      {/* Center: Command Bar + Sensor Look Pills */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      {/* Center: Command Palette Search */}
+      <div className="flex items-center justify-center flex-1 max-w-xs md:max-w-sm px-2">
         <button
-          onClick={onOpenCommandPalette}
+          onClick={() => {
+            soundFX.play("click");
+            onOpenCommandPalette();
+          }}
           aria-label="Open command palette (Ctrl+K)"
-          className="no-drag flex items-center gap-2 px-3 py-2 rounded-xl bg-blush-100/[0.045] border border-blush-100/[0.12] text-[11px] text-zinc-300 hover:text-white hover:border-blush-100/40 hover:bg-blush-100/[0.08] transition-all w-36 sm:w-48 md:w-56 justify-between group shadow-sm flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+          className="no-drag w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/20 text-[11px] text-zinc-400 hover:text-white transition-all group cursor-pointer focus-visible:ring-1 focus-visible:ring-accent shadow-sm"
         >
-          <div className="flex items-center gap-1.5 overflow-hidden">
-            <Search size={12} className="text-blush-200 group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true" />
-            <span className="font-mono text-[10px] tracking-tight truncate">COMMAND PALETTE...</span>
+          <div className="flex items-center gap-2 overflow-hidden">
+            <Search size={12} className="text-zinc-400 group-hover:text-accent transition-colors flex-shrink-0" aria-hidden="true" />
+            <span className="text-[11px] tracking-tight truncate">Search or jump to...</span>
           </div>
-          <kbd className="px-1.5 py-0.5 rounded-md bg-[#1A0A0F] text-[9px] font-mono text-blush-100 border border-blush-100/30 flex-shrink-0 font-bold">
+          <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded bg-black/40 text-[9px] font-mono text-zinc-400 border border-white/10 flex-shrink-0 font-medium">
             Ctrl+K
           </kbd>
         </button>
-
-        {/* God's Eye Sensor Look Mode Switcher */}
-        <div
-          role="radiogroup"
-          aria-label="Sensor display mode"
-          className="no-drag flex items-center p-0.5 rounded-xl bg-blush-100/[0.04] border border-blush-100/[0.10] font-mono text-[10px] flex-shrink-0"
-        >
-          <span className="hidden sm:flex px-1 text-zinc-400 text-[9px] items-center gap-0.5" aria-hidden="true">
-            <Eye size={10} className="text-blush-200" />
-          </span>
-          {sensorButtons.map((btn) => (
-            <button
-              key={btn.id}
-              role="radio"
-              aria-checked={mode === btn.id}
-              aria-label={`Sensor mode: ${btn.label}`}
-              onClick={() => setMode(btn.id)}
-              className={`px-1.5 py-0.5 rounded-lg text-[10px] transition-all font-bold whitespace-nowrap cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100 ${
-                mode === btn.id
-                  ? "bg-blush-100 text-burgundy-950 shadow-[0_2px_10px_rgba(246,230,234,0.35)]"
-                  : "text-zinc-300 hover:text-white hover:bg-blush-100/[0.06]"
-              }`}
-              title={`Switch sensor look: ${btn.label}`}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {/* Right: Tactical Clocks, DEFCON status & Air-Gap telemetry */}
-      <div className="flex items-center gap-2 flex-shrink-0 pr-24">
-        {/* Tactical Clock */}
-        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-[#1A0A0F]/80 border border-blush-100/15 font-mono text-[10px] whitespace-nowrap flex-shrink-0 shadow-sm" aria-label={`UTC time: ${timeUtc}, Local time: ${timeLocal}`}>
-          <span className="text-zinc-400">UTC</span>
-          <span className="text-blush-100 font-bold">{timeUtc}</span>
-          <span className="text-blush-300/30" aria-hidden="true">|</span>
-          <span className="text-zinc-400">LOC</span>
-          <span className="text-accent font-bold">{timeLocal}</span>
+      {/* Right: Telemetry & Actions */}
+      <div className={`flex items-center gap-2 flex-shrink-0 ${isElectron ? "pr-36" : "pr-2 sm:pr-4"}`}>
+        {/* Tactical Local Clock with UTC in Tooltip */}
+        <div
+          className="hidden 2xl:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-[10px] whitespace-nowrap shadow-sm cursor-default"
+          title={`Local: ${timeLocal} | UTC: ${timeUtc}`}
+          aria-label={`Local time: ${timeLocal}, UTC time: ${timeUtc}`}
+        >
+          <span className="text-zinc-500">LOC</span>
+          <span className="text-accent font-semibold">{timeLocal}</span>
         </div>
 
         {/* Real-Time Ambient Cognitive Load */}
         <CognitiveStatusBadge />
 
-        {/* DEFCON / Threat Status Badge */}
-        <div className="hidden lg:flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-verdigris/12 border border-verdigris/35 text-verdigris text-[10px] font-bold font-mono whitespace-nowrap flex-shrink-0 shadow-sm" role="status" aria-label="System status: DEFCON 5, all systems nominal">
+        {/* System Security / Status Badge */}
+        <div
+          className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-verdigris/10 border border-verdigris/25 text-verdigris text-[10px] font-bold font-mono whitespace-nowrap shadow-sm"
+          role="status"
+          aria-label="System status: DEFCON 5, all systems nominal"
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" aria-hidden="true" />
-          <span>DEFCON 5 // OK</span>
+          <span>DEFCON 5</span>
         </div>
 
-        <div className="hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#1A0A0F]/80 border border-blush-100/25 text-blush-100 text-[10px] font-medium font-mono whitespace-nowrap flex-shrink-0">
-          <Server size={11} className="text-blush-100" aria-hidden="true" />
-          <span>LOCAL</span>
-        </div>
+        {/* Semantic Audio SFX Toggle (uisfx.com inspiration) */}
+        <button
+          onClick={() => {
+            const next = soundFX.toggleMute();
+            setSfxMuted(next);
+          }}
+          className={`no-drag p-1.5 rounded-lg border transition-all cursor-pointer ${
+            sfxMuted
+              ? "bg-white/[0.02] border-white/[0.06] text-zinc-500 hover:text-zinc-400"
+              : "bg-white/[0.04] border-white/[0.12] text-zinc-300 hover:text-white hover:border-accent/40"
+          }`}
+          title={sfxMuted ? "Unmute UI Sound Effects" : "Mute UI Sound Effects"}
+          aria-label={sfxMuted ? "Unmute UI Sound Effects" : "Mute UI Sound Effects"}
+        >
+          {sfxMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+        </button>
 
+        {/* Smart Clipboard Trigger */}
         {onToggleClipboard && (
           <button
-            onClick={onToggleClipboard}
+            onClick={() => {
+              soundFX.play("click");
+              onToggleClipboard();
+            }}
             aria-label="Toggle Smart Clipboard history drawer"
             aria-expanded={isClipboardOpen}
-            className={`no-drag flex items-center gap-1.5 px-3 py-2 rounded-xl border text-[11px] font-mono whitespace-nowrap flex-shrink-0 cursor-pointer transition-all ${
+            className={`no-drag flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] font-mono whitespace-nowrap cursor-pointer transition-all ${
               isClipboardOpen
-                ? "bg-accent-500/20 text-accent-400 border-accent-500/50 shadow-sm shadow-accent-500/20"
-                : "bg-blush-100/[0.045] border-blush-100/[0.12] hover:border-accent-500/50 hover:bg-blush-100/[0.08] text-zinc-300 hover:text-white"
+                ? "bg-accent/20 text-accent border-accent/40 shadow-sm"
+                : "bg-white/[0.03] border-white/[0.08] hover:border-accent/40 hover:bg-white/[0.06] text-zinc-300 hover:text-white"
             }`}
-            title="Smart Clipboard Intelligence"
+            title="Smart Clipboard (History & Pointers)"
           >
-            <Clipboard size={12} className={isClipboardOpen ? "text-accent-400" : "text-zinc-400"} />
-            <span className="hidden xl:inline font-semibold">CLIPBOARD</span>
+            <Clipboard size={13} className={isClipboardOpen ? "text-accent" : "text-zinc-400"} />
+            <span className="hidden xl:inline font-medium">CLIPBOARD</span>
           </button>
         )}
 
+        {/* Operator Profile Trigger */}
         <button
-          onClick={onToggleDrawer}
+          onClick={() => {
+            soundFX.play("click");
+            onToggleDrawer();
+          }}
           aria-label="Toggle user profile and agent details drawer"
           aria-expanded={drawerOpen}
-          className="no-drag flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blush-100/[0.045] border border-blush-100/[0.12] hover:border-blush-100/40 hover:bg-blush-100/[0.08] text-[11px] text-zinc-300 hover:text-white transition-all font-mono whitespace-nowrap flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+          className="no-drag flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] hover:border-blush-100/30 hover:bg-white/[0.06] text-[11px] text-zinc-300 hover:text-white transition-all font-mono whitespace-nowrap cursor-pointer focus-visible:ring-1 focus-visible:ring-accent"
         >
-          <User size={12} className="text-accent" aria-hidden="true" />
-          <span className="font-semibold text-white">
+          <User size={13} className="text-accent" aria-hidden="true" />
+          <span className="font-semibold text-white text-[11px]">
             {profile?.relationship_tier || "OPERATOR"}
           </span>
         </button>

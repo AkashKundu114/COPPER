@@ -11,30 +11,46 @@ interface AutomationRule {
 }
 
 const PREMADE_TEMPLATES = [
-  { id: 'tpl1', name: 'Deep Work Protocol', triggerType: 'Time of Day', condition: '9:00 AM - 11:00 AM', action: 'Mute Notifications & Context Switch', icon: Brain },
-  { id: 'tpl2', name: 'Daily Wrap-Up', triggerType: 'Time of Day', condition: '5:00 PM', action: 'Draft Summary', icon: Clock },
-  { id: 'tpl3', name: 'Git Code Review on Push', triggerType: 'Commit Created', condition: 'Any branch', action: 'Run Script', icon: GitPullRequest },
-  { id: 'tpl4', name: 'Meeting Note Transcriber', triggerType: 'Audio Ended', condition: 'Duration > 5m', action: 'Draft Summary', icon: FileText },
+  { id: 'tpl1', name: 'Git PR Review on Push', triggerType: 'Git Commit Created', condition: 'Any branch', action: 'Trigger AXIS Coder Review & AST Diff', icon: GitPullRequest },
+  { id: 'tpl2', name: 'Continuous Test Watcher', triggerType: 'File Modified', condition: 'Matches src/ or tests/', action: 'Execute Vitest & Pytest Runner', icon: Clock },
+  { id: 'tpl3', name: 'Deep Work Focus Protocol', triggerType: 'Cognitive Load > 75%', condition: '10:00 AM - 12:00 PM', action: 'Mute Notifications & Lock Context', icon: Brain },
+  { id: 'tpl4', name: 'Knowledge Graph Re-indexer', triggerType: 'Branch Merged', condition: 'Target = main', action: 'Re-embed Codebase AST to Vector Store', icon: FileText },
 ];
 
 export const AutomationBuilderView: React.FC = () => {
   const [automations, setAutomations] = useState<AutomationRule[]>([
     {
       id: 'rule1',
-      name: 'Focus Mode Trigger',
-      triggerType: 'Cognitive State = Deep Focus',
-      condition: 'Focus duration > 30m',
-      action: 'Mute Notifications',
+      name: 'Git PR Auto-Review & AST Lint',
+      triggerType: 'Git Commit Created',
+      condition: 'Modified *.ts / *.py files',
+      action: 'Trigger AXIS Coder Review & AST Diff',
       isActive: true,
     },
     {
       id: 'rule2',
-      name: 'Automated Scripts',
-      triggerType: 'Window Focused',
-      condition: 'App = VS Code',
-      action: 'Switch Project Context',
+      name: 'Automated Regression Watcher',
+      triggerType: 'Test Suite Execution',
+      condition: 'Exit Code != 0',
+      action: 'Generate Self-Healing Fix Patch',
+      isActive: true,
+    },
+    {
+      id: 'rule3',
+      name: 'Zero-Trust Secret Redaction',
+      triggerType: 'Clipboard / Terminal Ingestion',
+      condition: 'Contains sk- or Bearer tokens',
+      action: 'Scrub PII & Notify SENTINEL',
+      isActive: true,
+    },
+    {
+      id: 'rule4',
+      name: 'VRAM Pager Threshold Balancer',
+      triggerType: 'VRAM Usage > 85%',
+      condition: 'Model Ingestion Active',
+      action: 'Evict Cold Quantized Layers',
       isActive: false,
-    }
+    },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,16 +96,18 @@ export const AutomationBuilderView: React.FC = () => {
         <div>
           <h2 className="text-xl font-display font-bold text-white mb-1 flex items-center gap-2">
             <Settings className="w-6 h-6 text-cyber-cyan" />
-            Visual Automation & Trigger Canvas
+            CI/CD & Visual Automation Canvas
           </h2>
-          <p className="text-xs text-zinc-500">Configure reactive behaviors and triggers for C.O.P.P.E.R.</p>
+          <p className="text-xs text-zinc-400">
+            Automated event-driven developer pipelines, git triggers, and autonomous agent jobs
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 border border-cyber-cyan/30 text-cyber-cyan rounded-lg text-sm transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)]"
+          className="flex items-center gap-2 px-4 py-2 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 border border-cyber-cyan/30 text-cyber-cyan rounded-lg text-sm transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          Add Custom Trigger
+          <span>New Automation</span>
         </button>
       </div>
 

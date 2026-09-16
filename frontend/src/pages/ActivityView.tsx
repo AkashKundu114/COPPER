@@ -10,7 +10,6 @@ import {
   ShieldAlert,
   Cpu,
   Clock,
-  Loader2,
   Sparkles,
   Zap,
   Compass,
@@ -23,6 +22,7 @@ import {
   type TaskGraphData,
 } from "../components/chat/TaskGraphVisualizer";
 import { PassiveActivityTimeline } from "../components/ambient/PassiveActivityTimeline";
+import { ThinkingOrb } from "thinking-orbs";
 import {
   RoutingExplanationCard,
   type RoutingExplanationData,
@@ -380,7 +380,7 @@ export const ActivityView: React.FC = () => {
 
   useEffect(() => {
     // Fetch live traces from backend if available
-    fetch(`${API_BASE}/api/v1/orchestration/traces?limit=10`)
+    fetch(`${API_BASE}/orchestration/traces?limit=10`)
       .then((r) => r.json())
       .then((traces) => {
         if (Array.isArray(traces) && traces.length > 0) {
@@ -403,7 +403,7 @@ export const ActivityView: React.FC = () => {
       .catch(() => {});
 
     // Fetch live PRISM routing history
-    fetch(`${API_BASE}/api/v1/routing/history?limit=20`)
+    fetch(`${API_BASE}/routing/history?limit=20`)
       .then((r) => r.json())
       .then((data) => {
         if (data && Array.isArray(data.history) && data.history.length > 0) {
@@ -465,7 +465,7 @@ export const ActivityView: React.FC = () => {
   const runExampleDAGSimulation = async () => {
     setIsSimulating(true);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/orchestration/plan`, {
+      const res = await fetch(`${API_BASE}/orchestration/plan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -596,7 +596,7 @@ export const ActivityView: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-purple-200 font-sans font-semibold text-xs shadow-lg shadow-purple-950/50 transition-all disabled:opacity-50"
           >
             {isSimulating ? (
-              <Loader2 size={13} className="animate-spin text-purple-400" />
+              <ThinkingOrb state="connecting" size={20} theme="dark" />
             ) : (
               <Sparkles size={13} className="text-purple-400" />
             )}

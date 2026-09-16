@@ -53,7 +53,7 @@ export const SettingsView: React.FC = () => {
           const running = await ipcRenderer.invoke("get-backend-status");
           if (active) setBackendRunning(running);
         } else {
-          const res = await fetch(`${API_BASE}/api/v1/system/telemetry`);
+          const res = await fetch(`${API_BASE}/system/telemetry`);
           if (active) setBackendRunning(res.ok);
         }
       } catch {
@@ -89,7 +89,7 @@ export const SettingsView: React.FC = () => {
     setIsPlayingVoice(true);
     setToast("Synthesizing female voice sample with Piper ONNX...");
     try {
-      const res = await fetch(`${API_BASE}/api/v1/voice/speak`, {
+      const res = await fetch(`${API_BASE}/voice/speak`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

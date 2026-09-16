@@ -4,6 +4,8 @@ import type { ProactiveAlert } from "../components/alerts/SpiderSenseToast";
 
 export type BrainEvent =
   | { type: "copper_thinking" }
+  | { type: "thinking"; agent_type?: string; trace_id?: string }
+  | { type: "error"; message?: string; trace_id?: string }
   | { type: "route_decision"; agent: string; tier: string; color: string }
   | { type: "edge_pulse"; from: string; to: string }
   | { type: "agent_active"; agent: string }
@@ -369,6 +371,7 @@ export function useBrainSocket(
       const event: BrainEvent = JSON.parse(evt.data);
       switch (event.type) {
         case "copper_thinking":
+        case "thinking":
           setThinking(true);
           setActiveAgent(null);
           setActiveEdge(null);
@@ -376,6 +379,20 @@ export function useBrainSocket(
             setSpeaking(false);
             clearTimeout(speakingTimer.current);
           }
+          break;
+        case "error":
+          setThinking(false);
+          setActiveAgent(null);
+          setActiveEdge(null);
+          setLines((prev) => [
+            ...prev,
+            {
+              id: `error-${Date.now()}`,
+              agent: "COPPER",
+              text: `⚠️ ${event.message || "An error occurred while generating a response."}`,
+              timestamp: Date.now(),
+            },
+          ]);
           break;
         case "route_decision":
           break;

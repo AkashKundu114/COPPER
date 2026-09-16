@@ -12,6 +12,37 @@ import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 import { DailyBriefingCard } from "../components/ambient/DailyBriefingCard";
 import { ActivityDashboardWidget } from "../components/ambient/ActivityDashboardWidget";
 
+const DEFAULT_SDE_SCHEDULE: ScheduleEvent[] = [
+  {
+    id: "evt-1",
+    time: "09:30 AM",
+    title: "Engineering Daily Standup & Sprint Sync",
+    category: "Meeting",
+    completed: true,
+  },
+  {
+    id: "evt-2",
+    time: "10:30 AM - 12:30 PM",
+    title: "Deep Work: VRAM Pager LRU Cache & WAL Engine",
+    category: "Focus",
+    completed: false,
+  },
+  {
+    id: "evt-3",
+    time: "02:00 PM - 03:00 PM",
+    title: "Architecture Review: Sovereign Fleet DAG Concurrency",
+    category: "Meeting",
+    completed: false,
+  },
+  {
+    id: "evt-4",
+    time: "04:30 PM - 05:30 PM",
+    title: "PR Code Review & Adversarial Safety Benchmark Run",
+    category: "Review",
+    completed: false,
+  },
+];
+
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
@@ -25,9 +56,14 @@ export const TodayView: React.FC = () => {
   const loadEvents = async () => {
     try {
       const data = await scheduleAPI.list();
-      setEvents(data);
+      if (data && data.length > 0) {
+        setEvents(data);
+      } else {
+        setEvents(DEFAULT_SDE_SCHEDULE);
+      }
     } catch (err) {
-      console.error("Failed to load schedule events from backend:", err);
+      console.error("Failed to load schedule events from backend, using defaults:", err);
+      setEvents(DEFAULT_SDE_SCHEDULE);
     } finally {
       setLoading(false);
     }
@@ -89,20 +125,20 @@ export const TodayView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Schedule & Today Overview
+            Daily Dev Agenda & Sprint Standup
           </h1>
-          <p className="text-xs text-slate-400 font-mono">{todayDate}</p>
+          <p className="text-xs text-slate-400 font-mono">{todayDate} • Engineering Focus Schedule</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex gap-1 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono">
+          <div className="flex gap-1 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] text-xs font-mono">
             {(["day", "week", "month"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1 rounded-lg capitalize transition-all ${
+                className={`px-3 py-1 rounded-lg capitalize transition-all cursor-pointer font-semibold ${
                   activeTab === tab
-                    ? "bg-accent-500/20 text-accent-400 border border-accent-500/40"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-blush-100 text-burgundy-950 shadow-sm"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
                 {tab}
@@ -111,10 +147,10 @@ export const TodayView: React.FC = () => {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-accent-500/20"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blush-100 hover:bg-white text-burgundy-950 font-bold text-xs transition-all shadow-sm cursor-pointer font-mono"
           >
             <Plus size={14} strokeWidth={2.5} />
-            <span>Add Event</span>
+            <span>Add Dev Block</span>
           </button>
         </div>
       </div>

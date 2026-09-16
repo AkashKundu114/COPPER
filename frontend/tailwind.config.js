@@ -174,9 +174,13 @@ export default {
         "hud-green": "0 0 16px rgba(0,255,136,0.22), inset 0 0 8px rgba(0,255,136,0.04)",
       },
       fontFamily: {
-        display: ["'Moon Walk'", "'Space Grotesk'", "Inter", "sans-serif"],
+        display: ["'Moon Walk'", "'Space Grotesk'", "'Oxanium'", "sans-serif"],
         brand: ["'Moon Walk'", "'Space Grotesk'", "sans-serif"],
-        body: ["Inter", "'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
+        sans: ["'Oxanium'", "'Sora'", "'Space Grotesk'", "-apple-system", "sans-serif"],
+        body: ["'Oxanium'", "'Sora'", "'Space Grotesk'", "-apple-system", "sans-serif"],
+        futuristic: ["'Oxanium'", "'Space Grotesk'", "sans-serif"],
+        tech: ["'Sora'", "'Oxanium'", "sans-serif"],
+        sub: ["'Space Grotesk'", "'Oxanium'", "sans-serif"],
         mono: ["'IBM Plex Mono'", "'Courier New'", "Courier", "monospace"],
       },
       keyframes: {

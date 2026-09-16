@@ -10,14 +10,16 @@ import {
   BookOpen,
   X,
   ChevronUp,
-  Loader2,
   Eye,
   Brain,
   Zap,
   RotateCcw,
+  Plus,
 } from "lucide-react";
 import { API_BASE, parseDocumentFile, type ParsedDocument } from "../../lib/api";
 import { DocumentReaderModal } from "../documents/DocumentReaderModal";
+import { soundFX } from "../../lib/soundFX";
+import { ThinkingOrb } from "thinking-orbs";
 
 interface Props {
   connected: boolean;
@@ -144,6 +146,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
       onStop();
     }
 
+    soundFX.play("send");
     onSend(fullMsg, selectedModel.id);
     setDraft("");
     setAttachedDocs([]);
@@ -234,7 +237,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         formData.append("file", audioBlob, "voice.webm");
 
         try {
-          const res = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+          const res = await fetch(`${API_BASE}/voice/transcribe`, {
             method: "POST",
             body: formData,
           });
@@ -425,8 +428,8 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           })}
 
           {isUploading && (
-            <div role="status" aria-live="polite" className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-950/40 border border-accent-500/40 text-xs font-mono text-accent-400 animate-pulse">
-              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
+            <div role="status" aria-live="polite" className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-950/40 border border-accent-500/40 text-xs font-mono text-accent-400">
+              <ThinkingOrb state="searching" size={20} theme="dark" />
               <span>Parsing document & extracting text...</span>
             </div>
           )}
@@ -436,18 +439,12 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
       {/* Main God's Eye Tactical Input Capsule */}
       <div className="w-full flex flex-col items-center">
         <div
-          className={`w-full relative flex flex-row items-end rounded-2xl bg-[#1A0A0F]/90 backdrop-blur-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.1)] border py-1.5 px-3.5 ${
+          className={`w-full relative flex flex-row items-center rounded-2xl bg-[#16080D]/90 backdrop-blur-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] border py-1.5 px-3 ${
             thinking
               ? "border-blush-100/50 shadow-[0_0_24px_rgba(246,230,234,0.22)]"
-              : "border-blush-100/20 focus-within:border-blush-100/50 focus-within:shadow-[0_0_24px_rgba(246,230,234,0.18)]"
+              : "border-blush-100/20 hover:border-blush-100/35 focus-within:border-blush-100/60 focus-within:shadow-[0_0_24px_rgba(246,230,234,0.2)] focus-within:ring-1 focus-within:ring-blush-100/30"
           }`}
         >
-          {/* 4 HUD Chamfer Corner Brackets in Blush Pink */}
-          <span className="absolute -top-[1px] -left-[1px] w-2.5 h-2.5 border-t-2 border-l-2 border-blush-100 pointer-events-none rounded-tl-sm" aria-hidden="true" />
-          <span className="absolute -top-[1px] -right-[1px] w-2.5 h-2.5 border-t-2 border-r-2 border-blush-100 pointer-events-none rounded-tr-sm" aria-hidden="true" />
-          <span className="absolute -bottom-[1px] -left-[1px] w-2.5 h-2.5 border-b-2 border-l-2 border-blush-100 pointer-events-none rounded-bl-sm" aria-hidden="true" />
-          <span className="absolute -bottom-[1px] -right-[1px] w-2.5 h-2.5 border-b-2 border-r-2 border-blush-100 pointer-events-none rounded-br-sm" aria-hidden="true" />
-
           {isRecording ? (
             <div role="status" aria-live="polite" className="flex items-center justify-between w-full px-5 py-3 h-[52px]">
               <div className="flex items-center gap-3">
@@ -466,24 +463,24 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
             </div>
           ) : (
             <>
-              {/* Plus Button */}
+              {/* Plus / Attach Button */}
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || thinking}
                 aria-label="Attach reconnaissance documents or files"
-                className="p-2 mb-1 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+                className="p-1.5 rounded-xl text-blush-200/70 hover:text-white hover:bg-blush-100/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                 title="Attach Recon Documents / Files"
               >
                 {isUploading ? (
-                  <Loader2 size={18} className="animate-spin text-blush-100" aria-hidden="true" />
+                  <ThinkingOrb state="weaving" size={20} theme="dark" />
                 ) : (
-                  <div className="w-5 h-5 flex items-center justify-center font-mono text-lg font-bold pb-0.5 text-blush-100" aria-hidden="true">+</div>
+                  <Plus size={18} className="text-blush-100" aria-hidden="true" />
                 )}
               </button>
 
               {/* Input Text Area */}
-              <div className="flex-1 py-2 px-2">
+              <div className="flex-1 py-1 px-2.5 flex items-center min-w-0">
                 <textarea
                   id="chat-message-input"
                   ref={textareaRef}
@@ -505,14 +502,14 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                   disabled={thinking || isUploading}
                   aria-label="Message input for COPPER intelligence"
                   aria-multiline="true"
-                  className="w-full bg-transparent outline-none border-none text-[14px] leading-relaxed text-white placeholder:text-blush-300/40 resize-none max-h-48 min-h-[24px] custom-scrollbar block font-sans focus-visible:ring-1 focus-visible:ring-blush-100 rounded"
+                  className="chat-input-textarea w-full bg-transparent border-none outline-none text-[14px] leading-relaxed text-white placeholder:text-zinc-500 resize-none max-h-48 min-h-[26px] custom-scrollbar block font-sans focus:outline-none focus:ring-0 focus:border-none"
                   rows={1}
                 />
               </div>
 
               {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
               {(thinking || speaking) && (
-                <div aria-hidden="true" className="flex items-center gap-1 mb-2.5 px-2 py-1 rounded-lg bg-[#14070B] border border-blush-100/30 text-blush-100 shadow-sm" title="Audio / Neural Telemetry Stream">
+                <div aria-hidden="true" className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#14070B] border border-blush-100/30 text-blush-100 shadow-sm flex-shrink-0 mr-1.5" title="Audio / Neural Telemetry Stream">
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-1" />
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-2" />
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-3" />
@@ -522,14 +519,14 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
               )}
 
               {/* Right Side Buttons */}
-              <div className="flex items-center gap-1.5 mb-1.5 pr-1">
+              <div className="flex items-center gap-1.5 flex-shrink-0">
                 {!draft.trim() && attachedDocs.length === 0 && !thinking && (
                   <button
                     type="button"
                     onClick={toggleRecording}
                     aria-label="Start voice recording"
                     aria-pressed={false}
-                    className="p-2 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+                    className="p-1.5 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                     title="Voice Intercept Mic"
                   >
                     <Mic size={18} aria-hidden="true" />
@@ -543,9 +540,9 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     disabled={isUploading}
                     aria-label="Send message"
                     title="Send message"
-                    className="w-8 h-8 rounded-xl bg-gradient-to-br from-blush-100 via-blush-200 to-accent text-burgundy-950 hover:brightness-110 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_14px_rgba(246,230,234,0.4)] cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+                    className="w-8 h-8 rounded-xl bg-gradient-to-br from-blush-100 via-blush-200 to-accent text-burgundy-950 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center disabled:opacity-50 shadow-[0_0_14px_rgba(246,230,234,0.4)] cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100 font-bold"
                   >
-                    <ArrowUp size={18} strokeWidth={2.5} aria-hidden="true" />
+                    <ArrowUp size={16} strokeWidth={2.5} aria-hidden="true" />
                   </button>
                 )}
 
@@ -586,6 +583,12 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           </button>
 
           <div className="flex items-center gap-3 text-[10px] text-zinc-400">
+            {thinking && (
+              <div role="status" aria-live="polite" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blush-100/10 border border-blush-100/25 text-blush-100 font-mono text-[10px] shadow-sm">
+                <ThinkingOrb state="working" size={20} theme="dark" />
+                <span className="hidden sm:inline font-semibold">SYNTHESIZING</span>
+              </div>
+            )}
             {onClear && (
               <button
                 type="button"

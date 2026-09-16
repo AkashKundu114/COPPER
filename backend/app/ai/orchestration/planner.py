@@ -257,9 +257,14 @@ class NexusPlanner:
             end_idx = content.rfind("}") + 1
             json_content = content[start_idx:end_idx]
 
+        # Strip comments and trailing commas that LLMs frequently output
+        cleaned_json = re.sub(r"//.*", "", json_content)
+        cleaned_json = re.sub(r"/\*.*?\*/", "", cleaned_json, flags=re.DOTALL)
+        cleaned_json = re.sub(r",\s*([\]}])", r"\1", cleaned_json)
+
         # Parse JSON DAG
         try:
-            data = json.loads(json_content)
+            data = json.loads(cleaned_json)
             goal = data.get("goal", "Multi-agent collaborative task")
             raw_tasks = data.get("tasks", [])
             synthesis = data.get("synthesis", {"agent": "CHAT", "instruction": "Synthesize all task outputs."})
