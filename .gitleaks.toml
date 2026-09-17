@@ -1,0 +1,11 @@
+﻿title = "COPPER Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore synthetic test secrets in test suites validating secret redaction and sandbox sanitization"
+paths = [
+    '''tests/core/test_data_firewall\.py''',
+    '''tests/core/test_forge_sandbox\.py''',
+]

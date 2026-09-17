@@ -1,0 +1,11 @@
+﻿# Gitleaks ignore list for false positives in historical test fixtures
+# tests/core/test_data_firewall.py: synthetic API key and token test cases
+7166926bfefeacc81e210e14f6a054a4acbe9620:tests/core/test_data_firewall.py:generic-api-key:29
+c2aea85a7bb036a533b4f626de30813b293f3da6:tests/core/test_data_firewall.py:github-pat:153
+c2aea85a7bb036a533b4f626de30813b293f3da6:tests/core/test_data_firewall.py:private-key:183
+7166926bfefeacc81e210e14f6a054a4acbe9620:tests/core/test_data_firewall.py:private-key:167
+6b34b8a8b2026c9c7547185f091f578884e95558:tests/core/test_data_firewall.py:generic-api-key:30
+afb4fdde8a06e41af7322e3762782970eef2085e:tests/core/test_data_firewall.py:generic-api-key:25
+
+# tests/core/test_forge_sandbox.py: test environment variable sanitization
+c2aea85a7bb036a533b4f626de30813b293f3da6:tests/core/test_forge_sandbox.py:generic-api-key:45
