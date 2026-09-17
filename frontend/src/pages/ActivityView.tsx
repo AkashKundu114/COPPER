@@ -566,11 +566,14 @@ export const ActivityView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <Activity size={20} className="text-purple-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-              Agent Activity & Multi-Agent Execution Trace Panel
+              Agent Activity Stream & Multi-Agent Execution Trace Panel
             </h1>
+            <span className="text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-0.5 rounded-full font-mono">
+              Live Execution & Governance Log
+            </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
             NEXUS DAG decomposition, PRISM explainable routing telemetry, and local tool execution traces

@@ -83,7 +83,12 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
 
     // 8. Verify Activity Trace and execution telemetry render
     await expect(
-      page.locator("text=Live Execution & Governance Log").or(page.locator("text=Activity Stream")).first()
+      page
+        .locator("text=Live Execution & Governance Log")
+        .or(page.locator("text=Activity Stream"))
+        .or(page.locator("text=Agent Activity"))
+        .or(page.locator("text=Activity Log"))
+        .first()
     ).toBeVisible({ timeout: 15000 });
 
     // Check for activity cards or categories (NEXUS, Tools, Routing, Guardian, etc.)

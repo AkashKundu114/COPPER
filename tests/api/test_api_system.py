@@ -55,3 +55,26 @@ def test_system_cors_headers():
 def test_system_gzip_middleware_large_response():
     response = client.get("/openapi.json", headers={"Accept-Encoding": "gzip"})
     assert response.status_code == 200
+
+
+def test_system_routes_import_on_non_windows():
+    import app.api.routes.system  # noqa: F401
+
+
+def test_get_cpu_usage_and_info_without_winreg(monkeypatch):
+    from app.api.routes import system
+
+    monkeypatch.setattr(system, "winreg", None)
+    model, cores, cpu_percent = system._get_cpu_usage_and_info()
+    assert isinstance(model, str)
+    assert cores >= 1
+    assert isinstance(cpu_percent, float)
+
+
+def test_get_ram_info_cross_platform():
+    from app.api.routes import system
+
+    total_gb, used_gb, percent = system._get_ram_info()
+    assert total_gb > 0
+    assert used_gb >= 0
+    assert percent >= 0

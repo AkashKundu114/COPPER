@@ -8,7 +8,11 @@ import os
 import platform
 import subprocess
 import time
-import winreg
+
+try:
+    import winreg
+except ImportError:
+    winreg = None
 
 from fastapi import APIRouter
 
@@ -38,10 +42,17 @@ def _get_cpu_usage_and_info():
     model = "CPU"
     cores = os.cpu_count() or 1
     cpu_percent = 0.0
-    try:
-        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
-        model = winreg.QueryValueEx(key, "ProcessorNameString")[0].strip()
-    except Exception:
+
+    if winreg is not None:
+        try:
+            key = winreg.OpenKey(
+                winreg.HKEY_LOCAL_MACHINE,
+                r"HARDWARE\DESCRIPTION\System\CentralProcessor\0",
+            )
+            model = winreg.QueryValueEx(key, "ProcessorNameString")[0].strip()
+        except Exception:
+            model = platform.processor() or "AMD/Intel x64"
+    else:
         model = platform.processor() or "AMD/Intel x64"
 
     try:
@@ -50,10 +61,18 @@ def _get_cpu_usage_and_info():
             return (ft.dwHighDateTime << 32) + ft.dwLowDateTime
 
         idle, kernel, user = FILETIME(), FILETIME(), FILETIME()
-        ctypes.windll.kernel32.GetSystemTimes(ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user))
+        ctypes.windll.kernel32.GetSystemTimes(
+            ctypes.byref(idle),
+            ctypes.byref(kernel),
+            ctypes.byref(user),
+        )
         i1, k1, u1 = to_int(idle), to_int(kernel), to_int(user)
         time.sleep(0.05)
-        ctypes.windll.kernel32.GetSystemTimes(ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user))
+        ctypes.windll.kernel32.GetSystemTimes(
+            ctypes.byref(idle),
+            ctypes.byref(kernel),
+            ctypes.byref(user),
+        )
         i2, k2, u2 = to_int(idle), to_int(kernel), to_int(user)
 
         usr = u2 - u1
@@ -62,12 +81,23 @@ def _get_cpu_usage_and_info():
         if total > 0:
             cpu_percent = round(((usr + ker) / total) * 100, 1)
     except Exception:
+        # Linux/macOS do not expose Windows GetSystemTimes.
         cpu_percent = 2.0
 
     return model, cores, cpu_percent
 
 
 def _get_ram_info():
+    try:
+        import psutil
+
+        vm = psutil.virtual_memory()
+        total_gb = round(vm.total / (1024**3), 1)
+        used_gb = round((vm.total - vm.available) / (1024**3), 1)
+        return total_gb, used_gb, float(vm.percent)
+    except Exception:
+        pass
+
     class MEMORYSTATUSEX(ctypes.Structure):
         _fields_ = [
             ("dwLength", ctypes.c_ulong),
@@ -82,14 +112,17 @@ def _get_ram_info():
         ]
 
     try:
-        stat = MEMORYSTATUSEX()
-        stat.dwLength = ctypes.sizeof(stat)
-        ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
-        total_gb = round(stat.ullTotalPhys / (1024**3), 1)
-        used_gb = round((stat.ullTotalPhys - stat.ullAvailPhys) / (1024**3), 1)
-        return total_gb, used_gb, stat.dwMemoryLoad
+        if hasattr(ctypes, "windll"):
+            stat = MEMORYSTATUSEX()
+            stat.dwLength = ctypes.sizeof(stat)
+            ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
+            total_gb = round(stat.ullTotalPhys / (1024**3), 1)
+            used_gb = round((stat.ullTotalPhys - stat.ullAvailPhys) / (1024**3), 1)
+            return total_gb, used_gb, float(stat.dwMemoryLoad)
     except Exception:
-        return 16.0, 4.0, 25.0
+        pass
+
+    return 16.0, 4.0, 25.0
 
 
 def _get_nvidia_gpu_info():
