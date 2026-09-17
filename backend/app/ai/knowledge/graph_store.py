@@ -524,10 +524,11 @@ class GraphStore:
                 new_name = updates["name"].strip()
                 new_canon = canonicalize_name(new_name)
                 if new_canon != old_canon:
-                    existing = db.query(KnowledgeEntity).filter(
-                        KnowledgeEntity.canonical_name == new_canon,
-                        KnowledgeEntity.id != entity_id
-                    ).first()
+                    existing = (
+                        db.query(KnowledgeEntity)
+                        .filter(KnowledgeEntity.canonical_name == new_canon, KnowledgeEntity.id != entity_id)
+                        .first()
+                    )
                     if existing:
                         raise ValueError(f"Entity with canonical name '{new_canon}' already exists.")
                     entity.name = new_name
@@ -622,17 +623,57 @@ class GraphStore:
         self._ensure_initialized()
         seeded_entities = [
             ("Akash Kundu", "PERSON", 0.99, "Creator, primary architect, and operator of COPPER."),
-            ("COPPER", "PROJECT", 0.99, "Personal Autonomous AI Operating System with 100% offline air-gapped zero egress."),
+            (
+                "COPPER",
+                "PROJECT",
+                0.99,
+                "Personal Autonomous AI Operating System with 100% offline air-gapped zero egress.",
+            ),
             ("FastAPI", "TECHNOLOGY", 0.95, "High-performance async Python backend framework powering COPPER APIs."),
-            ("ChromaDB", "TECHNOLOGY", 0.95, "Local embedded vector database for semantic memory storage and retrieval."),
+            (
+                "ChromaDB",
+                "TECHNOLOGY",
+                0.95,
+                "Local embedded vector database for semantic memory storage and retrieval.",
+            ),
             ("React 19", "TECHNOLOGY", 0.95, "Modern reactive web frontend with Tailwind CSS and D3.js visualization."),
-            ("Whisper Large v3 Turbo", "TECHNOLOGY", 0.92, "Offline speech recognition model executing on local GPU tensor cores."),
-            ("TFP-Router", "TECHNOLOGY", 0.96, "Sub-millisecond intent classification engine achieving 0.105ms routing latency."),
-            ("SQLite", "TECHNOLOGY", 0.98, "Embedded ACID relational storage for persistent memories, events, and graph topology."),
+            (
+                "Whisper Large v3 Turbo",
+                "TECHNOLOGY",
+                0.92,
+                "Offline speech recognition model executing on local GPU tensor cores.",
+            ),
+            (
+                "TFP-Router",
+                "TECHNOLOGY",
+                0.96,
+                "Sub-millisecond intent classification engine achieving 0.105ms routing latency.",
+            ),
+            (
+                "SQLite",
+                "TECHNOLOGY",
+                0.98,
+                "Embedded ACID relational storage for persistent memories, events, and graph topology.",
+            ),
             ("Ollama", "TECHNOLOGY", 0.95, "Local offline LLM inference server managing quantized GGUF weights."),
-            ("Qwen 2.5", "TECHNOLOGY", 0.92, "Local micro-model for knowledge extraction and rapid conversation summarization."),
-            ("NetworkX", "TECHNOLOGY", 0.94, "In-memory multi-directed graph engine for topological queries and pathfinding."),
-            ("Epistemic Memory Center", "CONCEPT", 0.95, "Bayesian belief network tracking facts, observations, and hypotheses."),
+            (
+                "Qwen 2.5",
+                "TECHNOLOGY",
+                0.92,
+                "Local micro-model for knowledge extraction and rapid conversation summarization.",
+            ),
+            (
+                "NetworkX",
+                "TECHNOLOGY",
+                0.94,
+                "In-memory multi-directed graph engine for topological queries and pathfinding.",
+            ),
+            (
+                "Epistemic Memory Center",
+                "CONCEPT",
+                0.95,
+                "Bayesian belief network tracking facts, observations, and hypotheses.",
+            ),
             ("Causal Engine", "CONCEPT", 0.92, "Directional event-action cause and effect inference subsystem."),
         ]
 
@@ -661,7 +702,9 @@ class GraphStore:
                 self.add_entity(name=name, entity_type=etype, confidence=conf, context=ctx, db=db)
 
             for src, tgt, rtype, conf, ctx in seeded_relationships:
-                self.add_relationship(source_name=src, target_name=tgt, relation_type=rtype, confidence=conf, context=ctx, db=db)
+                self.add_relationship(
+                    source_name=src, target_name=tgt, relation_type=rtype, confidence=conf, context=ctx, db=db
+                )
 
             stats = self.get_stats()
             return {

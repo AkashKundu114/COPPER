@@ -86,7 +86,7 @@ class ChatService:
         for pattern in stop_patterns:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
-                text = text[:match.start()].rstrip()
+                text = text[: match.start()].rstrip()
 
         # Replace any em dashes with standard hyphens
         text = text.replace("—", " - ")

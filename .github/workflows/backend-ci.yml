@@ -90,16 +90,22 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12"]
 
+    env:
+      DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
+      REDIS_URL: redis://localhost:6379/0
+      DISPLAY: ':99'
+      MPLBACKEND: Agg
+
     services:
       postgres:
         image: postgres:16-alpine
         env:
           POSTGRES_USER: copper
           POSTGRES_PASSWORD: copperpass
-          POSTGRES_DB: copperdb_test
+          POSTGRES_DB: copper
         ports: ["5432:5432"]
         options: >-
-          --health-cmd "pg_isready -U copper"
+          --health-cmd "pg_isready -U copper -d copper"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -121,6 +127,11 @@ jobs:
           cache: "pip"
           cache-dependency-path: backend/requirements.txt
 
+      - name: Install native audio dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libportaudio2 portaudio19-dev
+
       - name: Install dependencies
         run: |
           cd backend
@@ -129,7 +140,7 @@ jobs:
 
       - name: Run test suite with coverage
         env:
-          DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copperdb_test
+          DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
           REDIS_URL: redis://localhost:6379/0
           DISPLAY: ':99'
           MPLBACKEND: Agg

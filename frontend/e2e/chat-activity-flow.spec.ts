@@ -43,8 +43,8 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
     await expect(page).toHaveTitle(/COPPER/i);
 
     // 2. Navigate to Conversation / Chat view via Sidebar
-    const chatNavButton = page.locator("button, a").filter({ hasText: /Conversation/i }).first();
-    await expect(chatNavButton).toBeVisible();
+    const chatNavButton = page.getByTestId("conversation-nav");
+    await expect(chatNavButton).toBeVisible({ timeout: 15000 });
     await chatNavButton.click();
 
     // Verify ChatDock input is present
@@ -77,8 +77,8 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
     await expect(assistantBubble).toBeVisible({ timeout: 60000 });
 
     // 7. Navigate to Activity Stream view via Sidebar
-    const activityNavButton = page.locator("button, a").filter({ hasText: /Activity Stream/i }).first();
-    await expect(activityNavButton).toBeVisible();
+    const activityNavButton = page.getByTestId("activity-nav");
+    await expect(activityNavButton).toBeVisible({ timeout: 15000 });
     await activityNavButton.click();
 
     // 8. Verify Activity Trace and execution telemetry render
@@ -105,7 +105,8 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
     await page.goto("/");
 
     // 2. Open Conversation
-    const chatNavButton = page.locator("button, a").filter({ hasText: /Conversation/i }).first();
+    const chatNavButton = page.getByTestId("conversation-nav");
+    await expect(chatNavButton).toBeVisible({ timeout: 15000 });
     await chatNavButton.click();
 
     const chatInput = page.getByPlaceholder(/input command or prompt/i);
@@ -136,7 +137,8 @@ test.describe("Critical User Flows - Live Local Models E2E", () => {
     await expect(codeResponse).toBeVisible({ timeout: 60000 });
 
     // 7. Verify Activity view shows trace
-    const activityNavButton = page.locator("button, a").filter({ hasText: /Activity Stream/i }).first();
+    const activityNavButton = page.getByTestId("activity-nav");
+    await expect(activityNavButton).toBeVisible({ timeout: 15000 });
     await activityNavButton.click();
 
     await expect(page.locator("text=Activity Stream").or(page.locator("text=Activity")).first()).toBeVisible({

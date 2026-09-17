@@ -7,16 +7,19 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any
 
+from app.core.logger import logger
+
 try:
     import sounddevice as sd
-
-    SOUNDDEVICE_AVAILABLE = True
-except ImportError:
+except (ImportError, OSError) as exc:
+    # Audio hardware/PortAudio is optional in CI and headless environments.
     sd = None
     SOUNDDEVICE_AVAILABLE = False
+    logger.warning("Audio recording unavailable: %s", exc)
+else:
+    SOUNDDEVICE_AVAILABLE = True
 
 from app.ai.llm.ollama_client import ollama_client
-from app.core.logger import logger
 from app.database.models.task import Task
 from app.database.postgres import SessionLocal
 
@@ -78,21 +81,32 @@ class MeetingIntelligence:
 
         record = MeetingRecord(meeting_id=meeting_id, title=title, started_at=datetime.utcnow(), audio_path=audio_path)
 
-        try:
-            _ = sd.default.device  # Test if sounddevice is available
-            self.active_recordings[meeting_id] = True
-
-            # Start background recording task
-            asyncio.create_task(self._record_audio_task(meeting_id, audio_path))
-        except Exception as e:
-            logger.warning(f"Sounddevice not available, simulating recording: {e}")
+        if not SOUNDDEVICE_AVAILABLE or sd is None:
             record.status = "recording_simulated"
+            logger.info("Sounddevice unavailable; using simulated recording")
+        else:
+            try:
+                _ = sd.default.device  # Test if sounddevice is available
+                self.active_recordings[meeting_id] = True
+
+                # Start background recording task
+                try:
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(self._record_audio_task(meeting_id, audio_path))
+                except RuntimeError:
+                    logger.warning("No running event loop to schedule recording task.")
+            except Exception as exc:
+                logger.warning("Sounddevice unavailable, simulating recording: %s", exc)
+                record.status = "recording_simulated"
 
         self.meetings[meeting_id] = record
         self._save_index()
         return record
 
     async def _record_audio_task(self, meeting_id: str, audio_path: str):
+        if sd is None:
+            return
+
         sample_rate = 44100
         channels = 1
         frames = []
@@ -141,8 +155,12 @@ class MeetingIntelligence:
             record.status = "processing"
             self._save_index()
 
-            # Start processing pipeline in background
-            asyncio.create_task(self._process_meeting(meeting_id))
+            # Start processing pipeline in background if event loop is running
+            try:
+                loop = asyncio.get_running_loop()
+                loop.create_task(self._process_meeting(meeting_id))
+            except RuntimeError:
+                logger.warning("No running event loop to schedule meeting processing.")
 
         return record
 

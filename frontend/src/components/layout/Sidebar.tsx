@@ -48,9 +48,17 @@ interface SidebarProps {
   onSelectSection: (section: NavSection) => void;
 }
 
+interface NavItem {
+  id: NavSection;
+  label: string;
+  icon: React.ElementType;
+  testId?: string;
+  ariaLabel?: string;
+}
+
 interface NavGroup {
   category: string;
-  items: { id: NavSection; label: string; icon: React.ElementType }[];
+  items: NavItem[];
 }
 
 const NAV_GROUPS: NavGroup[] = [
@@ -58,7 +66,13 @@ const NAV_GROUPS: NavGroup[] = [
     category: "WORKSPACE",
     items: [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { id: "chat", label: "Pair-Programmer", icon: MessageSquare },
+      {
+        id: "chat",
+        label: "Pair-Programmer",
+        icon: MessageSquare,
+        testId: "conversation-nav",
+        ariaLabel: "Conversation",
+      },
       { id: "companion", label: "Voice Companion", icon: Radio },
       { id: "projects", label: "Repositories", icon: Layers },
       { id: "tasks", label: "Sprint Backlog", icon: CheckSquare },
@@ -82,7 +96,13 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "agents", label: "Agent Fleet", icon: Bot },
       { id: "benchmarks", label: "Benchmarks", icon: BarChart3 },
       { id: "security", label: "Zero-Trust Security", icon: Shield },
-      { id: "activity", label: "Activity Log", icon: Activity },
+      {
+        id: "activity",
+        label: "Activity Log",
+        icon: Activity,
+        testId: "activity-nav",
+        ariaLabel: "Activity Stream",
+      },
       { id: "insights", label: "System Insights", icon: TrendingUp },
       { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
       { id: "settings", label: "Settings", icon: Settings },
@@ -135,15 +155,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {group.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
+                const testId = item.testId || `${item.id}-nav`;
                 return (
                   <button
                     key={item.id}
+                    type="button"
+                    data-testid={testId}
                     onClick={() => {
                       soundFX.play("tab");
                       onSelectSection(item.id);
                     }}
                     aria-current={isActive ? "page" : undefined}
-                    aria-label={`${item.label} section${isActive ? ", current page" : ""}`}
+                    aria-label={
+                      item.ariaLabel ||
+                      `${item.label} section${isActive ? ", current page" : ""}`
+                    }
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-100 ${
                       isActive
                         ? "bg-blush-100/12 text-white border-l-2 border-blush-100 font-semibold"

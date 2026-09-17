@@ -16,10 +16,7 @@ from app.ai.ambient.meeting_intelligence import meeting_intelligence
 def test_context_watcher_record_and_timeline():
     now = datetime.now()
     entry = ActivityEntry(
-        app_name="Code.exe",
-        window_title="main.py - COPPER - Visual Studio Code",
-        timestamp=now,
-        duration_seconds=5.0
+        app_name="Code.exe", window_title="main.py - COPPER - Visual Studio Code", timestamp=now, duration_seconds=5.0
     )
     context_watcher.buffer.append(entry)
     timeline = context_watcher.get_timeline(hours=1)
@@ -59,7 +56,7 @@ def test_clipboard_processor_classification():
         timestamp=datetime.now(UTC),
         content="https://github.com/AkashKundu114/COPPER",
         content_type=t_url,
-        content_preview="https://github.com/AkashKundu114/COPPER"
+        content_preview="https://github.com/AkashKundu114/COPPER",
     )
     proc_url = clipboard_processor.process_entry(entry_url)
     assert "suggested_actions" in proc_url
@@ -75,7 +72,7 @@ def test_clipboard_processor_classification():
         timestamp=datetime.now(UTC),
         content=code_text,
         content_type=t_code,
-        content_preview=code_text
+        content_preview=code_text,
     )
     proc_code = clipboard_processor.process_entry(entry_code)
     assert "suggested_actions" in proc_code
@@ -132,3 +129,27 @@ async def test_meeting_intelligence_structure_notes():
     assert notes is not None
     assert isinstance(notes, dict)
     assert "summary" in notes or "decisions" in notes or "action_items" in notes
+
+
+def test_meeting_intelligence_start_and_stop_recording():
+    record = meeting_intelligence.start_recording(title="Test CI Sync")
+    assert record is not None
+    assert record.title == "Test CI Sync"
+    assert record.status in ("recording", "recording_simulated")
+
+    stopped = meeting_intelligence.stop_recording(record.meeting_id)
+    assert stopped is not None
+    assert stopped.status == "processing"
+
+
+def test_meeting_intelligence_headless_simulation(monkeypatch):
+    from app.ai.ambient import meeting_intelligence as mi_module
+
+    monkeypatch.setattr(mi_module, "SOUNDDEVICE_AVAILABLE", False)
+    monkeypatch.setattr(mi_module, "sd", None)
+
+    record = mi_module.meeting_intelligence.start_recording(title="Headless Meeting")
+    assert record.status == "recording_simulated"
+
+    stopped = mi_module.meeting_intelligence.stop_recording(record.meeting_id)
+    assert stopped.status == "processing"
