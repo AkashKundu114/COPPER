@@ -73,13 +73,7 @@ async def run_benchmark_endpoint() -> dict[str, Any]:
         from pathlib import Path
 
         backend_root = Path(__file__).resolve().parents[3]
-        dataset_path = (
-            backend_root
-            / "eval"
-            / "datasets"
-            / "routing"
-            / "master_routing_dataset.json"
-        )
+        dataset_path = backend_root / "eval" / "datasets" / "routing" / "master_routing_dataset.json"
         if not dataset_path.exists():
             logger.warning("Routing benchmark dataset missing: %s", dataset_path)
             return {

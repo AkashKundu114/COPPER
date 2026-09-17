@@ -127,7 +127,6 @@ class DynamicRoutingMemory:
         best_agent = None
 
         for key, data in self.memory.items():
-
             tokens_key = set(key.split())
             intersection = len(tokens_p & tokens_key)
             union = len(tokens_p | tokens_key)

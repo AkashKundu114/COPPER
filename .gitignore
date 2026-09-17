@@ -40,6 +40,7 @@ data/vector/
 data/user_profile.json
 frontend/public/generated/*.png
 !frontend/public/generated/.gitkeep
+/*.png
 
 # ── Model Binaries & Quantized Weights ────────────────────────────────────────
 ai-models/*

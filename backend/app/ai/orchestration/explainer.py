@@ -2,7 +2,7 @@ import collections
 import re
 import threading
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any
 
 from app.core.constants import AgentType
