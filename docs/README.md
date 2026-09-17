@@ -39,11 +39,8 @@ docs/
 │   ├── trd.md                        # Technical Requirements Document & APIs
 │   ├── implementation.md             # Developer codebase layout & agent creation guide
 │   └── model-selection.md            # Local model catalog & quantization strategy
-├── research/                         # Product & Epistemic Research
-│   ├── prd.md                        # Product Requirements Document & user personas
-│   ├── epistemic-memory.md           # Fact / Observation / Hypothesis math & memory decay
-│   ├── guardian.md                   # Guardian 4-level alignment framework
-│   └── whitepaper.md                 # Technical architecture whitepaper
+├── research/                         # [Offline/Embargoed] Academic research manuscripts & paper drafts
+│   └── (Maintained in root /research during paper submission)
 ├── setup/                            # Installation & Operational Guides
 │   ├── development.md                # Local environment, Docker, & desktop build setup
 │   ├── deployment.md                 # Docker Compose production & K8s deployment
@@ -74,8 +71,8 @@ docs/
 - **[Voice Activation & Tiered Inference](architecture/voice-activation.md)**
 - **[Model Selection Strategy](technical/model-selection.md)**
 - **[Implementation Guide](technical/implementation.md)**
-- **[Product Requirements Document (PRD)](research/prd.md)**
-- **[Epistemic Memory Research](research/epistemic-memory.md)**
-- **[Guardian Intervention Research](research/guardian.md)**
+- **[System Architecture](diagrams/system-architecture.md)**
+- **[Request Lifecycle & App Flow](diagrams/app-flow.md)**
+- **[State Machines Specification](diagrams/state-machines.md)**
 - **[Development Setup Guide](setup/development.md)**
 - **[Troubleshooting Guide](setup/troubleshooting.md)**

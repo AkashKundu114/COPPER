@@ -173,6 +173,9 @@ desktop.ini
 papers/
 !papers/references.md
 
+# ── Unpublished Research & Academic Papers (Embargoed until publication) ──────
+research/
+
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md
 PRIVACY_POLICY.md
