@@ -94,7 +94,7 @@ jobs:
       DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
       REDIS_URL: redis://localhost:6379/0
       DISPLAY: ":99"
-      XAUTHORITY: "/home/runner/.Xauthority"
+      XAUTHORITY: ${{ runner.temp }}/.Xauthority
       MPLBACKEND: Agg
 
     services:
@@ -140,36 +140,31 @@ jobs:
             xauth
 
       - name: Start virtual display
-        shell: bash
         run: |
-          set -euo pipefail
+          export XAUTHORITY="$RUNNER_TEMP/.Xauthority"
 
-          export DISPLAY=:99
-          export XAUTHORITY="$HOME/.Xauthority"
+          touch "$XAUTHORITY"
+          xauth -f "$XAUTHORITY" add :99 . "$(mcookie)"
 
-          COOKIE="$(mcookie)"
-          xauth -f "$XAUTHORITY" add "$DISPLAY" . "$COOKIE"
-
-          sudo Xvfb "$DISPLAY" \
+          Xvfb :99 \
             -screen 0 1920x1080x24 \
             -auth "$XAUTHORITY" \
-            +extension GLX +render -noreset \
+            +extension GLX \
+            +render \
+            -noreset \
             > /tmp/xvfb.log 2>&1 &
 
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+          echo "XAUTHORITY=$XAUTHORITY" >> "$GITHUB_ENV"
+
           for i in {1..20}; do
-            if xdpyinfo -display "$DISPLAY" >/dev/null 2>&1; then
+            if xdpyinfo -display :99 >/dev/null 2>&1; then
               break
             fi
             sleep 1
           done
 
-          xdpyinfo -display "$DISPLAY"
-
-          # Persist the variables for the test step.
-          {
-            echo "DISPLAY=$DISPLAY"
-            echo "XAUTHORITY=$XAUTHORITY"
-          } >> "$GITHUB_ENV"
+          xdpyinfo -display :99
 
       - name: Install dependencies
         run: |
@@ -182,7 +177,7 @@ jobs:
           DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
           REDIS_URL: redis://localhost:6379/0
           DISPLAY: ":99"
-          XAUTHORITY: "/home/runner/.Xauthority"
+          XAUTHORITY: ${{ runner.temp }}/.Xauthority
           PYTHONPATH: "${{ github.workspace }}/backend"
           MPLBACKEND: Agg
         run: |
