@@ -49,7 +49,7 @@ All pull request descriptions must follow Google's XYZ impact framework:
 ### Prerequisites
 - **Python:** 3.11+ (Strict typing with `typing` / `mypy` standards)
 - **Node.js:** 20+ & npm 9+
-- **Electron:** 43+
+- **Electron:** 44+
 - **Pytest:** 9+
 
 ### Local Environment Setup
@@ -81,18 +81,24 @@ cd ..
 Before opening a pull request, you **MUST** pass all quality gates locally:
 
 ```bash
-# Gate 1: Full Pytest Test Suite (All 500+ unit and integration tests must pass)
+# Gate 1: Full Pytest Test Suite (All 508 backend tests must pass)
 python -m pytest tests/ -v
 
-# Gate 2: Benchmark Evaluation Suite (100% Routing & Guardian accuracy across 1,740 samples)
+# Gate 2: Frontend Unit Tests (All 38 Vitest tests must pass)
+cd frontend && npm run test && cd ..
+
+# Gate 3: Benchmark Evaluation Suite (100% Routing & Guardian accuracy across 1,740 samples)
 python backend/eval/benchmark.py
 
-# Gate 3: AI Model Manifest Verification
+# Gate 4: AI Model Manifest Verification
 python scripts/models/verify_models.py
 
-# Gate 4: Code Style & Static Linting
-ruff check backend/
+# Gate 5: Code Style & Static Linting
+python -m ruff check backend/
 cd frontend && npm run lint && cd ..
+
+# Gate 6: TypeScript Type Check
+cd frontend && npx tsc -b --noEmit && cd ..
 ```
 
 ---

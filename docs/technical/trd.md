@@ -24,10 +24,10 @@ This Technical Requirements Document specifies the operational criteria, perform
 ## 3. Interface Contracts & API Specifications
 
 ### 3.1 REST API Standards
-All endpoints conform to OpenAPI 3.0 standards and return JSON structures using standard HTTP status codes.
+All endpoints conform to OpenAPI 3.0 standards and return JSON structures using standard HTTP status codes. The API encompasses **257 endpoints across 50 route modules**, backed by **13 SQLAlchemy database models**.
 
 - `POST /api/v1/chat/message`: Send synchronous user message.
-- `GET /api/v1/agents`: List all 30 sub-agents, active status, familiarity scores, and orbital tiers.
+- `GET /api/v1/agents`: List all 30 orchestrated agents (10 specialized primary agents + subagents), active status, familiarity scores, and orbital tiers.
 - `POST /api/v1/agents/{id}/rollback`: Trigger immediate version rollback for specified agent.
 - `GET /api/v1/memory`: Fetch epistemic user facts, observations, and hypotheses.
 - `POST /api/v1/memory/reset`: Clear all epistemic memories and vector embeddings.

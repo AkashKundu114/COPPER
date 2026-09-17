@@ -21,7 +21,7 @@ graph TD
         Router --> Guardian[Guardian Alignment Engine Levels 0-3]
         Guardian --> Firewall[Data Firewall PII Scanner]
         Firewall --> Orchestrator[Agent Orchestrator Pipeline]
-        Orchestrator --> Agents[9 Agents + 14 Micro-Subagents]
+        Orchestrator --> Agents[10 Specialized Agents + 7 Micro-Subagents]
         Orchestrator --> SelfHealing[Self-Healing Retry Loop]
         Orchestrator --> Learner[Epistemic Memory Learner]
     end

@@ -40,5 +40,12 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "53e791e6-954e-43d5-a3a7-f308eae0a35b",
+    "effect_id": "937618a0-e077-4eee-938e-29d169566fc9",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]

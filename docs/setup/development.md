@@ -10,7 +10,7 @@ This guide walks you through setting up a complete local development environment
 - **Python:** 3.11 or higher
 - **Node.js:** 20+ LTS & npm 9+
 - **Hardware Recommended:** NVIDIA RTX GPU with 8GB+ VRAM (or modern Apple Silicon / AMD APU)
-- **Disk Space:** ~45 GB for full 26-model GGUF & ONNX offline suite
+- **Disk Space:** ~47 GB for full 34-model GGUF & ONNX offline suite
 
 ---
 
@@ -82,12 +82,19 @@ npm run desktop
 Always run the full test and benchmark suite before submitting PRs:
 
 ```bash
-# 1. Run all 477 Pytest Unit & Integration Tests
+# 1. Run all 508 Pytest Backend Unit & Integration Tests
 python -m pytest tests/ -v
 
-# 2. Run the 1,740-case Intent Routing & Guardian Benchmark
+# 2. Run 38 Frontend Unit Tests (Vitest + React Testing Library)
+cd frontend && npm run test && cd ..
+
+# 3. Run the 1,740-case Intent Routing & Guardian Benchmark
 python backend/eval/benchmark.py
 
-# 3. Verify Local Model Artifacts
+# 4. Verify Local Model Artifacts
 python scripts/models/verify_models.py
+
+# 5. Code Linting (Python + TypeScript)
+python -m ruff check backend/
+cd frontend && npm run lint && npx tsc -b --noEmit && cd ..
 ```

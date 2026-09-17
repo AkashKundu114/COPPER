@@ -19,13 +19,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Chaos Engineering, Adversarial Reliability & Sovereign 14B Fleet
 
-> **Engineered** production-grade resilience and fault-tolerant local multi-agent operation **as measured by** 100.0% adversarial fuzzing threat interception (55/55 attacks blocked), zero CUDA OOM crashes under concurrency thrashing, 100% WAL crash recovery, and 501+ passing Pytest tests, **by developing** a comprehensive Chaos Harness (`backend/eval/chaos_harness.py`), dynamic VRAM pager eviction algorithms, and append-only write-ahead log state recovery.
+> **Engineered** production-grade resilience and fault-tolerant local multi-agent operation **as measured by** 100.0% adversarial fuzzing threat interception (55/55 attacks blocked), zero CUDA OOM crashes under concurrency thrashing, 100% WAL crash recovery, and 538 passing tests (500 backend + 38 frontend), **by developing** a comprehensive Chaos Harness (`backend/eval/chaos_harness.py`), dynamic VRAM pager eviction algorithms, and append-only write-ahead log state recovery.
 
 ### Added
 - **Chaos Engineering & Adversarial Fuzzing Harness:** Evaluates system resilience across 55 mutated payloads testing evasion techniques against `DFM-Guard` (zero-width spaces, homoglyph confusion, command chaining, Base64 obfuscation, and hypothetical roleplay jailbreaks), achieving a **100.0% threat catch sensitivity** (0 breaches).
 - **Dynamic VRAM Pager & Overcommit Defense:** Managed dynamic swap/eviction policy preserving physical VRAM ceilings under high-concurrency model swapping (29 dynamic evictions enforced with 0 CUDA OOM exceptions).
 - **Crash-Consistent WAL & State Rollback:** Append-only CRC32 write-ahead log ensuring 100% deterministic state recovery and orphaned file cleanup across simulated SIGKILL hard interrupts.
-- **Expanded Pytest Test Suite:** Expanded test suite to **501+ passing tests** spanning AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, and adversarial fuzzing.
+- **Expanded Pytest Test Suite:** Expanded test suite to **508 collected backend tests** (500 passing) plus **38 frontend unit tests** (Vitest + React Testing Library) spanning AI routing, DAG concurrency, REST APIs (257 endpoints across 50 route modules), audio pipelines, epistemic memory, sandboxing, adversarial fuzzing, and accessibility.
+- **Full Observability Stack:** Integrated Prometheus metrics, Grafana dashboards, Loki/Promtail log aggregation, and Tempo distributed tracing (OpenTelemetry) across the 8-service Docker Compose stack.
 - **Combinatorial Benchmark Evaluation:** Automated evaluation across 1,740 total samples (1,390 routing cases and 350 Guardian safety triggers) yielding 97.77% routing precision, 98.78% weighted F1, and ~2,049.53 QPS combinatorial throughput.
 
 ---
@@ -48,7 +49,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Algorithmic Novelties & Epistemic Operating System Milestones
 
-> **Pioneered** a 100% offline, local-first personal AI operating system **as measured by** 100.0% routing precision (1,390 samples at 0.100ms / ~9,856 QPS), 100.0% Guardian threat intercept (0 breaches across 350 test cases), 100.0% epistemic belief convergence, and 392/392 passing tests, **by designing and implementing** TFP-Router, UMF-EDR & PW-EBR epistemic memory, and DFM-Guard adaptive friction alignment.
+> **Pioneered** a 100% offline, local-first personal AI operating system **as measured by** 100.0% routing precision (1,390 samples at 0.100ms / ~9,856 QPS), 100.0% Guardian threat intercept (0 breaches across 350 test cases), 100.0% epistemic belief convergence, and 538 passing tests (500 backend + 38 frontend), **by designing and implementing** TFP-Router, UMF-EDR & PW-EBR epistemic memory, and DFM-Guard adaptive friction alignment.
 
 ### Added
 - **TFP-Router (Topological Failure-Predicting Cascade Router):** Cascaded sub-millisecond dispatch (<0.10ms) combining Jaccard exemplar caching, weighted multi-class pattern scoring with negative suppression, compound intent decomposition (`sub_tasks`), and topological DAG cascade failure risk prediction ($\mathcal{R}_{\text{cascade}}$).
@@ -130,7 +131,8 @@ This major release consolidates five architectural passes, resolving legacy sing
 - Local LLM connection via Ollama for single-agent conversation.
 
 
-[Unreleased]: https://github.com/AkashKundu114/COPPER/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/AkashKundu114/COPPER/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/AkashKundu114/COPPER/compare/v2.5.0...v3.0.0
 [2.5.0]: https://github.com/AkashKundu114/COPPER/compare/v1.2.0...v2.5.0
 [1.2.0]: https://github.com/AkashKundu114/COPPER/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/AkashKundu114/COPPER/compare/v1.0.0...v1.1.0

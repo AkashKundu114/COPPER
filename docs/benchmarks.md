@@ -16,7 +16,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 | **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.1 ms** | **~9,856 QPS** | 0 |
 | **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.008 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest Test Suite** | 501+ | **100.0%** | **100.0%** | **Core Passing** | — | 0 |
+| **Pytest Test Suite** | 508 Backend + 38 Frontend | **98.4% / 100%** | **538 Total** | **500 + 38 Passing** | — | 0 |
 
 ---
 
@@ -164,7 +164,7 @@ The figures below represent empirical profiling conducted on C.O.P.P.E.R.'s air-
   <img src="images/fig1_throughput_acceleration.png" alt="Figure 1: 14B Throughput Acceleration" width="48%" />
   <img src="images/fig2_vram_memory_footprint.png" alt="Figure 2: VRAM Allocation & Headroom" width="48%" />
   <br />
-  <em><b>Figure 1 & 2:</b> (Left) Empirical 14B speedup (+81% to +220%) & 15-agent throughput spectrum on RTX 5060 Laptop GPU. (Right) Stacked dedicated GPU VRAM budget breakdown and host system RAM allocation with zero layer spilling.</em>
+  <em><b>Figure 1 & 2:</b> (Left) Empirical 14B speedup (+81% to +220%) & multi-agent throughput spectrum across the 10 specialized agents and 15 builtin tool modules on RTX 5060 Laptop GPU. (Right) Stacked dedicated GPU VRAM budget breakdown and host system RAM allocation with zero layer spilling.</em>
 </p>
 
 ### 8.2 Pareto Frontier & Quantized KV Cache Scaling
@@ -172,7 +172,7 @@ The figures below represent empirical profiling conducted on C.O.P.P.E.R.'s air-
   <img src="images/fig3_latency_throughput_pareto.png" alt="Figure 3: Pareto Frontier" width="48%" />
   <img src="images/fig4_kv_cache_layer_offload_study.png" alt="Figure 4: Layer Offloading & KV Cache Study" width="48%" />
   <br />
-  <em><b>Figure 3 & 4:</b> (Left) Latency vs throughput Pareto optimal frontier across the 15-agent cognitive fleet. (Right) Layer offloading and KV cache quantization study (f16 vs q8_0 vs q4_0) on sustained generation throughput.</em>
+  <em><b>Figure 3 & 4:</b> (Left) Latency vs throughput Pareto optimal frontier across the cognitive fleet (10 specialized primary agents / 30 orchestrated agents total). (Right) Layer offloading and KV cache quantization study (f16 vs q8_0 vs q4_0) on sustained generation throughput.</em>
 </p>
 
 ### 8.3 Multi-Agent Dispatch Matrix & Epistemic Memory Dynamics

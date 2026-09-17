@@ -9,37 +9,45 @@ C.O.P.P.E.R/
 ├── backend/
 │   ├── app/
 │   │   ├── ai/                      # AI Core & Agent Subsystems
-│   │   │   ├── agents/              # 9 Specialized Agents + 14 Micro-Subagent configurations & implementations
+│   │   │   ├── agents/              # 10 Specialized Agents + 7 Micro-Subagent configurations & implementations
 │   │   │   ├── llm/                 # Ollama & OpenAI provider connectors
 │   │   │   ├── memory/              # Epistemic learner & ChromaDB RAG logic
 │   │   │   └── orchestration/       # Pipeline: Route -> Animate -> Respond -> Remember
 │   │   ├── api/                     # REST & WebSocket Route handlers
-│   │   │   └── routes/              # chat.py, guardian.py, agents.py, audit.py
+│   │   │   └── routes/              # 50 route modules (257 endpoints): chat, guardian, agents, audit, etc.
 │   │   ├── core/                    # Core System Services
 │   │   │   ├── config.py            # Environment configurations & settings
 │   │   │   ├── data_firewall.py     # PII Scanner & Anonymizer engine
 │   │   │   ├── guardian.py          # Level 0-3 Guardian evaluation engine
 │   │   │   ├── logger.py            # Structured JSON logger
+│   │   │   ├── telemetry.py         # OpenTelemetry tracing & metrics
 │   │   │   └── self_healing.py      # Retries, tool fallback & execution recovery
 │   │   ├── data/                    # Static registries & database seed files
 │   │   ├── database/                # Relational Models & Alembic Migrations
-│   │   │   └── models/              # memory_v2.py, agent_registry.py, audit_log.py
-│   │   ├── services/                # Business logic services
+│   │   │   └── models/              # 13 models: memory_v2, agent_registry, audit_log, etc.
+│   │   ├── services/                # Business logic services (chat, guardian, vision, document, audio)
 │   │   └── main.py                  # FastAPI application entrypoint
-│   └── requirements.txt
+│   └── requirements.txt             # 44 Python dependencies
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
+│   ├── src/                         # 84 source files, 24,224 LOC
+│   │   ├── components/              # 48 React components across 14 subsystems
 │   │   │   ├── brain/               # NeuralBrain.tsx (SVG radial ganglia map)
-│   │   │   ├── chat/                # ChatDock.tsx, GuardianChallengeModal.tsx, SpeakingBar.tsx
+│   │   │   ├── chat/                # ChatDock, GuardianChallengeModal, SpeakingBar, TaskGraphVisualizer
+│   │   │   ├── ambient/             # CognitiveStatusBadge, DailyBriefingCard, PassiveActivityTimeline
+│   │   │   ├── hud/                 # ThinkingOrb, HolographicCore, TacticalGlobe, VisionViewfinder
+│   │   │   ├── memory/              # CausalExplorerTab, MemoryProvenanceTab
+│   │   │   ├── registry/            # AgencyPersonasTab, ScientificSkillsTab, ActiveToolsTab
 │   │   │   ├── profile/             # SideDrawer.tsx (Memory inspector & Job logs)
 │   │   │   └── widgets/             # ClockWidget, WeatherWidget, CalendarWidget, NetworkWidget
-│   │   ├── lib/                     # WebSocket hooks, layout engines, API client
-│   │   ├── pages/                   # AgentRegistry.tsx, SecurityCenter.tsx, Insights.tsx
+│   │   ├── lib/ & hooks/            # WebSocket hooks, layout engines, API client, sound effects
+│   │   ├── pages/                   # 18 views: Dashboard, Today, Memory, Registry, SecurityCenter, etc.
 │   │   └── App.tsx                  # Core App Shell & router setup
 │   ├── tailwind.config.js           # Molten Copper theme configuration
-│   └── package.json
-└── docs/                            # Project Documentation Suite
+│   └── package.json                 # 31 dependencies (React 19, Vite 8, Electron 44, Tailwind 4)
+├── tests/                           # 508 backend tests (73 files) + 38 frontend tests (5 files)
+├── ai-models/                       # ~47 GB, 34 GGUF/ONNX model files
+├── infrastructure/                  # Docker, Kubernetes, Nginx, Prometheus, Grafana, Loki, Tempo
+└── docs/                            # 26 technical documentation files
 ```
 
 ---

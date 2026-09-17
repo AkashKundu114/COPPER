@@ -84,6 +84,8 @@ class GraphStore:
             id=rel.id,
             source=rel.source_name,
             target=rel.target_name,
+            source_canonical=source_canon,
+            target_canonical=target_canon,
             type=rel.relation_type,
             confidence=rel.confidence,
             context=rel.context or "",
@@ -372,15 +374,28 @@ class GraphStore:
 
         return path_steps
 
-    def get_subgraph(self, entity_name: str | None = None, depth: int = 1, max_nodes: int = 30) -> dict:
+    def get_subgraph(
+        self,
+        entity_name: str | None = None,
+        depth: int = 1,
+        max_nodes: int = 60,
+        entity_type: str | None = None,
+        min_confidence: float = 0.0,
+    ) -> dict:
         """
         Generates a D3.js-ready force-directed graph structure.
         If `entity_name` is provided, generates an ego-graph; otherwise returns top entities.
+        Supports entity_type and min_confidence filters.
         """
         self._ensure_initialized()
+        clean_type = entity_type.strip().upper() if entity_type and entity_type.upper() != "ALL" else None
+
         if entity_name:
-            result = self.query_neighbors(entity_name, depth=depth, min_confidence=0.0)
-            nodes = result["nodes"][:max_nodes]
+            result = self.query_neighbors(entity_name, depth=depth, min_confidence=min_confidence)
+            nodes = result["nodes"]
+            if clean_type:
+                nodes = [n for n in nodes if n.get("type", "").upper() == clean_type]
+            nodes = nodes[:max_nodes]
             node_names = {n["canonical_name"] for n in nodes}
             edges = [
                 e
@@ -395,6 +410,11 @@ class GraphStore:
 
         # Global graph top subgraph
         nodes = [dict(data) for _, data in self.graph.nodes(data=True)]
+        if min_confidence > 0.0:
+            nodes = [n for n in nodes if n.get("confidence", 0.0) >= min_confidence]
+        if clean_type:
+            nodes = [n for n in nodes if n.get("type", "").upper() == clean_type]
+
         nodes.sort(key=lambda x: (x.get("evidence_count", 1), x.get("confidence", 0.0)), reverse=True)
         top_nodes = nodes[:max_nodes]
         top_node_canons = {n["canonical_name"] for n in top_nodes}
@@ -402,7 +422,8 @@ class GraphStore:
         edges = []
         for u, v, key, edge_data in self.graph.edges(keys=True, data=True):
             if u in top_node_canons and v in top_node_canons:
-                edges.append(dict(edge_data))
+                if edge_data.get("confidence", 0.0) >= min_confidence:
+                    edges.append(dict(edge_data))
 
         edges.sort(key=lambda x: x.get("confidence", 0.0), reverse=True)
 
@@ -447,6 +468,279 @@ class GraphStore:
             logger.error(f"[ATLAS GraphStore] Error deleting entity {entity_id}: {e}")
             db.rollback()
             return False
+        finally:
+            db.close()
+
+    def remove_relationship(self, rel_id: int) -> bool:
+        """
+        Deletes a relationship by ID from SQLite and NetworkX.
+        """
+        self._ensure_initialized()
+        db = SessionLocal()
+        try:
+            rel = db.query(KnowledgeRelationship).filter(KnowledgeRelationship.id == rel_id).first()
+            if not rel:
+                return False
+
+            source_canon = canonicalize_name(rel.source_name)
+            target_canon = canonicalize_name(rel.target_name)
+
+            db.delete(rel)
+            db.commit()
+
+            # Remove edge from NetworkX
+            edge_to_remove = None
+            for u, v, key, data in self.graph.edges(keys=True, data=True):
+                if data.get("id") == rel_id:
+                    edge_to_remove = (u, v, key)
+                    break
+
+            if edge_to_remove:
+                self.graph.remove_edge(edge_to_remove[0], edge_to_remove[1], key=edge_to_remove[2])
+
+            logger.info(f"[ATLAS GraphStore] Deleted relationship {rel_id} ({source_canon} -> {target_canon}).")
+            return True
+        except Exception as e:
+            logger.error(f"[ATLAS GraphStore] Error deleting relationship {rel_id}: {e}")
+            db.rollback()
+            return False
+        finally:
+            db.close()
+
+    def update_entity(self, entity_id: int, updates: dict) -> dict | None:
+        """
+        Updates an existing entity in SQLite and updates the in-memory NetworkX graph.
+        """
+        self._ensure_initialized()
+        db = SessionLocal()
+        try:
+            entity = db.query(KnowledgeEntity).filter(KnowledgeEntity.id == entity_id).first()
+            if not entity:
+                return None
+
+            old_canon = entity.canonical_name
+
+            if "name" in updates and updates["name"]:
+                new_name = updates["name"].strip()
+                new_canon = canonicalize_name(new_name)
+                if new_canon != old_canon:
+                    existing = db.query(KnowledgeEntity).filter(
+                        KnowledgeEntity.canonical_name == new_canon,
+                        KnowledgeEntity.id != entity_id
+                    ).first()
+                    if existing:
+                        raise ValueError(f"Entity with canonical name '{new_canon}' already exists.")
+                    entity.name = new_name
+                    entity.canonical_name = new_canon
+
+            if "type" in updates and updates["type"]:
+                entity.entity_type = updates["type"].strip().upper()
+            elif "entity_type" in updates and updates["entity_type"]:
+                entity.entity_type = updates["entity_type"].strip().upper()
+
+            if "confidence" in updates and updates["confidence"] is not None:
+                entity.confidence = round(min(1.0, max(0.0, float(updates["confidence"]))), 3)
+
+            if "context" in updates and updates["context"] is not None:
+                entity.context = updates["context"].strip()
+
+            if "evidence_count" in updates and updates["evidence_count"] is not None:
+                entity.evidence_count = max(1, int(updates["evidence_count"]))
+
+            if "metadata" in updates and updates["metadata"] is not None:
+                meta = entity.extra_metadata or {}
+                meta.update(updates["metadata"])
+                entity.extra_metadata = meta
+
+            db.commit()
+            db.refresh(entity)
+
+            if old_canon != entity.canonical_name and old_canon in self.graph:
+                self.initialize_sync()
+            else:
+                self._add_node_to_graph(entity)
+
+            return entity.to_dict()
+        except Exception as e:
+            db.rollback()
+            logger.error(f"[ATLAS GraphStore] Error updating entity {entity_id}: {e}")
+            raise
+        finally:
+            db.close()
+
+    def update_relationship(self, rel_id: int, updates: dict) -> dict | None:
+        """
+        Updates an existing relationship in SQLite and updates the in-memory NetworkX graph.
+        """
+        self._ensure_initialized()
+        db = SessionLocal()
+        try:
+            rel = db.query(KnowledgeRelationship).filter(KnowledgeRelationship.id == rel_id).first()
+            if not rel:
+                return None
+
+            if "type" in updates and updates["type"]:
+                rel.relation_type = updates["type"].strip().upper()
+            elif "relation_type" in updates and updates["relation_type"]:
+                rel.relation_type = updates["relation_type"].strip().upper()
+
+            if "confidence" in updates and updates["confidence"] is not None:
+                rel.confidence = round(min(1.0, max(0.0, float(updates["confidence"]))), 3)
+
+            if "context" in updates and updates["context"] is not None:
+                rel.context = updates["context"].strip()
+
+            if "evidence_count" in updates and updates["evidence_count"] is not None:
+                rel.evidence_count = max(1, int(updates["evidence_count"]))
+
+            if "metadata" in updates and updates["metadata"] is not None:
+                meta = rel.extra_metadata or {}
+                meta.update(updates["metadata"])
+                rel.extra_metadata = meta
+
+            db.commit()
+            db.refresh(rel)
+
+            for u, v, key, data in list(self.graph.edges(keys=True, data=True)):
+                if data.get("id") == rel_id:
+                    self.graph.remove_edge(u, v, key=key)
+                    break
+            self._add_edge_to_graph(rel)
+
+            return rel.to_dict()
+        except Exception as e:
+            db.rollback()
+            logger.error(f"[ATLAS GraphStore] Error updating relationship {rel_id}: {e}")
+            raise
+        finally:
+            db.close()
+
+    def seed_default_graph(self) -> dict:
+        """
+        Seeds COPPER's default architectural knowledge graph with core entities and relations.
+        """
+        self._ensure_initialized()
+        seeded_entities = [
+            ("Akash Kundu", "PERSON", 0.99, "Creator, primary architect, and operator of COPPER."),
+            ("COPPER", "PROJECT", 0.99, "Personal Autonomous AI Operating System with 100% offline air-gapped zero egress."),
+            ("FastAPI", "TECHNOLOGY", 0.95, "High-performance async Python backend framework powering COPPER APIs."),
+            ("ChromaDB", "TECHNOLOGY", 0.95, "Local embedded vector database for semantic memory storage and retrieval."),
+            ("React 19", "TECHNOLOGY", 0.95, "Modern reactive web frontend with Tailwind CSS and D3.js visualization."),
+            ("Whisper Large v3 Turbo", "TECHNOLOGY", 0.92, "Offline speech recognition model executing on local GPU tensor cores."),
+            ("TFP-Router", "TECHNOLOGY", 0.96, "Sub-millisecond intent classification engine achieving 0.105ms routing latency."),
+            ("SQLite", "TECHNOLOGY", 0.98, "Embedded ACID relational storage for persistent memories, events, and graph topology."),
+            ("Ollama", "TECHNOLOGY", 0.95, "Local offline LLM inference server managing quantized GGUF weights."),
+            ("Qwen 2.5", "TECHNOLOGY", 0.92, "Local micro-model for knowledge extraction and rapid conversation summarization."),
+            ("NetworkX", "TECHNOLOGY", 0.94, "In-memory multi-directed graph engine for topological queries and pathfinding."),
+            ("Epistemic Memory Center", "CONCEPT", 0.95, "Bayesian belief network tracking facts, observations, and hypotheses."),
+            ("Causal Engine", "CONCEPT", 0.92, "Directional event-action cause and effect inference subsystem."),
+        ]
+
+        seeded_relationships = [
+            ("Akash Kundu", "COPPER", "WORKS_ON", 0.99, "Primary creator and system architect"),
+            ("COPPER", "FastAPI", "USES", 0.98, "Core API server framework"),
+            ("COPPER", "React 19", "USES", 0.96, "Desktop and web dashboard UI"),
+            ("COPPER", "ChromaDB", "USES", 0.95, "Vector embeddings and similarity search"),
+            ("COPPER", "SQLite", "USES", 0.98, "Structured persistence and relational storage"),
+            ("COPPER", "Ollama", "USES", 0.95, "Local model orchestration"),
+            ("COPPER", "TFP-Router", "USES", 0.96, "Intent routing and fast agent dispatch"),
+            ("COPPER", "Whisper Large v3 Turbo", "USES", 0.92, "Real-time speech transcription"),
+            ("COPPER", "NetworkX", "USES", 0.94, "Graph knowledge memory queries"),
+            ("COPPER", "Epistemic Memory Center", "PART_OF", 0.95, "Belief and observation management"),
+            ("COPPER", "Causal Engine", "PART_OF", 0.92, "Causality tracking and explanation"),
+            ("Ollama", "Qwen 2.5", "USES", 0.94, "Micro-model execution"),
+            ("FastAPI", "SQLite", "DEPENDS_ON", 0.95, "Database connector"),
+            ("FastAPI", "NetworkX", "USES", 0.94, "Graph RAG computation"),
+            ("TFP-Router", "COPPER", "DEPENDS_ON", 0.95, "Agent pipeline integration"),
+            ("Epistemic Memory Center", "SQLite", "USES", 0.96, "Persistent fact storage"),
+        ]
+
+        db = SessionLocal()
+        try:
+            for name, etype, conf, ctx in seeded_entities:
+                self.add_entity(name=name, entity_type=etype, confidence=conf, context=ctx, db=db)
+
+            for src, tgt, rtype, conf, ctx in seeded_relationships:
+                self.add_relationship(source_name=src, target_name=tgt, relation_type=rtype, confidence=conf, context=ctx, db=db)
+
+            stats = self.get_stats()
+            return {
+                "status": "success",
+                "seeded_entities": len(seeded_entities),
+                "seeded_relationships": len(seeded_relationships),
+                "total_entities": stats["total_entities"],
+                "total_relationships": stats["total_relationships"],
+            }
+        finally:
+            db.close()
+
+    def export_graph(self) -> dict:
+        """Exports the complete knowledge graph as JSON-serializable structure."""
+        self._ensure_initialized()
+        db = SessionLocal()
+        try:
+            entities = [e.to_dict() for e in db.query(KnowledgeEntity).all()]
+            relationships = [r.to_dict() for r in db.query(KnowledgeRelationship).all()]
+            return {
+                "version": "2.0",
+                "stats": self.get_stats(),
+                "entities": entities,
+                "relationships": relationships,
+            }
+        finally:
+            db.close()
+
+    def import_graph(self, data: dict, merge: bool = True) -> dict:
+        """Imports entities and relationships from JSON. If merge is False, wipes existing graph first."""
+        self._ensure_initialized()
+        entities = data.get("entities", [])
+        relationships = data.get("relationships", [])
+
+        db = SessionLocal()
+        try:
+            if not merge:
+                db.query(KnowledgeRelationship).delete()
+                db.query(KnowledgeEntity).delete()
+                db.commit()
+                self.graph.clear()
+
+            imported_entities = 0
+            for ent in entities:
+                if "name" in ent:
+                    self.add_entity(
+                        name=ent["name"],
+                        entity_type=ent.get("type", "CONCEPT"),
+                        confidence=ent.get("confidence", 0.8),
+                        context=ent.get("context", ""),
+                        metadata=ent.get("metadata", {}),
+                        db=db,
+                    )
+                    imported_entities += 1
+
+            imported_relationships = 0
+            for rel in relationships:
+                src = rel.get("source") or rel.get("source_name")
+                tgt = rel.get("target") or rel.get("target_name")
+                if src and tgt:
+                    self.add_relationship(
+                        source_name=src,
+                        target_name=tgt,
+                        relation_type=rel.get("type", "RELATED_TO"),
+                        confidence=rel.get("confidence", 0.8),
+                        context=rel.get("context", ""),
+                        metadata=rel.get("metadata", {}),
+                        db=db,
+                    )
+                    imported_relationships += 1
+
+            stats = self.get_stats()
+            return {
+                "status": "success",
+                "imported_entities": imported_entities,
+                "imported_relationships": imported_relationships,
+                "total_entities": stats["total_entities"],
+                "total_relationships": stats["total_relationships"],
+            }
         finally:
             db.close()
 

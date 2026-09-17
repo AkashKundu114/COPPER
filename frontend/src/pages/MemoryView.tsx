@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Search, X, Network, Brain } from "lucide-react";
-import { memoryCRUDAPI, type EpistemicMemoryItem } from "../lib/api";
+import { memoryCRUDAPI, knowledgeAPI, type EpistemicMemoryItem } from "../lib/api";
 import { KnowledgeGraphView } from "../components/knowledge/KnowledgeGraphView";
 import { CausalExplorerTab } from "../components/memory/CausalExplorerTab";
 import { MemoryProvenanceTab } from "../components/memory/MemoryProvenanceTab";
@@ -58,6 +58,18 @@ export const MemoryView: React.FC = () => {
   const [type, setType] = useState<EpistemicMemoryItem["type"]>("fact");
   const [content, setContent] = useState("");
   const [confidence, setConfidence] = useState(95);
+  const [syncingGraph, setSyncingGraph] = useState(false);
+
+  const handleSyncMemoriesToGraph = async () => {
+    setSyncingGraph(true);
+    try {
+      await knowledgeAPI.syncMemories();
+    } catch (err) {
+      console.error("Failed to sync memories to graph:", err);
+    } finally {
+      setSyncingGraph(false);
+    }
+  };
 
   const loadMemories = async () => {
     try {
@@ -170,13 +182,24 @@ export const MemoryView: React.FC = () => {
         </div>
 
         {activeTab === "epistemic" && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blush-100 hover:bg-white text-burgundy-950 font-bold text-xs transition-all shadow-sm cursor-pointer"
-          >
-            <Plus size={15} strokeWidth={2.5} />
-            <span>Add Memory Fact</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSyncMemoriesToGraph}
+              disabled={syncingGraph}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyber-cyan/15 hover:bg-cyber-cyan/25 text-cyber-cyan border border-cyber-cyan/40 font-bold text-xs transition-all shadow-sm cursor-pointer disabled:opacity-50"
+              title="Sync active memories into knowledge graph"
+            >
+              <Network size={14} />
+              <span>{syncingGraph ? "Syncing..." : "Sync to Graph"}</span>
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blush-100 hover:bg-white text-burgundy-950 font-bold text-xs transition-all shadow-sm cursor-pointer"
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              <span>Add Memory Fact</span>
+            </button>
+          </div>
         )}
       </div>
 

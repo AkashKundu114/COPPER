@@ -16,14 +16,14 @@ The frontend is a modern, high-performance web application packaged as a native 
 
 The UI is built around a persistent 13-section left sidebar and a dynamic workspace:
 
-- **src/pages/ (19 Views):** 
+- **src/pages/ (18 Views):** 
   - TodayView.tsx, DashboardView.tsx, ActivityView.tsx
   - CompanionHUDView.tsx, ResearchView.tsx, MemoryView.tsx
   - BenchmarkMetricsView.tsx, SecurityCenter.tsx, SelfImprovementView.tsx
   - AgentRegistry.tsx, AutomationBuilderView.tsx, TasksView.tsx, ProjectsView.tsx
   - MeetingsView.tsx, EmailView.tsx, Insights.tsx, SettingsView.tsx, FoodView.tsx, EVEView.tsx
-- **src/components/ (14 Subsystems):** Includes the chat dock, speaking bar, widget rail (Clock, Calendar, Weather, Network), and the brain/ directory containing the SVG Neural Brain Map.
-- **src/lib/:** WebSocket hooks (useBrainSocket.ts) for real-time agent dispatch and hardware metrics, plus the Axios API client (api.ts).
+- **src/components/ (48 Components across 14 Subsystems):** Includes the chat dock (6 components), speaking bar, widget rail (Clock, Calendar, Weather, Network), ambient intelligence (6 components), memory visualization (2 components), agent registry (5 components), HUD effects (5 components), documents, knowledge graph, routing, telemetry, profile, and the brain/ directory containing the SVG Neural Brain Map.
+- **src/lib/ & src/hooks/:** WebSocket hooks (useBrainSocket.ts) for real-time agent dispatch and hardware metrics, plus the Axios API client (api.ts), sound effects engine (soundFX.ts), and layout utilities.
 
 ## The Neural Brain Visualizer (src/components/brain/)
 
@@ -55,14 +55,23 @@ npm run dist
 
 ## Testing & Quality Gates
 
-The frontend enforces strict quality gates via Oxlint and comprehensive testing:
+The frontend enforces strict quality gates via OxLint (116 rules across 91 files), Vitest, and Playwright:
 
 ```bash
-# Run unit tests and component coverage
+# Run 38 unit tests with component coverage (5 test suites)
 npx vitest run
+
+# Run with v8 coverage report (28.3% stmts overall, 100% key components)
+npx vitest run --coverage
 
 # Run end-to-end desktop verification
 npx playwright test
+
+# Static analysis (36 warnings, 0 errors)
+npx oxlint
+
+# TypeScript type check (clean compilation)
+npx tsc -b --noEmit
 ```
 
 ## Theme & Accessibility (a11y)

@@ -20,12 +20,19 @@ C.O.P.P.E.R. can be deployed in production as a self-hosted single-node containe
    | (Gunicorn + Uvicorn Workers) |                  | (Nginx Static Serve)         |
    +--------------+---------------+                  +------------------------------+
                   |
-     +------------+------------+-----------------------+
-     |                         |                       |
-     v                         v                       v
-+---------+               +---------+             +----------+
-| Postgres|               | Redis   |             | ChromaDB |
-+---------+               +---------+             +----------+
+     +------+-----+------+----------+-----------+
+     |      |            |          |            |
+     v      v            v          v            v
++---------+ +---------+ +----------+ +---------+ +---------+
+| Postgres| | Redis   | | ChromaDB | | Ollama  | | SearXNG |
+| (16)    | | (7)     | | (Vector) | | (LLMs)  | | (Search)|
++---------+ +---------+ +----------+ +---------+ +---------+
+
+   Observability Stack:
+   +----------+ +----------+ +----------+ +----------+
+   | Tempo    | | Prome-   | | Grafana  | | Loki +   |
+   | (Traces) | | theus    | | (Dash)   | | Promtail |
+   +----------+ +----------+ +----------+ +----------+
 ```
 
 ---
@@ -59,7 +66,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     restart: always
     environment:
       POSTGRES_USER: copper_user
@@ -98,6 +105,10 @@ volumes:
 | `DATABASE_URL` | `postgresql://...` | Yes | Relational database connection string. |
 | `REDIS_URL` | `redis://localhost:6379` | Yes | Redis connection string for cache and pub/sub. |
 | `OLLAMA_BASE_URL` | `http://localhost:11434`| Yes | URL of Ollama service instance. |
+| `CHROMADB_HOST` | `chromadb` | Yes | ChromaDB vector store hostname. |
+| `CHROMADB_PORT` | `8000` | Yes | ChromaDB vector store port. |
+| `SEARXNG_BASE_URL` | `http://searxng:8080` | Optional | Local SearXNG metasearch engine URL. |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://tempo:4317` | Optional | OpenTelemetry collector endpoint for distributed tracing. |
 | `OPENAI_API_KEY` | `""` | Optional | Key for cloud model fallback (routed via Data Firewall). |
 | `DATA_FIREWALL_STRICT` | `true` | Yes | Enforces PII redaction on all cloud requests. |
 | `LOG_LEVEL` | `INFO` | Yes | Logging verbosity (`DEBUG`, `INFO`, `WARN`, `ERROR`). |

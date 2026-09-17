@@ -53,12 +53,16 @@ class KnowledgeRelationship(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     def to_dict(self) -> dict:
+        src_canon = " ".join(self.source_name.strip().split()).lower() if self.source_name else ""
+        tgt_canon = " ".join(self.target_name.strip().split()).lower() if self.target_name else ""
         return {
             "id": self.id,
             "source_id": self.source_id,
             "target_id": self.target_id,
             "source": self.source_name,
             "target": self.target_name,
+            "source_canonical": src_canon,
+            "target_canonical": tgt_canon,
             "type": self.relation_type,
             "confidence": round(self.confidence, 3),
             "context": self.context,

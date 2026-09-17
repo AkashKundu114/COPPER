@@ -43,5 +43,14 @@
     "timestamp": "2026-09-15T23:32:59.628595",
     "category": "urgent",
     "status": "digested"
+  },
+  {
+    "id": "6e980163-a802-4b6a-8f77-f51885da1177",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-09-16T22:35:33.546790",
+    "category": "urgent",
+    "status": "digested"
   }
 ]

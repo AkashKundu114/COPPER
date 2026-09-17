@@ -14,9 +14,10 @@ We provide active security updates, vulnerability fixes, and patches for the fol
 
 | Version | Supported | Status |
 | :--- | :---: | :--- |
-| **`1.1.x`** | **Yes** | **Current Active Release** |
-| **`1.0.x`** | **Yes** | **Maintenance Support** |
-| `< 1.0.0` | No | Deprecated Pre-Release Builds |
+| **`3.0.x`** | **Yes** | **Current Active Release** |
+| **`2.5.x`** | **Yes** | **Maintenance Support** |
+| **`1.2.x`** | **Yes** | **Security Patches Only** |
+| `< 1.2.0` | No | Deprecated Pre-Release Builds |
 
 ---
 

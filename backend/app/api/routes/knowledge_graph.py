@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 
 from app.ai.knowledge.entity_extractor import entity_extractor
 from app.ai.knowledge.graph_store import graph_store
+from app.database.models.memory_v2 import MemoryStatus, UserMemoryV2
+from app.database.postgres import SessionLocal
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
@@ -17,6 +19,15 @@ class EntityCreateRequest(BaseModel):
     metadata: dict[str, Any] | None = None
 
 
+class EntityUpdateRequest(BaseModel):
+    name: str | None = None
+    type: str | None = None
+    confidence: float | None = Field(None, ge=0.0, le=1.0)
+    context: str | None = None
+    evidence_count: int | None = None
+    metadata: dict[str, Any] | None = None
+
+
 class RelationshipCreateRequest(BaseModel):
     source: str = Field(..., description="Source entity canonical/display name")
     target: str = Field(..., description="Target entity canonical/display name")
@@ -26,9 +37,23 @@ class RelationshipCreateRequest(BaseModel):
     metadata: dict[str, Any] | None = None
 
 
+class RelationshipUpdateRequest(BaseModel):
+    type: str | None = None
+    confidence: float | None = Field(None, ge=0.0, le=1.0)
+    context: str | None = None
+    evidence_count: int | None = None
+    metadata: dict[str, Any] | None = None
+
+
 class ExtractKnowledgeRequest(BaseModel):
     text: str = Field(..., min_length=3, description="Conversation or document text to extract from")
     session_id: str | None = None
+
+
+class ImportGraphRequest(BaseModel):
+    entities: list[dict[str, Any]] = []
+    relationships: list[dict[str, Any]] = []
+    merge: bool = True
 
 
 @router.get("/entities")
@@ -75,6 +100,23 @@ async def get_entity(id_or_name: str):
     if not entity:
         raise HTTPException(status_code=404, detail="Entity not found")
     return {"status": "success", "entity": entity}
+
+
+@router.patch("/entities/{id}")
+async def update_entity(id: int, req: EntityUpdateRequest):
+    """
+    Update attributes of an existing entity in the knowledge graph.
+    """
+    try:
+        updates = req.model_dump(exclude_unset=True)
+        updated = graph_store.update_entity(id, updates)
+        if not updated:
+            raise HTTPException(status_code=404, detail=f"Entity {id} not found")
+        return {"status": "success", "entity": updated}
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/entities/{id}")
@@ -125,17 +167,49 @@ async def create_relationship(req: RelationshipCreateRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.patch("/relationships/{id}")
+async def update_relationship(id: int, req: RelationshipUpdateRequest):
+    """
+    Update attributes of an existing relationship in the knowledge graph.
+    """
+    try:
+        updates = req.model_dump(exclude_unset=True)
+        updated = graph_store.update_relationship(id, updates)
+        if not updated:
+            raise HTTPException(status_code=404, detail=f"Relationship {id} not found")
+        return {"status": "success", "relationship": updated}
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/relationships/{id}")
+async def delete_relationship(id: int):
+    """
+    Remove a relationship from the knowledge graph.
+    """
+    success = graph_store.remove_relationship(id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Relationship not found or could not be deleted")
+    return {"status": "success", "message": f"Relationship {id} deleted"}
+
+
 @router.get("/subgraph")
 async def get_subgraph(
     entity: str | None = Query(None, description="Center entity name to extract ego-graph"),
     depth: int = Query(1, ge=1, le=3, description="Graph traversal hop depth"),
-    max_nodes: int = Query(30, ge=1, le=200, description="Maximum nodes in returned subgraph"),
+    max_nodes: int = Query(60, ge=1, le=300, description="Maximum nodes in returned subgraph"),
+    type: str | None = Query(None, description="Filter by entity type"),
+    min_confidence: float = Query(0.0, ge=0.0, le=1.0, description="Minimum confidence threshold"),
 ):
     """
     Retrieve subgraph for D3.js force-directed graph visualization.
     Returns nodes and links/edges formatted with coordinates readiness.
     """
-    subgraph = graph_store.get_subgraph(entity_name=entity, depth=depth, max_nodes=max_nodes)
+    subgraph = graph_store.get_subgraph(
+        entity_name=entity, depth=depth, max_nodes=max_nodes, entity_type=type, min_confidence=min_confidence
+    )
     return subgraph
 
 
@@ -169,3 +243,69 @@ async def get_graph_stats():
     """
     stats = graph_store.get_stats()
     return {"status": "success", "stats": stats}
+
+
+@router.post("/seed-defaults")
+async def seed_defaults():
+    """
+    Seeds the default COPPER architectural graph (COPPER, Akash Kundu, FastAPI, ChromaDB, Whisper, etc.).
+    """
+    result = graph_store.seed_default_graph()
+    return result
+
+
+@router.post("/sync-memories")
+async def sync_memories():
+    """
+    Syncs active epistemic user memories into the knowledge graph.
+    """
+    db = SessionLocal()
+    synced_count = 0
+    try:
+        memories = db.query(UserMemoryV2).filter(UserMemoryV2.status == MemoryStatus.ACTIVE).all()
+        for mem in memories:
+            cat_name = mem.category.strip() if mem.category else "General"
+            graph_store.add_entity(
+                name=cat_name,
+                entity_type="CONCEPT",
+                confidence=mem.confidence,
+                context=f"Epistemic memory category with {mem.evidence_count} observation(s)",
+                db=db,
+            )
+            graph_store.add_relationship(
+                source_name="COPPER",
+                target_name=cat_name,
+                relation_type="TRACKS_CATEGORY",
+                confidence=mem.confidence,
+                context=mem.content[:250],
+                db=db,
+            )
+            synced_count += 1
+
+        stats = graph_store.get_stats()
+        return {
+            "status": "success",
+            "memories_processed": len(memories),
+            "synced_categories": synced_count,
+            "total_entities": stats["total_entities"],
+            "total_relationships": stats["total_relationships"],
+        }
+    finally:
+        db.close()
+
+
+@router.get("/export")
+async def export_graph():
+    """
+    Exports the entire knowledge graph as a JSON structure for backup or inspection.
+    """
+    return graph_store.export_graph()
+
+
+@router.post("/import")
+async def import_graph(req: ImportGraphRequest):
+    """
+    Imports entities and relationships from JSON format.
+    """
+    result = graph_store.import_graph(req.model_dump(), merge=req.merge)
+    return result

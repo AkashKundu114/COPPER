@@ -280,7 +280,84 @@ def test_api_routes_knowledge_graph():
     assert res_stats.status_code == 200
     assert res_stats.json()["stats"]["total_entities"] >= 2
 
-    # 8. Delete entity
+    # 8. Update entity via PATCH
+    res_patch_ent = client.patch(
+        f"/api/v1/knowledge/entities/{ent_id}",
+        json={"confidence": 0.98, "context": "Upgraded vector database description"},
+    )
+    assert res_patch_ent.status_code == 200
+    assert res_patch_ent.json()["entity"]["confidence"] == 0.98
+    assert res_patch_ent.json()["entity"]["context"] == "Upgraded vector database description"
+
+    # 9. Update relationship via PATCH
+    rel_id = res_rel.json()["relationship"]["id"]
+    res_patch_rel = client.patch(
+        f"/api/v1/knowledge/relationships/{rel_id}",
+        json={"confidence": 0.99, "type": "DEPENDS_ON"},
+    )
+    assert res_patch_rel.status_code == 200
+    assert res_patch_rel.json()["relationship"]["type"] == "DEPENDS_ON"
+    assert res_patch_rel.json()["relationship"]["confidence"] == 0.99
+
+    # 10. Delete relationship via DELETE
+    res_del_rel = client.delete(f"/api/v1/knowledge/relationships/{rel_id}")
+    assert res_del_rel.status_code == 200
+    assert res_del_rel.json()["status"] == "success"
+
+    # 11. Delete entity
     res_del = client.delete(f"/api/v1/knowledge/entities/{ent_id}")
     assert res_del.status_code == 200
     assert res_del.json()["status"] == "success"
+
+
+def test_seed_defaults_and_export_import():
+    # Seed default architecture graph
+    res_seed = client.post("/api/v1/knowledge/seed-defaults")
+    assert res_seed.status_code == 200
+    seed_data = res_seed.json()
+    assert seed_data["seeded_entities"] >= 10
+    assert seed_data["seeded_relationships"] >= 10
+
+    # Verify entities and relationships populated
+    res_stats = client.get("/api/v1/knowledge/stats")
+    assert res_stats.status_code == 200
+    assert res_stats.json()["stats"]["total_entities"] >= 10
+
+    # Subgraph with filter
+    res_sub = client.get("/api/v1/knowledge/subgraph?type=TECHNOLOGY&min_confidence=0.9")
+    assert res_sub.status_code == 200
+    assert len(res_sub.json()["nodes"]) > 0
+
+    # Export graph
+    res_exp = client.get("/api/v1/knowledge/export")
+    assert res_exp.status_code == 200
+    exported = res_exp.json()
+    assert "entities" in exported
+    assert "relationships" in exported
+    assert len(exported["entities"]) >= 10
+
+    # Import graph
+    res_imp = client.post(
+        "/api/v1/knowledge/import",
+        json={
+            "entities": [{"name": "TestImportNode", "type": "CONCEPT", "confidence": 0.9}],
+            "relationships": [{"source": "TestImportNode", "target": "COPPER", "type": "LINKS_TO", "confidence": 0.85}],
+            "merge": True,
+        },
+    )
+    assert res_imp.status_code == 200
+    assert res_imp.json()["imported_entities"] == 1
+    assert res_imp.json()["imported_relationships"] == 1
+
+
+def test_remove_relationship_unit():
+    ent1 = graph_store.add_entity("Alpha", "CONCEPT", 0.9)
+    ent2 = graph_store.add_entity("Beta", "CONCEPT", 0.9)
+    rel = graph_store.add_relationship("Alpha", "Beta", "CONNECTS_TO", 0.85)
+    rel_id = rel["id"]
+
+    assert graph_store.graph.has_edge("alpha", "beta")
+    success = graph_store.remove_relationship(rel_id)
+    assert success is True
+    assert not graph_store.graph.has_edge("alpha", "beta")
+    assert graph_store.remove_relationship(999999) is False

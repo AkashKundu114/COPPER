@@ -12,7 +12,7 @@ C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating en
 ### Core Architectural Principles
 
 1. **Local-First & Zero Egress:** Executes entirely on local hardware (AMD Ryzen 9 / RTX 5060) utilizing quantized GGUF & ONNX models. Zero cloud transmission occurs by default.
-2. **Multi-Tier Agent Hierarchy:** Routes queries through sub-millisecond intent classifiers to 4 heavy core models (7B–8B), 2 multimodal vision models (2B/7B), and 14 specialized micro-subagents (360M–3B).
+2. **Multi-Tier Agent Hierarchy:** Routes queries through sub-millisecond intent classifiers to 5 heavy Sovereign Core models (12B–14B IQ3_XS), 7 resident micro-subagents (1.5B–3B Q4_K_M), plus vision (Qwen2.5-VL-3B), image generation (SD-Turbo), and a full audio pipeline (Whisper Large v3 Turbo + Kokoro-82M + Silero VAD + openWakeWord).
 3. **Guardian Alignment (Levels 0–3):** Evaluates prompt safety, commitment conflicts, and destructive triggers prior to execution, protecting user goals while preserving autonomy.
 4. **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive credentials (`sk-`, `sk-proj-`), JWT tokens, SSNs, credit cards, emails, and private IP addresses.
 5. **Continuous Dynamic Routing Memory:** Self-training token-similarity memory cache (`DynamicRoutingMemory`) providing sub-0.05ms dispatch for known and evolving user intents.
@@ -62,7 +62,7 @@ C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating en
 
 ## 3. Desktop Application Navigation Architecture
 
-The desktop application is built on **Electron** with strict in-app navigation guards (no external browser escapes) and a persistent 13-section sidebar:
+The desktop application is built on **Electron 44** with strict in-app navigation guards (no external browser escapes) and a persistent sidebar accessing 18 frontend pages/views:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -70,17 +70,22 @@ The desktop application is built on **Electron** with strict in-app navigation g
 ├──────────────┬─────────────────────────────────────────────────────────┤
 │ Logo         │                                                         │
 │ Dashboard    │                                                         │
-│ Chat         │                    MAIN WORKSPACE                       │
+│ Chat (HUD)   │                    MAIN WORKSPACE                       │
 │ Today        │                                                         │
 │ Tasks        │    (Interactive Views: Neural Brain Ganglia Map,        │
 │ Projects     │     Schedule Timeline, Memory Inspector, Security       │
-│ Memory       │     Center Audit Log, Self-Improvement Benchmark)       │
-│ Agents       │                                                         │
+│ Meetings     │     Center Audit Log, Self-Improvement Benchmark,       │
+│ Email        │     Research Dossier Hub, Automation Builder)            │
+│ Research     │                                                         │
+│ Automations  │    48 React Components across 14 Subsystems             │
+│ Memory       │    84 TypeScript/React Source Files                      │
+│ Agents       │    24,224 Frontend LOC                                   │
 │ Activity     │                                                         │
 │ Insights     │                                                         │
+│ Benchmarks   │                                                         │
 │ Self-Impr    │                                                         │
 │ Security     │                                                         │
-│ Benchmarks   │                                                         │
+│ Food         │                                                         │
 │ Settings     │                                                         │
 └──────────────┴─────────────────────────────────────────────────────────┘
 ```

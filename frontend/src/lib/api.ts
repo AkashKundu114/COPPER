@@ -407,11 +407,15 @@ export interface KnowledgeRelationshipItem {
   target_id?: number;
   source: string;
   target: string;
+  source_canonical?: string;
+  target_canonical?: string;
   type: string;
   confidence: number;
   context?: string;
   evidence_count: number;
   metadata?: Record<string, unknown>;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface KnowledgeSubgraphResponse {
@@ -436,13 +440,19 @@ export const knowledgeAPI = {
     api.get<{ data: KnowledgeEntityItem[]; count: number }>("/knowledge/entities", { params }).then((r) => r.data),
   createEntity: (payload: { name: string; type: string; confidence?: number; context?: string }) =>
     api.post<{ status: string; entity: KnowledgeEntityItem }>("/knowledge/entities", payload).then((r) => r.data),
+  updateEntity: (id: number, payload: Partial<KnowledgeEntityItem>) =>
+    api.patch<{ status: string; entity: KnowledgeEntityItem }>(`/knowledge/entities/${id}`, payload).then((r) => r.data),
   deleteEntity: (id: number) =>
     api.delete<{ status: string; message: string }>(`/knowledge/entities/${id}`).then((r) => r.data),
   getRelationships: (params?: { type?: string; source?: string; target?: string; min_confidence?: number; limit?: number }) =>
     api.get<{ data: KnowledgeRelationshipItem[]; count: number }>("/knowledge/relationships", { params }).then((r) => r.data),
   createRelationship: (payload: { source: string; target: string; type: string; confidence?: number; context?: string }) =>
     api.post<{ status: string; relationship: KnowledgeRelationshipItem }>("/knowledge/relationships", payload).then((r) => r.data),
-  getSubgraph: (params?: { entity?: string; depth?: number; max_nodes?: number }) =>
+  updateRelationship: (id: number, payload: Partial<KnowledgeRelationshipItem>) =>
+    api.patch<{ status: string; relationship: KnowledgeRelationshipItem }>(`/knowledge/relationships/${id}`, payload).then((r) => r.data),
+  deleteRelationship: (id: number) =>
+    api.delete<{ status: string; message: string }>(`/knowledge/relationships/${id}`).then((r) => r.data),
+  getSubgraph: (params?: { entity?: string; depth?: number; max_nodes?: number; type?: string; min_confidence?: number }) =>
     api.get<KnowledgeSubgraphResponse>("/knowledge/subgraph", { params }).then((r) => r.data),
   getPath: (source: string, target: string) =>
     api.get<{ source: string; target: string; path: any[] }>("/knowledge/path", { params: { source, target } }).then((r) => r.data),
@@ -453,6 +463,14 @@ export const knowledgeAPI = {
     ).then((r) => r.data),
   getStats: () =>
     api.get<KnowledgeStatsResponse>("/knowledge/stats").then((r) => r.data),
+  seedDefaults: () =>
+    api.post<{ status: string; seeded_entities: number; seeded_relationships: number; total_entities: number; total_relationships: number }>("/knowledge/seed-defaults").then((r) => r.data),
+  syncMemories: () =>
+    api.post<{ status: string; memories_processed: number; synced_categories: number; total_entities: number; total_relationships: number }>("/knowledge/sync-memories").then((r) => r.data),
+  exportGraph: () =>
+    api.get<any>("/knowledge/export").then((r) => r.data),
+  importGraph: (payload: { entities: any[]; relationships: any[]; merge?: boolean }) =>
+    api.post<any>("/knowledge/import", payload).then((r) => r.data),
 };
 
 export interface TraceSpan {

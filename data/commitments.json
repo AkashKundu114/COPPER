@@ -118,5 +118,25 @@
     "nudges_sent": 0,
     "created_at": "2026-09-15T18:05:01.615449+00:00",
     "completed_at": "2026-09-15T18:05:01.616747+00:00"
+  },
+  {
+    "commitment_id": "37e1248e-537e-42e2-9306-b100d9e161a6",
+    "title": "Complete COPPER AI OS release 47e49a80-ff2b-43c8-8e0a-9d15ae5a7242",
+    "deadline": "2026-12-31T23:59:59Z",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-09-16T17:05:33.533242+00:00",
+    "completed_at": "2026-09-16T17:05:33.534243+00:00"
+  },
+  {
+    "commitment_id": "f9b4dff0-52fe-4b95-b47b-e3119c3d45a0",
+    "title": "Deploy v2.4 staging release",
+    "deadline": "2026-09-12 18:00",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-09-16T17:07:23.739072+00:00",
+    "completed_at": "2026-09-16T17:07:23.739932+00:00"
   }
 ]
