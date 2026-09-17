@@ -1,4 +1,5 @@
 import asyncio
+import shutil
 
 from app.core.logger import logger
 
@@ -6,8 +7,9 @@ from app.core.logger import logger
 async def execute_powershell(command: str, timeout: int = 30) -> str:
     """Executes a PowerShell command directly on the host OS."""
     try:
+        shell_bin = "powershell" if shutil.which("powershell") else ("pwsh" if shutil.which("pwsh") else "powershell")
         process = await asyncio.create_subprocess_exec(
-            "powershell",
+            shell_bin,
             "-NoProfile",
             "-NonInteractive",
             "-Command",

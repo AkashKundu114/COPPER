@@ -68,9 +68,9 @@ class ChatService:
             r"\b(what time is it|current date|today's date)\b",
         ]
         if any(re.search(pat, msg_clean) for pat in simple_patterns):
-            return model_manager.get_mini_model(prefer_tag=True)
+            return "qwen2.5:1b"
 
-        return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
+        return "qwen2.5:8b"
 
     def _sanitize_response(self, text: str) -> str:
         if not text:

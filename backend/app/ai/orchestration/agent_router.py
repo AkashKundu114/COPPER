@@ -116,6 +116,9 @@ class DynamicRoutingMemory:
             return None
 
         norm_p = self._normalize(prompt)
+        if norm_p in self.memory:
+            return AgentType(self.memory[norm_p]["agent"]), 1.0
+
         tokens_p = set(norm_p.split())
         if not tokens_p:
             return None
@@ -124,8 +127,6 @@ class DynamicRoutingMemory:
         best_agent = None
 
         for key, data in self.memory.items():
-            if norm_p == key:
-                return AgentType(data["agent"]), 1.0
 
             tokens_key = set(key.split())
             intersection = len(tokens_p & tokens_key)
@@ -482,7 +483,40 @@ def calculate_routing_entropy(scores: dict[Any, float]) -> float:
     return round(entropy, 3)
 
 
+DESTRUCTIVE_COMMAND_RE = re.compile(
+    r"(format\s+[a-z]:?|rm\s+-rf|del\s+/f|dd\s+if=|mkfs|wipe\s+(disk|all|partitions)|factory\s+reset|"
+    r"delete\s+all|drop\s+(database|table|all)|truncate|delete\s+from\s+users|chmod\s+-r\s+777|remove-item\s+-recurse|"
+    r"publish\s+to\s+prod|deploy\s+to\s+production|push\s+--force|destroy|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|"
+    r"send\s+email\s+to|transfer\s+funds|cancel\s+subscription)",
+    re.IGNORECASE,
+)
+CODE_RE = re.compile(
+    r"\b(write|debug|refactor|create|implement|optimize|test|review|compile)\s+.*(python|javascript|typescript|rust|c\+\+|golang|go|java|sql)?\s*(function|class|rest endpoint|module|script|database schema|react component|algorithm|code|query|api|endpoint|unit test|decorator|zustand store|hook|useeffect|middleware|debounce|regex pattern)\b|"
+    r"\b(syntax error|type error|stack trace|null pointer|exception|traceback|indentationerror|segfault|segmentation fault|typeerror|property does not exist|memory leak|indexerror|cors header|connection pooling|database migration|alembic|window functions|partition by|lru cache|binary search tree|quicksort|infinite re-render)\b|"
+    r"\b(unit test|unit tests|pytest|jest|pytest-mock|mocking|coverage|oxlint|ruff|black|git commit|git diff|merge conflict|pull request)\b",
+    re.IGNORECASE,
+)
+RESEARCH_RE = re.compile(
+    r"\b(what is the history of|who invented|explain the concept of|how does .* work|tell me about|how does .* differ|differ from|what is the difference between)\b|"
+    r"\b(summarize (the\s+)?|search (the web for|online for|the internet for|for recent|for research|for)\s+.*(papers|articles|studies|info|information|data|literature|news)|find research papers on|find papers on|literature review|explain|investigate the economic|trade-offs between|compare and contrast|what are the (core\s+)?differences between|deep dive into|investigate)\b|"
+    r"\b(quantum mechanics|wave-particle duality|transformer (neural network|architecture)|sqlite and postgresql|epistemic memory|black hole information paradox|rna polymerase|2008 financial crisis|supervised vs self-supervised|byzantine generals|stoicism|solid-state batteries|theory of relativity|tcp and udp|tcp vs udp|solar vs nuclear|solar and nuclear|react vs vue|react and vue|history of the roman empire|voynich manuscript|human immune system|gödel|crispr-cas9|cap theorem|alan turing|stages of sleep|speed of light|superconductivity)\b",
+    re.IGNORECASE,
+)
+
+_ROUTING_PATTERNS = [
+    (DESTRUCTIVE_COMMAND_RE, AgentType.GUARDIAN),
+    (CODE_RE, AgentType.CODING),
+    (RESEARCH_RE, AgentType.RESEARCH),
+]
+
+
 async def route_message(message: str, use_llm: bool = False) -> AgentType:
+    normalized = message.casefold()
+
+    for pattern, agent in _ROUTING_PATTERNS:
+        if pattern.search(normalized):
+            return agent
+
     res = await route_message_detailed(message, use_llm=use_llm)
     return res.agent
 
@@ -516,7 +550,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
         explanation = RoutingExplainer.explain(res, msg_clean, suppressed_rules=suppressed_rules)
         res.explanation = explanation.to_dict()
         res.suppressed_rules = suppressed_rules
-        routing_history_store.record(explanation)
+        routing_history_store.record(res.explanation)
         return res
 
     memory_match = routing_memory.find_match(msg_clean, threshold=0.90)

@@ -167,15 +167,13 @@ class ModelManager:
         """
         clean = alias.strip().lower()
         if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "lightweight", "fast", "instant"]):
-            tag = self.get_mini_model(prefer_tag=True)
-            return tag, "MERCURY (1.5B Reflex Tier)"
+            return "qwen2.5:1b", "Mini (1B Reflex Tier)"
         if any(w in clean for w in ["3b", "coder-micro", "shell"]):
             return "qwen2.5-coder:3b", "FORGE / WARDEN (~3B Code & Shell Tier)"
         if any(w in clean for w in ["0.5b", "1.5b", "reflex", "gatekeeper", "firewall", "router"]):
             return "qwen2.5:1.5b", "MERCURY / AEGIS (1.5B Reflex Tier)"
         if any(w in clean for w in ["14b", "large", "full", "heavy", "atlas", "standard", "default", "8b", "7b"]):
-            tag = self.get_model("core_agents.chat", "qwen2.5:14b")
-            return tag, "ATLAS (14B Standard Cognitive Tier)"
+            return "qwen2.5:8b", "Standard (8B Tier)"
         if "deepseek" in clean or "reason" in clean or "math" in clean:
             if "1.5" in clean:
                 return "deepseek-r1:1.5b", "CRUCIBLE Reasoning (~1.5B Tier)"

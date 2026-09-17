@@ -127,10 +127,27 @@ jobs:
           cache: "pip"
           cache-dependency-path: backend/requirements.txt
 
-      - name: Install native audio dependencies
+      - name: Install native test dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libportaudio2 portaudio19-dev
+          sudo apt-get install -y \
+            libportaudio2 \
+            portaudio19-dev \
+            powershell \
+            xvfb \
+            x11-utils
+
+      - name: Start virtual display
+        run: |
+          sudo Xvfb :99 -screen 0 1920x1080x24 -ac +extension GLX +render -noreset \
+            > /tmp/xvfb.log 2>&1 &
+          for i in {1..20}; do
+            if xdpyinfo -display :99 >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          xdpyinfo -display :99
 
       - name: Install dependencies
         run: |
@@ -142,11 +159,14 @@ jobs:
         env:
           DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
           REDIS_URL: redis://localhost:6379/0
-          DISPLAY: ':99'
+          DISPLAY: ":99"
+          PYTHONPATH: "${{ github.workspace }}/backend"
           MPLBACKEND: Agg
         run: |
           python -m pytest tests/ -v --tb=short \
-            --cov=backend/app --cov-report=xml --cov-report=term-missing \
+            --cov=backend/app \
+            --cov-report=xml \
+            --cov-report=term-missing \
             --junitxml=pytest-results-${{ matrix.python-version }}.xml
 
       - name: Upload coverage to Codecov
@@ -185,7 +205,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run evaluation benchmark suite
-        run: python backend/eval/benchmark.py
+        working-directory: backend
+        run: python eval/benchmark.py
 
       - name: Upload benchmark report
         uses: actions/upload-artifact@v7

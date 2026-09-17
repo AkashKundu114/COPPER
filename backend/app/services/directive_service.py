@@ -17,6 +17,18 @@ class DirectiveResult:
     updates: dict[str, Any] = field(default_factory=dict)
 
 
+MODEL_TIERS = {
+    "mini": {
+        "model": "qwen2.5:1b",
+        "tier_name": "Mini (1B Reflex Tier)",
+    },
+    "standard": {
+        "model": "qwen2.5:8b",
+        "tier_name": "Standard (8B Tier)",
+    },
+}
+
+
 class OperatorDirectiveService:
     """
     Parses and executes natural-language operational directives from the user:
@@ -233,14 +245,64 @@ class OperatorDirectiveService:
                 )
 
         # 6. Check Model Selection & Sizing Directive
+        # Check reset model directive
+        reset_match = re.search(r"\b(?:reset|clear|auto|adaptive)\s+models?\b", lower_msg)
+        if reset_match:
+            remaining = self._extract_remaining_prompt(clean_msg, reset_match.span())
+            persistent_memory.set_chat_model(None)
+            persistent_memory.set_chat_tier("auto")
+            confirmation = (
+                "⚡ **[OPERATOR DIRECTIVE EXECUTED: MODEL PREFERENCE RESET]**\n\n"
+                "Model selection returned to **Autonomous Adaptive Intent**. COPPER will dynamically select models based on query complexity."
+            )
+            return DirectiveResult(
+                is_directive=True,
+                action="reset_model",
+                confirmation=confirmation,
+                remaining_prompt=remaining,
+                updates={"chat_model": None, "chat_tier": "auto"},
+            )
+
+        # Check explicit model size directive before generic matching (e.g., 'switch to 3b model', 'switch back to 8b model')
+        size_match = re.search(r"\b(1|3|8)\s*b\b", lower_msg)
+        if size_match and any(w in lower_msg for w in ["switch", "use", "change", "set", "model", "back"]):
+            size = size_match.group(1)
+            model = f"qwen2.5:{size}b"
+            tier_name = (
+                MODEL_TIERS["mini"]["tier_name"]
+                if size == "1"
+                else (MODEL_TIERS["standard"]["tier_name"] if size == "8" else f"{size}B Tier ({model})")
+            )
+            chat_tier = "mini" if size == "1" else ("standard" if size == "8" else f"{size}b")
+            persistent_memory.set_chat_model(model, tier_name)
+            persistent_memory.set_chat_tier(chat_tier)
+
+            cmd_match = re.search(
+                r"\b(?:switch\s+back\s+to|switch\s+to|use|change\s+to|set)\s+(?:the\s+|a\s+)?(?:qwen2\.5:)?(?:1|3|8)\s*b(?:\s+models?)?\b",
+                lower_msg,
+            )
+            matched_span = cmd_match.span() if cmd_match else size_match.span()
+            remaining = self._extract_remaining_prompt(clean_msg, matched_span)
+
+            confirmation = (
+                f"⚡ **[OPERATOR DIRECTIVE EXECUTED: CHAT MODEL UPDATED]**\n\n"
+                f"• **Active Model:** `{model}`\n"
+                f"• **Performance Tier:** {tier_name}\n"
+                f"• **Persistence:** Saved to persistent operator profile. All general questions and conversation will now immediately run on this model.\n"
+            )
+            logger.info(f"[Directive] Operator switched chat model to {model} ({tier_name})")
+            return DirectiveResult(
+                is_directive=True,
+                action="set_chat_model",
+                confirmation=confirmation,
+                remaining_prompt=remaining,
+                updates={"chat_model": model, "chat_tier": chat_tier, "tier_name": tier_name},
+            )
+
         for pat, alias in self.MODEL_DIRECTIVE_PATTERNS:
             match = re.search(pat, lower_msg)
             if match:
                 matched_span = match.span()
-
-                # Check if there is an accompanying prompt after the directive
-                # e.g. "use a smaller model and tell me my age" -> "tell me my age"
-                # e.g. "use 1b model. whats my age" -> "whats my age"
                 remaining = self._extract_remaining_prompt(clean_msg, matched_span)
 
                 if alias == "auto":
@@ -258,7 +320,13 @@ class OperatorDirectiveService:
                         updates={"chat_model": None, "chat_tier": "auto"},
                     )
 
-                tag, tier_name = model_manager.resolve_model_alias(alias)
+                if alias == "mini":
+                    tier = MODEL_TIERS["mini"]
+                    tag = tier["model"]
+                    tier_name = tier["tier_name"]
+                else:
+                    tag, tier_name = model_manager.resolve_model_alias(alias)
+
                 persistent_memory.set_chat_model(tag, tier_name)
                 persistent_memory.set_chat_tier(alias)
 

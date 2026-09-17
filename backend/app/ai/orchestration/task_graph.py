@@ -19,6 +19,11 @@ from app.ai.orchestration.wal_executor import RecordType, TaskWAL, crash_recover
 from app.core.forge_sandbox import forge_sandbox
 from app.core.logger import logger
 
+STATUS_ALIASES = {
+    "completed": "done",
+    "success": "done",
+}
+
 AGENT_NAME_MAP = {
     "AXIS": coding_agent,
     "CODING": coding_agent,
@@ -264,7 +269,7 @@ class TaskGraphExecutor:
                         res = f"Simulated output from agent {sub_task.agent} for task {sub_task.id}"
 
                     dur = round((time.perf_counter() - t_start) * 1000.0, 2)
-                    sub_task.status = "completed"
+                    sub_task.status = "done"
                     sub_task.output = res
                     sub_task.execution_time_ms = dur
 
@@ -429,9 +434,13 @@ class TaskGraphExecutor:
                     {
                         "action": t.title,
                         "agent": t.agent,
-                        "description": t.description,
-                        "status": t.status,
-                        "dependencies": t.dependencies,
+                        "description": getattr(
+                            t,
+                            "description",
+                            getattr(t, "instruction", getattr(t, "title", "")),
+                        ),
+                        "status": STATUS_ALIASES.get(t.status, t.status),
+                        "dependencies": getattr(t, "dependencies", getattr(t, "depends_on", [])),
                     }
                     for t in plan.tasks
                 ]

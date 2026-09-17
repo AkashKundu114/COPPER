@@ -1,3 +1,4 @@
+import collections
 import re
 import threading
 import time
@@ -61,6 +62,15 @@ class KeywordHighlight:
     agent: str
     weight: float = 1.0
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "term": self.term,
+            "start": self.start,
+            "end": self.end,
+            "agent": self.agent,
+            "weight": self.weight,
+        }
+
 
 @dataclass
 class ScoreItem:
@@ -70,6 +80,16 @@ class ScoreItem:
     score: float
     percentage: float
     is_winner: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "agent": self.agent,
+            "agent_name": self.agent_name,
+            "codename": self.codename,
+            "score": self.score,
+            "percentage": self.percentage,
+            "is_winner": self.is_winner,
+        }
 
 
 @dataclass
@@ -82,6 +102,17 @@ class SuppressedRule:
     penalty: float
     reason: str
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "agent": self.agent,
+            "agent_name": self.agent_name,
+            "codename": self.codename,
+            "pattern": self.pattern,
+            "matched_text": self.matched_text,
+            "penalty": self.penalty,
+            "reason": self.reason,
+        }
+
 
 @dataclass
 class StageProgressionItem:
@@ -90,6 +121,15 @@ class StageProgressionItem:
     name: str
     status: str  # "matched", "passed", "bypassed", "evaluated"
     decision: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "stage_id": self.stage_id,
+            "stage_number": self.stage_number,
+            "name": self.name,
+            "status": self.status,
+            "decision": self.decision,
+        }
 
 
 @dataclass
@@ -117,7 +157,29 @@ class RoutingExplanation:
     confidence_calibration: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return {
+            "id": self.id,
+            "timestamp": self.timestamp,
+            "prompt": self.prompt,
+            "agent": self.agent,
+            "agent_codename": self.agent_codename,
+            "agent_display": self.agent_display,
+            "decision_summary": self.decision_summary,
+            "confidence": self.confidence,
+            "confidence_pct": self.confidence_pct,
+            "latency_ms": self.latency_ms,
+            "route_stage": self.route_stage,
+            "scores": self.scores,
+            "score_breakdown": self.score_breakdown,
+            "matched_keywords": self.matched_keywords,
+            "matched_terms": self.matched_terms,
+            "suppressed_rules": self.suppressed_rules,
+            "stage_progression": self.stage_progression,
+            "is_consequential": self.is_consequential,
+            "cascade_risk": self.cascade_risk,
+            "sub_tasks": self.sub_tasks,
+            "confidence_calibration": self.confidence_calibration,
+        }
 
 
 class RoutingExplainer:
@@ -442,7 +504,7 @@ class RoutingExplainer:
                 )
 
         # Compute score breakdown
-        score_breakdown = [asdict(item) for item in cls.compute_score_breakdown(scores, agent)]
+        score_breakdown = [item.to_dict() for item in cls.compute_score_breakdown(scores, agent)]
 
         # Decision summary
         decision_summary = cls.generate_decision_summary(agent, confidence, route_stage, highlights, prompt)
@@ -454,7 +516,7 @@ class RoutingExplainer:
 
         # Stage progression
         stage_progression = [
-            asdict(s) for s in cls.generate_stage_progression(route_stage, agent, scores, is_consequential)
+            s.to_dict() for s in cls.generate_stage_progression(route_stage, agent, scores, is_consequential)
         ]
 
         explanation_id = f"prism-{int(time.time() * 1000)}-{abs(hash(prompt)) % 10000:04d}"
@@ -474,7 +536,7 @@ class RoutingExplainer:
             scores=scores,
             score_breakdown=score_breakdown,
             matched_keywords=matched_keywords,
-            matched_terms=[asdict(h) for h in highlights],
+            matched_terms=[h.to_dict() for h in highlights],
             suppressed_rules=suppressed_list,
             stage_progression=stage_progression,
             is_consequential=is_consequential,
@@ -492,14 +554,12 @@ class RoutingHistoryStore:
     def __init__(self, capacity: int = 200):
         self._capacity = capacity
         self._lock = threading.Lock()
-        self._history: list[dict[str, Any]] = []
+        self._history: collections.deque[dict[str, Any]] = collections.deque(maxlen=capacity)
 
     def record(self, explanation: dict[str, Any] | RoutingExplanation):
         payload = explanation.to_dict() if isinstance(explanation, RoutingExplanation) else explanation
         with self._lock:
-            self._history.insert(0, payload)
-            if len(self._history) > self._capacity:
-                self._history.pop()
+            self._history.appendleft(payload)
 
     def get_history(self, limit: int = 50, agent_type: str | None = None) -> list[dict[str, Any]]:
         with self._lock:

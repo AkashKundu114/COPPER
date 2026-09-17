@@ -81,6 +81,12 @@ Output:
 Respond strictly in `<plan>...</plan>` tags."""
 
 
+STATUS_ALIASES = {
+    "completed": "done",
+    "success": "done",
+}
+
+
 @dataclass
 class SubTask:
     id: str
@@ -97,6 +103,7 @@ class SubTask:
     def __post_init__(self):
         if not self.title:
             self.title = f"Task {self.id} ({self.agent})"
+        self.status = STATUS_ALIASES.get(self.status, self.status)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -106,7 +113,7 @@ class SubTask:
             "instruction": self.instruction,
             "depends_on": self.depends_on,
             "output_key": self.output_key,
-            "status": self.status,
+            "status": STATUS_ALIASES.get(self.status, self.status),
             "output": str(self.output)[:500] if self.output is not None else None,
             "error": self.error,
             "execution_time_ms": self.execution_time_ms,
