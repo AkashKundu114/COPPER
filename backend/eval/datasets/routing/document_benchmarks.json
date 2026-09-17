@@ -1,0 +1,752 @@
+[
+  {
+    "prompt": "I need to make a presentation slide deck summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "I need to export a spreadsheet table analyzing quarterly metrics.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "write a presentation slide deck for client onboarding",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Can you make a presentation slide deck covering project milestones?",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "export the quarterly financial report analyzing quarterly metrics and export as standalone document.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Can you build a spreadsheet table for the Q3 earnings review?",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "I need to draft a Word document for the product launch.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please write a Word document for the product launch.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "build a quarterly financial report for the executive team",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Please create a project proposal document for the executive team.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "draft the technical specification document for the product launch and export as standalone document.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please draft a Word document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "create the quarterly financial report with formatted tables and styling and export as csv.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Can you draft a presentation slide deck for client onboarding?",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Can you build a executive summary report summarizing our architecture?",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "make the spreadsheet table for client onboarding and export as csv.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please make a presentation slide deck summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "I need to export a executive summary report covering project milestones.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Can you make a executive summary report with formatted tables and styling?",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "make the executive summary report summarizing our architecture and export as standalone document.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "draft a Word document for the executive team",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you write a executive summary report covering project milestones?",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "write a technical specification document for the Q3 earnings review",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "export a quarterly financial report summarizing our architecture",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "build a whitepaper document for the executive team",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Please build a executive summary report for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "export a project proposal document summarizing our architecture",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "draft the project proposal document for client onboarding and export as csv.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "I need to export a project proposal document for the executive team.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Please generate a project proposal document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "draft a spreadsheet table for the executive team",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Please generate a quarterly financial report for client onboarding.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Can you draft a Word document for the Q3 earnings review?",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "I need to write a executive summary report for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "export the quarterly financial report for the Q3 earnings review and export as xlsx.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please generate a technical specification document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Please make a quarterly financial report covering project milestones.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please build a Word document with formatted tables and styling.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Please draft a Word document for the executive team.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "create the executive summary report for client onboarding and export as docx.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "build a technical specification document analyzing quarterly metrics",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "draft a PDF report with formatted tables and styling",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Can you write a quarterly financial report for the product launch?",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "create a whitepaper document summarizing our architecture",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "build the formal invoice document summarizing our architecture and export as docx.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "build a whitepaper document analyzing quarterly metrics",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Can you make a Word document for the executive team?",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "export a technical specification document with formatted tables and styling",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you draft a spreadsheet table with formatted tables and styling?",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "export the executive summary report covering project milestones and export as csv.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "I need to write a Word document analyzing quarterly metrics.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Can you make a executive summary report for the executive team?",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "draft the technical specification document analyzing quarterly metrics and export as csv.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Please write a executive summary report for the executive team.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "I need to create a PDF report for client onboarding.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "generate the executive summary report for the product launch and export as pdf.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "generate the whitepaper document for the product launch and export as pdf.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Can you create a project proposal document with formatted tables and styling?",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "write the formal invoice document analyzing quarterly metrics and export as xlsx.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "I need to export a executive summary report for the product launch.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "generate the Word document for client onboarding and export as xlsx.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "draft a formal invoice document analyzing quarterly metrics",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you write a technical specification document summarizing our architecture?",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "I need to write a project proposal document for client onboarding.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please draft a technical specification document covering project milestones.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please export a spreadsheet table summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "generate the spreadsheet table for the executive team and export as docx.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "generate a whitepaper document covering project milestones",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "build the technical specification document covering project milestones and export as xlsx.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "make the formal invoice document summarizing our architecture and export as pdf.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "I need to export a Word document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "write a whitepaper document covering project milestones",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Can you draft a PDF report for the product launch?",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "create a formal invoice document for client onboarding",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "export the formal invoice document covering project milestones and export as csv.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "make a technical specification document covering project milestones",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "I need to build a project proposal document for client onboarding.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "I need to export a technical specification document for the executive team.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "create the formal invoice document for the executive team and export as xlsx.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "export the formal invoice document summarizing our architecture and export as docx.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "generate a executive summary report for the product launch",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Please create a technical specification document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "create a quarterly financial report covering project milestones",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please export a presentation slide deck for the executive team.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please create a Word document with formatted tables and styling.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "I need to make a whitepaper document for the product launch.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "write a technical specification document for client onboarding",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Can you write a project proposal document for the Q3 earnings review?",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you write a project proposal document for the product launch?",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "draft a project proposal document for the Q3 earnings review",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "create a whitepaper document with formatted tables and styling",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please export a Word document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Can you create a presentation slide deck for the executive team?",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "I need to draft a spreadsheet table with formatted tables and styling.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "I need to draft a technical specification document covering project milestones.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "write a quarterly financial report summarizing our architecture",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "create the PDF report for the Q3 earnings review and export as standalone document.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Can you write a presentation slide deck analyzing quarterly metrics?",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please write a PDF report covering project milestones.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "export the formal invoice document analyzing quarterly metrics and export as docx.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Please create a technical specification document covering project milestones.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please draft a spreadsheet table for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "export the formal invoice document analyzing quarterly metrics and export as standalone document.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Can you make a Word document covering project milestones?",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "Can you build a presentation slide deck for the Q3 earnings review?",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "draft a formal invoice document for the executive team",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "I need to create a spreadsheet table for the executive team.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "create the project proposal document analyzing quarterly metrics and export as docx.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Can you build a formal invoice document analyzing quarterly metrics?",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "I need to generate a whitepaper document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please make a PDF report analyzing quarterly metrics.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "create the Word document for the executive team and export as pdf.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "Please generate a presentation slide deck for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Please create a spreadsheet table for the executive team.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please build a formal invoice document covering project milestones.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Please make a PDF report summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "make the PDF report analyzing quarterly metrics and export as csv.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "export a spreadsheet table analyzing quarterly metrics",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "I need to write a formal invoice document summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Can you build a formal invoice document summarizing our architecture?",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Please build a Word document for the executive team.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "I need to write a whitepaper document for the executive team.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "draft a project proposal document for the product launch",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "make a whitepaper document for the Q3 earnings review",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Can you draft a formal invoice document for the Q3 earnings review?",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "I need to create a spreadsheet table for client onboarding.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "generate the quarterly financial report covering project milestones and export as pdf.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "I need to draft a project proposal document covering project milestones.",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "Can you export a executive summary report summarizing our architecture?",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  },
+  {
+    "prompt": "export the spreadsheet table for the product launch and export as csv.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you make a spreadsheet table with formatted tables and styling?",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "build a formal invoice document summarizing our architecture",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Please build a project proposal document for the executive team.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "generate the formal invoice document for the Q3 earnings review and export as docx.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "write a PDF report for the product launch",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "write the spreadsheet table covering project milestones and export as docx.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "Please make a technical specification document for client onboarding.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "write a project proposal document for client onboarding",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "export the executive summary report with formatted tables and styling and export as csv.",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Can you generate a PDF report covering project milestones?",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "Can you draft a presentation slide deck analyzing quarterly metrics?",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "I need to write a technical specification document summarizing our architecture.",
+    "expected_agent": "document",
+    "category": "spreadsheet_export"
+  },
+  {
+    "prompt": "create the project proposal document summarizing our architecture and export as xlsx.",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "draft a technical specification document for client onboarding",
+    "expected_agent": "document",
+    "category": "technical_whitepaper"
+  },
+  {
+    "prompt": "draft a executive summary report for the product launch",
+    "expected_agent": "document",
+    "category": "word_docx"
+  },
+  {
+    "prompt": "Please export a spreadsheet table with formatted tables and styling.",
+    "expected_agent": "document",
+    "category": "project_proposal"
+  },
+  {
+    "prompt": "I need to draft a project proposal document for the Q3 earnings review.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "create a technical specification document analyzing quarterly metrics",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "draft the presentation slide deck with formatted tables and styling and export as pdf.",
+    "expected_agent": "document",
+    "category": "executive_summary"
+  },
+  {
+    "prompt": "export a presentation slide deck summarizing our architecture",
+    "expected_agent": "document",
+    "category": "pdf_report"
+  }
+]

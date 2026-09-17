@@ -109,7 +109,6 @@ coverage.xml
 # ── Benchmark / Eval Outputs ──────────────────────────────────────────────────
 backend/eval/benchmark_metrics.json
 backend/eval/benchmark_report.md
-backend/eval/datasets/
 
 # ── Node & Frontend Build ─────────────────────────────────────────────────────
 node_modules/

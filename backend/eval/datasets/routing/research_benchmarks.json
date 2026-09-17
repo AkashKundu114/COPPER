@@ -1,0 +1,752 @@
+[
+  {
+    "prompt": "What is the transformer neural network architecture?",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the black hole information paradox.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "What is how the human immune system works?",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain the transformer neural network architecture to me.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain the black hole information paradox to me.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Tell me about how the human immune system works.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "What is wave-particle duality?",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about the CRISPR-Cas9 mechanism.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Tell me about wave-particle duality.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Tell me about the differences between React and Vue.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Tell me about TCP vs UDP protocols.",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Explain G\u00f6del's Incompleteness Theorem to me.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Summarize Alan Turing's life.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "What is TCP vs UDP protocols?",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for how the human immune system works.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Tell me about epistemic memory.",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Explain the stages of sleep to me.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Explain the latest AI news to me.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Tell me about the Byzantine Generals Problem.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Summarize how RNA polymerase works.",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "What is the differences between React and Vue?",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is the history of the Roman Empire?",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Search the web for the transformer neural network architecture.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Tell me about the Voynich manuscript.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is the 2008 financial crisis?",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Search the web for lithium-ion solid-state batteries.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Summarize the CRISPR-Cas9 mechanism.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Summarize the black hole information paradox.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "What is quantum mechanics?",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Explain the 2008 financial crisis to me.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain quantum mechanics to me.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Search the web for the 2008 financial crisis.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for epistemic memory.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Summarize solar vs nuclear power.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain lithium-ion solid-state batteries to me.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Explain how RNA polymerase works to me.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Tell me about supervised vs self-supervised learning.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Tell me about the CAP theorem.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Tell me about quantum mechanics.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for Alan Turing's life.",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Search the web for the differences between SQLite and PostgreSQL.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for wave-particle duality.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Explain the philosophy of Stoicism to me.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Search the web for the Byzantine Generals Problem.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain supervised vs self-supervised learning to me.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "What is the philosophy of Stoicism?",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "What is lithium-ion solid-state batteries?",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What is epistemic memory?",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "What is Alan Turing's life?",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Explain Alan Turing's life to me.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Summarize supervised vs self-supervised learning.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Summarize the Byzantine Generals Problem.",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Summarize the transformer neural network architecture.",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about how RNA polymerase works.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is the latest AI news?",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Tell me about the latest AI news.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Search the web for Einstein's special theory of relativity.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Tell me about the history of the Roman Empire.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Explain epistemic memory to me.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Search the web for the stages of sleep.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain Einstein's special theory of relativity to me.",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Explain the CAP theorem to me.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize quantum mechanics.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about lithium-ion solid-state batteries.",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Search the web for the philosophy of Stoicism.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "What is the CAP theorem?",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "What is the black hole information paradox?",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What is the Byzantine Generals Problem?",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "What is the CRISPR-Cas9 mechanism?",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Summarize how the human immune system works.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Tell me about the black hole information paradox.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Search the web for the Voynich manuscript.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize the stages of sleep.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about the stages of sleep.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is supervised vs self-supervised learning?",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for G\u00f6del's Incompleteness Theorem.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about Einstein's special theory of relativity.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Search the web for the CAP theorem.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Summarize Einstein's special theory of relativity.",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Explain TCP vs UDP protocols to me.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Tell me about G\u00f6del's Incompleteness Theorem.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize G\u00f6del's Incompleteness Theorem.",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Tell me about the transformer neural network architecture.",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Search the web for TCP vs UDP protocols.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Tell me about the philosophy of Stoicism.",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Search the web for the CRISPR-Cas9 mechanism.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Explain how the human immune system works to me.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is the differences between SQLite and PostgreSQL?",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Summarize epistemic memory.",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Summarize the differences between React and Vue.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Explain the history of the Roman Empire to me.",
+    "expected_agent": "research",
+    "category": "philosophy"
+  },
+  {
+    "prompt": "Search the web for the differences between React and Vue.",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "What is solar vs nuclear power?",
+    "expected_agent": "research",
+    "category": "medicine"
+  },
+  {
+    "prompt": "Explain the differences between React and Vue to me.",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "What is how RNA polymerase works?",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "What is G\u00f6del's Incompleteness Theorem?",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "What is the stages of sleep?",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Tell me about Alan Turing's life.",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Summarize TCP vs UDP protocols.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize the history of the Roman Empire.",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Explain wave-particle duality to me.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize the CAP theorem.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Tell me about solar vs nuclear power.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain the differences between SQLite and PostgreSQL to me.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Explain the CRISPR-Cas9 mechanism to me.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What is Einstein's special theory of relativity?",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Search the web for how RNA polymerase works.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize wave-particle duality.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Tell me about the differences between SQLite and PostgreSQL.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Summarize the differences between SQLite and PostgreSQL.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize lithium-ion solid-state batteries.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain the Byzantine Generals Problem to me.",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain solar vs nuclear power to me.",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "What is the Voynich manuscript?",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Summarize the Voynich manuscript.",
+    "expected_agent": "research",
+    "category": "comparison"
+  },
+  {
+    "prompt": "Summarize the 2008 financial crisis.",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Summarize the latest AI news.",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Tell me about the 2008 financial crisis.",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the history of the Roman Empire.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Search the web for supervised vs self-supervised learning.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for solar vs nuclear power.",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for the latest AI news.",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? please",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? right now",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? as soon as possible",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? quickly",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? today",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "What is the transformer neural network architecture? for me",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. right now",
+    "expected_agent": "research",
+    "category": "history"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. as soon as possible",
+    "expected_agent": "research",
+    "category": "mathematics"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. quickly",
+    "expected_agent": "research",
+    "category": "physics"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. today",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Explain the Voynich manuscript to me. for me",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. please",
+    "expected_agent": "research",
+    "category": "machine_learning"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. right now",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. as soon as possible",
+    "expected_agent": "research",
+    "category": "engineering"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. quickly",
+    "expected_agent": "research",
+    "category": "neuroscience"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. today",
+    "expected_agent": "research",
+    "category": "biology"
+  },
+  {
+    "prompt": "Summarize the philosophy of Stoicism. for me",
+    "expected_agent": "research",
+    "category": "genetics"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. please",
+    "expected_agent": "research",
+    "category": "economics"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. right now",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. as soon as possible",
+    "expected_agent": "research",
+    "category": "current_events"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. quickly",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. today",
+    "expected_agent": "research",
+    "category": "biography"
+  },
+  {
+    "prompt": "Search the web for quantum mechanics. for me",
+    "expected_agent": "research",
+    "category": "literature_search"
+  },
+  {
+    "prompt": "Search the web for the black hole information paradox. please",
+    "expected_agent": "research",
+    "category": "history"
+  }
+]

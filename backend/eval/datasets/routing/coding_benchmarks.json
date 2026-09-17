@@ -1,0 +1,752 @@
+[
+  {
+    "prompt": "test the algorithm using async/await in my Rust project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I debug a module in TypeScript for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "review the module with dependency injection in my TypeScript project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "review a Java React component to improve performance",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "review a Python algorithm using async/await",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "review a JavaScript React component to sort an array",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "review a Rust REST endpoint with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "refactor a Go REST endpoint for real-time streaming",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "debug the algorithm using async/await in my C++ project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "implement the script for real-time streaming in my Go project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "refactor the class to fix the null pointer exception in my Rust project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you implement this SQL React component to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Can you test this Go script using async/await?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "write a TypeScript module to improve performance",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "implement the algorithm to improve performance in my SQL project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to test a React component with dependency injection using SQL.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I write a function in Java to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I refactor a database schema in SQL to sort an array?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to debug a database schema with comprehensive unit tests using C++.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you review this TypeScript React component using async/await?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "write the function with dependency injection in my Python project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to optimize a REST endpoint to improve performance using Java.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "debug the React component to sort an array in my Rust project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "optimize a Python React component for real-time streaming",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I debug a class in JavaScript for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to review a script to improve performance using Python.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I optimize a class in SQL to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Can you review this Java script with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "write a C++ REST endpoint to sort an array",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you debug this Go database schema to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you write this Rust script to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you test this TypeScript script to improve performance?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "optimize the script to fix the null pointer exception in my Rust project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "refactor a Rust function with dependency injection",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "optimize a Java module to improve performance",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "implement a Rust class for real-time streaming",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "write the database schema with dependency injection in my Go project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "optimize the REST endpoint using async/await in my Java project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "write the class with comprehensive unit tests in my Rust project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to refactor a module for real-time streaming using SQL.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "I need help to test a algorithm with dependency injection using TypeScript.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you optimize this Java script for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "implement the algorithm for real-time streaming in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "refactor a Go module with dependency injection",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "implement the database schema to improve performance in my Rust project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you write this C++ REST endpoint with dependency injection?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "create the React component to improve performance in my Python project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "optimize a Rust React component to sort an array",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you optimize this Go REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "refactor the module to improve performance in my Python project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "I need help to optimize a script for real-time streaming using Go.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "test the script with comprehensive unit tests in my Rust project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "debug the class for real-time streaming in my Java project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "optimize a Go database schema using async/await",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "write the algorithm to fix the null pointer exception in my TypeScript project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I create a REST endpoint in TypeScript to sort an array?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I implement a script in Rust to sort an array?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you debug this JavaScript script with dependency injection?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "refactor a C++ function to sort an array",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "optimize a Java function for real-time streaming",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "Can you optimize this Go class with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "review the module to fix the null pointer exception in my SQL project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you debug this Java database schema to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you debug this TypeScript database schema using async/await?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I refactor a script in Go for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "Can you optimize this Rust database schema to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "review a Rust database schema using async/await",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "create the module to fix the null pointer exception in my Rust project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "review the script for real-time streaming in my Rust project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "optimize the module with dependency injection in my Python project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "refactor the algorithm with dependency injection in my Java project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "optimize the database schema to sort an array in my Go project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "refactor the database schema with dependency injection in my Go project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you implement this Python REST endpoint to improve performance?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I write a REST endpoint in JavaScript using async/await?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to optimize a script with comprehensive unit tests using Java.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "test a C++ function with dependency injection",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you create this Rust function to sort an array?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I test a algorithm in C++ to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test the function with comprehensive unit tests in my SQL project.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I review a script in Python to sort an array?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I refactor a database schema in Go using async/await?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "review the script with dependency injection in my SQL project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "debug the script with dependency injection in my Java project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "debug a Rust database schema with dependency injection",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "debug the class to improve performance in my Go project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "write a TypeScript React component with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you implement this C++ database schema for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I write a REST endpoint in Java to improve performance?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you write this Go REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to optimize a script to sort an array using Java.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "debug the class with comprehensive unit tests in my C++ project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to implement a class to improve performance using JavaScript.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "I need help to create a database schema using async/await using Rust.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "write the function to fix the null pointer exception in my Python project.",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "write a JavaScript function to fix the null pointer exception",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you optimize this Rust database schema with dependency injection?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I implement a React component in Java to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "How do I write a module in Python using async/await?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "create a Python database schema for real-time streaming",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "refactor a TypeScript script for real-time streaming",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "I need help to implement a script with dependency injection using Java.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you optimize this Rust REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "Can you implement this SQL class for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you implement this Go class to improve performance?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I debug a class in JavaScript to improve performance?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "How do I optimize a module in C++ using async/await?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I write a database schema in Java to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I test a algorithm in Python with dependency injection?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "test the class with dependency injection in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "write a TypeScript function to sort an array",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I test a REST endpoint in Java for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I create a function in Java using async/await?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "implement a JavaScript class using async/await",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I implement a script in SQL to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "I need help to optimize a module to sort an array using TypeScript.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "debug a Go REST endpoint with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "I need help to refactor a class using async/await using Go.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "test a Python script with comprehensive unit tests",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "How do I review a algorithm in Go to improve performance?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you write this Rust REST endpoint to fix the null pointer exception?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I review a algorithm in C++ with dependency injection?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "create a Rust database schema to fix the null pointer exception",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "debug the module to improve performance in my SQL project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you debug this Java function to sort an array?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "test a C++ database schema with dependency injection",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "optimize the database schema for real-time streaming in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "How do I refactor a script in Go to improve performance?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "I need help to create a database schema to improve performance using TypeScript.",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you optimize this Rust function to improve performance?",
+    "expected_agent": "coding",
+    "category": "refactor"
+  },
+  {
+    "prompt": "test the algorithm to fix the null pointer exception in my SQL project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "write the module to sort an array in my SQL project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "How do I optimize a REST endpoint in Java with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "debug the function to improve performance in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "I need help to create a algorithm to fix the null pointer exception using Rust.",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "Can you implement this SQL class to sort an array?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "How do I refactor a module in C++ with dependency injection?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "How do I debug a database schema in JavaScript to sort an array?",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "How do I create a script in TypeScript for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "test the React component for real-time streaming in my Python project.",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test a SQL class to improve performance",
+    "expected_agent": "coding",
+    "category": "debugging"
+  },
+  {
+    "prompt": "How do I write a script in Rust to improve performance?",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "I need help to debug a algorithm with dependency injection using Python.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "write the function using async/await in my JavaScript project.",
+    "expected_agent": "coding",
+    "category": "database"
+  },
+  {
+    "prompt": "test a SQL class using async/await",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "Can you implement this Python function with comprehensive unit tests?",
+    "expected_agent": "coding",
+    "category": "algorithms"
+  },
+  {
+    "prompt": "test a SQL algorithm to improve performance",
+    "expected_agent": "coding",
+    "category": "testing"
+  },
+  {
+    "prompt": "Can you write this SQL script with dependency injection?",
+    "expected_agent": "coding",
+    "category": "backend"
+  },
+  {
+    "prompt": "optimize a Go function using async/await",
+    "expected_agent": "coding",
+    "category": "frontend"
+  },
+  {
+    "prompt": "Can you review this TypeScript REST endpoint for real-time streaming?",
+    "expected_agent": "coding",
+    "category": "frontend"
+  }
+]

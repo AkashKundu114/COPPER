@@ -1,0 +1,752 @@
+[
+  {
+    "prompt": "Please terminate the active window in the background.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you terminate all log files in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to copy the background process on my desktop right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please launch the VSCode application on my desktop.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Please close my browser to the external drive.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "delete my browser to the external drive",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "move my browser from the system tray",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please copy my music player immediately.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to close my browser immediately right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "move my music player immediately",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please close the VSCode application to the external drive.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you launch my browser immediately?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you minimize my browser to the external drive?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you restart the database container in the background?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you delete all log files on my desktop?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "close my browser to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "open my browser on port 8000",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "delete the active window from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "open the active window from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "maximize my browser to the external drive",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please minimize the active window on port 8000.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "open the terminal in the background",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please launch the terminal in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you close my browser in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to minimize the background process from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you launch my browser to the external drive?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "move the VSCode application from the system tray",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "close the background process from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "copy all log files from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you copy my music player on my desktop?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you delete the temp directory on port 8000?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you copy the terminal on my desktop?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "terminate the background process to the external drive",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to minimize all log files from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to minimize the temp directory in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to launch all log files in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please terminate the terminal to the external drive.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to delete the database container in the background right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to maximize the active window in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please terminate the background process on port 8000.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "restart the VSCode application in the background",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "restart the temp directory in the background",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "close the terminal from the system tray",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you move the terminal in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you move the temp directory in the background?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to copy all log files in the background right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you copy all log files in the background?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "maximize the temp directory to the external drive and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you delete the terminal on my desktop?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to terminate the active window to the external drive right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please delete all log files on port 8000.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to launch all log files from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "maximize the active window in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "minimize my browser on my desktop",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "maximize the temp directory from the system tray",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "restart the background process from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "terminate the background process on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you close the terminal on my desktop?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please minimize the active window on my desktop.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "minimize my browser on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "restart the temp directory to the external drive",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you minimize my browser immediately?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "maximize my music player on port 8000",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to move the database container in the background right now.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you maximize the database container immediately?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you launch all log files on my desktop?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you restart the VSCode application on my desktop?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "open all log files in the background",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you maximize the background process immediately?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you minimize my browser from the system tray?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "maximize the VSCode application on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to terminate the active window on my desktop right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you close the temp directory on port 8000?",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you launch the background process in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "terminate the VSCode application immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to close the terminal immediately right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please delete the temp directory to the external drive.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "move the background process to the external drive",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you move the background process on my desktop?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you launch my music player in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "move the terminal on port 8000 and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Can you terminate all log files on my desktop?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "copy my music player on port 8000",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "terminate the active window in the background",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "launch all log files in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please close the background process in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please launch the active window immediately.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you terminate the database container in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to restart the terminal in the background right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "move the VSCode application immediately and confirm when done.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please move all log files from the system tray.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to minimize all log files in the background right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you close my browser in the background?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you terminate the VSCode application in the background?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "copy my browser immediately",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please restart all log files to the external drive.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Please delete the database container from the system tray.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to maximize my music player on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you move my browser in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you open all log files immediately?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "maximize the temp directory in the background and confirm when done.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "I want you to move my music player in the background right now.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you copy my music player in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "delete the background process from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "close my browser in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to minimize the background process immediately right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "minimize the VSCode application in the background",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please delete all log files in the background.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please launch the active window on port 8000.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "I want you to delete the active window on port 8000 right now.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you minimize the VSCode application to the external drive?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "launch my music player from the system tray",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "I want you to minimize the terminal on my desktop right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "Please maximize the VSCode application on port 8000.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "terminate the active window to the external drive",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "maximize my music player from the system tray",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please copy the background process to the external drive.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you restart my music player in the background?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please delete the active window in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Can you move my music player in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you close the background process in the downloads folder?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "terminate the VSCode application to the external drive",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you copy the database container from the system tray?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Can you close the background process immediately?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Can you copy the active window on port 8000?",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "maximize the background process in the downloads folder and confirm when done.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "Please delete the terminal immediately.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you launch my browser on my desktop?",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Can you terminate the active window to the external drive?",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you close the database container to the external drive?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please delete my music player immediately.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please terminate my browser immediately.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you copy the active window to the external drive?",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "launch the terminal in the background",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "move my browser on my desktop and confirm when done.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please minimize the active window from the system tray.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "I want you to minimize the terminal from the system tray right now.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Please move the background process in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please copy the active window on my desktop.",
+    "expected_agent": "automation",
+    "category": "execution"
+  },
+  {
+    "prompt": "I want you to open my browser on my desktop right now.",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please delete the background process on port 8000.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "Please terminate the terminal in the downloads folder.",
+    "expected_agent": "automation",
+    "category": "app_control"
+  },
+  {
+    "prompt": "Can you restart the database container immediately?",
+    "expected_agent": "automation",
+    "category": "system"
+  },
+  {
+    "prompt": "Please open the VSCode application on my desktop.",
+    "expected_agent": "automation",
+    "category": "filesystem"
+  },
+  {
+    "prompt": "Please maximize the background process on port 8000.",
+    "expected_agent": "automation",
+    "category": "process"
+  },
+  {
+    "prompt": "I want you to delete the terminal in the downloads folder right now.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "terminate my music player from the system tray and confirm when done.",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Can you terminate the VSCode application from the system tray?",
+    "expected_agent": "automation",
+    "category": "window"
+  },
+  {
+    "prompt": "Please copy the database container to the external drive.",
+    "expected_agent": "automation",
+    "category": "browser"
+  },
+  {
+    "prompt": "move the temp directory on port 8000",
+    "expected_agent": "automation",
+    "category": "process"
+  }
+]

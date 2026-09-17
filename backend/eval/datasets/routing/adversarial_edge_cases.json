@@ -1,0 +1,802 @@
+[
+  {
+    "prompt": "Remind me to read the text in this screenshot and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for read the text in this screenshot and close all windows",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Schedule a time to a cyberpunk city in the rain in 8k resolution",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Draw an image of a cyberpunk city in the rain with clear milestones",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Write a script to inspect this diagram of our architecture and close all windows",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Draw an image of refactor the UI in 8k resolution",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Explain how to the quarterly sales performance with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Generate a PDF report for debug the python app and open VSCode",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Plan a roadmap for fix the CSS styling with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about write unit tests and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to fix the CSS styling with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for research the Linux kernel and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Delete the file about study the Roman Empire and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Remind me to read the text in this screenshot and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to learn quantum mechanics and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to a cyberpunk city in the rain and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to fix the CSS styling in 8k resolution",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to research the Linux kernel and move it to downloads",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for fix the CSS styling in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Generate a PDF report for fix the CSS styling and export to PDF",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for fix the CSS styling step-by-step",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for the quarterly sales performance with clear milestones",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Write a script to the quarterly sales performance and export to PDF",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to a cyberpunk city in the rain and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for study the Roman Empire step-by-step",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Delete the file about debug the python app step-by-step",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to the quarterly sales performance in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to the quarterly sales performance step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to fix the CSS styling and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for inspect this diagram of our architecture and open VSCode",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Delete the file about the quarterly sales performance in a 4-week sprint",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for the quarterly sales performance and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about study the Roman Empire and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Schedule a time to write unit tests and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about a cyberpunk city in the rain and export to PDF",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Draw an image of fix the CSS styling and export to PDF",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Generate a PDF report for inspect this diagram of our architecture and export to PDF",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for a cyberpunk city in the rain step-by-step",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for learn quantum mechanics and open VSCode",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to a cyberpunk city in the rain with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for debug the python app and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for read the text in this screenshot in 8k resolution",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Remind me to inspect this diagram of our architecture and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to a cyberpunk city in the rain and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for study the Roman Empire in a 4-week sprint",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Explain how to the quarterly sales performance and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Delete the file about inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Plan a roadmap for learn quantum mechanics step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for a cyberpunk city in the rain in 8k resolution",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to inspect this diagram of our architecture in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to debug the python app step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about the quarterly sales performance and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Remind me to write unit tests with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for learn quantum mechanics and export to PDF",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to study the Roman Empire and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about a cyberpunk city in the rain and close all windows",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Write a script to study the Roman Empire step-by-step",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Plan a roadmap for debug the python app with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture and export to PDF",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for research the Linux kernel in 8k resolution",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Generate a PDF report for debug the python app in 8k resolution",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Plan a roadmap for refactor the UI and export to PDF",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Delete the file about a cyberpunk city in the rain and move it to downloads",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to research the Linux kernel with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Remind me to study the Roman Empire in 8k resolution",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to research the Linux kernel and export to PDF",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Generate a PDF report for write unit tests and export to PDF",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for research the Linux kernel in a 4-week sprint",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Explain how to debug the python app step-by-step",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to read the text in this screenshot and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Schedule a time to refactor the UI and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for the quarterly sales performance with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to inspect this diagram of our architecture and move it to downloads",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Write a script to debug the python app and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Draw an image of learn quantum mechanics and close all windows",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics and open VSCode",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for inspect this diagram of our architecture and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics and export to PDF",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for a cyberpunk city in the rain step-by-step",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to inspect this diagram of our architecture in 8k resolution",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Write a script to refactor the UI and export to PDF",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Draw an image of study the Roman Empire and close all windows",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Delete the file about debug the python app and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Write a script to the quarterly sales performance and open VSCode",
+    "expected_agent": "coding",
+    "category": "adversarial_coding"
+  },
+  {
+    "prompt": "Remind me to the quarterly sales performance with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for debug the python app in a 4-week sprint",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Explain how to debug the python app in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to debug the python app in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to a cyberpunk city in the rain in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to fix the CSS styling in 8k resolution",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Draw an image of fix the CSS styling and move it to downloads",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Remind me to inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Plan a roadmap for study the Roman Empire and open VSCode",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Generate a PDF report for fix the CSS styling in 8k resolution",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Generate a PDF report for the quarterly sales performance and export to PDF",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Draw an image of learn quantum mechanics step-by-step",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Draw an image of inspect this diagram of our architecture and close all windows",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Remind me to refactor the UI step-by-step",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Delete the file about inspect this diagram of our architecture and open VSCode",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Draw an image of a cyberpunk city in the rain and open VSCode",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Delete the file about fix the CSS styling in 8k resolution",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to refactor the UI and export to PDF",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to learn quantum mechanics with clear milestones",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for refactor the UI and close all windows",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Remind me to write unit tests and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for read the text in this screenshot and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Delete the file about inspect this diagram of our architecture step-by-step",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to a cyberpunk city in the rain with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to inspect this diagram of our architecture with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Plan a roadmap for refactor the UI and move it to downloads",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for inspect this diagram of our architecture and open VSCode",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for the quarterly sales performance in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Schedule a time to read the text in this screenshot in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to study the Roman Empire in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to refactor the UI and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Remind me to a cyberpunk city in the rain in 8k resolution",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to write unit tests and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Generate a PDF report for a cyberpunk city in the rain and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Remind me to learn quantum mechanics and close all windows",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for write unit tests and move it to downloads",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Draw an image of a cyberpunk city in the rain and move it to downloads",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Generate a PDF report for debug the python app and export to PDF",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Remind me to study the Roman Empire in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Generate a PDF report for a cyberpunk city in the rain and open VSCode",
+    "expected_agent": "document",
+    "category": "adversarial_document"
+  },
+  {
+    "prompt": "Delete the file about research the Linux kernel in a 4-week sprint",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Plan a roadmap for read the text in this screenshot and close all windows",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Plan a roadmap for a cyberpunk city in the rain with clear milestones",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Remind me to study the Roman Empire and export to PDF",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to learn quantum mechanics with clear milestones",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Schedule a time to fix the CSS styling in a 4-week sprint",
+    "expected_agent": "reminder",
+    "category": "adversarial_reminder"
+  },
+  {
+    "prompt": "Explain how to research the Linux kernel and open VSCode",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Draw an image of refactor the UI and open VSCode",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Delete the file about read the text in this screenshot and move it to downloads",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Delete the file about write unit tests with clear milestones",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Draw an image of learn quantum mechanics and open VSCode",
+    "expected_agent": "image",
+    "category": "adversarial_image"
+  },
+  {
+    "prompt": "Plan a roadmap for a cyberpunk city in the rain in a 4-week sprint",
+    "expected_agent": "planner",
+    "category": "adversarial_planner"
+  },
+  {
+    "prompt": "Explain how to research the Linux kernel in a 4-week sprint",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to a cyberpunk city in the rain and move it to downloads",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Explain how to read the text in this screenshot and export to PDF",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  },
+  {
+    "prompt": "Delete the file about learn quantum mechanics and move it to downloads",
+    "expected_agent": "automation",
+    "category": "adversarial_automation"
+  },
+  {
+    "prompt": "Explain how to refactor the UI and close all windows",
+    "expected_agent": "research",
+    "category": "adversarial_research"
+  }
+]
