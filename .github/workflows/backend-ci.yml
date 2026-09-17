@@ -93,7 +93,8 @@ jobs:
     env:
       DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
       REDIS_URL: redis://localhost:6379/0
-      DISPLAY: ':99'
+      DISPLAY: ":99"
+      XAUTHORITY: "${{ runner.temp }}/.Xauthority"
       MPLBACKEND: Agg
 
     services:
@@ -139,14 +140,18 @@ jobs:
 
       - name: Start virtual display
         run: |
+          touch "$XAUTHORITY"
+
           sudo Xvfb :99 -screen 0 1920x1080x24 -ac +extension GLX +render -noreset \
             > /tmp/xvfb.log 2>&1 &
+
           for i in {1..20}; do
             if xdpyinfo -display :99 >/dev/null 2>&1; then
               break
             fi
             sleep 1
           done
+
           xdpyinfo -display :99
 
       - name: Install dependencies
@@ -160,6 +165,7 @@ jobs:
           DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
           REDIS_URL: redis://localhost:6379/0
           DISPLAY: ":99"
+          XAUTHORITY: "${{ runner.temp }}/.Xauthority"
           PYTHONPATH: "${{ github.workspace }}/backend"
           MPLBACKEND: Agg
         run: |
