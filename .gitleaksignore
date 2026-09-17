@@ -1,4 +1,4 @@
-﻿# Gitleaks ignore list for false positives in historical test fixtures
+# Gitleaks ignore list for false positives in historical test fixtures
 # tests/core/test_data_firewall.py: synthetic API key and token test cases
 7166926bfefeacc81e210e14f6a054a4acbe9620:tests/core/test_data_firewall.py:generic-api-key:29
 c2aea85a7bb036a533b4f626de30813b293f3da6:tests/core/test_data_firewall.py:github-pat:153
