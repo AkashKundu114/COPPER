@@ -83,7 +83,9 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 ## System Architecture
 
 <p align="center">
-  <img src="docs/images/fig8_system_architecture_topology.png" alt="C.O.P.P.E.R. Architecture Topology" width="100%" />
+  <img src="docs/images/fig8_system_architecture_topology.png" alt="Figure 1: C.O.P.P.E.R. Architecture Topology" width="100%" />
+  <br />
+  <em><b>Figure 1 (Manuscript §III):</b> C.O.P.P.E.R. end-to-end sovereign air-gapped cognitive architecture topology. Strict three-tier isolation between desktop UI, FastAPI orchestration runtime, and resident GGUF model pool with zero external network egress.</em>
 </p>
 
 ```text
@@ -221,55 +223,73 @@ Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/bench
 *† Under UMF-EDR, 8 retrieval accesses over 45 days expanded effective half-life, maintaining $C=0.77$ vs. $0.38$ unretrieved.*  
 *‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
 
-### 3. Publication Research & Empirical Profiling Figures (IEEE / Nature Standards)
+### 3. Publication Research & Empirical Profiling Figures (IEEE Transactions Standard)
 
-All empirical benchmarks rendered at 320 DPI vector resolution using scientific publication styling:
+All empirical benchmarks and system mechanics are published and rigorously evaluated in the authoritative IEEE Transactions research manuscript:  
+> **Title:** *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity*  
+> **Author:** Akash Kundu — Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
+> **Repository Publication Workspace:** [`research/`](research/) | [`paper.tex`](research/paper.tex) | [`research/README.md`](research/README.md)
+
+All 15 figures below are rendered at 350 DPI vector resolution using scientific publication styling, matching the exact order and numbering of the IEEE Transactions paper (`kundu1.png` – `kundu15.png`):
 
 <p align="center">
-  <img src="docs/images/fig1_throughput_acceleration.png" alt="Figure 1: 14B Throughput Acceleration" width="48%" />
-  <img src="docs/images/fig2_vram_memory_footprint.png" alt="Figure 2: VRAM Allocation & Headroom" width="48%" />
+  <img src="docs/images/fig8_system_architecture_topology.png" alt="Figure 1: System Architecture Topology" width="96%" />
   <br />
-  <em><b>Figure 1 & 2:</b> (Left) Empirical 14B speedup (+81% to +220%) & multi-agent throughput spectrum across the 10 specialized agents and 15 builtin tool modules on RTX 5060 Laptop GPU. (Right) Stacked dedicated GPU VRAM budget breakdown and host system RAM allocation with zero layer spilling.</em>
+  <em><b>Figure 1 (Paper §III):</b> End-to-end sovereign air-gapped cognitive architecture topology across three discrete tiers with zero external network egress.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig3_latency_throughput_pareto.png" alt="Figure 3: Pareto Frontier" width="48%" />
-  <img src="docs/images/fig4_kv_cache_layer_offload_study.png" alt="Figure 4: Layer Offloading & KV Cache Study" width="48%" />
+  <img src="docs/images/fig5_multi_agent_routing_matrix.png" alt="Figure 2: Multi-Agent Routing Matrix" width="48%" />
+  <img src="docs/images/fig3_latency_throughput_pareto.png" alt="Figure 3: Latency vs. Throughput Pareto Curve" width="48%" />
   <br />
-  <em><b>Figure 3 & 4:</b> (Left) Latency vs throughput Pareto optimal frontier across the cognitive fleet (10 specialized primary agents / 30 orchestrated agents total). (Right) Layer offloading and KV cache quantization study (f16 vs q8_0 vs q4_0) on sustained generation throughput.</em>
+  <em><b>Figures 2 & 3 (Paper §III.A):</b> (Left) Multi-agent intent classification heatmap across 9 categories (97.77% accuracy, 98.78% weighted F1). (Right) Empirical Pareto optimal frontier mapping first-token latency vs sustained throughput from the sub-millisecond reflex tier to the heavy 14B cognitive tier.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig5_multi_agent_routing_matrix.png" alt="Figure 5: Multi-Agent Intent Routing Matrix" width="48%" />
-  <img src="docs/images/fig6_epistemic_memory_decay_dynamics.png" alt="Figure 6: Epistemic Memory Decay Dynamics" width="48%" />
+  <img src="docs/images/fig6_epistemic_memory_decay_dynamics.png" alt="Figure 4: Epistemic Memory Decay Dynamics" width="96%" />
   <br />
-  <em><b>Figure 5 & 6:</b> (Left) Multi-agent intent classification heatmap across 1,500 validation queries (98.4% mean accuracy). (Right) Epistemic memory dynamics: UMF-EDR half-life decay curves and PW-EBR surprise-gated Bayesian log-odds jumps.</em>
+  <em><b>Figure 4 (Paper §III.B):</b> UMF-EDR epistemic memory dynamics: (a) Temporal decay curves across Facts, Observations, and Hypotheses showing half-lives and asymptotic floors. (b) PW-EBR surprise-gated Bayesian log-odds jumps following congruent vs incongruent evidence streams with provenance scaling.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig7_guardian_firewall_safety_roc.png" alt="Figure 7: Guardian Firewall Safety ROC" width="48%" />
-  <img src="docs/images/fig9_context_scaling_vram_stability.png" alt="Figure 9: Context Scaling Stability" width="48%" />
+  <img src="docs/images/fig7_guardian_firewall_safety_roc.png" alt="Figure 5: Guardian Firewall Safety ROC" width="48%" />
+  <img src="docs/images/data_firewall_pipeline.png" alt="Figure 6: Zero-Trust Data Firewall" width="48%" />
   <br />
-  <em><b>Figure 7 & 9:</b> (Left) Adversarial red-teaming ROC curve (AUROC = 0.998) and category threat catch rates. (Right) Context window scaling vs 8.12 GB physical VRAM ceiling with f16 CPU spill threshold.</em>
+  <em><b>Figures 5 & 6 (Paper §III.C, §III.D):</b> (Left) Guardian ROC curve (AUROC = 0.998) across 1,740 adversarial red-teaming evaluations. (Right) Zero-Trust Data Firewall 16-pattern sanitization pipeline with volatile Redis vaulting and SHA-256 provenance hashing.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig10_sovereign_evolution_loop.png" alt="Figure 10: Sovereign Self-Evolution Loop" width="96%" />
+  <img src="docs/images/fig12_wal_crash_consistency.png" alt="Figure 7: WAL Crash Consistency" width="48%" />
+  <img src="docs/images/self_healing_sentinel.png" alt="Figure 8: Self-Healing Sentinel" width="48%" />
   <br />
-  <em><b>Figure 10:</b> C.O.P.P.E.R. Sovereign Self-Evolution & Continuous Experience Distillation Loop. Trajectory capture, Bayesian consolidation, autonomous synthetic generation, and edge companion adaptation without third-party exposure.</em>
+  <em><b>Figures 7 & 8 (Paper §III.F, §III.G):</b> (Left) ARIES-style Write-Ahead Log durability protocol achieving 100.0% autonomous state recovery across hard SIGKILL interruptions. (Right) Self-Healing Sentinel FSM watchdog and automated 3-stage remediation workflow.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig11_vram_pager_and_concurrency.png" alt="Figure 11: VRAM Pager & Concurrency Isolation" width="48%" />
-  <img src="docs/images/fig12_wal_crash_consistency.png" alt="Figure 12: WAL Crash Durability & Recovery" width="48%" />
+  <img src="docs/images/fig11_vram_pager_and_concurrency.png" alt="Figure 9: VRAM Pager & Concurrency" width="48%" />
+  <img src="docs/images/fig2_vram_memory_footprint.png" alt="Figure 10: VRAM Allocation Footprint" width="48%" />
   <br />
-  <em><b>Figure 11 & 12:</b> (Left) Multi-factor weighted LRU VRAM Pager with DAG lookahead eviction under strict 8GB bound & sub-3ms isolated event loop scheduling lag. (Right) ARIES-style Write-Ahead Log durability protocol achieving 100.0% autonomous state recovery across hard SIGKILL failure interruptions.</em>
+  <em><b>Figures 9 & 10 (Paper §III.E, §IV.E):</b> (Left) Multi-factor weighted LRU VRAM Pager with DAG lookahead eviction under strict 8GB bound. (Right) Stacked dedicated GPU VRAM budget breakdown and host system RAM allocation with zero layer spilling.</em>
 </p>
 
 <p align="center">
-  <img src="docs/images/fig13_chaos_fuzzing_and_hybrid_rrf.png" alt="Figure 13: Adversarial Fuzzing & Hybrid RRF IR Benchmark" width="96%" />
+  <img src="docs/images/fig1_throughput_acceleration.png" alt="Figure 11: Throughput Acceleration" width="48%" />
+  <img src="docs/images/fig13_chaos_fuzzing_and_hybrid_rrf.png" alt="Figure 12: Chaos Fuzzing & Hybrid RRF" width="48%" />
   <br />
-  <em><b>Figure 13:</b> (Left) Adversarial Fuzzing catch sensitivity (100.0% across zero-width Unicode, homoglyphs, and base64 obfuscation with 0 breaches). (Right) Symbol-Preserving Hybrid RRF Information Retrieval benchmark, reaching 0.96 MRR@10 on exact technical code symbols vs 0.42 dense-only baseline.</em>
+  <em><b>Figures 11 & 12 (Paper §IV.E, §IV.D):</b> (Left) Empirical 14B speedup (+81% to +220%) & multi-agent throughput spectrum on RTX 5060 Laptop GPU. (Right) Adversarial chaos fuzzing catch sensitivity (100.0% across 5 evasion families) and Symbol-Preserving Hybrid RRF retrieval (0.96 MRR@10).</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig4_kv_cache_layer_offload_study.png" alt="Figure 13: KV Cache Layer Offload Study" width="48%" />
+  <img src="docs/images/fig9_context_scaling_vram_stability.png" alt="Figure 14: Context Scaling Stability" width="48%" />
+  <br />
+  <em><b>Figures 13 & 14 (Paper §IV.E):</b> (Left) KV cache quantization study (f16 vs q8_0 vs q4_0) on sustained generation throughput. (Right) Context window scaling vs 8.12 GB physical VRAM ceiling with f16 CPU spill threshold.</em>
+</p>
+
+<p align="center">
+  <img src="docs/images/fig10_sovereign_evolution_loop.png" alt="Figure 15: Sovereign Evolution Loop" width="96%" />
+  <br />
+  <em><b>Figure 15 (Paper §III.B):</b> Autonomous Sovereign Memory Consolidation Cycle (Dreaming Protocol) & Continuous Experience Distillation Loop without third-party exposure.</em>
 </p>
 
 | Sub-Millisecond Latency Distribution | VRAM Memory Allocation (RTX 5060 Laptop - 8GB) |
@@ -280,9 +300,9 @@ All empirical benchmarks rendered at 320 DPI vector resolution using scientific 
 | :--- | :--- |
 | ![Token Throughput](docs/images/token_generation_throughput.png) | ![Model Radar](docs/images/model_comparison_radar.png) |
 
-| Nexus Multi-Agent DAG Orchestration | Autonomous Self-Healing Sentinel |
+| Nexus Multi-Agent DAG Orchestration | Audio & Document Pipelines |
 | :--- | :--- |
-| ![Nexus DAG](docs/images/nexus_dag_orchestration.png) | ![Self Healing](docs/images/self_healing_sentinel.png) |
+| ![Nexus DAG](docs/images/nexus_dag_orchestration.png) | ![Audio Pipeline](docs/images/audio_voice_pipeline.png) |
 
 ---
 

@@ -3,6 +3,10 @@
 **Centralized Omnifunctional Personal Productivity and Execution Routine**  
 *"Autonomous, 100% Offline Personal AI Companion, Multi-Agent Orchestrator & Desktop Guardian"*
 
+> **Authoritative Research Publication:**  
+> *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity* (Akash Kundu).  
+> Full manuscript & empirical benchmark specifications: [`research/`](../../research/) | [`research/paper.tex`](../../research/paper.tex) | [`research/README.md`](../../research/README.md).
+
 ---
 
 ## 1. System Vision & Core Operating Principles
