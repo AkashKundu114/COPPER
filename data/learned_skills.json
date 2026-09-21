@@ -419,5 +419,154 @@
     "avg_duration_seconds": 7.510185241699219e-05,
     "tags": [],
     "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "c6f868cf-5d2a-4159-825b-39f398addb73",
+    "name": "fetch_market_research_and_compile",
+    "description": "Skill extracted from: Fetch market research and compile financial data into a presentation",
+    "steps": [
+      {
+        "action": "Market Research",
+        "agent": "OMNI",
+        "description": "Gather market trends",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Financial Computation",
+        "agent": "AXIS",
+        "description": "Compute profit margins",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Compile Document",
+        "agent": "KINESIS",
+        "description": "Combine {T1.output} and {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-19T11:58:41.457585",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Fetch market research and compile financial data into a presentation"
+  },
+  {
+    "skill_id": "da326bcd-3290-4c5e-90fb-b2f8d9fff37d",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-19T11:58:50.496106",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "7ac8f1ef-da81-4ec1-ad4e-8ebca4737185",
+    "name": "analyze_csv_and_create_report",
+    "description": "Skill extracted from: Analyze CSV and create report",
+    "steps": [
+      {
+        "action": "Analyze CSV",
+        "agent": "OMNI",
+        "description": "Step 1 data",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Generate Script",
+        "agent": "AXIS",
+        "description": "Step 2 code using {T1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1"
+        ]
+      },
+      {
+        "action": "Run Sandbox",
+        "agent": "FORGE",
+        "description": "Step 2.1 run {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T2"
+        ]
+      },
+      {
+        "action": "Build PDF",
+        "agent": "KINESIS",
+        "description": "Step 3 PDF from {T1.output} and {T2.1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2.1"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-19T11:59:01.296824",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Analyze CSV and create report"
+  },
+  {
+    "skill_id": "d826bc72-d620-433b-8794-5077daba0cad",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-09-19T12:00:17.446306",
+    "last_used": "2026-09-19T12:00:17.448282+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 4.8160552978515625e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
   }
 ]

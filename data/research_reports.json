@@ -96,5 +96,19 @@
     "markdown_report": "",
     "progress_pct": 0,
     "error": null
+  },
+  {
+    "report_id": "f6896e85-021f-4e5d-99e4-17af30aef22a",
+    "topic": "Evaluate Microservices vs Monolith architectures",
+    "status": "researching",
+    "started_at": "2026-09-19T12:00:17.435380",
+    "completed_at": null,
+    "deadline": "2026-09-19T17:30:17.435371",
+    "sources": [],
+    "sections": [],
+    "executive_summary": "",
+    "markdown_report": "",
+    "progress_pct": 0,
+    "error": null
   }
 ]

@@ -1,0 +1,294 @@
+=== Table 1: tab:comparison ===
+Caption: Comprehensive Architecture Comparison Across Eight Architectural Dimensions.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Comprehensive Architecture Comparison Across Eight Architectural Dimensions.}\label{tab:comparison}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l c c c c c c c c c}
+\toprule
+\textbf{Dimension} & \textbf{AutoGen} & \textbf{MemGPT} & \textbf{AIOS} & \textbf{HippoRAG} & \textbf{RouteLLM} & \textbf{ToolSafe} & \textbf{LogAct} & \textbf{Nixie} & \textbf{\textbf{C.O.P.P.E.R.}} \\
+\midrule
+\textbf{Domain} & Multi-agent & Context mgmt & Agent OS & Graph memory & LLM routing & Tool safety & Agent WAL & GPU muxing & \textbf{Sovereign AI OS} \\
+\textbf{Execution} & Cloud APIs & Cloud & Local/Cloud & Cloud/Server & Cloud APIs & Cloud APIs & Server & Consumer GPU & \textbf{100\% Offline (8GB)} \\
+\textbf{Routing} & Static graph & N/A & Round-robin & N/A & Neural (28ms) & N/A & N/A & N/A & \textbf{TFP (<0.25ms CPU)} \\
+\textbf{QPS} & <10 & N/A & ~50 & N/A & ~50--100 & N/A & N/A & N/A & \textbf{~9,856} \\
+\textbf{Memory} & Stateless & Tiered paging & Paged & PageRank KG & N/A & N/A & WAL log & N/A & \textbf{UMF-EDR Bayesian} \\
+\textbf{Belief Revision} & None & Overwrite & Append & Node update & N/A & N/A & N/A & N/A & \textbf{PW-EBR Log-Odds} \\
+\textbf{Safety} & None & None & OS perms & None & None & Step-level & Pre-exec veto & N/A & \textbf{DFM-Guard 4-Tier} \\
+\textbf{Firewall} & None & None & Basic ACL & None & None & None & None & None & \textbf{Zero-Trust Regex} \\
+\textbf{VRAM Mgmt} & N/A & N/A & Basic & None & None & None & N/A & Transparent & \textbf{DAG-Lookahead} \\
+\textbf{Crash Recovery} & None & None & None & None & None & Pre-exec veto & WAL log & None & \textbf{ARIES WAL+CRC32} \\
+\textbf{Chaos Testing} & None & None & None & None & None & None & None & None & \textbf{55-payload harness} \\
+\textbf{Privacy} & Cloud-bound & Cloud-bound & Cloud-bound & Partial & Cloud-bound & Cloud-bound & Server & Local & \textbf{Zero Egress} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+=== Table 2: tab:provenance_tiers ===
+Caption: Source Provenance Weighting Tiers and Semantic Grounding.
+
+\begin{table*}[!t]
+\caption{Source Provenance Weighting Tiers and Semantic Grounding.}\label{tab:provenance_tiers}
+\centering
+\small
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{l c p{5.0cm}}
+\toprule
+\textbf{Source} & \textbf{Weight ($\gamma_s$)} & \textbf{Semantics} \\
+\midrule
+\texttt{explicit\_user} & 1.00 & Direct user assertion or correction \\
+\texttt{user\_directive} & 1.00 & Explicit command from user \\
+\texttt{tool\_success} & 0.85 & Verified sandbox execution or compiler pass \\
+\texttt{system\_verified} & 0.75 & Confirmed system interaction \\
+\texttt{chat} & 0.50 & Standard multi-turn dialog observation \\
+\texttt{ambient\_inferred} & 0.25 & Inferred pattern or background hypothesis \\
+\texttt{speculative} & 0.15 & Unverified speculation \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+=== Table 3: tab:fleet ===
+Caption: Specialized 15-Model Heterogeneous Fleet Architecture for Sovereign Personal Computing within 8.0 GB VRAM.
+
+\begin{table*}[!t]
+\caption{Specialized 15-Model Heterogeneous Fleet Architecture for Sovereign Personal Computing within 8.0 GB VRAM.}\label{tab:fleet}
+\centering
+\small
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l c c c c c c c}
+\toprule
+\textbf{Role} & \textbf{Codename} & \textbf{Model} & \textbf{Params} & \textbf{Quant} & \textbf{Disk} & \textbf{VRAM} & \textbf{Gen T/s} \\
+\midrule
+Sovereign Core & ATLAS & Qwen2.5-14B-Instruct & 14.7B & IQ3\_XS & 6.38 GB & 4.36 GB & 52 \\
+Coding Agent & VULCAN & Qwen2.5-Coder-14B-Instruct & 14.7B & IQ3\_XS & 6.38 GB & 4.36 GB & 52 \\
+Reasoning Core & PROMETHEUS & DeepSeek-R1-Distill-Qwen-14B & 14.7B & IQ3\_XS & 6.38 GB & 4.36 GB & 48 \\
+Document Scribe & SCRIBE & phi-4 & 14.0B & IQ3\_XS & 6.24 GB & 4.20 GB & 50 \\
+Automation Daemon & DAEMON & Mistral-Nemo-Instruct-2407 & 12.2B & IQ3\_M & 5.72 GB & 3.90 GB & 64 \\
+Reflex Router & MERCURY & Qwen2.5-1.5B-Instruct (Pinned) & 1.54B & Q4\_K\_M & 0.94 GB & 0.85 GB & 165 \\
+Safety Firewall & AEGIS & Qwen2.5-1.5B-Instruct (Pinned) & 1.54B & Q4\_K\_M & 0.94 GB & 0.85 GB & 165 \\
+Micro Coding Scaffold & FORGE & Qwen2.5-Coder-3B-Instruct & 3.09B & Q4\_K\_M & 1.80 GB & 1.65 GB & 110 \\
+Diagnostics \& Patching & CRUCIBLE & DeepSeek-R1-Distill-Qwen-1.5B & 1.78B & Q4\_K\_M & 1.04 GB & 0.95 GB & 130 \\
+Epistemic Memory & CHRONOS & SmolLM2-1.7B-Instruct & 1.71B & Q4\_K\_M & 1.00 GB & 0.92 GB & 145 \\
+Vision Core & ARGUS & Qwen2.5-VL-3B-Instruct & 3.09B & Q4\_K\_M & 2.10 GB & 1.95 GB & 32 \\
+Speech-to-Text & EAR & whisper-large-v3-turbo & 1.50B & ONNX & 1.50 GB & 1.20 GB & RT \\
+Text-to-Speech & VOICE & Kokoro-82M & 82M & ONNX & 0.30 GB & 0.15 GB & RT \\
+Dense Embeddings & VECTOR & nomic-embed-text-v1.5 & 137M & Q4\_K\_M & 0.14 GB & 0.12 GB & 680 \\
+Semantic Reranker & RERANK & bge-reranker-v2-m3 & 568M & Q4\_K\_M & 0.32 GB & 0.30 GB & 55 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+=== Table 4: tab:tfp ===
+Caption: TFP-Router Per-Class Evaluation Across 1,390 Empirical Samples.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{TFP-Router Per-Class Evaluation Across 1,390 Empirical Samples.}\label{tab:tfp}
+\begin{tabularx}{\textwidth}{X X X X X X }
+\toprule
+\textbf{Agent Class} & \textbf{Samples} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Primary Stage} \\
+\midrule
+\texttt{automation} & 170 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Regex \\
+\texttt{chat} & 120 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 0 Cache \\
+\texttt{coding} & 160 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Neg-Supp \\
+\texttt{document} & 177 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Pattern \\
+\texttt{image} & 132 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Scoring \\
+\texttt{planner} & 142 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Heuristic \\
+\texttt{reminder} & 193 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Pattern \\
+\texttt{research} & 176 & 100.0\% & 82.39\% & \textbf{90.34\%} & Stage 1 Scoring \\
+\texttt{vision} & 120 & 100.0\% & 100.0\% & \textbf{100.0\%} & Stage 1 Pattern \\
+\textbf{Weighted Avg} & \textbf{1,390} & \textbf{100.0\%} & \textbf{97.77\%} & \textbf{98.78\%} & \textbf{Cascade} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 5: tab:latency ===
+Caption: Latency Distribution Across Multi-Stage Execution Pipeline Stages.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Latency Distribution Across Multi-Stage Execution Pipeline Stages.}\label{tab:latency}
+\begin{tabularx}{\textwidth}{X X X X X X }
+\toprule
+\textbf{Pipeline Stage} & \textbf{P50} & \textbf{P90} & \textbf{P95} & \textbf{P99} & \textbf{Effective QPS} \\
+\midrule
+Stage 0: Dynamic Memory Cache & 0.012 ms & 0.018 ms & 0.022 ms & 0.031 ms & ~83,300 \\
+Stage 1: Regex + Suppression & 0.028 ms & 0.041 ms & 0.052 ms & 0.071 ms & ~35,700 \\
+Stage 2: Micro-LLM Classifier & 18.50 ms & 24.20 ms & 28.60 ms & 35.00 ms & ~54 \\
+\textbf{End-to-End TFP-Router} & \textbf{0.238 ms} & \textbf{0.357 ms} & \textbf{0.379 ms} & \textbf{0.410 ms} & \textbf{~4,170} \\
+\textit{RouteLLM (baseline)} & \textit{28.40 ms} & \textit{45.10 ms} & \textit{62.30 ms} & \textit{88.50 ms} & \textit{~35} \\
+\textit{LatentGate (baseline)} & \textit{~28.00 ms} & \textit{---} & \textit{---} & \textit{---} & \textit{~36} \\
+\textit{FrugalGPT (baseline)} & \textit{~45.00 ms} & \textit{---} & \textit{---} & \textit{---} & \textit{~22} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 6: tab:safety ===
+Caption: Runtime Safety Evaluation Across 350 Red-Team and 55 Chaos Payloads (95\% Clopper-Pearson Binomial Confidence Interval: [98.95\%, 100.0\%]).
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Runtime Safety Evaluation Across 350 Red-Team and 55 Chaos Payloads (95\% Clopper-Pearson Binomial Confidence Interval: [98.95\%, 100.0\%]).}\label{tab:safety}
+\begin{tabularx}{\textwidth}{X X X X X }
+\toprule
+\textbf{Metric} & \textbf{Count} & \textbf{Result} & \textbf{Target} & \textbf{Status} \\
+\midrule
+Destructive Command Detection & 350 & \textbf{100.0\%} & 100.0\% & \checkmark Zero breaches \\
+False Positive Rate (Benign) & 200 & \textbf{0.0\%} & <2.0\% & \checkmark Zero friction \\
+Critical Breach Rate (FNR) & 350 & \textbf{0.0\%} & 0.0\% & \checkmark Zero tolerance \\
+Verification Latency & 350 & \textbf{0.011 ms} & <1.0 ms & \checkmark >500K QPS \\
+Data Firewall Redaction & 120 & \textbf{100.0\%} & 100.0\% & \checkmark Zero leakage \\
+Chaos Fuzzing (5 families) & 55 & \textbf{100.0\%} & 95.0\% & \checkmark Complete \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 7: tab:chaos ===
+Caption: Chaos Fuzzing Breakdown Across 55 Mutated Adversarial Payloads.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Chaos Fuzzing Breakdown Across 55 Mutated Adversarial Payloads.}\label{tab:chaos}
+\begin{tabularx}{\textwidth}{X X X X X }
+\toprule
+\textbf{Attack Technique} & \textbf{Payloads} & \textbf{Intercepted} & \textbf{Evasion Rate} & \textbf{Catch Rate} \\
+\midrule
+Zero-Width Unicode Injection & 11 & 11 & 0.0\% & \textbf{100.0\%} \\
+Cyrillic Homoglyph Confusion & 11 & 11 & 0.0\% & \textbf{100.0\%} \\
+Shell Command Chaining & 11 & 11 & 0.0\% & \textbf{100.0\%} \\
+Base64 Payload Obfuscation & 11 & 11 & 0.0\% & \textbf{100.0\%} \\
+Hypothetical Roleplay & 11 & 11 & 0.0\% & \textbf{100.0\%} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 8: tab:belief ===
+Caption: Belief Calibration Dynamics Under Six Adversarial Scenarios. Expected denotes the normative calibration corridor PW-EBR was designed to satisfy for each scenario; LWW and Naive Bayes values are shown for baseline comparison and evaluated against the identical criterion for consistency, rather than having bounds derived from their specific behavior.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Belief Calibration Dynamics Under Six Adversarial Scenarios. Expected denotes the normative calibration corridor PW-EBR was designed to satisfy for each scenario; LWW and Naive Bayes values are shown for baseline comparison and evaluated against the identical criterion for consistency, rather than having bounds derived from their specific behavior.}\label{tab:belief}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l c c c c c c}
+\toprule
+\textbf{Scenario} & \textbf{Attribute} & \textbf{LWW} & \textbf{Naive Bayes} & \textbf{PW-EBR} & \textbf{Expected} & \textbf{Pass?} \\
+\midrule
+Ambient Poisoning & \texttt{editor\_theme} & 0.10 & 0.70 $\times$ & \textbf{0.05} & $\le$0.15 & \checkmark \\
+Instant Convergence & \texttt{user\_name} & 0.90 & 0.60 $\times$ & \textbf{0.92} & $\ge$0.85 & \checkmark \\
+60-Day Migration & \texttt{frontend\_framework} & 0.10 & 0.60 $\times$ & \textbf{0.11} & $\le$0.20 & \checkmark \\
+Tool Corroboration & \texttt{test\_suite} & 0.90 & 0.80 $\times$ & \textbf{0.87} & $\ge$0.85 & \checkmark \\
+Spacing Plasticity & \texttt{api\_architecture} & 0.90 & 0.99 & \textbf{0.77} & $\ge$0.75 & \checkmark \\
+Importance Floor & \texttt{hardware\_profile} & 0.90 & 0.70 & \textbf{0.62} & $\ge$0.55 & \checkmark \\
+\textbf{Scenarios Passed} & --- & 6/6 & \textbf{2/6} & \textbf{6/6} & --- & \textbf{\checkmark} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+=== Table 9: tab:vram ===
+Caption: VRAM Memory Allocation Profile Under 8.0~GB Physical Ceiling.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{VRAM Memory Allocation Profile Under 8.0~GB Physical Ceiling.}\label{tab:vram}
+\begin{tabularx}{\textwidth}{X X X X }
+\toprule
+\textbf{Component} & \textbf{Quantization} & \textbf{VRAM (GB)} & \textbf{\% Total} \\
+\midrule
+Primary Core Model (14B) & IQ3\_XS / Q4\_K\_M & 4.36 & 54.5\% \\
+Resident Micro-Agent (1.7B) & Q4\_K\_M & 0.98 & 12.3\% \\
+KV Cache (8,192 tokens) & FP16 / Q8\_0 & 0.90 & 11.2\% \\
+CUDA Runtime Overhead & --- & 0.30 & 3.8\% \\
+Dynamic Headroom (OOM Safety) & --- & \textbf{1.46} & \textbf{18.2\%} \\
+\textbf{Total Ceiling} & --- & \textbf{8.00} & \textbf{100.0\%} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 10: tab:throughput ===
+Caption: Token Generation and Prefill Throughput on NVIDIA RTX 5060 Laptop GPU (8.0 GB VRAM).
+
+\begin{table*}[!t]
+\caption{Token Generation and Prefill Throughput on NVIDIA RTX 5060 Laptop GPU (8.0 GB VRAM).}\label{tab:throughput}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l c c c}
+\toprule
+\textbf{Model Fleet Component} & \textbf{Prompt Eval (T/s)} & \textbf{Generation (T/s)} & \textbf{TTFT} \\
+\midrule
+Qwen2.5-1.5B (Q4\_K\_M) [MERCURY / AEGIS] & 920 & 165 & 9 ms \\
+SmolLM2-1.7B (Q4\_K\_M) [CHRONOS] & 720 & 145 & 12 ms \\
+Qwen2.5-Coder-3B (Q4\_K\_M) [FORGE] & 540 & 110 & 16 ms \\
+DeepSeek-R1-Distill-14B (IQ3\_XS) [PROMETHEUS] & 220 & 48 & 42 ms \\
+Qwen2.5-14B (IQ3\_XS) [ATLAS / VULCAN] & 228 & 52 & 38 ms \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 11: tab:ablation ===
+Caption: Ablation of Routing Pipeline Stages.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Ablation of Routing Pipeline Stages.}\label{tab:ablation}
+\begin{tabularx}{\textwidth}{X X X X X }
+\toprule
+\textbf{Configuration} & \textbf{P50 Latency (ms)} & \textbf{P95 Latency (ms)} & \textbf{Routing Accuracy} & \textbf{False Positive Rate} \\
+\midrule
+\textbf{Full Pipeline (TFP-Router)} & \textbf{0.238} & \textbf{0.379} & \textbf{97.77\%} & \textbf{0.02\%} \\
+No Cache (Stage 0 Disabled) & 0.845 & 1.102 & 97.71\% & 0.03\% \\
+No Negative Suppression & 0.241 & 0.405 & 89.14\% & 8.65\% \\
+Micro-LLM Only (Stage 2 Only) & 18.500 & 24.300 & 98.10\% & 0.01\% \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 12: tab:decay ===
+Caption: Impact of $\lambda_{\text{Fact
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Impact of $\lambda_{\text{Fact}}$ on Belief Accuracy Over Time.}\label{tab:decay}
+\begin{tabularx}{\textwidth}{X X X X X }
+\toprule
+\textbf{$\lambda_{Fact}$ Value} & \textbf{30-Day Accuracy} & \textbf{60-Day Accuracy} & \textbf{90-Day Accuracy} & \textbf{Hallucination Rate} \\
+\midrule
+$\lambda = 0.001$ & 99.8\% & 98.5\% & 96.2\% & 1.8\% \\
+**$\lambda = 0.005$ (Optimal)** & \textbf{99.5\%} & \textbf{97.1\%} & \textbf{94.8\%} & \textbf{0.2\%} \\
+$\lambda = 0.050$ & 85.4\% & 62.1\% & 41.3\% & 0.0\% \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+=== Table 13: tab:guardian ===
+Caption: Guardian Weight Variations and Threat Detection Performance.
+
+\begin{table*}[!t]
+\centering
+\small
+\caption{Guardian Weight Variations and Threat Detection Performance.}\label{tab:guardian}
+\begin{tabularx}{\textwidth}{X X X X }
+\toprule
+\textbf{Weight Configuration} & \textbf{False Positive Rate} & \textbf{False Negative Rate} & \textbf{Mean Friction Delay} \\
+\midrule
+$w_R=0.3, w_F=0.3, w_G=0.4$ & 4.2\% & 1.1\% & 1.8s \\
+$w_R=0.8, w_F=0.1, w_G=0.1$ & 0.5\% & 8.4\% & 0.9s \\
+$w_R=0.1, w_F=0.8, w_G=0.1$ & 12.5\% & 0.0\% & 4.5s \\
+**$w_R=0.5, w_F=0.2, w_G=0.3$** & \textbf{0.0\%} & \textbf{0.0\%} & \textbf{1.2s} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
