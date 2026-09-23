@@ -1,6 +1,6 @@
 fastapi==0.141.1
-uvicorn[standard]==0.52.4
-pydantic==2.13.4
+uvicorn[standard]==0.53.0
+pydantic==2.13.5
 pydantic-settings==2.15.0
 websockets==17.1
 python-multipart==0.0.32
@@ -41,4 +41,4 @@ opentelemetry-instrumentation-fastapi
 opentelemetry-exporter-otlp-proto-grpc
 opentelemetry-exporter-otlp-proto-http
 defusedxml>=0.7.1
-beautifulsoup4>=4.9.0
+beautifulsoup4>=4.15.0
