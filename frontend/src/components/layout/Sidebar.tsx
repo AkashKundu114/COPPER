@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Radio,
@@ -21,6 +21,8 @@ import {
   BookOpen,
 } from "lucide-react";
 import { soundFX } from "../../lib/soundFX";
+import { systemAPI } from "../../services/api";
+import { AGENTS } from "../../constants/agents";
 
 export type NavSection =
   | "dashboard"
@@ -114,6 +116,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onSelectSection,
 }) => {
+  const [telemetry, setTelemetry] = useState<{
+    vramUsed: number;
+    vramTotal: number;
+    vramPct: number;
+  }>({
+    vramUsed: 0.22,
+    vramTotal: 8.0,
+    vramPct: 2.8,
+  });
+
+  useEffect(() => {
+    const fetchTelem = () => {
+      systemAPI
+        .getTelemetry()
+        .then((res) => {
+          if (res.data?.gpu) {
+            const gpu = res.data.gpu;
+            setTelemetry({
+              vramUsed: gpu.vram_used_gb || 0.22,
+              vramTotal: gpu.vram_total_gb || 8.0,
+              vramPct: gpu.vram_percent || 2.8,
+            });
+          }
+        })
+        .catch(() => {});
+    };
+    fetchTelem();
+    const iv = setInterval(fetchTelem, 4000);
+    return () => clearInterval(iv);
+  }, []);
+
   return (
     <aside
       aria-label="Main Navigation"
@@ -141,7 +174,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <div className="mt-2.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[9px] text-zinc-400 font-mono">
             <span className="text-verdigris font-semibold">AIR-GAPPED</span>
-            <span className="text-zinc-300">30 AGENTS</span>
+            <span className="text-zinc-300">{AGENTS.length} AGENTS</span>
           </div>
         </div>
 
@@ -204,18 +237,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
               100% OFFLINE
             </span>
           </div>
-          <span className="text-blush-300/60">0.05ms</span>
+          <span className="text-blush-300/60">0.16ms</span>
         </div>
 
         <div className="w-full bg-[#12060A] rounded-full h-1 overflow-hidden border border-blush-100/10">
-          <div className="bg-gradient-to-r from-accent via-blush-300 to-blush-100 h-full w-[80%]" />
+          <div
+            className="bg-gradient-to-r from-accent via-blush-300 to-blush-100 h-full transition-all duration-500"
+            style={{ width: `${Math.min(100, Math.max(5, telemetry.vramPct))}%` }}
+          />
         </div>
 
         <div className="flex justify-between text-[9px] text-zinc-400">
-          <span>VRAM: 6.4/8.0 GB</span>
+          <span>VRAM: {telemetry.vramUsed.toFixed(1)}/{telemetry.vramTotal.toFixed(1)} GB</span>
           <span className="text-verdigris font-semibold">PASS</span>
         </div>
       </div>
     </aside>
   );
 };
+

@@ -5,9 +5,11 @@ services:
       dockerfile: infrastructure/docker/frontend/Dockerfile
     container_name: copper-frontend
     ports:
-      - "3000:80"
+      - "127.0.0.1:3000:80"
     depends_on:
       - backend
+    networks:
+      - copper-net
 
   backend:
     build:
@@ -15,7 +17,7 @@ services:
       dockerfile: infrastructure/docker/backend/Dockerfile
     container_name: copper-backend
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     env_file:
       - path: ./backend/.env
         required: false
@@ -24,53 +26,134 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
+      - OLLAMA_BASE_URL=http://ollama:11434
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
     depends_on:
-      - postgres
-      - redis
-      - chromadb
-      - ollama
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    networks:
+      - copper-net
 
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: copper-postgres
-    restart: always
+    restart: unless-stopped
+    shm_size: 512mb
     environment:
       POSTGRES_USER: copper
       POSTGRES_PASSWORD: copperpass
       POSTGRES_DB: copperdb
+    command: >
+      postgres
+      -c shared_buffers=512MB
+      -c work_mem=16MB
+      -c maintenance_work_mem=128MB
+      -c effective_cache_size=2GB
+      -c synchronous_commit=off
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U copper -d copperdb"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - copper-net
 
   redis:
-    image: redis:7
+    image: redis:7-alpine
     container_name: copper-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 60
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --appendonly no
+      --save ""
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+    networks:
+      - copper-net
 
   chromadb:
-    image: chromadb/chroma
+    image: chromadb/chroma:0.5.0
     container_name: copper-chromadb
+    restart: unless-stopped
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
     ports:
-      - "8001:8000"
+      - "127.0.0.1:8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 8000 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - copper-net
 
   ollama:
-    image: ollama/ollama
+    image: ollama/ollama:latest
     container_name: copper-ollama
+    restart: unless-stopped
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_FLASH_ATTENTION=1
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"
     volumes:
-      - ollama:/root/.ollama
+      - ollama_models:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - copper-net
 
   searxng:
     image: searxng/searxng:latest
     container_name: copper-searxng
+    restart: unless-stopped
     ports:
-      - "8888:8080"
+      - "127.0.0.1:8888:8080"
     volumes:
       - ./data/searxng:/etc/searxng
     environment:
       - SEARXNG_BASE_URL=http://localhost:8888
+    networks:
+      - copper-net
 
   tempo:
     image: grafana/tempo:2.4.1
@@ -80,10 +163,22 @@ services:
       - tempo_data:/var/tempo
       - ./infrastructure/tempo/tempo.yml:/etc/tempo/tempo.yml:ro
     ports:
-      - "3200:3200"
-      - "4317:4317"
-      - "4318:4318"
+      - "127.0.0.1:3200:3200"
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+    networks:
+      - copper-net
+
+networks:
+  copper-net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.driver.mtu: "1500"
 
 volumes:
-  ollama:
+  postgres_data:
+  redis_data:
+  chroma_data:
+  ollama_models:
   tempo_data:

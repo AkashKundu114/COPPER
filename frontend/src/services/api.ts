@@ -511,5 +511,100 @@ export const catalogAPI = {
     api.post<{ status: string; total_found?: number; query?: string; papers?: any[]; error?: string }>("/catalog/arxiv/search", { query, max_results }),
 };
 
+export interface CockpitStatus {
+  git: {
+    branch: string;
+    commit: string;
+    repo: string;
+  };
+  security: {
+    defcon: number;
+    defcon_label: string;
+    air_gapped: boolean;
+    air_gapped_label: string;
+    threat_shield_pct: number;
+    security_breaches: number;
+  };
+  hardware: {
+    status: string;
+    uptime_seconds: number;
+    cpu: {
+      model: string;
+      usage_percent: number;
+      cores: number;
+      temperature_c: number;
+    };
+    gpu: {
+      model: string;
+      vram_total_gb: number;
+      vram_used_gb: number;
+      vram_free_gb: number;
+      vram_percent: number;
+      core_temp_c: number;
+      hotspot_temp_c: number;
+      power_watts: number;
+      fan_speed_percent: number;
+    };
+    memory: {
+      system_total_gb: number;
+      system_used_gb: number;
+      system_percent: number;
+      app_footprint_mb: number;
+      suite_total_mb: number;
+    };
+    tokens: {
+      prompt_tokens_processed: number;
+      completion_tokens_generated: number;
+      total_tokens: number;
+      generation_speed_tps: number;
+      prompt_eval_speed_tps: number;
+    };
+  };
+  routing: {
+    velocity_ms: number;
+    throughput_qps: number;
+    precision_pct: number;
+    total_samples: number;
+  };
+  agents: {
+    fleet_count: number;
+    fleet_label: string;
+    active_in_vram: number;
+  };
+  models: {
+    loaded_count: number;
+    loaded_names: string[];
+    always_on_mini_model: string;
+    total_offline_weight_gb: number;
+    vram_policy: any;
+    summary_label: string;
+  };
+}
+
+export const systemAPI = {
+  getTelemetry: () => api.get("/system/telemetry"),
+  getCockpitStatus: () => api.get<CockpitStatus>("/system/cockpit"),
+  getVramModels: () => api.get("/system/models/vram"),
+  enforceKeepMini: () => api.post("/system/models/keep-mini"),
+};
+
+export const routingAPI = {
+  getConfusionMatrix: () => api.get("/routing/confusion-matrix"),
+  getHistory: (limit = 50) => api.get(`/routing/history?limit=${limit}`),
+};
+
+export const workflowsAPI = {
+  list: () => api.get("/workflows"),
+  create: (data: { prompt?: string; workflow?: any; auto_enable?: boolean }) =>
+    api.post("/workflows", data),
+  get: (id: string) => api.get(`/workflows/${id}`),
+  toggle: (id: string, enabled?: boolean) =>
+    api.patch(`/workflows/${id}/toggle`, { enabled }),
+  run: (id: string, inputs?: Record<string, any>) =>
+    api.post(`/workflows/${id}/run`, { inputs }),
+  delete: (id: string) => api.delete(`/workflows/${id}`),
+};
+
 export default api;
+
 

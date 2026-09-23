@@ -10,41 +10,7 @@ import {
   FolderGit2,
 } from "lucide-react";
 import { projectsAPI, type ProjectItem } from "../lib/api";
-
-const DEFAULT_SDE_WORKSPACES: ProjectItem[] = [
-  {
-    id: "ws-copper-core",
-    name: "C.O.P.P.E.R. Core Architecture",
-    reason: "14B Sovereign Core fleet orchestration and TFP sub-millisecond router.",
-    health: "healthy",
-    completedTasks: 8,
-    totalTasks: 10,
-  },
-  {
-    id: "ws-neural-voice",
-    name: "Neural Audio & Ambient Mesh",
-    reason: "Whisper Large v3 Turbo STT, Kokoro-82M TTS, Silero VAD v5 offline loop.",
-    health: "healthy",
-    completedTasks: 6,
-    totalTasks: 6,
-  },
-  {
-    id: "ws-dfm-guardian",
-    name: "DFM Guardian & Zero-Trust Firewall",
-    reason: "4-tier friction protocol, in-line PII scrubbing, and destructive command interception.",
-    health: "healthy",
-    completedTasks: 5,
-    totalTasks: 5,
-  },
-  {
-    id: "ws-sde-webstation",
-    name: "SDE Desktop Webstation",
-    reason: "React 19 + Electron HUD, Oxanium typography, and D3 knowledge graph engine.",
-    health: "healthy",
-    completedTasks: 9,
-    totalTasks: 10,
-  },
-];
+import { codeReviewAPI } from "../services/api";
 
 export const ProjectsView: React.FC = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
@@ -63,11 +29,26 @@ export const ProjectsView: React.FC = () => {
       if (data && data.length > 0) {
         setProjects(data);
       } else {
-        setProjects(DEFAULT_SDE_WORKSPACES);
+        // Check watched git repositories
+        const reposRes = await codeReviewAPI.getRepos().catch(() => ({ data: [] }));
+        const repos = reposRes.data || [];
+        if (repos.length > 0) {
+          const mapped: ProjectItem[] = repos.map((r: any, idx: number) => ({
+            id: `repo-${idx}`,
+            name: r.name || "C.O.P.P.E.R. Architecture",
+            reason: `Local repository mounted at ${r.path}. Active git workspace.`,
+            health: "healthy",
+            completedTasks: 1,
+            totalTasks: 1,
+          }));
+          setProjects(mapped);
+        } else {
+          setProjects([]);
+        }
       }
     } catch (err) {
-      console.error("Failed to load projects from backend, using defaults:", err);
-      setProjects(DEFAULT_SDE_WORKSPACES);
+      console.error("Failed to load projects from backend:", err);
+      setProjects([]);
     } finally {
       setLoading(false);
     }

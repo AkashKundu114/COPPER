@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { emailAPI } from '../services/api';
 
 type Priority = 'Urgent' | 'Needs Response' | 'FYI' | 'Spam';
 
@@ -19,41 +18,16 @@ interface Draft {
   guardianScreened: boolean;
 }
 
-const DEFAULT_SDE_ALERTS: Email[] = [
-  {
-    id: "alert-1",
-    from: "github-actions@copper.local",
-    subject: "[CI PASSED] PR #42: Sovereign 14B Fleet Memory Budget",
-    date: "10m ago",
-    body: "All 501 pytest tests passed. 0 regression failures. VRAM pager stress test passed with 0 OOM events. Ready for merge.",
-    priority: "Urgent",
-  },
-  {
-    id: "alert-2",
-    from: "guardian-sentinel@copper.local",
-    subject: "[AUDIT LOG] PII Scrubbing Intercept Report",
-    date: "1h ago",
-    body: "Scrubbed 1 candidate OpenAI API key (sk-...) from developer terminal buffer before prompt ingestion. Zero egress confirmed.",
-    priority: "Needs Response",
-  },
-  {
-    id: "alert-3",
-    from: "tfp-router@copper.local",
-    subject: "[TELEMETRY] Weekly QPS Benchmark Throughput: 9,856 QPS",
-    date: "1d ago",
-    body: "TFP-Router Stage 0/1 memory cache dispatch measured at 0.105ms latency across 1,390 benchmark test evaluations.",
-    priority: "FYI",
-  },
-];
+import { emailAPI, auditAPI } from '../services/api';
 
 export const EmailView: React.FC = () => {
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<Priority | 'Drafts'>('Urgent');
   
-  const [inbox, setInbox] = useState<Email[]>(DEFAULT_SDE_ALERTS);
+  const [inbox, setInbox] = useState<Email[]>([]);
   const [drafts, setDrafts] = useState<Draft[]>([]);
-  const [selectedEmail, setSelectedEmail] = useState<Email | null>(DEFAULT_SDE_ALERTS[0]);
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   
   const [configHost, setConfigHost] = useState('');
   const [configUser, setConfigUser] = useState('');
@@ -68,13 +42,28 @@ export const EmailView: React.FC = () => {
         fetchEmails(activeTab === 'Drafts' ? 'Urgent' : activeTab);
         fetchDrafts();
       } else {
-        setInbox(DEFAULT_SDE_ALERTS);
-        if (!selectedEmail) setSelectedEmail(DEFAULT_SDE_ALERTS[0]);
+        // Fetch live audit entries as system alerts
+        const auditRes = await auditAPI.list(undefined, 20).catch(() => ({ data: [] }));
+        const auditLogs = auditRes.data || [];
+        if (Array.isArray(auditLogs) && auditLogs.length > 0) {
+          const mapped: Email[] = auditLogs.map((a: any) => ({
+            id: String(a.id),
+            from: a.actor ? `${a.actor}@copper.local` : "system@copper.local",
+            subject: a.summary || "System Activity Event",
+            date: a.created_at ? new Date(a.created_at).toLocaleTimeString() : "Just now",
+            body: a.detail || a.summary || "Security and system audit event recorded.",
+            priority: a.category === "guardian_safety_block" ? "Urgent" : "FYI",
+          }));
+          setInbox(mapped);
+          setSelectedEmail(mapped[0] || null);
+        } else {
+          setInbox([]);
+          setSelectedEmail(null);
+        }
       }
-    } catch (error) {
-      console.error('Failed to load email state, using default SDE alerts:', error);
-      setInbox(DEFAULT_SDE_ALERTS);
-      if (!selectedEmail) setSelectedEmail(DEFAULT_SDE_ALERTS[0]);
+    } catch {
+      setInbox([]);
+      setSelectedEmail(null);
     }
   };
 

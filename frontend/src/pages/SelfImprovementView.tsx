@@ -25,7 +25,7 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
-import { selfImprovementAPI, trainingAPI } from "../services/api";
+import { selfImprovementAPI, trainingAPI, systemAPI } from "../services/api";
 
 interface DailyPoint {
   date: string;
@@ -141,6 +141,7 @@ export const SelfImprovementView: React.FC = () => {
   const [applyingEditId, setApplyingEditId] = useState<number | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "curves" | "models" | "training">("overview");
+  const [gpuInfo, setGpuInfo] = useState<{ model: string; vramTotalGb: number } | null>(null);
 
   const loadAllData = async () => {
     setIsLoading(true);
@@ -192,6 +193,15 @@ export const SelfImprovementView: React.FC = () => {
         if (tStats) setTrainingStats(tStats);
         if (aList) setAdapters(aList);
         if (tJob && tJob.job) setTrainingJob(tJob.job);
+        systemAPI.getCockpitStatus().then((res) => {
+          if (res.data?.hardware?.gpu && active) {
+            const g = res.data.hardware.gpu;
+            setGpuInfo({
+              model: g.model.replace("NVIDIA GeForce ", ""),
+              vramTotalGb: Math.round(g.vram_total_gb || 8),
+            });
+          }
+        }).catch(() => {});
       } catch (err: any) {
         if (!active) return;
         console.error("Failed to load self-improvement data:", err);
@@ -1000,7 +1010,7 @@ export const SelfImprovementView: React.FC = () => {
                 </div>
               </div>
               <span className="px-3 py-1 rounded-full bg-verdigris-950 text-verdigris-400 text-[10px] font-bold border border-verdigris-800/40 flex items-center gap-1">
-                <Shield size={12} /> Local RTX 5060 (8GB VRAM)
+                <Shield size={12} /> Local {gpuInfo ? `${gpuInfo.model} (${gpuInfo.vramTotalGb}GB VRAM)` : "Host GPU (Live Telemetry)"}
               </span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
@@ -1097,7 +1107,7 @@ export const SelfImprovementView: React.FC = () => {
                     QLoRA Hyperparameters & VRAM Policy
                   </h3>
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold">
-                    RTX 5060 Optimized
+                    {gpuInfo ? `${gpuInfo.model} Optimized` : "Hardware Accelerated"}
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 mb-3">

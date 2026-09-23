@@ -298,7 +298,7 @@ export const BenchmarkMetricsView: React.FC = () => {
                 LIVE HARDWARE TELEMETRY
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-accent/20 text-accent border border-accent/40 font-bold">
-                RTX 5060 (8GB VRAM)
+                {telemetry.gpu.model.replace("NVIDIA GeForce ", "")} ({telemetry.gpu.vram_total_gb}GB VRAM)
               </span>
             </div>
             <h1 className="text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
@@ -740,19 +740,21 @@ export const BenchmarkMetricsView: React.FC = () => {
 
             <div className="p-4 rounded-xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
-                <span className="flex items-center gap-1.5 font-medium text-white">
-                  <Cpu className="w-4 h-4 text-purple-400" /> RTX 5060 VRAM
+                <span className="flex items-center gap-1.5 font-medium text-white truncate">
+                  <Cpu className="w-4 h-4 text-purple-400 shrink-0" /> {telemetry.gpu.model.replace("NVIDIA GeForce ", "")} VRAM
                 </span>
-                <span className="text-[10px] text-purple-400 font-bold">
-                  8.0 GB Total
+                <span className="text-[10px] text-purple-400 font-bold shrink-0">
+                  {telemetry.gpu.vram_total_gb} GB Total
                 </span>
               </div>
               <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-bold text-white">6.4 GB</span>
-                <span className="text-xs text-verdigris-400">1.6 GB Free</span>
+                <span className="text-2xl font-bold text-white">{telemetry.gpu.vram_used_gb} GB</span>
+                <span className="text-xs text-verdigris-400">
+                  {(Math.max(0, telemetry.gpu.vram_total_gb - telemetry.gpu.vram_used_gb)).toFixed(1)} GB Free
+                </span>
               </div>
               <p className="text-[11px] text-gray-400 font-sans">
-                4.4GB Core 7B + 1.1GB Subagent + 0.9GB Context.
+                {telemetry.gpu.core_temp_c}°C Core Temp • {telemetry.gpu.power_watts}W Draw
               </p>
             </div>
           </div>
@@ -768,7 +770,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               budget, and coding/reasoning capabilities.
             </p>
             <span className="text-xs font-mono text-[#C97C4C]">
-              Hardware: RTX 5060 Laptop (8GB VRAM)
+              Hardware: {telemetry.gpu.model} ({telemetry.gpu.vram_total_gb}GB VRAM)
             </span>
           </div>
 

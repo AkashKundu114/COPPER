@@ -39,37 +39,6 @@ interface ResearchReport {
   error?: string;
 }
 
-const DEFAULT_SDE_REPORTS: ResearchReport[] = [
-  {
-    report_id: "report-deepseek-r1",
-    topic: "DeepSeek-R1 Architecture & Group Relative Policy Optimization (GRPO)",
-    status: "completed",
-    started_at: new Date(Date.now() - 7200000).toISOString(),
-    completed_at: new Date(Date.now() - 3600000).toISOString(),
-    progress_pct: 100,
-    executive_summary: "DeepSeek-R1 introduces pure Reinforcement Learning (RL) reasoning without initial supervised fine-tuning. By utilizing Group Relative Policy Optimization (GRPO), it eliminates the memory-heavy critic network and relies on deterministic rule-based reward functions.",
-    markdown_report: "# DeepSeek-R1 Architectural Analysis\n\n## Overview\nDeepSeek-R1 demonstrates emergent chain-of-thought (CoT) behaviors through large-scale RL exploration.\n\n## Key SDE Findings\n1. **Critic-Free Architecture**: GRPO samples multiple completions and evaluates relative rewards within the group, saving ~50% VRAM.\n2. **Verification Rewards**: Mathematical accuracy and code unit test passes serve as ground-truth verifiers.\n3. **Fleet Distillation**: High-density reasoning traces distilled directly into 1.5B and 14B local models.",
-    sources: [
-      {
-        title: "DeepSeek-R1 Technical Report",
-        url: "https://arxiv.org/abs/2501.12948",
-        snippet: "Incentivizing reasoning capability in LLMs via reinforcement learning.",
-        relevance_score: 0.98,
-      },
-    ],
-    sections: [
-      {
-        title: "1. Group Relative Policy Optimization (GRPO)",
-        content: "GRPO computes the baseline from group outputs rather than a value model, drastically cutting inference and training VRAM.",
-      },
-      {
-        title: "2. Distillation Fleet Efficiency",
-        content: "Reasoning capabilities transfer to lightweight parameter tiers (1.5B - 14B) with minimal degradation.",
-      },
-    ],
-  },
-];
-
 export const ResearchView: React.FC = () => {
   const [reports, setReports] = useState<ResearchReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<ResearchReport | null>(null);
@@ -114,15 +83,17 @@ export const ResearchView: React.FC = () => {
         if (selectedReport) {
           const updated = res.data.find((r: ResearchReport) => r.report_id === selectedReport.report_id);
           if (updated) setSelectedReport(updated);
+        } else {
+          setSelectedReport(res.data[0]);
         }
       } else {
-        setReports(DEFAULT_SDE_REPORTS);
-        if (!selectedReport) setSelectedReport(DEFAULT_SDE_REPORTS[0]);
+        setReports([]);
+        setSelectedReport(null);
       }
     } catch (err) {
-      console.error("Failed to load research reports, using default SDE report:", err);
-      setReports(DEFAULT_SDE_REPORTS);
-      if (!selectedReport) setSelectedReport(DEFAULT_SDE_REPORTS[0]);
+      console.error("Failed to load research reports:", err);
+      setReports([]);
+      setSelectedReport(null);
     } finally {
       setLoading(false);
     }

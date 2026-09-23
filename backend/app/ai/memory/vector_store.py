@@ -1,6 +1,36 @@
+import os
+from pathlib import Path
 from typing import Any
 
 from app.core.logger import logger
+
+_CHROMA_CLIENT_CACHE: Any = None
+
+
+def _get_chroma_client() -> Any:
+    global _CHROMA_CLIENT_CACHE
+    if _CHROMA_CLIENT_CACHE is not None:
+        return _CHROMA_CLIENT_CACHE
+
+    import chromadb
+
+    chroma_host = os.environ.get("CHROMA_HOST")
+    chroma_port = os.environ.get("CHROMA_PORT", "8000")
+
+    if chroma_host:
+        try:
+            _CHROMA_CLIENT_CACHE = chromadb.HttpClient(
+                host=chroma_host,
+                port=int(chroma_port),
+            )
+            return _CHROMA_CLIENT_CACHE
+        except Exception as e:
+            logger.warning(f"Failed to connect to ChromaDB at {chroma_host}:{chroma_port}, falling back to local: {e}")
+
+    db_path = Path(__file__).parent.parent.parent.parent / "data" / "chroma"
+    db_path.mkdir(parents=True, exist_ok=True)
+    _CHROMA_CLIENT_CACHE = chromadb.PersistentClient(path=str(db_path))
+    return _CHROMA_CLIENT_CACHE
 
 
 class VectorStore:
@@ -8,14 +38,7 @@ class VectorStore:
         self.collection_name = collection_name
         self.collection = None
         try:
-            from pathlib import Path
-
-            import chromadb
-
-            db_path = Path(__file__).parent.parent.parent.parent / "data" / "chroma"
-            db_path.mkdir(parents=True, exist_ok=True)
-
-            client = chromadb.PersistentClient(path=str(db_path))
+            client = _get_chroma_client()
             self.collection = client.get_or_create_collection(collection_name)
         except Exception as e:
             logger.warning(f"ChromaDB collection '{collection_name}' fallback active: {e}")

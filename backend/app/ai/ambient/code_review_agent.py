@@ -79,6 +79,9 @@ class CodeReviewAgent:
         self._save_json(WATCHED_REPOS_FILE, self.watched_repos)
 
     async def list_repos(self) -> list[dict]:
+        if not self.watched_repos:
+            workspace_root = str(Path(__file__).resolve().parent.parent.parent.parent)
+            return [{"path": workspace_root, "name": "C.O.P.P.E.R. Core Architecture"}]
         return self.watched_repos
 
     def get_review(self, review_id: str) -> ReviewResult | None:

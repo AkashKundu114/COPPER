@@ -24,25 +24,6 @@ interface Task {
   status: string;
 }
 
-const DEFAULT_SDE_MEETINGS: Meeting[] = [
-  {
-    id: "meet-arch-sync",
-    title: "Sovereign 14B Fleet Memory Budget & DAG Design",
-    status: "completed",
-    duration: 1840,
-    created_at: new Date(Date.now() - 86400000).toISOString(),
-    transcription: "Discussed dynamic offloading of Qwen2.5-Coder and DeepSeek-R1 models. Agreed to keep the always-on mini model resident in GPU VRAM and page heavier models on demand.",
-  },
-  {
-    id: "meet-security-review",
-    title: "DFM Guardian Adversarial Safety & Secret Scrubbing Review",
-    status: "completed",
-    duration: 1210,
-    created_at: new Date(Date.now() - 172800000).toISOString(),
-    transcription: "Reviewed zero-trust regex scrubbers. Verified 0 leaks on OpenAI sk- tokens, JWTs, and AWS credentials.",
-  },
-];
-
 export const MeetingsView: React.FC = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
@@ -62,18 +43,18 @@ export const MeetingsView: React.FC = () => {
   const fetchMeetings = async () => {
     try {
       const res = await meetingsAPI.list();
-      const list = res.data.meetings || res.data;
+      const list = res.data?.meetings || res.data;
       if (Array.isArray(list) && list.length > 0) {
         setMeetings(list);
         if (!selectedMeeting) setSelectedMeeting(list[0]);
       } else {
-        setMeetings(DEFAULT_SDE_MEETINGS);
-        if (!selectedMeeting) setSelectedMeeting(DEFAULT_SDE_MEETINGS[0]);
+        setMeetings([]);
+        setSelectedMeeting(null);
       }
     } catch (err) {
-      console.error("Failed to fetch meetings, using defaults:", err);
-      setMeetings(DEFAULT_SDE_MEETINGS);
-      if (!selectedMeeting) setSelectedMeeting(DEFAULT_SDE_MEETINGS[0]);
+      console.error("Failed to fetch meetings:", err);
+      setMeetings([]);
+      setSelectedMeeting(null);
     }
   };
 
@@ -188,7 +169,12 @@ export const MeetingsView: React.FC = () => {
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
           <h3 className="mb-3 text-slate-400 uppercase">Archive</h3>
           <div className="flex flex-col gap-2">
-            {meetings.map(m => (
+            {meetings.length === 0 ? (
+              <div className="p-4 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded">
+                No recorded meetings yet. Press "Start Recording" above.
+              </div>
+            ) : (
+              meetings.map(m => (
               <div 
                 key={m.id} 
                 onClick={() => loadMeetingDetails(m)}
@@ -213,7 +199,7 @@ export const MeetingsView: React.FC = () => {
                   <span>{formatDuration(m.duration)}</span>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>

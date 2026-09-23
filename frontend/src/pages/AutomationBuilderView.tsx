@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, Plus, Settings, Trash2, GitPullRequest, Clock, Brain, FileText, ArrowRight } from 'lucide-react';
+import { workflowsAPI } from '../services/api';
 
 interface AutomationRule {
   id: string;
@@ -18,76 +19,97 @@ const PREMADE_TEMPLATES = [
 ];
 
 export const AutomationBuilderView: React.FC = () => {
-  const [automations, setAutomations] = useState<AutomationRule[]>([
-    {
-      id: 'rule1',
-      name: 'Git PR Auto-Review & AST Lint',
-      triggerType: 'Git Commit Created',
-      condition: 'Modified *.ts / *.py files',
-      action: 'Trigger AXIS Coder Review & AST Diff',
-      isActive: true,
-    },
-    {
-      id: 'rule2',
-      name: 'Automated Regression Watcher',
-      triggerType: 'Test Suite Execution',
-      condition: 'Exit Code != 0',
-      action: 'Generate Self-Healing Fix Patch',
-      isActive: true,
-    },
-    {
-      id: 'rule3',
-      name: 'Zero-Trust Secret Redaction',
-      triggerType: 'Clipboard / Terminal Ingestion',
-      condition: 'Contains sk- or Bearer tokens',
-      action: 'Scrub PII & Notify SENTINEL',
-      isActive: true,
-    },
-    {
-      id: 'rule4',
-      name: 'VRAM Pager Threshold Balancer',
-      triggerType: 'VRAM Usage > 85%',
-      condition: 'Model Ingestion Active',
-      action: 'Evict Cold Quantized Layers',
-      isActive: false,
-    },
-  ]);
+  const [automations, setAutomations] = useState<AutomationRule[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadWorkflows = async () => {
+    try {
+      const res = await workflowsAPI.list();
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        const mapped = res.data.map((wf: any) => ({
+          id: wf.id || wf.workflow_id,
+          name: wf.name || wf.title || 'Automated Pipeline',
+          triggerType: wf.trigger?.type || 'Event Trigger',
+          condition: wf.condition || 'Active Workspace',
+          action: wf.action?.type || 'Execute Task',
+          isActive: Boolean(wf.enabled ?? true),
+        }));
+        setAutomations(mapped);
+      } else {
+        setAutomations([]);
+      }
+    } catch {
+      setAutomations([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadWorkflows();
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newRule, setNewRule] = useState<Partial<AutomationRule>>({});
 
-  const toggleAutomation = (id: string) => {
+  const toggleAutomation = async (id: string) => {
     setAutomations(prev => prev.map(rule => rule.id === id ? { ...rule, isActive: !rule.isActive } : rule));
+    try {
+      await workflowsAPI.toggle(id);
+    } catch (err) {
+      console.error("Failed to toggle workflow:", err);
+    }
   };
 
-  const deleteAutomation = (id: string) => {
+  const deleteAutomation = async (id: string) => {
     setAutomations(prev => prev.filter(rule => rule.id !== id));
+    try {
+      await workflowsAPI.delete(id);
+    } catch (err) {
+      console.error("Failed to delete workflow:", err);
+    }
   };
 
-  const handleAddCustom = () => {
+  const handleAddCustom = async () => {
     if (newRule.name && newRule.triggerType && newRule.action) {
-      setAutomations([...automations, {
+      const ruleItem: AutomationRule = {
         id: `rule_${Date.now()}`,
         name: newRule.name,
         triggerType: newRule.triggerType,
         condition: newRule.condition || 'Always',
         action: newRule.action,
         isActive: true,
-      }]);
+      };
+      setAutomations(prev => [...prev, ruleItem]);
       setIsModalOpen(false);
       setNewRule({});
+      try {
+        await workflowsAPI.create({
+          prompt: `${ruleItem.name}: When ${ruleItem.triggerType}, ${ruleItem.action}`,
+        });
+      } catch (err) {
+        console.error("Failed to persist workflow:", err);
+      }
     }
   };
 
-  const addTemplate = (tpl: typeof PREMADE_TEMPLATES[0]) => {
-    setAutomations([...automations, {
+  const addTemplate = async (tpl: typeof PREMADE_TEMPLATES[0]) => {
+    const ruleItem: AutomationRule = {
       id: `rule_${Date.now()}`,
       name: tpl.name,
       triggerType: tpl.triggerType,
       condition: tpl.condition,
       action: tpl.action,
       isActive: true,
-    }]);
+    };
+    setAutomations(prev => [...prev, ruleItem]);
+    try {
+      await workflowsAPI.create({
+        prompt: `${tpl.name}: When ${tpl.triggerType}, ${tpl.action}`,
+      });
+    } catch (err) {
+      console.error("Failed to persist template workflow:", err);
+    }
   };
 
   return (
@@ -114,7 +136,16 @@ export const AutomationBuilderView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
         <div className="lg:col-span-2 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2 pb-4">
           <h3 className="text-sm font-semibold text-white mb-2">Active Automations Canvas</h3>
-          {automations.map(rule => (
+          {loading ? (
+            <div className="p-8 text-center text-zinc-500 text-xs border border-dashed border-zinc-800 rounded-xl">
+              Querying live workflows from active system...
+            </div>
+          ) : automations.length === 0 ? (
+            <div className="p-8 text-center text-zinc-500 text-xs border border-dashed border-zinc-800 rounded-xl">
+              No automation workflows registered in current system. Select a template on the right or click "New Automation".
+            </div>
+          ) : (
+            automations.map(rule => (
             <div key={rule.id} className="relative group bg-[#1A0A0F]/85 border border-blush-100/15 rounded-2xl p-5 flex flex-col gap-3 transition-all hover:border-blush-100/40 shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.08)]">
               <div className="flex items-center justify-between">
                 <h4 className="text-white font-medium flex items-center gap-2">
@@ -151,12 +182,7 @@ export const AutomationBuilderView: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
-          {automations.length === 0 && (
-            <div className="text-center p-8 border border-dashed border-white/10 rounded-xl text-zinc-500 text-sm">
-              No automations active. Add a custom rule or choose a template.
-            </div>
-          )}
+          )))}
         </div>
 
         <div className="flex flex-col gap-4">

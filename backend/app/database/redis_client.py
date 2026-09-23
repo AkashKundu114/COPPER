@@ -11,6 +11,9 @@ try:
         decode_responses=True,
         socket_connect_timeout=0.15,
         socket_timeout=0.15,
+        max_connections=50,
+        socket_keepalive=True,
+        health_check_interval=30,
     )
 except Exception as e:
     logger.warning(f"Redis client disabled or unavailable (local memory fallback active): {e}")

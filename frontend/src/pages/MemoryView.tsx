@@ -5,45 +5,6 @@ import { KnowledgeGraphView } from "../components/knowledge/KnowledgeGraphView";
 import { CausalExplorerTab } from "../components/memory/CausalExplorerTab";
 import { MemoryProvenanceTab } from "../components/memory/MemoryProvenanceTab";
 
-const DEFAULT_SDE_MEMORIES: EpistemicMemoryItem[] = [
-  {
-    id: "mem-1",
-    category: "Architecture",
-    type: "fact",
-    content: "C.O.P.P.E.R. operates with 30 local GGUF/ONNX models with 100% offline air-gapped zero egress.",
-    confidence: 0.99,
-    evidenceCount: 14,
-    lastConfirmed: "Just now",
-  },
-  {
-    id: "mem-2",
-    category: "Inference Engine",
-    type: "fact",
-    content: "TFP-Router achieves sub-millisecond (0.105ms) intent classification across 1,390 benchmark tests (~9,856 QPS).",
-    confidence: 0.98,
-    evidenceCount: 22,
-    lastConfirmed: "Just now",
-  },
-  {
-    id: "mem-3",
-    category: "Developer Toolchain",
-    type: "observation",
-    content: "User primarily codes in TypeScript/React 19 on frontend and Python 3.11+ on local backend.",
-    confidence: 0.82,
-    evidenceCount: 9,
-    lastConfirmed: "1h ago",
-  },
-  {
-    id: "mem-4",
-    category: "Performance Optimization",
-    type: "hypothesis",
-    content: "Offloading Whisper Large v3 Turbo audio inference to GPU tensor cores reduces latency by ~42%.",
-    confidence: 0.45,
-    evidenceCount: 3,
-    lastConfirmed: "1d ago",
-  },
-];
-
 export const MemoryView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"graph" | "epistemic" | "causal" | "provenance">("graph");
   const [memories, setMemories] = useState<EpistemicMemoryItem[]>([]);
@@ -74,14 +35,10 @@ export const MemoryView: React.FC = () => {
   const loadMemories = async () => {
     try {
       const data = await memoryCRUDAPI.list();
-      if (data && data.length > 0) {
-        setMemories(data);
-      } else {
-        setMemories(DEFAULT_SDE_MEMORIES);
-      }
+      setMemories(data || []);
     } catch (err) {
-      console.error("Failed to load epistemic memories from backend, using defaults:", err);
-      setMemories(DEFAULT_SDE_MEMORIES);
+      console.error("Failed to load epistemic memories from backend:", err);
+      setMemories([]);
     } finally {
       setLoading(false);
     }

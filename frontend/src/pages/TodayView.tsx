@@ -12,37 +12,6 @@ import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 import { DailyBriefingCard } from "../components/ambient/DailyBriefingCard";
 import { ActivityDashboardWidget } from "../components/ambient/ActivityDashboardWidget";
 
-const DEFAULT_SDE_SCHEDULE: ScheduleEvent[] = [
-  {
-    id: "evt-1",
-    time: "09:30 AM",
-    title: "Engineering Daily Standup & Sprint Sync",
-    category: "Meeting",
-    completed: true,
-  },
-  {
-    id: "evt-2",
-    time: "10:30 AM - 12:30 PM",
-    title: "Deep Work: VRAM Pager LRU Cache & WAL Engine",
-    category: "Focus",
-    completed: false,
-  },
-  {
-    id: "evt-3",
-    time: "02:00 PM - 03:00 PM",
-    title: "Architecture Review: Sovereign Fleet DAG Concurrency",
-    category: "Meeting",
-    completed: false,
-  },
-  {
-    id: "evt-4",
-    time: "04:30 PM - 05:30 PM",
-    title: "PR Code Review & Adversarial Safety Benchmark Run",
-    category: "Review",
-    completed: false,
-  },
-];
-
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
@@ -56,14 +25,10 @@ export const TodayView: React.FC = () => {
   const loadEvents = async () => {
     try {
       const data = await scheduleAPI.list();
-      if (data && data.length > 0) {
-        setEvents(data);
-      } else {
-        setEvents(DEFAULT_SDE_SCHEDULE);
-      }
+      setEvents(data || []);
     } catch (err) {
-      console.error("Failed to load schedule events from backend, using defaults:", err);
-      setEvents(DEFAULT_SDE_SCHEDULE);
+      console.error("Failed to load schedule events from backend:", err);
+      setEvents([]);
     } finally {
       setLoading(false);
     }

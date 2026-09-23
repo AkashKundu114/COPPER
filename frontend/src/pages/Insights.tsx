@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, CheckCircle, Sparkles, Network, Terminal, Play, CheckCircle2 } from "lucide-react";
-import { skillsAPI, federatedAPI } from "../services/api";
+import { skillsAPI, federatedAPI, systemAPI } from "../services/api";
 
 interface InsightMetric {
   id: string;
@@ -12,40 +12,50 @@ interface InsightMetric {
 }
 
 export function Insights() {
-  const [metrics] = useState<InsightMetric[]>([
-    {
-      id: "1",
-      title: "Local Inference Latency",
-      value: "1.4s",
-      change: "-28%",
-      sub: "Avg Time-To-First-Token on RTX 5060",
-      positive: true,
-    },
-    {
-      id: "2",
-      title: "Offline Privacy Score",
-      value: "100%",
-      change: "0 Leaks",
-      sub: "100% of reasoning processed locally on D:\\blobs",
-      positive: true,
-    },
-    {
-      id: "3",
-      title: "Token Generation Speed",
-      value: "48 t/s",
-      change: "+14%",
-      sub: "GPU Hardware Accelerated (Ollama LLM)",
-      positive: true,
-    },
-    {
-      id: "4",
-      title: "Task Completion Rate",
-      value: "92%",
-      change: "+5%",
-      sub: "Across coding and system automation",
-      positive: true,
-    },
-  ]);
+  const [metrics, setMetrics] = useState<InsightMetric[]>([]);
+
+  useEffect(() => {
+    systemAPI.getCockpitStatus().then((res) => {
+      if (res.data) {
+        const c = res.data;
+        const gpuName = c.hardware.gpu.model.replace("NVIDIA GeForce ", "");
+        setMetrics([
+          {
+            id: "1",
+            title: "Router Dispatch Latency",
+            value: `${c.routing.velocity_ms.toFixed(3)}ms`,
+            change: "Sub-ms",
+            sub: `Avg latency across ${c.routing.total_samples} benchmark evaluations`,
+            positive: true,
+          },
+          {
+            id: "2",
+            title: "Offline Privacy Score",
+            value: `${c.security.threat_shield_pct.toFixed(0)}%`,
+            change: `${c.security.security_breaches} Breaches`,
+            sub: "100% local execution • Zero external egress",
+            positive: true,
+          },
+          {
+            id: "3",
+            title: "Routing Mesh Throughput",
+            value: `~${Math.round(c.routing.throughput_qps).toLocaleString()} QPS`,
+            change: `${c.routing.precision_pct.toFixed(1)}% Acc`,
+            sub: "Empirical benchmark classification throughput",
+            positive: true,
+          },
+          {
+            id: "4",
+            title: "GPU VRAM Utilization",
+            value: `${c.hardware.gpu.vram_used_gb} / ${c.hardware.gpu.vram_total_gb} GB`,
+            change: `${(c.hardware.gpu.vram_total_gb - c.hardware.gpu.vram_used_gb).toFixed(1)} GB Free`,
+            sub: `Accelerated on ${gpuName} (${c.hardware.gpu.core_temp_c}°C)`,
+            positive: true,
+          },
+        ]);
+      }
+    }).catch(() => {});
+  }, []);
 
   const [skills, setSkills] = useState<any[]>([]);
   const [skillStats, setSkillStats] = useState<any>(null);
@@ -124,7 +134,18 @@ export function Insights() {
 
       {/* Top 4 Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {metrics.map((m) => (
+        {metrics.length === 0
+          ? [1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-3 animate-pulse"
+              >
+                <div className="h-3 w-28 bg-slate-800 rounded" />
+                <div className="h-6 w-24 bg-slate-800 rounded" />
+                <div className="h-2.5 w-36 bg-slate-800 rounded" />
+              </div>
+            ))
+          : metrics.map((m) => (
           <div
             key={m.id}
             className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 hover:border-slate-700 transition-all shadow-sm"

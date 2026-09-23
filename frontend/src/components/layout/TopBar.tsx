@@ -3,6 +3,7 @@ import { Search, User, Clipboard, GitBranch, Volume2, VolumeX } from "lucide-rea
 import type { ProfileResponse } from "../../lib/api";
 import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
 import { soundFX } from "../../lib/soundFX";
+import { systemAPI } from "../../services/api";
 
 interface TopBarProps {
   sectionTitle: string;
@@ -49,6 +50,21 @@ export const TopBar: React.FC<TopBarProps> = ({
   const [timeLocal, setTimeLocal] = useState("");
   const [isElectron, setIsElectron] = useState(false);
   const [sfxMuted, setSfxMuted] = useState(() => soundFX.isMuted());
+  const [gitStatus, setGitStatus] = useState({ branch: "main", repo: "COPPER" });
+
+  useEffect(() => {
+    systemAPI
+      .getCockpitStatus()
+      .then((res) => {
+        if (res.data?.git) {
+          setGitStatus({
+            branch: res.data.git.branch || "main",
+            repo: res.data.git.repo || "COPPER",
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const isRunningInElectron =
@@ -89,11 +105,11 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-[10px] text-zinc-400">
           <GitBranch size={11} className="text-accent" />
-          <span className="text-zinc-200 font-medium">main</span>
+          <span className="text-zinc-200 font-medium">{gitStatus.branch}</span>
           <span className="text-zinc-600">/</span>
-          <span className="text-zinc-300">COPPER</span>
+          <span className="text-zinc-300">{gitStatus.repo}</span>
           <span className="text-zinc-600">·</span>
-          <span className="px-1.5 py-0.2 rounded bg-verdigris/15 text-verdigris text-[9px] font-bold">14B</span>
+          <span className="px-1.5 py-0.2 rounded bg-verdigris/15 text-verdigris text-[9px] font-bold">AIR-GAP</span>
         </div>
       </div>
 
