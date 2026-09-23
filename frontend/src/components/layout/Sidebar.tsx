@@ -10,15 +10,11 @@ import {
   Settings,
   Shield,
   Calendar,
-  CheckSquare,
-  Layers,
   Activity,
   TrendingUp,
   UtensilsCrossed,
   Users,
   Mail,
-  Workflow,
-  BookOpen,
 } from "lucide-react";
 import { soundFX } from "../../lib/soundFX";
 import { systemAPI } from "../../services/api";
@@ -76,10 +72,6 @@ const NAV_GROUPS: NavGroup[] = [
         ariaLabel: "Conversation",
       },
       { id: "companion", label: "Voice Companion", icon: Radio },
-      { id: "projects", label: "Repositories", icon: Layers },
-      { id: "tasks", label: "Sprint Backlog", icon: CheckSquare },
-      { id: "research", label: "Research & Docs", icon: BookOpen },
-      { id: "automations", label: "Automations", icon: Workflow },
     ],
   },
   {

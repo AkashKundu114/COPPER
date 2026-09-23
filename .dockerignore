@@ -74,6 +74,10 @@ htmlcov/
 .nyc_output/
 tests/
 backend/eval/
+eval/
+*.jsonl
+*.jsonl.gz
+*.gz
 
 # ── Logs & Temporary ──────────────────────────────────────────────────────────
 logs/

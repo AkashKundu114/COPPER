@@ -313,25 +313,23 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
 
       {/* Main Center Stage: Thinking Orb Visualizer */}
       <div className="flex-1 w-full max-w-6xl flex items-center justify-center relative my-2">
-        {/* Thinking Orb Centered */}
-        <div className="relative flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center justify-center p-8 rounded-3xl liquid-glass-card shadow-[0_0_50px_rgba(246,230,234,0.15)] border border-blush-100/25">
-            <div
-              className="scale-[2.4] my-10 cursor-pointer transition-transform hover:scale-[2.5] active:scale-[2.3]"
-              onClick={() => {
-                soundFX.play("click");
-                if (speaking) stopAudio();
-                else handleManualPushToTalk();
-              }}
-              title="Click to interact with Companion"
-            >
-              <OfficialThinkingOrb
-                state={autoDotsState}
-                size={64}
-                theme="dark"
-                speed={1.0}
-              />
-            </div>
+        {/* Floating Thinking Orb in the Middle (No Box) */}
+        <div className="relative flex items-center justify-center select-none py-12">
+          <div
+            className="scale-[3.3] cursor-pointer transition-transform duration-200 hover:scale-[3.45] active:scale-[3.15] flex items-center justify-center p-2"
+            onClick={() => {
+              soundFX.play("click");
+              if (speaking) stopAudio();
+              else handleManualPushToTalk();
+            }}
+            title="Click to interact with Companion"
+          >
+            <OfficialThinkingOrb
+              state={autoDotsState}
+              size={64}
+              theme="dark"
+              speed={1.0}
+            />
           </div>
         </div>
 

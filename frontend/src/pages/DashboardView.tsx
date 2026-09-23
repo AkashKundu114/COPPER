@@ -2,17 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
-  ArrowUpRight,
-  Target,
+  Bot,
+  Radio,
   Sparkles,
   Activity,
   Clock,
   Code2,
   GitBranch,
-  CheckSquare,
   Brain,
   Shield,
-  Layers,
   Plus,
 } from "lucide-react";
 import { HudCard } from "../components/hud/HudBrackets";
@@ -71,12 +69,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
     return () => clearInterval(interval);
   }, [fetchLiveTelemetry, fetchOperationalData]);
 
-  // Derived priority task
-  const activeTask =
-    tasks.find((t) => t.status === "active") ||
-    tasks.find((t) => t.priority === "high") ||
-    tasks[0] ||
-    null;
 
   // Real GPU readings or fallbacks from live telemetry
   const gpuModel = cockpit?.hardware?.gpu?.model
@@ -96,50 +88,50 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       {/* SDE Mission Command Header */}
       <motion.div
         variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-        className="p-6 md:p-7 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl"
+        className="p-4 md:p-5 rounded-2xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_16px_40px_rgba(10,3,6,0.4),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl"
       >
-        <div className="absolute -top-24 right-0 w-[28rem] h-[28rem] bg-blush-100/[0.08] rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 left-1/3 w-72 h-72 bg-accent/[0.09] rounded-full blur-3xl pointer-events-none" />
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+        <div className="absolute -top-24 right-0 w-[24rem] h-[24rem] bg-blush-100/[0.07] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 left-1/3 w-64 h-64 bg-accent/[0.08] rounded-full blur-3xl pointer-events-none" />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-10">
           <div>
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-verdigris/12 text-verdigris border border-verdigris/30 flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-verdigris/12 text-verdigris border border-verdigris/30 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
                 {cockpit?.security?.defcon_label || "DEFCON 5 // SYSTEM OPTIMAL"}
               </span>
-              <span className="px-2.5 py-1 rounded-full text-[10px] bg-blush-100/12 text-blush-100 border border-blush-100/30 font-bold flex items-center gap-1">
+              <span className="px-2 py-0.5 rounded-full text-[9px] bg-blush-100/12 text-blush-100 border border-blush-100/30 font-bold flex items-center gap-1">
                 <GitBranch className="w-3 h-3 text-accent" />
                 {cockpit?.git?.repo || "COPPER"} ({cockpit?.git?.branch || "MAIN"})
               </span>
-              <span className="px-2.5 py-1 rounded-full text-[10px] bg-accent/15 text-accent border border-accent/30 font-bold">
+              <span className="px-2 py-0.5 rounded-full text-[9px] bg-accent/15 text-accent border border-accent/30 font-bold">
                 {cockpit?.security?.air_gapped_label || "100% AIR-GAPPED SDE SUITE"}
               </span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-[-0.03em]">
+            <h1 className="text-xl md:text-2xl font-display font-bold text-white tracking-[-0.02em]">
               Sovereign Engineering Cockpit
             </h1>
-            <p className="text-xs text-blush-300/70 mt-1">
+            <p className="text-[11px] text-blush-300/70 mt-0.5">
               Autonomous {cockpit?.agents?.fleet_count ?? 30}-agent fleet ready •{" "}
               {cockpit?.models?.summary_label || "Zero external egress"}
             </p>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
-            <div className="p-3 rounded-2xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
-              <span className="text-blush-300/60 block text-[9px] uppercase tracking-wider">
+            <div className="p-2 px-3 rounded-xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
+              <span className="text-blush-300/60 block text-[8px] uppercase tracking-wider">
                 Router Velocity
               </span>
-              <span className="text-blush-100 font-display font-bold text-sm">
+              <span className="text-blush-100 font-display font-bold text-xs md:text-sm">
                 {cockpit?.routing?.velocity_ms !== undefined
                   ? `${cockpit.routing.velocity_ms.toFixed(3)} ms`
                   : "0.158 ms"}
               </span>
             </div>
-            <div className="p-3 rounded-2xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
-              <span className="text-blush-300/60 block text-[9px] uppercase tracking-wider">
+            <div className="p-2 px-3 rounded-xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
+              <span className="text-blush-300/60 block text-[8px] uppercase tracking-wider">
                 Mesh Throughput
               </span>
-              <span className="text-accent font-display font-bold text-sm">
+              <span className="text-accent font-display font-bold text-xs md:text-sm">
                 ~{cockpit?.routing?.throughput_qps
                   ? Math.round(cockpit.routing.throughput_qps).toLocaleString()
                   : "6,271"}{" "}
@@ -149,43 +141,49 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Quick Developer Action Strip */}
-        <div className="mt-5 pt-4 border-t border-blush-100/[0.10] flex flex-wrap gap-2 relative z-10">
+        {/* Quick Productivity Action Strip */}
+        <div className="mt-3 pt-3 border-t border-blush-100/[0.08] flex flex-wrap gap-1.5 relative z-10">
           <button
             onClick={() => onNavigate?.("chat")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold text-xs shadow-md hover:brightness-110 cursor-pointer font-mono"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold text-[11px] shadow-sm hover:brightness-110 cursor-pointer font-mono"
           >
             <Code2 className="w-3.5 h-3.5" /> Start Coding Session
           </button>
           <button
-            onClick={() => onNavigate?.("projects")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+            onClick={() => onNavigate?.("companion")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Layers className="w-3.5 h-3.5 text-accent" /> Repos & Workspaces
+            <Radio className="w-3 h-3 text-verdigris" /> Voice Companion
           </button>
           <button
-            onClick={() => onNavigate?.("tasks")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+            onClick={() => onNavigate?.("today")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <CheckSquare className="w-3.5 h-3.5 text-blush-200" /> Sprint Queue
+            <Calendar className="w-3 h-3 text-blush-200" /> Daily Standup
           </button>
           <button
-            onClick={() => onNavigate?.("security")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+            onClick={() => onNavigate?.("agents")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Shield className="w-3.5 h-3.5 text-verdigris" /> Security Audit
+            <Bot className="w-3 h-3 text-cyan-400" /> Agent Fleet
           </button>
           <button
             onClick={() => onNavigate?.("memory")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Brain className="w-3.5 h-3.5 text-cyan-400" /> Epistemic Memory
+            <Brain className="w-3 h-3 text-accent" /> Knowledge Memory
+          </button>
+          <button
+            onClick={() => onNavigate?.("security")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
+          >
+            <Shield className="w-3 h-3 text-verdigris" /> Security Center
           </button>
           <button
             onClick={() => onNavigate?.("benchmarks")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-xs font-mono cursor-pointer transition-all"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Activity className="w-3.5 h-3.5 text-amber-400" /> Live Telemetry & QPS
+            <Activity className="w-3 h-3 text-amber-400" /> Live Telemetry
           </button>
         </div>
       </motion.div>
@@ -254,54 +252,51 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           )}
         </HudCard>
 
-        {/* Live Priority Objective */}
+        {/* Autonomous Agent Fleet & Instant Copilot Launch */}
         <HudCard glow="copper">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 gap-2">
             <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-              <Target className="w-4 h-4 text-accent flex-shrink-0" /> Priority Objective
+              <Bot className="w-4 h-4 text-accent flex-shrink-0" /> Autonomous Agent Fleet
             </span>
             <div className="flex items-center gap-2 font-mono flex-shrink-0">
               <span className="px-2 py-0.5 rounded-md bg-accent/15 border border-accent/30 text-accent text-[9px] font-semibold uppercase tracking-wider">
-                SPRINT
+                FLEET
               </span>
               <span className="text-[10px] text-accent font-bold">
-                {activeTask ? (activeTask.priority || "ACTIVE").toUpperCase() : "QUEUE NOMINAL"}
+                {cockpit?.agents?.fleet_count ?? 30} READY
               </span>
             </div>
           </div>
 
-          {activeTask ? (
-            <div className="p-3.5 rounded-xl bg-accent/10 border border-accent/25 space-y-2 shadow-[inset_0_1px_0_rgba(201,124,76,0.15)]">
-              <p className="text-xs font-bold text-white font-sans truncate">
-                {activeTask.title}
-              </p>
-              <p className="text-[11px] text-zinc-300 font-sans line-clamp-2">
-                Project: {activeTask.project} • Est: {activeTask.duration || "30m"} • Status:{" "}
-                {activeTask.status}
-              </p>
-              <div className="pt-2 flex items-center justify-between text-[10px] text-accent">
-                <span>PRIORITY: {(activeTask.priority || "HIGH").toUpperCase()}</span>
-                <button
-                  onClick={() => onNavigate?.("tasks")}
-                  className="flex items-center gap-1 cursor-pointer hover:underline font-bold text-accent"
-                >
-                  INSPECT SPRINT <ArrowUpRight className="w-3 h-3" />
-                </button>
+          <div className="space-y-2.5">
+            <div className="p-3 rounded-xl bg-[#14070B]/80 border border-blush-100/10 space-y-1.5 shadow-inner">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-white font-bold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
+                  AXIS • Coding Specialist
+                </span>
+                <span className="text-accent text-[10px] font-mono">0.158ms routing</span>
               </div>
-            </div>
-          ) : (
-            <div className="p-4 rounded-xl bg-[#14070B]/50 border border-white/5 text-center space-y-2">
-              <p className="text-xs text-zinc-400">
-                Sprint queue is clear. No active tasks in flight.
+              <p className="text-[10px] text-zinc-400 font-sans line-clamp-1">
+                Sub-ms routing, AST code intelligence & sandboxed test runner.
               </p>
+            </div>
+
+            <div className="flex gap-2 pt-1 font-mono text-[11px]">
               <button
-                onClick={() => onNavigate?.("tasks")}
-                className="inline-flex items-center gap-1 text-[11px] text-accent hover:underline cursor-pointer font-bold"
+                onClick={() => onNavigate?.("chat")}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold hover:brightness-110 cursor-pointer shadow-sm transition-all"
               >
-                <Plus className="w-3 h-3" /> Add Backlog Task
+                <Code2 className="w-3.5 h-3.5" /> Start Copilot
+              </button>
+              <button
+                onClick={() => onNavigate?.("companion")}
+                className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] border border-blush-100/20 text-blush-100 font-bold hover:text-white cursor-pointer transition-all"
+              >
+                <Radio className="w-3.5 h-3.5 text-accent" /> Voice
               </button>
             </div>
-          )}
+          </div>
         </HudCard>
 
         {/* Live Guardian Proactive Intel */}
@@ -382,14 +377,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                 TELEMETRY
               </span>
             </div>
-            <button
-              onClick={() => onNavigate?.("benchmarks")}
-              className="text-[11px] text-verdigris flex items-center gap-1.5 font-bold hover:underline cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-verdigris animate-pulse" /> LIVE TELEMETRY
-              & BENCHMARKS →
-            </button>
-          </div>
             <button
               onClick={() => onNavigate?.("benchmarks")}
               className="text-[11px] text-verdigris flex items-center gap-1.5 font-bold hover:underline cursor-pointer"

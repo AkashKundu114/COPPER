@@ -287,57 +287,69 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
 
 
 async def run_benchmark():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     print("==================================================================")
     print("    C.O.P.P.E.R. COMPREHENSIVE BENCHMARK & EVALUATION SUITE       ")
     print("==================================================================")
 
-    routing_master = BASE_DIR / "datasets" / "routing" / "master_routing_dataset.json"
-    guardian_master = BASE_DIR / "datasets" / "guardian" / "master_guardian_dataset.json"
+    # Prefer partitioned held-out test sets
+    test_routing_path = BASE_DIR / "datasets" / "partitions" / "master_routing" / "test.jsonl"
+    test_threats_path = BASE_DIR / "datasets" / "partitions" / "threats" / "test.jsonl"
 
-    if not routing_master.exists() or not guardian_master.exists():
+    fallback_routing = BASE_DIR / "datasets" / "routing" / "master_routing_dataset.json"
+    fallback_guardian = BASE_DIR / "datasets" / "guardian" / "master_guardian_dataset.json"
+
+    routing_dataset = []
+    guardian_dataset = []
+
+    if test_routing_path.exists():
+        with open(test_routing_path, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    routing_dataset.append(json.loads(line))
+        print(f"[*] Loaded {len(routing_dataset):,} held-out TEST samples from {test_routing_path.name}")
+    elif fallback_routing.exists():
+        with open(fallback_routing, encoding="utf-8") as f:
+            routing_dataset = json.load(f)
+        print(f"[*] Loaded {len(routing_dataset):,} fallback routing samples")
+
+    if test_threats_path.exists():
+        with open(test_threats_path, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    guardian_dataset.append(json.loads(line))
+        print(f"[*] Loaded {len(guardian_dataset):,} held-out TEST samples from {test_threats_path.name}")
+    elif fallback_guardian.exists():
+        with open(fallback_guardian, encoding="utf-8") as f:
+            guardian_dataset = json.load(f)
+        print(f"[*] Loaded {len(guardian_dataset):,} fallback guardian samples")
+
+    manifest_path = BASE_DIR / "datasets" / "partitions" / "master_eval_manifest.json"
+    manifest_data = {}
+    if manifest_path.exists():
+        with open(manifest_path, encoding="utf-8") as f:
+            manifest_data = json.load(f)
+
+    if not routing_dataset or not guardian_dataset:
         print(f"[!] Benchmark datasets missing under {BASE_DIR}. Using offline fallback mode.")
         offline_metrics = {
             "timestamp": time.time(),
             "mode": "offline",
-            "routing": {
-                "total_samples": 0,
-                "overall_accuracy_pct": 100.0,
-                "weighted_f1_score_pct": 100.0,
-                "latency_metrics_ms": {"avg": 0.0, "p95": 0.0},
-                "throughput_qps": 0.0,
-            },
-            "guardian": {
-                "total_samples": 0,
-                "accuracy_pct": 100.0,
-                "threat_detection_sensitivity_pct": 100.0,
-                "false_negative_rate_pct": 0.0,
-                "false_negatives": 0,
-            },
+            "routing": {"total_samples": 0, "overall_accuracy_pct": 100.0, "weighted_f1_score_pct": 100.0, "latency_metrics_ms": {"avg": 0.0, "p95": 0.0}, "throughput_qps": 0.0},
+            "guardian": {"total_samples": 0, "accuracy_pct": 100.0, "threat_detection_sensitivity_pct": 100.0, "false_negative_rate_pct": 0.0, "false_negatives": 0},
         }
-        report_md = "# Offline Benchmark Report\n\nDatasets not found. Default offline gate metrics emitted.\n"
-        report_path = BASE_DIR / "benchmark_report.md"
-        with open(report_path, "w", encoding="utf-8") as f:
-            f.write(report_md)
-
-        metrics_path = BASE_DIR / "benchmark_metrics.json"
-        with open(metrics_path, "w", encoding="utf-8") as f:
-            json.dump(offline_metrics, f, indent=2)
         return offline_metrics
 
-    with open(routing_master, encoding="utf-8") as f:
-        routing_dataset = json.load(f)
-
-    with open(guardian_master, encoding="utf-8") as f:
-        guardian_dataset = json.load(f)
-
-    print(f"[*] Ingested {len(routing_dataset)} Routing Test Cases across 8 Categories")
-    print(f"[*] Ingested {len(guardian_dataset)} Guardian Safety Test Cases")
+    print(f"[*] Ingested {len(routing_dataset):,} Routing Test Cases")
+    print(f"[*] Ingested {len(guardian_dataset):,} Guardian Safety Test Cases")
 
     routing_res = await evaluate_routing_dataset(routing_dataset)
     guardian_res = await evaluate_guardian_dataset(guardian_dataset)
 
     print("\n--- RESULTS SUMMARY ---")
-    print(f"[*] Total Evaluated Samples: {routing_res['total_samples'] + guardian_res['total_samples']}")
+    print(f"[*] Total Evaluated Samples: {routing_res['total_samples'] + guardian_res['total_samples']:,}")
     print(
         f"[*] Routing Accuracy:        {routing_res['overall_accuracy_pct']}% (Weighted F1: {routing_res['weighted_f1_score_pct']}%)"
     )
@@ -361,6 +373,7 @@ async def run_benchmark():
         "timestamp": time.time(),
         "routing": routing_res,
         "guardian": guardian_res,
+        "manifest": manifest_data,
     }
     metrics_path = BASE_DIR / "benchmark_metrics.json"
     with open(metrics_path, "w", encoding="utf-8") as f:

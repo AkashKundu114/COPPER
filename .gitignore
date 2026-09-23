@@ -107,9 +107,16 @@ coverage.xml
 *.lcov
 .nyc_output/
 
-# ── Benchmark / Eval Outputs ──────────────────────────────────────────────────
+# ── Benchmark / Eval Outputs & Large Datasets ─────────────────────────────────
 backend/eval/benchmark_metrics.json
 backend/eval/benchmark_report.md
+backend/eval/datasets/generated/
+backend/eval/datasets/hybrid/
+backend/eval/datasets/external/
+backend/eval/datasets/partitions/
+backend/eval/datasets/master_eval_manifest.json
+*.jsonl
+*.jsonl.gz
 
 # ── Node & Frontend Build ─────────────────────────────────────────────────────
 node_modules/

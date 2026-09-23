@@ -23,9 +23,16 @@ external_repos/
 # Sandbox temp execution
 sandbox/
 
-# Eval outputs (regenerated on demand)
+# Eval outputs (regenerated on demand) & large datasets
 eval/benchmark_metrics.json
 eval/benchmark_report.md
+eval/datasets/generated/
+eval/datasets/hybrid/
+eval/datasets/external/
+eval/datasets/partitions/
+eval/datasets/master_eval_manifest.json
+*.jsonl
+*.jsonl.gz
 
 # Caches
 .ruff_cache/

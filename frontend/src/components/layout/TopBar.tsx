@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, User, Clipboard, GitBranch, Volume2, VolumeX } from "lucide-react";
+import { Search, GitBranch, Volume2, VolumeX } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
 import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
 import { soundFX } from "../../lib/soundFX";
@@ -39,12 +39,7 @@ const SECTION_TITLES: Record<string, string> = {
 
 export const TopBar: React.FC<TopBarProps> = ({
   sectionTitle,
-  profile,
-  drawerOpen,
-  onToggleDrawer,
   onOpenCommandPalette,
-  onToggleClipboard,
-  isClipboardOpen,
 }) => {
   const [timeUtc, setTimeUtc] = useState("");
   const [timeLocal, setTimeLocal] = useState("");
@@ -158,7 +153,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span>DEFCON 5</span>
         </div>
 
-        {/* Semantic Audio SFX Toggle (uisfx.com inspiration) */}
+        {/* Semantic Audio SFX Toggle */}
         <button
           onClick={() => {
             const next = soundFX.toggleMute();
@@ -173,43 +168,6 @@ export const TopBar: React.FC<TopBarProps> = ({
           aria-label={sfxMuted ? "Unmute UI Sound Effects" : "Mute UI Sound Effects"}
         >
           {sfxMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
-        </button>
-
-        {/* Smart Clipboard Trigger */}
-        {onToggleClipboard && (
-          <button
-            onClick={() => {
-              soundFX.play("click");
-              onToggleClipboard();
-            }}
-            aria-label="Toggle Smart Clipboard history drawer"
-            aria-expanded={isClipboardOpen}
-            className={`no-drag flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] font-mono whitespace-nowrap cursor-pointer transition-all ${
-              isClipboardOpen
-                ? "bg-accent/20 text-accent border-accent/40 shadow-sm"
-                : "bg-white/[0.03] border-white/[0.08] hover:border-accent/40 hover:bg-white/[0.06] text-zinc-300 hover:text-white"
-            }`}
-            title="Smart Clipboard (History & Pointers)"
-          >
-            <Clipboard size={13} className={isClipboardOpen ? "text-accent" : "text-zinc-400"} />
-            <span className="hidden xl:inline font-medium">CLIPBOARD</span>
-          </button>
-        )}
-
-        {/* Operator Profile Trigger */}
-        <button
-          onClick={() => {
-            soundFX.play("click");
-            onToggleDrawer();
-          }}
-          aria-label="Toggle user profile and agent details drawer"
-          aria-expanded={drawerOpen}
-          className="no-drag flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] hover:border-blush-100/30 hover:bg-white/[0.06] text-[11px] text-zinc-300 hover:text-white transition-all font-mono whitespace-nowrap cursor-pointer focus-visible:ring-1 focus-visible:ring-accent"
-        >
-          <User size={13} className="text-accent" aria-hidden="true" />
-          <span className="font-semibold text-white text-[11px]">
-            {profile?.relationship_tier || "OPERATOR"}
-          </span>
         </button>
       </div>
     </header>
