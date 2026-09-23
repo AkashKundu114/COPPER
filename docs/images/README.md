@@ -2,19 +2,17 @@
 
 This directory contains the publication-grade figures, system architecture diagrams, and empirical benchmark charts for **C.O.P.P.E.R.** (Centralized Omnifunctional Personal Productivity and Execution Routine).
 
-All figures are rendered at publication-standard **350 DPI** using scientific styling (pure white canvas `#ffffff`, professional typography, and colorblind-safe palettes). They are bit-for-bit identical to the authoritative IEEE Transactions publication package in [`research/figures/`](../../research/figures/).
+All figures are rendered at publication-standard **350 DPI** using scientific styling (pure white canvas `#ffffff`, professional typography, and colorblind-safe palettes).
 
 ---
 
-## 1. Canonical IEEE Transactions Publication Figures (Figures 1–15)
+## 1. Canonical System & Empirical Architecture Figures (Figures 1–15)
 
-The table below maps the 15 canonical manuscript figures from the authoritative research paper:  
+The table below maps the 15 canonical architecture and benchmark figures:  
 > **Title:** *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity*  
 > **Author:** Akash Kundu — Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
-> **Target Venue:** IEEE Transactions on Consumer Electronics (T-CE) / arXiv: cs.AI, cs.OS, cs.DC, cs.SE, cs.CR  
-> **LaTeX Source:** [`research/paper.tex`](../../research/paper.tex) | [`research/README.md`](../../research/README.md)
 
-| Manuscript Figure | Canonical Asset | Descriptive Alias | Section in Paper | Scientific Content & Significance |
+| Figure | Canonical Asset | Descriptive Alias | Section | Scientific Content & Significance |
 | :---: | :--- | :--- | :--- | :--- |
 | **Fig. 1** | `kundu1.png` | `fig8_system_architecture_topology.png` | §III Architecture | **System Architecture Topology & Bus Interconnect:** End-to-end air-gapped sovereign topology enforcing strict 3-tier isolation (Electron UI, FastAPI Orchestrator, Resident GGUF Model Pool) with zero external network egress. |
 | **Fig. 2** | `kundu2.png` | `fig5_multi_agent_routing_matrix.png` | §III.A TFP-Router | **Multi-Agent Routing Confidence Matrix:** Intent classification heatmap across 9 specialized cognitive categories achieving 97.77% raw accuracy and 98.78% weighted F1 on 1,390 intent queries. |

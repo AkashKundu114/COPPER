@@ -223,14 +223,13 @@ Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/bench
 *† Under UMF-EDR, 8 retrieval accesses over 45 days expanded effective half-life, maintaining $C=0.77$ vs. $0.38$ unretrieved.*  
 *‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
 
-### 3. Publication Research & Empirical Profiling Figures (IEEE Transactions Standard)
+### 3. System Architecture & Empirical Profiling Figures
 
-All empirical benchmarks and system mechanics are published and rigorously evaluated in the authoritative IEEE Transactions research manuscript:  
+All empirical benchmarks and system mechanics are thoroughly profiled and evaluated:  
 > **Title:** *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity*  
 > **Author:** Akash Kundu — Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
-> **Repository Publication Workspace:** [`research/`](research/) | [`paper.tex`](research/paper.tex) | [`research/README.md`](research/README.md)
 
-All 15 figures below are rendered at 350 DPI vector resolution using scientific publication styling, matching the exact order and numbering of the IEEE Transactions paper (`kundu1.png` – `kundu15.png`):
+All 15 figures below are rendered at 350 DPI vector resolution using scientific styling:
 
 <p align="center">
   <img src="docs/images/fig8_system_architecture_topology.png" alt="Figure 1: System Architecture Topology" width="96%" />

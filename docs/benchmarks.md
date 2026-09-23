@@ -155,9 +155,9 @@ COPPER includes a fully-integrated `psutil`-powered telemetry dashboard accessib
 
 ---
 
-## 8. Academic Research & Publication Benchmark Suite (IEEE Transactions Standard)
+## 8. Empirical Architecture & Benchmark Suite
 
-The figures below represent empirical profiling conducted on C.O.P.P.E.R.'s air-gapped sovereign architecture, rendered at publication-grade 350 DPI vector resolution and matching the exact 15-figure canonical sequence of the authoritative IEEE Transactions research manuscript ([`research/paper.tex`](../research/paper.tex) / [`research/README.md`](../research/README.md)):
+The figures below represent empirical profiling conducted on C.O.P.P.E.R.'s air-gapped sovereign architecture, rendered at publication-grade 350 DPI vector resolution:
 
 ### 8.1 System Architecture & Cognitive Topology (Figure 1)
 <p align="center">

@@ -6,10 +6,9 @@ Welcome to the official technical documentation and architectural reference for 
 
 ## Visual Architecture & Benchmark Gallery
 
-All empirical benchmarks, cognitive architectures, and security pipelines below are published and analyzed in the authoritative IEEE Transactions research manuscript:  
-**[Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity](../research/README.md)**
+All empirical benchmarks, cognitive architectures, and security pipelines below detail the system mechanics and profiling results:
 
-| IEEE Manuscript Figures (Core Architecture & Mechanics) | Empirical Hardware Telemetry & Pipelines |
+| Core Architecture & Mechanics Figures | Empirical Hardware Telemetry & Pipelines |
 | :--- | :--- |
 | **Fig. 1:** System Architecture Topology<br>![System Architecture Topology](images/fig8_system_architecture_topology.png) | **Hardware Telemetry:** Sub-Millisecond Latency Percentiles<br>![Latency Percentiles](images/latency_percentiles.png) |
 | **Fig. 2:** Multi-Agent Routing Confidence Matrix<br>![Multi-Agent Routing Matrix](images/fig5_multi_agent_routing_matrix.png) | **Hardware Telemetry:** VRAM Memory Allocation Profile<br>![VRAM Allocation](images/vram_memory_allocation.png) |
