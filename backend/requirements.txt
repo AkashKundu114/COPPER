@@ -41,4 +41,4 @@ opentelemetry-instrumentation-fastapi
 opentelemetry-exporter-otlp-proto-grpc
 opentelemetry-exporter-otlp-proto-http
 defusedxml>=0.7.1
-beautifulsoup4>=4.9.0
+beautifulsoup4>=4.15.0
