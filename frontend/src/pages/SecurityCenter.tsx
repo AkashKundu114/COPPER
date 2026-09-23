@@ -113,12 +113,11 @@ export function SecurityCenter() {
           <div className="flex items-center gap-2">
             <ShieldCheck size={20} className="text-verdigris-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-              Data Firewall & Security Center
+              Security
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Zero-leak local firewall rules, PII redaction engines, and
-            air-gapped protection
+            Local firewall rules, privacy guards, and air-gapped protection
           </p>
         </div>
         <button

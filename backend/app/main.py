@@ -34,7 +34,6 @@ from app.api.routes import (
     agents,
     ambient,
     audit,
-    automation,
     briefing,
     cache,
     catalog,
@@ -60,10 +59,8 @@ from app.api.routes import (
     plugins,
     predictions,
     privacy,
-    projects,
     provenance,
     reminders,
-    research,
     routing_analytics,
     schedule,
     self_improvement,
@@ -72,13 +69,11 @@ from app.api.routes import (
     skills,
     sync,
     system,
-    tasks,
     telemetry_routes,
     training,
     vision,
     voice,
     wake,
-    workflows,
     workspace,
 )
 from app.core.config import settings
@@ -174,9 +169,6 @@ app.include_router(privacy.router, prefix="/api/v1")
 app.include_router(knowledge_graph.router, prefix="/api/v1")
 app.include_router(reminders.router, prefix="/api/v1")
 app.include_router(code_review.router, prefix="/api/v1")
-app.include_router(research.router, prefix="/api/v1")
-app.include_router(automation.router, prefix="/api/v1")
-app.include_router(workflows.router, prefix="/api/v1")
 app.include_router(vision.router, prefix="/api/v1")
 app.include_router(guardian.router, prefix="/api/v1")
 app.include_router(agents.router, prefix="/api/v1")
@@ -193,9 +185,7 @@ app.include_router(training.router, prefix="/api/v1")
 app.include_router(federated.router, prefix="/api/v1")
 app.include_router(routing_analytics.router, prefix="/api/v1")
 app.include_router(workspace.router, prefix="/api/v1")
-app.include_router(tasks.router, prefix="/api/v1")
 app.include_router(predictions.router, prefix="/api/v1")
-app.include_router(projects.router, prefix="/api/v1")
 app.include_router(schedule.router, prefix="/api/v1")
 app.include_router(schedule.events_router, prefix="/api/v1")
 app.include_router(briefing.router, prefix="/api/v1")

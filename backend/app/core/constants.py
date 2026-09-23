@@ -20,6 +20,7 @@ class AgentType(str, Enum):
     EVALUATOR = "evaluator"
     ORCHESTRATOR = "orchestrator"
     WEB_SEARCH = "web_search"
+    VOICE = "voice"
 
 
 class GuardianLevel(int, Enum):

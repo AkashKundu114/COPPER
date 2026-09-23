@@ -156,8 +156,8 @@ export const EmailView: React.FC = () => {
     <div className="w-full h-full flex flex-col bg-slate-900/80 border border-slate-800 font-mono text-xs text-cyber-cyan p-4">
       <div className="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
         <div>
-          <h2 className="text-accent-400 text-lg uppercase tracking-wider font-display font-bold">Git & Alert Communications Feed</h2>
-          <p className="text-[10px] text-zinc-400 font-mono">Automated CI/CD alerts, Guardian security reports, and asynchronous developer dispatches</p>
+          <h2 className="text-accent-400 text-lg uppercase tracking-wider font-display font-bold">Alerts & Notifications</h2>
+          <p className="text-[10px] text-zinc-400 font-mono">Live system events, security alerts, and communication feeds</p>
         </div>
         <div className="flex gap-2">
           {!isConfigured ? (

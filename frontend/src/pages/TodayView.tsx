@@ -90,9 +90,9 @@ export const TodayView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Daily Dev Agenda & Sprint Standup
+            Today
           </h1>
-          <p className="text-xs text-slate-400 font-mono">{todayDate} • Engineering Focus Schedule</p>
+          <p className="text-xs text-slate-400 font-mono">{todayDate} • Live Schedule</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex gap-1 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] text-xs font-mono">
@@ -115,18 +115,18 @@ export const TodayView: React.FC = () => {
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blush-100 hover:bg-white text-burgundy-950 font-bold text-xs transition-all shadow-sm cursor-pointer font-mono"
           >
             <Plus size={14} strokeWidth={2.5} />
-            <span>Add Dev Block</span>
+            <span>Add Event</span>
           </button>
         </div>
       </div>
 
-      {/* Autonomous Ambient Briefing & Predictive Anticipation Card */}
+      {/* Autonomous Ambient Briefing Card */}
       <DailyBriefingCard />
 
-      {/* Live Activity & Focus Dashboard Widget */}
+      {/* Live Focus Widget */}
       <ActivityDashboardWidget />
 
-      {/* AI Proactive Recommendation Banner */}
+      {/* Schedule Recommendation Banner */}
       <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
@@ -134,11 +134,11 @@ export const TodayView: React.FC = () => {
           </div>
           <div>
             <p className="font-semibold text-white">
-              Smart Schedule Optimizer Active
+              Schedule Optimizer
             </p>
             <p className="text-slate-400 text-[11px]">
               {events.filter((e) => !e.completed).length} pending events
-              scheduled for today. Optimal focus window: 11:00 AM – 1:00 PM.
+              scheduled for today.
             </p>
           </div>
         </div>

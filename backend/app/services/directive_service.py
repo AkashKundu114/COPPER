@@ -19,8 +19,8 @@ class DirectiveResult:
 
 MODEL_TIERS = {
     "mini": {
-        "model": "qwen2.5:1b",
-        "tier_name": "Mini (1B Reflex Tier)",
+        "model": "qwen2.5:1.5b",
+        "tier_name": "Mini (1.5B Reflex Tier)",
     },
     "standard": {
         "model": "qwen2.5:8b",

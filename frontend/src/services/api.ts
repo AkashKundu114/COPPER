@@ -382,16 +382,6 @@ export const codeReviewAPI = {
   getRepos: () => api.get("/code-review/repos"),
 };
 
-export const researchAPI = {
-  start: (topic: string, depth = "standard", deadline?: string) =>
-    api.post("/research/start", { topic, depth, deadline }),
-  getReports: (status?: string, limit = 20) =>
-    api.get(`/research/reports?limit=${limit}${status ? `&status=${status}` : ""}`),
-  getReport: (id: string) => api.get(`/research/reports/${id}`),
-  getMarkdown: (id: string) => api.get(`/research/reports/${id}/markdown`),
-  cancel: (id: string) => api.post(`/research/reports/${id}/cancel`),
-};
-
 export const skillsAPI = {
   list: (tag?: string) => api.get(`/skills${tag ? `?tag=${tag}` : ""}`),
   getStats: () => api.get("/skills/stats"),
@@ -593,17 +583,6 @@ export const routingAPI = {
   getHistory: (limit = 50) => api.get(`/routing/history?limit=${limit}`),
 };
 
-export const workflowsAPI = {
-  list: () => api.get("/workflows"),
-  create: (data: { prompt?: string; workflow?: any; auto_enable?: boolean }) =>
-    api.post("/workflows", data),
-  get: (id: string) => api.get(`/workflows/${id}`),
-  toggle: (id: string, enabled?: boolean) =>
-    api.patch(`/workflows/${id}/toggle`, { enabled }),
-  run: (id: string, inputs?: Record<string, any>) =>
-    api.post(`/workflows/${id}/run`, { inputs }),
-  delete: (id: string) => api.delete(`/workflows/${id}`),
-};
 
 export default api;
 

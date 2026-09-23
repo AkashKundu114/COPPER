@@ -302,8 +302,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </span>
             </div>
             <h1 className="text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
-              <BarChart2 className="w-6 h-6 text-[#C97C4C]" /> Live System
-              Telemetry, VRAM & Token Usage
+              <BarChart2 className="w-6 h-6 text-[#C97C4C]" /> Benchmarks & Hardware Telemetry
             </h1>
             <p className="text-xs text-gray-400 font-mono mt-1">
               Host: {telemetry.cpu.model} | Active GPU: {telemetry.gpu.model}

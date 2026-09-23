@@ -378,11 +378,11 @@ export const SelfImprovementView: React.FC = () => {
           <div className="flex items-center gap-2">
             <Sparkles size={20} className="text-accent-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-              Autonomous Self-Improvement & Benchmark Center
+              Optimization
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            CRUCIBLE evaluation, Bayesian learning, DSPy prompt tuning, and On-Device QLoRA Fine-Tuning (CHRYSALIS)
+            Autonomous model evaluation, prompt optimization, and on-device tuning
           </p>
         </div>
 
@@ -411,10 +411,10 @@ export const SelfImprovementView: React.FC = () => {
       {/* Navigation Tabs */}
       <div className="flex border-b border-slate-800 gap-1 pb-1">
         {[
-          { id: "overview", label: "Quality & Failure Radar", icon: Cpu },
-          { id: "curves", label: "Improvement Curves (Online Learning)", icon: Activity },
-          { id: "models", label: "Model Selection Matrix", icon: GitBranch },
-          { id: "training", label: "On-Device QLoRA (CHRYSALIS)", icon: HardDrive },
+          { id: "overview", label: "Overview", icon: Cpu },
+          { id: "curves", label: "Learning Curves", icon: Activity },
+          { id: "models", label: "Model Matrix", icon: GitBranch },
+          { id: "training", label: "Fine-Tuning", icon: HardDrive },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

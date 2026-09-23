@@ -101,7 +101,7 @@ export const MemoryView: React.FC = () => {
             }`}
           >
             <Network size={14} />
-            <span>Knowledge Graph</span>
+            <span>Graph</span>
           </button>
           <button
             onClick={() => setActiveTab("epistemic")}
@@ -112,7 +112,7 @@ export const MemoryView: React.FC = () => {
             }`}
           >
             <Brain size={14} />
-            <span>Memories ({memories.length})</span>
+            <span>Facts & Notes ({memories.length})</span>
           </button>
           <button
             onClick={() => setActiveTab("causal")}
@@ -123,7 +123,7 @@ export const MemoryView: React.FC = () => {
             }`}
           >
             <Network size={14} />
-            <span>Causal Explorer</span>
+            <span>Causality</span>
           </button>
           <button
             onClick={() => setActiveTab("provenance")}
@@ -134,7 +134,7 @@ export const MemoryView: React.FC = () => {
             }`}
           >
             <Brain size={14} />
-            <span>Provenance Audit</span>
+            <span>History</span>
           </button>
         </div>
 

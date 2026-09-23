@@ -16,7 +16,7 @@ import {
 import { HudCard } from "../components/hud/HudBrackets";
 import type { NavSection } from "../components/layout/Sidebar";
 import { systemAPI, cognitiveAPI, type CockpitStatus } from "../services/api";
-import { scheduleAPI, tasksAPI, type ScheduleEvent, type TaskItem } from "../lib/api";
+import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 
 interface DashboardViewProps {
   onNavigate?: (section: NavSection) => void;
@@ -25,7 +25,6 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
   const [cockpit, setCockpit] = useState<CockpitStatus | null>(null);
   const [scheduleEvents, setScheduleEvents] = useState<ScheduleEvent[]>([]);
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [cognitiveState, setCognitiveState] = useState<{
     state: string;
     confidence: number;
@@ -47,13 +46,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
 
   const fetchOperationalData = useCallback(async () => {
     try {
-      const [eventsData, tasksData, cogRes] = await Promise.all([
+      const [eventsData, cogRes] = await Promise.all([
         scheduleAPI.list().catch(() => []),
-        tasksAPI.list().catch(() => []),
         cognitiveAPI.getState().catch(() => null),
       ]);
       setScheduleEvents(eventsData || []);
-      setTasks(tasksData || []);
       if (cogRes?.data) {
         setCognitiveState(cogRes.data);
       }
@@ -317,11 +314,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
             </div>
             <p className="text-xs text-zinc-200 leading-relaxed italic bg-[#14070B]/80 p-3 rounded-xl border border-blush-100/10 font-sans shadow-inner">
               "{cognitiveState?.recommendations?.[0] ||
-                `Cognitive state: ${cognitiveState?.state || "idle"}. ${
-                  tasks.length > 0
-                    ? `${tasks.length} planned sprint tasks remain in queue.`
-                    : "Zero pending tasks. Standby for developer input."
-                }`}"
+                `Cognitive state: ${cognitiveState?.state || "nominal"}. System standby for direct user instruction.`}"
             </p>
             <div className="flex gap-2 pt-2">
               <button

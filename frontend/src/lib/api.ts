@@ -278,55 +278,6 @@ export const enforceKeepOnlyMiniModel = async () => {
   return res.data;
 };
 
-export interface TaskItem {
-  id: string;
-  title: string;
-  project: string;
-  priority: "high" | "medium" | "low";
-  duration: string;
-  status: "inbox" | "planned" | "active" | "completed";
-  createdAt?: number;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export const tasksAPI = {
-  list: (params?: { status?: string; project?: string; priority?: string }) =>
-    api.get<TaskItem[]>("/tasks", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<TaskItem>(`/tasks/${id}`).then((r) => r.data),
-  create: (payload: Partial<TaskItem>) =>
-    api.post<TaskItem>("/tasks", payload).then((r) => r.data),
-  update: (id: string, payload: Partial<TaskItem>) =>
-    api.patch<TaskItem>(`/tasks/${id}`, payload).then((r) => r.data),
-  delete: (id: string) =>
-    api.delete(`/tasks/${id}`),
-};
-
-export interface ProjectItem {
-  id: string;
-  name: string;
-  health: "healthy" | "at_risk" | "blocked" | "completed";
-  reason: string;
-  completedTasks: number;
-  totalTasks: number;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export const projectsAPI = {
-  list: (params?: { health?: string }) =>
-    api.get<ProjectItem[]>("/projects", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<ProjectItem>(`/projects/${id}`).then((r) => r.data),
-  create: (payload: Partial<ProjectItem>) =>
-    api.post<ProjectItem>("/projects", payload).then((r) => r.data),
-  update: (id: string, payload: Partial<ProjectItem>) =>
-    api.patch<ProjectItem>(`/projects/${id}`, payload).then((r) => r.data),
-  delete: (id: string) =>
-    api.delete(`/projects/${id}`),
-};
-
 export interface ScheduleEvent {
   id: string;
   time: string;

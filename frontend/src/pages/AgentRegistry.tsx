@@ -142,11 +142,11 @@ export function AgentRegistry() {
           <div className="flex items-center gap-2">
             <Cpu size={20} className="text-cyan-400" />
             <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-              Specialist Agent & Model Squad Registry
+              Agents
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 font-mono">
-            {AGENTS.length} Core Fleet Agents ({activeCount} active in VRAM) • {catalogSummary?.total_personas || 264} Agency Personas • {catalogSummary?.total_scientific_skills || 165} Scientific Skills • {catalogSummary?.total_tools || 36} Active Tools
+            {AGENTS.length} Core Agents ({activeCount} active in VRAM) • {catalogSummary?.total_personas || 264} Personas • {catalogSummary?.total_scientific_skills || 165} Skills • {catalogSummary?.total_tools || 36} Tools
           </p>
         </div>
 
@@ -174,7 +174,7 @@ export function AgentRegistry() {
           }`}
         >
           <Cpu size={14} />
-          <span>Core Agents ({AGENTS.length})</span>
+          <span>Core ({AGENTS.length})</span>
         </button>
 
         <button
@@ -186,7 +186,7 @@ export function AgentRegistry() {
           }`}
         >
           <Users size={14} />
-          <span>Specialist Personas ({catalogSummary?.total_personas || 264})</span>
+          <span>Personas ({catalogSummary?.total_personas || 264})</span>
         </button>
 
         <button
@@ -198,7 +198,7 @@ export function AgentRegistry() {
           }`}
         >
           <FlaskConical size={14} />
-          <span>Scientific Skills ({catalogSummary?.total_scientific_skills || 165})</span>
+          <span>Skills ({catalogSummary?.total_scientific_skills || 165})</span>
         </button>
 
         <button
@@ -210,7 +210,7 @@ export function AgentRegistry() {
           }`}
         >
           <Wrench size={14} />
-          <span>Tools & MCP ({catalogSummary?.total_tools || 36})</span>
+          <span>Tools ({catalogSummary?.total_tools || 36})</span>
         </button>
       </div>
 

@@ -166,8 +166,8 @@ class ModelManager:
         Returns: (ollama_tag, tier_display_name)
         """
         clean = alias.strip().lower()
-        if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "lightweight", "fast", "instant"]):
-            return "qwen2.5:1b", "Mini (1B Reflex Tier)"
+        if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "1.5b", "lightweight", "fast", "instant"]):
+            return self.get_mini_model(), "Mini (1.5B Reflex Tier)"
         if any(w in clean for w in ["3b", "coder-micro", "shell"]):
             return "qwen2.5-coder:3b", "FORGE / WARDEN (~3B Code & Shell Tier)"
         if any(w in clean for w in ["0.5b", "1.5b", "reflex", "gatekeeper", "firewall", "router"]):

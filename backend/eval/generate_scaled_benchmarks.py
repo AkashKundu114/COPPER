@@ -388,18 +388,21 @@ AUTOMATION_VARS = {
 
 
 # ==============================================================================
-# 7. DOCUMENT DOMAIN (State space: >30,000,000 combinations)
+# 7. DOCUMENT DOMAIN (State space: >100,000,000 combinations)
 # ==============================================================================
 DOCUMENT_TEMPLATES = [
-    "Generate a {doc_type} summarizing {doc_topic} and export as {doc_format}",
-    "Draft an authoritative {doc_type} covering {doc_topic} with {doc_styling}",
-    "Format these notes into a structured {doc_type} on {doc_topic} in {doc_format}",
+    "Generate a {doc_type} summarizing {doc_topic} for {audience} with {doc_styling} exported as {doc_format}",
+    "Draft an authoritative {doc_type} covering {doc_topic} for {audience} with {doc_styling}",
+    "Format these notes into a structured {doc_type} on {doc_topic} for {audience} in {doc_format}",
+    "Prepare an executive {doc_type} analyzing {doc_topic} with {doc_styling} in {doc_format}",
+    "Write a comprehensive {doc_type} detailing {doc_topic} for {audience} with {doc_styling}",
 ]
 DOCUMENT_VARS = {
-    "doc_type": ["technical whitepaper", "executive summary report", "formal project proposal", "quarterly financial review", "system architecture specification", "client onboarding guide", "security compliance assessment", "disaster recovery runbook", "API reference manual", "service level agreement (SLA)"],
-    "doc_topic": ["Q3 AI engineering benchmarks", "cloud infrastructure migration savings", "SOC2 compliance readiness", "agent orchestration reliability", "zero-trust security implementation", "multi-region failover procedures", "machine learning training costs", "data privacy GDPR compliance"],
-    "doc_format": ["PDF document", "Microsoft Word docx", "standalone Markdown document", "formatted HTML printable page", "CSV spreadsheet table"],
-    "doc_styling": ["executive callout boxes and formatted data tables", "formal academic typography and citations", "custom header branding and page numbering", "clean modern layout with charts", "two-column professional layout with table of contents"],
+    "doc_type": ["technical whitepaper", "executive summary report", "formal project proposal", "quarterly financial review", "system architecture specification", "client onboarding guide", "security compliance assessment", "disaster recovery runbook", "API reference manual", "service level agreement (SLA)", "vendor risk evaluation", "SOC2 security playbook", "incident response guide", "database audit report", "product launch roadmap document"],
+    "doc_topic": ["Q3 AI engineering benchmarks", "cloud infrastructure migration savings", "SOC2 compliance readiness", "agent orchestration reliability", "zero-trust security implementation", "multi-region failover procedures", "machine learning training costs", "data privacy GDPR compliance", "distributed microservice performance", "Kubernetes cluster hardening", "database sharding and replication", "real-time vector search latency"],
+    "doc_format": ["PDF document", "Microsoft Word docx", "standalone Markdown document", "formatted HTML printable page", "CSV spreadsheet table", "interactive PDF with table of contents", "LaTeX scientific article"],
+    "doc_styling": ["executive callout boxes and formatted data tables", "formal academic typography and citations", "custom header branding and page numbering", "clean modern layout with charts", "two-column professional layout with table of contents", "minimalist monochrome typography", "color-coded priority callout banners"],
+    "audience": ["the executive board", "external compliance auditors", "senior engineering staff", "enterprise prospective clients", "infrastructure leads", "all company stakeholders", "the open-source community"],
 }
 
 
@@ -455,16 +458,17 @@ BEHAVIOR_NUTRITION_TEMPLATES = [
     "Track my {health_metric} for today: {health_val}",
     "How does {lifestyle_factor} affect my {cognitive_metric} during {work_period}?",
     "Plan a daily nutrition schedule focusing on {nutrition_goal} with {diet_pref}",
-    "Analyze the correlation between my {health_metric} and {cognitive_metric}",
+    "Analyze the correlation between my {health_metric} and {cognitive_metric} during {work_period}",
+    "Log that {health_metric} reached {health_val} and evaluate against {nutrition_goal}",
 ]
 BEHAVIOR_NUTRITION_VARS = {
-    "health_metric": ["water intake", "caffeine consumption", "sleep duration", "deep work focus minutes", "daily step count", "protein intake", "resting heart rate", "blue-light exposure minutes"],
-    "health_val": ["2.5 liters logged", "2 cups of black coffee at 9 AM", "7 hours 30 minutes with 2 hours deep sleep", "180 minutes of uninterrupted coding", "10,200 steps completed", "150g protein reached", "58 bpm average", "30 minutes before bed"],
-    "lifestyle_factor": ["taking a 10-minute walk after lunch", "stopping caffeine after 2 PM", "intermittent fasting until noon", "blue-light blocking before sleep", "cold showers in the morning", "doing 20 pushups between work blocks", "drinking a glass of electrolyte water upon waking"],
-    "cognitive_metric": ["focus endurance and code quality", "circadian energy crashes", "mental clarity and problem-solving speed", "REM sleep architecture", "sustained attention span", "working memory recall"],
-    "work_period": ["late-night architecture reviews", "early morning deep work sprints", "afternoon standup sessions", "all-day coding hackathons"],
-    "nutrition_goal": ["sustained high energy without afternoon slump", "lean muscle preservation", "healthy blood sugar stabilization", "optimal cognitive brain health", "reduced systemic inflammation"],
-    "diet_pref": ["high protein Mediterranean meal choices", "whole-food plant-forward options", "low glycemic index complex carbs", "anti-inflammatory micronutrient density", "clean ketogenic whole foods"],
+    "health_metric": ["water intake", "caffeine consumption", "sleep duration", "deep work focus minutes", "daily step count", "protein intake", "resting heart rate", "blue-light exposure minutes", "cardio training duration", "electrolytes consumed"],
+    "health_val": ["2.5 liters logged", "2 cups of black coffee at 9 AM", "7 hours 30 minutes with 2 hours deep sleep", "180 minutes of uninterrupted coding", "10,200 steps completed", "150g protein reached", "58 bpm average", "30 minutes before bed", "45 minutes high intensity", "1000mg sodium and potassium"],
+    "lifestyle_factor": ["taking a 10-minute walk after lunch", "stopping caffeine after 2 PM", "intermittent fasting until noon", "blue-light blocking before sleep", "cold showers in the morning", "doing 20 pushups between work blocks", "drinking a glass of electrolyte water upon waking", "standing desk intervals every hour"],
+    "cognitive_metric": ["focus endurance and code quality", "circadian energy crashes", "mental clarity and problem-solving speed", "REM sleep architecture", "sustained attention span", "working memory recall", "stress response recovery"],
+    "work_period": ["late-night architecture reviews", "early morning deep work sprints", "afternoon standup sessions", "all-day coding hackathons", "weekly release deployment blocks"],
+    "nutrition_goal": ["sustained high energy without afternoon slump", "lean muscle preservation", "healthy blood sugar stabilization", "optimal cognitive brain health", "reduced systemic inflammation", "rapid metabolic recovery"],
+    "diet_pref": ["high protein Mediterranean meal choices", "whole-food plant-forward options", "low glycemic index complex carbs", "anti-inflammatory micronutrient density", "clean ketogenic whole foods", "paleolithic unprocessed ingredients"],
 }
 
 
@@ -527,7 +531,6 @@ def main():
     BASE_DIR.mkdir(parents=True, exist_ok=True)
     all_manifest = {}
 
-    # 9 Domains at 115,000 each + Image & Voice kept at 10,500 each = 1,056,000 items
     suites = [
         ("coding", CODING_TEMPLATES, CODING_VARS, "coding", "allow", 115000, ["algorithms", "debugging", "refactor", "testing", "architecture", "database"]),
         ("threats", THREAT_TEMPLATES, THREAT_VARS, "guardian", "block", 115000, ["critical_destructive", "jailbreak_injection", "obfuscated_exploit", "policy_bypass", "privilege_escalation"]),
@@ -535,9 +538,9 @@ def main():
         ("productivity", PRODUCTIVITY_TEMPLATES, PRODUCTIVITY_VARS, "planner", "allow", 115000, ["milestones", "calendar", "task_decomposition", "checklists", "executive_brief"]),
         ("vision", VISION_TEMPLATES, VISION_VARS, "vision", "allow", 115000, ["ocr_extraction", "ui_localization", "chart_analysis", "schematic_audit", "a11y_review"]),
         ("automation", AUTOMATION_TEMPLATES, AUTOMATION_VARS, "automation", "allow", 115000, ["process_lifecycle", "filesystem_ops", "system_monitoring", "workflow_automation"]),
-        ("document", DOCUMENT_TEMPLATES, DOCUMENT_VARS, "document", "allow", 115000, ["whitepaper", "executive_summary", "proposals", "compliance_audit"]),
-        ("chat", CHAT_TEMPLATES, CHAT_VARS, "chat", "allow", 115000, ["greeting", "companion_identity", "gratitude", "capabilities"]),
-        ("behavior_nutrition", BEHAVIOR_NUTRITION_TEMPLATES, BEHAVIOR_NUTRITION_VARS, "behavior", "allow", 115000, ["circadian_health", "macro_tracking", "cognitive_endurance", "focus_intervals"]),
+        ("document", DOCUMENT_TEMPLATES, DOCUMENT_VARS, "document", "allow", 100000, ["whitepaper", "executive_summary", "proposals", "compliance_audit"]),
+        ("chat", CHAT_TEMPLATES, CHAT_VARS, "chat", "allow", 100000, ["greeting", "companion_identity", "gratitude", "capabilities"]),
+        ("behavior_nutrition", BEHAVIOR_NUTRITION_TEMPLATES, BEHAVIOR_NUTRITION_VARS, "behavior", "allow", 100000, ["circadian_health", "macro_tracking", "cognitive_endurance", "focus_intervals"]),
         # KEPT STRICTLY FIXED WITHOUT INCREASING AS INSTRUCTED
         ("image", IMAGE_TEMPLATES, IMAGE_VARS, "image", "allow", 10500, ["cyberpunk", "photorealism", "watercolor", "3d_render"]),
         ("voice_audio", VOICE_TEMPLATES, VOICE_VARS, "voice", "allow", 10500, ["barge_in", "acoustic_settings", "hands_free_duplex"]),
@@ -547,6 +550,21 @@ def main():
 
     for domain, tmpl, v_dict, exp_agent, exp_action, target_count, cats in suites:
         out_path = BASE_DIR / f"{domain}_scaled.jsonl"
+        # Check if already generated
+        if out_path.exists() and out_path.stat().st_size > 15 * 1024 * 1024:
+            with open(out_path, "r", encoding="utf-8") as f_chk:
+                actual_count = sum(1 for _ in f_chk)
+            size_mb = round(out_path.stat().st_size / (1024 * 1024), 2)
+            total_samples += actual_count
+            all_manifest[domain] = {
+                "samples": actual_count,
+                "target_agent": exp_agent,
+                "file": str(out_path.name),
+                "size_mb": size_mb,
+            }
+            print(f"[*] Domain {domain.upper():<20}: Reusing already generated {actual_count:,} samples ({size_mb} MB)")
+            continue
+
         print(f"\n[+] Streaming {target_count:,} unique samples for domain: {domain.upper()} (Target: {exp_agent})...")
         actual_count = generate_partition_streaming(
             templates=tmpl,

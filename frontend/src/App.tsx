@@ -26,12 +26,8 @@ import { SmartClipboardDrawer } from "./components/ambient/SmartClipboardDrawer"
 
 import { DashboardView } from "./pages/DashboardView";
 import { TodayView } from "./pages/TodayView";
-import { TasksView } from "./pages/TasksView";
-import { ProjectsView } from "./pages/ProjectsView";
 import { MeetingsView } from "./pages/MeetingsView";
 import { EmailView } from "./pages/EmailView";
-import { ResearchView } from "./pages/ResearchView";
-import { AutomationBuilderView } from "./pages/AutomationBuilderView";
 import { MemoryView } from "./pages/MemoryView";
 import { ActivityView } from "./pages/ActivityView";
 import { SelfImprovementView } from "./pages/SelfImprovementView";
@@ -215,18 +211,10 @@ function MainApp() {
         );
       case "today":
         return <TodayView />;
-      case "tasks":
-        return <TasksView />;
-      case "projects":
-        return <ProjectsView />;
       case "meetings":
         return <MeetingsView />;
       case "email":
         return <EmailView />;
-      case "research":
-        return <ResearchView />;
-      case "automations":
-        return <AutomationBuilderView />;
       case "memory":
         return <MemoryView />;
       case "agents":

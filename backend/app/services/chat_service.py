@@ -13,6 +13,7 @@ from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.agents.web_search_agent import web_search_agent
 from app.ai.cache.semantic_cache import semantic_cache
+from app.ai.llm.model_manager import model_manager
 from app.ai.llm.prompt_manager import build_messages, get_mode_prompt, get_system_prompt
 from app.ai.memory.context_engine import context_engine
 from app.ai.memory.memory_manager import memory_manager
@@ -67,9 +68,9 @@ class ChatService:
             r"\b(what time is it|current date|today's date)\b",
         ]
         if any(re.search(pat, msg_clean) for pat in simple_patterns):
-            return "qwen2.5:1b"
+            return model_manager.get_mini_model()
 
-        return "qwen2.5:8b"
+        return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
 
     def _sanitize_response(self, text: str) -> str:
         if not text:

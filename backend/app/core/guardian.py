@@ -138,6 +138,23 @@ SAFETY_TRIGGERS = [
     "ncat -e",
 ]
 
+SAFETY_PATTERNS = [
+    # Destructive SQL & DB attacks
+    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column)\b",
+    # Filesystem & OS destruction
+    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item\s+-recurse|format\s+[a-z]:(?=\s|$)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq)\b",
+    # Privilege escalation, Persistence & Token tampering
+    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile))\b",
+    # Malicious payloads, exploits & exfiltration
+    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?)\b",
+    # Secret harvesting & Poisoning
+    r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
+    # Safety bypass, Defender tampering & jailbreaks
+    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux)|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+evil|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode)\b",
+]
+
+COMPILED_SAFETY_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SAFETY_PATTERNS]
+
 CONFLICT_TRIGGERS = [
     "during my scheduled",
     "during my work sprint",
@@ -360,10 +377,14 @@ class GuardianEngine:
         friction = compute_dynamic_friction_index(risk, fatigue, goal_conflict)
 
         # 1. Hard-boundary Catastrophic Safety Interception (Guaranteed 100% catch rate)
-        if context.get("is_destructive") or any(t in action_lower for t in SAFETY_TRIGGERS):
+        if (
+            context.get("is_destructive")
+            or any(t in action_lower for t in SAFETY_TRIGGERS)
+            or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
+        ):
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
-                reasoning="This action is destructive or irreversible.",
+                reasoning="This action is destructive, adversarial, or violates safety boundaries.",
                 requires_confirmation=True,
                 recommendation="Confirm explicitly before I proceed, or choose a safer alternative.",
                 friction_index=max(2.85, friction),

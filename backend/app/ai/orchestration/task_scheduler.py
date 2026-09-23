@@ -259,13 +259,6 @@ def start_scheduler():
         logger.info("CHRYSALIS Training Data Curation scheduled (daily)")
         logger.info("COPPER Predictive Pattern Analysis scheduled (daily 7:30 AM)")
 
-        # Initialize Workflow Engine and register persistent automations
-        try:
-            from app.ai.workflows.workflow_engine import workflow_engine
-
-            workflow_engine.initialize(_scheduler)
-        except Exception as wf_err:
-            logger.error(f"Failed to initialize WorkflowEngine on scheduler start: {wf_err}")
 
         try:
             from app.ai.ambient.context_watcher import context_watcher

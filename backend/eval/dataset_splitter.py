@@ -96,18 +96,27 @@ def main():
         },
     }
 
-    hybrid_files = list(HYBRID_DIR.glob("*_hybrid.json"))
+    hybrid_files = list(HYBRID_DIR.glob("*_hybrid.jsonl"))
+    if not hybrid_files:
+        hybrid_files = list(HYBRID_DIR.glob("*_hybrid.json"))
     if not hybrid_files:
         print("[!] No hybrid files found in datasets/hybrid. Run hybrid_synthesis.py first.")
         return
 
     for hf in hybrid_files:
-        domain = hf.name.replace("_hybrid.json", "")
+        domain = hf.name.replace("_hybrid.jsonl", "").replace("_hybrid.json", "")
         domain_partition_dir = PARTITIONS_DIR / domain
         domain_partition_dir.mkdir(parents=True, exist_ok=True)
 
+        items = []
         with open(hf, encoding="utf-8") as f:
-            items = json.load(f)
+            if hf.suffix == ".jsonl":
+                for line in f:
+                    line_s = line.strip()
+                    if line_s:
+                        items.append(json.loads(line_s))
+            else:
+                items = json.load(f)
 
         train, val, test = split_dataset(items, train_ratio=0.80, val_ratio=0.10, test_ratio=0.10)
         audit = verify_leakage(train, val, test)

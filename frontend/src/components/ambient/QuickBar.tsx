@@ -54,10 +54,10 @@ export function QuickBar() {
     setResponse(null);
     
     try {
-      if (query.startsWith("/task ")) {
-        const title = query.slice(6).trim();
-        await api.post("/api/v1/tasks", { title, status: "pending", priority: "medium" });
-        setResponse(`**Task created:** ${title}`);
+      if (query.startsWith("/task ") || query.startsWith("/event ")) {
+        const title = query.replace(/^\/(task|event)\s+/, "").trim();
+        await api.post("/api/v1/schedule/events", { title, time: "Today", category: "Focus", completed: false });
+        setResponse(`**Event scheduled:** ${title}`);
       } else if (query.startsWith("/remind ")) {
         const text = query.slice(8).trim();
         await api.post("/api/v1/reminders/parse", { text });

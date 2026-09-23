@@ -11,6 +11,11 @@ import sys
 import tempfile
 from pathlib import Path
 
+if sys.platform == "win32":
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 MODELS_DIR = ROOT_DIR / "ai-models"
 MANIFEST_PATH = MODELS_DIR / "models_manifest.json"
@@ -118,19 +123,25 @@ def register_models(force: bool = False):
 
         try:
             cmd = ["ollama", "create", tag, "-f", tmp_path]
-            proc = subprocess.run(
+            proc = subprocess.Popen(
                 cmd,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
                 encoding="utf-8",
                 errors="replace",
             )
+            for line in iter(proc.stdout.readline, ""):
+                line_str = line.strip().encode("ascii", "replace").decode("ascii")
+                if line_str:
+                    if any(k in line_str for k in ["success", "error", "failed", "100%"]):
+                        print(f"    {line_str}", flush=True)
+            proc.wait()
             if proc.returncode == 0:
                 print(f"    [OK] Successfully linked {tag}", flush=True)
                 success_count += 1
             else:
-                err_msg = proc.stderr.encode("ascii", "replace").decode("ascii").strip()
-                print(f"    [FAIL] Could not register {tag}: {err_msg}", flush=True)
+                print(f"    [FAIL] Could not register {tag} (exit code {proc.returncode})", flush=True)
                 failed_count += 1
         finally:
             if os.path.exists(tmp_path):

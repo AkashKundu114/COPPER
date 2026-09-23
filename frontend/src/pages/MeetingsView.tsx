@@ -129,8 +129,8 @@ export const MeetingsView: React.FC = () => {
       {/* Left panel: History & Controls */}
       <div className="w-1/3 border-r border-slate-800 flex flex-col">
         <div className="p-4 border-b border-slate-800">
-          <h2 className="text-sm font-display font-bold text-accent-400 mb-0.5 uppercase tracking-wider">Architecture & Standup Audio</h2>
-          <p className="text-[10px] text-zinc-400 mb-3 font-mono">100% offline Whisper transcription & RFC note synthesis</p>
+          <h2 className="text-sm font-display font-bold text-accent-400 mb-0.5 uppercase tracking-wider">Meetings & Transcripts</h2>
+          <p className="text-[10px] text-zinc-400 mb-3 font-mono">Voice recording, transcription & AI summaries</p>
           
           <div className="flex flex-col gap-2 mb-4">
             <input 

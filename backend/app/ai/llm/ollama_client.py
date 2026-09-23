@@ -37,6 +37,21 @@ class OllamaClient:
             logger.debug(f"Failed to query loaded models from Ollama: {e}")
             return []
 
+    async def get_available_models(self) -> list[str]:
+        """
+        Queries Ollama /api/tags to list all pulled models on the system.
+        """
+        try:
+            async with httpx.AsyncClient(timeout=3.0) as client:
+                res = await client.get(f"{self.base_url}/api/tags")
+                if res.status_code == 200:
+                    models = res.json().get("models", [])
+                    return [m.get("name", "") for m in models if m.get("name")]
+                return []
+        except Exception as e:
+            logger.debug(f"Failed to query available models from Ollama: {e}")
+            return []
+
     async def unload_all_models(self) -> str:
         """
         Force Ollama to unload all models from VRAM immediately.
@@ -147,6 +162,8 @@ class OllamaClient:
 
         if requested_model and isinstance(requested_model, str):
             clean_req = requested_model.strip().lower()
+            if clean_req in ["qwen2.5:1b", "qwen2.5-1b"]:
+                return "qwen2.5:1.5b"
             # Ignore random greetings or invalid non-model strings
             if clean_req not in ["hi", "hello", "hey", "test", "null", "none", ""]:
                 return requested_model
@@ -228,7 +245,12 @@ class OllamaClient:
                     return data.get("message", {}).get("content", "")
                 else:
                     logger.warning(f"Ollama non-200 ({res.status_code}): {res.text}")
-                    return f"Ollama model '{target_model}' is not available (status {res.status_code}). Make sure to run 'ollama pull {target_model}'."
+                    if res.status_code == 404:
+                        available = await self.get_available_models()
+                        if available:
+                            return f"Model '{target_model}' not found in Ollama. Available local models: {', '.join(available)}. Run `ollama pull {target_model}` to download it."
+                        return f"No models currently found in Ollama. Please run `ollama pull {target_model}` (or `ollama pull qwen2.5:1.5b`) in your terminal."
+                    return f"Ollama model '{target_model}' returned error {res.status_code}: {res.text}"
         except Exception as e:
             logger.warning(f"Ollama connection error: {e}")
             return f"Cannot reach the local Ollama LLM server at {self.base_url}. Please launch Ollama on your PC to enable active local reasoning."
@@ -302,7 +324,14 @@ class OllamaClient:
                         err_body = await resp.aread()
                         err_text = err_body.decode(errors="replace")
                         logger.warning(f"Ollama stream non-200 ({resp.status_code}): {err_text}")
-                        yield f"Ollama returned status {resp.status_code} for '{target_model}': {err_text}"
+                        if resp.status_code == 404:
+                            available = await self.get_available_models()
+                            if available:
+                                yield f"⚠️ Model '{target_model}' not found in Ollama.\nLocally installed models: {', '.join(available)}.\nRun `ollama pull {target_model}` to download it."
+                            else:
+                                yield f"⚠️ No models are currently downloaded in Ollama.\nPlease run `ollama pull {target_model}` (or `ollama pull qwen2.5:1.5b`) in your terminal to enable local reasoning."
+                        else:
+                            yield f"Ollama returned status {resp.status_code} for '{target_model}': {err_text}"
         except Exception as e:
             logger.warning(f"Ollama stream error: {e}")
             yield f"Cannot reach local Ollama server at {self.base_url}. Please start Ollama to chat with C.O.P.P.E.R."

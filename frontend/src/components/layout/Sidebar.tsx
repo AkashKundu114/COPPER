@@ -25,12 +25,8 @@ export type NavSection =
   | "companion"
   | "chat"
   | "today"
-  | "tasks"
-  | "projects"
   | "meetings"
   | "email"
-  | "research"
-  | "automations"
   | "memory"
   | "agents"
   | "activity"
@@ -66,39 +62,39 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
       {
         id: "chat",
-        label: "Pair-Programmer",
+        label: "Chat",
         icon: MessageSquare,
         testId: "conversation-nav",
-        ariaLabel: "Conversation",
+        ariaLabel: "AI Chat",
       },
-      { id: "companion", label: "Voice Companion", icon: Radio },
+      { id: "companion", label: "Voice", icon: Radio },
     ],
   },
   {
-    category: "OPERATIONS",
+    category: "PRODUCTIVITY",
     items: [
-      { id: "today", label: "Daily Standup", icon: Calendar },
-      { id: "meetings", label: "Meetings & Audio", icon: Users },
-      { id: "email", label: "Alerts & Feeds", icon: Mail },
+      { id: "today", label: "Today", icon: Calendar },
+      { id: "meetings", label: "Meetings", icon: Users },
+      { id: "email", label: "Alerts", icon: Mail },
       { id: "food", label: "Wellness", icon: UtensilsCrossed },
     ],
   },
   {
-    category: "TECHNICAL TELEMETRY",
+    category: "SYSTEM",
     items: [
-      { id: "memory", label: "Memory Graph", icon: Brain },
-      { id: "agents", label: "Agent Fleet", icon: Bot },
+      { id: "memory", label: "Memory", icon: Brain },
+      { id: "agents", label: "Agents", icon: Bot },
       { id: "benchmarks", label: "Benchmarks", icon: BarChart3 },
-      { id: "security", label: "Zero-Trust Security", icon: Shield },
+      { id: "security", label: "Security", icon: Shield },
       {
         id: "activity",
-        label: "Activity Log",
+        label: "Activity",
         icon: Activity,
         testId: "activity-nav",
-        ariaLabel: "Activity Stream",
+        ariaLabel: "Activity Log",
       },
-      { id: "insights", label: "System Insights", icon: TrendingUp },
-      { id: "self-improvement", label: "Self-Improvement", icon: Sparkles },
+      { id: "insights", label: "Insights", icon: TrendingUp },
+      { id: "self-improvement", label: "Optimization", icon: Sparkles },
       { id: "settings", label: "Settings", icon: Settings },
     ],
   },
