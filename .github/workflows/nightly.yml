@@ -32,7 +32,16 @@ jobs:
         run: pip install -r backend/requirements.txt
 
       - name: Run full test suite
-        run: python -m pytest tests/ -v --tb=short
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y xvfb
+            xvfb-run -a -s "-screen 0 1280x1024x24" \
+              python -m pytest tests/ -v --tb=short
+          else
+            python -m pytest tests/ -v --tb=short
+          fi
 
   frontend-cross-platform-build:
     name: Frontend & Desktop Build (${{ matrix.os }})

@@ -1,3 +1,4 @@
+import sys
 import tempfile
 from pathlib import Path
 
@@ -43,7 +44,13 @@ async def test_python_execute_sandbox():
 
 @pytest.mark.asyncio
 async def test_shell_execute():
-    cmd = "Write-Output 'PowerShell Hello'"
+    if sys.platform == "win32":
+        cmd = "Write-Output 'PowerShell Hello'"
+    elif sys.platform == "darwin":
+        cmd = "printf 'PowerShell Hello\\n'"
+    else:
+        cmd = "printf 'PowerShell Hello\\n'"
+
     res = await shell_execute(command=cmd, timeout=5)
     assert res["status"] == "success"
     assert "PowerShell Hello" in res["output"]

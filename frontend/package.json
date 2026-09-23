@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "COPPER - Cognitive Offline Personal Partner & Epistemic Reasoner",
   "author": "COPPER Team",
+  "homepage": "https://github.com/AkashKundu114/COPPER",
   "type": "module",
   "main": "electron-main.cjs",
   "scripts": {

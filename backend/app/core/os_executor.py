@@ -1,19 +1,26 @@
 import asyncio
+import os
 import shutil
 
 from app.core.logger import logger
 
 
+def _get_shell_command(command: str) -> list[str]:
+    if os.name == "nt":
+        powershell = shutil.which("pwsh") or shutil.which("powershell")
+        if powershell:
+            return [powershell, "-NoProfile", "-NonInteractive", "-Command", command]
+        return ["cmd.exe", "/d", "/c", command]
+
+    shell = shutil.which("bash") or shutil.which("sh") or "sh"
+    return [shell, "-c", command]
+
+
 async def execute_powershell(command: str, timeout: int = 30) -> str:
-    """Executes a PowerShell command directly on the host OS."""
+    """Executes a shell command directly on the host OS using the platform shell."""
     try:
-        shell_bin = "powershell" if shutil.which("powershell") else ("pwsh" if shutil.which("pwsh") else "powershell")
         process = await asyncio.create_subprocess_exec(
-            shell_bin,
-            "-NoProfile",
-            "-NonInteractive",
-            "-Command",
-            command,
+            *_get_shell_command(command),
             stdin=asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
