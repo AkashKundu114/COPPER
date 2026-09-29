@@ -5,11 +5,15 @@ import { api } from "../../lib/api";
 import { MarkdownContent } from "../chat/MarkdownContent";
 
 function getIpcRenderer() {
-  if (typeof window !== "undefined" && typeof (window as any).require === "function") {
-    try {
-      return (window as any).require("electron")?.ipcRenderer;
-    } catch {
-      return null;
+  if (typeof window !== "undefined") {
+    if ((window as any).copperAPI) return (window as any).copperAPI;
+    if ((window as any).ipcRenderer) return (window as any).ipcRenderer;
+    if (typeof (window as any).require === "function") {
+      try {
+        return (window as any).require("electron")?.ipcRenderer;
+      } catch {
+        return null;
+      }
     }
   }
   return null;

@@ -48,9 +48,9 @@ export const SettingsView: React.FC = () => {
     let active = true;
     const checkStatus = async () => {
       try {
-        if ((window as any).require) {
-          const { ipcRenderer } = (window as any).require("electron");
-          const running = await ipcRenderer.invoke("get-backend-status");
+        const ipc = (window as any).copperAPI || (window as any).ipcRenderer || ((window as any).require ? (window as any).require("electron")?.ipcRenderer : null);
+        if (ipc) {
+          const running = await ipc.invoke("get-backend-status");
           if (active) setBackendRunning(running);
         } else {
           const res = await fetch(`${API_BASE}/system/telemetry`);
@@ -68,14 +68,14 @@ export const SettingsView: React.FC = () => {
 
   const toggleBackend = async () => {
     try {
-      if ((window as any).require) {
-        const { ipcRenderer } = (window as any).require("electron");
+      const ipc = (window as any).copperAPI || (window as any).ipcRenderer || ((window as any).require ? (window as any).require("electron")?.ipcRenderer : null);
+      if (ipc) {
         if (backendRunning) {
-          await ipcRenderer.invoke("stop-backend");
+          await ipc.invoke("stop-backend");
           setBackendRunning(false);
           setToast("Python Backend Server stopped.");
         } else {
-          await ipcRenderer.invoke("start-backend");
+          await ipc.invoke("start-backend");
           setBackendRunning(true);
           setToast("Python Backend Server started.");
         }

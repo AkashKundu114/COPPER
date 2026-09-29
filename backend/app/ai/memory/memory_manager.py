@@ -50,8 +50,9 @@ def compute_unified_epistemic_decay(
     beta_plasticity = 0.40
     lam_eff = lam_base / (1.0 + beta_plasticity * math.log(1.0 + max(0, retrieval_count)))
 
-    # Importance-bounded resistance floor (high-importance memories never decay below floor)
-    c_floor = 0.05 + (0.50 * max(0.0, min(1.0, importance)))
+    # Importance-bounded resistance floor (high-importance memories never decay below floor,
+    # and floor is bounded by initial confidence so low-confidence hypotheses decay downwards)
+    c_floor = min(confidence, 0.05 + (0.50 * max(0.0, min(1.0, importance))))
     decayed = confidence * math.exp(-lam_eff * max(0.0, elapsed_days))
     return max(c_floor, min(0.99, decayed))
 

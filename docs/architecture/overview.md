@@ -24,6 +24,10 @@ C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating en
 
 ## 2. System Architecture Diagram
 
+> 💡 **Interactive Architecture Map Available:**  
+> Explore the full system interactively with animated trace flows, search, and keyboard navigation in **[`copper_architecture.html`](copper_architecture.html)** (powered by [Archify](https://github.com/tt-a1i/archify)).  
+> *Hotkeys: `?` guide · `/` search · `R` trace route · `P` play story · `F` presentation mode · `T` toggle theme · `E` export*.
+
 ```
                                   ┌───────────────────────────┐
                                   │  Electron Desktop App     │

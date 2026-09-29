@@ -175,3 +175,39 @@ async def test_task_graph_empty_plan_boundary():
     assert res2.success is True
     assert "No sub-tasks provided" in res2.final_response
     assert res2.tasks == []
+
+
+@pytest.mark.asyncio
+async def test_task_graph_wal_durability_records():
+    from app.ai.orchestration.wal_executor import RecordType, TaskWAL
+
+    executor = TaskGraphExecutor()
+    plan = PlanResult(
+        is_decomposition=True,
+        goal="Test WAL persistence",
+        tasks=[
+            SubTask(id="T1", agent="AXIS", title="Step 1", instruction="Compute A", depends_on=[]),
+        ],
+        synthesis={"agent": "CHAT", "instruction": "Synthesize {T1.output}"},
+    )
+
+    with (
+        patch("app.ai.agents.coding_agent.coding_agent.run", new_callable=AsyncMock) as mock_axis,
+        patch("app.ai.llm.ollama_client.ollama_client.chat", new_callable=AsyncMock) as mock_chat,
+    ):
+        mock_axis.return_value = "Result A"
+        mock_chat.return_value = "Final Synthesis"
+
+        res = await executor.execute_plan(plan)
+        assert res.success is True
+
+        # Verify WAL records on disk
+        wal = TaskWAL(res.dag_id)
+        records = wal.read_records()
+        record_types = [r.record_type for r in records]
+
+        assert RecordType.DAG_START in record_types
+        assert RecordType.TASK_INTENT in record_types
+        assert RecordType.TASK_COMMIT in record_types
+        assert RecordType.DAG_COMMIT in record_types
+

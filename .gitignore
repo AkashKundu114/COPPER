@@ -37,6 +37,7 @@ data/memory/
 data/reminders/
 data/screenshots/
 data/vector/
+data/wal/
 data/user_profile.json
 frontend/public/generated/*.png
 !frontend/public/generated/.gitkeep
@@ -190,3 +191,8 @@ research/
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md
 PRIVACY_POLICY.md
+
+# ── Agent Skills & Local Generation Tooling ───────────────────────────────────
+.agents/
+.archify/
+

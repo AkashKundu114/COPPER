@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "C.O.P.P.E.R. System Architecture",
+    "subtitle": "Centralized Omnifunctional Personal Productivity and Execution Routine — 100% Offline Local AI OS",
+    "output": "copper_architecture.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "repository": {
+      "url": "https://github.com/AkashKundu114/COPPER",
+      "provider": "github",
+      "revision": "d8742fe61a5d3ea71ac00a2f352298b4010d5333"
+    }
+  },
+  "components": [
+    {
+      "id": "desktop",
+      "type": "frontend",
+      "label": "Electron Desktop Shell",
+      "sublabel": "IPC Bridge :preload.cjs",
+      "tag": "contextIsolation: true",
+      "sources": [
+        { "path": "frontend/electron-main.cjs", "line": 50, "label": "createWindow" }
+      ],
+      "pos": [40, 140],
+      "size": [160, 64]
+    },
+    {
+      "id": "react_ui",
+      "type": "frontend",
+      "label": "React 19 Client UI",
+      "sublabel": "Tailwind + ErrorBoundary",
+      "tag": "Component Isolation",
+      "sources": [
+        { "path": "frontend/src/main.tsx", "line": 1, "label": "Root Entrypoint" }
+      ],
+      "pos": [320, 140],
+      "size": [160, 64]
+    },
+    {
+      "id": "api_gateway",
+      "type": "backend",
+      "label": "FastAPI Gateway",
+      "sublabel": "SSE / WS / HTTP :8000",
+      "tag": "asyncio.to_thread",
+      "sources": [
+        { "path": "backend/app/main.py", "line": 1, "label": "App Lifespan" }
+      ],
+      "pos": [600, 140],
+      "size": [160, 64]
+    },
+    {
+      "id": "firewall",
+      "type": "security",
+      "label": "Zero-Trust Firewall",
+      "sublabel": "PII & Secret Sanitizer",
+      "tag": "Zero Cloud Egress",
+      "sources": [
+        { "path": "backend/app/core/data_firewall.py", "line": 1, "label": "Data Firewall" }
+      ],
+      "pos": [880, 140],
+      "size": [160, 64]
+    },
+    {
+      "id": "sandbox",
+      "type": "security",
+      "label": "FORGE OS Sandbox",
+      "sublabel": "Bounded Execution Guard",
+      "tag": "Subprocess Timeout",
+      "sources": [
+        { "path": "backend/app/core/os_executor.py", "line": 1, "label": "OS Executor" }
+      ],
+      "pos": [1160, 140],
+      "size": [160, 64]
+    },
+    {
+      "id": "router",
+      "type": "backend",
+      "label": "TFP Cascade Router",
+      "sublabel": "Topological Router (<0.1ms)",
+      "tag": "~9,856 QPS",
+      "sources": [
+        { "path": "backend/app/ai/orchestration/agent_router.py", "line": 1, "label": "Agent Router" }
+      ],
+      "pos": [600, 290],
+      "size": [160, 64]
+    },
+    {
+      "id": "guardian",
+      "type": "security",
+      "label": "Guardian Safety",
+      "sublabel": "4-Tier Disagreement Engine",
+      "tag": "100% Intercept",
+      "sources": [
+        { "path": "backend/app/core/guardian.py", "line": 1, "label": "Guardian Engine" }
+      ],
+      "pos": [880, 290],
+      "size": [160, 64]
+    },
+    {
+      "id": "task_graph",
+      "type": "backend",
+      "label": "NEXUS DAG Engine",
+      "sublabel": "TaskGraph & ContextBus",
+      "tag": "Multi-Agent DAG",
+      "sources": [
+        { "path": "backend/app/ai/orchestration/task_graph.py", "line": 140, "label": "execute_plan" }
+      ],
+      "pos": [1160, 290],
+      "size": [160, 64]
+    },
+    {
+      "id": "vector_db",
+      "type": "database",
+      "label": "Vector & State DB",
+      "sublabel": "ChromaDB + SQLite/Postgres",
+      "tag": "Local Disk Persistence",
+      "sources": [
+        { "path": "backend/app/database/postgres.py", "line": 1, "label": "Database Session" }
+      ],
+      "pos": [320, 440],
+      "size": [160, 64]
+    },
+    {
+      "id": "memory",
+      "type": "database",
+      "label": "Epistemic Memory",
+      "sublabel": "Belief Revision (c_floor <= c0)",
+      "tag": "Exponential Decay",
+      "sources": [
+        { "path": "backend/app/ai/memory/memory_manager.py", "line": 320, "label": "Memory Decay" }
+      ],
+      "pos": [600, 440],
+      "size": [160, 64]
+    },
+    {
+      "id": "wal",
+      "type": "database",
+      "label": "TaskWAL & ARIES",
+      "sublabel": "Crash-Consistent Log",
+      "tag": "CRC32 Checksums",
+      "sources": [
+        { "path": "backend/app/ai/orchestration/wal_executor.py", "line": 1, "label": "WAL Recovery" }
+      ],
+      "pos": [880, 440],
+      "size": [160, 64]
+    },
+    {
+      "id": "vram_pager",
+      "type": "cloud",
+      "label": "14B Sovereign Core",
+      "sublabel": "RTX 5060 (8GB VRAM Pager)",
+      "tag": "Dynamic Pager",
+      "sources": [
+        { "path": "backend/app/ai/llm/vram_pager.py", "line": 1, "label": "VRAM Pager" }
+      ],
+      "pos": [1160, 440],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Desktop Client Tier (Electron 30 + React 19)",
+      "wraps": ["desktop", "react_ui"]
+    },
+    {
+      "kind": "region",
+      "label": "FastAPI Core & Agent Orchestration (Localhost Only, Zero Egress)",
+      "wraps": ["api_gateway", "router", "guardian", "task_graph", "wal", "memory", "firewall", "sandbox"]
+    },
+    {
+      "kind": "region",
+      "label": "Local Hardware & Memory Tier (RTX 5060 8GB + Local Disk)",
+      "wraps": ["vram_pager", "vector_db"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Zero-Trust Safety Perimeter",
+      "wraps": ["firewall", "guardian", "sandbox"]
+    }
+  ],
+  "connections": [
+    { "id": "ui-to-shell", "from": "react_ui", "to": "desktop", "label": "IPC Bridge", "variant": "security" },
+    { "id": "ui-to-gateway", "from": "react_ui", "to": "api_gateway", "label": "HTTP/WS :8000", "variant": "emphasis" },
+    { "id": "gateway-to-firewall", "from": "api_gateway", "to": "firewall", "label": "sanitizes prompt", "variant": "security" },
+    { "id": "gateway-to-router", "from": "api_gateway", "to": "router", "label": "route prompt", "fromSide": "bottom", "toSide": "top" },
+    { "id": "router-to-guardian", "from": "router", "to": "guardian", "label": "safety evaluate", "variant": "emphasis" },
+    { "id": "guardian-to-dag", "from": "guardian", "to": "task_graph", "label": "dispatch DAG" },
+    { "id": "dag-to-sandbox", "from": "task_graph", "to": "sandbox", "label": "isolated run", "fromSide": "top", "toSide": "bottom" },
+    { "id": "dag-to-wal", "from": "task_graph", "to": "wal", "label": "write-ahead log", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "dag-to-models", "from": "task_graph", "to": "vram_pager", "label": "14B inference", "fromSide": "bottom", "toSide": "top" },
+    { "id": "router-to-memory", "from": "router", "to": "memory", "label": "belief context", "fromSide": "bottom", "toSide": "top" },
+    { "id": "memory-to-vectordb", "from": "memory", "to": "vector_db", "label": "vector embeddings", "fromSide": "left", "toSide": "right" },
+    { "id": "gateway-to-db", "from": "api_gateway", "to": "vector_db", "label": "asyncio.to_thread", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Desktop Shell & Client Security",
+      "items": [
+        "Electron hardened with contextIsolation: true and nodeIntegration: false",
+        "Preload bridge restricts IPC calls strictly to an immutable whitelist",
+        "React 19 ErrorBoundary isolates component faults without desktop white-screen"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "High-Throughput Intelligence & Concurrency",
+      "items": [
+        "TFP-Router achieves sub-millisecond dispatch (<0.1ms / ~9,856 QPS)",
+        "FastAPI event loop starvation prevented via asyncio.to_thread ORM offloading",
+        "NEXUS DAG executes parallel branch tasks concurrently with asyncio.gather"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Zero-Trust Safety & ARIES Durability",
+      "items": [
+        "Zero-Trust Data Firewall redacts credentials & PII before prompt ingestion",
+        "Guardian 4-tier disagreement hierarchy intercepts destructive OS operations",
+        "ARIES-inspired Write-Ahead Log (WAL) with CRC32 guarantees 100% crash consistency"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Hardware-Bounded Local Inference",
+      "items": [
+        "Dynamic VRAM Pager multiplexes 14B models & SD-Turbo within 8GB GPU memory",
+        "Epistemic memory decay strictly bounded (c_floor <= c0) preventing confidence bugs",
+        "100% offline local execution with zero cloud egress"
+      ]
+    }
+  ]
+}

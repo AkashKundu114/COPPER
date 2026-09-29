@@ -63,8 +63,10 @@ function createWindow() {
       height: 56,
     },
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, "preload.cjs"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: true,
       webviewTag: false,
       spellcheck: false,
     },
@@ -119,8 +121,12 @@ function createQuickBar() {
     skipTaskbar: true,
     show: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, "preload.cjs"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: true,
+      webviewTag: false,
+      spellcheck: false,
     },
   });
 
@@ -264,9 +270,11 @@ async function stopBackend() {
 
   if (process.platform === "win32") {
     try {
-      const { execSync } = require("child_process");
-      const cmd = `powershell -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }"`;
-      execSync(cmd, { stdio: "ignore" });
+      const { exec } = require("child_process");
+      const cmd = `powershell -NoProfile -NonInteractive -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }"`;
+      await new Promise((resolve) => {
+        exec(cmd, { windowsHide: true }, () => resolve());
+      });
     } catch {}
   }
   return true;

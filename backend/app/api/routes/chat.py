@@ -36,6 +36,27 @@ class ChatResponse(BaseModel):
     trace_id: str | None = None
 
 
+def _save_history(db: Session, session_id: str, user_msg: str, assistant_msg: str) -> None:
+    for sender, message in [("user", user_msg), ("assistant", assistant_msg)]:
+        db.add(ChatHistory(session_id=session_id, sender=sender, message=message))
+    db.commit()
+
+
+def _fetch_history(db: Session, session_id: str) -> list[ChatHistory]:
+    return (
+        db.query(ChatHistory)
+        .filter(ChatHistory.session_id == session_id)
+        .order_by(ChatHistory.created_at)
+        .limit(100)
+        .all()
+    )
+
+
+def _delete_history(db: Session, session_id: str) -> None:
+    db.query(ChatHistory).filter(ChatHistory.session_id == session_id).delete()
+    db.commit()
+
+
 @router.post("/message", response_model=ChatResponse)
 async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
     valid, err = validate_message(req.message)
@@ -56,9 +77,7 @@ async def send_message(req: ChatRequest, db: Session = Depends(get_db)):
         result = await chat_service.process_message(
             session_id, req.message, req.provider, db=db, trace_id=trace_id, parent_span=root_span
         )
-        for sender, message in [("user", req.message), ("assistant", result["response"])]:
-            db.add(ChatHistory(session_id=session_id, sender=sender, message=message))
-        db.commit()
+        await asyncio.to_thread(_save_history, db, session_id, req.message, result["response"])
         return ChatResponse(
             response=result["response"],
             agent_type=str(result["agent_type"]),
@@ -93,13 +112,7 @@ async def stream_message(message: str, session_id: str | None = None, provider: 
 
 @router.get("/history/{session_id}")
 async def get_history(session_id: str, db: Session = Depends(get_db)):
-    records = (
-        db.query(ChatHistory)
-        .filter(ChatHistory.session_id == session_id)
-        .order_by(ChatHistory.created_at)
-        .limit(100)
-        .all()
-    )
+    records = await asyncio.to_thread(_fetch_history, db, session_id)
     if records:
         return [r.to_dict() for r in records]
 
@@ -125,8 +138,7 @@ async def get_history(session_id: str, db: Session = Depends(get_db)):
 @router.delete("/history/{session_id}")
 async def clear_history(session_id: str, db: Session = Depends(get_db)):
     await chat_service.clear_history(session_id)
-    db.query(ChatHistory).filter(ChatHistory.session_id == session_id).delete()
-    db.commit()
+    await asyncio.to_thread(_delete_history, db, session_id)
     return {"message": "History cleared"}
 
 

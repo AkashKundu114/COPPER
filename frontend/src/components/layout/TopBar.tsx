@@ -64,7 +64,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   useEffect(() => {
     const isRunningInElectron =
       typeof window !== "undefined" &&
-      (Boolean((window as any).ipcRenderer) ||
+      (Boolean((window as any).copperAPI) ||
+        Boolean((window as any).ipcRenderer) ||
         Boolean((window as any).require) ||
         (typeof navigator !== "undefined" &&
           navigator.userAgent.toLowerCase().includes("electron")));

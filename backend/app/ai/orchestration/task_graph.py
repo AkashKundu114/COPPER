@@ -284,6 +284,17 @@ class TaskGraphExecutor:
                     sub_task.output = res
                     sub_task.execution_time_ms = dur
 
+                    # Append TASK_COMMIT to WAL for crash-consistent durability
+                    wal.append_record(
+                        RecordType.TASK_COMMIT,
+                        {
+                            "task_id": sub_task.id,
+                            "agent": sub_task.agent,
+                            "output": res,
+                            "execution_time_ms": dur,
+                        },
+                    )
+
                     outputs_by_id[sub_task.id] = res
                     if sub_task.output_key:
                         outputs_by_key[sub_task.output_key] = res
@@ -318,10 +329,22 @@ class TaskGraphExecutor:
 
                 except Exception as e:
                     logger.error(f"Error executing sub-task {sub_task.id} ({sub_task.agent}): {e}")
+                    dur = round((time.perf_counter() - t_start) * 1000.0, 2)
                     sub_task.status = "failed"
                     sub_task.error = str(e)
-                    sub_task.execution_time_ms = round((time.perf_counter() - t_start) * 1000.0, 2)
+                    sub_task.execution_time_ms = dur
                     failed_task_ids.add(sub_task.id)
+
+                    # Append TASK_FAIL to WAL for crash-consistent durability
+                    wal.append_record(
+                        RecordType.TASK_FAIL,
+                        {
+                            "task_id": sub_task.id,
+                            "agent": sub_task.agent,
+                            "error": str(e),
+                            "execution_time_ms": dur,
+                        },
+                    )
 
                     await context_bus.send_message(
                         dag_id=dag_id,

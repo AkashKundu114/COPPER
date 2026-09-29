@@ -18,18 +18,22 @@ def _get_shell_command(command: str) -> list[str]:
 
 async def execute_powershell(command: str, timeout: int = 30) -> str:
     """Executes a shell command directly on the host OS using the platform shell."""
+    if not command or not command.strip():
+        return "[Execution Error] Command cannot be empty."
+
+    safe_timeout = max(1, timeout)
     try:
         process = await asyncio.create_subprocess_exec(
-            *_get_shell_command(command),
+            *_get_shell_command(command.strip()),
             stdin=asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
         try:
-            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
+            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=safe_timeout)
         except TimeoutError:
             process.kill()
-            return "[Execution Timeout Error] Command exceeded 30 seconds."
+            return f"[Execution Timeout Error] Command exceeded {safe_timeout} seconds."
 
         out = stdout.decode("utf-8", errors="replace").strip()
         err = stderr.decode("utf-8", errors="replace").strip()

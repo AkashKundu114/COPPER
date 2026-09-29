@@ -345,7 +345,11 @@ class ChatService:
                     total_tokens = prompt_tokens + completion_tokens
                     total_time_sec = round(t_end - t_start, 2)
                     total_time_ms = round((t_end - t_start) * 1000, 1)
-                    ttft_ms = round(total_time_ms * 0.2, 1)
+                    prompt_eval_nanos = ollama_metrics.get("prompt_eval_duration")
+                    if prompt_eval_nanos:
+                        ttft_ms = round(prompt_eval_nanos / 1e6, 1)
+                    else:
+                        ttft_ms = round(min(total_time_ms, total_time_ms * 0.2), 1)
                     tokens_per_sec = round(completion_tokens / max(0.001, total_time_sec), 1)
                     model_selected = ollama_metrics.get("model") or target_model
 
