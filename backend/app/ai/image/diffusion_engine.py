@@ -45,12 +45,12 @@ class LocalDiffusionEngine:
         return self.model_path.exists() and self.model_path.is_file()
 
     def is_torch_available(self) -> bool:
-        """Check if PyTorch is installed."""
+        """Check if PyTorch is installed and loadable."""
         try:
             import torch  # noqa: F401
 
             return True
-        except ImportError:
+        except (ImportError, OSError):
             return False
 
     def is_cuda_available(self) -> bool:
@@ -59,7 +59,7 @@ class LocalDiffusionEngine:
             import torch
 
             return torch.cuda.is_available()
-        except ImportError:
+        except (ImportError, OSError):
             return False
 
     def resolve_device(self) -> str:

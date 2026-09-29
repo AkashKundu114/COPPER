@@ -1,8 +1,7 @@
-import os
-import sys
 import json
-import glob
+import os
 from pathlib import Path
+
 
 def audit_workspace():
     print("=" * 80)
@@ -34,12 +33,12 @@ def audit_workspace():
     # 2. Inspect models_manifest.json
     manifest_path = models_dir / "models_manifest.json"
     if manifest_path.exists():
-        with open(manifest_path, "r", encoding="utf-8") as f:
+        with open(manifest_path, encoding="utf-8") as f:
             manifest = json.load(f)
         print("\n--- 2. MANIFEST SPECIFICATIONS (models_manifest.json) ---")
         print(f"  Meta Agent Full Title: {manifest.get('sovereign_meta_agent', {}).get('full_title')}")
         print(f"  Target Idle VRAM:      {manifest.get('vram_policy', {}).get('target_idle_vram_gb')} GB")
-        
+
         print("\n  Declared Models in Manifest:")
         declared_total_gb = 0
         all_models = []
@@ -78,7 +77,7 @@ def audit_workspace():
         print("  Routing Datasets:")
         master_routing = routing_dir / "master_routing_dataset.json"
         if master_routing.exists():
-            with open(master_routing, "r", encoding="utf-8") as f:
+            with open(master_routing, encoding="utf-8") as f:
                 data = json.load(f)
             print(f"    master_routing_dataset.json: {len(data)} total samples")
             # Count per category
@@ -88,10 +87,10 @@ def audit_workspace():
                 cats[c] = cats.get(c, 0) + 1
             for c, cnt in sorted(cats.items()):
                 print(f"      - {c:<15}: {cnt} samples")
-        
+
         for p in routing_dir.glob("*.json"):
             if p.name != "master_routing_dataset.json":
-                with open(p, "r", encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     d = json.load(f)
                 print(f"    {p.name:<32}: {len(d):5d} items")
 
@@ -100,7 +99,7 @@ def audit_workspace():
         print("\n  Guardian Datasets:")
         master_guardian = guardian_dir / "master_guardian_dataset.json"
         if master_guardian.exists():
-            with open(master_guardian, "r", encoding="utf-8") as f:
+            with open(master_guardian, encoding="utf-8") as f:
                 gdata = json.load(f)
             print(f"    master_guardian_dataset.json: {len(gdata)} total samples")
             types = {}
@@ -112,7 +111,7 @@ def audit_workspace():
 
         for p in guardian_dir.glob("*.json"):
             if p.name != "master_guardian_dataset.json":
-                with open(p, "r", encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     d = json.load(f)
                 print(f"    {p.name:<32}: {len(d):5d} items")
 
@@ -120,7 +119,7 @@ def audit_workspace():
     print("\n--- 4. STORED BENCHMARK EVALUATION OUTPUTS ---")
     bm_metrics_path = Path("backend/eval/benchmark_metrics.json")
     if bm_metrics_path.exists():
-        with open(bm_metrics_path, "r", encoding="utf-8") as f:
+        with open(bm_metrics_path, encoding="utf-8") as f:
             bm = json.load(f)
         routing = bm.get("routing", bm)
         guardian = bm.get("guardian", bm)
@@ -140,7 +139,7 @@ def audit_workspace():
 
     belief_metrics_path = Path("backend/eval/benchmark_belief_metrics.json")
     if belief_metrics_path.exists():
-        with open(belief_metrics_path, "r", encoding="utf-8") as f:
+        with open(belief_metrics_path, encoding="utf-8") as f:
             b_bm = json.load(f)
         print(f"  Belief UMF-EDR Acc: {b_bm.get('umf_edr_accuracy')}%")
         print(f"  Belief LWW Acc:     {b_bm.get('lww_accuracy')}%")

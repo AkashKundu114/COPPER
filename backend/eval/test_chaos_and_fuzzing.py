@@ -1,11 +1,12 @@
 import sys
 from pathlib import Path
+
 import pytest
 
 BACKEND_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from eval.chaos_harness import ChaosHarness
+from eval.chaos_harness import ChaosHarness  # noqa: E402
 
 
 def test_adversarial_fuzzer_generation():

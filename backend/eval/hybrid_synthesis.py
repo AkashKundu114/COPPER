@@ -5,9 +5,7 @@ performs canonical deduplication via SHA-256 fingerprinting,
 and produces unified hybrid evaluation corpuses for every domain.
 """
 
-import hashlib
 import json
-import random
 import sys
 from pathlib import Path
 
@@ -47,8 +45,7 @@ def stream_file_items(path: Path):
         with open(path, encoding="utf-8") as f:
             try:
                 items = json.load(f)
-                for it in items:
-                    yield it
+                yield from items
             except Exception:
                 pass
 

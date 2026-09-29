@@ -1,10 +1,7 @@
-import pytest
 from fastapi.testclient import TestClient
 
 from app.core.telemetry import (
-    LiveSpanCollector,
     format_grafana_tempo_url,
-    get_recent_traces,
     get_trace_by_id,
     init_telemetry,
     live_span_collector,
@@ -62,7 +59,7 @@ def test_request_lifecycle_tracing():
         g_span.set_attribute("guardian.reasoning", "Safe code generation request")
 
     # 3. Agent Span
-    with trace_span("copper.agent", attributes={"agent.type": "coding", "agent.name": "VULCAN"}) as a_span:
+    with trace_span("copper.agent", attributes={"agent.type": "coding", "agent.name": "VULCAN"}):
         # 4. LLM Span
         with trace_span("copper.llm", attributes={"llm.model": "qwen2.5-coder-abliterated:14b"}) as l_span:
             l_span.set_attribute("llm.prompt_tokens", 45)

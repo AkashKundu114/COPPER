@@ -291,7 +291,7 @@ describe("Accessibility (a11y) Audit Suite", () => {
       expect(activeBtn).toHaveAttribute("aria-current", "page");
     });
 
-    it("renders TopBar with role='banner' and command palette button", () => {
+    it("renders TopBar with role='banner' and command palette button", async () => {
       render(
         <TopBar
           sectionTitle="dashboard"
@@ -302,11 +302,10 @@ describe("Accessibility (a11y) Audit Suite", () => {
         />
       );
 
-      const banner = screen.getByRole("banner", { name: /top bar controls and status/i });
-      expect(banner).toBeInTheDocument();
-
-      const commandBtn = screen.getByRole("button", { name: /open command palette/i });
-      expect(commandBtn).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole("banner", { name: /top bar controls and status/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /open command palette/i })).toBeInTheDocument();
+      });
     });
   });
 });

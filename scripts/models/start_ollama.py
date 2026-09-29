@@ -1,6 +1,6 @@
 import os
 import subprocess
-import sys
+
 
 def main():
     env = os.environ.copy()

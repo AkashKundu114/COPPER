@@ -80,9 +80,15 @@ def load_applied_patches_from_db():
         pass
 
 
-def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_context: str = "") -> str:
+def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_context: str = "", model_name: str = "") -> str:
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
     self_snippet = self_context if self_context else "No self-model entries yet."
+    model_snippet = (
+        f"\nActive Local LLM Engine: {model_name} (running 100% offline via local Ollama).\n"
+        f"When asked which model you are running or using, state clearly that you are running on {model_name}."
+        if model_name
+        else ""
+    )
 
     formatted_base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
 
@@ -92,13 +98,19 @@ def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_cont
     if patches:
         patch_snippet = "\n\nCRUCIBLE OPTIMIZED DIRECTIVES:\n" + "\n".join(f"- {p}" for p in patches)
 
-    return f"{formatted_base}\nAgent Role: {agent_type.value.upper()}{patch_snippet}{ctx_snippet}"
+    return f"{formatted_base}\nAgent Role: {agent_type.value.upper()}{model_snippet}{patch_snippet}{ctx_snippet}"
 
 
-def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "") -> str:
+def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "", model_name: str = "") -> str:
     self_snippet = self_context if self_context else "No self-model entries yet."
     base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
     ctx_snippet = f"\nUser Epistemic Context:\n{memory_context}" if memory_context else ""
+    model_snippet = (
+        f"\nActive Local LLM Engine: {model_name} (running 100% offline via local Ollama).\n"
+        f"When asked which model you are running or using, state clearly that you are running on {model_name}."
+        if model_name
+        else ""
+    )
 
     if mode == "reasoning":
         mode_instructions = (
@@ -139,7 +151,7 @@ def get_mode_prompt(mode: str, memory_context: str = "", self_context: str = "")
     else:
         mode_instructions = ""
 
-    return f"{base}{mode_instructions}{ctx_snippet}"
+    return f"{base}{mode_instructions}{model_snippet}{ctx_snippet}"
 
 
 def is_corrupted_content(content: str) -> bool:

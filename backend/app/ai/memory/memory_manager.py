@@ -137,7 +137,16 @@ class MemoryManager:
             return
         if any(
             err in assistant_response
-            for err in ["Ollama returned status", "Cannot reach local Ollama", "Error connecting to Ollama"]
+            for err in [
+                "Ollama returned status",
+                "Cannot reach local Ollama",
+                "Cannot reach the local Ollama",
+                "Error connecting to Ollama",
+                "No models currently found",
+                "No models are currently downloaded",
+                "Ollama model '",
+                "pre-stored version based on my last update",
+            ]
         ):
             return
 
@@ -181,6 +190,19 @@ class MemoryManager:
             if dist < 1.5:
                 doc = r.get("document", "")
                 if is_corrupted_content(doc):
+                    continue
+                if any(
+                    err in doc
+                    for err in [
+                        "Cannot reach local Ollama",
+                        "Cannot reach the local Ollama",
+                        "No models currently found",
+                        "No models are currently downloaded",
+                        "Ollama model '",
+                        "Ollama returned status",
+                        "pre-stored version based on my last update",
+                    ]
+                ):
                     continue
                 meta = r.get("metadata", {})
                 mem_type = meta.get("type", "observation")

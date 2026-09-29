@@ -1,11 +1,12 @@
-import pytest
 from unittest.mock import AsyncMock, patch
+
+import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
 from app.ai.branching.branch_manager import BranchManager
 from app.ai.branching.diff_analyzer import DiffAnalyzer
 from app.ai.memory.persistent_memory import persistent_memory
+from app.main import app
 
 client = TestClient(app)
 

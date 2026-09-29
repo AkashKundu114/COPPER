@@ -4,7 +4,7 @@ Verifies priority dispatch order, concurrency throttling, backpressure shedding,
 """
 
 import asyncio
-import time
+
 import pytest
 
 from app.core.inference_queue import InferenceQueueManager, PriorityTier
@@ -81,8 +81,8 @@ async def test_inference_queue_backpressure_shedding():
         return 1
 
     # Occupy queue to capacity
-    f1 = asyncio.create_task(iq.submit("t1", dummy, priority=PriorityTier.NORMAL))
-    f2 = asyncio.create_task(iq.submit("t2", dummy, priority=PriorityTier.NORMAL))
+    _task_one = asyncio.create_task(iq.submit("t1", dummy, priority=PriorityTier.NORMAL))
+    _task_two = asyncio.create_task(iq.submit("t2", dummy, priority=PriorityTier.NORMAL))
     await asyncio.sleep(0.01)
 
     # 3rd submission with BACKGROUND priority should be rejected by backpressure

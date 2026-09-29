@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from PIL import Image
 
 from app.ai.image.diffusion_engine import LocalDiffusionEngine

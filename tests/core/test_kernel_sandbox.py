@@ -4,7 +4,6 @@ Verifies process execution, timeout enforcement, and memory quota isolation.
 """
 
 import sys
-import pytest
 
 from app.core.kernel_sandbox import KernelSandboxRunner, WindowsKernelJob
 

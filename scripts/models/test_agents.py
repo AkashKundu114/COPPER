@@ -12,11 +12,7 @@ Usage:
 """
 
 import argparse
-import asyncio
-import json
-import os
 import sys
-import time
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -231,7 +227,7 @@ def test_agent_model(key: str, conf: dict) -> None:
     model_path = AI_MODELS_DIR / conf["model_file"]
     if not model_path.exists():
         print(f"    [!] Model file missing: {model_path}")
-        print(f"    [!] Status: PENDING DOWNLOAD (Run `python scripts/models/download_v3_models.py` first)")
+        print("    [!] Status: PENDING DOWNLOAD (Run `python scripts/models/download_v3_models.py` first)")
         return
 
     actual_size_gb = round(model_path.stat().st_size / (1024**3), 2)
@@ -284,7 +280,7 @@ def test_agent_model(key: str, conf: dict) -> None:
     except Exception as e:
         print(f"    [!] Ollama query exception: {e}", flush=True)
 
-    print(f"    [*] Model verified on disk and ready for inference pipeline.")
+    print("    [*] Model verified on disk and ready for inference pipeline.")
 
 
 def main():

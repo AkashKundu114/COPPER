@@ -12,10 +12,10 @@ Usage:
 """
 
 import argparse
-import os
 import shutil
 import sys
 from pathlib import Path
+
 from huggingface_hub import hf_hub_download
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -143,7 +143,7 @@ def download_single_model(key: str, conf: dict) -> bool:
         actual_gb = round(target_path.stat().st_size / (1024**3), 2)
         print(f"[+] Already downloaded: {target_path} ({actual_gb} GB). Skipping download.")
     else:
-        print(f"[>] Streaming download to cache...")
+        print("[>] Streaming download to cache...")
         try:
             downloaded_file = hf_hub_download(
                 repo_id=conf["repo"],

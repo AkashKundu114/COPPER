@@ -83,3 +83,33 @@ if (!navigator.clipboard) {
     configurable: true,
   });
 }
+
+// Mock systemAPI and cognitiveAPI to prevent dangling network calls in TopBar & ambient components
+vi.mock("../services/api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../services/api")>();
+  return {
+    ...actual,
+    systemAPI: {
+      ...actual.systemAPI,
+      getCockpitStatus: vi.fn().mockResolvedValue({
+        data: {
+          git: { branch: "main", repo: "COPPER" },
+          status: "healthy",
+        },
+      }),
+    },
+    cognitiveAPI: {
+      ...actual.cognitiveAPI,
+      getState: vi.fn().mockResolvedValue({
+        data: {
+          state: "normal_flow",
+          confidence: 0.9,
+          window_switch_rate: 1,
+          avg_session_duration: 3600,
+          current_focus_streak: 45,
+          recommendations: [],
+        },
+      }),
+    },
+  };
+});

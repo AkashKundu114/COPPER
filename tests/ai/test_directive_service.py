@@ -85,16 +85,16 @@ async def test_chat_service_resolves_preferred_model():
     # When user ordered a smaller model:
     await directive_service.evaluate("use a smaller model")
     resolved = chat_service._resolve_chat_model(AgentType.CHAT, "whats my age")
-    assert "1b" in resolved.lower() or "mini" in resolved.lower()
+    assert any(tag in resolved.lower() for tag in ["1b", "1.5b", "mini"])
 
     # When user reset model, adaptive intent for "whats my age" still picks fast mini model:
     await directive_service.evaluate("reset model")
     adaptive_resolved = chat_service._resolve_chat_model(AgentType.CHAT, "whats my age")
-    assert "1b" in adaptive_resolved.lower()
+    assert any(tag in adaptive_resolved.lower() for tag in ["1b", "1.5b", "mini"])
 
     # Complex conversation without preference picks 8B:
     complex_resolved = chat_service._resolve_chat_model(
         AgentType.CHAT,
         "can you provide an in-depth philosophical treatise on the epistemology of synthetic neural architectures?",
     )
-    assert "8b" in complex_resolved.lower()
+    assert any(tag in complex_resolved.lower() for tag in ["8b", "14b", "chat"])

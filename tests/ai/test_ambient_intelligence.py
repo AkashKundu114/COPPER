@@ -1,16 +1,17 @@
-import pytest
 import uuid
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
-from app.ai.ambient.context_watcher import context_watcher, ActivityEntry, ActivitySession
+import pytest
+
 from app.ai.ambient.activity_timeline import activity_timeline
-from app.ai.ambient.daily_briefing import daily_briefing_service
-from app.ai.ambient.clipboard_monitor import clipboard_monitor, ClipboardEntry
+from app.ai.ambient.clipboard_monitor import ClipboardEntry, clipboard_monitor
 from app.ai.ambient.clipboard_processor import clipboard_processor
-from app.ai.ambient.cognitive_load import cognitive_load_detector, CognitiveState
+from app.ai.ambient.cognitive_load import CognitiveState, cognitive_load_detector
 from app.ai.ambient.context_switcher import context_switcher
-from app.ai.ambient.predictive_engine import predictive_engine
+from app.ai.ambient.context_watcher import ActivityEntry, context_watcher
+from app.ai.ambient.daily_briefing import daily_briefing_service
 from app.ai.ambient.meeting_intelligence import meeting_intelligence
+from app.ai.ambient.predictive_engine import predictive_engine
 
 
 def test_context_watcher_record_and_timeline():

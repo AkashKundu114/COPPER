@@ -108,6 +108,23 @@ class OllamaClient:
             logger.error(f"Error during unload_heavy_models: {e}")
             return {"status": "error", "error": str(e), "unloaded_models": unloaded}
 
+    async def evict_competing_heavy_models(self, target_model: str) -> None:
+        """
+        Under constrained 8GB VRAM, evicts any other heavy models (14B/12B) currently
+        in VRAM to guarantee dedicated GPU space for the target heavy model.
+        """
+        try:
+            loaded = await self.get_loaded_models()
+            for m in loaded:
+                m_name = m.get("name", "")
+                if m_name and m_name != target_model:
+                    if any(k in m_name for k in ["14b", "12b", "coder-abliterated"]):
+                        async with httpx.AsyncClient(timeout=5.0) as client:
+                            await client.post(f"{self.base_url}/api/chat", json={"model": m_name, "keep_alive": 0})
+                            logger.info(f"[VRAM] Evicted competing model '{m_name}' to dedicate GPU to '{target_model}'")
+        except Exception as e:
+            logger.debug(f"[VRAM] Error evicting competing models: {e}")
+
     async def warmup_mini_model(self) -> dict[str, Any]:
         """
         Loads the Always-On Mini Model into VRAM with keep_alive: -1.
@@ -209,6 +226,8 @@ class OllamaClient:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
         is_heavy = any(k in target_model for k in ["14b", "12b"])
+        if is_heavy:
+            await self.evict_competing_heavy_models(target_model)
         default_ctx = 4096 if is_heavy else 8192
 
         options = {
@@ -269,6 +288,8 @@ class OllamaClient:
             keep_alive = model_manager.get_model_keep_alive(target_model)
 
         is_heavy = any(k in target_model for k in ["14b", "12b"])
+        if is_heavy:
+            await self.evict_competing_heavy_models(target_model)
         default_ctx = 4096 if is_heavy else 8192
 
         options = {

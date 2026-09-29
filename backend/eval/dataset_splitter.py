@@ -158,7 +158,7 @@ def main():
     print(f"   • Train Split (80%)       : {master_manifest['totals']['train_samples']:,} samples")
     print(f"   • Validation Split (10%)  : {master_manifest['totals']['val_samples']:,} samples")
     print(f"   • Test Split (10%)        : {master_manifest['totals']['test_samples']:,} samples")
-    print(f"   • Leakage Verification    : 100% CLEAN (0 cross-contamination between train & test)")
+    print("   • Leakage Verification    : 100% CLEAN (0 cross-contamination between train & test)")
     print(f"📁 Partitions directory      : {PARTITIONS_DIR}")
     print(f"📜 Master manifest           : {manifest_path}")
     print("=" * 70)

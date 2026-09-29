@@ -1,15 +1,15 @@
-import pytest
 import uuid
-import numpy as np
-from datetime import datetime, UTC
+from datetime import datetime
 
-from app.ai.ambient.email_agent import email_agent, EmailMessage
+import pytest
+
+from app.ai.agents.research_agent import ResearchAgent
 from app.ai.ambient.code_review_agent import code_review_agent
-from app.ai.ambient.research_pipeline import research_pipeline
+from app.ai.ambient.email_agent import EmailMessage, email_agent
 from app.ai.ambient.skill_learner import skill_learner
+from app.ai.knowledge.causal_engine import causal_engine
 from app.ai.memory.differential_privacy import dp_engine
 from app.ai.memory.provenance import provenance_tracker
-from app.ai.knowledge.causal_engine import causal_engine, CausalEvent
 from app.ai.training.federated_learner import federated_learner
 
 
@@ -57,11 +57,16 @@ def test_code_review_agent_diff_parsing():
     assert len(gaps) == 1
 
 
-def test_research_pipeline_query_generation():
-    queries = research_pipeline._generate_search_queries("Differential Privacy in AI OS")
-    assert isinstance(queries, list)
-    assert len(queries) >= 3
-    assert any("Differential Privacy" in q for q in queries)
+def test_research_agent_source_ranking_and_formatting():
+    agent = ResearchAgent()
+    sources = [
+        {"content": "Differential Privacy in AI OS: DP bounds information leakage.", "relevance_score": 0.95},
+        {"content": "Epistemic Memory Networks: Belief revision and plasticity.", "relevance_score": 0.88},
+    ]
+    formatted = agent.format_ranked_sources(sources)
+    assert isinstance(formatted, str)
+    assert "[Source 1]" in formatted
+    assert "Differential Privacy" in formatted
 
 
 def test_skill_learner_extraction_and_matching():

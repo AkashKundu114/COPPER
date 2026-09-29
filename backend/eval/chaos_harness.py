@@ -14,7 +14,6 @@ Generates `backend/eval/chaos_report.md` with quantitative metrics.
 
 import asyncio
 import base64
-import os
 import sys
 import tempfile
 import time
@@ -25,15 +24,15 @@ from typing import Any
 BACKEND_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.ai.llm.vram_pager import VRAMPager
-from app.ai.orchestration.agent_router import is_consequential_action
-from app.ai.orchestration.wal_executor import (
+from app.ai.llm.vram_pager import VRAMPager  # noqa: E402
+from app.ai.orchestration.agent_router import is_consequential_action  # noqa: E402
+from app.ai.orchestration.wal_executor import (  # noqa: E402
     CrashRecoveryEngine,
     RecordType,
     TaskWAL,
 )
-from app.core.guardian import DisagreementLevel, guardian_engine
-from app.core.logger import logger
+from app.core.guardian import DisagreementLevel, guardian_engine  # noqa: E402
+from app.core.logger import logger  # noqa: E402
 
 # Base malicious command seeds to mutate
 MALICIOUS_SEEDS = [
@@ -170,8 +169,8 @@ class ChaosHarness:
                 logger.error(f"[Chaos] VRAM allocation failed: {e}")
                 oom_occurred = True
 
-        telem = pager.get_telemetry()
         return {
+            "telemetry": pager.get_telemetry(),
             "total_allocations": pager.stats["total_requests"],
             "evictions_enforced": pager.stats["evictions"],
             "cache_hits": pager.stats["cache_hits"],
@@ -229,8 +228,8 @@ class ChaosHarness:
         report_path = Path(__file__).parent / "chaos_report.md"
         report_md = f"""# C.O.P.P.E.R. Chaos Engineering & Adversarial Reliability Report
 
-**Execution Timestamp:** {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}  
-**Target Architecture:** Multi-Agent Local Operating System (v3.0 Sovereign 14B Fleet)  
+**Execution Timestamp:** {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
+**Target Architecture:** Multi-Agent Local Operating System (v3.0 Sovereign 14B Fleet)
 **Status:** ALL RELIABILITY & RESILIENCE CRITERIA PASSED (100%)
 
 ---

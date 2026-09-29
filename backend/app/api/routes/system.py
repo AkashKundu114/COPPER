@@ -6,10 +6,10 @@ Queries live hardware metrics: CPU %, Host RAM, NVIDIA GPU VRAM, Temperatures, a
 import ctypes
 import json
 import os
-from pathlib import Path
 import platform
 import subprocess
 import time
+from pathlib import Path
 
 try:
     import winreg
@@ -313,8 +313,8 @@ async def get_cockpit_status():
 
     breaches_count = 0
     try:
-        from app.database.postgres import SessionLocal
         from app.database.models.audit_log import AuditLogEntry
+        from app.database.postgres import SessionLocal
         with SessionLocal() as db:
             breaches_count = db.query(AuditLogEntry).filter(AuditLogEntry.category == "guardian_safety_block").count()
     except Exception:

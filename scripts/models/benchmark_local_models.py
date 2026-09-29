@@ -1,7 +1,7 @@
-import json
 import time
-import requests
 from pathlib import Path
+
+import requests
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 REPORT_FILE = ROOT_DIR / "docs" / "benchmarks" / "local_models_e2e_report.md"
@@ -219,7 +219,7 @@ def generate_markdown_report(results):
         "# C.O.P.P.E.R. Local Models E2E Inference & Verification Report",
         "",
         f"**Generated:** {timestamp}  ",
-        f"**Environment:** Windows Host Execution | Local Ollama + GPU / CPU Acceleration  ",
+        "**Environment:** Windows Host Execution | Local Ollama + GPU / CPU Acceleration  ",
         f"**Overall Fleet Health:** **{passed_count} / {total_count} Models Verified (100% Passing)**  ",
         "**Cloud Egress:** **Zero (100% Air-Gapped Local Inference)**  ",
         "",

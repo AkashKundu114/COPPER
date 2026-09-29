@@ -15,7 +15,7 @@ BACKEND_DIR = Path(__file__).parent.parent / "backend"
 sys.path.insert(0, str(BACKEND_DIR))
 
 from app.ai.llm.speculative_engine import SpeculativeDecodingEngine
-from app.ai.memory.crdt_sync import LWWElementSet, P2PEpistemicSyncEngine
+from app.ai.memory.crdt_sync import P2PEpistemicSyncEngine
 from app.core.kernel_sandbox import KernelSandboxRunner
 
 
@@ -47,6 +47,7 @@ async def verify_speculative_decoding():
     t_elapsed = time.perf_counter() - t0
 
     telem = engine.get_telemetry()
+    print(f"  > Speculative Run Duration: {t_elapsed * 1000.0:.2f} ms")
     print(f"  > Generated Output Tokens : {res['total_tokens']}")
     print(f"  > Tokens Drafted          : {telem['total_drafted']}")
     print(f"  > Tokens Accepted         : {telem['total_accepted']}")
@@ -62,7 +63,7 @@ def verify_kernel_sandboxing():
     print("=" * 80)
 
     runner = KernelSandboxRunner(memory_limit_mb=128, cpu_rate_pct=25)
-    print(f"[*] Initialized KernelSandboxRunner (Memory Ceiling: 128 MB, CPU Rate Cap: 25%)")
+    print("[*] Initialized KernelSandboxRunner (Memory Ceiling: 128 MB, CPU Rate Cap: 25%)")
 
     # Safe workload
     print("[*] Executing safe sandboxed computation...")

@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+
 from alembic import op
 
 revision = "0004_productivity_tasks_projects_events"

@@ -552,7 +552,7 @@ def main():
         out_path = BASE_DIR / f"{domain}_scaled.jsonl"
         # Check if already generated
         if out_path.exists() and out_path.stat().st_size > 15 * 1024 * 1024:
-            with open(out_path, "r", encoding="utf-8") as f_chk:
+            with open(out_path, encoding="utf-8") as f_chk:
                 actual_count = sum(1 for _ in f_chk)
             size_mb = round(out_path.stat().st_size / (1024 * 1024), 2)
             total_samples += actual_count

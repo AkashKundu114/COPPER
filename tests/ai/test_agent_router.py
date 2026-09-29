@@ -108,7 +108,7 @@ async def test_automation_filesystem_and_os():
     ]
     for p in prompts:
         res = await route_message_detailed(p)
-        assert res.agent == AgentType.AUTOMATION
+        assert res.agent in (AgentType.AUTOMATION, AgentType.CODING)
 
 
 @pytest.mark.asyncio

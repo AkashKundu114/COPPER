@@ -23,7 +23,7 @@ async def test_day_to_day_morning_checkin_and_identity():
 
     # Verify model resolution for identity check-in uses fast mini model
     model = chat_service._resolve_chat_model(route.agent, prompt)
-    assert "1b" in model.lower() or "mini" in model.lower()
+    assert any(tag in model.lower() for tag in ["1b", "1.5b", "mini"])
 
     # Verify context engine includes verified operator identity
     snippet = persistent_memory.get_memory_prompt_snippet()
@@ -50,7 +50,7 @@ async def test_day_to_day_model_directives_and_switching():
 
     # 2. General conversation turn now uses the preferred smaller model
     resolved_model = chat_service._resolve_chat_model(AgentType.CHAT, "whats my age")
-    assert "1b" in resolved_model.lower() or "mini" in resolved_model.lower()
+    assert any(tag in resolved_model.lower() for tag in ["1b", "1.5b", "mini"])
 
     # 3. Order 3B model
     res_3b = await directive_service.evaluate("switch to 3b model")

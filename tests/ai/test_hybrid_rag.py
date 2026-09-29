@@ -1,11 +1,11 @@
-import pytest
 from unittest.mock import AsyncMock, patch
 
-from app.ai.agents.research_agent import CITATION_GROUNDED_RESEARCH_PROMPT_TEMPLATE, research_agent
+import pytest
+
+from app.ai.agents.research_agent import research_agent
 from app.ai.memory.bm25_index import BM25Index, tokenize_text
 from app.ai.memory.hybrid_search import HybridSearch
 from app.ai.memory.reranker import LocalReRanker
-
 
 # ---------------------------------------------------------
 # BM25 Index Tests

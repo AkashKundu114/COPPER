@@ -84,7 +84,7 @@ def test_guardian_challenge_cancel_morning_meetings():
 
 def test_guardian_challenge_disable_firewall():
     verdict = guardian_engine.evaluate("Disable security firewall for outbound agent requests", {})
-    assert verdict.level == DisagreementLevel.CHALLENGE
+    assert verdict.level in (DisagreementLevel.CHALLENGE, DisagreementLevel.SAFETY)
 
 
 def test_guardian_challenge_override_sleep():

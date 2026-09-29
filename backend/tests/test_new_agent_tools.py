@@ -1,24 +1,21 @@
-﻿import json
-import pytest
-from pathlib import Path
+﻿import pytest
+from bs4 import BeautifulSoup
 
 from app.ai.agents.agency_catalog import (
+    _load_catalog,
     get_persona,
     inject_persona,
-    list_personas,
     list_divisions,
-    _load_catalog,
 )
-from app.ai.tools.builtin.persona_tools import agency_persona_lookup
 from app.ai.tools.builtin.codebase_tools import codebase_map, codebase_symbol_lookup
-from app.ai.tools.builtin.git_tools import git_status, git_log
-from app.ai.tools.builtin.system_tools import system_hardware_stats, process_status
-from app.ai.tools.builtin.scrapling_tools import scrapling_scrape, _adaptive_content_extract
+from app.ai.tools.builtin.diagram_tools import workflow_diagram_render
+from app.ai.tools.builtin.git_tools import git_log, git_status
+from app.ai.tools.builtin.persona_tools import agency_persona_lookup
+from app.ai.tools.builtin.science_catalog_tools import scientific_skill_list, scientific_skill_lookup
 from app.ai.tools.builtin.science_tools import dataset_summary
-from app.ai.tools.builtin.science_catalog_tools import scientific_skill_lookup, scientific_skill_list
+from app.ai.tools.builtin.scrapling_tools import _adaptive_content_extract, scrapling_scrape
+from app.ai.tools.builtin.system_tools import system_hardware_stats
 from app.ai.tools.builtin.video_tools import video_create_slideshow, video_pipeline_list
-from app.ai.tools.builtin.diagram_tools import workflow_diagram_render, generate_mermaid_flowchart
-from bs4 import BeautifulSoup
 
 
 @pytest.mark.asyncio

@@ -93,7 +93,7 @@ class QLoRATrainer:
 
             if not torch.cuda.is_available():
                 return False
-        except ImportError:
+        except (ImportError, OSError):
             return False
 
         if importlib.util.find_spec("unsloth"):

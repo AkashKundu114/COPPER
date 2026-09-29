@@ -7,9 +7,9 @@ Hugging Face, GitHub, and open datasets into standard C.O.P.P.E.R. evaluation sc
 import hashlib
 import json
 import sys
-from pathlib import Path
-import urllib.request
 import urllib.error
+import urllib.request
+from pathlib import Path
 
 # Fix Windows console UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):

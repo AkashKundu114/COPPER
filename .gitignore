@@ -153,6 +153,10 @@ temp/
 scratch/
 .tmp/
 external_repos/
+scripts/scratch/
+scripts/*_scratch.*
+scripts/temp_*.*
+scripts/*.txt
 
 # ── IDE & Editor ──────────────────────────────────────────────────────────────
 .vscode/

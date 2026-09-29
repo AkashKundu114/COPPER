@@ -1,14 +1,12 @@
-import pytest
 import uuid
-from datetime import datetime, timezone
 
-from app.ai.companion.personality_manager import personality_manager
 from app.ai.companion.accountability_tracker import accountability_tracker
 from app.ai.companion.context_continuity import context_continuity
+from app.ai.companion.personality_manager import personality_manager
 from app.ai.companion.skill_gap_detector import skill_gap_detector
+from app.ai.os_integration.device_sync import device_sync
 from app.ai.os_integration.notification_filter import notification_filter
 from app.ai.os_integration.plugin_manager import plugin_manager
-from app.ai.os_integration.device_sync import device_sync
 
 
 def test_personality_manager():

@@ -351,8 +351,8 @@ def test_seed_defaults_and_export_import():
 
 
 def test_remove_relationship_unit():
-    ent1 = graph_store.add_entity("Alpha", "CONCEPT", 0.9)
-    ent2 = graph_store.add_entity("Beta", "CONCEPT", 0.9)
+    graph_store.add_entity("Alpha", "CONCEPT", 0.9)
+    graph_store.add_entity("Beta", "CONCEPT", 0.9)
     rel = graph_store.add_relationship("Alpha", "Beta", "CONNECTS_TO", 0.85)
     rel_id = rel["id"]
 

@@ -1,39 +1,31 @@
-import asyncio
 from datetime import datetime
+
 import pytest
 
-from app.ai.ambient.research_pipeline import research_pipeline
-from app.ai.ambient.skill_learner import skill_learner
-from app.ai.ambient.cognitive_load import cognitive_load_detector, CognitiveState
+from app.ai.agents.research_agent import ResearchAgent
 from app.ai.ambient.clipboard_monitor import ClipboardEntry
 from app.ai.ambient.clipboard_processor import clipboard_processor
+from app.ai.ambient.cognitive_load import CognitiveState, cognitive_load_detector
 from app.ai.ambient.daily_briefing import DailyBriefingService
 from app.ai.ambient.predictive_engine import PredictiveEngine
-from app.ai.knowledge.causal_engine import causal_engine
-from app.ai.companion.personality_manager import personality_manager
+from app.ai.ambient.skill_learner import skill_learner
 from app.ai.companion.accountability_tracker import accountability_tracker
 from app.ai.companion.context_continuity import context_continuity
+from app.ai.companion.personality_manager import personality_manager
+from app.ai.knowledge.causal_engine import causal_engine
 
 
-@pytest.mark.asyncio
-async def test_research_pipeline_lifecycle():
-    """Test starting, tracking, and retrieving research reports."""
-    report = await research_pipeline.start_research(
-        topic="Evaluate Microservices vs Monolith architectures",
-        depth="quick",
-        deadline="today",
-    )
-    assert report is not None
-    assert report.report_id is not None
-    assert report.topic == "Evaluate Microservices vs Monolith architectures"
-    assert report.status in ["queued", "in_progress", "completed"]
-
-    fetched = research_pipeline.get_report(report.report_id)
-    assert fetched is not None
-    assert fetched.report_id == report.report_id
-
-    reports_list = research_pipeline.list_reports(limit=10)
-    assert any(r.report_id == report.report_id for r in reports_list)
+def test_research_agent_ranking_and_prompt_assembly():
+    """Test ResearchAgent ranked source formatting and grounding prompt assembly."""
+    agent = ResearchAgent()
+    sources = [
+        {"content": "Microservices vs Monolith architectures: Benchmarking IPC overhead vs modularity", "relevance_score": 0.94},
+        {"content": "Database Isolation Levels: Serializability trade-offs in distributed systems", "relevance_score": 0.81},
+    ]
+    formatted = agent.format_ranked_sources(sources)
+    assert "[Source 1]" in formatted
+    assert "Microservices vs Monolith" in formatted
+    assert "[Source 2]" in formatted
 
 
 @pytest.mark.asyncio

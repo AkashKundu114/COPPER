@@ -3,7 +3,6 @@ Unit tests for Conflict-Free Replicated Data Types (CRDTs) & Offline P2P Memory 
 Verifies LWW-Element-Set, Vector Clocks, idempotency, and partition convergence.
 """
 
-import pytest
 
 from app.ai.memory.crdt_sync import (
     LWWElementSet,

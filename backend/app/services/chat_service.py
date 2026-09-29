@@ -312,7 +312,7 @@ class ChatService:
                     if agent:
                         response = await agent.run(message, history, memory_context, provider, session_id=session_id)
                     else:
-                        system = get_system_prompt(AgentType.CHAT, memory_context, self_context)
+                        system = get_system_prompt(AgentType.CHAT, memory_context, self_context, model_name=target_model)
                         messages = build_messages(system, history, message)
                         response = await langchain_manager.ainvoke(
                             messages, provider, model=target_model, metrics_collector=ollama_metrics
@@ -680,35 +680,35 @@ class ChatService:
             ):
                 if mode == "reasoning":
                     model_name = model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
-                    system = get_mode_prompt(mode, memory_context, self_context)
+                    system = get_mode_prompt(mode, memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
                     )
                 elif mode == "coding":
                     model_name = model_manager.get_model("core_agents.coding", "qwen2.5-coder-abliterated:14b")
-                    system = get_mode_prompt(mode, memory_context, self_context)
+                    system = get_mode_prompt(mode, memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
                     )
                 elif mode == "document":
                     model_name = model_manager.get_document_model()
-                    system = get_mode_prompt(mode, memory_context, self_context)
+                    system = get_mode_prompt(mode, memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
                     )
                 elif mode == "research":
                     model_name = model_manager.get_model("core_agents.document", "phi4:14b")
-                    system = get_mode_prompt(mode, memory_context, self_context)
+                    system = get_mode_prompt(mode, memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
                     )
                 elif mode == "fast":
                     model_name = model_manager.get_mini_model()
-                    system = get_mode_prompt(mode, memory_context, self_context)
+                    system = get_mode_prompt(mode, memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
@@ -725,7 +725,7 @@ class ChatService:
                     )
                 else:
                     model_name = self._resolve_chat_model(agent_type, message, agent=agent)
-                    system = get_mode_prompt("auto", memory_context, self_context)
+                    system = get_mode_prompt("auto", memory_context, self_context, model_name=model_name)
                     messages = build_messages(system, history, message)
                     gen = langchain_manager.astream(
                         messages, provider, model=model_name, metrics_collector=ollama_metrics
