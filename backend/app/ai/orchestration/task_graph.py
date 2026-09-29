@@ -148,6 +148,17 @@ class TaskGraphExecutor:
         start_time = time.perf_counter()
         dag_id = f"dag_{uuid.uuid4().hex[:8]}"
 
+        if not plan or not getattr(plan, "tasks", None):
+            duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
+            return TaskGraphResult(
+                dag_id=dag_id,
+                goal=getattr(plan, "goal", "") or "",
+                final_response="No sub-tasks provided in execution plan.",
+                tasks=[],
+                success=True,
+                total_duration_ms=duration_ms,
+            )
+
         outputs_by_id: dict[str, Any] = {}
         outputs_by_key: dict[str, Any] = {}
         execution_trace: list[dict[str, Any]] = []

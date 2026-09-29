@@ -160,3 +160,18 @@ async def test_task_graph_execution_parallel_and_dependent():
         assert len(res.inter_agent_messages) >= 3
         assert "task_graph_start" in events
         assert "task_graph_complete" in events
+
+
+@pytest.mark.asyncio
+async def test_task_graph_empty_plan_boundary():
+    executor = TaskGraphExecutor()
+    res = await executor.execute_plan(None)
+    assert res.success is True
+    assert "No sub-tasks provided" in res.final_response
+    assert res.tasks == []
+
+    empty_plan = PlanResult(is_decomposition=True, goal="Empty", tasks=[])
+    res2 = await executor.execute_plan(empty_plan)
+    assert res2.success is True
+    assert "No sub-tasks provided" in res2.final_response
+    assert res2.tasks == []

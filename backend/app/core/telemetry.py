@@ -82,7 +82,8 @@ class LiveSpanCollector(SpanProcessor):
     def get_traces(self, limit: int = 50) -> list[dict[str, Any]]:
         """Return formatted traces ordered from newest to oldest."""
         result = []
-        for trace_id, spans in reversed(list(self._traces.items())[-limit:]):
+        safe_limit = max(1, limit)
+        for trace_id, spans in reversed(list(self._traces.items())[-safe_limit:]):
             if not spans:
                 continue
 

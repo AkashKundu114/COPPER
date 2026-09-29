@@ -16,7 +16,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 | **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.1 ms** | **~9,856 QPS** | 0 |
 | **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.008 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest & Vitest Suite** | 515 Backend + 38 Frontend | **100.0% / 100%** | **553 Total** | **515 + 38 Passing** | — | 0 |
+| **Pytest & Vitest Suite** | 523 Backend + 38 Frontend | **100.0% / 100%** | **561 Total** | **523 + 38 Passing** | — | 0 |
 
 ---
 

@@ -88,3 +88,20 @@ def test_self_healing_resilient_result_structure():
     assert res.result == "test_val"
     assert res.attempts == []
     assert res.final_error is None
+
+
+@pytest.mark.asyncio
+async def test_self_healing_boundary_none_primary():
+    result = await resilient_call(None)
+    assert result.success is False
+    assert "Primary callable is required" in result.final_error
+
+
+@pytest.mark.asyncio
+async def test_self_healing_boundary_negative_retries_and_delay():
+    async def primary():
+        return "immediate_success"
+
+    result = await resilient_call(primary, retries=-5, retry_delay_s=-1.0)
+    assert result.success is True
+    assert result.result == "immediate_success"

@@ -42,3 +42,20 @@ def test_validate_message_exceeds_max_length():
     valid, err = validate_message(message_over)
     assert valid is False
     assert "exceeds" in err.lower()
+
+
+def test_chunk_text_boundary_empty():
+    from app.core.document_indexer import chunk_text
+
+    assert chunk_text("") == []
+    assert chunk_text(None) == []
+
+
+def test_chunk_text_boundary_overlap_greater_than_chunk_size():
+    from app.core.document_indexer import chunk_text
+
+    text = "Hello world, this is a test string to verify boundary chunking."
+    # Overlap >= chunk_size should not loop infinitely; it safely clamps overlap
+    chunks = chunk_text(text, chunk_size=20, overlap=30)
+    assert len(chunks) > 0
+    assert "".join(chunks) != ""

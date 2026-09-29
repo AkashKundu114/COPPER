@@ -6,12 +6,18 @@ from app.core.logger import logger
 
 
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
+    if not text:
+        return []
+    safe_chunk_size = max(10, chunk_size)
+    safe_overlap = max(0, min(overlap, safe_chunk_size - 1))
+    step = safe_chunk_size - safe_overlap
     chunks = []
     start = 0
-    while start < len(text):
-        end = start + chunk_size
+    text_length = len(text)
+    while start < text_length:
+        end = min(text_length, start + safe_chunk_size)
         chunks.append(text[start:end])
-        start += chunk_size - overlap
+        start += step
     return chunks
 
 

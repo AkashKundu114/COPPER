@@ -70,6 +70,17 @@ _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
 
 
 def classify_and_redact(text: str) -> FirewallResult:
+    if text is None:
+        return FirewallResult(
+            redacted_text="",
+            classification=DataClass.PUBLIC,
+            redaction_count=0,
+            audit_hash="",
+            redacted_categories=[],
+        )
+    if not isinstance(text, str):
+        text = str(text)
+
     severity_order = [DataClass.PUBLIC, DataClass.PERSONAL, DataClass.SENSITIVE, DataClass.SECRET]
     worst = DataClass.PUBLIC
     redaction_count = 0

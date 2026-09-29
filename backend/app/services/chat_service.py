@@ -103,6 +103,24 @@ class ChatService:
         trace_id: str | None = None,
         parent_span=None,
     ) -> dict:
+        session_id = session_id.strip() if (session_id and session_id.strip()) else "default_session"
+        if not message or not message.strip():
+            return {
+                "response": "Operator, please provide an instruction or query for C.O.P.P.E.R.",
+                "agent_type": "chat",
+                "session_id": session_id,
+                "metrics": {
+                    "model": "system:guard",
+                    "prompt_tokens": 0,
+                    "completion_tokens": 12,
+                    "total_tokens": 12,
+                    "tokens_per_sec": 100.0,
+                    "ttft_ms": 1.0,
+                    "total_time_sec": 0.01,
+                    "total_time_ms": 10.0,
+                },
+            }
+
         # Check Operator Directives (model switching, cognitive mode, voice, VRAM)
         directive_res = await directive_service.evaluate(message, session_id=session_id)
         prefix_confirmation = ""

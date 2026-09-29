@@ -34,8 +34,13 @@ async def resilient_call(
     actor: str = "system",
     incident_label: str = "operation",
 ) -> ResilientResult:
+    if primary is None:
+        return ResilientResult(success=False, final_error="Primary callable is required")
+
+    safe_retries = max(0, retries)
+    safe_retry_delay = max(0.0, retry_delay_s)
     attempts: list[RecoveryAttempt] = []
-    for attempt_num in range(retries + 1):
+    for attempt_num in range(safe_retries + 1):
         try:
             result = await primary()
             attempts.append(RecoveryAttempt(strategy=f"primary (attempt {attempt_num + 1})", succeeded=True))
@@ -46,8 +51,8 @@ async def resilient_call(
                 RecoveryAttempt(strategy=f"primary (attempt {attempt_num + 1})", succeeded=False, error=str(e))
             )
             logger.warning(f"[self-healing] {incident_label} failed (attempt {attempt_num + 1}): {e}")
-            if attempt_num < retries:
-                await asyncio.sleep(retry_delay_s)
+            if attempt_num < safe_retries:
+                await asyncio.sleep(safe_retry_delay)
     for i, fallback in enumerate(fallbacks or []):
         try:
             result = await fallback()

@@ -9,7 +9,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-553%20Passed%20(515%20Backend%20%2B%2038%20Frontend)-brightgreen.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-561%20Passed%20(523%20Backend%20%2B%2038%20Frontend)-brightgreen.svg)](tests/)
 [![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-38%20Passed%20(100%25)-brightgreen.svg)](frontend/src/__tests__/)
 [![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-28.3%25%20Stmts%20%7C%20100%25%20Key%20Components-brightgreen.svg)](frontend/src/__tests__/)
 [![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
@@ -42,7 +42,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 - **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases at **~2,050 QPS** full combinatorial throughput (< 0.49 ms average latency) and **~9,856 QPS** on Stage 0/1 regex & memory cache dispatch (< 0.10 ms).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback.
-- **553 Total Passing Tests (515 Backend + 38 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization. 515 backend Pytest tests (100% pass rate) across 73 test files, plus 38 frontend Vitest unit tests (5 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, and accessibility.
+- **561 Total Passing Tests (523 Backend + 38 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization. 523 backend Pytest tests (100% pass rate) across 73 test files, plus 38 frontend Vitest unit tests (5 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, and accessibility.
 - **~59,800 Lines of Code / 257 REST API Endpoints / 201 Backend Modules:** 35,590 Python LOC across 201 backend modules, 24,224 TypeScript/React LOC across 84 frontend source files, 73 test files, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 48 React components spanning 18 pages/views.
 - **Local GGUF / ONNX Model Fleet (~47 GB / 30 Orchestrated Agents):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
@@ -51,7 +51,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 553 passing unit/integration tests (515 backend + 38 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS dispatch)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 561 passing unit/integration tests (523 backend + 38 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS dispatch)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 

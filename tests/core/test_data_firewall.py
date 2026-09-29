@@ -177,3 +177,17 @@ def test_firewall_secret_password_assignment():
     assert result.classification == DataClass.SECRET
     assert "•••PASSWORD_REDACTED•••" in result.redacted_text
     assert "MyVerySecretPassword!123" not in result.redacted_text
+
+
+def test_firewall_boundary_none_input():
+    result = classify_and_redact(None)
+    assert result.classification == DataClass.PUBLIC
+    assert result.redacted_text == ""
+    assert result.redaction_count == 0
+
+
+def test_firewall_boundary_non_string_input():
+    result = classify_and_redact(12345678)
+    assert result.classification == DataClass.PUBLIC
+    assert result.redacted_text == "12345678"
+    assert result.redaction_count == 0

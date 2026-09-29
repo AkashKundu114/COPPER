@@ -47,3 +47,15 @@ def test_chat_message_includes_telemetry_metrics():
         assert "ttft_ms" in metrics
         assert "total_time_sec" in metrics
         assert metrics["total_tokens"] == metrics["prompt_tokens"] + metrics["completion_tokens"]
+
+
+def test_chat_service_direct_empty_message():
+    import asyncio
+
+    from app.services.chat_service import chat_service
+
+    loop = asyncio.new_event_loop()
+    res = loop.run_until_complete(chat_service.process_message(session_id="", message=""))
+    loop.close()
+    assert "Operator, please provide an instruction" in res["response"]
+    assert res["session_id"] == "default_session"
