@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.1.0",
   "description": "COPPER - Cognitive Offline Personal Partner & Epistemic Reasoner",
-  "author": "COPPER Team",
+  "author": "Akash Kundu <akashkundu1152@gmail.com>",
   "homepage": "https://github.com/AkashKundu114/COPPER",
   "type": "module",
   "main": "electron-main.cjs",
@@ -96,7 +96,7 @@
         "deb"
       ],
       "category": "Utility",
-      "maintainer": "COPPER Team <support@copper.ai>"
+      "maintainer": "Akash Kundu <akashkundu1152@gmail.com>"
     },
     "deb": {
       "priority": "optional"
