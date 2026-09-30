@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles } from "lucide-react";
+import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles, ShieldCheck, Cpu, DownloadCloud, RotateCcw } from "lucide-react";
 import { API_BASE } from "../lib/api";
 import { personalityAPI } from "../services/api";
 
@@ -413,6 +413,67 @@ export const SettingsView: React.FC = () => {
                     personality.use_emojis ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* GPU Hardware Authorization & One-Click Model Provisioning */}
+        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+            <div className="p-2 bg-amber-500/10 text-amber-400 rounded-xl">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-white">GPU Authorization & Local Model Setup</h2>
+              <p className="text-xs text-slate-400">Manage offline hardware fingerprinting and one-click model downloads</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
+                <Cpu size={16} className="text-amber-400" />
+                <span>GPU Runtime & License Status</span>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Bound to host hardware fingerprint. Compatible with NVIDIA RTX dedicated GPU and shared master access codes.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  fetch("/api/activation/status")
+                    .then((r) => r.json())
+                    .then((d) => alert(`Status: ${d.activated ? "Authorized" : "Not Activated"}\nMode: ${d.mode}\nGPU: ${d.gpu_info?.name || "Detected"}`))
+                    .catch(() => alert("Activation check failed"));
+                }}
+                className="mt-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-xs text-slate-200 font-medium"
+              >
+                Inspect GPU Fingerprint
+              </button>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
+                <DownloadCloud size={16} className="text-cyan-400" />
+                <span>One-Click Dependency & Model Installer</span>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Re-launch the onboarding setup wizard to adjust model presets, select active agents, or pull missing weights.
+              </p>
+              <button
+                type="button"
+                onClick={async () => {
+                  await fetch("/api/setup/state", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ completed: false, current_step: 1 }),
+                  });
+                  window.location.reload();
+                }}
+                className="mt-2 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1.5"
+              >
+                <RotateCcw size={14} /> Re-run Setup Wizard
               </button>
             </div>
           </div>

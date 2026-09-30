@@ -45,6 +45,9 @@ import {
   ScreenReaderProvider,
   useAnnounce,
 } from "./components/common/ScreenReaderAnnouncer";
+import axios from "axios";
+import { Activation } from "./pages/Activation";
+import { SetupWizard } from "./pages/SetupWizard";
 
 function MainApp() {
   const { mode } = useSensorMode();
@@ -61,6 +64,18 @@ function MainApp() {
   const [branches, setBranches] = useState<BranchItem[]>([]);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [activeBranchId, setActiveBranchId] = useState<string>("default");
+  const [isActivated, setIsActivated] = useState<boolean>(true);
+  const [isSetupComplete, setIsSetupComplete] = useState<boolean>(true);
+
+  useEffect(() => {
+    Promise.all([
+      axios.get("/api/activation/status").then((r) => r.data).catch(() => ({ activated: true })),
+      axios.get("/api/setup/state").then((r) => r.data).catch(() => ({ completed: true })),
+    ]).then(([act, setup]) => {
+      setIsActivated(!!act.activated);
+      setIsSetupComplete(!!setup.completed);
+    });
+  }, []);
 
   const refresh = useCallback(() => {
     fetchAgents()
@@ -240,6 +255,14 @@ function MainApp() {
         return <DashboardView onNavigate={setActiveSection} />;
     }
   };
+
+  if (!isActivated) {
+    return <Activation onActivated={() => setIsActivated(true)} />;
+  }
+
+  if (!isSetupComplete) {
+    return <SetupWizard onComplete={() => setIsSetupComplete(true)} />;
+  }
 
   return (
     <div

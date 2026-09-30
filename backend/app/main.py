@@ -31,6 +31,7 @@ from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api.routes import (
     accountability,
+    activation,
     agents,
     ambient,
     audit,
@@ -65,6 +66,7 @@ from app.api.routes import (
     schedule,
     self_improvement,
     self_memory,
+    setup,
     skill_gaps,
     skills,
     sync,
@@ -203,6 +205,8 @@ app.include_router(catalog.router, prefix="/api/v1")
 app.include_router(campaign_routes.router, prefix="/api")
 app.include_router(campaign_routes.router, prefix="/api/v1")
 app.include_router(campaign_routes.ws_router)
+app.include_router(activation.router)
+app.include_router(setup.router)
 
 # Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)

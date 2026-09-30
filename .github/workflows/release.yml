@@ -106,6 +106,13 @@ jobs:
             echo "- \`ghcr.io/${{ github.repository }}-frontend:${{ github.ref_name }}\`"
           } > release-notes.md
 
+      - name: Generate SHA-256 Checksums
+        run: |
+          if [ -d "desktop-dist" ]; then
+            cd desktop-dist
+            sha256sum * > SHA256SUMS.txt 2>/dev/null || true
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:

@@ -16,6 +16,11 @@ const ALLOWED_INVOKE_CHANNELS = [
   "start-backend",
   "stop-backend",
   "get-accessibility-status",
+  "get-activation-status",
+  "activate-local-gpu",
+  "activate-owner-code",
+  "get-system-info",
+  "run-setup-wizard",
 ];
 
 const copperAPI = {
