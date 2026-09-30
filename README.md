@@ -24,9 +24,11 @@
 - [Overview & Project Independence](#overview--project-independence)
 - [The 3-Tier Multi-Agent Routing Hierarchy](#the-3-tier-multi-agent-routing-hierarchy)
 - [Ambient Intelligence & Continuous Context (v2.5)](#ambient-intelligence--continuous-context-v25)
-- [Campaign Intelligence Agent](#campaign-intelligence-agent)
+- [Campaign Intelligence Agent & DeltaX Ad-Tech Suite](#campaign-intelligence-agent--deltax-ad-tech-suite)
 - [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
 - [Safety Calibration](#safety-calibration)
+- [GPU Hardware Licensing & Master Access Gate](#gpu-hardware-licensing--master-access-gate)
+- [First-Run Setup Wizard & One-Click Installer](#first-run-setup-wizard--one-click-installer)
 - [Directory Structure](#directory-structure)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
@@ -348,6 +350,42 @@ All 15 figures below are rendered at 350 DPI vector resolution using scientific 
 
 ## Safety Calibration
 The DFM-Guard friction coefficients were calibrated using grid search optimization over 350 adversarial test scenarios, optimizing for F1 score. Sensitivity: 100.0%, Specificity: 100.0% (F1 Score: 1.000, 0 Breaches across 350 adversarial & destructive trigger scenarios). See [`docs/friction_calibration_report.json`](docs/friction_calibration_report.json) and [`scripts/calibrate_friction.py`](scripts/calibrate_friction.py) for full methodology and calibration logs.
+
+---
+
+## GPU Hardware Licensing & Master Access Gate
+
+To protect sovereignty without tethering to cloud authentication servers, C.O.P.P.E.R. v2.1 implements a **Dual-Mode Offline Hardware Authorization Gate** (`backend/app/core/gpu_activation.py`):
+
+1. **Option A — Local GPU Fingerprint:** Automatically detects dedicated NVIDIA GPU hardware (`nvidia-smi`), VRAM capacity, CPU, and machine UUID to generate a deterministic local license `COPPER-XXXX-XXXX-XXXX` persisted to `~/.copper/activation.json`.
+2. **Option B — Owner Master Access Code:** When sharing the executable with colleagues or interviewers, recipients can input Akash's authorized master code:
+   ```text
+   COPPER-033D-EE4E-C150
+   ```
+   *(Validated against the embedded SHA-256 hash `71a81efef1517110a12be96f5ab37ab0be2d41c782c83bd58aa9d7719a0ebb8b` without requiring internet access).*
+3. **Owner CLI Generator:** Run `python scripts/generate_owner_code.py` to inspect hardware and generate fresh access hashes.
+
+---
+
+## First-Run Setup Wizard & One-Click Installer
+
+Upon initial launch, COPPER guides users through a modern 6-step setup flow (`frontend/src/pages/SetupWizard.tsx`):
+- **Step 1: System Pre-Flight:** Live hardware diagnostics testing GPU VRAM, free disk space, Python runtime, and local Ollama daemon reachability.
+- **Step 2: Agent Architecture Presets:** Choose between *Minimal (Reflex, <2GB VRAM)*, *Recommended (Balanced, ~4.5GB VRAM)*, or *Full Sovereign (All 12 Agents, ~6.4GB VRAM)* with real-time VRAM budget estimation.
+- **Step 3: Voice & Media Studio:** Select Kokoro TTS neural voice profiles (*Bella, Nicole, Michael, Emma*) and toggle the offline SD-Turbo image diffusion engine.
+- **Step 4: Model Provisioning:** Automatic validation and download of core Ollama model tags (`qwen2.5:1.5b`, `qwen2.5:14b`, `qwen2.5-coder-abliterated:14b`).
+- **Step 5: Completion & Launch:** Direct entry into the full desktop neural workspace.
+
+---
+
+## Campaign Intelligence Agent & DeltaX Ad-Tech Suite
+
+Modeled on the DeltaX enterprise digital advertising automation architecture, the **DELTA** agent (`backend/app/ai/agents/campaign_agent.py`) integrates an offline ad-tech analytics engine:
+- **Creative Fatigue Engine (`creative_fatigue.py`):** Monitors ad sets by correlating exposure frequency ($>3.0\times$) and monotonic CTR decay ($>20\%$) to preemptively alert on audience saturation before CPA escalates.
+- **Predictive Pacing Forecaster (`forecaster.py`):** Uses exponential smoothing on hourly spend velocity to forecast intraday run-rate and predict budget exhaustion time (e.g., alerting before 2:00 PM if a campaign burns through its daily allocation).
+- **Multi-Touch Attribution Engine (`attribution.py`):** Implements **Game-Theoretic Shapley Value Attribution** alongside Linear and Time-Decay attribution across cross-channel customer journeys (Search, Social, Display, Retargeting) ensuring mathematically fair credit assignment:
+  $$\phi_i(v) = \sum_{S \subseteq N \setminus \{i\}} \frac{|S|!(|N| - |S| - 1)!}{|N|!} (v(S \cup \{i\}) - v(S))$$
+- **Automated Executive Briefings (`report_generator.py`):** Synthesizes portfolio health, active anomalies, and SLSQP budget reallocation suggestions into Markdown and PDF-ready briefings via the SCRIBE document agent.
 
 ---
 
