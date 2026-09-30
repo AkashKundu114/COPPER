@@ -329,6 +329,6 @@ export const AGENTS: AgentMeta[] = ACTIVE_AGENTS;
  */
 export const ALL_AGENTS: AgentMeta[] = [...ACTIVE_AGENTS, ...PLANNED_AGENTS];
 
-export const AGENT_MAP: Map<string, AgentMeta> = new Map(
+export const AGENT_MAP: Record<string, AgentMeta> = Object.fromEntries(
   ALL_AGENTS.map((a) => [a.id, a]),
 );

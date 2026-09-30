@@ -4,7 +4,6 @@ import {
   ACTIVE_AGENTS,
   PLANNED_AGENTS,
   ALL_AGENTS,
-  AGENTS,
   TIER_COLORS,
   TIER_LABELS,
 } from "../../constants/agents";

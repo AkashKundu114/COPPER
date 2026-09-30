@@ -415,6 +415,7 @@ export function AgentRegistry() {
                   </div>
                 </div>
               );
+            })}
           </div>
 
           {/* Planned Roadmap Agents Section */}
