@@ -206,9 +206,17 @@ class OllamaClient:
         elif agent_type == AgentType.AUTOMATION:
             return model_manager.get_model("core_agents.automation", "mistral-nemo:12b")
         elif agent_type == AgentType.RESEARCH:
-            return model_manager.get_model("core_agents.reasoning", "phi4:14b")
+            return model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
+        elif agent_type == AgentType.WEB_SEARCH:
+            return model_manager.get_model("core_agents.web_search", "mistral-nemo:12b")
         elif agent_type == AgentType.VISION:
             return model_manager.get_model("vision_agents.vision_primary", "qwen2.5-vl:3b")
+        elif agent_type == AgentType.CAMPAIGN_INTELLIGENCE:
+            return model_manager.get_model("core_agents.campaign_intelligence", "deepseek-r1:14b")
+        elif agent_type == AgentType.REMINDER:
+            return model_manager.get_model("core_agents.chat", "qwen2.5:14b")
+        elif agent_type == AgentType.PLANNER:
+            return model_manager.get_model("subagents.diagnostics", "deepseek-r1:1.5b")
 
         return self.default_model
 

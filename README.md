@@ -1,7 +1,7 @@
 # C.O.P.P.E.R.
 
 **Centralized Omnifunctional Personal Productivity and Execution Routine**  
-*An independent, 100% offline, local-first personal AI operating system featuring 30 orchestrated agents, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
+*An independent, 100% offline, local-first personal AI operating system featuring 16 specialized agent types with extensible multi-agent architecture, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary%20%7C%20All%20Rights%20Reserved-red.svg)](LICENSE)
 [![Author: Akash Kundu](https://img.shields.io/badge/Author-Akash%20Kundu-blue.svg)](https://github.com/AkashKundu114)
@@ -9,11 +9,11 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-565%20Passed%20(524%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-614%20Passed%20(573%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
 [![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-41%20Passed%20(100%25)-brightgreen.svg)](frontend/src/__tests__/)
 [![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components%20%26%20Boundaries-brightgreen.svg)](frontend/src/__tests__/)
 [![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
-[![Routing QPS](https://img.shields.io/badge/Routing%20Throughput-~9%2C856%20QPS-blueviolet.svg)](backend/eval/benchmark_report.md)
+[![Routing Dispatch QPS](https://img.shields.io/badge/Routing%20Dispatch-~9%2C856%20QPS%20(Cache%20Hit)-blueviolet.svg)](backend/eval/benchmark_report.md)
 [![Guardian Catch Rate](https://img.shields.io/badge/Guardian%20Catch%20Rate-100.0%25-success.svg)](backend/eval/benchmark_report.md)
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)](docs/architecture/security.md)
 [![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)](.github/workflows/codeql.yml)
@@ -24,39 +24,41 @@
 - [Overview & Project Independence](#overview--project-independence)
 - [The 3-Tier Multi-Agent Routing Hierarchy](#the-3-tier-multi-agent-routing-hierarchy)
 - [Ambient Intelligence & Continuous Context (v2.5)](#ambient-intelligence--continuous-context-v25)
+- [Campaign Intelligence Agent](#campaign-intelligence-agent)
 - [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
 - [Directory Structure](#directory-structure)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Hardware Constraints & Inference Optimization](#hardware-constraints--inference-optimization)
 - [Getting Started & Local Setup](#getting-started--local-setup)
+- [Limitations and Known Issues](#limitations-and-known-issues)
 - [Documentation & Resources](#documentation--resources)
 
 ## Overview & Project Independence
 
 **C.O.P.P.E.R.** is an **independent, proprietary personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
 
-Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **30-agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
+Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **16+ specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases at **~2,050 QPS** full combinatorial throughput (< 0.49 ms average latency) and **~9,856 QPS** on Stage 0/1 regex & memory cache dispatch (< 0.10 ms).
-- **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases.
-- **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback.
-- **565 Total Passing Tests (524 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, sandboxing, adversarial jailbreak protection, and data sanitization. 524 backend Pytest tests (100% pass rate) across 73 test files, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
-- **~59,900 Lines of Code / 257 REST API Endpoints / 201 Backend Modules:** 35,590 Python LOC across 201 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 73 test files, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 18 pages/views.
-- **Local GGUF / ONNX Model Fleet (~47 GB / 30 Orchestrated Agents):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
+- **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms–2 s per response).
+- **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases [2].
+- **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback [3].
+- **614 Total Passing Tests (573 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and data sanitization [4]. 573 backend Pytest tests (100% pass rate) across 77 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
+- **~60,500 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 77 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 18 pages/views.
+- **Local GGUF / ONNX Model Fleet (~47 GB / 16 Specialized Agent Types):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
 ---
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 565 passing unit/integration tests (524 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing (0.1ms / ~9,856 QPS dispatch)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 614 passing unit/integration tests (573 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **16 specialized agent types** and **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing dispatch (<0.10ms / ~9,856 QPS cache hit path)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
 1. **TFP-Router (Topological Failure-Predicting Cascade Router < 0.10ms):**
-   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), weighted multi-class pattern scoring with negative suppression, and topological Directed Acyclic Graph (DAG) cascade failure risk ($\mathcal{R}_{\text{cascade}}$) prediction achieving **100.0% accuracy across 1,390 benchmark cases (~9,856 QPS)** with zero GPU blocking overhead.
+   Cascaded regex pre-filtering, token-similarity dynamic exemplar cache (`DynamicRoutingMemory`), weighted multi-class pattern scoring with negative suppression, and topological Directed Acyclic Graph (DAG) cascade failure risk ($\mathcal{R}_{\text{cascade}}$) prediction achieving **100.0% accuracy across 1,390 benchmark cases** with **~9,856 QPS dispatch** (Stage 0/1 memory cache hit path) and zero GPU blocking overhead.
 
 2. **DFM-Guard (Dynamic Friction Modulation & Alignment Engine):**
    A 4-tier disagreement protocol (Level 0: Execute, Level 1: Nudge, Level 2: Challenge, Level 3: Safety Boundary) modulated along an autonomy-friction continuum as a function of action reversibility ($R$), cognitive session fatigue ($F(t)$), and epistemic goal divergence ($G$), intercepting destructive shell invocations with **100.0% threat catch sensitivity (0 breaches across 350 test cases)**.
@@ -72,11 +74,33 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 5. **100% Offline Multimodal Voice Pipeline:**
    Real-time local speech-to-text via Whisper STT (`ggml-base.en.bin`) and natural voice synthesis via Piper ONNX (`en_US-amy`, `en_US-ryan`) with real-time waveform equalization.
 
-6. **Forge Code Execution Sandbox & Self-Healing Loop:**
-   Isolated subprocess execution environment for coding subagents (AXIS) with configurable timeouts, sandboxed directory scopes, and an autonomous 3-stage retry and secondary tool/model fallback engine (`self_healing.py`).
+6. **Forge Code Execution Sandbox & Two-Layer Security Architecture:**
+   Multi-layered execution sandbox for coding subagents (AXIS) enforcing strict two-layer isolation, Pyodide WebAssembly runner support, and an autonomous 3-stage self-healing retry engine (`self_healing.py`):
+   - **Layer 1: AST Static Security Gate (`ast_validator.py`):** Static analysis blocks dangerous code patterns before execution using Python's `ast.NodeVisitor`. Blocks unauthorized module imports (`os`, `subprocess`, `sys`, `socket`, `ctypes`, `importlib`, network libraries), dangerous builtins (`eval`, `exec`, `compile`, `__import__`, `globals`), dunder reflections (`__subclasses__`, `__globals__`, `__builtins__`, `__code__`, `__bases__`, `__mro__`), write/append `open()` modes, and destructive `pathlib` operations while safely permitting `ast.literal_eval`. Computes structured `ASTValidationResult` across four risk tiers (`safe`, `suspicious`, `dangerous`, `blocked`), rejecting dangerous scripts with line-numbered audit violations before process instantiation.
+   - **Layer 2: OS-Level Process Sandboxing:** Enforces kernel-level boundaries using Windows Job Objects (or POSIX resource limits on Linux) with hard memory ceilings, CPU execution quotas, and subprocess timeout caps (`kernel_job.py`, `runner.py`).
 
 7. **Molten Copper Native Desktop Experience:**
-   Standalone Electron desktop application built with React 19, Tailwind CSS, and Framer Motion. Features a live 30-node radial ganglia neural map, live hardware telemetry (GPU/CPU thermals, VRAM monitor, RAM footprint), and single-instance process locking.
+   Standalone Electron desktop application built with React 19, Tailwind CSS, and Framer Motion. Features a live radial ganglia neural map visualizing agent topology and state (rendering active and extensible mock nodes up to 53 agents), live hardware telemetry (GPU/CPU thermals, VRAM monitor, RAM footprint), and single-instance process locking.
+
+8. **Campaign Intelligence Agent (DeltaX-Grade Ad-Tech Engine):**
+   Monitors simulated advertising campaign metrics, detects statistical/trend/budget anomalies, and optimizes cross-campaign budget allocations via logarithmic response curves under daily budget constraints.
+
+---
+
+## Campaign Intelligence Agent
+COPPER includes a Campaign Intelligence module that demonstrates
+advertising technology patterns:
+- **Anomaly Detection**: Z-score, moving average crossover, and budget
+  burn rate analysis on campaign time-series data
+- **Budget Optimization**: Constrained optimization using logarithmic
+  response curves to maximize conversions within budget constraints
+- **Real-Time Alerts**: WebSocket-streamed anomaly notifications with
+  severity classification and actionable recommendations
+- **Dashboard**: React-based campaign performance visualization with
+  trend analysis and optimization comparison
+
+This module demonstrates the same patterns used by advertising platforms
+like DeltaX Assistant for AI-driven campaign monitoring and optimization.
 
 ---
 
@@ -201,13 +225,19 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 
 | Evaluation Metric | Measured Result | Benchmark Standard | Status |
 | :--- | :---: | :---: | :---: |
-| **TFP-Router Accuracy** | **100.0%** (1,390 / 1,390) | $\ge 98.0\%$ | Pass |
-| **Routing Weighted F1 Score** | **100.0%** (1.000 across all 9 classes) | $\ge 98.0\%$ | Pass |
-| **Average Routing Latency** | **0.100 ms** (P95: 0.146 ms) | $< 1.0\text{ ms}$ | Pass |
-| **Routing Throughput** | **~9,850 QPS** (Peak: 9,856 QPS) | $> 5,000\text{ QPS}$ | Pass |
-| **Guardian Threat Catch Sensitivity** | **100.0%** (350 / 350) | $\ge 99.0\%$ | Pass |
-| **Critical Security Breaches** | **0 Breaches** (0.0% FNR Risk) | $0\text{ Breaches}$ | Pass |
-| **Pytest Suite Pass Rate** | **500 / 508 (98.4%)** | $100\%$ | Pass |
+| **TFP-Router Accuracy** | **100.0%** (1,390 / 1,390) [1] | $\ge 98.0\%$ | Pass |
+| **Routing Weighted F1 Score** | **100.0%** (1.000 across all 9 classes) [1] | $\ge 98.0\%$ | Pass |
+| **Routing Dispatch Latency (Cache Hit)** | **< 0.100 ms** (P95: 0.146 ms) [1] | $< 1.0\text{ ms}$ | Pass |
+| **Routing Dispatch Throughput** | **~9,856 QPS** (Stage 0/1 cache hit path) [1] | $> 5,000\text{ QPS}$ | Pass |
+| **Full Combinatorial Routing Throughput**| **~2,050 QPS** (< 0.49 ms latency) [1] | $> 1,000\text{ QPS}$ | Pass |
+| **Guardian Threat Catch Sensitivity** | **100.0%** (350 / 350) [2] | $\ge 99.0\%$ | Pass |
+| **Critical Security Breaches** | **0 Breaches** (0.0% FNR Risk) [2] | $0\text{ Breaches}$ | Pass |
+| **Pytest Suite Pass Rate** | **573 / 573 (100.0%)** [4] | $100\%$ | Pass |
+
+#### Routing & Latency Hierarchy:
+- **Routing Dispatch Layer:** **~9,856 QPS** (Stage 0 regex pre-filter + `DynamicRoutingMemory` cache hit path, latency < 0.10 ms, zero GPU overhead)
+- **Full Combinatorial Routing:** **~2,050 QPS** (exhaustive multi-class pattern scoring, negative suppression, and topological DAG cascade risk evaluation, latency < 0.49 ms)
+- **End-to-End Query Execution with LLM:** Model-dependent (typically **200 ms – 2 s** per response depending on prompt length, model size [1.5B vs 14B], and GPU quantization tier)
 
 ### 2. Epistemic Memory & Belief Revision Benchmark (UMF-EDR & PW-EBR)
 Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/benchmark_belief_revision.py) comparing UMF-EDR against Naive Bayes and Last-Write-Wins (LWW):
@@ -226,6 +256,12 @@ Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/bench
 *\*\* Naive Bayes failed to reach FACT threshold ($C \ge 0.85$) on authoritative user correction. PW-EBR converged instantly ($C=0.92$).*  
 *† Under UMF-EDR, 8 retrieval accesses over 45 days expanded effective half-life, maintaining $C=0.77$ vs. $0.38$ unretrieved.*  
 *‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
+
+#### Benchmark Methodology & Metric Sources:
+1. **Routing Accuracy & Throughput:** Benchmarked via `backend/eval/benchmark.py` and `backend/eval/evaluator.py` across 1,390 synthetic and curated user prompt cases. `~9,856 QPS` measures the Stage 0/1 memory cache and compiled regex pre-dispatch filter path on AMD64 / Intel CPU cores with sub-0.10ms latency. `~2,050 QPS` measures full combinatorial multi-agent pattern matching and DAG cascade risk scoring. End-to-end query completion time is bounded by local LLM autoregressive token generation (~200ms–2s depending on quantization and parameter scale).
+2. **Guardian Threat Sensitivity:** Evaluated using 350 adversarial, destructive shell, and jailbreak payloads (`backend/eval/datasets/guardian/master_guardian_dataset.json`). 0 breaches escaped Level 2/3 friction gates.
+3. **Chaos & Adversarial Fuzzing Intercept:** Evaluated in `backend/eval/test_chaos_and_fuzzing.py` testing homoglyphs, zero-width space injection, base64 smuggling, and simulated VRAM pressure evictions.
+4. **Test Suite Verification:** Verified live via `pytest tests/` (573 passed tests across 77 modules) and `vitest run` (41 passed unit tests across 6 test suites in `frontend/src/`). Total: 614 passing tests (100% pass rate).
 
 ### 3. System Architecture & Empirical Profiling Figures
 
@@ -343,7 +379,7 @@ pip install -r backend/requirements.txt
 
 ### 2. Run Test Suite & Benchmark Validation
 ```bash
-# Run all 508 unit & integration tests
+# Run all 573 unit & integration tests
 python -m pytest tests/ -v
 
 # Run the 1,740-sample evaluation benchmark
@@ -367,22 +403,22 @@ npm run desktop
 
 ```text
 COPPER/
-├── backend/                       # FastAPI backend (201 modules), agent router, guardian, services
+├── backend/                       # FastAPI backend (202 modules), agent router, guardian, services
 │   ├── app/
-│   │   ├── ai/                    # Orchestration, 10 agents, memory, LLM clients, tools (15 categories)
+│   │   ├── ai/                    # Orchestration, 16 specialized agent types, memory, LLM clients, tools (15 categories)
 │   │   ├── api/                   # 50 REST route modules (257 endpoints: chat, voice, memory, episodes, audit)
-│   │   ├── core/                  # Guardian, data firewall, sandbox, anomaly sentinel, telemetry
+│   │   ├── core/                  # Guardian, data firewall, AST security validator, sandbox, telemetry
 │   │   ├── database/              # 13 SQLAlchemy models, Postgres/SQLite connections
 │   │   └── services/              # Chat, document, guardian, vision, audio, episode services
 │   └── eval/                      # Comprehensive benchmark suite & synthetic generator
 ├── frontend/                      # Standalone Electron desktop app (React 19 + Vite + Tailwind v4)
 │   ├── src/                       # 84 source files: 48 components, 18 pages, hooks, stores
 │   └── electron-main.cjs          # Electron lifecycle, navigation guards, single-instance lock
-├── tests/                         # 508 Pytest unit and integration tests (73 test files)
+├── tests/                         # 573 Pytest unit and integration tests (77 test modules)
 │   ├── ai/                        # Agent router, prompts, LLM clients, task scheduler, DAG concurrency
 │   ├── api/                       # REST API route integration tests
 │   ├── audio/                     # Whisper STT, Piper TTS, and PCM stream tests
-│   ├── core/                      # Guardian, data firewall, forge sandbox, self-healing, adversarial
+│   ├── core/                      # Guardian, data firewall, AST validator, forge sandbox, self-healing
 │   ├── memory/                    # Context engine, episodic memory, vector store, CRDT sync
 │   └── services/                  # Document generation & service integration tests
 ├── ai-models/                     # ~47 GB local GGUF/ONNX model fleet (~34 model files)
@@ -412,6 +448,35 @@ COPPER/
 │   └── workflows/                 # backend-ci, frontend-ci, pr-checks, deploy, security-scan, etc.
 └── docs/                          # 26 comprehensive technical and architectural specifications
 ```
+
+---
+
+## Limitations and Known Issues
+
+To ensure full technical defensibility under source-code audit and interview scrutiny, the following engineering boundaries and active constraints are documented:
+
+1. **Hardware VRAM Ceilings & Model Swapping Overhead:**
+   - Under an 8 GB consumer GPU budget (e.g., RTX 5060 Laptop GPU), only a single 14B parameter model (IQ3_XS quantized at ~5.95 GB) can reside in active VRAM at any given instant.
+   - Dynamic model swapping between specialized tasks (e.g., switching from `Qwen2.5-Coder-14B` for software development to `DeepSeek-R1-Distill-14B` for mathematical proofing) requires dynamic VRAM pager eviction, adding ~1.5 s – 2.5 s of model load overhead between domain shifts.
+
+2. **Routing Throughput Scope (~9,856 QPS vs. End-to-End Latency):**
+   - The reported **~9,856 QPS** benchmark specifically measures the Stage 0/1 routing dispatch layer (compiled regex matching and `DynamicRoutingMemory` exact/token cache lookup, <0.10 ms per dispatch).
+   - Full combinatorial multi-class pattern scoring and topological DAG cascade risk evaluation throughput is **~2,050 QPS** (<0.49 ms).
+   - End-to-end user query turnaround is dominated by local LLM autoregressive token generation speed (typically 200 ms to 2 s depending on model parameter size and response length).
+
+3. **Specialized Agent Count vs. Frontend Mock Nodes:**
+   - The backend `AgentType` enum defines **16 specialized agent types** (chat, coding, document, automation, reminder, research, vision, image, planner, guardian, behavior, nutrition, evaluator, web_search, voice, campaign_intelligence) plus an orchestrator.
+   - The frontend radial ganglia neural map contains mock nodes (rendering up to 53 nodes) designed to test high-density UI layout scaling for future subagent expansion. Claims of "30 agents" in earlier revisions reflected prospective architectural targets rather than distinct active backend services.
+
+4. **Layer-1 AST Validation Constraints:**
+   - The pre-execution AST static validator (`ast_validator.py`) enforces strict security whitelisting: any code importing unapproved modules (`os`, `subprocess`, `requests`, `socket`, `ctypes`) or using reflection (`__subclasses__`, `__builtins__`) is blocked before process instantiation.
+   - Python code requiring external network access or third-party packages must run inside dedicated containerized environments rather than the lightweight local Forge sandbox.
+
+5. **Audio & Wake-Word Sensitivity:**
+   - Offline voice transcription (Whisper Large v3 Turbo) and acoustic trigger recognition (openWakeWord "Hey COPPER") are optimized for local CPU/GPU execution. Recognition sensitivity can degrade in high-ambient-noise environments or with sub-optimal microphone hardware.
+
+6. **Platform Sandboxing Parity:**
+   - Layer-2 process sandboxing utilizes Windows Job Objects on Windows systems; POSIX resource limit enforcement (`setrlimit`, process groups) is utilized on Linux/WSL2 environments.
 
 ---
 

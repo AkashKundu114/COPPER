@@ -5,6 +5,7 @@ from collections.abc import AsyncGenerator
 from sqlalchemy.orm import Session
 
 from app.ai.agents.automation_agent import automation_agent
+from app.ai.agents.campaign_agent import campaign_agent
 from app.ai.agents.coding_agent import coding_agent
 from app.ai.agents.document_agent import document_agent
 from app.ai.agents.image_agent import image_agent
@@ -40,6 +41,7 @@ AGENT_MAP = {
     AgentType.WEB_SEARCH: web_search_agent,
     AgentType.VISION: vision_agent,
     AgentType.IMAGE: image_agent,
+    AgentType.CAMPAIGN_INTELLIGENCE: campaign_agent,
 }
 
 
@@ -194,20 +196,27 @@ class ChatService:
                 "similarity": cache_match.similarity,
             }
 
+            raw_agent_type = cache_match.agent_type or "chat"
+            normalized_agent_type = (
+                raw_agent_type.split(".", 1)[1].lower()
+                if raw_agent_type.startswith("AgentType.")
+                else raw_agent_type
+            )
+
             await context_engine.append_message(session_id, "user", message)
             await context_engine.append_message(
                 session_id,
                 "assistant",
                 cached_text,
-                agent_type=cache_match.agent_type or "chat",
+                agent_type=normalized_agent_type,
                 model_name="cache:instant-recall",
                 latency_ms=hit_latency_ms,
             )
-            await memory_manager.save_interaction(session_id, message, cached_text, cache_match.agent_type or "chat")
+            await memory_manager.save_interaction(session_id, message, cached_text, normalized_agent_type)
 
             return {
                 "response": cached_text,
-                "agent_type": cache_match.agent_type or "chat",
+                "agent_type": normalized_agent_type,
                 "session_id": session_id,
                 "metrics": metrics,
             }
@@ -412,10 +421,13 @@ class ChatService:
                         pass
 
                 if not semantic_cache.is_error_response(response):
+                    stored_agent_type = (
+                        agent_type.value if hasattr(agent_type, "value") else str(agent_type)
+                    )
                     await semantic_cache.store(
                         message,
                         response,
-                        agent_type=str(agent_type),
+                        agent_type=stored_agent_type,
                         context_hash=current_context_hash,
                         memory_context=memory_snippet,
                     )

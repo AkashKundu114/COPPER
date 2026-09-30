@@ -15,6 +15,7 @@ import {
   UtensilsCrossed,
   Users,
   Mail,
+  Megaphone,
 } from "lucide-react";
 import { soundFX } from "../../lib/soundFX";
 import { systemAPI } from "../../services/api";
@@ -35,7 +36,8 @@ export type NavSection =
   | "self-improvement"
   | "security"
   | "food"
-  | "settings";
+  | "settings"
+  | "campaigns";
 
 interface SidebarProps {
   activeSection: NavSection;
@@ -68,6 +70,13 @@ const NAV_GROUPS: NavGroup[] = [
         ariaLabel: "AI Chat",
       },
       { id: "companion", label: "Voice", icon: Radio },
+      {
+        id: "campaigns",
+        label: "Campaigns",
+        icon: Megaphone,
+        testId: "campaigns-nav",
+        ariaLabel: "Campaign Intelligence",
+      },
     ],
   },
   {

@@ -518,5 +518,66 @@
     "metadata": {
       "duration_seconds": 1800
     }
+  },
+  "ae1b71ab-c658-466a-bf7f-67346d584a20": {
+    "event_id": "ae1b71ab-c658-466a-bf7f-67346d584a20",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-09-30T09:03:27.350820",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "6e56d04b-3f73-41f6-b83c-ce7860f81005": {
+    "event_id": "6e56d04b-3f73-41f6-b83c-ce7860f81005",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-09-30T09:03:27.353132",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "144be13f-a038-4a9f-a4ea-06a11c5abecf": {
+    "event_id": "144be13f-a038-4a9f-a4ea-06a11c5abecf",
+    "description": "API test event",
+    "timestamp": "2026-09-30T09:06:04.714023",
+    "category": "system",
+    "source": "pytest",
+    "entities": [
+      "test_runner"
+    ],
+    "metadata": {}
+  },
+  "f147302f-7718-4cc4-95aa-a8451a858a36": {
+    "event_id": "f147302f-7718-4cc4-95aa-a8451a858a36",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-09-30T09:06:48.951470",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "b19e5c22-5b05-4335-b35b-4b1592f29d35": {
+    "event_id": "b19e5c22-5b05-4335-b35b-4b1592f29d35",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-09-30T09:06:48.953329",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
   }
 }

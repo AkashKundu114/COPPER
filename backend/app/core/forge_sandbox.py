@@ -9,6 +9,7 @@ from collections import deque
 from pathlib import Path
 from typing import Any
 
+from app.core.ast_validator import ast_security_validator
 from app.core.config import settings
 from app.core.data_firewall import redact
 from app.core.kernel_sandbox import KernelSandboxRunner
@@ -417,6 +418,7 @@ class ForgeSandbox:
         timeout: int | None = None,
         backend: str | None = None,
         session_id: str | None = None,
+        skip_ast_validation: bool = False,
     ) -> dict:
         """Executes Python code with sandbox isolation, resource limits, and audit logging."""
         effective_timeout = timeout or getattr(settings, "SANDBOX_TIMEOUT_SECONDS", 15)
@@ -448,6 +450,54 @@ class ForgeSandbox:
                     is_blocked=True,
                 )
                 return blocked_res
+
+        # AST-level static security validation
+        if not skip_ast_validation:
+            ast_res = ast_security_validator.validate(code)
+            if ast_res.risk_level in ("blocked", "dangerous"):
+                duration_ms = (time.perf_counter() - start_time) * 1000
+                violation_details = [
+                    f"Line {v.line_number} [{v.severity.upper()}]: {v.description}"
+                    for v in ast_res.violations
+                ]
+                formatted_stderr = (
+                    f"Execution rejected by Forge Sandbox AST Security Validator ({ast_res.risk_level}):\n"
+                    + "\n".join(violation_details)
+                )
+                logger.warning(
+                    f"Forge Sandbox AST validator blocked execution ({ast_res.risk_level}): {violation_details}"
+                )
+                blocked_res = {
+                    "stdout": "",
+                    "stderr": formatted_stderr,
+                    "exit_code": 1,
+                    "error": "ASTSecurityViolation",
+                    "backend": "ast_validator",
+                    "duration_ms": duration_ms,
+                    "violations": [
+                        {
+                            "node_type": v.node_type,
+                            "line_number": v.line_number,
+                            "description": v.description,
+                            "severity": v.severity,
+                        }
+                        for v in ast_res.violations
+                    ],
+                }
+                self._log_audit_entry(
+                    code,
+                    blocked_res,
+                    backend_used="ast_validator",
+                    duration_ms=duration_ms,
+                    session_id=session_id,
+                    is_blocked=True,
+                )
+                return blocked_res
+            elif ast_res.risk_level == "suspicious":
+                logger.warning(
+                    f"Forge Sandbox AST validator flagged suspicious patterns: "
+                    f"{[v.description for v in ast_res.violations]}"
+                )
 
         runner = self._select_runner(backend)
         logger.info(f"Forge Sandbox running with runner: {runner.name}")
@@ -481,6 +531,7 @@ class ForgeSandbox:
         timeout_seconds: int | None = None,
         backend: str | None = None,
         session_id: str | None = None,
+        skip_ast_validation: bool = False,
     ) -> dict:
         """Legacy helper matching execute_python interface with status flag."""
         res = self.run_python_code(
@@ -488,6 +539,7 @@ class ForgeSandbox:
             timeout=timeout_seconds,
             backend=backend,
             session_id=session_id,
+            skip_ast_validation=skip_ast_validation,
         )
         status = "success" if res.get("exit_code") == 0 else "error"
         return {"status": status, **res}

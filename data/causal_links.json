@@ -54,5 +54,12 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "ae1b71ab-c658-466a-bf7f-67346d584a20",
+    "effect_id": "6e56d04b-3f73-41f6-b83c-ce7860f81005",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]

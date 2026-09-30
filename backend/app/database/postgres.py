@@ -35,6 +35,7 @@ def init_db():
         db_file.parent.mkdir(parents=True, exist_ok=True)
     import app.database.models.agent_registry  # noqa: F401
     import app.database.models.audit_log  # noqa: F401
+    import app.database.models.campaign  # noqa: F401
     import app.database.models.episode  # noqa: F401
     import app.database.models.history  # noqa: F401
     import app.database.models.knowledge_graph  # noqa: F401

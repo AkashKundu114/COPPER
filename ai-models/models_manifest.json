@@ -93,6 +93,16 @@
       "quantization": "IQ3_M",
       "size_gb": 5.72,
       "role": "Deterministic function calling, CLI execution, API coordination, and task automation"
+    },
+    "campaign_intelligence": {
+      "name": "DeepSeek-R1-Distill-Qwen-14B",
+      "agent_codename": "DELTA",
+      "ollama_tag": "deepseek-r1:14b",
+      "hf_repo": "bartowski/DeepSeek-R1-Distill-Qwen-14B-GGUF",
+      "file": "core/DeepSeek-R1-Distill-Qwen-14B-IQ3_XS.gguf",
+      "quantization": "IQ3_XS",
+      "size_gb": 6.38,
+      "role": "Ad-tech campaign intelligence, mathematical conversion response optimization, and anomaly detection"
     }
   },
   "subagents": {

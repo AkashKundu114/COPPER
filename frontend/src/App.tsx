@@ -33,6 +33,7 @@ import { ActivityView } from "./pages/ActivityView";
 import { SelfImprovementView } from "./pages/SelfImprovementView";
 import { FoodView } from "./pages/FoodView";
 import { SettingsView } from "./pages/SettingsView";
+import { CampaignDashboard } from "./components/CampaignDashboard";
 
 import { AgentRegistry } from "./pages/AgentRegistry";
 import { Insights } from "./pages/Insights";
@@ -233,6 +234,8 @@ function MainApp() {
         return <FoodView />;
       case "settings":
         return <SettingsView />;
+      case "campaigns":
+        return <CampaignDashboard />;
       default:
         return <DashboardView onNavigate={setActiveSection} />;
     }

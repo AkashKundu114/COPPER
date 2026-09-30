@@ -24,6 +24,9 @@ class DocumentAgent(BaseAgent):
             description="Autonomous document generation agent capable of synthesizing multi-format reports, proposals, tables, and documents.",
         )
 
+    def get_target_model(self) -> str:
+        return model_manager.get_document_model()
+
     def _detect_format(self, prompt: str) -> str:
         p = prompt.lower()
         if "word" in p or ".docx" in p or "docx" in p or "ms word" in p:

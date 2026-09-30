@@ -76,6 +76,7 @@ from app.api.routes import (
     wake,
     workspace,
 )
+from app.api import campaign_routes
 from app.core.config import settings
 from app.core.logger import logger
 from app.core.telemetry import init_telemetry
@@ -199,6 +200,9 @@ app.include_router(plugins.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(sync.router, prefix="/api/v1")
 app.include_router(catalog.router, prefix="/api/v1")
+app.include_router(campaign_routes.router, prefix="/api")
+app.include_router(campaign_routes.router, prefix="/api/v1")
+app.include_router(campaign_routes.ws_router)
 
 # Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)

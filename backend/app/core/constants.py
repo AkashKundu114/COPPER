@@ -21,6 +21,7 @@ class AgentType(str, Enum):
     ORCHESTRATOR = "orchestrator"
     WEB_SEARCH = "web_search"
     VOICE = "voice"
+    CAMPAIGN_INTELLIGENCE = "campaign_intelligence"
 
 
 class GuardianLevel(int, Enum):

@@ -393,6 +393,20 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             8.0,
         ),
     ],
+    AgentType.CAMPAIGN_INTELLIGENCE: [
+        (
+            r"\b(how are my campaigns performing|which campaign is underperforming|optimize my budget|what happened to my ctr|alert me about problems|campaign\s+metrics?|reallocate\s+(ad\s+)?budget)\b",
+            9.0,
+        ),
+        (
+            r"\b(campaign|campaigns|advertising|ad\s+campaign|ad\s+spend|ad\s+fatigue|ctr|cpc|cpa|roas|impressions|clicks|conversions|budget\s+utilization|optimize\s+(my\s+)?budget|budget\s+optimizer|underperforming\s+campaign|campaign\s+anomaly|campaign\s+alert|ad\s+performance|deltax)\b",
+            8.0,
+        ),
+        (
+            r"\b(ad|ads|budget|spend|anomaly|alert|optimize|performance)\b",
+            4.0,
+        ),
+    ],
 }
 
 
@@ -512,6 +526,7 @@ def estimate_dag_cascade_risk(agent: AgentType, is_consequential: bool, sub_task
         AgentType.REMINDER: 0.02,
         AgentType.DOCUMENT: 0.04,
         AgentType.IMAGE: 0.05,
+        AgentType.CAMPAIGN_INTELLIGENCE: 0.05,
         AgentType.RESEARCH: 0.07,
         AgentType.WEB_SEARCH: 0.06,
         AgentType.VISION: 0.09,
@@ -588,8 +603,14 @@ RESEARCH_RE = re.compile(
     re.IGNORECASE,
 )
 
+CAMPAIGN_RE = re.compile(
+    r"\b(campaigns?|advertising|ad\s+spend|ad\s+campaign|ad\s+performance|ad\s+fatigue|ctr|cpc|cpa|roas|impressions|clicks|conversions|optimize\s+(my\s+)?budget|budget\s+optimizer|underperforming\s+campaign|campaign\s+anomaly|campaign\s+alert|deltax)\b",
+    re.IGNORECASE,
+)
+
 _ROUTING_PATTERNS = [
     (DESTRUCTIVE_COMMAND_RE, AgentType.GUARDIAN),
+    (CAMPAIGN_RE, AgentType.CAMPAIGN_INTELLIGENCE),
     (CODE_RE, AgentType.CODING),
     (RESEARCH_RE, AgentType.RESEARCH),
 ]

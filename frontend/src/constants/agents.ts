@@ -52,6 +52,19 @@ export const AGENTS: AgentMeta[] = [
   // TIER 1: Core Reasoning (MODEL_1_CORE)
   // ==========================================
   {
+    id: "DELTA",
+    name: "Delta",
+    tier: "MODEL_1_CORE",
+    domain: "Campaign Intelligence & Ad-Tech",
+    blurb: "DeltaX-grade ad campaign anomaly detection, budget allocation optimization, and telemetry monitoring.",
+    icon: "Target",
+    color: "#06b6d4",
+    bg: "bg-cyan-950/30",
+    border: "border-cyan-500/40",
+    text: "text-cyan-400",
+    model: "deepseek-r1:14b",
+  },
+  {
     id: "CHRONOS",
     name: "Chronos",
     tier: "MODEL_1_CORE",

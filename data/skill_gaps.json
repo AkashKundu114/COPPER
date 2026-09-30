@@ -128,5 +128,25 @@
     "recommended_guide": null,
     "difficulty_level": "beginner",
     "status": "detected"
+  },
+  {
+    "gap_id": "4944ccf9-0d84-45e7-a53c-ee091106e4bd",
+    "topic": "asyncio-distributed-locks-9305913e-2759-4e53-87c9-73d5d03d2979",
+    "query_count": 3,
+    "first_observed": "2026-09-30T03:32:42.293427+00:00",
+    "last_observed": "2026-09-30T03:32:42.294438+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-9305913e-2759-4e53-87c9-73d5d03d2979: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "306e812c-53ed-40c1-bed0-a20d03231ed9",
+    "topic": "api_test_topic_80f962fe-ef18-4d86-8b9e-0ae4ddc945d5",
+    "query_count": 1,
+    "first_observed": "2026-09-30T03:36:04.761539+00:00",
+    "last_observed": "2026-09-30T03:36:04.761539+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
   }
 ]

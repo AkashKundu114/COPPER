@@ -583,6 +583,63 @@ export const routingAPI = {
   getHistory: (limit = 50) => api.get(`/routing/history?limit=${limit}`),
 };
 
+export interface CampaignItem {
+  id?: number;
+  campaign_id: string;
+  campaign_name: string;
+  campaign_type: string;
+  timestamp?: string;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  spend: number;
+  revenue: number;
+  ctr: number;
+  cpc: number;
+  cpa: number;
+  roas: number;
+  daily_budget: number;
+  budget_utilization: number;
+  status?: "healthy" | "warning" | "critical";
+}
+
+export interface CampaignAnomalyItem {
+  campaign_id: string;
+  campaign_name: string;
+  anomaly_type: string;
+  severity: "info" | "warning" | "critical";
+  metric_name: string;
+  current_value: number;
+  expected_value: number;
+  deviation_percent: number;
+  detected_at: string;
+  recommendation: string;
+  auto_fixable: boolean;
+}
+
+export interface BudgetOptimizationResult {
+  total_budget: number;
+  current_allocation: Record<string, number>;
+  optimized_allocation: Record<string, number>;
+  projected_current_conversions: number;
+  projected_optimized_conversions: number;
+  improvement_percent: number;
+  reasoning: string[];
+}
+
+export const campaignAPI = {
+  getCampaigns: () => api.get<CampaignItem[]>("/campaigns"),
+  getMetrics: (campaignId: string, hours = 168) =>
+    api.get<CampaignItem[]>(`/campaigns/${campaignId}/metrics?hours=${hours}`),
+  getAnomalies: (hours = 168) =>
+    api.get<CampaignAnomalyItem[]>(`/campaigns/anomalies?hours=${hours}`),
+  getDashboard: () => api.get<any>("/campaigns/dashboard"),
+  optimizeBudget: (totalBudget: number, campaignIds?: string[]) =>
+    api.post<BudgetOptimizationResult>("/campaigns/optimize-budget", {
+      total_budget: totalBudget,
+      campaign_ids: campaignIds,
+    }),
+};
 
 export default api;
 

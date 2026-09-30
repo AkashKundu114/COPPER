@@ -49,7 +49,8 @@ def test_sandbox_environment_sanitization(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", "postgresql://copper:supersecret@localhost:5432/db")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-secret-key-12345")
     res = forge_sandbox.run_python_code(
-        "import os\nprint('DB:', os.environ.get('DATABASE_URL'))\nprint('KEY:', os.environ.get('OPENAI_API_KEY'))\n"
+        "import os\nprint('DB:', os.environ.get('DATABASE_URL'))\nprint('KEY:', os.environ.get('OPENAI_API_KEY'))\n",
+        skip_ast_validation=True,
     )
     assert res["exit_code"] == 0
     assert "DB: None" in res["stdout"]
@@ -61,6 +62,34 @@ def test_sandbox_blocks_forbidden_destructive_patterns():
     assert res["exit_code"] == 1
     assert "Execution blocked by Forge Sandbox safety filter" in res["stderr"]
     assert res["error"] == "SecurityViolation"
+
+
+def test_sandbox_ast_validation_blocking():
+    """Verify that AST validation intercepts and blocks dangerous execution before runner invocation."""
+    code = "import os\nos.system('echo compromised')"
+    res = forge_sandbox.run_python_code(code)
+    assert res["exit_code"] == 1
+    assert res["error"] == "ASTSecurityViolation"
+    assert res["backend"] == "ast_validator"
+    assert "Execution rejected by Forge Sandbox AST Security Validator" in res["stderr"]
+    assert "violations" in res
+    assert len(res["violations"]) > 0
+
+
+def test_sandbox_ast_validation_allows_safe_code():
+    """Verify that safe code passes AST validation and executes normally."""
+    code = "numbers = [x * 2 for x in range(5)]\nprint('SUM:', sum(numbers))"
+    res = forge_sandbox.run_python_code(code)
+    assert res["exit_code"] == 0
+    assert "SUM: 20" in res["stdout"]
+
+
+def test_sandbox_ast_validation_suspicious_logs_and_proceeds():
+    """Verify that suspicious code (e.g. locals()) logs warning but executes normally."""
+    code = "def get_ctx():\n    val = 123\n    return str(list(locals().keys()))\nprint(get_ctx())"
+    res = forge_sandbox.run_python_code(code)
+    assert res["exit_code"] == 0
+    assert "val" in res["stdout"]
 
 
 def test_sandbox_pyodide_wasm_execution():
@@ -87,7 +116,7 @@ def test_sandbox_filesystem_isolation():
         "print(f'CWD:{cwd}')\n"
         "print(f'FILES:{files}')\n"
     )
-    res = forge_sandbox.run_python_code(code, backend="pyodide")
+    res = forge_sandbox.run_python_code(code, backend="pyodide", skip_ast_validation=True)
     assert res["exit_code"] == 0
     assert "/home/pyodide" in res["stdout"]
     # Ensure host files (like pyproject.toml, backend) are NOT in the virtual cwd
@@ -103,7 +132,7 @@ def test_sandbox_network_isolation():
         "import urllib.request\n"
         "urllib.request.urlopen('http://127.0.0.1:9999', timeout=1)\n"
     )
-    res = forge_sandbox.run_python_code(code, backend="pyodide")
+    res = forge_sandbox.run_python_code(code, backend="pyodide", skip_ast_validation=True)
     assert res["exit_code"] != 0
     assert "URLError" in res["stderr"] or "Error" in res["stderr"]
 
