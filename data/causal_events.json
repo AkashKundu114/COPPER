@@ -579,5 +579,29 @@
     "metadata": {
       "duration_seconds": 1800
     }
+  },
+  "235ea42d-e09d-4ccf-ae4a-e9a28ab2145e": {
+    "event_id": "235ea42d-e09d-4ccf-ae4a-e9a28ab2145e",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-09-30T10:29:24.218784",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "7e417e6c-fbc3-4391-a764-74684ea5b6b5": {
+    "event_id": "7e417e6c-fbc3-4391-a764-74684ea5b6b5",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-09-30T10:29:24.221582",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
   }
 }

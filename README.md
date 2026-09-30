@@ -1,7 +1,7 @@
 # C.O.P.P.E.R.
 
 **Centralized Omnifunctional Personal Productivity and Execution Routine**  
-*An independent, 100% offline, local-first personal AI operating system featuring 16 specialized agent types with extensible multi-agent architecture, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
+*An independent, 100% offline, local-first personal AI operating system featuring 12 specialized agent types (plus 5 architectural roadmap targets), extensible multi-agent architecture, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary%20%7C%20All%20Rights%20Reserved-red.svg)](LICENSE)
 [![Author: Akash Kundu](https://img.shields.io/badge/Author-Akash%20Kundu-blue.svg)](https://github.com/AkashKundu114)
@@ -26,6 +26,7 @@
 - [Ambient Intelligence & Continuous Context (v2.5)](#ambient-intelligence--continuous-context-v25)
 - [Campaign Intelligence Agent](#campaign-intelligence-agent)
 - [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
+- [Safety Calibration](#safety-calibration)
 - [Directory Structure](#directory-structure)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
@@ -38,7 +39,7 @@
 
 **C.O.P.P.E.R.** is an **independent, proprietary personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
 
-Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **16+ specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
+Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **12 specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
 - **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms–2 s per response).
@@ -46,14 +47,14 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback [3].
 - **614 Total Passing Tests (573 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and data sanitization [4]. 573 backend Pytest tests (100% pass rate) across 77 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
 - **~60,500 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 77 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 18 pages/views.
-- **Local GGUF / ONNX Model Fleet (~47 GB / 16 Specialized Agent Types):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
+- **Local GGUF / ONNX Model Fleet (~47 GB / 12 Specialized Agent Types):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
 ---
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 614 passing unit/integration tests (573 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **16 specialized agent types** and **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing dispatch (<0.10ms / ~9,856 QPS cache hit path)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 614 passing unit/integration tests (573 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **12 specialized agent types** and **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing dispatch (<0.10ms / ~9,856 QPS cache hit path)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
@@ -80,7 +81,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
    - **Layer 2: OS-Level Process Sandboxing:** Enforces kernel-level boundaries using Windows Job Objects (or POSIX resource limits on Linux) with hard memory ceilings, CPU execution quotas, and subprocess timeout caps (`kernel_job.py`, `runner.py`).
 
 7. **Molten Copper Native Desktop Experience:**
-   Standalone Electron desktop application built with React 19, Tailwind CSS, and Framer Motion. Features a live radial ganglia neural map visualizing agent topology and state (rendering active and extensible mock nodes up to 53 agents), live hardware telemetry (GPU/CPU thermals, VRAM monitor, RAM footprint), and single-instance process locking.
+   Standalone Electron desktop application built with React 19, Tailwind CSS, and Framer Motion. Features a live radial ganglia neural map visualizing agent topology and state (rendering 12 active specialized agents alongside 5 planned roadmap nodes with distinct visual states and orbital topologies), live hardware telemetry (GPU/CPU thermals, VRAM monitor, RAM footprint), and single-instance process locking.
 
 8. **Campaign Intelligence Agent (DeltaX-Grade Ad-Tech Engine):**
    Monitors simulated advertising campaign metrics, detects statistical/trend/budget anomalies, and optimizes cross-campaign budget allocations via logarithmic response curves under daily budget constraints.
@@ -345,6 +346,11 @@ All 15 figures below are rendered at 350 DPI vector resolution using scientific 
 
 ---
 
+## Safety Calibration
+The DFM-Guard friction coefficients were calibrated using grid search optimization over 350 adversarial test scenarios, optimizing for F1 score. Sensitivity: 100.0%, Specificity: 100.0% (F1 Score: 1.000, 0 Breaches across 350 adversarial & destructive trigger scenarios). See [`docs/friction_calibration_report.json`](docs/friction_calibration_report.json) and [`scripts/calibrate_friction.py`](scripts/calibrate_friction.py) for full methodology and calibration logs.
+
+---
+
 ## Quick Start Guide
 
 ### Live Telemetry & Benchmarking Tab
@@ -405,7 +411,7 @@ npm run desktop
 COPPER/
 ├── backend/                       # FastAPI backend (202 modules), agent router, guardian, services
 │   ├── app/
-│   │   ├── ai/                    # Orchestration, 16 specialized agent types, memory, LLM clients, tools (15 categories)
+│   │   ├── ai/                    # Orchestration, 12 specialized agent types, memory, LLM clients, tools (15 categories)
 │   │   ├── api/                   # 50 REST route modules (257 endpoints: chat, voice, memory, episodes, audit)
 │   │   ├── core/                  # Guardian, data firewall, AST security validator, sandbox, telemetry
 │   │   ├── database/              # 13 SQLAlchemy models, Postgres/SQLite connections
@@ -464,9 +470,9 @@ To ensure full technical defensibility under source-code audit and interview scr
    - Full combinatorial multi-class pattern scoring and topological DAG cascade risk evaluation throughput is **~2,050 QPS** (<0.49 ms).
    - End-to-end user query turnaround is dominated by local LLM autoregressive token generation speed (typically 200 ms to 2 s depending on model parameter size and response length).
 
-3. **Specialized Agent Count vs. Frontend Mock Nodes:**
-   - The backend `AgentType` enum defines **16 specialized agent types** (chat, coding, document, automation, reminder, research, vision, image, planner, guardian, behavior, nutrition, evaluator, web_search, voice, campaign_intelligence) plus an orchestrator.
-   - The frontend radial ganglia neural map contains mock nodes (rendering up to 53 nodes) designed to test high-density UI layout scaling for future subagent expansion. Claims of "30 agents" in earlier revisions reflected prospective architectural targets rather than distinct active backend services.
+3. **Specialized Agent Count Parity:**
+   - The backend `AgentType` enum and `AGENT_MAP` registry define **12 fully implemented specialized agent types**: `chat` (Atlas), `coding` (Vulcan), `document` (Scribe), `automation` (Daemon), `reminder` (Chronos), `research` (Prometheus), `vision` (Argus), `image` (Picasso), `web_search` (Raptor), `campaign_intelligence` (Delta), `planner` (Nexus), and `guardian` (Aegis). Every agent type has a dedicated handler subclassing `BaseAgent`, prompt/tool bindings, assigned model, and automated test coverage.
+   - The frontend `ACTIVE_AGENTS` array (`constants/agents.ts`) matches this 12-agent count and nomenclature with 100% parity. An additional 5 architectural extensions (`behavior`, `nutrition`, `evaluator`, `orchestrator`, `voice`) are tracked in `PLANNED_AGENTS` and rendered as dimmed/dashed coming-soon roadmap nodes in the Neural Brain topology. Earlier references to mock counts (30, 53) are deprecated in favor of verified parity.
 
 4. **Layer-1 AST Validation Constraints:**
    - The pre-execution AST static validator (`ast_validator.py`) enforces strict security whitelisting: any code importing unapproved modules (`os`, `subprocess`, `requests`, `socket`, `ctypes`) or using reflection (`__subclasses__`, `__builtins__`) is blocked before process instantiation.

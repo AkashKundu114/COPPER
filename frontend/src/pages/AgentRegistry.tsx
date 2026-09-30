@@ -10,7 +10,7 @@ import {
   FlaskConical,
   Wrench,
 } from "lucide-react";
-import { AGENTS, TIER_LABELS, TIER_COLORS, type Tier } from "../constants/agents";
+import { AGENTS, PLANNED_AGENTS, TIER_LABELS, TIER_COLORS, type Tier } from "../constants/agents";
 import { AgentIcon } from "../components/chat/AgentIcon";
 import { enforceKeepOnlyMiniModel, fetchAgents } from "../lib/api";
 import { catalogAPI, systemAPI, type CatalogSummary } from "../services/api";
@@ -146,7 +146,7 @@ export function AgentRegistry() {
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 font-mono">
-            {AGENTS.length} Core Agents ({activeCount} active in VRAM) • {catalogSummary?.total_personas || 264} Personas • {catalogSummary?.total_scientific_skills || 165} Skills • {catalogSummary?.total_tools || 36} Tools
+            {AGENTS.length} Core Active Agents ({activeCount} active in VRAM) • {PLANNED_AGENTS.length} Planned • {catalogSummary?.total_personas || 264} Personas • {catalogSummary?.total_scientific_skills || 165} Skills • {catalogSummary?.total_tools || 36} Tools
           </p>
         </div>
 
@@ -415,7 +415,63 @@ export function AgentRegistry() {
                   </div>
                 </div>
               );
-            })}
+          </div>
+
+          {/* Planned Roadmap Agents Section */}
+          <div className="pt-8 border-t border-slate-800/80">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-bold text-slate-200 font-sans tracking-tight flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full border border-dashed border-slate-400" />
+                  Planned Roadmap Agents ({PLANNED_AGENTS.length})
+                </h2>
+                <p className="text-xs text-slate-500 font-mono mt-0.5">
+                  Architectural extensions in development. Visualized with dashed rings in the neural brain topology.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {PLANNED_AGENTS.map((p) => (
+                <div
+                  key={p.id}
+                  className="p-4 rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/20 opacity-60 hover:opacity-85 transition-opacity flex flex-col justify-between space-y-3"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/40 text-slate-400">
+                          <AgentIcon agentId={p.id} size={18} />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="font-bold text-slate-300 text-sm font-sans tracking-tight">
+                              {p.name}
+                            </h3>
+                            <span className="text-[10px] font-mono text-slate-500">[{p.id}]</span>
+                          </div>
+                          <span className="text-[11px] font-semibold text-slate-400 font-sans block">
+                            {p.domain}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-900 text-amber-400/80 border border-amber-500/20 font-mono">
+                        Coming Soon
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-400 font-sans leading-relaxed line-clamp-2">
+                      {p.blurb}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-800/40 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                    <span>Model: {p.model}</span>
+                    <span className="italic">Roadmap</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

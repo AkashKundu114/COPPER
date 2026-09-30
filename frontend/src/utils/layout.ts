@@ -1,4 +1,4 @@
-import { AGENTS, TIER_ORDER, type Tier } from "../constants/agents";
+import { ALL_AGENTS, TIER_ORDER, type Tier } from "../constants/agents";
 
 export const VIEWBOX = 1000;
 export const CENTER = VIEWBOX / 2;
@@ -66,7 +66,7 @@ export function computeLayout(): Record<string, NodePosition> {
   const positions: Record<string, NodePosition> = {};
 
   for (const tier of TIER_ORDER) {
-    const tierAgents = AGENTS.filter((a) => a.tier === tier);
+    const tierAgents = ALL_AGENTS.filter((a) => a.tier === tier);
     const n = tierAgents.length;
     const baseRadius = RING_RADIUS[tier];
     const offset = RING_OFFSET_DEG[tier];

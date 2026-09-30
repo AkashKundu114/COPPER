@@ -1,9 +1,12 @@
 import base64
+import json
 import math
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
 from enum import IntEnum
+from pathlib import Path
 
 HOMOGLYPH_MAP = {
     "\u0430": "a",
@@ -272,23 +275,100 @@ def compute_action_reversibility_risk(proposed_action: str) -> float:
     return 0.05
 
 
+@dataclass
+class FrictionConfig:
+    risk_weight: float = 2.8
+    fatigue_weight: float = 1.8
+    goal_conflict_weight: float = 2.2
+    bias: float = 3.5
+    calibration_method: str = "grid_search_f1_optimized"
+    calibration_date: str = "2026-09-30"
+
+    def to_dict(self) -> dict:
+        return {
+            "risk_weight": self.risk_weight,
+            "fatigue_weight": self.fatigue_weight,
+            "goal_conflict_weight": self.goal_conflict_weight,
+            "bias": self.bias,
+            "calibration_method": self.calibration_method,
+            "calibration_date": self.calibration_date,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "FrictionConfig":
+        return cls(
+            risk_weight=float(data.get("risk_weight", 2.8)),
+            fatigue_weight=float(data.get("fatigue_weight", 1.8)),
+            goal_conflict_weight=float(data.get("goal_conflict_weight", 2.2)),
+            bias=float(data.get("bias", 3.5)),
+            calibration_method=str(data.get("calibration_method", "grid_search_f1_optimized")),
+            calibration_date=str(data.get("calibration_date", "2026-09-30")),
+        )
+
+
+def load_friction_config(config_path: str | Path | None = None) -> FrictionConfig:
+    """
+    Loads FrictionConfig from a JSON configuration file or report if available,
+    falling back to default calibrated values.
+    """
+    candidates = []
+    if config_path:
+        candidates.append(Path(config_path))
+    env_cfg = os.environ.get("COPPER_FRICTION_CONFIG")
+    if env_cfg:
+        candidates.append(Path(env_cfg))
+
+    root_dir = Path(__file__).resolve().parent.parent.parent
+    candidates.append(root_dir / "config" / "friction_config.json")
+    candidates.append(root_dir / "docs" / "friction_calibration_report.json")
+
+    for p in candidates:
+        if p.is_file():
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                cfg_block = data.get("optimal_coefficients") or data.get("friction_config") or data
+                if isinstance(cfg_block, dict) and "risk_weight" in cfg_block:
+                    return FrictionConfig.from_dict(cfg_block)
+            except Exception:
+                continue
+
+    return FrictionConfig()
+
+
+DEFAULT_FRICTION_CONFIG = load_friction_config()
+
+
 def compute_dynamic_friction_index(
     reversibility_risk: float,
     fatigue_score: float,
     goal_conflict: float,
-    bias: float = 1.0,
+    bias: float | None = None,
+    config: FrictionConfig | None = None,
 ) -> float:
     """
-    Computes continuous Friction Index:
-    F_idx = 3.0 * sigma(2.8 * R + 1.8 * F + 2.2 * G - bias)
+    Computes continuous Friction Index in [0.0, 3.0]:
+    F_idx = 3.0 * sigma(w_R * R + w_F * F + w_G * G - bias)
+
+    Coefficients calibrated via grid search over 350 adversarial
+    test cases optimizing for F1 score. See scripts/calibrate_friction.py
+    and docs/friction_calibration_report.json for methodology.
     """
-    logit = (2.8 * reversibility_risk) + (1.8 * fatigue_score) + (2.2 * goal_conflict) - bias
+    cfg = config or DEFAULT_FRICTION_CONFIG
+    effective_bias = bias if bias is not None else cfg.bias
+    logit = (
+        (cfg.risk_weight * reversibility_risk)
+        + (cfg.fatigue_weight * fatigue_score)
+        + (cfg.goal_conflict_weight * goal_conflict)
+        - effective_bias
+    )
     sigma = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
     return round(3.0 * sigma, 3)
 
 
 class GuardianEngine:
-    def __init__(self):
+    def __init__(self, friction_config: FrictionConfig | None = None):
+        self.friction_config = friction_config or load_friction_config()
         self.window_whitelist: set[str] = set()
         self.window_blacklist: list[str] = list(SENSITIVE_WINDOW_KEYWORDS)
 
@@ -374,7 +454,9 @@ class GuardianEngine:
         has_conflict = bool(conflicts or detected_conflicts)
         goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
 
-        friction = compute_dynamic_friction_index(risk, fatigue, goal_conflict)
+        friction = compute_dynamic_friction_index(
+            risk, fatigue, goal_conflict, config=self.friction_config
+        )
 
         # 1. Hard-boundary Catastrophic Safety Interception (Guaranteed 100% catch rate)
         if (
@@ -391,13 +473,17 @@ class GuardianEngine:
                 fatigue_score=fatigue,
             )
 
-        # 2. Level 2 Challenge: Commitment Conflict or Consequential Command under High Fatigue
-        if has_conflict or (risk >= 0.70 and fatigue >= 0.65):
+        # 2. Level 2 Challenge: Commitment Conflict, High Fatigue or Elevated Dynamic Friction
+        if has_conflict or (risk >= 0.70 and fatigue >= 0.65) or friction >= 2.0:
             evidence = conflicts if conflicts else detected_conflicts
             reason = (
                 "This conflicts with an existing commitment or goal."
                 if has_conflict
-                else (f"Elevated fatigue ({fatigue:.2f}) detected during high-impact operation.")
+                else (
+                    f"Elevated fatigue ({fatigue:.2f}) detected during high-impact operation."
+                    if (risk >= 0.70 and fatigue >= 0.65)
+                    else f"Elevated dynamic friction index ({friction:.2f}) exceeds challenge threshold."
+                )
             )
             return GuardianVerdict(
                 level=DisagreementLevel.CHALLENGE,

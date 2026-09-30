@@ -6,9 +6,12 @@ from sqlalchemy.orm import Session
 
 from app.ai.agents.automation_agent import automation_agent
 from app.ai.agents.campaign_agent import campaign_agent
+from app.ai.agents.chat_agent import chat_agent
 from app.ai.agents.coding_agent import coding_agent
 from app.ai.agents.document_agent import document_agent
+from app.ai.agents.guardian_agent import guardian_agent
 from app.ai.agents.image_agent import image_agent
+from app.ai.agents.planner_agent import planner_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
@@ -33,15 +36,18 @@ from app.services.guardian_service import guardian_service
 from app.services.self_model_service import self_model_service
 
 AGENT_MAP = {
+    AgentType.CHAT: chat_agent,
     AgentType.CODING: coding_agent,
     AgentType.DOCUMENT: document_agent,
     AgentType.AUTOMATION: automation_agent,
     AgentType.REMINDER: reminder_agent,
     AgentType.RESEARCH: research_agent,
-    AgentType.WEB_SEARCH: web_search_agent,
     AgentType.VISION: vision_agent,
     AgentType.IMAGE: image_agent,
+    AgentType.WEB_SEARCH: web_search_agent,
     AgentType.CAMPAIGN_INTELLIGENCE: campaign_agent,
+    AgentType.PLANNER: planner_agent,
+    AgentType.GUARDIAN: guardian_agent,
 }
 
 

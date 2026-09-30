@@ -46,5 +46,29 @@
     "structured_notes": null,
     "auto_tasks_created": [],
     "audio_path": "data/meetings\\14f06690-b79c-4565-a858-cbd32cef63ab.wav"
+  },
+  "4ef32444-4402-4d47-98a5-34ef061926fa": {
+    "meeting_id": "4ef32444-4402-4d47-98a5-34ef061926fa",
+    "title": "Test CI Sync",
+    "started_at": "2026-09-30T04:58:34.952615",
+    "ended_at": "2026-09-30T04:58:34.953374",
+    "duration_minutes": 1.2650000000000001e-05,
+    "status": "processing",
+    "transcript": "",
+    "structured_notes": null,
+    "auto_tasks_created": [],
+    "audio_path": "data/meetings\\4ef32444-4402-4d47-98a5-34ef061926fa.wav"
+  },
+  "ad1d1c1c-d1dc-425e-a142-8354e48da6e0": {
+    "meeting_id": "ad1d1c1c-d1dc-425e-a142-8354e48da6e0",
+    "title": "Headless Meeting",
+    "started_at": "2026-09-30T04:58:34.955798",
+    "ended_at": "2026-09-30T04:58:34.956524",
+    "duration_minutes": 1.21e-05,
+    "status": "processing",
+    "transcript": "",
+    "structured_notes": null,
+    "auto_tasks_created": [],
+    "audio_path": "data/meetings\\ad1d1c1c-d1dc-425e-a142-8354e48da6e0.wav"
   }
 }

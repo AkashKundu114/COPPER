@@ -62,14 +62,14 @@ describe("Accessibility (a11y) Audit Suite", () => {
   describe("Neural Brain Visualization a11y", () => {
     const defaultProps: NeuralBrainProps = {
       agentStats: {
-        CHRONOS: {
-          id: "CHRONOS",
-          name: "Chronos",
+        reminder: {
+          id: "reminder",
+          name: "Reminder",
           tier: "MODEL_1_CORE",
           tier_label: "Core Reasoning & Planning",
-          color: "#10b981",
-          domain: "Architecture & Planning",
-          blurb: "Breaks big asks into phased roadmaps.",
+          color: "#14b8a6",
+          domain: "Temporal & Reminders",
+          blurb: "Manages daily calendar events, focus blocks, deadlines, and reminders.",
           times_invoked: 15,
           familiarity_score: 0.8,
           familiarity_tier: "Trusted Partner",
@@ -78,10 +78,10 @@ describe("Accessibility (a11y) Audit Suite", () => {
         },
       },
       thinking: true,
-      activeAgent: "CHRONOS",
+      activeAgent: "reminder",
       activeEdge: null,
       pulseSeq: 0,
-      selectedAgent: "CHRONOS",
+      selectedAgent: "reminder",
       onSelectAgent: vi.fn(),
     };
 
@@ -114,13 +114,13 @@ describe("Accessibility (a11y) Audit Suite", () => {
       render(<NeuralBrain {...defaultProps} onSelectAgent={handleSelect} />);
 
       // The SVG interactive node circle
-      const chronosSvgButton = screen.getByRole("button", { name: /^Chronos,/i });
-      expect(chronosSvgButton).toHaveAttribute("aria-label");
-      expect(chronosSvgButton).toHaveAttribute("tabindex", "0");
-      expect(chronosSvgButton).toHaveAttribute("aria-pressed", "true");
+      const reminderSvgButton = screen.getByRole("button", { name: /^Reminder,/i });
+      expect(reminderSvgButton).toHaveAttribute("aria-label");
+      expect(reminderSvgButton).toHaveAttribute("tabindex", "0");
+      expect(reminderSvgButton).toHaveAttribute("aria-pressed", "true");
 
-      fireEvent.keyDown(chronosSvgButton, { key: "Enter" });
-      expect(handleSelect).toHaveBeenCalledWith("CHRONOS");
+      fireEvent.keyDown(reminderSvgButton, { key: "Enter" });
+      expect(handleSelect).toHaveBeenCalledWith("reminder");
     });
   });
 

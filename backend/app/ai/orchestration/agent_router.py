@@ -359,26 +359,6 @@ KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]] = {
             10.0,
         ),
     ],
-    AgentType.VOICE: [
-        (
-            r"\b(cut\s+audio|barge\s+in|stop\s+talking|shut\s+up|listen\s+carefully\s+to\s+what\s+i'm\s+about\s+to\s+say|interrupting\s+you|mute\s+mic|unmute\s+mic|voice\s+mode|whisper\s+mode|transcribe\s+audio|push-to-talk|voice\s+companion|wake\s+word|listen\s+to\s+me|turn\s+down\s+the\s+speech|speak\s+slower|speak\s+faster|stop\s+speaking|pause\s+speaking|quiet\s+please|listen\s+carefully|duplex\s+voice\s+mode|hands-free\s+mode|presence\s+volume|mute\s+your\s+voice\s+output|stop\s+talking\s+and\s+let\s+me\s+finish|switch\s+speech\s+rate|speech\s+rate|let\s+me\s+finish\s+my\s+thought)\b",
-            9.0,
-        ),
-        (
-            r"\b(i'm\s+interrupting\s+you|wait\s+a\s+second,\s+listen|hold\s+on\s+a\s+sec|cut\s+mic|tts|stt)\b",
-            8.0,
-        ),
-    ],
-    AgentType.BEHAVIOR: [
-        (
-            r"\b(nutrition\s+(schedule|plan)|protein\s+intake|caloric\s+intake|bpm\s+average|heart\s+rate|cognitive\s+brain\s+health|paleolithic|unprocessed\s+ingredients|afternoon\s+slump|intermittent\s+fasting|macronutrient|macronutrients|sleep\s+hygiene|circadian\s+rhythm|circadian\s+energy|caffeine\s+(intake|consumption)|focus\s+intervals?|ergonomic\s+posture|habit\s+tracking|hydration\s+reminder|burnout\s+detection|fatigue\s+level|recovery\s+score|biometric|cortisol|nootropic|keto|zone\s+2\s+cardio|blue-light(\s+exposure)?|attention\s+span|late-night\s+architecture\s+reviews|all-day\s+coding\s+hackathons)\b",
-            9.0,
-        ),
-        (
-            r"\b(log\s+(that\s+)?(protein|calories|heart\s+rate|bpm|sleep|water|workout)|track\s+my\s+(macros|habits|nutrition|steps|sleep|fasting)|plan\s+a\s+daily\s+nutrition|analyze\s+the\s+correlation\s+between\s+my)\b",
-            8.0,
-        ),
-    ],
     AgentType.CHAT: [
         (
             r"\b(read\s+any\s+good\s+documentation\s+lately|to\s+clear\s+my\s+mind|share\s+a\s+thoughtful\s+insight|tell\s+me\s+a\s+joke|witty\s+remark|how\s+are\s+you\s+feeling|what's\s+on\s+your\s+mind|philosophical\s+reflection|just\s+chatting|casual\s+conversation|companion\s+thought|tell\s+me\s+something\s+interesting|a\s+penny\s+for\s+your\s+thoughts)\b",

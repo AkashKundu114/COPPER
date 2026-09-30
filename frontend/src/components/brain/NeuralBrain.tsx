@@ -1,6 +1,13 @@
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AGENTS, TIER_COLORS, TIER_LABELS } from "../../constants/agents";
+import {
+  ACTIVE_AGENTS,
+  PLANNED_AGENTS,
+  ALL_AGENTS,
+  AGENTS,
+  TIER_COLORS,
+  TIER_LABELS,
+} from "../../constants/agents";
 import { computeLayout, computeOrbit, hashStr, CENTER, VIEWBOX } from "../../lib/layout";
 import type { AgentStats } from "../../lib/api";
 
@@ -38,21 +45,22 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
       <div className="sr-only">
         <h2>Agent Neural Network Overview</h2>
         <p>COPPER Core Engine Status: {thinking ? "Thinking and reasoning active" : "Idle"}.</p>
-        <p>Active Agent: {activeAgent ? AGENTS.find(a => a.id === activeAgent)?.name || activeAgent : "None"}.</p>
-        <p>Selected Agent: {selectedAgent ? AGENTS.find(a => a.id === selectedAgent)?.name || selectedAgent : "None"}.</p>
-        <p>Network includes {AGENTS.length} specialist agents across local neural mesh:</p>
+        <p>Active Agent: {activeAgent ? ALL_AGENTS.find((a) => a.id === activeAgent || a.codename === activeAgent)?.name || activeAgent : "None"}.</p>
+        <p>Selected Agent: {selectedAgent ? ALL_AGENTS.find((a) => a.id === selectedAgent || a.codename === selectedAgent)?.name || selectedAgent : "None"}.</p>
+        <p>
+          Network includes {ACTIVE_AGENTS.length} active specialist agents and {PLANNED_AGENTS.length} planned agents across local neural mesh:
+        </p>
         <ul>
-          {AGENTS.map((agent) => {
-            const stats = agentStats[agent.id];
-            const isActive = activeAgent === agent.id;
-            const isSelected = selectedAgent === agent.id;
+          {ALL_AGENTS.map((agent) => {
+            const stats = agentStats[agent.id] || (agent.codename ? agentStats[agent.codename] : undefined);
+            const isActive = activeAgent === agent.id || activeAgent === agent.codename || activeAgent?.toLowerCase() === agent.id.toLowerCase();
+            const isSelected = selectedAgent === agent.id || selectedAgent === agent.codename || selectedAgent?.toLowerCase() === agent.id.toLowerCase();
+            const isPlanned = agent.status === "coming_soon";
             return (
               <li key={`sr-${agent.id}`}>
-                <button
-                  type="button"
-                  onClick={() => onSelectAgent(agent.id)}
-                >
+                <button type="button" onClick={() => onSelectAgent(agent.id)}>
                   Select {agent.name}: {agent.domain} ({TIER_LABELS[agent.tier] || agent.tier}).
+                  {isPlanned ? " (Planned Agent - Coming Soon)." : ""}
                   {isActive ? " Currently active in mesh." : ""}
                   {isSelected ? " Currently selected." : ""}
                   {stats?.times_invoked ? ` ${stats.times_invoked} jobs handled.` : ""}
@@ -115,18 +123,19 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
           </text>
         </g>
 
-        {/* Orbiting Agent Nodes */}
-        {AGENTS.map((agent) => {
+        {/* Orbiting Agent Nodes (Active + Dimmed Planned) */}
+        {ALL_AGENTS.map((agent) => {
           const pos = positions[agent.id] || { x: CENTER, y: CENTER };
           const orbit = computeOrbit(agent.id, agent.tier);
-          const stats = agentStats[agent.id];
+          const stats = agentStats[agent.id] || (agent.codename ? agentStats[agent.codename] : undefined);
           const glow = stats?.glow ?? 0;
-          const isActive = activeAgent === agent.id;
-          const isSelected = selectedAgent === agent.id;
+          const isActive = activeAgent === agent.id || activeAgent === agent.codename || activeAgent?.toLowerCase() === agent.id.toLowerCase();
+          const isSelected = selectedAgent === agent.id || selectedAgent === agent.codename || selectedAgent?.toLowerCase() === agent.id.toLowerCase();
+          const isPlanned = agent.status === "coming_soon";
           const tierColor = TIER_COLORS[agent.tier] || "#06b6d4";
           const radius = isActive ? NODE_R_ACTIVE : NODE_R_BASE + glow * 3;
-          const baseOpacity = 0.35 + glow * 0.65;
-          const baseLineOpacity = 0.12 + glow * 0.35;
+          const baseOpacity = isPlanned ? 0.22 : 0.35 + glow * 0.65;
+          const baseLineOpacity = isPlanned ? 0.06 : 0.12 + glow * 0.35;
           const labelY = pos.y + radius + 12;
 
           return (
@@ -148,10 +157,11 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 y1={CENTER}
                 x2={pos.x}
                 y2={pos.y}
-                stroke={tierColor}
-                strokeWidth={1 + glow * 1.5}
+                stroke={isPlanned ? "#71717a" : tierColor}
+                strokeWidth={isPlanned ? 0.8 : 1 + glow * 1.5}
+                strokeDasharray={isPlanned ? "3 5" : undefined}
                 strokeLinecap="round"
-                animate={{ opacity: [baseLineOpacity, baseLineOpacity + 0.1, baseLineOpacity] }}
+                animate={{ opacity: [baseLineOpacity, baseLineOpacity + (isPlanned ? 0.04 : 0.1), baseLineOpacity] }}
                 transition={{
                   duration: 4 + (hashStr(agent.id) % 25) / 10,
                   repeat: Infinity,
@@ -203,16 +213,21 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
-                fill={isActive ? "#ffffff" : tierColor}
+                fill={isPlanned ? "transparent" : isActive ? "#ffffff" : tierColor}
                 filter={isActive ? "url(#soft-blur)" : undefined}
-                stroke={isSelected ? "#ffffff" : "transparent"}
-                strokeWidth={isSelected ? 1.5 : 0}
+                stroke={isSelected ? "#ffffff" : isPlanned ? tierColor : "transparent"}
+                strokeWidth={isSelected ? 1.5 : isPlanned ? 1.2 : 0}
+                strokeDasharray={isPlanned ? "3 3" : undefined}
                 style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
                 initial={{ r: radius }}
                 animate={
                   isActive
                     ? { r: radius, opacity: 1, scale: 1 }
-                    : { r: radius, opacity: [baseOpacity, baseOpacity + 0.18, baseOpacity], scale: [1, 1.05, 1] }
+                    : {
+                        r: radius,
+                        opacity: [baseOpacity, baseOpacity + (isPlanned ? 0.1 : 0.18), baseOpacity],
+                        scale: isPlanned ? 1 : [1, 1.05, 1],
+                      }
                 }
                 transition={
                   isActive
@@ -225,12 +240,12 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                       }
                 }
                 className="cursor-pointer focus-visible:outline-none"
-                whileHover={{ scale: 1.25 }}
+                whileHover={{ scale: isPlanned ? 1.1 : 1.25 }}
                 onClick={() => onSelectAgent(agent.id)}
                 role="button"
                 tabIndex={0}
                 aria-pressed={isSelected}
-                aria-label={`${agent.name}, ${agent.domain}${TIER_LABELS[agent.tier] ? ` - ${TIER_LABELS[agent.tier]}` : ""}${isActive ? ", currently active" : ""}${isSelected ? ", selected" : ""}`}
+                aria-label={`${agent.name}${isPlanned ? " (Planned Agent - Coming Soon)" : ""}, ${agent.domain}${TIER_LABELS[agent.tier] ? ` - ${TIER_LABELS[agent.tier]}` : ""}${isActive ? ", currently active" : ""}${isSelected ? ", selected" : ""}`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
@@ -255,7 +270,11 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                   textAnchor="middle"
                   fontSize="9"
                   className={`font-mono pointer-events-none select-none transition-opacity duration-300 ${
-                    isActive || isSelected ? "fill-white opacity-100" : "fill-zinc-400 opacity-60"
+                    isPlanned
+                      ? "fill-zinc-500 opacity-40 italic"
+                      : isActive || isSelected
+                      ? "fill-white opacity-100"
+                      : "fill-zinc-400 opacity-60"
                   }`}
                 >
                   {agent.name}
@@ -265,6 +284,23 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
           );
         })}
       </svg>
+
+      {/* Visual Legend: Active Agent vs Planned Agent */}
+      <div
+        role="complementary"
+        aria-label="Agent Visualization Legend"
+        className="absolute bottom-4 left-4 flex items-center gap-3 px-3 py-1.5 rounded-lg bg-zinc-950/80 border border-zinc-800/70 backdrop-blur-md text-[11px] font-mono select-none pointer-events-none shadow-lg"
+      >
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+          <span className="text-zinc-200">Active Agent ({ACTIVE_AGENTS.length})</span>
+        </div>
+        <div className="w-[1px] h-3 bg-zinc-800" />
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full border border-dashed border-zinc-500 bg-transparent opacity-70" />
+          <span className="text-zinc-400">Planned Agent ({PLANNED_AGENTS.length})</span>
+        </div>
+      </div>
     </div>
   );
 };
