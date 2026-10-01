@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import {
   Activity,
   Terminal,
@@ -238,7 +238,7 @@ export const ActivityView: React.FC = () => {
   };
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -251,7 +251,7 @@ export const ActivityView: React.FC = () => {
               Live Execution & Governance Log
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             NEXUS DAG decomposition, PRISM explainable routing telemetry, and local tool execution traces
           </p>
         </div>
@@ -262,7 +262,7 @@ export const ActivityView: React.FC = () => {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-sans font-semibold transition-all ${
               showBenchmarkAnalytics
                 ? "bg-purple-600 text-white border-purple-500 shadow-lg shadow-purple-900/50"
-                : "bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white"
+                : "bg-surface-elevated hover:bg-surface-active border-border-subtle text-text-secondary hover:text-white"
             }`}
           >
             <BarChart3 size={13} />
@@ -284,7 +284,7 @@ export const ActivityView: React.FC = () => {
 
           <button
             onClick={clearLogs}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-elevated hover:bg-surface-active border border-border-subtle text-text-secondary hover:text-white transition-colors"
           >
             <Trash2 size={13} />
             <span>Clear Logs</span>
@@ -293,7 +293,7 @@ export const ActivityView: React.FC = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+      <div className="flex flex-wrap gap-2 border-b border-border-subtle pb-3">
         {(
           [
             "all",
@@ -315,7 +315,7 @@ export const ActivityView: React.FC = () => {
             className={`px-3 py-1.5 rounded-lg capitalize transition-all ${
               filter === cat
                 ? "bg-purple-500/20 text-purple-400 border border-purple-500/40 font-bold"
-                : "text-slate-400 hover:text-white"
+                : "text-text-secondary hover:text-white"
             }`}
           >
             {cat === "ambient"
@@ -346,29 +346,29 @@ export const ActivityView: React.FC = () => {
       )}
 
       {/* Active Execution Pipeline Card */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+      <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
+        <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider flex items-center justify-between">
           <span>Active Collaboration Architecture</span>
           <span className="text-[10px] text-purple-400 bg-purple-950/40 border border-purple-800/40 px-2.5 py-0.5 rounded-full font-mono">
             DeepSeek-R1 DAG + Redis Pub/Sub Active
           </span>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2">
+          <div className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-2">
             <div className="flex items-center gap-2 text-purple-400 font-bold font-sans text-xs">
               <Network size={14} />
               <span>NEXUS Planner & DAG Orchestrator</span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-text-secondary">
               Decomposes high-level requests into atomic sub-tasks with dependency graphs, parallel execution tiers, and final response synthesis.
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2">
+          <div className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-2">
             <div className="flex items-center gap-2 text-cyan-400 font-bold font-sans text-xs">
               <Terminal size={14} />
               <span>Redis Pub/Sub Shared Context Bus</span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-text-secondary">
               Distributed event broadcasting, inter-agent data passing, and real-time state sharing across specialist squads (OMNI, AXIS, FORGE, KINESIS).
             </p>
           </div>
@@ -377,11 +377,11 @@ export const ActivityView: React.FC = () => {
 
       {/* Real-time Activity Event Logs */}
       <div className="space-y-4">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Execution Traces ({filtered.length})
         </h3>
         {filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
+          <div className="p-12 text-center text-text-tertiary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
             No activity logs match the selected filter.
           </div>
         ) : (
@@ -417,7 +417,7 @@ export const ActivityView: React.FC = () => {
             return (
               <div
                 key={log.id}
-                className="rounded-2xl bg-slate-900/70 border border-slate-800 overflow-hidden hover:border-slate-700 transition-all space-y-2 p-4"
+                className="rounded-2xl bg-surface-elevated/70 border border-border-subtle overflow-hidden hover:border-border-highlight transition-all space-y-2 p-4"
               >
                 <div
                   onClick={() => hasIO && toggleExpand(log.id)}
@@ -426,7 +426,7 @@ export const ActivityView: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-1.5 rounded-lg bg-slate-800 border border-slate-700 mt-0.5">
+                    <div className="p-1.5 rounded-lg bg-surface-active border border-border-highlight mt-0.5">
                       {getCategoryIcon(log.category)}
                     </div>
                     <div>
@@ -440,30 +440,30 @@ export const ActivityView: React.FC = () => {
                               ? "bg-purple-950/60 text-purple-400 border border-purple-800/40"
                               : log.category === "Tools"
                               ? "bg-cyan-950/60 text-cyan-400 border border-cyan-800/40"
-                              : "bg-slate-800 text-accent-400"
+                              : "bg-surface-active text-accent-400"
                           }`}
                         >
                           {log.category}
                         </span>
                         {log.io?.duration_ms && (
-                          <span className="flex items-center gap-1 text-[10px] text-slate-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">
+                          <span className="flex items-center gap-1 text-[10px] text-text-secondary bg-canvas px-1.5 py-0.5 rounded border border-border-subtle">
                             <Clock size={10} />
                             {log.io.duration_ms}ms
                           </span>
                         )}
                       </div>
-                      <p className="text-slate-400 text-[11px] mt-1">
+                      <p className="text-text-secondary text-[11px] mt-1">
                         {log.detail}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-text-tertiary">
                       {log.timestamp}
                     </span>
                     {hasIO && (
-                      <div className="text-slate-400 hover:text-white">
+                      <div className="text-text-secondary hover:text-white">
                         {isExpanded ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
                       </div>
                     )}
@@ -486,13 +486,13 @@ export const ActivityView: React.FC = () => {
 
                 {/* Expandable I/O Drawer for simple tools */}
                 {hasIO && isExpanded && (
-                  <div className="p-4 bg-slate-950/90 border border-slate-800/80 rounded-xl space-y-3 mt-2">
+                  <div className="p-4 bg-canvas/90 border border-border-subtle rounded-xl space-y-3 mt-2">
                     {log.io?.arguments && (
                       <div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <div className="text-[10px] font-bold text-text-secondary uppercase tracking-wider mb-1">
                           Arguments (JSON Payload)
                         </div>
-                        <pre className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-cyan-300 text-[11px] overflow-x-auto">
+                        <pre className="p-2.5 rounded-lg bg-surface-elevated border border-border-subtle text-cyan-300 text-[11px] overflow-x-auto">
                           {JSON.stringify(log.io.arguments, null, 2)}
                         </pre>
                       </div>
@@ -500,10 +500,10 @@ export const ActivityView: React.FC = () => {
 
                     {log.io?.output && (
                       <div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <div className="text-[10px] font-bold text-text-secondary uppercase tracking-wider mb-1">
                           Output Result / Observation
                         </div>
-                        <pre className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-emerald-300 text-[11px] overflow-x-auto whitespace-pre-wrap">
+                        <pre className="p-2.5 rounded-lg bg-surface-elevated border border-border-subtle text-emerald-300 text-[11px] overflow-x-auto whitespace-pre-wrap">
                           {typeof log.io.output === "object"
                             ? JSON.stringify(log.io.output, null, 2)
                             : String(log.io.output)}

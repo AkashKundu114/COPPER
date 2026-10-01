@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { meetingsAPI } from '../services/api';
 
 // Types for meeting data
@@ -125,10 +125,10 @@ export const MeetingsView: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full bg-slate-900/80 text-verdigris font-mono text-xs overflow-hidden">
+    <div className="flex h-full w-full bg-surface-elevated text-verdigris font-mono text-xs overflow-hidden">
       {/* Left panel: History & Controls */}
-      <div className="w-1/3 border-r border-slate-800 flex flex-col">
-        <div className="p-4 border-b border-slate-800">
+      <div className="w-1/3 border-r border-border-subtle flex flex-col">
+        <div className="p-4 border-b border-border-subtle">
           <h2 className="text-sm font-display font-bold text-accent-400 mb-0.5 uppercase tracking-wider">Meetings & Transcripts</h2>
           <p className="text-[10px] text-zinc-400 mb-3 font-mono">Voice recording, transcription & AI summaries</p>
           
@@ -136,7 +136,7 @@ export const MeetingsView: React.FC = () => {
             <input 
               type="text"
               placeholder="Meeting Title..."
-              className="bg-slate-800 border border-slate-700 p-2 text-verdigris focus:outline-none focus:border-accent-400"
+              className="bg-surface-active border border-border-highlight p-2 text-verdigris focus:outline-none focus:border-accent-400"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               disabled={isRecording}
@@ -152,7 +152,7 @@ export const MeetingsView: React.FC = () => {
             ) : (
               <button 
                 onClick={startMeeting}
-                className="bg-slate-800 hover:bg-slate-700 text-accent-400 border border-slate-700 p-2 uppercase tracking-widest transition-colors"
+                className="bg-surface-active hover:bg-surface-spotlight text-accent-400 border border-border-highlight p-2 uppercase tracking-widest transition-colors"
               >
                 Start Recording
               </button>
@@ -167,10 +167,10 @@ export const MeetingsView: React.FC = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
-          <h3 className="mb-3 text-slate-400 uppercase">Archive</h3>
+          <h3 className="mb-3 text-text-secondary uppercase">Archive</h3>
           <div className="flex flex-col gap-2">
             {meetings.length === 0 ? (
-              <div className="p-4 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded">
+              <div className="p-4 text-center text-text-tertiary text-xs border border-dashed border-border-subtle rounded">
                 No recorded meetings yet. Press "Start Recording" above.
               </div>
             ) : (
@@ -180,8 +180,8 @@ export const MeetingsView: React.FC = () => {
                 onClick={() => loadMeetingDetails(m)}
                 className={`p-3 border cursor-pointer transition-colors ${
                   selectedMeeting?.id === m.id 
-                    ? 'border-accent-400 bg-slate-800/50' 
-                    : 'border-slate-800 hover:border-slate-600 bg-slate-900/50'
+                    ? 'border-accent-400 bg-surface-active/50' 
+                    : 'border-border-subtle hover:border-border-highlight bg-surface-elevated/50'
                 }`}
               >
                 <div className="flex justify-between items-start mb-1">
@@ -189,12 +189,12 @@ export const MeetingsView: React.FC = () => {
                   <div className={`text-[10px] px-1 py-0.5 rounded ${
                     m.status === 'recording' ? 'bg-red-900/50 text-red-400 border border-red-800 animate-pulse' :
                     m.status === 'processing' ? 'bg-yellow-900/50 text-yellow-400 border border-yellow-800' :
-                    'bg-slate-800 text-slate-400 border border-slate-700'
+                    'bg-surface-active text-text-secondary border border-border-highlight'
                   }`}>
                     {m.status.toUpperCase()}
                   </div>
                 </div>
-                <div className="flex justify-between text-[10px] text-slate-500">
+                <div className="flex justify-between text-[10px] text-text-tertiary">
                   <span>{new Date(m.created_at).toLocaleDateString()}</span>
                   <span>{formatDuration(m.duration)}</span>
                 </div>
@@ -210,9 +210,9 @@ export const MeetingsView: React.FC = () => {
           <div className="max-w-3xl w-full mx-auto space-y-6">
             
             {/* Header */}
-            <div className="border-b border-slate-800 pb-4">
+            <div className="border-b border-border-subtle pb-4">
               <h1 className="text-2xl text-accent-400 mb-2">{selectedMeeting.title}</h1>
-              <div className="flex gap-4 text-slate-500">
+              <div className="flex gap-4 text-text-tertiary">
                 <span>ID: {selectedMeeting.id}</span>
                 <span>DATE: {new Date(selectedMeeting.created_at).toLocaleString()}</span>
                 <span>STATUS: {selectedMeeting.status.toUpperCase()}</span>
@@ -221,18 +221,18 @@ export const MeetingsView: React.FC = () => {
 
             {/* Notes Section */}
             {notes && (
-              <div className="border border-slate-800 bg-slate-900/50 p-4">
-                <h3 className="text-accent-400 border-b border-slate-800 pb-2 mb-4 uppercase">Structured Synthesis</h3>
+              <div className="border border-border-subtle bg-surface-elevated/50 p-4">
+                <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Structured Synthesis</h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <div className="text-slate-400 mb-1 font-bold">Executive Summary</div>
-                    <div className="text-slate-300 leading-relaxed">{notes.executive_summary}</div>
+                    <div className="text-text-secondary mb-1 font-bold">Executive Summary</div>
+                    <div className="text-text-secondary leading-relaxed">{notes.executive_summary}</div>
                   </div>
 
                   {notes.key_decisions && notes.key_decisions.length > 0 && (
                     <div>
-                      <div className="text-slate-400 mb-1 font-bold">Key Decisions</div>
+                      <div className="text-text-secondary mb-1 font-bold">Key Decisions</div>
                       <ul className="list-disc pl-4 space-y-1 text-accent-400/80">
                         {notes.key_decisions.map((dec, i) => <li key={i}>{dec}</li>)}
                       </ul>
@@ -241,7 +241,7 @@ export const MeetingsView: React.FC = () => {
 
                   {notes.open_questions && notes.open_questions.length > 0 && (
                     <div>
-                      <div className="text-slate-400 mb-1 font-bold">Open Questions</div>
+                      <div className="text-text-secondary mb-1 font-bold">Open Questions</div>
                       <ul className="list-disc pl-4 space-y-1 text-yellow-400/80">
                         {notes.open_questions.map((q, i) => <li key={i}>{q}</li>)}
                       </ul>
@@ -250,10 +250,10 @@ export const MeetingsView: React.FC = () => {
 
                   {notes.important_quotes && notes.important_quotes.length > 0 && (
                     <div>
-                      <div className="text-slate-400 mb-1 font-bold">Important Quotes</div>
+                      <div className="text-text-secondary mb-1 font-bold">Important Quotes</div>
                       <div className="space-y-2">
                         {notes.important_quotes.map((q, i) => (
-                          <div key={i} className="pl-3 border-l-2 border-slate-700 italic text-slate-400">
+                          <div key={i} className="pl-3 border-l-2 border-border-highlight italic text-text-secondary">
                             "{q}"
                           </div>
                         ))}
@@ -266,14 +266,14 @@ export const MeetingsView: React.FC = () => {
 
             {/* Action Items */}
             {tasks && tasks.length > 0 && (
-              <div className="border border-slate-800 bg-slate-900/50 p-4">
-                <h3 className="text-accent-400 border-b border-slate-800 pb-2 mb-4 uppercase">Action Items & Tasks</h3>
+              <div className="border border-border-subtle bg-surface-elevated/50 p-4">
+                <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Action Items & Tasks</h3>
                 <div className="space-y-2">
                   {tasks.map(t => (
-                    <div key={t.id} className="flex items-center gap-3 bg-slate-800/30 p-2 border border-slate-800">
+                    <div key={t.id} className="flex items-center gap-3 bg-surface-active/30 p-2 border border-border-subtle">
                       <div className="w-3 h-3 border border-accent-400 rounded-sm"></div>
                       <span className="flex-1">{t.description}</span>
-                      <span className="text-[10px] text-slate-500 bg-slate-800 px-2 py-1 uppercase">{t.status}</span>
+                      <span className="text-[10px] text-text-tertiary bg-surface-active px-2 py-1 uppercase">{t.status}</span>
                     </div>
                   ))}
                 </div>
@@ -282,9 +282,9 @@ export const MeetingsView: React.FC = () => {
 
             {/* Full Transcription */}
             {selectedMeeting.transcription && (
-              <div className="border border-slate-800 bg-slate-900/50 p-4">
-                <h3 className="text-accent-400 border-b border-slate-800 pb-2 mb-4 uppercase">Raw Transcription Log</h3>
-                <div className="whitespace-pre-wrap text-slate-400 leading-relaxed max-h-96 overflow-y-auto custom-scrollbar pr-2">
+              <div className="border border-border-subtle bg-surface-elevated/50 p-4">
+                <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Raw Transcription Log</h3>
+                <div className="whitespace-pre-wrap text-text-secondary leading-relaxed max-h-96 overflow-y-auto custom-scrollbar pr-2">
                   {selectedMeeting.transcription}
                 </div>
               </div>
@@ -292,7 +292,7 @@ export const MeetingsView: React.FC = () => {
 
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center text-slate-600 uppercase tracking-widest">
+          <div className="h-full flex items-center justify-center text-text-tertiary uppercase tracking-widest">
             Select a meeting to view intelligence
           </div>
         )}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import {
   X,
   FileText,
@@ -105,9 +105,9 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-5xl h-[88vh] flex flex-col rounded-3xl bg-slate-900/95 border border-slate-700/80 shadow-2xl overflow-hidden font-sans text-slate-200">
+      <div className="w-full max-w-5xl h-[88vh] flex flex-col rounded-3xl bg-surface-elevated/95 border border-border-highlight/80 shadow-2xl overflow-hidden font-sans text-text">
         {/* Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 bg-canvas border-b border-border-subtle">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/30 flex-shrink-0">
               <DocIcon size={22} className="text-accent-400" />
@@ -126,7 +126,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">
+              <p className="text-xs text-text-secondary font-mono mt-0.5">
                 {document.category} · {document.size_formatted} · {document.word_count.toLocaleString()} words · ~{document.estimated_tokens.toLocaleString()} tokens
               </p>
             </div>
@@ -136,7 +136,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             {onAskAI && (
               <button
                 onClick={handleSummarizeWithAI}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-accent-500 to-indigo-500 hover:from-accent-400 hover:to-indigo-400 text-slate-950 font-bold text-xs shadow-md shadow-accent-500/20 transition-all cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-accent-500 to-indigo-500 hover:from-accent-400 hover:to-indigo-400 text-text-inverse font-bold text-xs shadow-md shadow-accent-500/20 transition-all cursor-pointer"
                 title="Ask C.O.P.P.E.R. to summarize this document"
               >
                 <Sparkles size={14} />
@@ -146,7 +146,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={handleCopy}
-              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white transition-colors"
               title="Copy Document Text"
             >
               {copied ? <Check size={16} className="text-verdigris-400" /> : <Copy size={16} />}
@@ -154,7 +154,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={handleDownload}
-              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white transition-colors"
               title="Download Extracted Text"
             >
               <Download size={16} />
@@ -162,7 +162,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
             <button
               onClick={onClose}
-              className="p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors ml-1"
+              className="p-2 rounded-xl hover:bg-surface-active text-text-secondary hover:text-white transition-colors ml-1"
               title="Close Reader (Esc)"
             >
               <X size={18} />
@@ -171,8 +171,8 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
         </div>
 
         {/* Tab Navigation Toolbar */}
-        <div className="flex items-center justify-between px-6 py-2 bg-[#14060B]/90 border-b border-blush-100/[0.10] text-xs font-mono">
-          <div className="flex items-center gap-1 p-0.5 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.08]">
+        <div className="flex items-center justify-between px-6 py-2 bg-[#14060B]/90 border-b border-border/[0.10] text-xs font-mono">
+          <div className="flex items-center gap-1 p-0.5 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.08]">
             <button
               onClick={() => setActiveTab("reader")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
@@ -224,11 +224,11 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
           {/* PDF Page Controls */}
           {isPdf && document.pages.length > 1 && activeTab === "reader" && (
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-text-secondary">
               <button
                 onClick={() => setSelectedPage((p) => Math.max(1, p - 1))}
                 disabled={selectedPage === 1}
-                className="p-1 rounded hover:bg-slate-800 disabled:opacity-30"
+                className="p-1 rounded hover:bg-surface-active disabled:opacity-30"
               >
                 <ChevronLeft size={15} />
               </button>
@@ -238,7 +238,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
               <button
                 onClick={() => setSelectedPage((p) => Math.min(document.pages.length, p + 1))}
                 disabled={selectedPage === document.pages.length}
-                className="p-1 rounded hover:bg-slate-800 disabled:opacity-30"
+                className="p-1 rounded hover:bg-surface-active disabled:opacity-30"
               >
                 <ChevronRight size={15} />
               </button>
@@ -247,14 +247,14 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-slate-950/40">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-surface-base/60">
           {/* TAB 1: INTERACTIVE READER */}
           {activeTab === "reader" && (
             <div className="max-w-4xl mx-auto space-y-4">
               {/* CSV / Tabular Viewer */}
               {isTable && document.structured_data?.headers && (
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-lg">
-                  <div className="p-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+                <div className="rounded-2xl border border-border-subtle bg-surface-elevated overflow-hidden shadow-lg">
+                  <div className="p-3 bg-canvas border-b border-border-subtle flex items-center justify-between text-xs font-mono text-text-secondary">
                     <span>
                       Table: {document.structured_data.total_rows} rows · {document.structured_data.column_count} columns
                     </span>
@@ -263,7 +263,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                   <div className="overflow-x-auto custom-scrollbar">
                     <table className="w-full text-left text-xs font-mono border-collapse">
                       <thead>
-                        <tr className="bg-slate-800/80 text-accent-300 border-b border-slate-700">
+                        <tr className="bg-surface-active text-accent-300 border-b border-border-highlight">
                           {document.structured_data.headers.map((h: string, idx: number) => (
                             <th key={idx} className="p-3 font-semibold whitespace-nowrap">
                               {h}
@@ -271,9 +271,9 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                      <tbody className="divide-y divide-slate-800/60 text-text-secondary">
                         {document.structured_data.preview_rows?.map((row: string[], rIdx: number) => (
-                          <tr key={rIdx} className="hover:bg-slate-800/40 transition-colors">
+                          <tr key={rIdx} className="hover:bg-surface-active/40 transition-colors">
                             {row.map((cell: string, cIdx: number) => (
                               <td key={cIdx} className="p-3 whitespace-nowrap">
                                 {cell}
@@ -289,8 +289,8 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
               {/* PDF Document Page View */}
               {isPdf && (
-                <div className="p-8 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-4 font-serif text-[14.5px] leading-relaxed text-slate-200">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-800 font-sans text-xs font-mono text-slate-400">
+                <div className="p-8 rounded-2xl bg-surface-elevated border border-border-subtle shadow-xl space-y-4 font-serif text-[14.5px] leading-relaxed text-text">
+                  <div className="flex items-center justify-between pb-3 border-b border-border-subtle font-sans text-xs font-mono text-text-secondary">
                     <span className="text-accent-400 font-bold uppercase">Page {selectedPage} of {document.pages.length}</span>
                     <span>{document.pages[selectedPage - 1]?.word_count || 0} words on page</span>
                   </div>
@@ -302,20 +302,20 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
               {/* Code / Markdown / Text Line Gutter View */}
               {!isTable && !isPdf && (
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden font-mono text-xs">
-                  <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-[11px] text-slate-400">
+                <div className="rounded-2xl border border-border-subtle bg-surface-elevated shadow-xl overflow-hidden font-mono text-xs">
+                  <div className="flex items-center justify-between px-4 py-2 bg-canvas border-b border-border-subtle text-[11px] text-text-secondary">
                     <span className="uppercase text-accent-400 font-bold">{document.extension} Document View</span>
                     <span>{document.line_count} total lines</span>
                   </div>
                   <div className="p-4 flex gap-4 overflow-x-auto custom-scrollbar select-text leading-relaxed">
                     {/* Line numbers gutter */}
-                    <div className="text-slate-600 select-none text-right pr-3 border-r border-slate-800 font-mono">
+                    <div className="text-text-tertiary select-none text-right pr-3 border-r border-border-subtle font-mono">
                       {document.full_text.split("\n").map((_, i) => (
                         <div key={i}>{i + 1}</div>
                       ))}
                     </div>
                     {/* Source content */}
-                    <pre className="text-slate-200 flex-1 whitespace-pre">
+                    <pre className="text-text flex-1 whitespace-pre">
                       {document.full_text}
                     </pre>
                   </div>
@@ -328,38 +328,38 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
           {activeTab === "search" && (
             <div className="max-w-3xl mx-auto space-y-4 font-mono text-xs">
               <div className="relative">
-                <Search size={16} className="absolute left-3.5 top-3.5 text-slate-500" />
+                <Search size={16} className="absolute left-3.5 top-3.5 text-text-tertiary" />
                 <input
                   type="text"
                   placeholder="Search keywords or phrases in document..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-accent-500 text-sm shadow-inner"
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-surface-elevated border border-border-subtle text-white outline-none focus:border-accent-500 text-sm shadow-inner"
                   autoFocus
                 />
               </div>
 
               {searchQuery.trim() && (
-                <div className="text-xs text-slate-400 px-1">
+                <div className="text-xs text-text-secondary px-1">
                   Found <strong className="text-accent-400">{searchMatches.length}</strong> matching lines:
                 </div>
               )}
 
               <div className="space-y-2">
                 {searchMatches.length === 0 ? (
-                  <div className="p-8 text-center text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800">
+                  <div className="p-8 text-center text-text-tertiary bg-surface-elevated/40 rounded-2xl border border-border-subtle">
                     {searchQuery.trim() ? "No matching occurrences found." : "Type a query above to search inside this document."}
                   </div>
                 ) : (
                   searchMatches.map((m, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 hover:border-accent-500/40 flex items-start gap-3 transition-colors"
+                      className="p-3.5 rounded-xl bg-surface-elevated border border-border-subtle hover:border-accent-500/40 flex items-start gap-3 transition-colors"
                     >
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-accent-400 text-[11px] font-bold">
+                      <span className="px-2 py-0.5 rounded bg-surface-active text-accent-400 text-[11px] font-bold">
                         L{m.lineNumber}
                       </span>
-                      <p className="text-slate-200 select-text flex-1 whitespace-pre-wrap">
+                      <p className="text-text select-text flex-1 whitespace-pre-wrap">
                         {m.text}
                       </p>
                     </div>
@@ -373,46 +373,46 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
           {activeTab === "analytics" && (
             <div className="max-w-3xl mx-auto space-y-6 font-mono text-xs">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <div className="text-[11px] text-slate-400 uppercase">Words</div>
+                <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-1">
+                  <div className="text-[11px] text-text-secondary uppercase">Words</div>
                   <div className="text-xl font-bold text-white font-sans">{document.word_count.toLocaleString()}</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <div className="text-[11px] text-slate-400 uppercase">Characters</div>
+                <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-1">
+                  <div className="text-[11px] text-text-secondary uppercase">Characters</div>
                   <div className="text-xl font-bold text-accent-400 font-sans">{document.char_count.toLocaleString()}</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <div className="text-[11px] text-slate-400 uppercase">Lines / Pages</div>
+                <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-1">
+                  <div className="text-[11px] text-text-secondary uppercase">Lines / Pages</div>
                   <div className="text-xl font-bold text-purple-400 font-sans">
                     {document.page_count > 1 ? `${document.page_count} Pages` : `${document.line_count} Lines`}
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <div className="text-[11px] text-slate-400 uppercase">Est. Tokens</div>
+                <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-1">
+                  <div className="text-[11px] text-text-secondary uppercase">Est. Tokens</div>
                   <div className="text-xl font-bold text-verdigris-400 font-sans">{document.estimated_tokens.toLocaleString()}</div>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+              <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
                 <h3 className="font-bold text-sm text-white font-sans flex items-center gap-2">
                   <Sparkles size={16} className="text-accent-400" />
                   <span>Document Metadata & AI Ingestion</span>
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300">
-                  <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
-                    <span className="text-slate-500 block text-[10px]">FILE NAME</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-text-secondary">
+                  <div className="p-2.5 rounded-xl bg-canvas border border-border-subtle">
+                    <span className="text-text-tertiary block text-[10px]">FILE NAME</span>
                     <span className="text-white font-bold">{document.filename}</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
-                    <span className="text-slate-500 block text-[10px]">CATEGORY</span>
+                  <div className="p-2.5 rounded-xl bg-canvas border border-border-subtle">
+                    <span className="text-text-tertiary block text-[10px]">CATEGORY</span>
                     <span className="text-accent-400 font-bold">{document.category}</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
-                    <span className="text-slate-500 block text-[10px]">FILE SIZE</span>
+                  <div className="p-2.5 rounded-xl bg-canvas border border-border-subtle">
+                    <span className="text-text-tertiary block text-[10px]">FILE SIZE</span>
                     <span className="text-white font-bold">{document.size_formatted} ({document.size_bytes.toLocaleString()} bytes)</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/60">
-                    <span className="text-slate-500 block text-[10px]">CHROMA RAG INDEX</span>
+                  <div className="p-2.5 rounded-xl bg-canvas border border-border-subtle">
+                    <span className="text-text-tertiary block text-[10px]">CHROMA RAG INDEX</span>
                     <span className="text-verdigris-400 font-bold">
                       {document.indexed_chunks > 0 ? `Ready (${document.indexed_chunks} chunks)` : "Not indexed"}
                     </span>
@@ -424,21 +424,21 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
 
           {/* TAB 4: RAW SOURCE */}
           {activeTab === "raw" && (
-            <div className="max-w-4xl mx-auto rounded-2xl bg-slate-900/90 border border-slate-800 p-5 font-mono text-xs text-slate-200 select-text overflow-x-auto custom-scrollbar leading-relaxed">
+            <div className="max-w-4xl mx-auto rounded-2xl bg-surface-elevated border border-border-subtle p-5 font-mono text-xs text-text select-text overflow-x-auto custom-scrollbar leading-relaxed">
               <pre className="whitespace-pre-wrap">{document.full_text}</pre>
             </div>
           )}
         </div>
 
         {/* Footer Bar */}
-        <div className="flex items-center justify-between px-6 py-3 bg-slate-950 border-t border-slate-800 text-xs font-mono text-slate-400">
+        <div className="flex items-center justify-between px-6 py-3 bg-canvas border-t border-border-subtle text-xs font-mono text-text-secondary">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-verdigris-400 animate-pulse" />
             <span>Document Parsed & Ready for C.O.P.P.E.R. Execution</span>
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-xl bg-surface-active hover:bg-surface-spotlight text-white font-bold transition-colors cursor-pointer"
           >
             Close Reader
           </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   Cpu,
   Power,
@@ -135,7 +135,7 @@ export function AgentRegistry() {
   const activeCount = Object.values(runtimeState).filter((s) => s.status === "active").length;
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-sans text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-sans text-xs">
       {/* Header & High-Level Telemetry Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -145,7 +145,7 @@ export function AgentRegistry() {
               Agents
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-mono">
+          <p className="text-xs text-text-secondary mt-1 font-mono">
             {AGENTS.length} Core Active Agents ({activeCount} active in VRAM) • {PLANNED_AGENTS.length} Planned • {catalogSummary?.total_personas || 264} Personas • {catalogSummary?.total_scientific_skills || 165} Skills • {catalogSummary?.total_tools || 36} Tools
           </p>
         </div>
@@ -153,7 +153,7 @@ export function AgentRegistry() {
         <button
           onClick={handleEnforceKeepMini}
           disabled={vramOptimizing}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-slate-200 hover:text-white transition-all shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-elevated hover:bg-surface-active border border-border-highlight hover:border-cyan-500/50 text-text hover:text-white transition-all shadow-sm disabled:opacity-50"
           title="Offload all heavy 7B/8B models from GPU memory and keep only the fast mini model resident"
         >
           <Zap size={13} className="text-amber-400 animate-pulse" />
@@ -164,7 +164,7 @@ export function AgentRegistry() {
       </div>
 
       {/* Main Tab Switcher Bar */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] w-fit overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.10] w-fit overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab("core")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
@@ -234,15 +234,15 @@ export function AgentRegistry() {
       {activeTab === "core" && (
         <div className="space-y-6">
           {/* Search & Tier Filters */}
-          <div className="flex flex-col md:flex-row gap-3 items-center justify-between border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-2 w-full md:w-80 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all">
-              <Search size={14} className="text-slate-400" />
+          <div className="flex flex-col md:flex-row gap-3 items-center justify-between border-b border-border-subtle pb-4">
+            <div className="flex items-center gap-2 w-full md:w-80 bg-surface-elevated border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all">
+              <Search size={14} className="text-text-secondary" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search agent, domain, model, or capability..."
-                className="bg-transparent text-white placeholder:text-slate-500 outline-none text-xs w-full font-sans"
+                className="bg-transparent text-white placeholder:text-text-tertiary outline-none text-xs w-full font-sans"
               />
             </div>
 
@@ -252,7 +252,7 @@ export function AgentRegistry() {
                 className={`px-3 py-1 rounded-lg text-xs transition-all font-sans ${
                   selectedTier === "all"
                     ? "bg-white/15 text-white font-bold border border-white/30"
-                    : "text-slate-400 hover:text-white"
+                    : "text-text-secondary hover:text-white"
                 }`}
               >
                 All ({AGENTS.length})
@@ -277,7 +277,7 @@ export function AgentRegistry() {
                     className={`px-2.5 py-1 rounded-lg text-[11px] transition-all flex items-center gap-1.5 font-sans ${
                       isSelected
                         ? "font-bold border shadow-sm"
-                        : "text-slate-400 hover:text-white border border-transparent"
+                        : "text-text-secondary hover:text-white border border-transparent"
                     }`}
                     style={{
                       backgroundColor: isSelected ? `${color}20` : undefined,
@@ -310,7 +310,7 @@ export function AgentRegistry() {
                   className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 relative overflow-hidden ${
                     isActive
                       ? `${a.bg} ${a.border} hover:border-opacity-100 hover:shadow-lg shadow-black/40`
-                      : "bg-slate-950/40 border-slate-900 opacity-50"
+                      : "bg-surface-base/60 border-border-subtle opacity-50"
                   }`}
                 >
                   {/* Top Accent Line */}
@@ -338,11 +338,11 @@ export function AgentRegistry() {
                             <h3 className="font-bold text-white text-sm font-sans tracking-tight">
                               {a.name}
                             </h3>
-                            <span className="text-[10px] font-mono text-slate-400 opacity-75">
+                            <span className="text-[10px] font-mono text-text-secondary opacity-75">
                               [{a.id}]
                             </span>
                           </div>
-                          <span className="text-[11px] font-semibold text-slate-300 font-sans block">
+                          <span className="text-[11px] font-semibold text-text-secondary font-sans block">
                             {a.domain}
                           </span>
                         </div>
@@ -352,29 +352,29 @@ export function AgentRegistry() {
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 shrink-0 font-mono ${
                           isActive
                             ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/40"
-                            : "bg-slate-800 text-slate-400 border border-slate-700"
+                            : "bg-surface-active text-text-secondary border border-border-highlight"
                         }`}
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`}
+                          className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-400 animate-pulse" : "bg-surface-active"}`}
                         />
                         {isActive ? "READY" : "OFF"}
                       </span>
                     </div>
 
                     {/* Blurb / Specialty Description */}
-                    <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                    <p className="text-[11px] text-text-secondary line-clamp-2 leading-relaxed font-sans">
                       {a.blurb}
                     </p>
 
                     {/* Model & Tier Metadata */}
-                    <div className="pt-2 border-t border-slate-800/60 grid grid-cols-2 gap-2 text-[10px] font-mono">
+                    <div className="pt-2 border-t border-border-subtle grid grid-cols-2 gap-2 text-[10px] font-mono">
                       <div>
-                        <span className="text-slate-500 block">Model:</span>
-                        <strong className="text-slate-200">{a.model}</strong>
+                        <span className="text-text-tertiary block">Model:</span>
+                        <strong className="text-text">{a.model}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-500 block">Tier:</span>
+                        <span className="text-text-tertiary block">Tier:</span>
                         <span
                           className="font-bold"
                           style={{ color: tierColor }}
@@ -386,7 +386,7 @@ export function AgentRegistry() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-2 pt-2 border-t border-slate-800/40 font-sans">
+                  <div className="flex gap-2 pt-2 border-t border-border-subtle font-sans">
                     <button
                       onClick={() => handleTestPing(a.id, a.model)}
                       disabled={testingId === a.id || !isActive}
@@ -405,7 +405,7 @@ export function AgentRegistry() {
                       onClick={() => toggleStatus(a.id)}
                       className={`px-2.5 py-1.5 rounded-xl border font-bold transition-all ${
                         isActive
-                          ? "bg-slate-800 text-slate-300 hover:text-white border-slate-700"
+                          ? "bg-surface-active text-text-secondary hover:text-white border-border-highlight"
                           : "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30"
                       }`}
                       title={isActive ? "Deactivate Node" : "Activate Node"}
@@ -419,14 +419,14 @@ export function AgentRegistry() {
           </div>
 
           {/* Planned Roadmap Agents Section */}
-          <div className="pt-8 border-t border-slate-800/80">
+          <div className="pt-8 border-t border-border-subtle">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-base font-bold text-slate-200 font-sans tracking-tight flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full border border-dashed border-slate-400" />
+                <h2 className="text-base font-bold text-text font-sans tracking-tight flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full border border-dashed border-border-highlight" />
                   Planned Roadmap Agents ({PLANNED_AGENTS.length})
                 </h2>
-                <p className="text-xs text-slate-500 font-mono mt-0.5">
+                <p className="text-xs text-text-tertiary font-mono mt-0.5">
                   Architectural extensions in development. Visualized with dashed rings in the neural brain topology.
                 </p>
               </div>
@@ -436,37 +436,37 @@ export function AgentRegistry() {
               {PLANNED_AGENTS.map((p) => (
                 <div
                   key={p.id}
-                  className="p-4 rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/20 opacity-60 hover:opacity-85 transition-opacity flex flex-col justify-between space-y-3"
+                  className="p-4 rounded-2xl border border-dashed border-border-subtle bg-canvas/20 opacity-60 hover:opacity-85 transition-opacity flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/40 text-slate-400">
+                        <div className="p-2 rounded-xl border border-dashed border-border-highlight/60 bg-surface-elevated/40 text-text-secondary">
                           <AgentIcon agentId={p.id} size={18} />
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h3 className="font-bold text-slate-300 text-sm font-sans tracking-tight">
+                            <h3 className="font-bold text-text-secondary text-sm font-sans tracking-tight">
                               {p.name}
                             </h3>
-                            <span className="text-[10px] font-mono text-slate-500">[{p.id}]</span>
+                            <span className="text-[10px] font-mono text-text-tertiary">[{p.id}]</span>
                           </div>
-                          <span className="text-[11px] font-semibold text-slate-400 font-sans block">
+                          <span className="text-[11px] font-semibold text-text-secondary font-sans block">
                             {p.domain}
                           </span>
                         </div>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-900 text-amber-400/80 border border-amber-500/20 font-mono">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-surface-elevated text-amber-400/80 border border-amber-500/20 font-mono">
                         Coming Soon
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-400 font-sans leading-relaxed line-clamp-2">
+                    <p className="text-xs text-text-secondary font-sans leading-relaxed line-clamp-2">
                       {p.blurb}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-800/40 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                  <div className="pt-2 border-t border-border-subtle flex items-center justify-between text-[11px] font-mono text-text-tertiary">
                     <span>Model: {p.model}</span>
                     <span className="italic">Roadmap</span>
                   </div>

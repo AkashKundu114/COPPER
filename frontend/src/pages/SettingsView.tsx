@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Power, Volume2, HardDrive, CheckCircle2, Play, Mic, Sparkles, ShieldCheck, Cpu, DownloadCloud, RotateCcw } from "lucide-react";
+import {
+  Power,
+  Volume2,
+  HardDrive,
+  CheckCircle2,
+  Play,
+  Mic,
+  Sparkles,
+  ShieldCheck,
+  Cpu,
+  DownloadCloud,
+  RotateCcw,
+} from "lucide-react";
 import { API_BASE } from "../lib/api";
 import { personalityAPI } from "../services/api";
+import { Button } from "../components/ui/Button";
 
 export const SettingsView: React.FC = () => {
   const [backendRunning, setBackendRunning] = useState(false);
@@ -48,7 +61,12 @@ export const SettingsView: React.FC = () => {
     let active = true;
     const checkStatus = async () => {
       try {
-        const ipc = (window as any).copperAPI || (window as any).ipcRenderer || ((window as any).require ? (window as any).require("electron")?.ipcRenderer : null);
+        const ipc =
+          (window as any).copperAPI ||
+          (window as any).ipcRenderer ||
+          ((window as any).require
+            ? (window as any).require("electron")?.ipcRenderer
+            : null);
         if (ipc) {
           const running = await ipc.invoke("get-backend-status");
           if (active) setBackendRunning(running);
@@ -68,7 +86,12 @@ export const SettingsView: React.FC = () => {
 
   const toggleBackend = async () => {
     try {
-      const ipc = (window as any).copperAPI || (window as any).ipcRenderer || ((window as any).require ? (window as any).require("electron")?.ipcRenderer : null);
+      const ipc =
+        (window as any).copperAPI ||
+        (window as any).ipcRenderer ||
+        ((window as any).require
+          ? (window as any).require("electron")?.ipcRenderer
+          : null);
       if (ipc) {
         if (backendRunning) {
           await ipc.invoke("stop-backend");
@@ -87,7 +110,7 @@ export const SettingsView: React.FC = () => {
 
   const testVoiceSample = async () => {
     setIsPlayingVoice(true);
-    setToast("Synthesizing female voice sample with Piper ONNX...");
+    setToast("Synthesizing voice sample with Piper ONNX...");
     try {
       const res = await fetch(`${API_BASE}/voice/speak`, {
         method: "POST",
@@ -113,28 +136,25 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight font-sans">
-            System Settings
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Local endpoints, female voice synthesis, model storage paths, and
-            runtime toggles
-          </p>
-        </div>
+    <div className="p-6 space-y-5 max-w-5xl mx-auto text-text select-none font-sans text-xs pb-16">
+      <div>
+        <h1 className="text-xl font-bold text-text tracking-tight">
+          System Settings
+        </h1>
+        <p className="text-xs text-text-secondary mt-1">
+          Local endpoints, voice synthesis, personality adaptation, and GPU authorization
+        </p>
       </div>
 
       {toast && (
-        <div className="p-3.5 rounded-xl bg-accent-950/60 border border-accent-500/40 text-accent-300 flex items-center justify-between animate-fade-in">
+        <div className="p-3 rounded-lg bg-surface-elevated border border-copper/30 text-copper flex items-center justify-between animate-fade-in shadow-sm">
           <div className="flex items-center gap-2">
-            <CheckCircle2 size={16} />
-            <span>{toast}</span>
+            <CheckCircle2 size={15} />
+            <span className="text-xs font-medium">{toast}</span>
           </div>
           <button
             onClick={() => setToast(null)}
-            className="text-accent-400 hover:text-white text-[11px]"
+            className="text-text-secondary hover:text-text text-2xs cursor-pointer"
           >
             Dismiss
           </button>
@@ -143,43 +163,45 @@ export const SettingsView: React.FC = () => {
 
       <div className="space-y-4">
         {/* Backend Toggle */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between shadow-sm">
+        <div className="surface-card p-4 rounded-xl border border-border flex items-center justify-between">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
+            <div className="flex items-center gap-2 text-text font-semibold text-sm">
               <Power
-                size={17}
-                className={backendRunning ? "text-accent-400" : "text-slate-500"}
+                size={16}
+                className={backendRunning ? "text-success" : "text-text-tertiary"}
               />
               <span>Python Backend Server (FastAPI + Uvicorn)</span>
             </div>
-            <p className="text-[11px] text-slate-400">
-              Controls the standalone backend runtime on port 8000 with
-              WatchFiles live-reload.
+            <p className="text-2xs text-text-secondary">
+              Controls the standalone backend runtime on port 8000 with WatchFiles live-reload.
             </p>
           </div>
           <button
             onClick={toggleBackend}
-            className={`w-12 h-6 rounded-full p-1 transition-colors ${
-              backendRunning ? "bg-accent-500" : "bg-slate-700"
+            className={`w-11 h-6 rounded-full p-0.5 transition-colors cursor-pointer ${
+              backendRunning ? "bg-copper" : "bg-surface-active"
             }`}
           >
             <div
-              className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                backendRunning ? "translate-x-6" : "translate-x-0"
+              className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                backendRunning ? "translate-x-5" : "translate-x-0"
               }`}
             />
           </button>
         </div>
 
         {/* Continuous Voice Toggle */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between shadow-sm">
+        <div className="surface-card p-4 rounded-xl border border-border flex items-center justify-between">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-              <Mic size={17} className={continuousVoice ? "text-purple-400" : "text-slate-500"} />
-              <span>E.V.E. Hands-Free Mode (Continuous Voice)</span>
+            <div className="flex items-center gap-2 text-text font-semibold text-sm">
+              <Mic
+                size={16}
+                className={continuousVoice ? "text-copper" : "text-text-tertiary"}
+              />
+              <span>Hands-Free Mode (Continuous Voice)</span>
             </div>
-            <p className="text-[11px] text-slate-400">
-              Voice assistant listens continuously without needing to press the mic button. Interrupt E.V.E. by speaking.
+            <p className="text-2xs text-text-secondary">
+              Companion listens continuously via VAD without requiring a push-to-talk click.
             </p>
           </div>
           <button
@@ -189,51 +211,51 @@ export const SettingsView: React.FC = () => {
               localStorage.setItem("copper_continuous_voice", String(newVal));
               setToast(newVal ? "Hands-Free Mode Enabled" : "Hands-Free Mode Disabled");
             }}
-            className={`w-12 h-6 rounded-full p-1 transition-colors ${
-              continuousVoice ? "bg-purple-500" : "bg-slate-700"
+            className={`w-11 h-6 rounded-full p-0.5 transition-colors cursor-pointer ${
+              continuousVoice ? "bg-copper" : "bg-surface-active"
             }`}
           >
             <div
-              className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                continuousVoice ? "translate-x-6" : "translate-x-0"
+              className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                continuousVoice ? "translate-x-5" : "translate-x-0"
               }`}
             />
           </button>
         </div>
 
         {/* Voice Preference */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm">
+        <div className="surface-card p-4 rounded-xl border border-border space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-                <Volume2 size={17} className="text-verdigris-400" />
+              <div className="flex items-center gap-2 text-text font-semibold text-sm">
+                <Volume2 size={16} className="text-copper" />
                 <span>Text-To-Speech (TTS) Voice Engine</span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                High-fidelity local neural voice synthesis powered by Piper
-                ONNX.
+              <p className="text-2xs text-text-secondary">
+                High-fidelity local neural voice synthesis powered by Piper ONNX.
               </p>
             </div>
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={testVoiceSample}
               disabled={isPlayingVoice}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-verdigris-500/20 hover:bg-verdigris-500/30 text-verdigris-400 border border-verdigris-500/40 font-bold transition-all disabled:opacity-40"
             >
-              <Play size={13} />
-              <span>{isPlayingVoice ? "Playing Voice..." : "Test Voice"}</span>
-            </button>
+              <Play size={12} className="mr-1" />
+              <span>{isPlayingVoice ? "Playing..." : "Test Voice"}</span>
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
             {[
               {
                 id: "en-US-AvaNeural",
-                name: "Ava (Neural Female)",
+                name: "Ava (Neural)",
                 tag: "Ultra Realistic & Fluent",
               },
               {
                 id: "en-US-JennyNeural",
-                name: "Jenny (Neural Female)",
+                name: "Jenny (Neural)",
                 tag: "Warm & Expressive",
               },
               {
@@ -254,60 +276,57 @@ export const SettingsView: React.FC = () => {
                   localStorage.setItem("copper_selected_voice", v.id);
                   setToast(`Voice set to ${v.name}`);
                 }}
-                className={`p-3.5 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedVoice === v.id
-                    ? "bg-verdigris-500/15 text-verdigris-400 border-verdigris-500/50 shadow-sm"
-                    : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                    ? "bg-copper-subtle text-text border-copper/50"
+                    : "bg-surface-base border-border-subtle text-text-secondary hover:text-text hover:bg-surface-hover"
                 }`}
               >
-                <p className="font-bold text-white font-sans text-xs">
-                  {v.name}
-                </p>
-                <p className="text-[10px] text-slate-500 mt-1">{v.tag}</p>
+                <p className="font-semibold text-text text-xs">{v.name}</p>
+                <p className="text-2xs text-text-tertiary mt-0.5">{v.tag}</p>
               </button>
             ))}
           </div>
         </div>
 
         {/* Model Storage Directory */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-sm">
-          <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-            <HardDrive size={17} className="text-accent-400" />
+        <div className="surface-card p-4 rounded-xl border border-border space-y-3">
+          <div className="flex items-center gap-2 text-text font-semibold text-sm">
+            <HardDrive size={16} className="text-copper" />
             <span>Local Weights & Storage Paths</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 text-[10px] uppercase font-bold">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle">
+              <span className="text-text-tertiary text-2xs uppercase font-mono font-medium">
                 Ollama Model Blobs
               </span>
-              <p className="text-white text-xs font-mono mt-0.5">D:\blobs</p>
+              <p className="text-text text-xs font-mono mt-0.5">D:\blobs</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 text-[10px] uppercase font-bold">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle">
+              <span className="text-text-tertiary text-2xs uppercase font-mono font-medium">
                 Local App & Vectors
               </span>
-              <p className="text-white text-xs font-mono mt-0.5">
-                D:\C.O.P.P.E.R
-              </p>
+              <p className="text-text text-xs font-mono mt-0.5">D:\C.O.P.P.E.R</p>
             </div>
           </div>
         </div>
-        {/* Personality & Communication Style Adaptation (Tier 4 Companion Intelligence) */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm font-mono text-xs">
-          <div className="flex items-center gap-2 text-white font-bold font-sans text-sm">
-            <Sparkles size={17} className="text-purple-400" />
-            <span>AI Personality & Communication Style Adaptation</span>
+
+        {/* Personality Adaptation */}
+        <div className="surface-card p-4 rounded-xl border border-border space-y-3.5 text-xs">
+          <div className="flex items-center gap-2 text-text font-semibold text-sm">
+            <Sparkles size={16} className="text-copper" />
+            <span>AI Personality & Adaptation</span>
           </div>
-          <p className="text-slate-400 text-[11px]">
+          <p className="text-text-secondary text-2xs">
             Tune C.O.P.P.E.R's conversational mannerisms, technical depth, formality, and behavioral patterns.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Warmth Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 font-bold">Warmth & Empathy</span>
-                <span className="text-accent-400 font-bold">{Math.round(personality.warmth * 100)}%</span>
+                <span className="text-text-secondary font-medium">Warmth & Empathy</span>
+                <span className="text-copper font-mono font-semibold">{Math.round(personality.warmth * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -316,16 +335,16 @@ export const SettingsView: React.FC = () => {
                 step="0.05"
                 value={personality.warmth}
                 onChange={(e) => handleUpdatePersonality("warmth", parseFloat(e.target.value))}
-                className="w-full accent-accent-500 cursor-pointer"
+                className="w-full accent-copper cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 block">Analytical ← → Empathetic</span>
+              <span className="text-2xs text-text-tertiary block">Analytical ← → Empathetic</span>
             </div>
 
             {/* Formality Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 font-bold">Formality Level</span>
-                <span className="text-purple-400 font-bold">{Math.round(personality.formality * 100)}%</span>
+                <span className="text-text-secondary font-medium">Formality Level</span>
+                <span className="text-copper font-mono font-semibold">{Math.round(personality.formality * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -334,16 +353,16 @@ export const SettingsView: React.FC = () => {
                 step="0.05"
                 value={personality.formality}
                 onChange={(e) => handleUpdatePersonality("formality", parseFloat(e.target.value))}
-                className="w-full accent-purple-500 cursor-pointer"
+                className="w-full accent-copper cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 block">Casual Chat ← → Executive Briefing</span>
+              <span className="text-2xs text-text-tertiary block">Casual Chat ← → Executive Briefing</span>
             </div>
 
             {/* Verbosity Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 font-bold">Verbosity & Detail</span>
-                <span className="text-cyber-cyan font-bold">{Math.round(personality.verbosity * 100)}%</span>
+                <span className="text-text-secondary font-medium">Verbosity & Detail</span>
+                <span className="text-copper font-mono font-semibold">{Math.round(personality.verbosity * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -352,16 +371,16 @@ export const SettingsView: React.FC = () => {
                 step="0.05"
                 value={personality.verbosity}
                 onChange={(e) => handleUpdatePersonality("verbosity", parseFloat(e.target.value))}
-                className="w-full accent-cyan-500 cursor-pointer"
+                className="w-full accent-copper cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 block">Terse Bullets ← → Comprehensive Explanations</span>
+              <span className="text-2xs text-text-tertiary block">Terse Bullets ← → Comprehensive Explanations</span>
             </div>
 
             {/* Humor Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 font-bold">Humor & Wit</span>
-                <span className="text-verdigris font-bold">{Math.round(personality.humor * 100)}%</span>
+                <span className="text-text-secondary font-medium">Humor & Wit</span>
+                <span className="text-copper font-mono font-semibold">{Math.round(personality.humor * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -370,23 +389,23 @@ export const SettingsView: React.FC = () => {
                 step="0.05"
                 value={personality.humor}
                 onChange={(e) => handleUpdatePersonality("humor", parseFloat(e.target.value))}
-                className="w-full accent-emerald-500 cursor-pointer"
+                className="w-full accent-copper cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 block">Strictly Serious ← → Playful Wit</span>
+              <span className="text-2xs text-text-tertiary block">Strictly Serious ← → Playful Wit</span>
             </div>
           </div>
 
           {/* Behavior Toggles */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle flex items-center justify-between">
               <div>
-                <p className="font-bold text-white text-xs">Code-First Responses</p>
-                <p className="text-slate-400 text-[10px]">Provide solution code immediately before prose</p>
+                <p className="font-medium text-text text-xs">Code-First Responses</p>
+                <p className="text-text-tertiary text-2xs">Provide solution code immediately before prose</p>
               </div>
               <button
                 onClick={() => handleUpdatePersonality("code_first", !personality.code_first)}
-                className={`w-10 h-5 rounded-full p-0.5 transition-colors ${
-                  personality.code_first ? "bg-verdigris" : "bg-slate-700"
+                className={`w-10 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${
+                  personality.code_first ? "bg-copper" : "bg-surface-active"
                 }`}
               >
                 <div
@@ -397,15 +416,15 @@ export const SettingsView: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+            <div className="p-3 rounded-lg bg-surface-base border border-border-subtle flex items-center justify-between">
               <div>
-                <p className="font-bold text-white text-xs">Expressive Formatting & Emojis</p>
-                <p className="text-slate-400 text-[10px]">Use contextual symbols and icons in output</p>
+                <p className="font-medium text-text text-xs">Expressive Formatting & Emojis</p>
+                <p className="text-text-tertiary text-2xs">Use contextual symbols and icons in output</p>
               </div>
               <button
                 onClick={() => handleUpdatePersonality("use_emojis", !personality.use_emojis)}
-                className={`w-10 h-5 rounded-full p-0.5 transition-colors ${
-                  personality.use_emojis ? "bg-verdigris" : "bg-slate-700"
+                className={`w-10 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${
+                  personality.use_emojis ? "bg-copper" : "bg-surface-active"
                 }`}
               >
                 <div
@@ -418,51 +437,56 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* GPU Hardware Authorization & One-Click Model Provisioning */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
-            <div className="p-2 bg-amber-500/10 text-amber-400 rounded-xl">
-              <ShieldCheck size={20} />
+        {/* GPU Hardware Authorization & Model Setup */}
+        <div className="surface-card p-4 rounded-xl border border-border space-y-3.5">
+          <div className="flex items-center gap-2.5 border-b border-border pb-3">
+            <div className="p-1.5 bg-copper-subtle text-copper rounded-lg">
+              <ShieldCheck size={18} />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">GPU Authorization & Local Model Setup</h2>
-              <p className="text-xs text-slate-400">Manage offline hardware fingerprinting and one-click model downloads</p>
+              <h2 className="text-sm font-semibold text-text">GPU Authorization & Local Model Setup</h2>
+              <p className="text-2xs text-text-secondary">Manage offline hardware fingerprinting and one-click model downloads</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-                <Cpu size={16} className="text-amber-400" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="p-3.5 rounded-lg bg-surface-base border border-border-subtle space-y-2">
+              <div className="flex items-center gap-2 text-xs font-medium text-text">
+                <Cpu size={14} className="text-copper" />
                 <span>GPU Runtime & License Status</span>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-2xs text-text-secondary leading-relaxed">
                 Bound to host hardware fingerprint. Compatible with NVIDIA RTX dedicated GPU and shared master access codes.
               </p>
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => {
                   fetch("/api/activation/status")
                     .then((r) => r.json())
-                    .then((d) => alert(`Status: ${d.activated ? "Authorized" : "Not Activated"}\nMode: ${d.mode}\nGPU: ${d.gpu_info?.name || "Detected"}`))
+                    .then((d) =>
+                      alert(
+                        `Status: ${d.activated ? "Authorized" : "Not Activated"}\nMode: ${d.mode}\nGPU: ${d.gpu_info?.name || "Detected"}`
+                      )
+                    )
                     .catch(() => alert("Activation check failed"));
                 }}
-                className="mt-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-xs text-slate-200 font-medium"
               >
                 Inspect GPU Fingerprint
-              </button>
+              </Button>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-                <DownloadCloud size={16} className="text-cyan-400" />
+            <div className="p-3.5 rounded-lg bg-surface-base border border-border-subtle space-y-2">
+              <div className="flex items-center gap-2 text-xs font-medium text-text">
+                <DownloadCloud size={14} className="text-info" />
                 <span>One-Click Dependency & Model Installer</span>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-2xs text-text-secondary leading-relaxed">
                 Re-launch the onboarding setup wizard to adjust model presets, select active agents, or pull missing weights.
               </p>
-              <button
-                type="button"
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={async () => {
                   await fetch("/api/setup/state", {
                     method: "POST",
@@ -471,10 +495,9 @@ export const SettingsView: React.FC = () => {
                   });
                   window.location.reload();
                 }}
-                className="mt-2 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1.5"
               >
-                <RotateCcw size={14} /> Re-run Setup Wizard
-              </button>
+                <RotateCcw size={13} className="mr-1" /> Re-run Setup Wizard
+              </Button>
             </div>
           </div>
         </div>

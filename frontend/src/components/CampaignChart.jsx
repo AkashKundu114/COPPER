@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+﻿import React, { useMemo, useState } from "react";
 import * as d3 from "d3";
 import { TrendingUp, DollarSign, MousePointerClick, Percent } from "lucide-react";
 
@@ -112,20 +112,20 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
   const activeConfig = metricConfigs[selectedMetric];
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+    <div className="bg-surface-elevated border border-border-subtle rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-3">
         <div>
-          <h3 className="text-base font-semibold text-slate-100 flex items-center gap-2">
+          <h3 className="text-base font-semibold text-text flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
             Performance Trajectory: {campaign?.campaign_name || "All Campaigns"}
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-text-secondary mt-0.5">
             Hourly telemetry with DeltaX anomaly detection thresholds
           </p>
         </div>
 
         {/* Metric Selector Buttons */}
-        <div className="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800">
+        <div className="flex items-center gap-1.5 bg-surface-base p-1 rounded-lg border border-border-subtle">
           {Object.entries(metricConfigs).map(([key, cfg]) => {
             const Icon = cfg.icon;
             const isSelected = selectedMetric === key;
@@ -135,8 +135,8 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
                 onClick={() => setSelectedMetric(key)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                   isSelected
-                    ? "bg-slate-800 text-white shadow-sm border border-slate-700"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
+                    ? "bg-surface-active text-white shadow-sm border border-border-highlight"
+                    : "text-text-secondary hover:text-text hover:bg-surface-elevated/60"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" style={{ color: cfg.color }} />
@@ -149,7 +149,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
 
       {/* Main Chart Area */}
       {!hasData ? (
-        <div className="h-64 flex items-center justify-center text-slate-500 text-sm">
+        <div className="h-64 flex items-center justify-center text-text-tertiary text-sm">
           No metrics available for {campaign?.campaign_name || "selected campaign"}.
         </div>
       ) : (
@@ -264,7 +264,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
       )}
 
       {/* Legend & Anomaly Notice */}
-      <div className="flex flex-wrap items-center justify-between text-xs text-slate-400 pt-1">
+      <div className="flex flex-wrap items-center justify-between text-xs text-text-secondary pt-1">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
             <span
@@ -278,7 +278,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
             Anomaly Region (|Z| &gt; 2.0 or Burn Alert)
           </span>
         </div>
-        <span className="text-slate-500">Trailing 7 days • 168 hourly snapshots</span>
+        <span className="text-text-tertiary">Trailing 7 days • 168 hourly snapshots</span>
       </div>
     </div>
   );

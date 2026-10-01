@@ -153,8 +153,8 @@ export const EmailView: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-slate-900/80 border border-slate-800 font-mono text-xs text-cyber-cyan p-4">
-      <div className="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
+    <div className="w-full h-full flex flex-col bg-surface-elevated border border-border-subtle font-mono text-xs text-cyber-cyan p-4">
+      <div className="flex justify-between items-center mb-4 border-b border-border-subtle pb-2">
         <div>
           <h2 className="text-accent-400 text-lg uppercase tracking-wider font-display font-bold">Alerts & Notifications</h2>
           <p className="text-[10px] text-zinc-400 font-mono">Live system events, security alerts, and communication feeds</p>
@@ -163,14 +163,14 @@ export const EmailView: React.FC = () => {
           {!isConfigured ? (
             <button 
               onClick={() => setShowConfigModal(true)}
-              className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-accent-400 border border-accent-400/30 rounded"
+              className="px-3 py-1 bg-surface-active hover:bg-surface-spotlight text-accent-400 border border-accent-400/30 rounded"
             >
               Configure IMAP
             </button>
           ) : (
             <button 
               onClick={handleSync}
-              className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-cyber-cyan border border-cyber-cyan/30 rounded"
+              className="px-3 py-1 bg-surface-active hover:bg-surface-spotlight text-cyber-cyan border border-cyber-cyan/30 rounded"
             >
               [ SYNC ]
             </button>
@@ -180,27 +180,27 @@ export const EmailView: React.FC = () => {
 
       {showConfigModal && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-md shadow-2xl max-w-sm w-full">
+          <div className="bg-surface-elevated border border-border-subtle p-6 rounded-md shadow-2xl max-w-sm w-full">
             <h3 className="text-accent-400 text-sm mb-4 uppercase">IMAP Configuration</h3>
             <form onSubmit={handleConfigure} className="flex flex-col gap-3">
               <input 
                 type="text" placeholder="Host" 
                 value={configHost} onChange={e => setConfigHost(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-cyber-cyan p-2 outline-none focus:border-accent-400"
+                className="bg-surface-active border border-border-highlight text-cyber-cyan p-2 outline-none focus:border-accent-400"
               />
               <input 
                 type="text" placeholder="Username" 
                 value={configUser} onChange={e => setConfigUser(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-cyber-cyan p-2 outline-none focus:border-accent-400"
+                className="bg-surface-active border border-border-highlight text-cyber-cyan p-2 outline-none focus:border-accent-400"
               />
               <input 
                 type="password" placeholder="Password" 
                 value={configPass} onChange={e => setConfigPass(e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-cyber-cyan p-2 outline-none focus:border-accent-400"
+                className="bg-surface-active border border-border-highlight text-cyber-cyan p-2 outline-none focus:border-accent-400"
               />
               <div className="flex justify-end gap-2 mt-4">
                 <button type="button" onClick={() => setShowConfigModal(false)} className="px-3 py-1 hover:text-red-400">Cancel</button>
-                <button type="submit" className="px-3 py-1 bg-slate-800 text-accent-400 border border-accent-400 hover:bg-slate-700 rounded">Save</button>
+                <button type="submit" className="px-3 py-1 bg-surface-active text-accent-400 border border-accent-400 hover:bg-surface-spotlight rounded">Save</button>
               </div>
             </form>
           </div>
@@ -209,13 +209,13 @@ export const EmailView: React.FC = () => {
 
       <div className="flex gap-4 h-full overflow-hidden">
         {/* Sidebar */}
-        <div className="w-1/3 flex flex-col border-r border-slate-800 pr-4">
+        <div className="w-1/3 flex flex-col border-r border-border-subtle pr-4">
           <div className="flex flex-wrap gap-2 mb-4">
             {(['Urgent', 'Needs Response', 'FYI', 'Spam', 'Drafts'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => { setActiveTab(tab); setSelectedEmail(null); }}
-                className={`px-2 py-1 border rounded ${activeTab === tab ? 'bg-slate-800 text-accent-400 border-accent-400' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}
+                className={`px-2 py-1 border rounded ${activeTab === tab ? 'bg-surface-active text-copper border-copper' : 'border-border-highlight text-text-secondary hover:border-copper'}`}
               >
                 {tab}
               </button>
@@ -228,28 +228,28 @@ export const EmailView: React.FC = () => {
                 <div 
                   key={email.id} 
                   onClick={() => setSelectedEmail(email)}
-                  className={`p-2 cursor-pointer border ${selectedEmail?.id === email.id ? 'border-accent-400 bg-slate-800/50' : 'border-slate-800 bg-slate-800/20 hover:border-slate-600'}`}
+                  className={`p-2 cursor-pointer border ${selectedEmail?.id === email.id ? 'border-accent-400 bg-surface-active/50' : 'border-border-subtle bg-surface-active/20 hover:border-border-highlight'}`}
                 >
                   <div className="flex justify-between items-baseline mb-1">
                     <span className="font-bold truncate">{email.from}</span>
-                    <span className="text-[10px] text-slate-500">{new Date(email.date).toLocaleDateString()}</span>
+                    <span className="text-[10px] text-text-tertiary">{new Date(email.date).toLocaleDateString()}</span>
                   </div>
-                  <div className="truncate text-slate-400">{email.subject}</div>
+                  <div className="truncate text-text-secondary">{email.subject}</div>
                 </div>
               ))
             ) : (
               drafts.map(draft => (
-                <div key={draft.id} className="p-2 border border-slate-800 bg-slate-800/20">
+                <div key={draft.id} className="p-2 border border-border-subtle bg-surface-active/20">
                   <div className="text-accent-400 mb-1">Draft for Email: {draft.emailId}</div>
-                  <div className="truncate text-slate-400 mb-2">{draft.body}</div>
+                  <div className="truncate text-text-secondary mb-2">{draft.body}</div>
                   {draft.guardianScreened && (
                     <div className="text-[10px] text-green-400 border border-green-400/30 inline-block px-1 mb-2">
                       Screened by Guardian Engine
                     </div>
                   )}
                   <div className="flex gap-2">
-                    <button onClick={() => handleApproveDraft(draft.id)} className="px-2 py-1 bg-slate-800 text-green-400 border border-green-900 hover:bg-slate-700">Approve Draft</button>
-                    <button onClick={() => handleRejectDraft(draft.id)} className="px-2 py-1 bg-slate-800 text-red-400 border border-red-900 hover:bg-slate-700">Reject Draft</button>
+                    <button onClick={() => handleApproveDraft(draft.id)} className="px-2 py-1 bg-surface-active text-green-400 border border-green-900 hover:bg-surface-spotlight">Approve Draft</button>
+                    <button onClick={() => handleRejectDraft(draft.id)} className="px-2 py-1 bg-surface-active text-red-400 border border-red-900 hover:bg-surface-spotlight">Reject Draft</button>
                   </div>
                 </div>
               ))
@@ -260,33 +260,33 @@ export const EmailView: React.FC = () => {
         {/* Main Content */}
         <div className="w-2/3 flex flex-col pl-2">
           {selectedEmail ? (
-            <div className="flex flex-col h-full bg-slate-800/10 p-4 border border-slate-800">
-              <div className="border-b border-slate-800 pb-4 mb-4">
+            <div className="flex flex-col h-full bg-surface-active/10 p-4 border border-border-subtle">
+              <div className="border-b border-border-subtle pb-4 mb-4">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-lg text-accent-400">{selectedEmail.subject}</h3>
-                  <span className="px-2 py-1 border border-slate-700 bg-slate-800 text-[10px]">{selectedEmail.priority}</span>
+                  <span className="px-2 py-1 border border-border-highlight bg-surface-active text-[10px]">{selectedEmail.priority}</span>
                 </div>
-                <div className="text-slate-400">From: <span className="text-cyber-cyan">{selectedEmail.from}</span></div>
-                <div className="text-slate-400">Date: {new Date(selectedEmail.date).toLocaleString()}</div>
+                <div className="text-text-secondary">From: <span className="text-cyber-cyan">{selectedEmail.from}</span></div>
+                <div className="text-text-secondary">Date: {new Date(selectedEmail.date).toLocaleString()}</div>
               </div>
-              <div className="flex-1 overflow-y-auto text-slate-300 whitespace-pre-wrap mb-4">
+              <div className="flex-1 overflow-y-auto text-text-secondary whitespace-pre-wrap mb-4">
                 {selectedEmail.body}
               </div>
-              <div className="border-t border-slate-800 pt-4 mt-auto">
+              <div className="border-t border-border-subtle pt-4 mt-auto">
                 <button 
                   onClick={() => generateDraft(selectedEmail.id)}
-                  className="px-4 py-2 bg-slate-800 text-accent-400 border border-accent-400 hover:bg-slate-700 uppercase tracking-widest"
+                  className="px-4 py-2 bg-surface-active text-accent-400 border border-accent-400 hover:bg-surface-spotlight uppercase tracking-widest"
                 >
                   Generate Draft Reply
                 </button>
               </div>
             </div>
           ) : activeTab !== 'Drafts' ? (
-            <div className="flex-1 flex items-center justify-center text-slate-600 uppercase tracking-widest border border-slate-800/50 border-dashed">
+            <div className="flex-1 flex items-center justify-center text-text-tertiary uppercase tracking-widest border border-border-subtle border-dashed">
               [ NO COMM LINK SELECTED ]
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-slate-600 uppercase tracking-widest border border-slate-800/50 border-dashed">
+            <div className="flex-1 flex items-center justify-center text-text-tertiary uppercase tracking-widest border border-border-subtle border-dashed">
               [ DRAFTS REVIEW QUEUE ]
             </div>
           )}

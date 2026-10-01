@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 interface HudCardProps {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export const HudCard: React.FC<HudCardProps> = ({
       ? "border-verdigris/30 hover:border-verdigris/60"
       : glow === "cyan"
       ? "border-cyber-cyan/25 hover:border-cyber-cyan/50"
-      : "border-blush-100/20 hover:border-blush-100/45";
+      : "border-border/20 hover:border-border/45";
 
   return (
     <div
@@ -38,12 +38,12 @@ export const HudCard: React.FC<HudCardProps> = ({
       {(tag || subtag) && (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-text-muted select-none pointer-events-none">
           {tag && (
-            <span className="px-2 py-0.5 rounded-md bg-blush-100/10 border border-blush-100/25 text-blush-100 font-semibold shadow-sm">
+            <span className="px-2 py-0.5 rounded-md bg-copper-subtle border border-border/25 text-text font-semibold shadow-sm">
               {tag}
             </span>
           )}
           {subtag && (
-            <span className="text-blush-300/40 hidden sm:inline">[{subtag}]</span>
+            <span className="text-text-secondary/40 hidden sm:inline">[{subtag}]</span>
           )}
         </div>
       )}

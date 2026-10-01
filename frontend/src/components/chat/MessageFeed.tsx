@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import {
   type ChatLine,
   type ActiveTaskGraphTrace,
@@ -338,7 +338,7 @@ export function MessageFeed({
                         <span>Branch</span>
                       </button>
                     )}
-                    <span className="text-blush-300/40">ENCRYPTED</span>
+                    <span className="text-text-secondary/40">ENCRYPTED</span>
                   </div>
                 </div>
 
@@ -379,16 +379,16 @@ export function MessageFeed({
             key={line.id || i}
             role="article"
             aria-label={`Response from ${agentName}`}
-            className="flex flex-col w-full animate-slide-up text-text space-y-3 relative bg-[#1A0A0F]/60 p-4 rounded-2xl border border-blush-100/[0.08] shadow-[0_8px_28px_rgba(10,3,6,0.25)]"
+            className="flex flex-col w-full animate-slide-up text-text space-y-3 relative bg-[#1A0A0F]/60 p-4 rounded-2xl border border-border/[0.08] shadow-[0_8px_28px_rgba(10,3,6,0.25)]"
           >
             {/* Tactical Agent Message Header */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none px-1 border-b border-blush-100/10 pb-1.5">
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none px-1 border-b border-border/10 pb-1.5">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse shadow-[0_0_6px_rgba(95,168,143,0.7)]" aria-hidden="true" />
                 <span className="text-white font-display font-bold tracking-wider uppercase">
                   {agentName}
                 </span>
-                <span className="text-blush-200/80">[CONFIDENCE: {dynamicConfidence}%]</span>
+                <span className="text-copper/80">[CONFIDENCE: {dynamicConfidence}%]</span>
                 {(line.cached || line.instant_recall || line.metrics?.cached || line.metrics?.instant_recall) && (
                   <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/20 border border-accent/40 text-accent font-bold text-[9px] shadow-[0_0_8px_rgba(201,124,76,0.3)] animate-pulse tracking-normal font-sans">
                     <Zap size={10} className="text-accent fill-accent" aria-hidden="true" />
@@ -405,13 +405,13 @@ export function MessageFeed({
                     }}
                     aria-label={`Branch conversation from ${agentName} response`}
                     title="Branch conversation from this response"
-                    className="opacity-80 hover:opacity-100 flex items-center gap-1 px-2 py-0.5 rounded-md bg-blush-100/10 hover:bg-blush-100/20 text-blush-100 transition-all text-[9px] cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100 border border-blush-100/20"
+                    className="opacity-80 hover:opacity-100 flex items-center gap-1 px-2 py-0.5 rounded-md bg-copper-subtle hover:bg-copper-subtle text-text transition-all text-[9px] cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100 border border-border/20"
                   >
                     <GitBranch size={10} aria-hidden="true" />
                     <span>Branch</span>
                   </button>
                 )}
-                <span className="text-blush-300/40">AIR-GAPPED SYNTHESIS</span>
+                <span className="text-text-secondary/40">AIR-GAPPED SYNTHESIS</span>
               </div>
             </div>
 
@@ -468,12 +468,12 @@ export function MessageFeed({
             aria-label={`Neural reasoning active: ${agentStats[activeAgent]?.name || activeAgent} executing cognitive tasks across local agent mesh`}
             className="flex flex-col w-full animate-slide-up text-zinc-400 space-y-3 font-mono"
           >
-            <div className="flex items-center gap-2 text-xs text-blush-100">
+            <div className="flex items-center gap-2 text-xs text-text">
               <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" aria-hidden="true" />
               <span className="font-display font-bold tracking-wider uppercase">Neural Reasoning Active...</span>
             </div>
-            <div className="flex items-center gap-4 p-4 rounded-2xl border border-blush-100/25 bg-[#1A0A0F]/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)]">
-              <div className="w-16 h-16 rounded-2xl bg-black/50 border border-blush-100/20 flex items-center justify-center flex-shrink-0 shadow-inner overflow-hidden">
+            <div className="flex items-center gap-4 p-4 rounded-2xl border border-border/25 bg-[#1A0A0F]/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(10,3,6,0.35),inset_0_1px_0_rgba(246,230,234,0.1)]">
+              <div className="w-16 h-16 rounded-2xl bg-black/50 border border-border/20 flex items-center justify-center flex-shrink-0 shadow-inner overflow-hidden">
                 <ThinkingOrb state={orbState} size={64} theme="dark" />
               </div>
               <div className="flex flex-col min-w-0">
@@ -481,11 +481,11 @@ export function MessageFeed({
                   <span className="text-[13.5px] text-white font-display font-bold truncate">
                     {agentStats[activeAgent]?.name || activeAgent}
                   </span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-blush-100/10 text-blush-200 border border-blush-100/20 uppercase">
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-copper-subtle text-copper border border-border/20 uppercase">
                     {orbState}
                   </span>
                 </div>
-                <span className="text-[11px] text-blush-300/70 font-mono mt-0.5">
+                <span className="text-[11px] text-text-secondary/70 font-mono mt-0.5">
                   Hand-tuned neural cognitive synthesis in progress...
                 </span>
               </div>

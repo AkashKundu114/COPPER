@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import {
   BarChart3,
   CheckCircle2,
@@ -76,7 +76,7 @@ export const RoutingBenchmarkView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 flex flex-col items-center justify-center space-y-2 text-slate-400 bg-slate-900/60 rounded-2xl border border-slate-800">
+      <div className="p-8 flex flex-col items-center justify-center space-y-2 text-text-secondary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
         <Loader2 size={24} className="animate-spin text-purple-400" />
         <span className="text-xs font-mono">Loading PRISM Benchmark & Calibration Analytics...</span>
       </div>
@@ -84,9 +84,9 @@ export const RoutingBenchmarkView: React.FC = () => {
   }
 
   return (
-    <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-5 font-sans text-xs">
+    <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-5 font-sans text-xs">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-subtle pb-4">
         <div>
           <div className="flex items-center gap-2">
             <BarChart3 size={18} className="text-purple-400" />
@@ -94,19 +94,19 @@ export const RoutingBenchmarkView: React.FC = () => {
               PRISM Systematic Routing Benchmarks & Calibration Analytics
             </h2>
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-text-secondary mt-0.5">
             Empirical validation across {cmData?.total_samples || 1390} benchmark exemplars with sub-millisecond execution
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex rounded-lg bg-slate-950 p-1 border border-slate-800">
+          <div className="flex rounded-lg bg-canvas p-1 border border-border-subtle">
             <button
               onClick={() => setActiveTab("matrix")}
               className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${
                 activeTab === "matrix"
                   ? "bg-purple-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  : "text-text-secondary hover:text-white"
               }`}
             >
               Confusion Matrix
@@ -116,7 +116,7 @@ export const RoutingBenchmarkView: React.FC = () => {
               className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${
                 activeTab === "calibration"
                   ? "bg-purple-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  : "text-text-secondary hover:text-white"
               }`}
             >
               Confidence Calibration
@@ -125,7 +125,7 @@ export const RoutingBenchmarkView: React.FC = () => {
 
           <button
             onClick={fetchData}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+            className="p-1.5 rounded-lg bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white transition-colors"
             title="Refresh Benchmark Data"
           >
             <RefreshCw size={13} />
@@ -135,38 +135,38 @@ export const RoutingBenchmarkView: React.FC = () => {
 
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/90 space-y-1">
-          <div className="text-[10px] text-slate-400 uppercase font-mono">Overall Accuracy</div>
+        <div className="p-3 rounded-xl bg-canvas border border-border-subtle/90 space-y-1">
+          <div className="text-[10px] text-text-secondary uppercase font-mono">Overall Accuracy</div>
           <div className="text-lg font-bold text-emerald-400 font-mono">
             {cmData?.overall_accuracy_pct?.toFixed(1) || 100.0}%
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[10px] text-text-tertiary">
             Weighted F1: {cmData?.weighted_f1_score_pct?.toFixed(1) || 100.0}%
           </div>
         </div>
 
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/90 space-y-1">
-          <div className="text-[10px] text-slate-400 uppercase font-mono">Throughput Capacity</div>
+        <div className="p-3 rounded-xl bg-canvas border border-border-subtle/90 space-y-1">
+          <div className="text-[10px] text-text-secondary uppercase font-mono">Throughput Capacity</div>
           <div className="text-lg font-bold text-purple-400 font-mono">
             {Math.round(cmData?.throughput_qps || 19200).toLocaleString()} QPS
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[10px] text-text-tertiary">
             Purely deterministic regex & memory
           </div>
         </div>
 
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/90 space-y-1">
-          <div className="text-[10px] text-slate-400 uppercase font-mono">Latency (P95)</div>
+        <div className="p-3 rounded-xl bg-canvas border border-border-subtle/90 space-y-1">
+          <div className="text-[10px] text-text-secondary uppercase font-mono">Latency (P95)</div>
           <div className="text-lg font-bold text-cyan-400 font-mono">
             {cmData?.latency_metrics_ms?.p95 ? `${cmData.latency_metrics_ms.p95}ms` : "0.095ms"}
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[10px] text-text-tertiary">
             Avg: {cmData?.latency_metrics_ms?.avg || 0.052}ms
           </div>
         </div>
 
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/90 space-y-1">
-          <div className="text-[10px] text-slate-400 uppercase font-mono">Calibration ECE</div>
+        <div className="p-3 rounded-xl bg-canvas border border-border-subtle/90 space-y-1">
+          <div className="text-[10px] text-text-secondary uppercase font-mono">Calibration ECE</div>
           <div className="text-lg font-bold text-amber-400 font-mono">
             {calData ? `${(calData.expected_calibration_error * 100).toFixed(2)}%` : "0.03%"}
           </div>
@@ -180,15 +180,15 @@ export const RoutingBenchmarkView: React.FC = () => {
       {/* TAB 1: Confusion Matrix Grid */}
       {activeTab === "matrix" && cmData && (
         <div className="space-y-4">
-          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/80 p-3">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+          <div className="overflow-x-auto rounded-xl border border-border-subtle bg-surface-base p-3">
+            <div className="text-[10px] font-mono text-text-secondary uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>Empirical Confusion Matrix (Rows: Actual / Columns: Predicted)</span>
               <span className="text-emerald-400 font-bold">Zero Misclassifications Verified</span>
             </div>
 
             <table className="w-full text-center border-collapse font-mono text-[11px]">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 text-[10px]">
+                <tr className="border-b border-border-subtle text-text-secondary text-[10px]">
                   <th className="p-2 text-left">Actual \ Pred</th>
                   {cmData.classes.map((cls) => (
                     <th key={cls} className="p-2 uppercase tracking-tight">
@@ -204,7 +204,7 @@ export const RoutingBenchmarkView: React.FC = () => {
                 {cmData.classes.map((actual) => {
                   const metrics = cmData.per_class_metrics[actual] || { precision: 100, recall: 100, f1_score: 100 };
                   return (
-                    <tr key={actual} className="border-b border-slate-900/60 hover:bg-slate-900/40 transition-colors">
+                    <tr key={actual} className="border-b border-border-subtle hover:bg-surface-elevated/40 transition-colors">
                       <td className="p-2 text-left font-bold text-white uppercase text-[10px]">
                         {actual}
                       </td>
@@ -219,7 +219,7 @@ export const RoutingBenchmarkView: React.FC = () => {
                                 ? "bg-emerald-950/40 text-emerald-300 font-bold"
                                 : count > 0
                                 ? "bg-rose-950/40 text-rose-300 font-bold"
-                                : "text-slate-600"
+                                : "text-text-tertiary"
                             }`}
                           >
                             {count}
@@ -241,8 +241,8 @@ export const RoutingBenchmarkView: React.FC = () => {
       {/* TAB 2: Confidence Calibration Reliability Diagram */}
       {activeTab === "calibration" && calData && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/80 space-y-3">
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
+          <div className="p-4 rounded-xl border border-border-subtle bg-surface-base space-y-3">
+            <div className="flex items-center justify-between text-[11px] text-text-secondary">
               <span className="font-semibold text-white">Confidence Calibration Reliability Diagram (10 Bins)</span>
               <span className="font-mono text-[10px] text-purple-300">
                 Expected vs Observed Accuracy Alignment
@@ -257,18 +257,18 @@ export const RoutingBenchmarkView: React.FC = () => {
                 return (
                   <div key={bin.bin_label} className="space-y-1">
                     <div className="flex items-center justify-between text-[11px] font-mono">
-                      <span className="w-16 text-slate-400 font-semibold">{bin.bin_label}</span>
+                      <span className="w-16 text-text-secondary font-semibold">{bin.bin_label}</span>
                       <div className="flex items-center gap-3 text-right">
-                        <span className="text-slate-500 text-[10px]">{bin.sample_count} samples</span>
+                        <span className="text-text-tertiary text-[10px]">{bin.sample_count} samples</span>
                         <span className="text-cyan-300 w-20 text-right">Conf: {confPct}%</span>
                         <span className="text-emerald-300 font-bold w-20 text-right">Acc: {accPct}%</span>
-                        <span className="text-slate-400 text-[10px] w-16 text-right">
+                        <span className="text-text-secondary text-[10px] w-16 text-right">
                           Gap: {(bin.calibration_gap * 100).toFixed(1)}%
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-1 h-2 rounded-full overflow-hidden bg-slate-900 border border-slate-800">
+                    <div className="grid grid-cols-2 gap-1 h-2 rounded-full overflow-hidden bg-surface-elevated border border-border-subtle">
                       <div
                         className="h-full bg-gradient-to-r from-cyan-600 to-blue-500 rounded-l"
                         style={{ width: `${Math.max(2, confPct)}%` }}
@@ -285,7 +285,7 @@ export const RoutingBenchmarkView: React.FC = () => {
               })}
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 font-mono">
+            <div className="flex items-center justify-between pt-2 border-t border-border-subtle text-[10px] text-text-secondary font-mono">
               <span className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 inline-block" /> Predicted Confidence
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block ml-2" /> Observed Accuracy

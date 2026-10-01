@@ -11,6 +11,8 @@ import {
 import { scheduleAPI, type ScheduleEvent } from "../lib/api";
 import { DailyBriefingCard } from "../components/ambient/DailyBriefingCard";
 import { ActivityDashboardWidget } from "../components/ambient/ActivityDashboardWidget";
+import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
 
 export const TodayView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
@@ -85,38 +87,39 @@ export const TodayView: React.FC = () => {
   });
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none">
+    <div className="p-6 space-y-5 max-w-5xl mx-auto text-text select-none font-sans pb-16">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-text tracking-tight">
             Today
           </h1>
-          <p className="text-xs text-slate-400 font-mono">{todayDate} • Live Schedule</p>
+          <p className="text-xs text-text-secondary mt-0.5">{todayDate} • Live Standup Schedule</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] text-xs font-mono">
+        <div className="flex items-center gap-2.5">
+          <div className="flex gap-1 p-1 bg-surface-base rounded-lg border border-border-subtle text-xs">
             {(["day", "week", "month"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1 rounded-lg capitalize transition-all cursor-pointer font-semibold ${
+                className={`px-3 py-1 rounded-md capitalize transition-colors cursor-pointer text-xs ${
                   activeTab === tab
-                    ? "bg-blush-100 text-burgundy-950 shadow-sm"
-                    : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                    ? "bg-copper text-text-inverse font-medium shadow-sm"
+                    : "text-text-secondary hover:text-text hover:bg-surface-hover"
                 }`}
               >
                 {tab}
               </button>
             ))}
           </div>
-          <button
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blush-100 hover:bg-white text-burgundy-950 font-bold text-xs transition-all shadow-sm cursor-pointer font-mono"
           >
-            <Plus size={14} strokeWidth={2.5} />
+            <Plus size={14} className="mr-1" />
             <span>Add Event</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -127,92 +130,91 @@ export const TodayView: React.FC = () => {
       <ActivityDashboardWidget />
 
       {/* Schedule Recommendation Banner */}
-      <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
-            <Sparkles size={16} />
+      <div className="surface-card p-3.5 rounded-xl border border-border flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-lg bg-copper-subtle text-copper">
+            <Sparkles size={15} />
           </div>
           <div>
-            <p className="font-semibold text-white">
+            <p className="font-semibold text-text">
               Schedule Optimizer
             </p>
-            <p className="text-slate-400 text-[11px]">
-              {events.filter((e) => !e.completed).length} pending events
-              scheduled for today.
+            <p className="text-text-secondary text-2xs">
+              {events.filter((e) => !e.completed).length} pending events scheduled for today.
             </p>
           </div>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-verdigris-950 text-verdigris-400 text-[10px] font-bold border border-verdigris-800/40">
-          On Track
-        </span>
+        <Badge variant="success">On Track</Badge>
       </div>
 
       {/* Timeline Section */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+      <div className="surface-card p-4 rounded-xl border border-border space-y-3.5">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider">
+          <h3 className="text-xs font-semibold text-text uppercase tracking-wider">
             {activeTab === "day"
               ? "Today's Timeline"
               : activeTab === "week"
                 ? "This Week's Plan"
                 : "Monthly Calendar Agenda"}
           </h3>
-          <span className="text-[11px] font-mono text-slate-500">
+          <span className="text-2xs font-mono text-text-tertiary">
             {events.length} Items
           </span>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500 font-mono">
+          <div className="p-10 text-center text-xs text-text-tertiary font-mono">
             Loading events...
           </div>
         ) : events.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500 font-mono">
+          <div className="p-10 text-center text-xs text-text-tertiary font-mono">
             No events scheduled. Click "+ Add Event" to plan your day.
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {events.map((event) => (
               <div
                 key={event.id}
-                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
+                className={`p-3 rounded-lg border flex items-center justify-between transition-colors ${
                   event.completed
-                    ? "bg-slate-950/40 border-slate-900 opacity-50"
-                    : "bg-slate-950/80 border-slate-800/80 hover:border-slate-700 shadow-sm"
+                    ? "bg-surface-base/50 border-border-subtle opacity-50"
+                    : "bg-surface-base border-border-subtle hover:border-border shadow-sm"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => toggleEvent(event)}
-                    className="text-slate-400 hover:text-accent-400 transition-colors"
+                    className="text-text-tertiary hover:text-copper transition-colors cursor-pointer"
                   >
                     {event.completed ? (
-                      <CheckCircle2 size={18} className="text-verdigris-400" />
+                      <CheckCircle2 size={17} className="text-success" />
                     ) : (
-                      <Circle size={18} />
+                      <Circle size={17} />
                     )}
                   </button>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-accent-400 flex items-center gap-1">
+                      <span className="text-xs font-mono font-medium text-copper flex items-center gap-1">
                         <Clock size={11} /> {event.time}
                       </span>
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
+                      <Badge
+                        variant={
                           event.category === "Focus"
-                            ? "bg-purple-950 text-purple-400 border border-purple-800/40"
+                            ? "copper"
                             : event.category === "Meeting"
-                              ? "bg-blue-950 text-blue-400 border border-blue-800/40"
-                              : event.category === "Review"
-                                ? "bg-molten-950 text-molten-400 border border-molten-800/40"
-                                : "bg-slate-800 text-slate-300"
-                        }`}
+                            ? "info"
+                            : event.category === "Review"
+                            ? "warning"
+                            : "default"
+                        }
                       >
                         {event.category}
-                      </span>
+                      </Badge>
                     </div>
                     <p
-                      className={`text-sm font-medium text-white mt-0.5 ${event.completed ? "line-through text-slate-400" : ""}`}
+                      className={`text-xs font-medium text-text mt-0.5 ${
+                        event.completed ? "line-through text-text-tertiary" : ""
+                      }`}
                     >
                       {event.title}
                     </p>
@@ -220,7 +222,7 @@ export const TodayView: React.FC = () => {
                 </div>
                 <button
                   onClick={() => deleteEvent(event.id)}
-                  className="p-1.5 text-slate-500 hover:text-danger-400 rounded-lg hover:bg-slate-800 transition-colors"
+                  className="p-1 text-text-tertiary hover:text-danger rounded-md hover:bg-surface-hover transition-colors cursor-pointer"
                   title="Delete event"
                 >
                   <Trash2 size={14} />
@@ -233,24 +235,24 @@ export const TodayView: React.FC = () => {
 
       {/* Add Event Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in font-mono text-xs">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/80 backdrop-blur-sm animate-fade-in font-sans text-xs">
+          <div className="w-full max-w-md surface-card border border-border rounded-xl p-5 shadow-elevation-modal space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-border">
+              <h3 className="font-semibold text-sm text-text">
                 Add Schedule Event
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-text-secondary hover:text-text cursor-pointer"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateEvent} className="space-y-3.5">
+            <form onSubmit={handleCreateEvent} className="space-y-3">
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">
-                  Event / Milestone Title
+                <label className="text-2xs text-text-secondary font-medium block mb-1">
+                  Event / Task Title
                 </label>
                 <input
                   type="text"
@@ -258,13 +260,13 @@ export const TodayView: React.FC = () => {
                   placeholder="e.g. Deep Work Session..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-base border border-border-subtle text-text placeholder:text-text-tertiary outline-none focus:border-copper text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">
+                  <label className="text-2xs text-text-secondary font-medium block mb-1">
                     Time
                   </label>
                   <input
@@ -272,17 +274,17 @@ export const TodayView: React.FC = () => {
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                     placeholder="e.g. 10:30 AM"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-base border border-border-subtle text-text placeholder:text-text-tertiary outline-none focus:border-copper text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">
+                  <label className="text-2xs text-text-secondary font-medium block mb-1">
                     Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-accent-500"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-base border border-border-subtle text-text outline-none focus:border-copper text-xs cursor-pointer"
                   >
                     <option value="Focus">Focus</option>
                     <option value="Meeting">Meeting</option>
@@ -292,20 +294,22 @@ export const TodayView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                <button
+              <div className="flex justify-end gap-2 pt-2 border-t border-border">
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-3 py-1.5 rounded-xl hover:bg-slate-800 text-slate-400"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold shadow-md"
                 >
                   Save Event
-                </button>
+                </Button>
               </div>
             </form>
           </div>

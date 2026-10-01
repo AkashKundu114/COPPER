@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Cpu, Key, ShieldCheck, Zap, AlertCircle, CheckCircle2 } from "lucide-react";
 import axios from "axios";
+import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
 
 interface ActivationProps {
   onActivated: () => void;
@@ -66,56 +68,52 @@ export function Activation({ onActivated }: ActivationProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 text-slate-100 p-6 backdrop-blur-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas text-text p-6">
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
+        className="w-full max-w-xl surface-card rounded-2xl p-7 border border-border shadow-elevation-modal relative"
       >
-        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
-
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-amber-500/20 text-amber-400 rounded-2xl border border-amber-500/30">
-            <ShieldCheck size={28} />
+          <div className="p-2.5 bg-copper-subtle text-copper rounded-xl border border-copper/20">
+            <ShieldCheck size={24} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">C.O.P.P.E.R. Authorization</h1>
-            <p className="text-sm text-slate-400">Offline Sovereign Intelligence Hardware Gate</p>
+            <h1 className="text-xl font-bold tracking-tight text-text">C.O.P.P.E.R. Authorization</h1>
+            <p className="text-xs text-text-secondary">Offline Sovereign Intelligence Hardware Gate</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-950/50 border border-red-800/80 rounded-2xl flex items-center gap-3 text-red-200 text-sm">
-            <AlertCircle size={20} className="text-red-400 shrink-0" />
+          <div className="mb-5 p-3.5 bg-danger-dim border border-danger/30 rounded-xl flex items-center gap-2.5 text-danger text-xs">
+            <AlertCircle size={16} className="shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {mode === "choose" && (
           <div className="space-y-4">
-            <p className="text-slate-300 text-sm mb-4">
-              To operate COPPER offline with zero cloud telemetry, please choose how you would like to
-              authorize this installation:
+            <p className="text-text-secondary text-xs mb-3">
+              To operate COPPER offline with zero cloud telemetry, choose how you want to authorize this installation:
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {/* Option A: Local GPU */}
               <button
                 type="button"
                 onClick={() => setMode("local")}
-                className="group p-6 text-left rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-amber-500/50 hover:bg-amber-950/20 transition-all flex flex-col justify-between"
+                className="group p-5 text-left rounded-xl border border-border-subtle bg-surface-base hover:border-copper/50 hover:bg-copper-subtle transition-all flex flex-col justify-between cursor-pointer"
               >
                 <div>
-                  <div className="p-3 w-fit bg-amber-500/10 text-amber-400 rounded-xl mb-4 group-hover:scale-105 transition-transform">
-                    <Cpu size={24} />
+                  <div className="p-2 w-fit bg-copper-subtle text-copper rounded-lg mb-3 group-hover:scale-105 transition-transform">
+                    <Cpu size={20} />
                   </div>
-                  <h3 className="font-semibold text-base text-slate-100 mb-1">Use My System GPU</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Automatically generate a hardware fingerprint and run locally on your host graphics card.
+                  <h3 className="font-semibold text-sm text-text mb-1">Use Host GPU</h3>
+                  <p className="text-2xs text-text-secondary leading-relaxed">
+                    Generate an offline hardware fingerprint and run locally on your graphics card.
                   </p>
                 </div>
-                <div className="mt-6 flex items-center gap-2 text-xs font-medium text-amber-400">
+                <div className="mt-4 flex items-center gap-1.5 text-2xs font-medium text-copper">
                   <span>Authorize Hardware</span> &rarr;
                 </div>
               </button>
@@ -124,18 +122,18 @@ export function Activation({ onActivated }: ActivationProps) {
               <button
                 type="button"
                 onClick={() => setMode("owner")}
-                className="group p-6 text-left rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-cyan-950/20 transition-all flex flex-col justify-between"
+                className="group p-5 text-left rounded-xl border border-border-subtle bg-surface-base hover:border-info/50 hover:bg-info-dim transition-all flex flex-col justify-between cursor-pointer"
               >
                 <div>
-                  <div className="p-3 w-fit bg-cyan-500/10 text-cyan-400 rounded-xl mb-4 group-hover:scale-105 transition-transform">
-                    <Key size={24} />
+                  <div className="p-2 w-fit bg-info-dim text-info rounded-lg mb-3 group-hover:scale-105 transition-transform">
+                    <Key size={20} />
                   </div>
-                  <h3 className="font-semibold text-base text-slate-100 mb-1">Enter Master Access Code</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Enter the access code provided by the repository owner (Akash) to unlock runtime execution.
+                  <h3 className="font-semibold text-sm text-text mb-1">Master Access Code</h3>
+                  <p className="text-2xs text-text-secondary leading-relaxed">
+                    Enter the access code provided by repository author (Akash) to unlock execution.
                   </p>
                 </div>
-                <div className="mt-6 flex items-center gap-2 text-xs font-medium text-cyan-400">
+                <div className="mt-4 flex items-center gap-1.5 text-2xs font-medium text-info">
                   <span>Enter Code</span> &rarr;
                 </div>
               </button>
@@ -144,56 +142,57 @@ export function Activation({ onActivated }: ActivationProps) {
         )}
 
         {mode === "local" && (
-          <div className="space-y-6">
-            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="space-y-5">
+            <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-2.5">
+              <h4 className="text-2xs font-semibold text-text-tertiary uppercase tracking-wider">
                 Detected Hardware Profile
               </h4>
-              <div className="flex justify-between items-center text-sm py-1 border-b border-slate-800/60">
-                <span className="text-slate-400">GPU Device</span>
-                <span className="font-medium text-slate-200">
+              <div className="flex justify-between items-center text-xs py-1 border-b border-border-subtle">
+                <span className="text-text-secondary">GPU Device</span>
+                <span className="font-medium text-text">
                   {fingerprint?.gpu_name || "Detecting..."}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-sm py-1 border-b border-slate-800/60">
-                <span className="text-slate-400">Total VRAM</span>
-                <span className="font-medium text-slate-200">
+              <div className="flex justify-between items-center text-xs py-1 border-b border-border-subtle">
+                <span className="text-text-secondary">Total VRAM</span>
+                <span className="font-medium text-text">
                   {fingerprint?.gpu_vram_mb ? `${fingerprint.gpu_vram_mb} MB` : "Shared / System"}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-sm py-1">
-                <span className="text-slate-400">Hardware Code</span>
-                <span className="font-mono text-xs text-amber-400 bg-amber-950/30 px-2 py-0.5 rounded border border-amber-800/50">
+              <div className="flex justify-between items-center text-xs py-1">
+                <span className="text-text-secondary">Hardware Code</span>
+                <Badge variant="copper">
                   {fingerprint?.activation_code || "COPPER-..."}
-                </span>
+                </Badge>
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <button
-                type="button"
+            <div className="flex gap-2.5">
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => setMode("choose")}
-                className="px-5 py-3 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-medium"
               >
                 Back
-              </button>
-              <button
-                type="button"
-                onClick={handleActivateLocal}
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                className="flex-1"
                 disabled={loading}
-                className="flex-1 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+                onClick={handleActivateLocal}
               >
-                {loading ? <Zap className="animate-spin" size={18} /> : <CheckCircle2 size={18} />}
+                {loading ? <Zap className="animate-spin mr-1" size={15} /> : <CheckCircle2 className="mr-1" size={15} />}
                 Confirm & Activate Local Hardware
-              </button>
+              </Button>
             </div>
           </div>
         )}
 
         {mode === "owner" && (
-          <form onSubmit={handleActivateOwner} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
+          <form onSubmit={handleActivateOwner} className="space-y-5">
+            <div className="space-y-1.5">
+              <label className="text-2xs font-semibold text-text-secondary uppercase tracking-wider block">
                 Owner Access Code
               </label>
               <input
@@ -201,30 +200,33 @@ export function Activation({ onActivated }: ActivationProps) {
                 placeholder="COPPER-XXXX-XXXX-XXXX"
                 value={ownerCode}
                 onChange={(e) => setOwnerCode(e.target.value.toUpperCase())}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-cyan-400 font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-500 transition-colors uppercase placeholder:text-slate-700"
+                className="w-full bg-surface-base border border-border-subtle rounded-lg px-3 py-2.5 text-copper font-mono text-center tracking-widest text-base focus:outline-none focus:border-copper transition-colors uppercase placeholder:text-text-tertiary"
                 required
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-2xs text-text-tertiary">
                 Contact Akash Kundu to receive your authorized access code.
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <button
+            <div className="flex gap-2.5">
+              <Button
+                variant="secondary"
+                size="md"
                 type="button"
                 onClick={() => setMode("choose")}
-                className="px-5 py-3 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-medium"
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 type="submit"
+                className="flex-1"
                 disabled={loading || !ownerCode.trim()}
-                className="flex-1 px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {loading ? <Zap className="animate-spin" size={18} /> : <CheckCircle2 size={18} />}
+                {loading ? <Zap className="animate-spin mr-1" size={15} /> : <CheckCircle2 className="mr-1" size={15} />}
                 Validate Code & Unlock
-              </button>
+              </Button>
             </div>
           </form>
         )}

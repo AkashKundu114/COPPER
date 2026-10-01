@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import {
   AlertTriangle,
   ShieldAlert,
@@ -58,32 +58,32 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
   };
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+    <div className="bg-surface-elevated border border-border-subtle rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-3">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
             <Zap className="w-4 h-4 animate-pulse" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-slate-100">
+            <h3 className="text-base font-semibold text-text">
               Live Anomaly Feed ({anomalies.length})
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-text-secondary">
               DeltaX automated detection: Statistical Z-Score, Trend MA, &amp; Burn Projection
             </p>
           </div>
         </div>
 
         {/* Severity Filter Tabs */}
-        <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-medium">
+        <div className="flex items-center gap-1 bg-canvas p-1 rounded-lg border border-border-subtle text-xs font-medium">
           {["all", "critical", "warning", "info"].map((sev) => (
             <button
               key={sev}
               onClick={() => setFilterSeverity(sev)}
               className={`px-2.5 py-1 rounded capitalize transition-all ${
                 filterSeverity === sev
-                  ? "bg-slate-800 text-slate-100 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-surface-active text-text shadow-sm"
+                  : "text-text-secondary hover:text-text"
               }`}
             >
               {sev}
@@ -95,8 +95,8 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
       {filtered.length === 0 ? (
         <div className="py-12 flex flex-col items-center justify-center text-center">
           <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-2 opacity-80" />
-          <p className="text-sm font-medium text-slate-200">No active anomalies detected</p>
-          <p className="text-xs text-slate-500 max-w-sm mt-1">
+          <p className="text-sm font-medium text-text">No active anomalies detected</p>
+          <p className="text-xs text-text-tertiary max-w-sm mt-1">
             All advertising campaigns are performing within calibrated historical baselines.
           </p>
         </div>
@@ -113,8 +113,8 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
                 key={idx}
                 className={`p-4 rounded-xl border transition-all ${
                   isFixed
-                    ? "bg-slate-950/60 border-emerald-900/40 opacity-75"
-                    : "bg-slate-950/80 border-slate-800/90 hover:border-slate-700"
+                    ? "bg-surface-base border-emerald-900/40 opacity-75"
+                    : "bg-surface-base border-border-subtle/90 hover:border-border-highlight"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -125,7 +125,7 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
 
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-semibold text-slate-100">
+                        <span className="text-sm font-semibold text-text">
                           {anom.campaign_name}
                         </span>
                         <span
@@ -133,22 +133,22 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
                         >
                           {anom.severity}
                         </span>
-                        <span className="text-xs text-slate-500 font-mono">
+                        <span className="text-xs text-text-tertiary font-mono">
                           {anom.metric_name} ({anom.deviation_percent > 0 ? "+" : ""}
                           {anom.deviation_percent}%)
                         </span>
                       </div>
 
-                      <div className="mt-1 text-xs text-slate-300">
-                        <span className="text-slate-400">Current: </span>
-                        <span className="font-mono font-medium text-slate-200">
+                      <div className="mt-1 text-xs text-text-secondary">
+                        <span className="text-text-secondary">Current: </span>
+                        <span className="font-mono font-medium text-text">
                           {anom.current_value}
                         </span>
-                        <span className="text-slate-500"> vs Expected: </span>
-                        <span className="font-mono text-slate-400">{anom.expected_value}</span>
+                        <span className="text-text-tertiary"> vs Expected: </span>
+                        <span className="font-mono text-text-secondary">{anom.expected_value}</span>
                       </div>
 
-                      <div className="mt-2 text-xs bg-slate-900/90 border border-slate-800 rounded-lg p-2 text-cyan-300/90 flex items-start gap-1.5">
+                      <div className="mt-2 text-xs bg-surface-elevated border border-border-subtle rounded-lg p-2 text-cyan-300/90 flex items-start gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-cyan-400" />
                         <span>{anom.recommendation}</span>
                       </div>
@@ -175,12 +175,12 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
                   )}
                 </div>
 
-                <div className="mt-2.5 pt-2 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-500">
+                <div className="mt-2.5 pt-2 border-t border-border-subtle flex items-center justify-between text-[11px] text-text-tertiary">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {new Date(anom.detected_at).toLocaleString()}
                   </span>
-                  <span className="font-mono uppercase text-[10px] text-slate-600">
+                  <span className="font-mono uppercase text-[10px] text-text-tertiary">
                     ID: {anom.campaign_id} • TYPE: {anom.anomaly_type}
                   </span>
                 </div>

@@ -16,6 +16,9 @@ import {
   Users,
   Mail,
   Megaphone,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
 } from "lucide-react";
 import { soundFX } from "../../lib/soundFX";
 import { systemAPI } from "../../services/api";
@@ -42,6 +45,9 @@ export type NavSection =
 interface SidebarProps {
   activeSection: NavSection;
   onSelectSection: (section: NavSection) => void;
+  onOpenCommandPalette?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 interface NavItem {
@@ -89,7 +95,7 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    category: "SYSTEM",
+    category: "INTELLIGENCE",
     items: [
       { id: "memory", label: "Memory", icon: Brain },
       { id: "agents", label: "Agents", icon: Bot },
@@ -112,7 +118,21 @@ const NAV_GROUPS: NavGroup[] = [
 export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onSelectSection,
+  onOpenCommandPalette,
+  isCollapsed: controlledCollapsed,
+  onToggleCollapse: controlledToggle,
 }) => {
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const isCollapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
+
+  const toggleCollapse = () => {
+    if (controlledToggle) {
+      controlledToggle();
+    } else {
+      setInternalCollapsed((prev) => !prev);
+    }
+  };
+
   const [telemetry, setTelemetry] = useState<{
     vramUsed: number;
     vramTotal: number;
@@ -147,41 +167,85 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       aria-label="Main Navigation"
-      className="w-60 h-screen bg-[#14060B]/95 backdrop-blur-2xl border-r border-[#F6E6EA]/[0.08] flex flex-col justify-between p-3 z-30 select-none shadow-[16px_0_48px_rgba(10,3,6,0.55)] font-mono flex-shrink-0"
+      className={`${
+        isCollapsed ? "w-14" : "w-60"
+      } h-screen bg-surface-base border-r border-border flex flex-col justify-between p-2.5 z-30 select-none flex-shrink-0 transition-all duration-200`}
     >
       <div className="flex-1 flex flex-col min-h-0">
-        {/* Brand & Classification Header */}
-        <div className="drag-region px-3 py-3 mb-2 border-b border-[#F6E6EA]/[0.08] flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blush-100 via-accent to-burgundy-700 text-burgundy-950 flex items-center justify-center font-display font-black text-sm shadow-md flex-shrink-0" aria-hidden="true">
+        {/* Brand & Window Drag Region */}
+        <div className="drag-region px-1.5 py-2 mb-2 border-b border-border flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div
+              className="w-7 h-7 rounded-lg bg-copper text-text-inverse flex items-center justify-center font-brand font-bold text-xs shadow-sm flex-shrink-0"
+              aria-hidden="true"
+            >
               C
             </div>
-            <div className="overflow-hidden">
-              <div className="flex items-center gap-1.5">
-                <h1 className="font-display font-bold text-[14px] tracking-tight text-white truncate">
-                  C.O.P.P.E.R.
-                </h1>
-                <span className="w-1.5 h-1.5 rounded-full bg-verdigris flex-shrink-0" aria-hidden="true" />
+            {!isCollapsed && (
+              <div className="overflow-hidden">
+                <div className="flex items-center gap-1.5">
+                  <h1 className="font-brand font-bold text-[13px] tracking-tight text-text truncate">
+                    COPPER
+                  </h1>
+                  <span className="w-1.5 h-1.5 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
+                </div>
+                <p className="text-[8.5px] text-text-tertiary font-mono tracking-wider uppercase truncate">
+                  AI WORKSTATION
+                </p>
               </div>
-              <p className="text-[8.5px] text-zinc-400 font-mono tracking-[0.14em] uppercase truncate font-semibold">
-                AI DEV WORKSTATION
-              </p>
-            </div>
+            )}
           </div>
 
-          <div className="mt-2.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[9px] text-zinc-400 font-mono">
-            <span className="text-verdigris font-semibold">AIR-GAPPED</span>
-            <span className="text-zinc-300">{AGENTS.length} AGENTS</span>
-          </div>
+          <button
+            type="button"
+            onClick={toggleCollapse}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="no-drag p-1 rounded-md text-text-secondary hover:text-text hover:bg-surface-hover transition-colors cursor-pointer"
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+          </button>
         </div>
 
+        {/* Quick Search Shortcut */}
+        {onOpenCommandPalette && (
+          <div className="no-drag mb-2 px-1 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                soundFX.play("click");
+                onOpenCommandPalette();
+              }}
+              className={`w-full flex items-center ${
+                isCollapsed ? "justify-center p-2" : "justify-between px-2.5 py-1.5"
+              } rounded-lg bg-surface-elevated hover:bg-surface-hover border border-border-subtle text-text-secondary hover:text-text text-xs transition-colors cursor-pointer`}
+              title="Search or jump to... (Ctrl+K)"
+            >
+              <div className="flex items-center gap-2">
+                <Search size={13} className="text-copper flex-shrink-0" />
+                {!isCollapsed && <span className="text-[11px] truncate">Search...</span>}
+              </div>
+              {!isCollapsed && (
+                <kbd className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-base border border-border-subtle text-text-tertiary">
+                  Ctrl+K
+                </kbd>
+              )}
+            </button>
+          </div>
+        )}
+
         {/* Navigation Sections */}
-        <nav aria-label="Application Sections" className="no-drag space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-1 min-h-0">
+        <nav
+          aria-label="Application Sections"
+          className="no-drag space-y-3 overflow-y-auto flex-1 pr-0.5 min-h-0"
+        >
           {NAV_GROUPS.map((group) => (
             <div key={group.category} className="space-y-0.5">
-              <div className="px-2.5 py-1 text-[8.5px] font-mono font-semibold tracking-[0.14em] text-zinc-500 uppercase">
-                <span>{group.category}</span>
-              </div>
+              {!isCollapsed && (
+                <div className="px-2 py-1 text-[9px] font-mono font-medium tracking-wider text-text-tertiary uppercase">
+                  <span>{group.category}</span>
+                </div>
+              )}
               {group.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
@@ -200,22 +264,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       item.ariaLabel ||
                       `${item.label} section${isActive ? ", current page" : ""}`
                     }
-                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-100 ${
+                    title={isCollapsed ? item.label : undefined}
+                    className={`w-full flex items-center ${
+                      isCollapsed ? "justify-center px-1 py-1.5" : "justify-between px-2.5 py-1.5"
+                    } rounded-md text-caption font-medium transition-all duration-100 group cursor-pointer ${
                       isActive
-                        ? "bg-blush-100/12 text-white border-l-2 border-blush-100 font-semibold"
-                        : "text-zinc-400 border-l-2 border-transparent hover:text-white hover:bg-white/[0.04]"
+                        ? "bg-copper-subtle text-text border-l-2 border-copper font-medium"
+                        : "text-text-secondary border-l-2 border-transparent hover:text-text hover:bg-surface-hover"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       <Icon
                         aria-hidden="true"
-                        className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
-                          isActive
-                            ? "text-blush-100"
-                            : "text-zinc-500 group-hover:text-zinc-300"
+                        className={`w-4 h-4 flex-shrink-0 transition-colors ${
+                          isActive ? "text-copper" : "text-text-secondary group-hover:text-text"
                         }`}
                       />
-                      <span className="tracking-tight truncate">{item.label}</span>
+                      {!isCollapsed && (
+                        <span className="tracking-tight truncate">{item.label}</span>
+                      )}
                     </div>
                   </button>
                 );
@@ -225,31 +292,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Bottom Telemetry & Air-Gap Status Panel */}
-      <div className="p-2.5 rounded-xl bg-[#220D15]/80 border border-blush-100/[0.10] space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2 shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
+      {/* Bottom Telemetry & Status Panel */}
+      <div className="rounded-lg bg-surface-elevated border border-border p-2 space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-verdigris shadow-[0_0_8px_rgba(95,168,143,0.7)] animate-pulse flex-shrink-0" />
-            <span className="font-bold text-white tracking-wider">
-              100% OFFLINE
-            </span>
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-success flex-shrink-0" />
+            {!isCollapsed && (
+              <span className="font-semibold text-text tracking-wide truncate">
+                AIR-GAPPED
+              </span>
+            )}
           </div>
-          <span className="text-blush-300/60">0.16ms</span>
+          {!isCollapsed && (
+            <span className="text-text-tertiary">{AGENTS.length} AGENTS</span>
+          )}
         </div>
 
-        <div className="w-full bg-[#12060A] rounded-full h-1 overflow-hidden border border-blush-100/10">
+        <div className="w-full bg-surface-base rounded-full h-1 overflow-hidden">
           <div
-            className="bg-gradient-to-r from-accent via-blush-300 to-blush-100 h-full transition-all duration-500"
+            className="bg-copper h-full transition-all duration-300"
             style={{ width: `${Math.min(100, Math.max(5, telemetry.vramPct))}%` }}
           />
         </div>
 
-        <div className="flex justify-between text-[9px] text-zinc-400">
-          <span>VRAM: {telemetry.vramUsed.toFixed(1)}/{telemetry.vramTotal.toFixed(1)} GB</span>
-          <span className="text-verdigris font-semibold">PASS</span>
-        </div>
+        {!isCollapsed && (
+          <div className="flex justify-between text-text-tertiary">
+            <span>VRAM: {telemetry.vramUsed.toFixed(1)}/{telemetry.vramTotal.toFixed(1)} GB</span>
+            <span className="text-success font-medium">OK</span>
+          </div>
+        )}
       </div>
     </aside>
   );
 };
-

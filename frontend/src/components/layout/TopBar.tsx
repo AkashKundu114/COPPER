@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Search, GitBranch, Volume2, VolumeX } from "lucide-react";
+import { GitBranch, Search, Volume2, VolumeX } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
 import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
 import { soundFX } from "../../lib/soundFX";
 import { systemAPI } from "../../services/api";
+import { Badge } from "../ui/Badge";
 
 interface TopBarProps {
   sectionTitle: string;
@@ -35,6 +36,7 @@ const SECTION_TITLES: Record<string, string> = {
   insights: "Analytics",
   food: "Wellness",
   settings: "Settings",
+  campaigns: "Campaign Intelligence",
 };
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -88,28 +90,28 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header
       role="banner"
       aria-label="Top Bar Controls and Status"
-      className="drag-region h-14 bg-[#16080D]/90 backdrop-blur-xl border-b border-[#F6E6EA]/[0.08] flex items-center justify-between px-3 md:px-5 z-20 select-none shadow-[0_4px_20px_rgba(10,3,6,0.25)]"
+      className="drag-region h-11 bg-surface-base/90 backdrop-blur-sm border-b border-border flex items-center justify-between px-3 md:px-4 z-20 select-none flex-shrink-0"
     >
       {/* Left: Section Title & Repository context */}
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex items-center gap-2.5 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-accent ring-2 ring-accent/20" aria-hidden="true" />
-          <h2 className="font-display text-xs md:text-sm font-semibold text-white tracking-wide uppercase whitespace-nowrap">
+          <span className="w-1.5 h-1.5 rounded-full bg-copper" aria-hidden="true" />
+          <h2 className="font-sans text-xs font-semibold text-text uppercase tracking-wider whitespace-nowrap">
             {displayTitle}
           </h2>
         </div>
 
-        <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-[10px] text-zinc-400">
-          <GitBranch size={11} className="text-accent" />
-          <span className="text-zinc-200 font-medium">{gitStatus.branch}</span>
-          <span className="text-zinc-600">/</span>
-          <span className="text-zinc-300">{gitStatus.repo}</span>
-          <span className="text-zinc-600">·</span>
-          <span className="px-1.5 py-0.2 rounded bg-verdigris/15 text-verdigris text-[9px] font-bold">AIR-GAP</span>
+        <div className="hidden md:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-elevated border border-border-subtle font-mono text-[10px] text-text-secondary">
+          <GitBranch size={11} className="text-copper" />
+          <span className="text-text font-medium">{gitStatus.branch}</span>
+          <span className="text-text-tertiary">/</span>
+          <span className="text-text-secondary">{gitStatus.repo}</span>
+          <span className="text-text-tertiary">·</span>
+          <Badge variant="success">AIR-GAP</Badge>
         </div>
       </div>
 
-      {/* Center: Command Palette Search */}
+      {/* Center: Command Palette Trigger */}
       <div className="flex items-center justify-center flex-1 max-w-xs md:max-w-sm px-2">
         <button
           onClick={() => {
@@ -117,58 +119,44 @@ export const TopBar: React.FC<TopBarProps> = ({
             onOpenCommandPalette();
           }}
           aria-label="Open command palette (Ctrl+K)"
-          className="no-drag w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/20 text-[11px] text-zinc-400 hover:text-white transition-all group cursor-pointer focus-visible:ring-1 focus-visible:ring-accent shadow-sm"
+          className="no-drag w-full flex items-center justify-between gap-2 px-2.5 py-1 rounded-md bg-surface-elevated hover:bg-surface-hover border border-border-subtle hover:border-border text-xs text-text-secondary hover:text-text transition-colors group cursor-pointer"
         >
-          <div className="flex items-center gap-2 overflow-hidden">
-            <Search size={12} className="text-zinc-400 group-hover:text-accent transition-colors flex-shrink-0" aria-hidden="true" />
+          <div className="flex items-center gap-1.5 overflow-hidden">
+            <Search size={12} className="text-copper flex-shrink-0" aria-hidden="true" />
             <span className="text-[11px] tracking-tight truncate">Search or jump to...</span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded bg-black/40 text-[9px] font-mono text-zinc-400 border border-white/10 flex-shrink-0 font-medium">
+          <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded bg-surface-base text-[9px] font-mono text-text-tertiary border border-border-subtle font-medium">
             Ctrl+K
           </kbd>
         </button>
       </div>
 
       {/* Right: Telemetry & Actions */}
-      <div className={`flex items-center gap-2 flex-shrink-0 ${isElectron ? "pr-36" : "pr-2 sm:pr-4"}`}>
-        {/* Tactical Local Clock with UTC in Tooltip */}
+      <div className={`flex items-center gap-2 flex-shrink-0 ${isElectron ? "pr-36" : "pr-1 sm:pr-2"}`}>
+        {/* Local Clock */}
         <div
-          className="hidden 2xl:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-[10px] whitespace-nowrap shadow-sm cursor-default"
+          className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-elevated border border-border-subtle font-mono text-[10px] whitespace-nowrap cursor-default"
           title={`Local: ${timeLocal} | UTC: ${timeUtc}`}
           aria-label={`Local time: ${timeLocal}, UTC time: ${timeUtc}`}
         >
-          <span className="text-zinc-500">LOC</span>
-          <span className="text-accent font-semibold">{timeLocal}</span>
+          <span className="text-text-tertiary">LOC</span>
+          <span className="text-copper font-medium">{timeLocal}</span>
         </div>
 
         {/* Real-Time Ambient Cognitive Load */}
         <CognitiveStatusBadge />
 
-        {/* System Security / Status Badge */}
-        <div
-          className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-verdigris/10 border border-verdigris/25 text-verdigris text-[10px] font-bold font-mono whitespace-nowrap shadow-sm"
-          role="status"
-          aria-label="System status: DEFCON 5, all systems nominal"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" aria-hidden="true" />
-          <span>DEFCON 5</span>
-        </div>
-
-        {/* Semantic Audio SFX Toggle */}
+        {/* Audio SFX Toggle */}
         <button
           onClick={() => {
             const next = soundFX.toggleMute();
             setSfxMuted(next);
           }}
-          className={`no-drag p-1.5 rounded-lg border transition-all cursor-pointer ${
-            sfxMuted
-              ? "bg-white/[0.02] border-white/[0.06] text-zinc-500 hover:text-zinc-400"
-              : "bg-white/[0.04] border-white/[0.12] text-zinc-300 hover:text-white hover:border-accent/40"
-          }`}
+          className="no-drag p-1 rounded-md text-text-secondary hover:text-text hover:bg-surface-hover transition-colors cursor-pointer"
           title={sfxMuted ? "Unmute UI Sound Effects" : "Mute UI Sound Effects"}
           aria-label={sfxMuted ? "Unmute UI Sound Effects" : "Mute UI Sound Effects"}
         >
-          {sfxMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+          {sfxMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
         </button>
       </div>
     </header>

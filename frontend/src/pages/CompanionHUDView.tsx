@@ -251,32 +251,31 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   const recentLines = lines.slice(-4);
 
   return (
-    <div className="modern-page relative w-full h-full flex flex-col items-center justify-between p-6 select-none overflow-hidden font-mono bg-[#12060A]">
-      {/* Background Radial Glow */}
+    <div className="relative w-full h-full flex flex-col items-center justify-between p-6 select-none overflow-hidden font-sans bg-canvas text-text">
+      {/* Subtle Ambient Glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div className="w-[600px] h-[600px] bg-blush-100/[0.06] rounded-full blur-[140px]" />
-        <div className="w-[400px] h-[400px] bg-accent/[0.08] rounded-full blur-[120px]" />
+        <div className="w-[500px] h-[500px] bg-copper-subtle rounded-full blur-[140px] opacity-40" />
       </div>
 
-      {/* Top Tactical Status Bar */}
-      <div className="w-full max-w-6xl flex items-center justify-between z-10">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-[#1A0A0F]/85 px-3 py-1.5 rounded-xl border border-blush-100/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(246,230,234,0.1)]">
-            <span className={`w-2 h-2 rounded-full ${connected ? "bg-verdigris animate-pulse shadow-[0_0_8px_rgba(95,168,143,0.8)]" : "bg-red-500"}`} />
-            <span className="font-display text-xs font-bold tracking-wider text-white">
-              COPPER EMBODIED COMPANION // v1.0
+      {/* Top Status Bar */}
+      <div className="w-full max-w-5xl flex items-center justify-between z-10">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 bg-surface-elevated px-3 py-1.5 rounded-lg border border-border shadow-sm">
+            <span className={`w-2 h-2 rounded-full ${connected ? "bg-success" : "bg-danger"}`} />
+            <span className="font-sans text-xs font-semibold tracking-wide text-text">
+              COPPER COMPANION
             </span>
           </div>
           <button
             onClick={toggleHandsFree}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
               handsFree
-                ? "bg-verdigris/15 border-verdigris text-verdigris shadow-[0_0_15px_rgba(95,168,143,0.3)]"
-                : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
+                ? "bg-success-dim border-success/30 text-success"
+                : "bg-surface-elevated border-border-subtle text-text-secondary hover:text-text hover:bg-surface-hover"
             }`}
           >
             <Radio className="w-3.5 h-3.5" />
-            {handsFree ? "HANDS-FREE DUPLEX [ON]" : "HANDS-FREE [OFF]"}
+            {handsFree ? "HANDS-FREE [ON]" : "HANDS-FREE [OFF]"}
           </button>
         </div>
 
@@ -286,10 +285,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
               soundFX.play("toggle");
               setShowVision(!showVision);
             }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
               showVision
-                ? "bg-blush-100/20 border-blush-100 text-blush-100 shadow-[0_0_15px_rgba(246,230,234,0.25)]"
-                : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
+                ? "bg-copper-subtle border-copper/30 text-copper"
+                : "bg-surface-elevated border-border-subtle text-text-secondary hover:text-text hover:bg-surface-hover"
             }`}
           >
             <Eye className="w-3.5 h-3.5" />
@@ -301,8 +300,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
               setMuted(nextMuted);
               onSend(nextMuted ? "mute voice" : "unmute voice");
             }}
-            className={`p-2 rounded-xl border transition-all cursor-pointer ${
-              muted ? "bg-red-500/20 border-red-500 text-red-400" : "bg-[#1A0A0F]/70 border-blush-100/15 text-zinc-400 hover:text-white"
+            className={`p-2 rounded-lg border transition-all cursor-pointer ${
+              muted
+                ? "bg-danger-dim border-danger/30 text-danger"
+                : "bg-surface-elevated border-border-subtle text-text-secondary hover:text-text hover:bg-surface-hover"
             }`}
             title={muted ? "Unmute Voice" : "Mute Voice"}
           >
@@ -312,11 +313,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
       </div>
 
       {/* Main Center Stage: Thinking Orb Visualizer */}
-      <div className="flex-1 w-full max-w-6xl flex items-center justify-center relative my-2">
-        {/* Floating Thinking Orb in the Middle (No Box) */}
-        <div className="relative flex items-center justify-center select-none py-12">
+      <div className="flex-1 w-full max-w-5xl flex items-center justify-center relative my-2">
+        <div className="relative flex items-center justify-center select-none py-10">
           <div
-            className="scale-[3.3] cursor-pointer transition-transform duration-200 hover:scale-[3.45] active:scale-[3.15] flex items-center justify-center p-2"
+            className="scale-[3.2] cursor-pointer transition-transform duration-200 hover:scale-[3.35] active:scale-[3.05] flex items-center justify-center p-2"
             onClick={() => {
               soundFX.play("click");
               if (speaking) stopAudio();
@@ -333,7 +333,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           </div>
         </div>
 
-        {/* Ambient Vision Dock (Right Drawer overlay) */}
+        {/* Ambient Vision Dock */}
         <AnimatePresence>
           {showVision && (
             <motion.div
@@ -353,23 +353,23 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
       </div>
 
       {/* Recent Conversational Dialogue Overlays */}
-      <div className="w-full max-w-3xl flex flex-col gap-2.5 mb-3 z-10">
+      <div className="w-full max-w-2xl flex flex-col gap-2.5 mb-3 z-10">
         <AnimatePresence>
           {recentLines.map((line) => {
             const isUser = line.agent === "YOU" || line.agent === "user";
             return (
               <motion.div
                 key={line.id}
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 className={`flex ${isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-2.5 rounded-2xl backdrop-blur-md text-sm border shadow-lg ${
+                  className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm border shadow-sm ${
                     isUser
-                      ? "bg-accent/20 border-accent/35 text-white rounded-br-sm shadow-[0_4px_16px_rgba(201,124,76,0.2)]"
-                      : "liquid-glass text-blush-100 rounded-bl-sm shadow-[0_0_20px_rgba(246,230,234,0.1)]"
+                      ? "bg-copper-subtle border-copper/20 text-text rounded-br-sm"
+                      : "surface-glass text-text border-border-subtle rounded-bl-sm"
                   }`}
                 >
                   <p className="leading-relaxed font-sans">{line.text}</p>
@@ -380,8 +380,8 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Bottom Control Deck (Liquid Glass) */}
-      <div className="w-full max-w-4xl flex items-center justify-between gap-4 z-10 liquid-glass p-3 rounded-2xl shadow-[0_16px_40px_rgba(10,3,6,0.5)]">
+      {/* Bottom Control Deck */}
+      <div className="w-full max-w-3xl flex items-center justify-between gap-4 z-10 surface-glass p-2.5 px-4 rounded-xl border border-border">
         {/* Quick Directives */}
         <div className="flex items-center gap-2">
           <button
@@ -389,9 +389,9 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
               soundFX.play("click");
               onSend("use a smaller model");
             }}
-            className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:border-blush-100/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-2.5 py-1.5 rounded-md bg-surface-base hover:bg-surface-hover border border-border-subtle text-2xs text-text-secondary hover:text-text flex items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <Cpu className="w-3 h-3 text-blush-100" />
+            <Cpu className="w-3.5 h-3.5 text-copper" />
             1B MINI
           </button>
           <button
@@ -399,9 +399,9 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
               soundFX.play("click");
               onSend("clear vram");
             }}
-            className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:border-red-500/40 text-[10.5px] text-zinc-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-2.5 py-1.5 rounded-md bg-surface-base hover:bg-surface-hover border border-border-subtle hover:border-danger/30 text-2xs text-text-secondary hover:text-danger flex items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <Trash2 className="w-3 h-3 text-red-400" />
+            <Trash2 className="w-3.5 h-3.5 text-danger" />
             PURGE VRAM
           </button>
         </div>
@@ -410,13 +410,13 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={handleManualPushToTalk}
-            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer ${
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
               isRecording
-                ? "bg-red-500 shadow-[0_0_25px_rgba(239,68,68,0.7)] scale-110"
-                : "bg-gradient-to-tr from-blush-100 via-blush-200 to-accent text-burgundy-950 hover:brightness-110 shadow-[0_0_25px_rgba(246,230,234,0.4)]"
+                ? "bg-danger text-white shadow-lg scale-105"
+                : "bg-copper hover:bg-copper-bright text-text-inverse shadow-md active:scale-95"
             }`}
           >
-            {isRecording ? <Square className="w-6 h-6 fill-white text-white" /> : <Mic className="w-6 h-6 text-burgundy-950 stroke-[2.5]" />}
+            {isRecording ? <Square className="w-5 h-5 fill-current" /> : <Mic className="w-5 h-5 stroke-[2.2]" />}
           </button>
 
           {speaking && (
@@ -425,20 +425,20 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
                 soundFX.play("click");
                 stopAudio();
               }}
-              className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-400 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-danger-dim border border-danger/30 text-danger text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
             >
               BARGE-IN
             </button>
           )}
         </div>
 
-        {/* Clean Dialogue button */}
+        {/* Clear Log button */}
         <button
           onClick={() => {
             soundFX.play("click");
             clearChat?.();
           }}
-          className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.10] hover:bg-white/[0.08] text-zinc-400 hover:text-white text-[10.5px] transition-all cursor-pointer"
+          className="px-2.5 py-1.5 rounded-md bg-surface-base hover:bg-surface-hover border border-border-subtle text-text-secondary hover:text-text text-2xs transition-colors cursor-pointer"
         >
           CLEAR LOG
         </button>

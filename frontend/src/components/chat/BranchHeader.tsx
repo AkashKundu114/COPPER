@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import {
   GitBranch,
   GitCompare,
@@ -53,7 +53,7 @@ export const BranchHeader: React.FC<Props> = ({
 
   return (
     <div className="w-full max-w-[850px] flex flex-col z-20">
-      <div className="px-4 py-2 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/70 backdrop-blur text-xs font-mono select-none">
+      <div className="px-4 py-2 flex items-center justify-between border-b border-border-subtle bg-canvas/70 backdrop-blur text-xs font-mono select-none">
         {/* Branch Selector Dropdown */}
         <div className="relative">
           <button
@@ -63,16 +63,16 @@ export const BranchHeader: React.FC<Props> = ({
             aria-expanded={dropdownOpen}
             aria-controls="branch-listbox"
             aria-label={`Conversation branch: ${activeBranch.title}`}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 transition-all font-sans font-bold text-xs cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-elevated hover:bg-surface-hover border border-border-subtle text-text transition-all font-sans font-bold text-xs cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
           >
             <GitBranch size={14} className={isMain ? "text-accent-400" : "text-amber-400"} aria-hidden="true" />
             <span className="truncate max-w-[200px] md:max-w-[320px]">
               {activeBranch.title}
             </span>
-            <span className="px-1.5 py-0.2 rounded bg-slate-800 text-[10px] text-slate-400 font-mono">
+            <span className="px-1.5 py-0.2 rounded bg-surface-active text-[10px] text-text-secondary font-mono">
               {activeBranch.messages_count ?? 0}
             </span>
-            <ChevronDown size={12} className={`text-slate-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+            <ChevronDown size={12} className={`text-text-secondary transition-transform ${dropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
           </button>
 
           {dropdownOpen && (
@@ -82,9 +82,9 @@ export const BranchHeader: React.FC<Props> = ({
                 role="listbox"
                 id="branch-listbox"
                 aria-label="Available conversation branches"
-                className="absolute left-0 mt-1.5 w-72 rounded-xl bg-slate-950 border border-slate-800 shadow-2xl p-1.5 z-40 space-y-1"
+                className="absolute left-0 mt-1.5 w-72 rounded-xl bg-canvas border border-border-subtle shadow-2xl p-1.5 z-40 space-y-1"
               >
-                <div className="px-2.5 py-1 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                <div className="px-2.5 py-1 text-[10px] uppercase font-bold text-text-secondary tracking-wider">
                   Conversation Branches ({branches.length})
                 </div>
 
@@ -105,7 +105,7 @@ export const BranchHeader: React.FC<Props> = ({
                         className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-colors text-[11px] cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
                           isSelected
                             ? "bg-accent-950 text-white border border-accent-800/50"
-                            : "text-slate-300 hover:bg-slate-900"
+                            : "text-text-secondary hover:bg-surface-elevated"
                         }`}
                       >
                         <div className="flex items-center gap-2 truncate pr-2">
@@ -116,7 +116,7 @@ export const BranchHeader: React.FC<Props> = ({
                           />
                           <span className="truncate font-sans font-medium">{b.title}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-mono text-slate-400">
+                        <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-mono text-text-secondary">
                           <span>{b.messages_count ?? "?"}</span>
                           {isSelected && <Check size={12} className="text-accent-400" aria-hidden="true" />}
                         </div>
@@ -137,7 +137,7 @@ export const BranchHeader: React.FC<Props> = ({
             className={`flex items-center justify-center p-1.5 rounded-lg border text-[11px] font-bold transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan ${
               showGraph 
                 ? "bg-accent-950 text-accent-400 border-accent-800/50" 
-                : "bg-slate-900 hover:bg-slate-850 text-slate-400 border-slate-800"
+                : "bg-surface-elevated hover:bg-surface-hover text-text-secondary border-border-subtle"
             }`}
             title="Toggle Branch Graph"
           >
@@ -148,7 +148,7 @@ export const BranchHeader: React.FC<Props> = ({
             onClick={onOpenCompare}
             disabled={branches.length < 2}
             aria-label="Compare divergent conversation branches"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 text-[11px] font-bold transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-elevated hover:bg-surface-hover text-text-secondary border border-border-subtle text-[11px] font-bold transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             title="Compare divergent conversation branches"
           >
             <GitCompare size={13} className="text-accent-400" aria-hidden="true" />
@@ -171,7 +171,7 @@ export const BranchHeader: React.FC<Props> = ({
       
       {/* Branch Graph Visualization Panel */}
       {showGraph && (
-        <div className="w-full border-b border-slate-800 shadow-inner">
+        <div className="w-full border-b border-border-subtle shadow-inner">
           <BranchGraph
             branches={branches}
             activeBranchId={activeBranchId}

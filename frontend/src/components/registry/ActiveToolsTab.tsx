@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import {
   Wrench,
   Search,
@@ -107,7 +107,7 @@ export const ActiveToolsTab: React.FC = () => {
   return (
     <div className="space-y-6 animate-fade-in font-sans">
       {/* Header & Filter Controls */}
-      <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-3">
+      <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Wrench size={18} className="text-cyan-400" />
@@ -115,34 +115,34 @@ export const ActiveToolsTab: React.FC = () => {
               <h2 className="text-sm font-bold text-white tracking-tight">
                 Active Tool Armor & Execution Schemas
               </h2>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-text-secondary">
                 {tools.length} Registered System, Codebase, Stealth Scraping & Visual Tools
               </p>
             </div>
           </div>
 
           {/* Search Box */}
-          <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
-            <Search size={14} className="text-slate-500" />
+          <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
+            <Search size={14} className="text-text-tertiary" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tool name, schema, or purpose..."
-              className="bg-transparent text-white placeholder:text-slate-500 outline-none text-xs w-full font-sans"
+              className="bg-transparent text-white placeholder:text-text-tertiary outline-none text-xs w-full font-sans"
             />
           </div>
         </div>
 
         {/* Guardian Level & Category Selectors */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-border-subtle">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             <button
               onClick={() => setSelectedCategory("all")}
               className={`px-3 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCategory === "all"
-                  ? "bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20"
-                  : "bg-slate-950/60 text-slate-400 hover:text-white border border-slate-800"
+                  ? "bg-cyan-500 text-text-inverse font-bold shadow-lg shadow-cyan-500/20"
+                  : "bg-surface-base text-text-secondary hover:text-white border border-border-subtle"
               }`}
             >
               All Categories
@@ -153,8 +153,8 @@ export const ActiveToolsTab: React.FC = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   selectedCategory === cat
-                    ? "bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20"
-                    : "bg-slate-950/60 text-slate-400 hover:text-white border border-slate-800"
+                    ? "bg-cyan-500 text-text-inverse font-bold shadow-lg shadow-cyan-500/20"
+                    : "bg-surface-base text-text-secondary hover:text-white border border-border-subtle"
                 }`}
               >
                 {cat}
@@ -164,7 +164,7 @@ export const ActiveToolsTab: React.FC = () => {
 
           {/* Guardian Filter */}
           <div className="flex items-center gap-1">
-            <span className="text-[10px] font-mono text-slate-500 mr-1">Guardian:</span>
+            <span className="text-[10px] font-mono text-text-tertiary mr-1">Guardian:</span>
             {[
               { id: "all", label: "All" },
               { id: 0, label: "L0 Direct" },
@@ -175,8 +175,8 @@ export const ActiveToolsTab: React.FC = () => {
                 onClick={() => setSelectedGuardianLevel(g.id as any)}
                 className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-semibold transition-all ${
                   selectedGuardianLevel === g.id
-                    ? "bg-slate-700 text-white border border-slate-600"
-                    : "text-slate-500 hover:text-slate-300"
+                    ? "bg-surface-spotlight text-white border border-border-highlight"
+                    : "text-text-tertiary hover:text-text-secondary"
                 }`}
               >
                 {g.label}
@@ -187,7 +187,7 @@ export const ActiveToolsTab: React.FC = () => {
       </div>
 
       {/* Embedded Live Tool Studio (Diagram & Architecture Renderer) */}
-      <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+      <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileCode size={16} className="text-cyan-400" />
@@ -202,11 +202,11 @@ export const ActiveToolsTab: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
-            <label className="text-[10px] font-mono text-slate-400 block mb-1">Diagram Type</label>
+            <label className="text-[10px] font-mono text-text-secondary block mb-1">Diagram Type</label>
             <select
               value={diagramType}
               onChange={(e) => setDiagramType(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 outline-none focus:border-cyan-500/50"
+              className="w-full bg-canvas border border-border-subtle rounded-xl px-3 py-1.5 text-xs text-text outline-none focus:border-cyan-500/50"
             >
               <option value="flowchart">Flowchart</option>
               <option value="sequence">Sequence Diagram</option>
@@ -216,24 +216,24 @@ export const ActiveToolsTab: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[10px] font-mono text-slate-400 block mb-1">Diagram Title</label>
+            <label className="text-[10px] font-mono text-text-secondary block mb-1">Diagram Title</label>
             <input
               type="text"
               value={diagramTitle}
               onChange={(e) => setDiagramTitle(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 outline-none focus:border-cyan-500/50"
+              className="w-full bg-canvas border border-border-subtle rounded-xl px-3 py-1.5 text-xs text-text outline-none focus:border-cyan-500/50"
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-mono text-slate-400 block mb-1">Workflow Specification</label>
+            <label className="text-[10px] font-mono text-text-secondary block mb-1">Workflow Specification</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={diagramSpec}
                 onChange={(e) => setDiagramSpec(e.target.value)}
                 placeholder="Nodes and edges specification..."
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 outline-none focus:border-cyan-500/50"
+                className="w-full bg-canvas border border-border-subtle rounded-xl px-3 py-1.5 text-xs text-text outline-none focus:border-cyan-500/50"
               />
               <button
                 onClick={handleRenderDiagram}
@@ -248,8 +248,8 @@ export const ActiveToolsTab: React.FC = () => {
         </div>
 
         {diagramResult && (
-          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 font-mono text-xs">
-            <div className="flex items-center justify-between text-[10px] text-slate-500">
+          <div className="bg-canvas p-3 rounded-xl border border-border-subtle space-y-1 font-mono text-xs">
+            <div className="flex items-center justify-between text-[10px] text-text-tertiary">
               <span>RENDER OUTPUT ({diagramType.toUpperCase()}):</span>
               <button
                 onClick={() => setDiagramResult(null)}
@@ -271,7 +271,7 @@ export const ActiveToolsTab: React.FC = () => {
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="h-32 rounded-2xl bg-slate-900/40 border border-slate-800 animate-pulse p-4"
+              className="h-32 rounded-2xl bg-surface-elevated/40 border border-border-subtle animate-pulse p-4"
             />
           ))}
         </div>
@@ -284,7 +284,7 @@ export const ActiveToolsTab: React.FC = () => {
             return (
               <div
                 key={t.name}
-                className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-3"
+                className="p-4 rounded-2xl bg-surface-elevated/70 border border-border-subtle hover:border-border-highlight transition-all flex flex-col justify-between space-y-3"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -293,7 +293,7 @@ export const ActiveToolsTab: React.FC = () => {
                         <span className="text-xs font-mono font-bold text-white">
                           {t.name}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 bg-slate-950 px-2 py-0.5 rounded-full border border-slate-800">
+                        <span className="text-[10px] font-mono text-text-tertiary bg-canvas px-2 py-0.5 rounded-full border border-border-subtle">
                           {t.category}
                         </span>
                       </div>
@@ -307,17 +307,17 @@ export const ActiveToolsTab: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                  <p className="text-xs text-text-secondary leading-relaxed font-sans">
                     {t.description}
                   </p>
 
-                  <div className="text-[11px] font-mono text-slate-500">
-                    Returns: <span className="text-slate-400">{t.return_description}</span>
+                  <div className="text-[11px] font-mono text-text-tertiary">
+                    Returns: <span className="text-text-secondary">{t.return_description}</span>
                   </div>
                 </div>
 
                 {/* Parameters Accordion */}
-                <div className="pt-2 border-t border-slate-800/80">
+                <div className="pt-2 border-t border-border-subtle">
                   <button
                     onClick={() => setExpandedTool(isExpanded ? null : t.name)}
                     className="flex items-center justify-between w-full text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors"
@@ -329,10 +329,10 @@ export const ActiveToolsTab: React.FC = () => {
                   </button>
 
                   {isExpanded && (
-                    <div className="mt-2.5 space-y-2 bg-slate-950 p-3 rounded-xl border border-slate-800/80 font-mono text-[11px]">
+                    <div className="mt-2.5 space-y-2 bg-canvas p-3 rounded-xl border border-border-subtle font-mono text-[11px]">
                       {t.parameters && t.parameters.length > 0 ? (
                         t.parameters.map((p) => (
-                          <div key={p.name} className="border-b border-slate-900 pb-1.5 last:border-0 last:pb-0">
+                          <div key={p.name} className="border-b border-border-subtle pb-1.5 last:border-0 last:pb-0">
                             <div className="flex items-center gap-2">
                               <span className="text-white font-bold">{p.name}</span>
                               <span className="text-[10px] text-cyan-400 bg-cyan-950/60 px-1.5 py-0.2 rounded border border-cyan-900">
@@ -345,14 +345,14 @@ export const ActiveToolsTab: React.FC = () => {
                               )}
                             </div>
                             {p.description && (
-                              <p className="text-slate-400 text-[10px] mt-0.5 font-sans">
+                              <p className="text-text-secondary text-[10px] mt-0.5 font-sans">
                                 {p.description}
                               </p>
                             )}
                           </div>
                         ))
                       ) : (
-                        <span className="text-slate-500">No parameters required.</span>
+                        <span className="text-text-tertiary">No parameters required.</span>
                       )}
                     </div>
                   )}

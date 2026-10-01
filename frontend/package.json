@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "COPPER - Cognitive Offline Personal Partner & Epistemic Reasoner",
   "author": "Akash Kundu <akashkundu1152@gmail.com>",
   "homepage": "https://github.com/AkashKundu114/COPPER",

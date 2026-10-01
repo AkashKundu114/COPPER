@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import {
   Clock,
   ExternalLink,
@@ -51,7 +51,7 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
       case "copper.response":
         return <Send size={12} className="text-blue-400" />;
       default:
-        return <Clock size={12} className="text-slate-400" />;
+        return <Clock size={12} className="text-text-secondary" />;
     }
   };
 
@@ -71,21 +71,21 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
       case "copper.response":
         return "bg-blue-500/80 border-blue-400";
       default:
-        return "bg-slate-500/80 border-slate-400";
+        return "bg-surface-spotlight border-border-highlight";
     }
   };
 
   const maxDuration = Math.max(trace.duration_ms, 0.1);
 
   return (
-    <div className="rounded-xl bg-slate-950/90 border border-slate-800/80 overflow-hidden font-mono text-xs shadow-md">
+    <div className="rounded-xl bg-canvas/90 border border-border-subtle overflow-hidden font-mono text-xs shadow-md">
       {/* Header bar */}
       <div
         onClick={() => setIsFullViewExpanded(!isFullViewExpanded)}
-        className="p-3.5 bg-slate-900/90 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 cursor-pointer select-none hover:bg-slate-900 transition-colors"
+        className="p-3.5 bg-surface-elevated border-b border-border-subtle flex flex-wrap items-center justify-between gap-3 cursor-pointer select-none hover:bg-surface-elevated transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <button className="text-slate-400 hover:text-white">
+          <button className="text-text-secondary hover:text-white">
             {isFullViewExpanded ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
           </button>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-950/70 border border-purple-800/50 text-purple-300 uppercase tracking-wide">
@@ -94,7 +94,7 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
           <div className="flex items-center gap-1.5 font-sans font-bold text-white text-xs">
             <span>{trace.root_name}</span>
           </div>
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-text-secondary">
             ({trace.spans_count} spans • {trace.duration_ms}ms)
           </span>
         </div>
@@ -104,16 +104,16 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
           <div
             onClick={copyTraceId}
             title="Click to copy Trace ID"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-[11px] text-slate-300 hover:text-white transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-canvas hover:bg-surface-active border border-border-subtle text-[11px] text-text-secondary hover:text-white transition-all cursor-pointer"
           >
-            <span className="text-slate-500">Trace:</span>
+            <span className="text-text-tertiary">Trace:</span>
             <span className="font-mono text-purple-300">
               {trace.trace_id.slice(0, 8)}...{trace.trace_id.slice(-6)}
             </span>
             {copied ? (
               <Check size={12} className="text-emerald-400" />
             ) : (
-              <Copy size={12} className="text-slate-400" />
+              <Copy size={12} className="text-text-secondary" />
             )}
           </div>
 
@@ -135,7 +135,7 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
       {isFullViewExpanded && (
         <div className="p-3.5 space-y-3">
           {/* Time axis header */}
-          <div className="flex items-center text-[10px] text-slate-500 border-b border-slate-800/60 pb-1.5 pl-[200px]">
+          <div className="flex items-center text-[10px] text-text-tertiary border-b border-border-subtle pb-1.5 pl-[200px]">
             <div className="w-1/4">0ms</div>
             <div className="w-1/4 text-center">{Math.round(maxDuration * 0.33)}ms</div>
             <div className="w-1/4 text-center">{Math.round(maxDuration * 0.66)}ms</div>
@@ -158,27 +158,27 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
                 <div key={span.span_id} className="space-y-1">
                   <div
                     onClick={() => setExpandedSpanId(isSelected ? null : span.span_id)}
-                    className={`flex items-center gap-3 p-1.5 rounded-lg hover:bg-slate-900/80 cursor-pointer transition-colors ${
-                      isSelected ? "bg-slate-900 border border-slate-800" : ""
+                    className={`flex items-center gap-3 p-1.5 rounded-lg hover:bg-surface-elevated cursor-pointer transition-colors ${
+                      isSelected ? "bg-surface-elevated border border-border-subtle" : ""
                     }`}
                   >
                     {/* Span label */}
                     <div
                       className={`w-[200px] shrink-0 flex items-center gap-1.5 text-[11px] truncate ${
-                        isChild ? "pl-4 text-slate-300" : "font-bold text-white"
+                        isChild ? "pl-4 text-text-secondary" : "font-bold text-white"
                       }`}
                     >
                       {getSpanIcon(span.name)}
                       <span className="truncate">{span.name.replace("copper.", "")}</span>
-                      <span className="text-[10px] text-slate-500 ml-auto mr-1">
+                      <span className="text-[10px] text-text-tertiary ml-auto mr-1">
                         {span.duration_ms}ms
                       </span>
                     </div>
 
                     {/* Timeline bar area */}
-                    <div className="flex-1 relative h-5 bg-slate-900/40 rounded overflow-hidden">
+                    <div className="flex-1 relative h-5 bg-surface-elevated/40 rounded overflow-hidden">
                       {/* Grid background markers */}
-                      <div className="absolute inset-0 grid grid-cols-4 pointer-events-none opacity-10 border-x border-slate-700" />
+                      <div className="absolute inset-0 grid grid-cols-4 pointer-events-none opacity-10 border-x border-border-highlight" />
 
                       {/* Span timing bar */}
                       <div
@@ -199,25 +199,25 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
 
                   {/* Expandable attributes drawer for this span */}
                   {isSelected && (
-                    <div className="ml-[200px] p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] space-y-1.5 animate-in fade-in duration-150">
-                      <div className="flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    <div className="ml-[200px] p-2.5 rounded-lg bg-surface-elevated border border-border-subtle text-[11px] space-y-1.5 animate-in fade-in duration-150">
+                      <div className="flex items-center justify-between text-[10px] text-text-secondary font-bold uppercase tracking-wider">
                         <span>Span: {span.name}</span>
                         <span>ID: {span.span_id}</span>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[10px]">
                         <div>
-                          <span className="text-slate-500">Duration:</span>{" "}
+                          <span className="text-text-tertiary">Duration:</span>{" "}
                           <span className="text-emerald-400 font-bold">{span.duration_ms}ms</span>
                         </div>
                         <div>
-                          <span className="text-slate-500">Offset:</span>{" "}
-                          <span className="text-slate-300">{span.offset_ms}ms</span>
+                          <span className="text-text-tertiary">Offset:</span>{" "}
+                          <span className="text-text-secondary">{span.offset_ms}ms</span>
                         </div>
                         <div>
-                          <span className="text-slate-500">Status:</span>{" "}
+                          <span className="text-text-tertiary">Status:</span>{" "}
                           <span
                             className={
-                              span.status === "ERROR" ? "text-rose-400 font-bold" : "text-slate-300"
+                              span.status === "ERROR" ? "text-rose-400 font-bold" : "text-text-secondary"
                             }
                           >
                             {span.status}
@@ -227,8 +227,8 @@ export const TraceWaterfallVisualizer: React.FC<TraceWaterfallVisualizerProps> =
 
                       {span.attributes && Object.keys(span.attributes).length > 0 && (
                         <div>
-                          <div className="text-[10px] text-slate-500 font-bold mt-1">Attributes:</div>
-                          <pre className="p-2 rounded bg-slate-950 border border-slate-800 text-[10px] text-cyan-300 overflow-x-auto max-h-40">
+                          <div className="text-[10px] text-text-tertiary font-bold mt-1">Attributes:</div>
+                          <pre className="p-2 rounded bg-canvas border border-border-subtle text-[10px] text-cyan-300 overflow-x-auto max-h-40">
                             {JSON.stringify(span.attributes, null, 2)}
                           </pre>
                         </div>

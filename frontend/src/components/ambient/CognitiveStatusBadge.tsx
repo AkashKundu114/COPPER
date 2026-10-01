@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Brain, Zap, Coffee, AlertTriangle, ShieldAlert } from "lucide-react";
 import { cognitiveAPI } from "../../services/api";
 
@@ -83,39 +83,39 @@ export const CognitiveStatusBadge: React.FC = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-10 w-72 p-3.5 rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-slate-800 shadow-2xl z-50 font-mono text-xs space-y-3 animate-fade-in">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div className="absolute right-0 top-10 w-72 p-3.5 rounded-2xl bg-canvas backdrop-blur-xl border border-border-subtle shadow-2xl z-50 font-mono text-xs space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between border-b border-border-subtle pb-2">
             <div className="flex items-center gap-2">
               <IconComponent size={14} className="text-white" />
               <span className="font-bold text-white text-xs font-sans">Cognitive Load State</span>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-slate-500 hover:text-white text-[10px]"
+              className="text-text-tertiary hover:text-white text-[10px]"
             >
               Close
             </button>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[10px]">
-            <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800/60">
-              <span className="text-slate-400 block">Switch Rate</span>
+            <div className="p-2 rounded-lg bg-surface-elevated border border-border-subtle">
+              <span className="text-text-secondary block">Switch Rate</span>
               <span className="text-white font-bold">{profile.window_switch_rate.toFixed(1)}/min</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800/60">
-              <span className="text-slate-400 block">Focus Streak</span>
+            <div className="p-2 rounded-lg bg-surface-elevated border border-border-subtle">
+              <span className="text-text-secondary block">Focus Streak</span>
               <span className="text-accent-400 font-bold">{profile.current_focus_streak.toFixed(1)} mins</span>
             </div>
           </div>
 
           {profile.recommendations && profile.recommendations.length > 0 && (
             <div className="space-y-1.5 pt-1">
-              <span className="text-[10px] text-slate-400 block uppercase tracking-wider font-semibold">
+              <span className="text-[10px] text-text-secondary block uppercase tracking-wider font-semibold">
                 Autonomous Recommendations
               </span>
               <div className="space-y-1">
                 {profile.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-1.5 text-[10px] text-slate-300">
+                  <div key={i} className="flex items-start gap-1.5 text-[10px] text-text-secondary">
                     <span className="text-accent-400 mt-0.5">•</span>
                     <span>{rec}</span>
                   </div>

@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { ACTIVE_AGENTS } from "../constants/agents";
+import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
 
 interface SetupWizardProps {
   onComplete: () => void;
@@ -104,28 +106,28 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
   const requiredVramEstimate = selectedAgents.length > 8 ? "6.4 GB" : selectedAgents.length > 4 ? "4.2 GB" : "1.8 GB";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 text-slate-100 p-6 overflow-y-auto">
-      <div className="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas text-text p-6 overflow-y-auto">
+      <div className="w-full max-w-3xl surface-card rounded-2xl p-7 border border-border shadow-elevation-modal relative my-auto">
         {/* Step Indicator */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-6 mb-8">
+        <div className="flex items-center justify-between border-b border-border pb-5 mb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest text-amber-500 font-semibold">
+            <span className="text-2xs uppercase tracking-widest text-copper font-semibold font-mono">
               Step {step} of 5
             </span>
-            <h2 className="text-xl font-bold text-slate-100">
-              {step === 1 && "Hardware & Dependency Pre-Flight"}
-              {step === 2 && "Select Agent Architecture & Presets"}
-              {step === 3 && "Voice Synthesis & Generative Studio"}
+            <h2 className="text-lg font-bold text-text">
+              {step === 1 && "Hardware & Pre-Flight Verification"}
+              {step === 2 && "Agent Architecture & Presets"}
+              {step === 3 && "Voice Synthesis & Media Studio"}
               {step === 4 && "Local AI Model Provisioning"}
               {step === 5 && "Initialization Complete"}
             </h2>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {[1, 2, 3, 4, 5].map((s) => (
               <div
                 key={s}
-                className={`w-8 h-2 rounded-full transition-all ${
-                  s === step ? "bg-amber-500 w-12" : s < step ? "bg-amber-500/50" : "bg-slate-800"
+                className={`h-1.5 rounded-full transition-all ${
+                  s === step ? "bg-copper w-8" : s < step ? "bg-copper/50 w-5" : "bg-surface-active w-4"
                 }`}
               />
             ))}
@@ -134,135 +136,135 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
 
         {/* Step 1: System Pre-Flight */}
         {step === 1 && (
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400">
+          <div className="space-y-5">
+            <p className="text-xs text-text-secondary">
               C.O.P.P.E.R. operates 100% offline. Verifying host machine resources:
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center gap-4">
-                <div className="p-3 bg-amber-500/10 text-amber-400 rounded-xl">
-                  <Cpu size={24} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-surface-base border border-border-subtle flex items-center gap-3">
+                <div className="p-2.5 bg-copper-subtle text-copper rounded-lg">
+                  <Cpu size={20} />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Graphics Processor (GPU)</div>
-                  <div className="font-semibold text-sm text-slate-200">
+                  <div className="text-2xs text-text-tertiary">Graphics Processor (GPU)</div>
+                  <div className="font-semibold text-xs text-text">
                     {systemInfo?.gpu?.name || "Detecting..."}
                   </div>
-                  <div className="text-xs text-amber-400 font-mono mt-0.5">
+                  <div className="text-2xs text-copper font-mono mt-0.5">
                     {systemInfo?.gpu?.vram_mb ? `${systemInfo.gpu.vram_mb} MB VRAM` : "Integrated GPU"}
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center gap-4">
-                <div className="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl">
-                  <HardDrive size={24} />
+              <div className="p-3.5 rounded-xl bg-surface-base border border-border-subtle flex items-center gap-3">
+                <div className="p-2.5 bg-info-dim text-info rounded-lg">
+                  <HardDrive size={20} />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Available Storage</div>
-                  <div className="font-semibold text-sm text-slate-200">
+                  <div className="text-2xs text-text-tertiary">Available Storage</div>
+                  <div className="font-semibold text-xs text-text">
                     {systemInfo?.disk?.free_gb || "..."} GB Free Space
                   </div>
-                  <div className="text-xs text-emerald-400 font-mono mt-0.5">
+                  <div className="text-2xs text-success font-mono mt-0.5">
                     Sufficient for Model Tiers
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center gap-4">
-                <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
-                  <Layers size={24} />
+              <div className="p-3.5 rounded-xl bg-surface-base border border-border-subtle flex items-center gap-3">
+                <div className="p-2.5 bg-copper-subtle text-copper rounded-lg">
+                  <Layers size={20} />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Python Environment</div>
-                  <div className="font-semibold text-sm text-slate-200">
+                  <div className="text-2xs text-text-tertiary">Python Environment</div>
+                  <div className="font-semibold text-xs text-text">
                     Python {systemInfo?.python?.version || "3.14"}
                   </div>
-                  <div className="text-xs text-emerald-400 font-mono mt-0.5">
+                  <div className="text-2xs text-success font-mono mt-0.5">
                     Standard Library & FastAPIs Active
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center gap-4">
-                <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
-                  <RefreshCw size={24} />
+              <div className="p-3.5 rounded-xl bg-surface-base border border-border-subtle flex items-center gap-3">
+                <div className="p-2.5 bg-success-dim text-success rounded-lg">
+                  <RefreshCw size={20} />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Ollama Local Daemon</div>
-                  <div className="font-semibold text-sm text-slate-200">
+                  <div className="text-2xs text-text-tertiary">Ollama Local Daemon</div>
+                  <div className="font-semibold text-xs text-text">
                     {systemInfo?.ollama?.running
                       ? "Daemon Active (Port 11434)"
                       : systemInfo?.ollama?.installed
                       ? "Installed (Starting Daemon)"
                       : "Ready to Install"}
                   </div>
-                  <div className="text-xs text-slate-400 font-mono mt-0.5">
+                  <div className="text-2xs text-text-secondary font-mono mt-0.5">
                     {systemInfo?.ollama?.installed_models?.length || 0} Models Installed
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <button
-                type="button"
+            <div className="flex justify-between items-center pt-3">
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={fetchSystemCheck}
                 disabled={checking}
-                className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1.5"
               >
-                <RefreshCw size={14} className={checking ? "animate-spin" : ""} />
+                <RefreshCw size={13} className={checking ? "animate-spin mr-1" : "mr-1"} />
                 Re-check System
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => setStep(2)}
-                className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold rounded-xl text-sm flex items-center gap-2"
               >
-                Next: Agent Selection <ArrowRight size={16} />
-              </button>
+                Next: Agent Selection <ArrowRight size={14} className="ml-1" />
+              </Button>
             </div>
           </div>
         )}
 
         {/* Step 2: Agent Selection */}
         {step === 2 && (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div className="flex justify-between items-center">
-              <p className="text-sm text-slate-400">
+              <p className="text-xs text-text-secondary">
                 Choose a pre-configured architecture tier or customize your active agents:
               </p>
-              <div className="text-xs font-mono text-amber-400 bg-amber-950/40 px-3 py-1 rounded-full border border-amber-800/40">
-                Est. VRAM Footprint: {requiredVramEstimate}
-              </div>
+              <Badge variant="copper">
+                Est. VRAM: {requiredVramEstimate}
+              </Badge>
             </div>
 
             {/* Presets */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2.5">
               {[
-                { id: "minimal", title: "Minimal (Reflex)", desc: "4 Core Agents, Low VRAM (<2GB)" },
+                { id: "minimal", title: "Minimal (Reflex)", desc: "4 Core Agents (<2GB)" },
                 { id: "recommended", title: "Recommended (Balanced)", desc: "8 Agents, Code + Vision (~4.5GB)" },
-                { id: "full", title: "Full Sovereign Suite", desc: "All 12 Agents, Multi-modal (~6.4GB)" },
+                { id: "full", title: "Full Sovereign Suite", desc: "All 12 Agents (~6.4GB)" },
               ].map((p) => (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => handlePresetSelect(p.id as any)}
-                  className={`p-3 text-left rounded-2xl border transition-all ${
+                  className={`p-3 text-left rounded-xl border transition-all cursor-pointer ${
                     selectedPreset === p.id
-                      ? "border-amber-500 bg-amber-950/20 text-slate-100"
-                      : "border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700"
+                      ? "border-copper bg-copper-subtle text-text"
+                      : "border-border-subtle bg-surface-base text-text-secondary hover:border-border"
                   }`}
                 >
-                  <div className="font-semibold text-xs text-slate-200">{p.title}</div>
-                  <div className="text-[11px] text-slate-400 mt-1">{p.desc}</div>
+                  <div className="font-semibold text-xs text-text">{p.title}</div>
+                  <div className="text-2xs text-text-secondary mt-0.5">{p.desc}</div>
                 </button>
               ))}
             </div>
 
             {/* Agent Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 max-h-64 overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
               {ACTIVE_AGENTS.map((agent) => {
                 const isSelected = selectedAgents.includes(agent.id);
                 const isMandatory = ["chat", "guardian", "planner"].includes(agent.id);
@@ -270,97 +272,97 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
                   <div
                     key={agent.id}
                     onClick={() => toggleAgent(agent.id)}
-                    className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                    className={`p-2.5 rounded-lg border flex items-center justify-between cursor-pointer transition-all ${
                       isSelected
-                        ? "border-amber-500/50 bg-amber-500/10 text-slate-100"
-                        : "border-slate-800/80 bg-slate-950/30 text-slate-500 hover:border-slate-700"
+                        ? "border-copper/40 bg-copper-subtle text-text"
+                        : "border-border-subtle bg-surface-base text-text-secondary hover:border-border"
                     }`}
                   >
                     <div>
-                      <div className="font-semibold text-xs flex items-center gap-1.5">
+                      <div className="font-medium text-xs flex items-center gap-1.5 text-text">
                         {agent.name}
                         {isMandatory && (
-                          <span className="text-[9px] uppercase px-1.5 py-0.2 bg-amber-500/20 text-amber-400 rounded">
+                          <span className="text-[9px] uppercase px-1 py-0.2 bg-copper/20 text-copper rounded font-mono">
                             Core
                           </span>
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{agent.blurb}</div>
+                      <div className="text-2xs text-text-tertiary mt-0.5 line-clamp-1">{agent.blurb}</div>
                     </div>
                     <div
-                      className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
-                        isSelected ? "bg-amber-500 border-amber-500 text-slate-950" : "border-slate-700"
+                      className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 ${
+                        isSelected ? "bg-copper border-copper text-text-inverse" : "border-border-subtle"
                       }`}
                     >
-                      {isSelected && <Check size={12} />}
+                      {isSelected && <Check size={10} />}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <button
-                type="button"
+            <div className="flex justify-between items-center pt-3">
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => setStep(1)}
-                className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-sm flex items-center gap-2"
               >
-                <ArrowLeft size={16} /> Back
-              </button>
-              <button
-                type="button"
+                <ArrowLeft size={14} className="mr-1" /> Back
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => setStep(3)}
-                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold rounded-xl text-sm flex items-center gap-2"
               >
-                Next: Voice & Media <ArrowRight size={16} />
-              </button>
+                Next: Voice & Media <ArrowRight size={14} className="ml-1" />
+              </Button>
             </div>
           </div>
         )}
 
         {/* Step 3: Voice & Creative Studio */}
         {step === 3 && (
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400">
+          <div className="space-y-5">
+            <p className="text-xs text-text-secondary">
               Configure speech synthesis (Kokoro ONNX) and real-time offline image generation:
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               {/* Voice Selector */}
-              <div className="p-5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl">
-                    <Mic size={20} />
+              <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-copper-subtle text-copper rounded-lg">
+                    <Mic size={18} />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-slate-200">Kokoro TTS Voice Profile</h4>
-                    <p className="text-xs text-slate-400">Zero-latency sub-100ms conversational audio</p>
+                    <h4 className="font-semibold text-xs text-text">Kokoro TTS Voice Profile</h4>
+                    <p className="text-2xs text-text-secondary">Sub-100ms conversational audio</p>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {[
-                    { id: "af_bella", name: "Bella (Warm, Natural American English)" },
-                    { id: "af_nicole", name: "Nicole (Clear, Precise Technical Assistant)" },
-                    { id: "am_michael", name: "Michael (Authoritative Deep Baritone)" },
+                    { id: "af_bella", name: "Bella (Warm American English)" },
+                    { id: "af_nicole", name: "Nicole (Technical Assistant)" },
+                    { id: "am_michael", name: "Michael (Deep Baritone)" },
                     { id: "bf_emma", name: "Emma (Crisp British Accent)" },
                   ].map((v) => (
                     <label
                       key={v.id}
-                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer text-xs ${
+                      className={`flex items-center justify-between p-2.5 rounded-lg border cursor-pointer text-xs ${
                         voice === v.id
-                          ? "border-amber-500 bg-amber-500/10 text-amber-300"
-                          : "border-slate-800 text-slate-400 hover:border-slate-700"
+                          ? "border-copper bg-copper-subtle text-text"
+                          : "border-border-subtle text-text-secondary hover:border-border"
                       }`}
                     >
-                      <span>{v.name}</span>
+                      <span className="text-2xs font-medium">{v.name}</span>
                       <input
                         type="radio"
                         name="voice"
                         value={v.id}
                         checked={voice === v.id}
                         onChange={() => setVoice(v.id)}
-                        className="accent-amber-500"
+                        className="accent-copper"
                       />
                     </label>
                   ))}
@@ -368,142 +370,134 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
               </div>
 
               {/* Creative Image Studio */}
-              <div className="p-5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-4 flex flex-col justify-between">
+              <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-3 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl">
-                      <Palette size={20} />
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="p-2 bg-copper-subtle text-copper rounded-lg">
+                      <Palette size={18} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-sm text-slate-200">PICASSO Image Studio</h4>
-                      <p className="text-xs text-slate-400">Offline SD-Turbo 1-step diffusion engine</p>
+                      <h4 className="font-semibold text-xs text-text">PICASSO Image Studio</h4>
+                      <p className="text-2xs text-text-secondary">Offline SD-Turbo diffusion engine</p>
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-2xs text-text-secondary leading-relaxed">
                     Enables local 512x512 visual generation without cloud credits. Requires ~4.8 GB disk
                     space for weights.
                   </p>
                 </div>
 
-                <button
-                  type="button"
+                <Button
+                  variant={imageGen ? "primary" : "secondary"}
+                  size="md"
                   onClick={() => setImageGen((prev) => !prev)}
-                  className={`w-full py-3 rounded-xl border font-semibold text-xs flex items-center justify-center gap-2 transition-all ${
-                    imageGen
-                      ? "bg-purple-600/20 border-purple-500 text-purple-300"
-                      : "border-slate-800 bg-slate-950 text-slate-500"
-                  }`}
+                  className="w-full"
                 >
-                  <CheckCircle2 size={16} />
+                  <CheckCircle2 size={14} className="mr-1" />
                   {imageGen ? "Image Generation Studio Enabled" : "Image Generation Disabled (Saves VRAM)"}
-                </button>
+                </Button>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <button
-                type="button"
+            <div className="flex justify-between items-center pt-3">
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => setStep(2)}
-                className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-sm flex items-center gap-2"
               >
-                <ArrowLeft size={16} /> Back
-              </button>
-              <button
-                type="button"
+                <ArrowLeft size={14} className="mr-1" /> Back
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => setStep(4)}
-                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold rounded-xl text-sm flex items-center gap-2"
               >
-                Next: Model Provisioning <ArrowRight size={16} />
-              </button>
+                Next: Model Provisioning <ArrowRight size={14} className="ml-1" />
+              </Button>
             </div>
           </div>
         )}
 
         {/* Step 4: Model Provisioning */}
         {step === 4 && (
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400">
-              C.O.P.P.E.R. will now ensure the baseline Ollama models for your selected architecture are
-              available:
+          <div className="space-y-5">
+            <p className="text-xs text-text-secondary">
+              Baseline Ollama models for your selected architecture:
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {[
-                { tag: "qwen2.5:1.5b", name: "MERCURY Always-On Reflex Mini Model", size: "0.94 GB", role: "Voice routing & intent classification" },
-                { tag: "qwen2.5:14b", name: "ATLAS Core Chat & Reasoning Model", size: "6.38 GB", role: "Primary dialogue & conversational orchestrator" },
-                { tag: "qwen2.5-coder-abliterated:14b", name: "VULCAN Coding Architecture Model", size: "6.38 GB", role: "Full-stack code generation and debug" },
+                { tag: "qwen2.5:1.5b", name: "MERCURY Reflex Mini Model", size: "0.94 GB", role: "Voice routing & intent classification" },
+                { tag: "qwen2.5:14b", name: "ATLAS Core Chat & Reasoning", size: "6.38 GB", role: "Primary dialogue & conversational orchestrator" },
+                { tag: "qwen2.5-coder-abliterated:14b", name: "VULCAN Coding Architecture", size: "6.38 GB", role: "Full-stack code generation and debug" },
               ].map((m) => (
                 <div
                   key={m.tag}
-                  className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center justify-between"
+                  className="p-3.5 rounded-xl bg-surface-base border border-border-subtle flex items-center justify-between"
                 >
                   <div>
-                    <div className="font-semibold text-xs text-slate-200 flex items-center gap-2">
+                    <div className="font-medium text-xs text-text flex items-center gap-2">
                       {m.name}
-                      <span className="font-mono text-[10px] text-amber-400 bg-amber-950/40 px-2 py-0.5 rounded">
-                        {m.tag}
-                      </span>
+                      <Badge variant="copper">{m.tag}</Badge>
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-1">{m.role} ({m.size})</div>
+                    <div className="text-2xs text-text-secondary mt-0.5">{m.role} ({m.size})</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-emerald-400 font-medium flex items-center gap-1">
-                      <CheckCircle2 size={16} /> Ready
-                    </span>
+                    <Badge variant="success">Ready</Badge>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <button
-                type="button"
+            <div className="flex justify-between items-center pt-3">
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => setStep(3)}
-                className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-sm flex items-center gap-2"
               >
-                <ArrowLeft size={16} /> Back
-              </button>
-              <button
-                type="button"
+                <ArrowLeft size={14} className="mr-1" /> Back
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => setStep(5)}
-                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold rounded-xl text-sm flex items-center gap-2"
               >
-                Finalize Setup <ArrowRight size={16} />
-              </button>
+                Finalize Setup <ArrowRight size={14} className="ml-1" />
+              </Button>
             </div>
           </div>
         )}
 
         {/* Step 5: Ready */}
         {step === 5 && (
-          <div className="space-y-6 text-center py-6">
-            <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
-              <CheckCircle2 size={36} />
+          <div className="space-y-5 text-center py-4">
+            <div className="w-14 h-14 bg-success-dim text-success rounded-full flex items-center justify-center mx-auto border border-success/30">
+              <CheckCircle2 size={32} />
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-100">C.O.P.P.E.R. is Fully Configured</h3>
-              <p className="text-sm text-slate-400 max-w-md mx-auto">
-                Your sovereign offline assistant is initialized. You can reconfigure models, voices, and
-                agents at any time in the Settings view.
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-text">C.O.P.P.E.R. is Fully Configured</h3>
+              <p className="text-xs text-text-secondary max-w-sm mx-auto">
+                Your sovereign offline workstation is initialized and ready for production use.
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl max-w-md mx-auto text-left text-xs space-y-1.5 text-slate-400">
-              <div>&bull; <strong>Active Agents:</strong> {selectedAgents.length} agents enabled</div>
-              <div>&bull; <strong>TTS Voice:</strong> {voice}</div>
-              <div>&bull; <strong>Image Studio:</strong> {imageGen ? "Active (SD-Turbo)" : "Disabled"}</div>
-              <div>&bull; <strong>Telemetry:</strong> 100% Offline (Local Host Bound)</div>
+            <div className="p-3.5 bg-surface-base border border-border-subtle rounded-xl max-w-sm mx-auto text-left text-2xs space-y-1 text-text-secondary">
+              <div>&bull; <strong className="text-text">Active Agents:</strong> {selectedAgents.length} agents enabled</div>
+              <div>&bull; <strong className="text-text">TTS Voice:</strong> {voice}</div>
+              <div>&bull; <strong className="text-text">Image Studio:</strong> {imageGen ? "Active (SD-Turbo)" : "Disabled"}</div>
+              <div>&bull; <strong className="text-text">Telemetry:</strong> 100% Offline (Local Host Bound)</div>
             </div>
 
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              size="lg"
               onClick={handleFinish}
-              className="px-8 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-2xl text-sm transition-transform hover:scale-105"
+              className="mt-2"
             >
               Launch C.O.P.P.E.R. Workspace
-            </button>
+            </Button>
           </div>
         )}
       </div>

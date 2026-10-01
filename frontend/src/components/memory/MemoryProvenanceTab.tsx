@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { provenanceAPI } from "../../services/api";
 import { Search, ShieldAlert, CheckCircle2, XCircle, HelpCircle, History, Tag } from "lucide-react";
 
@@ -65,13 +65,13 @@ export const MemoryProvenanceTab: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto p-6 space-y-6 max-w-6xl mx-auto w-full custom-scrollbar text-slate-200">
+    <div className="flex flex-col h-full overflow-y-auto p-6 space-y-6 max-w-6xl mx-auto w-full custom-scrollbar text-text">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight font-sans">
             Memory Provenance
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-text-secondary">
             Audit trail, sources, and belief confidence for system knowledge.
           </p>
         </div>
@@ -84,43 +84,43 @@ export const MemoryProvenanceTab: React.FC = () => {
       </div>
 
       <form onSubmit={handleSearch} className="relative w-full">
-        <Search size={14} className="absolute left-3 top-3 text-slate-500" />
+        <Search size={14} className="absolute left-3 top-3 text-text-tertiary" />
         <input
           type="text"
           placeholder="Search facts audit trail..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none focus:border-accent-500 text-sm"
+          className="w-full pl-9 pr-4 py-2 rounded-xl bg-surface-elevated border border-border-subtle text-white outline-none focus:border-accent-500 text-sm"
         />
       </form>
 
       {/* Facts List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
+          <div className="p-8 text-center text-text-tertiary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
             Loading provenance records...
           </div>
         ) : facts.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
+          <div className="p-8 text-center text-text-tertiary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
             No records found.
           </div>
         ) : (
           facts.map((fact) => (
-            <div key={fact.id} className="p-4 bg-slate-900/80 rounded-2xl border border-slate-800 space-y-3">
+            <div key={fact.id} className="p-4 bg-surface-elevated rounded-2xl border border-border-subtle space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <p className="text-sm font-medium text-white flex-1 leading-relaxed">
                   {fact.fact}
                 </p>
                 <div className="flex flex-col items-end gap-1 shrink-0 text-xs">
-                  <span className="text-slate-400">Score: <strong className="text-white">{Math.round(fact.confidence * 100)}%</strong></span>
+                  <span className="text-text-secondary">Score: <strong className="text-white">{Math.round(fact.confidence * 100)}%</strong></span>
                   {fact.initial_confidence && (
-                    <span className="text-slate-500 text-[10px]">Initial: {Math.round(fact.initial_confidence * 100)}%</span>
+                    <span className="text-text-tertiary text-[10px]">Initial: {Math.round(fact.initial_confidence * 100)}%</span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
-                <span className="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-md border border-slate-800">
+              <div className="flex items-center gap-4 text-xs text-text-secondary flex-wrap">
+                <span className="flex items-center gap-1.5 bg-canvas px-2 py-1 rounded-md border border-border-subtle">
                   <Tag size={12} />
                   {fact.source_type}
                 </span>
@@ -135,7 +135,7 @@ export const MemoryProvenanceTab: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex gap-2 pt-3 border-t border-slate-800/60">
+              <div className="flex gap-2 pt-3 border-t border-border-subtle">
                 <button
                   onClick={() => handleConfirm(fact.id)}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium transition-colors border border-emerald-500/20"
@@ -153,7 +153,7 @@ export const MemoryProvenanceTab: React.FC = () => {
                 <button
                   onClick={() => handleExplain(fact.id, fact.fact)}
                   disabled={explaining === fact.id}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition-colors ml-auto border border-slate-700"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-active hover:bg-surface-spotlight text-text-secondary rounded-lg text-xs font-medium transition-colors ml-auto border border-border-highlight"
                 >
                   <HelpCircle size={14} />
                   {explaining === fact.id ? "Analyzing..." : "Explain Belief"}
@@ -162,7 +162,7 @@ export const MemoryProvenanceTab: React.FC = () => {
 
               {/* Explanation Dropdown */}
               {explanation && explaining !== fact.id && explanation.fact === fact.fact && (
-                <div className="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 text-sm text-slate-300 leading-relaxed">
+                <div className="mt-3 p-3 bg-canvas rounded-xl border border-border-subtle text-sm text-text-secondary leading-relaxed">
                   <strong className="text-white block mb-1">Belief Explanation:</strong>
                   {explanation.explanation}
                 </div>

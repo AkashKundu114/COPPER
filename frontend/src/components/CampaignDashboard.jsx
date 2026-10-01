@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+﻿import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   DollarSign,
   TrendingUp,
@@ -160,9 +160,9 @@ export const CampaignDashboard = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col p-6 overflow-y-auto bg-slate-950 text-slate-100 gap-6">
+    <div className="w-full h-full flex flex-col p-6 overflow-y-auto bg-canvas text-text gap-6">
       {/* Page Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-4">
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white shadow-md shadow-cyan-950/40">
@@ -175,7 +175,7 @@ export const CampaignDashboard = () => {
                   DELTA (DeltaX-Grade)
                 </span>
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-text-secondary mt-0.5">
                 Simulated real-time advertising telemetry, statistical anomaly detection, and ML budget optimization
               </p>
             </div>
@@ -184,13 +184,13 @@ export const CampaignDashboard = () => {
 
         <div className="flex items-center gap-3">
           {/* WebSocket Status Indicator */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-elevated border border-border-subtle text-xs">
             <span
               className={`w-2 h-2 rounded-full ${
-                wsConnected ? "bg-emerald-400 animate-pulse" : "bg-slate-500"
+                wsConnected ? "bg-emerald-400 animate-pulse" : "bg-surface-active"
               }`}
             />
-            <span className="text-slate-400 font-mono">
+            <span className="text-text-secondary font-mono">
               {wsConnected ? "STREAM ONLINE" : "REST SYNC"}
             </span>
           </div>
@@ -198,7 +198,7 @@ export const CampaignDashboard = () => {
           <button
             onClick={fetchDashboard}
             disabled={loading}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-200 transition-all shadow-sm"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-surface-active hover:bg-surface-spotlight border border-border-highlight text-xs font-medium text-text transition-all shadow-sm"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Refresh</span>
@@ -209,27 +209,27 @@ export const CampaignDashboard = () => {
       {/* 4 Summary KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Spend */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-md">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
+          <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Daily Spend Run-Rate</span>
             <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-1 font-mono">
-            <span className="text-2xl font-bold text-slate-100">
+            <span className="text-2xl font-bold text-text">
               ${summary.total_spend ? Number(summary.total_spend).toLocaleString() : "0"}
             </span>
-            <span className="text-xs text-slate-500">/day</span>
+            <span className="text-xs text-text-tertiary">/day</span>
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-text-tertiary mt-1 block">
             Across 5 active simulated ad campaigns
           </span>
         </div>
 
         {/* Total Conversions */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-md">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
+          <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Projected Conversions</span>
             <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
               <MousePointerClick className="w-4 h-4" />
@@ -239,16 +239,16 @@ export const CampaignDashboard = () => {
             <span className="text-2xl font-bold text-purple-300">
               {summary.total_conversions ? Number(summary.total_conversions).toLocaleString() : "0"}
             </span>
-            <span className="text-xs text-slate-500">orders</span>
+            <span className="text-xs text-text-tertiary">orders</span>
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-text-tertiary mt-1 block">
             Derived from hourly click x CVR telemetry
           </span>
         </div>
 
         {/* Avg CTR */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-md">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
+          <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Blended CTR</span>
             <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400">
               <Percent className="w-4 h-4" />
@@ -259,14 +259,14 @@ export const CampaignDashboard = () => {
               {(Number(summary.avg_ctr || 0) * 100).toFixed(2)}%
             </span>
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-text-tertiary mt-1 block">
             Target benchmark: &gt; 1.5% brand / &gt; 3.5% perf
           </span>
         </div>
 
         {/* Overall ROAS */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-md">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
+          <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Portfolio ROAS</span>
             <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
               <TrendingUp className="w-4 h-4" />
@@ -277,14 +277,14 @@ export const CampaignDashboard = () => {
               {Number(summary.overall_roas || 0).toFixed(2)}x
             </span>
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-text-tertiary mt-1 block">
             Blended revenue/spend conversion return
           </span>
         </div>
       </div>
 
       {/* Navigation Sub-Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-border-subtle pb-2">
         {[
           { id: "overview", label: "Overview & Campaigns", icon: BarChart3 },
           { id: "chart", label: "Trajectory & Anomalies", icon: Activity },
@@ -299,8 +299,8 @@ export const CampaignDashboard = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 isActive
-                  ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/50"
+                  ? "bg-surface-active text-white border border-border-highlight shadow-sm"
+                  : "text-text-secondary hover:text-text hover:bg-surface-elevated/50"
               }`}
             >
               <Icon className={`w-3.5 h-3.5 ${isActive ? "text-cyan-400" : ""}`} />
@@ -314,13 +314,13 @@ export const CampaignDashboard = () => {
       {activeTab === "overview" && (
         <div className="flex flex-col gap-6">
           {/* Campaign Table */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-lg backdrop-blur-md">
-            <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
+          <div className="bg-surface-elevated border border-border-subtle rounded-xl overflow-hidden shadow-lg backdrop-blur-md">
+            <div className="p-4 border-b border-border-subtle flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-slate-100">
+                <h3 className="text-base font-semibold text-text">
                   Active Advertising Campaigns ({campaigns.length})
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-text-secondary">
                   Click any row to inspect historical metrics and anomaly timeline
                 </p>
               </div>
@@ -328,7 +328,7 @@ export const CampaignDashboard = () => {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-950/80 text-slate-400 uppercase font-mono text-[11px] border-b border-slate-800">
+                <thead className="bg-surface-base text-text-secondary uppercase font-mono text-[11px] border-b border-border-subtle">
                   <tr>
                     <th className="py-3 px-4">Campaign Name</th>
                     <th className="py-3 px-4">Type</th>
@@ -349,30 +349,30 @@ export const CampaignDashboard = () => {
                         onClick={() => setSelectedCampaign(c)}
                         className={`cursor-pointer transition-colors ${
                           isSelected
-                            ? "bg-slate-800/80 text-white"
-                            : "hover:bg-slate-900/60 text-slate-300"
+                            ? "bg-surface-active text-white"
+                            : "hover:bg-surface-elevated/60 text-text-secondary"
                         }`}
                       >
-                        <td className="py-3 px-4 font-semibold text-slate-100 flex items-center gap-2">
+                        <td className="py-3 px-4 font-semibold text-text flex items-center gap-2">
                           <span
                             className={`w-2 h-2 rounded-full ${
-                              isSelected ? "bg-cyan-400 animate-ping" : "bg-slate-600"
+                              isSelected ? "bg-cyan-400 animate-ping" : "bg-surface-spotlight"
                             }`}
                           />
                           {c.campaign_name}
                         </td>
                         <td className="py-3 px-4">
-                          <span className="capitalize font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                          <span className="capitalize font-mono text-[11px] px-2 py-0.5 rounded bg-surface-active text-text-secondary border border-border-highlight">
                             {c.campaign_type}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-right font-mono text-slate-300">
+                        <td className="py-3 px-4 text-right font-mono text-text-secondary">
                           ${Number(c.daily_budget || 0).toLocaleString()}
                         </td>
-                        <td className="py-3 px-4 text-right font-mono text-slate-300">
+                        <td className="py-3 px-4 text-right font-mono text-text-secondary">
                           ${Number(c.spend || 0).toFixed(2)}
                         </td>
-                        <td className="py-3 px-4 text-right font-mono text-slate-300">
+                        <td className="py-3 px-4 text-right font-mono text-text-secondary">
                           {Number(c.clicks || 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right font-mono font-semibold text-sky-400">

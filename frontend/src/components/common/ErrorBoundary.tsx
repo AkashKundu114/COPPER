@@ -1,4 +1,4 @@
-import { Component } from "react";
+﻿import { Component } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Copy, Check } from "lucide-react";
 
@@ -61,22 +61,22 @@ export class ErrorBoundary extends Component<Props, State> {
           aria-live="assertive"
           className="min-h-screen w-full bg-[#020617] text-white flex items-center justify-center p-6 select-none"
         >
-          <div className="max-w-lg w-full bg-slate-900/80 backdrop-blur-xl border border-rose-500/30 rounded-2xl p-6 shadow-2xl space-y-6">
+          <div className="max-w-lg w-full bg-surface-elevated backdrop-blur-xl border border-rose-500/30 rounded-2xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400">
                 <AlertTriangle className="w-8 h-8" />
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-rose-300">Application Error</h1>
-                <p className="text-xs text-slate-400">A component encountered an unhandled exception.</p>
+                <p className="text-xs text-text-secondary">A component encountered an unhandled exception.</p>
               </div>
             </div>
 
             {this.state.error && (
-              <div className="bg-black/40 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-300 max-h-40 overflow-y-auto break-words space-y-1">
+              <div className="bg-black/40 border border-border-subtle rounded-xl p-3 text-xs font-mono text-text-secondary max-h-40 overflow-y-auto break-words space-y-1">
                 <div className="text-rose-400 font-semibold">{this.state.error.name}: {this.state.error.message}</div>
                 {this.state.error.stack && (
-                  <pre className="text-[10px] text-slate-500 whitespace-pre-wrap font-mono">
+                  <pre className="text-[10px] text-text-tertiary whitespace-pre-wrap font-mono">
                     {this.state.error.stack.split("\n").slice(0, 4).join("\n")}
                   </pre>
                 )}
@@ -95,7 +95,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleReset}
-                className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-xl transition-colors cursor-pointer"
+                className="px-4 py-2.5 bg-surface-active hover:bg-surface-spotlight text-text text-sm font-medium rounded-xl transition-colors cursor-pointer"
               >
                 Try Again
               </button>
@@ -104,7 +104,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 onClick={this.handleCopy}
                 aria-label="Copy error stack"
                 title="Copy error details"
-                className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl transition-colors cursor-pointer"
+                className="p-2.5 bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white rounded-xl transition-colors cursor-pointer"
               >
                 {this.state.copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               </button>

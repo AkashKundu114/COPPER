@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { Zap } from "lucide-react";
 import { ThinkingOrb } from "thinking-orbs";
 import { api } from "../../lib/api";
@@ -100,7 +100,7 @@ export function QuickBar() {
   return (
     <div 
       ref={containerRef}
-      className="bg-slate-950/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col w-[680px] text-white animate-in zoom-in-95 duration-200"
+      className="bg-canvas backdrop-blur-xl border border-border-highlight/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col w-[680px] text-white animate-in zoom-in-95 duration-200"
     >
       <div className="flex items-center px-4 py-4 gap-3">
         <Zap className="w-5 h-5 text-accent-400 shrink-0" />
@@ -120,13 +120,13 @@ export function QuickBar() {
       </div>
 
       {(response || loading) && (
-        <div className="px-4 pb-4 pt-1 max-h-[400px] overflow-y-auto custom-scrollbar border-t border-slate-800/50">
+        <div className="px-4 pb-4 pt-1 max-h-[400px] overflow-y-auto custom-scrollbar border-t border-border-subtle">
           {loading && !response ? (
-            <div className="text-sm text-slate-400 flex items-center gap-2 py-2">
+            <div className="text-sm text-text-secondary flex items-center gap-2 py-2">
               Processing...
             </div>
           ) : (
-            <div className="w-full markdown-body font-sans text-[14.5px] leading-relaxed text-slate-300">
+            <div className="w-full markdown-body font-sans text-[14.5px] leading-relaxed text-text-secondary">
               <MarkdownContent content={response || ""} />
             </div>
           )}

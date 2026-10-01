@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Zap,
@@ -288,12 +288,12 @@ export const BenchmarkMetricsView: React.FC = () => {
   return (
     <div className="modern-page p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl">
+      <div className="p-6 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-border/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blush-100/[0.08] rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blush-100/15 text-blush-100 border border-blush-100/30 flex items-center gap-1.5">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blush-100/15 text-text border border-border/30 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-blush-100 animate-ping" />
                 LIVE HARDWARE TELEMETRY
               </span>
@@ -377,7 +377,7 @@ export const BenchmarkMetricsView: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-blush-100/[0.10] w-fit overflow-x-auto scrollbar-none text-xs font-mono">
+      <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.10] w-fit overflow-x-auto scrollbar-none text-xs font-mono">
         <button
           onClick={() => setActiveTab("live-telemetry")}
           className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { TrendingUp, CheckCircle, Sparkles, Network, Terminal, Play, CheckCircle2 } from "lucide-react";
 import { skillsAPI, federatedAPI, systemAPI } from "../services/api";
 
@@ -116,7 +116,7 @@ export function Insights() {
   }, []);
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export function Insights() {
               Productivity & System Insights
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Evidence-based telemetry derived from real local hardware and model
             sessions
           </p>
@@ -138,19 +138,19 @@ export function Insights() {
           ? [1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-3 animate-pulse"
+                className="p-5 rounded-2xl bg-surface-elevated/40 border border-border-subtle space-y-3 animate-pulse"
               >
-                <div className="h-3 w-28 bg-slate-800 rounded" />
-                <div className="h-6 w-24 bg-slate-800 rounded" />
-                <div className="h-2.5 w-36 bg-slate-800 rounded" />
+                <div className="h-3 w-28 bg-surface-active rounded" />
+                <div className="h-6 w-24 bg-surface-active rounded" />
+                <div className="h-2.5 w-36 bg-surface-active rounded" />
               </div>
             ))
           : metrics.map((m) => (
           <div
             key={m.id}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 hover:border-slate-700 transition-all shadow-sm"
+            className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-2 hover:border-border-highlight transition-all shadow-sm"
           >
-            <span className="text-[11px] text-slate-400 font-semibold">
+            <span className="text-[11px] text-text-secondary font-semibold">
               {m.title}
             </span>
             <div className="flex items-baseline justify-between">
@@ -163,15 +163,15 @@ export function Insights() {
                 {m.change}
               </span>
             </div>
-            <p className="text-[10px] text-slate-500">{m.sub}</p>
+            <p className="text-[10px] text-text-tertiary">{m.sub}</p>
           </div>
         ))}
       </div>
 
       {/* Model Distribution & Cognitive Focus Breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
+          <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Model Workload Allocation
           </h3>
           <div className="space-y-3">
@@ -182,7 +182,7 @@ export function Insights() {
                 </span>
                 <span className="text-accent-400 font-bold">52%</span>
               </div>
-              <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-canvas rounded-full overflow-hidden">
                 <div className="h-full bg-accent-500" style={{ width: "52%" }} />
               </div>
             </div>
@@ -194,7 +194,7 @@ export function Insights() {
                 </span>
                 <span className="text-accent-400 font-bold">30%</span>
               </div>
-              <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-canvas rounded-full overflow-hidden">
                 <div className="h-full bg-accent-500" style={{ width: "30%" }} />
               </div>
             </div>
@@ -206,37 +206,37 @@ export function Insights() {
                 </span>
                 <span className="text-accent-400 font-bold">18%</span>
               </div>
-              <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-canvas rounded-full overflow-hidden">
                 <div className="h-full bg-accent-500" style={{ width: "18%" }} />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
+          <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
             Observed Focus Patterns
           </h3>
           <div className="space-y-2.5">
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle flex items-start gap-2.5">
               <CheckCircle size={15} className="text-verdigris-400 mt-0.5" />
               <div>
                 <p className="text-white font-sans text-xs font-semibold">
                   High Engineering Throughput
                 </p>
-                <p className="text-slate-400 text-[11px]">
+                <p className="text-text-secondary text-[11px]">
                   Primary activity concentrated on Python and React
                   architecture.
                 </p>
               </div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle flex items-start gap-2.5">
               <CheckCircle size={15} className="text-verdigris-400 mt-0.5" />
               <div>
                 <p className="text-white font-sans text-xs font-semibold">
                   Zero Cloud Dependency
                 </p>
-                <p className="text-slate-400 text-[11px]">
+                <p className="text-text-secondary text-[11px]">
                   All inferences, embeddings, and voice audio processed 100%
                   locally.
                 </p>
@@ -247,7 +247,7 @@ export function Insights() {
       </div>
 
       {/* Compositional Learned Skills Library (Phase 3 Delegation Engine) */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+      <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-lg bg-accent-500/10 text-accent-400 border border-accent-500/20">
@@ -257,14 +257,14 @@ export function Insights() {
               <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
                 Compositional Learned Skills Library
               </h3>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-text-secondary">
                 Self-extracted reusable execution skills from past successful workflows
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {skillStats && (
-              <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
+              <span className="text-[10px] text-text-secondary font-mono hidden sm:inline">
                 {skillStats.total_executions || 0} Total Executions
               </span>
             )}
@@ -275,7 +275,7 @@ export function Insights() {
         </div>
 
         {skills.length === 0 ? (
-          <div className="p-6 rounded-xl bg-slate-950 border border-slate-800/80 text-center text-slate-500 text-xs">
+          <div className="p-6 rounded-xl bg-canvas border border-border-subtle text-center text-text-tertiary text-xs">
             No learned skills extracted yet. Skills are automatically created when complex multi-agent workflows complete successfully.
           </div>
         ) : (
@@ -283,7 +283,7 @@ export function Insights() {
             {skills.map((s) => (
               <div
                 key={s.skill_id}
-                className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 hover:border-accent-500/40 transition-all cursor-pointer group"
+                className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-2 hover:border-accent-500/40 transition-all cursor-pointer group"
                 onClick={() => {
                   setSelectedSkill(s);
                   setExecParams(s.parameters ? JSON.stringify(s.parameters, null, 2) : "{}");
@@ -299,8 +299,8 @@ export function Insights() {
                     {Math.round((s.success_rate || 1.0) * 100)}% Pass
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 line-clamp-2">{s.description || "Synthesized multi-step skill"}</p>
-                <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-900">
+                <p className="text-[11px] text-text-secondary line-clamp-2">{s.description || "Synthesized multi-step skill"}</p>
+                <div className="flex items-center justify-between text-[10px] text-text-tertiary pt-1 border-t border-border-subtle">
                   <span>Used {s.use_count || 0} times</span>
                   <span className="flex items-center gap-1 text-accent-400">
                     <Play size={10} /> Execute
@@ -313,8 +313,8 @@ export function Insights() {
 
         {/* Skill Execution Modal / Drawer */}
         {selectedSkill && (
-          <div className="p-4 rounded-xl bg-slate-950 border border-accent-500/30 space-y-3 animate-fade-in">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div className="p-4 rounded-xl bg-canvas border border-accent-500/30 space-y-3 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-border-subtle pb-2">
               <div className="flex items-center gap-2">
                 <Terminal size={14} className="text-accent-400" />
                 <span className="text-xs font-bold text-white font-sans">
@@ -323,33 +323,33 @@ export function Insights() {
               </div>
               <button
                 onClick={() => setSelectedSkill(null)}
-                className="text-slate-400 hover:text-white text-xs"
+                className="text-text-secondary hover:text-white text-xs"
               >
                 Close
               </button>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] text-slate-400 block font-mono">
+              <label className="text-[10px] text-text-secondary block font-mono">
                 Execution Parameters (JSON)
               </label>
               <textarea
                 value={execParams}
                 onChange={(e) => setExecParams(e.target.value)}
                 rows={3}
-                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-accent-500/50"
+                className="w-full bg-surface-elevated border border-border-subtle rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-accent-500/50"
                 placeholder='{"param": "value"}'
               />
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <div className="text-[10px] text-slate-400">
+              <div className="text-[10px] text-text-secondary">
                 {selectedSkill.steps?.length || 0} composition step(s) will be executed locally.
               </div>
               <button
                 onClick={handleExecuteSkill}
                 disabled={executing}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-500 hover:bg-accent-400 text-slate-950 font-bold text-xs transition-all disabled:opacity-50"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-500 hover:bg-accent-400 text-text-inverse font-bold text-xs transition-all disabled:opacity-50"
               >
                 <Play size={12} />
                 <span>{executing ? "Executing..." : "Run Skill"}</span>
@@ -357,12 +357,12 @@ export function Insights() {
             </div>
 
             {execResult && (
-              <div className="p-3 rounded-lg bg-slate-900 border border-verdigris-500/40 space-y-1">
+              <div className="p-3 rounded-lg bg-surface-elevated border border-verdigris-500/40 space-y-1">
                 <div className="flex items-center gap-1.5 text-verdigris-400 text-xs font-bold">
                   <CheckCircle2 size={13} />
                   <span>Execution Succeeded</span>
                 </div>
-                <pre className="text-[10px] text-slate-300 font-mono overflow-x-auto max-h-36">
+                <pre className="text-[10px] text-text-secondary font-mono overflow-x-auto max-h-36">
                   {JSON.stringify(execResult, null, 2)}
                 </pre>
               </div>
@@ -378,7 +378,7 @@ export function Insights() {
       </div>
 
       {/* Federated Self-Improvement Mesh (Phase 5) */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+      <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-lg bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/20">
@@ -388,7 +388,7 @@ export function Insights() {
               <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
                 Federated Self-Improvement Swarm
               </h3>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-text-secondary">
                 Multi-instance FedAvg weight delta synchronization with formal Laplace noise
               </p>
             </div>
@@ -399,27 +399,27 @@ export function Insights() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-[10px] text-slate-400 block">Connected Peers</span>
+          <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+            <span className="text-[10px] text-text-secondary block">Connected Peers</span>
             <span className="text-lg font-bold text-white font-sans">{peers.length}</span>
-            <span className="text-[9px] text-slate-500 block">Local LAN / Direct</span>
+            <span className="text-[9px] text-text-tertiary block">Local LAN / Direct</span>
           </div>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-[10px] text-slate-400 block">FedAvg Rounds</span>
+          <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+            <span className="text-[10px] text-text-secondary block">FedAvg Rounds</span>
             <span className="text-lg font-bold text-accent-400 font-sans">{federatedStats?.total_rounds ?? 0}</span>
-            <span className="text-[9px] text-slate-500 block">Deltas aggregated</span>
+            <span className="text-[9px] text-text-tertiary block">Deltas aggregated</span>
           </div>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-[10px] text-slate-400 block">DP Privacy Epsilon</span>
+          <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+            <span className="text-[10px] text-text-secondary block">DP Privacy Epsilon</span>
             <span className="text-lg font-bold text-purple-400 font-sans">
               ε = {federatedStats?.total_epsilon_spent?.toFixed(1) ?? "0.0"}
             </span>
-            <span className="text-[9px] text-slate-500 block">Weight perturbation</span>
+            <span className="text-[9px] text-text-tertiary block">Weight perturbation</span>
           </div>
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-[10px] text-slate-400 block">Local Adapter Status</span>
+          <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+            <span className="text-[10px] text-text-secondary block">Local Adapter Status</span>
             <span className="text-lg font-bold text-verdigris font-sans">Synchronized</span>
-            <span className="text-[9px] text-slate-500 block">Zero-raw-data shared</span>
+            <span className="text-[9px] text-text-tertiary block">Zero-raw-data shared</span>
           </div>
         </div>
       </div>

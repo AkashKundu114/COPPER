@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+﻿import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowUp,
   Mic,
@@ -309,11 +309,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           role="listbox"
           id="cognitive-mode-listbox"
           aria-label="Cognitive Intelligence Modes"
-          className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-[#1A0A0F]/95 backdrop-blur-2xl border border-blush-100/20 shadow-[0_20px_50px_rgba(10,3,6,0.65),inset_0_1px_0_rgba(246,230,234,0.12)] p-2.5 z-50 animate-slide-up font-mono text-xs"
+          className="absolute bottom-full mb-2 left-0 w-80 sm:w-96 rounded-2xl bg-[#1A0A0F]/95 backdrop-blur-2xl border border-border/20 shadow-[0_20px_50px_rgba(10,3,6,0.65),inset_0_1px_0_rgba(246,230,234,0.12)] p-2.5 z-50 animate-slide-up font-mono text-xs"
         >
-          <div className="px-3 py-2 text-[10px] font-semibold text-blush-300/60 uppercase tracking-wider border-b border-blush-100/10 flex items-center justify-between">
+          <div className="px-3 py-2 text-[10px] font-semibold text-text-secondary/60 uppercase tracking-wider border-b border-border/10 flex items-center justify-between">
             <span>Cognitive Intelligence Mode</span>
-            <span className="text-blush-100 font-bold">5 Active Squads</span>
+            <span className="text-text font-bold">5 Active Squads</span>
           </div>
           <div className="space-y-1.5 mt-2 max-h-80 overflow-y-auto custom-scrollbar">
             {COGNITIVE_MODES.map((m) => {
@@ -331,11 +331,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                   }}
                   className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100 ${
                     isSelected
-                      ? "bg-gradient-to-r from-blush-100/18 via-accent/10 to-transparent text-white border border-blush-100/30 shadow-sm"
+                      ? "bg-gradient-to-r from-blush-100/18 via-accent/10 to-transparent text-white border border-border/30 shadow-sm"
                       : "text-zinc-300 hover:text-white hover:bg-blush-100/[0.06] border border-transparent"
                   }`}
                 >
-                  <div className={`p-2 rounded-xl mt-0.5 ${isSelected ? "bg-blush-100/20 text-blush-100 shadow-[0_0_10px_rgba(246,230,234,0.3)]" : "bg-white/[0.04] text-zinc-400"}`} aria-hidden="true">
+                  <div className={`p-2 rounded-xl mt-0.5 ${isSelected ? "bg-copper-subtle text-text shadow-[0_0_10px_rgba(246,230,234,0.3)]" : "bg-white/[0.04] text-zinc-400"}`} aria-hidden="true">
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -351,9 +351,9 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                         {m.badge}
                       </span>
                     </div>
-                    <div className="text-[10.5px] text-slate-300 mt-0.5 leading-snug">{m.desc}</div>
-                    <div className="text-[9.5px] text-slate-400 mt-1 font-mono">
-                      Subagents: <span className="text-slate-200">{m.agents}</span>
+                    <div className="text-[10.5px] text-text-secondary mt-0.5 leading-snug">{m.desc}</div>
+                    <div className="text-[9.5px] text-text-secondary mt-1 font-mono">
+                      Subagents: <span className="text-text">{m.agents}</span>
                     </div>
                   </div>
                 </button>
@@ -385,7 +385,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 key={idx}
                 role="group"
                 aria-label={`Attached document: ${doc.parsed.filename}`}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-accent-500/50 text-xs font-mono text-accent-300 shadow-sm transition-all cursor-pointer group"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-elevated hover:bg-surface-elevated border border-border-subtle hover:border-accent-500/50 text-xs font-mono text-accent-300 shadow-sm transition-all cursor-pointer group"
                 onClick={() => setPreviewDoc(doc.parsed)}
                 title="Click to Open Document Reader & Preview"
               >
@@ -393,7 +393,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 <span className="max-w-[160px] truncate group-hover:text-white transition-colors font-medium">
                   {doc.parsed.filename}
                 </span>
-                <span className="text-[10px] text-slate-400">({doc.parsed.size_formatted})</span>
+                <span className="text-[10px] text-text-secondary">({doc.parsed.size_formatted})</span>
                 {doc.parsed.page_count > 1 && (
                   <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-800/40">
                     {doc.parsed.page_count}p
@@ -406,7 +406,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     e.stopPropagation();
                     setPreviewDoc(doc.parsed);
                   }}
-                  className="p-1 hover:bg-slate-800 hover:text-accent-400 rounded-lg text-slate-400 transition-colors ml-0.5 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+                  className="p-1 hover:bg-surface-active hover:text-accent-400 rounded-lg text-text-secondary transition-colors ml-0.5 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                   title="Open Document Reader"
                 >
                   <Eye size={13} aria-hidden="true" />
@@ -418,7 +418,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     e.stopPropagation();
                     removeFile(idx);
                   }}
-                  className="p-0.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-danger-400 transition-colors focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+                  className="p-0.5 hover:bg-surface-active rounded-full text-text-secondary hover:text-danger-400 transition-colors focus-visible:ring-1 focus-visible:ring-cyber-cyan"
                   title="Remove Document"
                 >
                   <X size={13} aria-hidden="true" />
@@ -441,8 +441,8 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         <div
           className={`w-full relative flex flex-row items-center rounded-2xl bg-[#16080D]/90 backdrop-blur-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] border py-1.5 px-3 ${
             thinking
-              ? "border-blush-100/50 shadow-[0_0_24px_rgba(246,230,234,0.22)]"
-              : "border-blush-100/20 hover:border-blush-100/35 focus-within:border-blush-100/60 focus-within:shadow-[0_0_24px_rgba(246,230,234,0.2)] focus-within:ring-1 focus-within:ring-blush-100/30"
+              ? "border-border/50 shadow-[0_0_24px_rgba(246,230,234,0.22)]"
+              : "border-border/20 hover:border-border/35 focus-within:border-border/60 focus-within:shadow-[0_0_24px_rgba(246,230,234,0.2)] focus-within:ring-1 focus-within:ring-blush-100/30"
           }`}
         >
           {isRecording ? (
@@ -469,13 +469,13 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || thinking}
                 aria-label="Attach reconnaissance documents or files"
-                className="p-1.5 rounded-xl text-blush-200/70 hover:text-white hover:bg-blush-100/10 transition-all flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+                className="p-1.5 rounded-xl text-copper/70 hover:text-white hover:bg-copper-subtle transition-all flex-shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                 title="Attach Recon Documents / Files"
               >
                 {isUploading ? (
                   <ThinkingOrb state="weaving" size={20} theme="dark" />
                 ) : (
-                  <Plus size={18} className="text-blush-100" aria-hidden="true" />
+                  <Plus size={18} className="text-text" aria-hidden="true" />
                 )}
               </button>
 
@@ -509,7 +509,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
 
               {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
               {(thinking || speaking) && (
-                <div aria-hidden="true" className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#14070B] border border-blush-100/30 text-blush-100 shadow-sm flex-shrink-0 mr-1.5" title="Audio / Neural Telemetry Stream">
+                <div aria-hidden="true" className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#14070B] border border-border/30 text-text shadow-sm flex-shrink-0 mr-1.5" title="Audio / Neural Telemetry Stream">
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-1" />
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-2" />
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-3" />
@@ -526,7 +526,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                     onClick={toggleRecording}
                     aria-label="Start voice recording"
                     aria-pressed={false}
-                    className="p-1.5 rounded-xl text-blush-300/70 hover:text-white hover:bg-blush-100/10 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+                    className="p-1.5 rounded-xl text-text-secondary/70 hover:text-white hover:bg-copper-subtle transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
                     title="Voice Intercept Mic"
                   >
                     <Mic size={18} aria-hidden="true" />
@@ -572,11 +572,11 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
             aria-expanded={modelDropdownOpen}
             aria-controls="cognitive-mode-listbox"
             aria-label={`Cognitive intelligence mode: ${selectedModel.name}`}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#14070B]/85 border border-blush-100/20 hover:border-blush-100/50 text-blush-100 transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#14070B]/85 border border-border/20 hover:border-border/50 text-text transition-all shadow-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-blush-100"
           >
             <span className="font-bold text-accent" aria-hidden="true">+</span>
             <span className="font-semibold text-white tracking-tight">{selectedModel.name}</span>
-            <span className="px-1.5 py-0.2 rounded-md bg-blush-100/15 text-[9px] font-bold text-blush-100 uppercase border border-blush-100/20">
+            <span className="px-1.5 py-0.2 rounded-md bg-blush-100/15 text-[9px] font-bold text-text uppercase border border-border/20">
               {selectedModel.badge}
             </span>
             <ChevronUp size={13} className={`transition-transform duration-200 ${modelDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -584,7 +584,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
 
           <div className="flex items-center gap-3 text-[10px] text-zinc-400">
             {thinking && (
-              <div role="status" aria-live="polite" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blush-100/10 border border-blush-100/25 text-blush-100 font-mono text-[10px] shadow-sm">
+              <div role="status" aria-live="polite" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-copper-subtle border border-border/25 text-text font-mono text-[10px] shadow-sm">
                 <ThinkingOrb state="working" size={20} theme="dark" />
                 <span className="hidden sm:inline font-semibold">SYNTHESIZING</span>
               </div>
@@ -594,7 +594,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 type="button"
                 onClick={onClear}
                 aria-label="Purge session memory and reset chat logs"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-blush-100/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-border/10 hover:border-danger/40 hover:text-danger-400 hover:bg-danger/10 text-zinc-400 transition-all font-mono cursor-pointer focus-visible:ring-1 focus-visible:ring-blush-100"
                 title="Purge session memory & reset chat"
               >
                 <RotateCcw size={10} aria-hidden="true" />

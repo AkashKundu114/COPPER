@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+﻿import React, { useState, useEffect, useMemo } from "react";
 import {
   Search,
   Users,
@@ -122,7 +122,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
   return (
     <div className="space-y-4 animate-fade-in font-sans">
       {/* Search & Division Filter Header */}
-      <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-3">
+      <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Users size={18} className="text-cyan-400" />
@@ -130,21 +130,21 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
               <h2 className="text-sm font-bold text-white tracking-tight">
                 Agency Specialist Squad
               </h2>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-text-secondary">
                 264 Autonomous Specialized Personas across 18 operational divisions
               </p>
             </div>
           </div>
 
           {/* Search Box */}
-          <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
-            <Search size={14} className="text-slate-500" />
+          <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
+            <Search size={14} className="text-text-tertiary" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search by role, vibe, or skill..."
-              className="bg-transparent text-white placeholder:text-slate-500 outline-none text-xs w-full font-sans"
+              className="bg-transparent text-white placeholder:text-text-tertiary outline-none text-xs w-full font-sans"
             />
           </div>
         </div>
@@ -155,8 +155,8 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
             onClick={() => handleDivisionChange("all")}
             className={`px-3 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               selectedDivision === "all"
-                ? "bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20"
-                : "bg-slate-950/60 text-slate-400 hover:text-white border border-slate-800"
+                ? "bg-cyan-500 text-text-inverse font-bold shadow-lg shadow-cyan-500/20"
+                : "bg-surface-base text-text-secondary hover:text-white border border-border-subtle"
             }`}
           >
             <span>All Divisions</span>
@@ -171,8 +171,8 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
                 onClick={() => handleDivisionChange(div.id)}
                 className={`px-3 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   isSelected
-                    ? "bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20"
-                    : "bg-slate-950/60 text-slate-400 hover:text-white border border-slate-800"
+                    ? "bg-cyan-500 text-text-inverse font-bold shadow-lg shadow-cyan-500/20"
+                    : "bg-surface-base text-text-secondary hover:text-white border border-border-subtle"
                 }`}
               >
                 <span>{div.label}</span>
@@ -189,19 +189,19 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-44 rounded-2xl bg-slate-900/40 border border-slate-800 animate-pulse p-4 space-y-3"
+              className="h-44 rounded-2xl bg-surface-elevated/40 border border-border-subtle animate-pulse p-4 space-y-3"
             >
-              <div className="h-4 bg-slate-800 rounded w-2/3" />
-              <div className="h-3 bg-slate-800/60 rounded w-1/3" />
-              <div className="h-16 bg-slate-800/40 rounded w-full" />
+              <div className="h-4 bg-surface-active rounded w-2/3" />
+              <div className="h-3 bg-surface-active/60 rounded w-1/3" />
+              <div className="h-16 bg-surface-active/40 rounded w-full" />
             </div>
           ))}
         </div>
       ) : personas.length === 0 ? (
-        <div className="p-12 text-center bg-slate-900/40 border border-slate-800 rounded-2xl space-y-2">
-          <Sparkles className="mx-auto text-slate-600 mb-2" size={32} />
+        <div className="p-12 text-center bg-surface-elevated/40 border border-border-subtle rounded-2xl space-y-2">
+          <Sparkles className="mx-auto text-text-tertiary mb-2" size={32} />
           <h3 className="text-white font-bold text-sm">No Personas Found</h3>
-          <p className="text-slate-400 text-xs">
+          <p className="text-text-secondary text-xs">
             Try adjusting your search terms or division filter.
           </p>
         </div>
@@ -213,7 +213,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
               <div
                 key={p.id}
                 onClick={() => openDossier(p)}
-                className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between space-y-3 shadow-md hover:shadow-xl hover:shadow-cyan-950/10"
+                className="group p-4 rounded-2xl bg-surface-elevated/70 hover:bg-surface-elevated border border-border-subtle hover:border-border-highlight transition-all cursor-pointer flex flex-col justify-between space-y-3 shadow-md hover:shadow-xl hover:shadow-cyan-950/10"
               >
                 <div className="space-y-2">
                   {/* Card Header: Division Tag + Role */}
@@ -232,7 +232,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
                     <button
                       onClick={(e) => handleCopyDirective(p, e)}
                       title="Quick Copy Persona Directive"
-                      className="p-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition-all"
+                      className="p-1.5 rounded-lg bg-canvas border border-border-subtle text-text-secondary hover:text-white transition-all"
                     >
                       {copiedId === p.id ? (
                         <Check size={12} className="text-emerald-400" />
@@ -250,13 +250,13 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
                   )}
 
                   {/* Mission / Description */}
-                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                  <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed font-sans">
                     {p.description}
                   </p>
                 </div>
 
                 {/* Card Footer Actions */}
-                <div className="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <div className="pt-2.5 border-t border-border-subtle flex items-center justify-between text-[11px] font-mono text-text-secondary">
                   <span className="truncate max-w-[140px] opacity-75">{p.id.split(":")[1] || p.id}</span>
                   <div className="flex items-center gap-1 text-cyan-400 group-hover:translate-x-0.5 transition-transform font-bold">
                     <span>Inspect Dossier</span>
@@ -271,8 +271,8 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
 
       {/* Pagination Bar */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 bg-slate-900/60 border border-slate-800 rounded-xl text-xs">
-          <span className="text-slate-400 font-mono">
+        <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/60 border border-border-subtle rounded-xl text-xs">
+          <span className="text-text-secondary font-mono">
             Showing {(page - 1) * pageSize + 1}–
             {Math.min(page * pageSize, personas.length)} of {personas.length} personas
           </span>
@@ -281,17 +281,17 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40 font-semibold"
+              className="px-3 py-1.5 rounded-lg bg-surface-active hover:bg-surface-spotlight text-text-secondary disabled:opacity-40 font-semibold"
             >
               Previous
             </button>
-            <span className="text-slate-400 font-mono">
+            <span className="text-text-secondary font-mono">
               Page {page} of {totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40 font-semibold"
+              className="px-3 py-1.5 rounded-lg bg-surface-active hover:bg-surface-spotlight text-text-secondary disabled:opacity-40 font-semibold"
             >
               Next
             </button>

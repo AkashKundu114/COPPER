@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { type BranchItem } from "../../services/api";
 
 interface BranchGraphProps {
@@ -69,7 +69,7 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
 
   return (
     <div 
-      className="w-full overflow-auto bg-slate-950/80 border-b border-slate-800 custom-scrollbar" 
+      className="w-full overflow-auto bg-surface-base border-b border-border-subtle custom-scrollbar" 
       style={{ maxHeight: `${maxHeight}px` }}
     >
       <div className="relative min-w-max p-4" style={{ height: `${totalHeight}px` }}>
@@ -205,8 +205,8 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
                 style={{ left: `${x + 15}px`, top: `${y - 10}px` }}
               >
                 <div 
-                  className={`pointer-events-auto flex items-center gap-2 px-2 py-1 rounded bg-slate-900 border ${
-                    isActive ? colorBorder : "border-slate-800"
+                  className={`pointer-events-auto flex items-center gap-2 px-2 py-1 rounded bg-surface-elevated border ${
+                    isActive ? colorBorder : "border-border-subtle"
                   } shadow-md transition-all cursor-pointer ${
                     isHovered || isActive ? "opacity-100" : "opacity-60"
                   }`}
@@ -226,16 +226,16 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
                   <span className={`text-[10px] font-sans font-bold whitespace-nowrap ${colorText}`}>
                     {branch.title}
                   </span>
-                  <span className="text-[9px] font-mono text-slate-400 bg-slate-950 px-1 rounded">
+                  <span className="text-[9px] font-mono text-text-secondary bg-canvas px-1 rounded">
                     {branch.messages_count || 0}
                   </span>
                 </div>
                 
                 {/* Detailed Tooltip on Hover */}
                 {isHovered && branch.divergence_message && !isMain && (
-                  <div className="absolute top-full mt-1 left-0 z-50 w-48 p-2 rounded-lg bg-slate-950 border border-slate-700 shadow-xl pointer-events-none">
-                    <div className="text-[9px] uppercase font-bold text-slate-500 mb-1">Diverged at</div>
-                    <div className="text-[10px] text-slate-300 font-sans line-clamp-3 leading-snug">
+                  <div className="absolute top-full mt-1 left-0 z-50 w-48 p-2 rounded-lg bg-canvas border border-border-highlight shadow-xl pointer-events-none">
+                    <div className="text-[9px] uppercase font-bold text-text-tertiary mb-1">Diverged at</div>
+                    <div className="text-[10px] text-text-secondary font-sans line-clamp-3 leading-snug">
                       "{branch.divergence_message.content}"
                     </div>
                   </div>

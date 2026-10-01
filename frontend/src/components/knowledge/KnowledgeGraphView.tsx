@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+﻿import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as d3 from "d3";
 import {
   Search,
@@ -821,7 +821,7 @@ export const KnowledgeGraphView: React.FC = () => {
   }, [selectedEntity, relationships]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#05080e]/95 text-slate-200 select-none font-mono">
+    <div className="flex flex-col h-full w-full bg-[#05080e]/95 text-text select-none font-mono">
       {/* Top HUD Banner */}
       <div className="px-6 py-3.5 border-b border-cyber-cyan/20 bg-black/40 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">

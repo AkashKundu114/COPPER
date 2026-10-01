@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     APP_NAME: str = "COPPER"
-    APP_VERSION: str = "2.1.0"
+    APP_VERSION: str = "3.0.0"
     APP_ENV: str = "development"
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",

@@ -9,14 +9,16 @@ import {
   Clock,
   Code2,
   GitBranch,
-  Brain,
-  Shield,
   Plus,
+  ArrowRight,
 } from "lucide-react";
-import { HudCard } from "../components/hud/HudBrackets";
 import type { NavSection } from "../components/layout/Sidebar";
 import { systemAPI, cognitiveAPI, type CockpitStatus } from "../services/api";
 import { scheduleAPI, type ScheduleEvent } from "../lib/api";
+import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
+import { staggerContainer, staggerItem } from "../lib/motion";
 
 interface DashboardViewProps {
   onNavigate?: (section: NavSection) => void;
@@ -66,69 +68,67 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
     return () => clearInterval(interval);
   }, [fetchLiveTelemetry, fetchOperationalData]);
 
+  // Greeting determination
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-  // Real GPU readings or fallbacks from live telemetry
+  // GPU readings or fallbacks
   const gpuModel = cockpit?.hardware?.gpu?.model
     ? cockpit.hardware.gpu.model.replace("NVIDIA GeForce ", "")
     : "System GPU";
   const vramUsed = cockpit?.hardware?.gpu?.vram_used_gb ?? 0;
   const vramTotal = cockpit?.hardware?.gpu?.vram_total_gb ?? 8.0;
-  const vramHeadroom = (Math.max(0, vramTotal - vramUsed)).toFixed(1);
+  const vramHeadroom = Math.max(0, vramTotal - vramUsed).toFixed(1);
 
   return (
     <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
-      className="modern-page p-5 md:p-7 space-y-6 max-w-7xl mx-auto text-text select-none pb-16 font-mono"
+      variants={staggerContainer}
+      initial="initial"
+      animate="animate"
+      className="p-5 md:p-6 space-y-5 max-w-6xl mx-auto text-text font-sans pb-16"
     >
-      {/* SDE Mission Command Header */}
+      {/* Hero Banner / Greeting */}
       <motion.div
-        variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-        className="p-4 md:p-5 rounded-2xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-blush-100/[0.15] shadow-[0_16px_40px_rgba(10,3,6,0.4),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl"
+        variants={staggerItem}
+        className="surface-card p-5 rounded-2xl relative overflow-hidden"
       >
-        <div className="absolute -top-24 right-0 w-[24rem] h-[24rem] bg-blush-100/[0.07] rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 left-1/3 w-64 h-64 bg-accent/[0.08] rounded-full blur-3xl pointer-events-none" />
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-verdigris/12 text-verdigris border border-verdigris/30 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
-                {cockpit?.security?.defcon_label || "DEFCON 5 // SYSTEM OPTIMAL"}
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] bg-blush-100/12 text-blush-100 border border-blush-100/30 font-bold flex items-center gap-1">
-                <GitBranch className="w-3 h-3 text-accent" />
-                {cockpit?.git?.repo || "COPPER"} ({cockpit?.git?.branch || "MAIN"})
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] bg-accent/15 text-accent border border-accent/30 font-bold">
-                {cockpit?.security?.air_gapped_label || "100% AIR-GAPPED SDE SUITE"}
-              </span>
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <Badge variant="success">
+                {cockpit?.security?.defcon_label || "OPTIMAL"}
+              </Badge>
+              <Badge variant="copper">
+                <GitBranch size={10} className="mr-1 inline" />
+                {cockpit?.git?.branch || "MAIN"}
+              </Badge>
+              <Badge variant="default">100% AIR-GAPPED</Badge>
             </div>
-            <h1 className="text-xl md:text-2xl font-display font-bold text-white tracking-[-0.02em]">
-              Sovereign Engineering Cockpit
+            <h1 className="text-xl md:text-2xl font-bold text-text tracking-tight">
+              {greeting}, Akash
             </h1>
-            <p className="text-[11px] text-blush-300/70 mt-0.5">
-              Autonomous {cockpit?.agents?.fleet_count ?? 30}-agent fleet ready •{" "}
-              {cockpit?.models?.summary_label || "Zero external egress"}
+            <p className="text-xs text-text-secondary mt-1">
+              Autonomous {cockpit?.agents?.fleet_count ?? 12}-agent fleet online • Zero external egress
             </p>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs">
-            <div className="p-2 px-3 rounded-xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
-              <span className="text-blush-300/60 block text-[8px] uppercase tracking-wider">
-                Router Velocity
+          <div className="flex items-center gap-3">
+            <div className="px-3 py-2 rounded-lg bg-surface-base border border-border-subtle text-right">
+              <span className="text-2xs font-mono uppercase text-text-tertiary block">
+                Router Latency
               </span>
-              <span className="text-blush-100 font-display font-bold text-xs md:text-sm">
+              <span className="text-sm font-semibold font-mono text-copper">
                 {cockpit?.routing?.velocity_ms !== undefined
                   ? `${cockpit.routing.velocity_ms.toFixed(3)} ms`
                   : "0.158 ms"}
               </span>
             </div>
-            <div className="p-2 px-3 rounded-xl bg-[#1A0A0F]/80 border border-blush-100/[0.12] text-right shadow-[inset_0_1px_0_rgba(246,230,234,0.08)]">
-              <span className="text-blush-300/60 block text-[8px] uppercase tracking-wider">
-                Mesh Throughput
+            <div className="px-3 py-2 rounded-lg bg-surface-base border border-border-subtle text-right">
+              <span className="text-2xs font-mono uppercase text-text-tertiary block">
+                Throughput
               </span>
-              <span className="text-accent font-display font-bold text-xs md:text-sm">
+              <span className="text-sm font-semibold font-mono text-text">
                 ~{cockpit?.routing?.throughput_qps
                   ? Math.round(cockpit.routing.throughput_qps).toLocaleString()
                   : "6,271"}{" "}
@@ -138,307 +138,282 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Quick Productivity Action Strip */}
-        <div className="mt-3 pt-3 border-t border-blush-100/[0.08] flex flex-wrap gap-1.5 relative z-10">
-          <button
+        {/* Action Strip */}
+        <div className="mt-4 pt-3.5 border-t border-border-hairline flex flex-wrap gap-2">
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => onNavigate?.("chat")}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold text-[11px] shadow-sm hover:brightness-110 cursor-pointer font-mono"
           >
-            <Code2 className="w-3.5 h-3.5" /> Start Coding Session
-          </button>
-          <button
+            <Code2 size={13} className="mr-1" /> Start Coding Session
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => onNavigate?.("companion")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Radio className="w-3 h-3 text-verdigris" /> Voice Companion
-          </button>
-          <button
+            <Radio size={13} className="mr-1 text-copper" /> Voice Companion
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => onNavigate?.("today")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Calendar className="w-3 h-3 text-blush-200" /> Daily Standup
-          </button>
-          <button
+            <Calendar size={13} className="mr-1 text-text-secondary" /> Daily Standup
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => onNavigate?.("agents")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
           >
-            <Bot className="w-3 h-3 text-cyan-400" /> Agent Fleet
-          </button>
-          <button
-            onClick={() => onNavigate?.("memory")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
-          >
-            <Brain className="w-3 h-3 text-accent" /> Knowledge Memory
-          </button>
-          <button
-            onClick={() => onNavigate?.("security")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
-          >
-            <Shield className="w-3 h-3 text-verdigris" /> Security Center
-          </button>
-          <button
-            onClick={() => onNavigate?.("benchmarks")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#14070B]/80 hover:bg-[#1E0C13] text-zinc-200 border border-blush-100/20 text-[11px] font-mono cursor-pointer transition-all"
-          >
-            <Activity className="w-3 h-3 text-amber-400" /> Live Telemetry
-          </button>
+            <Bot size={13} className="mr-1 text-info" /> Agent Fleet
+          </Button>
         </div>
       </motion.div>
 
+      {/* 3-Column Bento Grid */}
       <motion.div
-        variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-5"
+        variants={staggerItem}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
-        {/* Live Mission Timeline */}
-        <HudCard glow="blush">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 gap-2">
-            <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-              <Calendar className="w-4 h-4 text-blush-100 flex-shrink-0" /> Mission Schedule
-            </span>
-            <div className="flex items-center gap-2 font-mono flex-shrink-0">
-              <span className="px-2 py-0.5 rounded-md bg-blush-100/10 border border-blush-100/25 text-blush-100 text-[9px] font-semibold uppercase tracking-wider">
-                TIMELINE
-              </span>
-              <span className="text-[10px] text-blush-100 font-bold">
-                {scheduleEvents.length > 0 ? `${scheduleEvents.length} EVENTS` : "LIVE STANDBY"}
-              </span>
+        {/* Column 1: Schedule */}
+        <Card variant="default">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Calendar size={16} className="text-copper" />
+                <CardTitle>Schedule</CardTitle>
+              </div>
+              <Badge variant="default">
+                {scheduleEvents.length > 0 ? `${scheduleEvents.length} EVENTS` : "READY"}
+              </Badge>
             </div>
-          </div>
+          </CardHeader>
 
-          {scheduleEvents.length > 0 ? (
-            <div className="space-y-2 max-h-56 overflow-y-auto custom-scrollbar">
-              {scheduleEvents.slice(0, 3).map((evt) => (
-                <div
-                  key={evt.id}
-                  className={`p-3 rounded-xl border text-xs flex justify-between items-center shadow-inner ${
-                    evt.completed
-                      ? "bg-[#14070B]/50 border-white/5 opacity-60"
-                      : "bg-[#14070B]/80 border-blush-100/10"
-                  }`}
-                >
-                  <div className="overflow-hidden pr-2">
-                    <p className="font-bold text-white truncate">{evt.title}</p>
-                    <p className="text-[10px] text-blush-300/60 font-mono flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3 text-blush-200" /> {evt.time}
-                    </p>
-                  </div>
-                  <span
-                    className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase flex-shrink-0 ${
+          <CardContent>
+            {scheduleEvents.length > 0 ? (
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {scheduleEvents.slice(0, 3).map((evt) => (
+                  <div
+                    key={evt.id}
+                    className={`p-2.5 rounded-lg border text-xs flex justify-between items-center ${
                       evt.completed
-                        ? "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                        : "bg-verdigris/15 text-verdigris border border-verdigris/30"
+                        ? "bg-surface-base/50 border-border-subtle opacity-50"
+                        : "bg-surface-base border-border-subtle"
                     }`}
                   >
-                    {evt.completed ? "DONE" : evt.category || "ACTIVE"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 rounded-xl bg-[#14070B]/50 border border-white/5 text-center space-y-2">
-              <p className="text-xs text-zinc-400">
-                No operational events queued today. System nominal.
-              </p>
-              <button
-                onClick={() => onNavigate?.("today")}
-                className="inline-flex items-center gap-1 text-[11px] text-blush-100 hover:text-white cursor-pointer font-bold"
-              >
-                <Plus className="w-3 h-3" /> Schedule Standup Event
-              </button>
-            </div>
-          )}
-        </HudCard>
-
-        {/* Autonomous Agent Fleet & Instant Copilot Launch */}
-        <HudCard glow="copper">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 gap-2">
-            <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-              <Bot className="w-4 h-4 text-accent flex-shrink-0" /> Autonomous Agent Fleet
-            </span>
-            <div className="flex items-center gap-2 font-mono flex-shrink-0">
-              <span className="px-2 py-0.5 rounded-md bg-accent/15 border border-accent/30 text-accent text-[9px] font-semibold uppercase tracking-wider">
-                FLEET
-              </span>
-              <span className="text-[10px] text-accent font-bold">
-                {cockpit?.agents?.fleet_count ?? 30} READY
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-2.5">
-            <div className="p-3 rounded-xl bg-[#14070B]/80 border border-blush-100/10 space-y-1.5 shadow-inner">
-              <div className="flex items-center justify-between text-[11px]">
-                <span className="text-white font-bold flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-verdigris animate-pulse" />
-                  AXIS • Coding Specialist
-                </span>
-                <span className="text-accent text-[10px] font-mono">0.158ms routing</span>
+                    <div className="overflow-hidden pr-2">
+                      <p className="font-medium text-text truncate">{evt.title}</p>
+                      <p className="text-2xs text-text-tertiary font-mono flex items-center gap-1 mt-0.5">
+                        <Clock size={11} className="text-copper" /> {evt.time}
+                      </p>
+                    </div>
+                    <Badge variant={evt.completed ? "default" : "success"}>
+                      {evt.completed ? "DONE" : evt.category || "ACTIVE"}
+                    </Badge>
+                  </div>
+                ))}
               </div>
-              <p className="text-[10px] text-zinc-400 font-sans line-clamp-1">
-                Sub-ms routing, AST code intelligence & sandboxed test runner.
+            ) : (
+              <div className="p-4 rounded-lg bg-surface-base border border-border-subtle text-center space-y-2">
+                <p className="text-xs text-text-secondary">
+                  No events scheduled today.
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onNavigate?.("today")}
+                >
+                  <Plus size={13} className="mr-1" /> Add Standup Event
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Column 2: Agent Fleet */}
+        <Card variant="default">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bot size={16} className="text-copper" />
+                <CardTitle>Autonomous Fleet</CardTitle>
+              </div>
+              <Badge variant="copper">
+                {cockpit?.agents?.fleet_count ?? 12} READY
+              </Badge>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+            <div className="p-2.5 rounded-lg bg-surface-base border border-border-subtle space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-text font-medium flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                  ATLAS • Core Reasoning
+                </span>
+                <span className="text-copper text-2xs font-mono">14B active</span>
+              </div>
+              <p className="text-2xs text-text-secondary">
+                Intent decomposition, semantic search & dialogue routing.
               </p>
             </div>
 
-            <div className="flex gap-2 pt-1 font-mono text-[11px]">
-              <button
+            <div className="flex gap-2">
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
                 onClick={() => onNavigate?.("chat")}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold hover:brightness-110 cursor-pointer shadow-sm transition-all"
               >
-                <Code2 className="w-3.5 h-3.5" /> Start Copilot
-              </button>
-              <button
+                <Code2 size={13} className="mr-1" /> Start Chat
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
                 onClick={() => onNavigate?.("companion")}
-                className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#14070B]/80 hover:bg-[#1E0C13] border border-blush-100/20 text-blush-100 font-bold hover:text-white cursor-pointer transition-all"
               >
-                <Radio className="w-3.5 h-3.5 text-accent" /> Voice
-              </button>
+                <Radio size={13} className="mr-1 text-copper" /> Voice
+              </Button>
             </div>
-          </div>
-        </HudCard>
+          </CardContent>
+        </Card>
 
-        {/* Live Guardian Proactive Intel */}
-        {!intelDismissed ? (
-          <HudCard glow="blush">
-            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 gap-2">
-              <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-                <Sparkles className="w-4 h-4 text-verdigris flex-shrink-0" /> Tactical Intelligence
-              </span>
-              <div className="flex items-center gap-2 font-mono flex-shrink-0">
-                <span className="px-2 py-0.5 rounded-md bg-verdigris/15 border border-verdigris/30 text-verdigris text-[9px] font-semibold uppercase tracking-wider">
-                  GUARDIAN
-                </span>
-                <span className="text-[10px] text-verdigris font-bold">
-                  EVIDENCE {Math.round((cognitiveState?.confidence ?? 1.0) * 100)}%
-                </span>
+        {/* Column 3: Guardian Intelligence */}
+        <Card variant="default">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-warning" />
+                <CardTitle>Intelligence</CardTitle>
               </div>
+              <Badge variant="warning">
+                CONF {Math.round((cognitiveState?.confidence ?? 0.95) * 100)}%
+              </Badge>
             </div>
-            <p className="text-xs text-zinc-200 leading-relaxed italic bg-[#14070B]/80 p-3 rounded-xl border border-blush-100/10 font-sans shadow-inner">
-              "{cognitiveState?.recommendations?.[0] ||
-                `Cognitive state: ${cognitiveState?.state || "nominal"}. System standby for direct user instruction.`}"
-            </p>
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() => onNavigate?.("chat")}
-                className="lift-on-hover px-3.5 py-2 rounded-xl bg-gradient-to-r from-blush-100 via-accent to-accent text-burgundy-950 font-bold text-xs shadow-[0_8px_20px_rgba(246,230,234,0.22)] hover:brightness-110 cursor-pointer font-mono"
-              >
-                EXECUTE PLAN
-              </button>
-              <button
-                onClick={() => setIntelDismissed(true)}
-                className="lift-on-hover px-3.5 py-2 rounded-xl bg-blush-100/[0.05] hover:bg-blush-100/[0.1] text-zinc-300 text-xs border border-blush-100/[0.12] cursor-pointer font-mono"
-              >
-                DISMISS
-              </button>
-            </div>
-          </HudCard>
-        ) : (
-          <HudCard glow="blush">
-            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 gap-2">
-              <span className="flex items-center gap-2 font-bold text-white tracking-tight">
-                <Sparkles className="w-4 h-4 text-zinc-500 flex-shrink-0" /> Tactical Intelligence
-              </span>
-              <div className="flex items-center gap-2 font-mono flex-shrink-0">
-                <span className="px-2 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-400 text-[9px] font-semibold uppercase tracking-wider">
-                  GUARDIAN
-                </span>
-                <span className="text-[10px] text-zinc-500 font-bold">STANDBY</span>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+            {!intelDismissed ? (
+              <>
+                <p className="text-xs text-text-secondary leading-relaxed bg-surface-base p-2.5 rounded-lg border border-border-subtle italic">
+                  "{cognitiveState?.recommendations?.[0] ||
+                    `Cognitive state: ${cognitiveState?.state || "nominal"}. Ready for developer instruction.`}"
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => onNavigate?.("chat")}
+                  >
+                    Execute Plan
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIntelDismissed(true)}
+                  >
+                    Dismiss
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="p-3 rounded-lg bg-surface-base border border-border-subtle text-center space-y-2">
+                <p className="text-xs text-text-tertiary">
+                  Advisories acknowledged. Standing by.
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIntelDismissed(false)}
+                >
+                  Restore Advisory
+                </Button>
               </div>
-            </div>
-            <p className="text-xs text-zinc-500 leading-relaxed italic bg-[#14070B]/50 p-3 rounded-xl border border-white/5 font-sans">
-              All tactical intelligence advisories acknowledged. System standing by for operational
-              directives.
-            </p>
-            <button
-              onClick={() => setIntelDismissed(false)}
-              className="mt-2 text-[10px] text-blush-200 hover:underline font-mono cursor-pointer"
-            >
-              RESTORE ADVISORY
-            </button>
-          </HudCard>
-        )}
+            )}
+          </CardContent>
+        </Card>
       </motion.div>
 
-      {/* Live Hardware & Telemetry Matrix */}
-      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
-        <HudCard glow="blush">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2">
-              <h3 className="text-xs font-bold text-blush-300/70 uppercase tracking-wider flex items-center gap-2">
-                <Activity className="w-4 h-4 text-blush-100" /> Hardware & Model Telemetry Matrix
-              </h3>
-              <span className="px-2 py-0.5 rounded-md bg-blush-100/10 border border-blush-100/25 text-blush-100 text-[9px] font-semibold uppercase tracking-wider font-mono">
-                TELEMETRY
-              </span>
+      {/* Hardware & Telemetry Matrix */}
+      <motion.div variants={staggerItem}>
+        <Card variant="default">
+          <CardHeader>
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <Activity size={16} className="text-copper" />
+                <CardTitle>System & Model Telemetry</CardTitle>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onNavigate?.("benchmarks")}
+                className="text-copper hover:text-copper-bright text-xs"
+              >
+                Benchmarks & Telemetry <ArrowRight size={13} className="ml-1" />
+              </Button>
             </div>
-            <button
-              onClick={() => onNavigate?.("benchmarks")}
-              className="text-[11px] text-verdigris flex items-center gap-1.5 font-bold hover:underline cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-verdigris animate-pulse" /> LIVE TELEMETRY
-              & BENCHMARKS →
-            </button>
-          </div>
+          </CardHeader>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="lift-on-hover p-4 rounded-2xl bg-[#14070B]/70 border border-blush-100/[0.12] space-y-1 shadow-[inset_0_1px_0_rgba(246,230,234,0.06)]">
-              <span className="text-[10px] text-blush-300/60 uppercase tracking-wider">
-                Router Precision
-              </span>
-              <p className="text-2xl font-display font-bold text-white">
-                {cockpit?.routing?.precision_pct !== undefined
-                  ? `${cockpit.routing.precision_pct.toFixed(1)}%`
-                  : "97.8%"}
-              </p>
-              <span className="text-[10px] text-blush-200">
-                {cockpit?.routing?.velocity_ms !== undefined
-                  ? `${cockpit.routing.velocity_ms.toFixed(3)}ms Avg Latency`
-                  : "0.158ms Avg Latency"}
-              </span>
-            </div>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1">
+                <span className="text-2xs font-mono uppercase text-text-tertiary block">
+                  Router Precision
+                </span>
+                <p className="text-xl font-bold font-mono text-text">
+                  {cockpit?.routing?.precision_pct !== undefined
+                    ? `${cockpit.routing.precision_pct.toFixed(1)}%`
+                    : "97.8%"}
+                </p>
+                <span className="text-2xs text-text-secondary">
+                  Sub-millisecond routing
+                </span>
+              </div>
 
-            <div className="lift-on-hover p-4 rounded-2xl bg-[#14070B]/70 border border-blush-100/[0.12] space-y-1 shadow-[inset_0_1px_0_rgba(246,230,234,0.06)]">
-              <span className="text-[10px] text-blush-300/60 uppercase tracking-wider">
-                Threat Shield
-              </span>
-              <p className="text-2xl font-display font-bold text-verdigris">
-                {cockpit?.security?.threat_shield_pct !== undefined
-                  ? `${cockpit.security.threat_shield_pct.toFixed(1)}%`
-                  : "100.0%"}
-              </p>
-              <span className="text-[10px] text-verdigris">
-                {cockpit?.security?.security_breaches ?? 0} Security Breaches
-              </span>
-            </div>
+              <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1">
+                <span className="text-2xs font-mono uppercase text-text-tertiary block">
+                  Threat Shield
+                </span>
+                <p className="text-xl font-bold font-mono text-success">
+                  {cockpit?.security?.threat_shield_pct !== undefined
+                    ? `${cockpit.security.threat_shield_pct.toFixed(1)}%`
+                    : "100.0%"}
+                </p>
+                <span className="text-2xs text-success">
+                  0 Breaches Detected
+                </span>
+              </div>
 
-            <div className="lift-on-hover p-4 rounded-2xl bg-[#14070B]/70 border border-blush-100/[0.12] space-y-1 shadow-[inset_0_1px_0_rgba(246,230,234,0.06)]">
-              <span className="text-[10px] text-blush-300/60 uppercase tracking-wider truncate block">
-                {gpuModel} VRAM
-              </span>
-              <p className="text-2xl font-display font-bold text-accent">
-                {vramUsed} / {vramTotal} GB
-              </p>
-              <span className="text-[10px] text-verdigris">
-                {vramHeadroom} GB Headroom
-              </span>
-            </div>
+              <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1">
+                <span className="text-2xs font-mono uppercase text-text-tertiary truncate block">
+                  {gpuModel} VRAM
+                </span>
+                <p className="text-xl font-bold font-mono text-copper">
+                  {vramUsed} / {vramTotal} GB
+                </p>
+                <span className="text-2xs text-text-secondary">
+                  {vramHeadroom} GB Headroom
+                </span>
+              </div>
 
-            <div className="lift-on-hover p-4 rounded-2xl bg-[#14070B]/70 border border-blush-100/[0.12] space-y-1 shadow-[inset_0_1px_0_rgba(246,230,234,0.06)]">
-              <span className="text-[10px] text-blush-300/60 uppercase tracking-wider">
-                Neural Mesh Models
-              </span>
-              <p className="text-2xl font-display font-bold text-blush-100">
-                {cockpit?.models?.loaded_count && cockpit.models.loaded_count > 0
-                  ? `${cockpit.models.loaded_count} Loaded`
-                  : "Core Standby"}
-              </p>
-              <span className="text-[10px] text-zinc-400">
-                {cockpit?.models?.total_offline_weight_gb
-                  ? `${cockpit.models.total_offline_weight_gb.toFixed(2)} GB Loaded`
-                  : cockpit?.models?.always_on_mini_model || "Zero External Egress"}
-              </span>
+              <div className="p-3 rounded-lg bg-surface-base border border-border-subtle space-y-1">
+                <span className="text-2xs font-mono uppercase text-text-tertiary block">
+                  Neural Mesh Models
+                </span>
+                <p className="text-xl font-bold font-mono text-text">
+                  {cockpit?.models?.loaded_count && cockpit.models.loaded_count > 0
+                    ? `${cockpit.models.loaded_count} Loaded`
+                    : "Core Standby"}
+                </p>
+                <span className="text-2xs text-text-secondary">
+                  Local Weight Cache
+                </span>
+              </div>
             </div>
-          </div>
-        </HudCard>
+          </CardContent>
+        </Card>
       </motion.div>
     </motion.div>
   );

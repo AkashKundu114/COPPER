@@ -103,7 +103,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
             cx={CENTER}
             cy={CENTER}
             r={38}
-            fill="#09090b"
+            fill="#0A0808"
             stroke="#ffffff"
             strokeWidth={1.5}
             animate={thinking ? { scale: [1, 1.05, 1] } : { scale: 1 }}
@@ -114,7 +114,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
             x={CENTER}
             y={CENTER + 5}
             textAnchor="middle"
-            className="fill-white font-display font-semibold"
+            className="fill-white font-brand font-bold"
             fontSize="15"
             letterSpacing="1.5"
           >
@@ -288,16 +288,16 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
       <div
         role="complementary"
         aria-label="Agent Visualization Legend"
-        className="absolute bottom-4 left-4 flex items-center gap-3 px-3 py-1.5 rounded-lg bg-zinc-950/80 border border-zinc-800/70 backdrop-blur-md text-[11px] font-mono select-none pointer-events-none shadow-lg"
+        className="absolute bottom-4 left-4 flex items-center gap-3 px-3 py-1.5 rounded-lg bg-surface-base border border-border backdrop-blur-md text-[11px] font-mono select-none pointer-events-none shadow-md"
       >
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span className="text-zinc-200">Active Agent ({ACTIVE_AGENTS.length})</span>
+          <span className="w-2 h-2 rounded-full bg-copper shadow-sm" />
+          <span className="text-text">Active Agent ({ACTIVE_AGENTS.length})</span>
         </div>
-        <div className="w-[1px] h-3 bg-zinc-800" />
+        <div className="w-[1px] h-3 bg-border" />
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full border border-dashed border-zinc-500 bg-transparent opacity-70" />
-          <span className="text-zinc-400">Planned Agent ({PLANNED_AGENTS.length})</span>
+          <span className="w-2 h-2 rounded-full border border-dashed border-text-tertiary bg-transparent opacity-70" />
+          <span className="text-text-tertiary">Planned Agent ({PLANNED_AGENTS.length})</span>
         </div>
       </div>
     </div>

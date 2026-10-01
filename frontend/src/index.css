@@ -1,6 +1,31 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+/* ── Font Faces ─────────────────────────────────────────────── */
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/fonts/InterVariable-Italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono Variable";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Moon Walk";
   src: url("/fonts/MoonWalk.otf") format("opentype"),
@@ -10,131 +35,55 @@
   font-display: swap;
 }
 
+/* ── Base Reset ─────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
+html, body, #root {
   height: 100%;
   margin: 0;
-  background-color: #12060A;
-  /* Multi-layered luxury velvet burgundy canvas with soft blush and warm copper atmospheric bloom */
-  background-image:
-    radial-gradient(ellipse 65% 50% at 50% -12%, rgba(195, 100, 128, 0.16), transparent 70%),
-    radial-gradient(ellipse 48% 45% at 94% 98%, rgba(201, 124, 76, 0.15), transparent 72%),
-    radial-gradient(ellipse 55% 50% at 6% 92%, rgba(246, 230, 234, 0.09), transparent 68%),
-    linear-gradient(rgba(246, 230, 234, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(246, 230, 234, 0.022) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
-  background-attachment: fixed;
-  color: #F6E6EA;
-  font-family: "Oxanium", "Sora", "Space Grotesk", -apple-system, sans-serif;
+  background-color: #0A0808;
+  color: #F2EDEA;
+  font-family: "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-rendering: grayscale;
   overscroll-behavior: none;
 }
 
 body {
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
 
-h1, h2, h3, h4, h5, h6, .font-display, .font-brand {
-  font-family: "Moon Walk", "Space Grotesk", sans-serif !important;
-  letter-spacing: -0.015em;
-}
-
-.font-sub {
-  font-family: "Space Grotesk", "Oxanium", sans-serif;
-}
-
-.font-small, .font-body, .font-futuristic {
-  font-family: "Oxanium", "Sora", "Space Grotesk", sans-serif;
-}
-
-.font-tech {
-  font-family: "Sora", "Oxanium", sans-serif;
-}
-
-/* Microkit / Neuform tactile physics transitions */
-button,
-a,
-input,
-select,
-textarea {
-  transition: color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 180ms ease;
+/* ── Interactive Element Transitions ────────────────────────── */
+button, a, input, select, textarea {
+  transition:
+    color 120ms ease-out,
+    background-color 120ms ease-out,
+    border-color 120ms ease-out,
+    box-shadow 120ms ease-out,
+    transform 80ms ease-in,
+    opacity 120ms ease;
 }
 
 button:not(:disabled):active {
   transform: translateY(1px) scale(0.98);
 }
 
-.drag-region {
-  -webkit-app-region: drag;
-  user-select: none;
-}
-.no-drag {
-  -webkit-app-region: no-drag;
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
-.glow-blush {
-  text-shadow: 0 0 14px rgba(246, 230, 234, 0.65);
+input, textarea, select {
+  accent-color: #D4845A;
 }
 
-.glow-copper {
-  text-shadow: 0 0 14px rgba(201, 124, 76, 0.65);
-}
-
-.glow-text {
-  text-shadow: 0 0 12px rgba(246, 230, 234, 0.55);
-}
-
-.glow-amber {
-  text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
-}
-
-.glow-green {
-  text-shadow: 0 0 12px rgba(95, 168, 143, 0.6);
-}
-
-/* Burgundy & Blush Velvet Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(18, 6, 10, 0.7);
-}
-::-webkit-scrollbar-thumb {
-  background: #361421;
-  border-radius: 4px;
-  border: 1px solid rgba(246, 230, 234, 0.08);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #F6E6EA;
-  box-shadow: 0 0 10px rgba(246, 230, 234, 0.6);
-}
-
-::selection {
-  background: rgba(246, 230, 234, 0.3);
-  color: #ffffff;
-}
-
-textarea,
-input {
-  outline: none;
-}
-textarea:focus,
-input:focus {
+textarea, input {
   outline: none;
 }
 
-/* WCAG 2.1 AA Compliant High-Contrast Focus Visible Ring in Luminous Blush Pink */
+/* ── Focus Visible (WCAG AA) ────────────────────────────────── */
 *:focus-visible:not(.chat-input-textarea):not(.bare-input),
 button:focus-visible,
 select:focus-visible,
@@ -143,12 +92,12 @@ input:focus-visible:not(.chat-input-textarea):not(.bare-input),
 [role="button"]:focus-visible,
 [role="tab"]:focus-visible,
 [role="option"]:focus-visible {
-  outline: 2px solid #F6E6EA !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 14px rgba(246, 230, 234, 0.5) !important;
+  outline: 2px solid #D4845A;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(212, 132, 90, 0.25);
 }
 
-/* Seamless Chat Dock Textarea Reset */
+/* Chat textarea should have no visible focus ring */
 .chat-input-textarea,
 .chat-input-textarea:focus,
 .chat-input-textarea:focus-visible {
@@ -157,321 +106,96 @@ input:focus-visible:not(.chat-input-textarea):not(.bare-input),
   outline: none !important;
   box-shadow: none !important;
   border-radius: 0 !important;
-  color: #FFFFFF !important;
+  color: #F2EDEA !important;
 }
 
-button {
-  -webkit-tap-highlight-color: transparent;
+/* ── Scrollbars ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.20);
 }
 
-input, textarea, select {
-  accent-color: #F6E6EA;
+::selection {
+  background: rgba(212, 132, 90, 0.30);
+  color: #ffffff;
 }
 
-/* ── Velvet Burgundy Glass Surface (microkit.co / neuform.ai inspired) ─── */
-.app-surface {
-  background: linear-gradient(135deg, rgba(26, 10, 15, 0.86), rgba(18, 6, 10, 0.94));
-  border: 1px solid rgba(246, 230, 234, 0.14);
-  box-shadow: 0 20px 52px rgba(10, 3, 6, 0.48), inset 0 1px 0 rgba(246, 230, 234, 0.12);
-  backdrop-filter: blur(24px) saturate(1.15);
+/* ── Electron Window Drag ───────────────────────────────────── */
+.drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
 }
 
-/* Tactical HUD Card with Burgundy/Blush Glass and Inner Bevel */
-.hud-card {
-  position: relative;
-  background: linear-gradient(145deg, rgba(30, 12, 19, 0.82), rgba(18, 6, 10, 0.9));
-  border: 1px solid rgba(246, 230, 234, 0.13);
-  backdrop-filter: blur(20px) saturate(1.1);
-  box-shadow: 0 14px 36px rgba(10, 3, 6, 0.35), inset 0 1px 0 rgba(246, 230, 234, 0.1);
-  transition: border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+/* ── Surface Utilities ──────────────────────────────────────── */
+.surface-glass {
+  background: rgba(18, 16, 15, 0.65);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-.hud-card:hover {
-  border-color: rgba(246, 230, 234, 0.34);
-  box-shadow: 0 20px 48px rgba(10, 3, 6, 0.45), 0 0 24px rgba(246, 230, 234, 0.12), inset 0 1px 0 rgba(246, 230, 234, 0.2);
-  transform: translateY(-2px);
+.surface-card {
+  background: #1A1716;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hud-card-active {
-  border-color: rgba(246, 230, 234, 0.5);
-  box-shadow: 0 0 24px rgba(246, 230, 234, 0.22), inset 0 1px 0 rgba(246, 230, 234, 0.35);
+.surface-card:hover {
+  background: #1F1B19;
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 4px 16px -2px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 
-/* HUD Corner Reticle Crosshairs in Blush Pink */
-.hud-bracket {
-  position: relative;
+.glow-copper {
+  box-shadow:
+    0 0 24px -6px rgba(212, 132, 90, 0.30),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-.hud-bracket::before,
-.hud-bracket::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  pointer-events: none;
+/* ── Tabular Numbers ────────────────────────────────────────── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-.hud-bracket::before {
-  top: -1px;
-  left: -1px;
-  border-top: 2px solid #F6E6EA;
-  border-left: 2px solid #F6E6EA;
-}
-
-.hud-bracket::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 2px solid #F6E6EA;
-  border-right: 2px solid #F6E6EA;
-}
-
-/* Tactical HUD Badge */
-.hud-tag {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 6px;
-  border: 1px solid;
-}
-
-/* ── Signature Copper & Blush Trace ─────────────────────────────────── */
-.copper-trace {
-  position: relative;
-}
-.copper-trace::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 6%;
-  right: 6%;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, #F6E6EA, #C97C4C, #F6E6EA, transparent);
-  background-size: 200% 100%;
-  opacity: 0.85;
-  animation: trace 3.6s linear infinite;
-  box-shadow: 0 0 12px rgba(246, 230, 234, 0.45);
-}
-
-.page-enter {
-  animation: page-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.lift-on-hover {
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
-}
-
-.lift-on-hover:hover {
-  transform: translateY(-2px);
-}
-
-/* Shared polish for every product view: Burgundy velvet cards, subtle blush borders, tactile buttons */
-.modern-page {
-  animation: page-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-:is([class*="bg-slate-900"], [class*="bg-slate-950"], [class*="bg-zinc-900"], [class*="bg-zinc-950"], [class*="bg-gray-900"], [class*="bg-gray-950"], [class*="bg-bg-panel"], [class*="bg-void-panel"]) {
-  background-color: rgba(26, 10, 15, 0.85) !important;
-  box-shadow: inset 0 1px 0 rgba(246, 230, 234, 0.08), 0 12px 32px rgba(10, 3, 6, 0.28);
-  backdrop-filter: blur(16px);
-}
-
-:is([class*="border-slate-800"], [class*="border-slate-700"], [class*="border-zinc-800"], [class*="border-zinc-700"], [class*="border-gray-800"], [class*="border-border"]) {
-  border-color: rgba(246, 230, 234, 0.12) !important;
-}
-
-:is([class*="bg-slate-800"], [class*="bg-zinc-800"], [class*="bg-void-raised"]) {
-  background-color: rgba(38, 15, 23, 0.78) !important;
-}
-
-/* Modal and dialog backdrops with Burgundy velvet tint */
-:is([class*="bg-black/70"], [class*="bg-black/80"], [class*="bg-black/90"], .modal-backdrop) {
-  background-color: rgba(14, 5, 8, 0.84) !important;
-  backdrop-filter: blur(14px) !important;
-}
-
-/* Harmonized muted text with delicate warm blush tint */
-:is([class*="text-slate-400"], [class*="text-zinc-400"], [class*="text-gray-400"]) {
-  color: #BFA8AF;
-}
-
-:is([class*="text-slate-500"], [class*="text-zinc-500"], [class*="text-gray-500"]) {
-  color: #8F777F;
-}
-
-
-.modern-page :is(button, [role="button"]) {
-  border-radius: 0.75rem;
-  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms ease, border-color 180ms ease;
-}
-
-.modern-page :is(button, [role="button"]):not(:disabled):hover {
-  transform: translateY(-1.5px);
-}
-
-.modern-page :is(button, [role="button"]):not(:disabled):active {
-  transform: translateY(0.5px) scale(0.985);
-}
-
-.modern-page :is(input, textarea, select):not(.chat-input-textarea):not(.bare-input) {
-  background-color: rgba(18, 6, 10, 0.75) !important;
-  border-color: rgba(246, 230, 234, 0.14) !important;
-  border-radius: 0.75rem;
-  color: #F6E6EA !important;
-}
-
-.modern-page :is(input, textarea, select):not(.chat-input-textarea):not(.bare-input):focus {
-  border-color: rgba(246, 230, 234, 0.6) !important;
-  box-shadow: 0 0 0 3px rgba(246, 230, 234, 0.12), 0 0 16px rgba(246, 230, 234, 0.2) !important;
-}
-
-.modern-page :is(table, [role="table"]) {
-  border-radius: 1rem;
-  overflow: hidden;
-}
-
-.modern-workspace .modern-page :is([class*="shadow-hud"], [class*="shadow-lg"], [class*="shadow-xl"]) {
-  box-shadow: 0 16px 40px rgba(10, 3, 6, 0.38), inset 0 1px 0 rgba(246, 230, 234, 0.08);
-}
-
-@keyframes page-enter {
-  from { opacity: 0; transform: translateY(8px) scale(0.992); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Chamfered Tech Cut Corner */
-.notch-corner {
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
-}
-
-.notch-corner-sm {
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
-}
-
-/* ── God's Eye Sensor Look Shader Filters ────────────────────────────── */
-
-/* FLIR (Forward-Looking Infrared / Thermal Heat) */
-.sensor-flir {
-  filter: contrast(1.1) saturate(1.4) sepia(0.35) hue-rotate(-25deg);
-}
-.sensor-flir ::selection {
-  background: rgba(255, 122, 69, 0.5) !important;
-}
-
-/* NVG (Night Vision Goggles / Tactical Phosphor) */
-.sensor-nvg {
-  filter: contrast(1.15) brightness(1.05) hue-rotate(85deg) saturate(1.2);
-}
-.sensor-nvg ::selection {
-  background: rgba(0, 255, 136, 0.5) !important;
-}
-
-/* CRT Aesthetics (Clean, sharp, subtle retro texture) */
-.sensor-crt {
-  /* Razor-sharp typography without buzzing text-shadow */
-}
-
-.sensor-crt ::selection {
-  background: rgba(246, 230, 234, 0.35) !important;
-  color: #ffffff !important;
-}
-
-/* Subtle Retro CRT Texture & Edge Vignette */
-.scanlines-overlay {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%,
-    rgba(0, 0, 0, 0.18) 50%
-  );
-  background-size: 100% 4px;
-  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-}
-
-/* Audio Equalizer Bar Animation */
+/* ── Audio Equalizer Bars (used by Voice Companion) ─────────── */
 @keyframes eq-bounce {
   0%, 100% { height: 4px; }
   50% { height: 16px; }
 }
-
 .eq-bar-1 { animation: eq-bounce 0.6s ease-in-out infinite; }
 .eq-bar-2 { animation: eq-bounce 0.8s ease-in-out infinite 0.15s; }
 .eq-bar-3 { animation: eq-bounce 0.5s ease-in-out infinite 0.3s; }
 .eq-bar-4 { animation: eq-bounce 0.9s ease-in-out infinite 0.1s; }
 .eq-bar-5 { animation: eq-bounce 0.7s ease-in-out infinite 0.25s; }
 
-/* Liquid Glass (inspired by glass.samasante.com) */
-.liquid-glass {
-  background: rgba(22, 8, 13, 0.75);
-  backdrop-filter: blur(20px) saturate(170%);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  border: 1px solid rgba(246, 230, 234, 0.12);
-  box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.45),
-    0 10px 32px rgba(10, 3, 6, 0.38);
-}
-
-.liquid-glass-card {
-  background: linear-gradient(135deg, rgba(26, 10, 15, 0.80) 0%, rgba(18, 6, 10, 0.88) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(246, 230, 234, 0.10);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
-    0 12px 36px rgba(10, 3, 6, 0.35);
-  border-radius: 1rem;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.liquid-glass-card:hover {
-  border-color: rgba(201, 124, 76, 0.35);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-    0 16px 44px rgba(10, 3, 6, 0.45),
-    0 0 20px rgba(201, 124, 76, 0.12);
-}
-
-/* Vibe UI Bento & Pills (inspired by vibeui.online) */
-.vibe-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  font-family: monospace;
-  font-size: 0.6875rem;
-  background: rgba(201, 124, 76, 0.12);
-  border: 1px solid rgba(201, 124, 76, 0.28);
-  color: #C97C4C;
-  box-shadow: 0 0 10px rgba(201, 124, 76, 0.10);
-  transition: all 0.15s ease;
-}
-
-.vibe-pill:hover {
-  background: rgba(201, 124, 76, 0.20);
-  border-color: rgba(201, 124, 76, 0.45);
-}
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-
+/* ── Reduced Motion ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .copper-trace::before {
-    animation: none !important;
   }
   svg * {
     animation: none !important;

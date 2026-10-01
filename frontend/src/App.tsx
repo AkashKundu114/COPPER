@@ -39,8 +39,7 @@ import { AgentRegistry } from "./pages/AgentRegistry";
 import { Insights } from "./pages/Insights";
 import { SecurityCenter } from "./pages/SecurityCenter";
 import { BenchmarkMetricsView } from "./pages/BenchmarkMetricsView";
-import { SensorModeProvider } from "./context/SensorModeProvider";
-import { useSensorMode } from "./context/SensorModeContext";
+import { pageTransition } from "./lib/motion";
 import {
   ScreenReaderProvider,
   useAnnounce,
@@ -50,8 +49,8 @@ import { Activation } from "./pages/Activation";
 import { SetupWizard } from "./pages/SetupWizard";
 
 function MainApp() {
-  const { mode } = useSensorMode();
   const { announce } = useAnnounce();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState<NavSection>("dashboard");
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
@@ -265,27 +264,28 @@ function MainApp() {
   }
 
   return (
-    <div
-      className={`relative w-screen h-screen overflow-hidden flex bg-bg text-text font-body transition-all duration-500 sensor-crt sensor-${mode}`}
-    >
+    <div className="relative w-screen h-screen overflow-hidden flex bg-canvas text-text font-sans">
       {/* Accessible Skip to Content Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-blush-100 focus:text-burgundy-950 focus:font-bold focus:rounded-xl focus:shadow-[0_0_20px_rgba(246,230,234,0.85)] focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-copper focus:text-text-inverse focus:font-semibold focus:rounded-md focus:shadow-md focus:outline-none"
       >
         Skip to main content
       </a>
 
-      {/* Cyber CRT Scanline Overlay Strip & Vignette (Calm retro texture) */}
-      <div className="absolute inset-0 pointer-events-none scanlines-overlay z-50 opacity-12" aria-hidden="true" />
-
-      <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
+      <Sidebar
+        activeSection={activeSection}
+        onSelectSection={setActiveSection}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((p) => !p)}
+        onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+      />
       <main
         id="main-content"
         tabIndex={-1}
         role="main"
         aria-label="Main Content"
-        className="modern-workspace flex-1 min-h-0 relative flex flex-col overflow-hidden bg-bg/40 focus:outline-none"
+        className="flex-1 min-h-0 relative flex flex-col overflow-hidden bg-canvas focus:outline-none"
       >
         <TopBar
           sectionTitle={activeSection}
@@ -299,10 +299,7 @@ function MainApp() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
-            initial={{ opacity: 0, y: 8, scale: 0.992 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            {...pageTransition}
             className={`flex-1 w-full min-h-0 flex flex-col ${
               activeSection === "chat" ? "overflow-hidden" : "overflow-y-auto custom-scrollbar"
             }`}
@@ -390,10 +387,8 @@ function MainApp() {
 
 export default function App() {
   return (
-    <SensorModeProvider>
-      <ScreenReaderProvider>
-        <MainApp />
-      </ScreenReaderProvider>
-    </SensorModeProvider>
+    <ScreenReaderProvider>
+      <MainApp />
+    </ScreenReaderProvider>
   );
 }

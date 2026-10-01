@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { X, Copy, Check, Sparkles, Shield, Terminal, UserCheck } from "lucide-react";
 import type { AgencyPersona } from "../../services/api";
 
@@ -57,11 +57,11 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+        className="relative w-full max-w-2xl bg-surface-elevated border border-border-highlight/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-surface-base/50">
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-xl border ${colors.bg} ${colors.border} ${colors.text}`}>
               <Sparkles size={18} />
@@ -77,7 +77,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
                   {persona.division_label || persona.division}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">
+              <p className="text-xs text-text-secondary font-mono mt-0.5">
                 ID: {persona.id}
               </p>
             </div>
@@ -85,7 +85,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-white hover:bg-surface-active transition-all"
           >
             <X size={18} />
           </button>
@@ -94,20 +94,20 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
         {/* Modal Content */}
         <div className="p-6 overflow-y-auto space-y-4 text-xs">
           {/* Mission & Role */}
-          <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 space-y-2">
-            <div className="flex items-center gap-2 text-slate-400 uppercase text-[10px] font-semibold tracking-wider font-mono">
+          <div className="bg-surface-base p-4 rounded-xl border border-border-subtle space-y-2">
+            <div className="flex items-center gap-2 text-text-secondary uppercase text-[10px] font-semibold tracking-wider font-mono">
               <Shield size={12} className="text-cyan-400" />
               <span>Specialist Mandate & Role</span>
             </div>
-            <p className="text-slate-200 leading-relaxed font-sans text-sm">
+            <p className="text-text leading-relaxed font-sans text-sm">
               {persona.description || persona.role}
             </p>
           </div>
 
           {/* Persona Vibe & Tone */}
           {persona.vibe && (
-            <div className="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60 flex items-center justify-between">
-              <span className="text-slate-400 font-mono text-[11px]">Operational Persona & Vibe:</span>
+            <div className="bg-surface-base/60 p-3 rounded-xl border border-border-subtle flex items-center justify-between">
+              <span className="text-text-secondary font-mono text-[11px]">Operational Persona & Vibe:</span>
               <span className="text-cyan-300 font-mono font-medium text-[11px] bg-cyan-950/50 px-2.5 py-1 rounded-lg border border-cyan-800/40">
                 "{persona.vibe}"
               </span>
@@ -117,13 +117,13 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
           {/* Directive / System Prompt Directive */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 font-mono uppercase text-[10px] font-semibold tracking-wider flex items-center gap-1.5">
+              <span className="text-text-secondary font-mono uppercase text-[10px] font-semibold tracking-wider flex items-center gap-1.5">
                 <Terminal size={12} className="text-amber-400" />
                 Autonomous System Prompt Directive
               </span>
               <button
                 onClick={handleCopyPrompt}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] transition-all font-mono"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white text-[11px] transition-all font-mono"
               >
                 {copied ? (
                   <>
@@ -139,22 +139,22 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
               </button>
             </div>
 
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-text">
+            <div className="bg-canvas p-4 rounded-xl border border-border-subtle font-mono text-[11px] text-text-secondary leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-text">
               {persona.system_prompt || persona.system_prompt_preview || persona.description}
             </div>
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex items-center justify-between gap-3">
-          <div className="text-[11px] text-slate-500 font-mono">
+        <div className="px-6 py-4 border-t border-border-subtle bg-surface-base/50 flex items-center justify-between gap-3">
+          <div className="text-[11px] text-text-tertiary font-mono">
             Autonomous Specialist Fleet: 1 of 264 Verified Personas
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all"
+              className="px-4 py-2 rounded-xl bg-surface-active hover:bg-surface-spotlight text-text-secondary hover:text-white text-xs font-semibold transition-all"
             >
               Close
             </button>

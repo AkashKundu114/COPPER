@@ -1,4 +1,4 @@
-export type Tier =
+﻿export type Tier =
   | "MODEL_1_CORE"
   | "MODEL_2_CODE"
   | "MODEL_3_OS"
@@ -41,12 +41,12 @@ export const TIER_LABELS: Record<Tier, string> = {
 };
 
 export const TIER_COLORS: Record<Tier, string> = {
-  MODEL_1_CORE: "#10b981", // Emerald
-  MODEL_2_CODE: "#06b6d4", // Electric Cyan
-  MODEL_3_OS: "#3b82f6",   // Sapphire Blue
-  MODEL_4_VISION: "#ec4899", // Neon Pink
-  MODEL_5_WEB: "#f59e0b",  // Molten Amber
-  MODEL_6_AUDIO: "#a855f7", // Royal Purple
+  MODEL_1_CORE: "#4ADE9A", // Emerald
+  MODEL_2_CODE: "#38BCD8", // Electric Cyan
+  MODEL_3_OS: "#5B93F0",   // Sapphire Blue
+  MODEL_4_VISION: "#E06E9E", // Neon Pink
+  MODEL_5_WEB: "#E8A840",  // Molten Amber
+  MODEL_6_AUDIO: "#9B6DD8", // Royal Purple
 };
 
 /**
@@ -250,9 +250,9 @@ export const PLANNED_AGENTS: AgentMeta[] = [
     blurb: "Circadian rhythms, fatigue modeling, and user behavioral preference optimization.",
     icon: "Activity",
     color: "#64748b",
-    bg: "bg-slate-950/20",
-    border: "border-slate-500/20",
-    text: "text-slate-400",
+    bg: "bg-canvas/20",
+    border: "border-border-subtle",
+    text: "text-text-secondary",
     model: "planned:qwen2.5:14b",
     status: "coming_soon",
   },
@@ -265,9 +265,9 @@ export const PLANNED_AGENTS: AgentMeta[] = [
     blurb: "Biometric intake tracking, meal scheduling, and cognitive health correlations.",
     icon: "HeartPulse",
     color: "#64748b",
-    bg: "bg-slate-950/20",
-    border: "border-slate-500/20",
-    text: "text-slate-400",
+    bg: "bg-canvas/20",
+    border: "border-border-subtle",
+    text: "text-text-secondary",
     model: "planned:smollm2:1.7b",
     status: "coming_soon",
   },
@@ -280,9 +280,9 @@ export const PLANNED_AGENTS: AgentMeta[] = [
     blurb: "Autonomous hallucination verification, rubric scoring, and synthetic output judging.",
     icon: "Scale",
     color: "#64748b",
-    bg: "bg-slate-950/20",
-    border: "border-slate-500/20",
-    text: "text-slate-400",
+    bg: "bg-canvas/20",
+    border: "border-border-subtle",
+    text: "text-text-secondary",
     model: "planned:deepseek-r1:14b",
     status: "coming_soon",
   },
@@ -295,9 +295,9 @@ export const PLANNED_AGENTS: AgentMeta[] = [
     blurb: "High-density dynamic subagent swarming and consensus aggregation.",
     icon: "GitFork",
     color: "#64748b",
-    bg: "bg-slate-950/20",
-    border: "border-slate-500/20",
-    text: "text-slate-400",
+    bg: "bg-canvas/20",
+    border: "border-border-subtle",
+    text: "text-text-secondary",
     model: "planned:qwen2.5:14b",
     status: "coming_soon",
   },
@@ -310,9 +310,9 @@ export const PLANNED_AGENTS: AgentMeta[] = [
     blurb: "Sub-300ms bidirectional voice conversation with barge-in detection.",
     icon: "Mic",
     color: "#64748b",
-    bg: "bg-slate-950/20",
-    border: "border-slate-500/20",
-    text: "text-slate-400",
+    bg: "bg-canvas/20",
+    border: "border-border-subtle",
+    text: "text-text-secondary",
     model: "planned:kokoro+whisper",
     status: "coming_soon",
   },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Check, Copy, ChevronDown, ChevronRight, Brain } from "lucide-react";
 
 interface Props {
@@ -142,7 +142,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
         parts.push(
           <div
             key={key++}
-            className="my-3 overflow-hidden rounded-xl border border-slate-700/50 shadow-lg max-w-2xl bg-slate-900/50"
+            className="my-3 overflow-hidden rounded-xl border border-border-highlight/50 shadow-lg max-w-2xl bg-surface-elevated/50"
           >
             <img
               src={imgMatch[2]}
@@ -182,7 +182,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
         parts.push(
           <code
             key={key++}
-            className="px-1.5 py-0.5 rounded bg-slate-900 text-accent-300 font-mono text-xs border border-slate-700/60"
+            className="px-1.5 py-0.5 rounded bg-surface-elevated text-accent-300 font-mono text-xs border border-border-highlight/60"
           >
             {codeMatch[1]}
           </code>,
@@ -194,7 +194,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
       const italicMatch = remaining.match(/^(\*|_)(.*?)\1/);
       if (italicMatch) {
         parts.push(
-          <em key={key++} className="italic text-slate-300">
+          <em key={key++} className="italic text-text-secondary">
             {italicMatch[2]}
           </em>,
         );
@@ -262,7 +262,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
               {block.items?.map((item, j) => (
                 <li key={j} className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0 shadow-[0_0_6px_rgba(14,165,233,0.6)]" />
-                  <span className="flex-1 text-slate-200">
+                  <span className="flex-1 text-text">
                     {renderInline(item)}
                   </span>
                 </li>
@@ -276,7 +276,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
         }
 
         return (
-          <p key={i} className="text-slate-200 whitespace-pre-wrap">
+          <p key={i} className="text-text whitespace-pre-wrap">
             {renderInline(block.text)}
           </p>
         );
@@ -317,13 +317,13 @@ const ThinkingProcessBlock: React.FC<{
     <div
       className={`rounded-xl overflow-hidden border shadow-sm mb-3.5 font-mono text-xs transition-all ${
         isStreaming
-          ? "bg-slate-950/80 border-accent-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
-          : "bg-slate-950/60 border-slate-800/80"
+          ? "bg-surface-base border-accent-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+          : "bg-surface-base border-border-subtle"
       }`}
     >
       <div
         onClick={() => setUserToggledExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-900/70 hover:bg-slate-900 border-b border-slate-800/50 text-slate-400 hover:text-slate-200 transition-all cursor-pointer select-none"
+        className="w-full flex items-center justify-between px-3.5 py-2.5 bg-surface-elevated/70 hover:bg-surface-elevated border-b border-border-subtle text-text-secondary hover:text-text transition-all cursor-pointer select-none"
       >
         <div className="flex items-center gap-2.5">
           <div className="p-1 rounded-lg bg-accent-500/10 text-accent-400 border border-accent-500/20">
@@ -335,10 +335,10 @@ const ThinkingProcessBlock: React.FC<{
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[11.5px] text-slate-200">
+            <span className="font-bold text-[11.5px] text-text">
               {isStreaming ? `Thinking (${seconds}s)...` : "Thinking Process"}
             </span>
-            <span className="text-[10px] text-slate-500 font-normal">
+            <span className="text-[10px] text-text-tertiary font-normal">
               {wordCount} words
             </span>
           </div>
@@ -352,11 +352,11 @@ const ThinkingProcessBlock: React.FC<{
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-[11px] text-slate-400">
+        <div className="flex items-center gap-2 text-[11px] text-text-secondary">
           <button
             type="button"
             onClick={copyThought}
-            className="p-1 rounded hover:bg-slate-800 text-slate-500 hover:text-slate-200 transition-colors"
+            className="p-1 rounded hover:bg-surface-active text-text-tertiary hover:text-text transition-colors"
             title="Copy thought steps"
           >
             {copied ? (
@@ -371,7 +371,7 @@ const ThinkingProcessBlock: React.FC<{
       </div>
 
       {expanded && (
-        <div className="p-3.5 text-slate-400 bg-slate-950/40 italic font-mono text-[11.5px] leading-relaxed border-l-2 border-accent-500/70 pl-4 max-h-96 overflow-y-auto custom-scrollbar whitespace-pre-wrap">
+        <div className="p-3.5 text-text-secondary bg-surface-base/60 italic font-mono text-[11.5px] leading-relaxed border-l-2 border-accent-500/70 pl-4 max-h-96 overflow-y-auto custom-scrollbar whitespace-pre-wrap">
           {thought}
         </div>
       )}
@@ -392,14 +392,14 @@ const CodeBlock: React.FC<{ code: string; lang?: string }> = ({
   };
 
   return (
-    <div className="rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md my-3 font-mono text-xs">
-      <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 text-[11px] text-slate-400">
+    <div className="rounded-xl overflow-hidden bg-canvas border border-border-subtle shadow-md my-3 font-mono text-xs">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-surface-elevated border-b border-border-subtle text-[11px] text-text-secondary">
         <span className="text-accent-400 font-semibold uppercase tracking-wider">
           {lang || "code"}
         </span>
         <button
           onClick={copyCode}
-          className="flex items-center gap-1 hover:text-white transition-colors px-2 py-0.5 rounded hover:bg-slate-800"
+          className="flex items-center gap-1 hover:text-white transition-colors px-2 py-0.5 rounded hover:bg-surface-active"
         >
           {copied ? (
             <Check size={12} className="text-verdigris-400" />
@@ -409,7 +409,7 @@ const CodeBlock: React.FC<{ code: string; lang?: string }> = ({
           <span>{copied ? "Copied" : "Copy"}</span>
         </button>
       </div>
-      <pre className="p-3.5 overflow-x-auto text-slate-200 custom-scrollbar leading-relaxed">
+      <pre className="p-3.5 overflow-x-auto text-text custom-scrollbar leading-relaxed">
         <code>{code}</code>
       </pre>
     </div>

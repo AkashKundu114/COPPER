@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import {
   GitBranch,
   GitMerge,
@@ -104,9 +104,9 @@ export const BranchCompareModal: React.FC<Props> = ({
       aria-labelledby="branch-compare-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-mono text-xs"
     >
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-slate-200">
+      <div className="bg-canvas border border-border-subtle rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-text">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-surface-elevated/60">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-accent-950/80 border border-accent-800/40 text-accent-400" aria-hidden="true">
               <GitCompare size={18} />
@@ -115,7 +115,7 @@ export const BranchCompareModal: React.FC<Props> = ({
               <h2 id="branch-compare-title" className="text-sm font-bold text-white font-sans flex items-center gap-2">
                 Semantic Branch Comparison & Diff
               </h2>
-              <p className="text-[10px] text-slate-400">
+              <p className="text-[10px] text-text-secondary">
                 Natural language trajectory analysis, key divergence aspects, and mergeable insights
               </p>
             </div>
@@ -126,7 +126,7 @@ export const BranchCompareModal: React.FC<Props> = ({
               onClick={runComparison}
               disabled={isLoading}
               aria-label="Refresh branch comparison"
-              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+              className="p-1.5 rounded-lg bg-surface-elevated hover:bg-surface-active text-text-secondary hover:text-white border border-border-subtle transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
               title="Refresh comparison"
             >
               <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} aria-hidden="true" />
@@ -134,7 +134,7 @@ export const BranchCompareModal: React.FC<Props> = ({
             <button
               onClick={onClose}
               aria-label="Close branch comparison dialog"
-              className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+              className="p-1.5 rounded-lg bg-surface-elevated hover:bg-surface-active text-text-secondary hover:text-white border border-border-subtle transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             >
               <X size={16} aria-hidden="true" />
             </button>
@@ -142,14 +142,14 @@ export const BranchCompareModal: React.FC<Props> = ({
         </div>
 
         {/* Branch Selectors Bar */}
-        <div className="px-6 py-3 bg-slate-900/40 border-b border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="px-6 py-3 bg-surface-elevated/40 border-b border-border-subtle flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <span className="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap">Branch A:</span>
+            <span className="text-[10px] text-text-secondary font-bold uppercase whitespace-nowrap">Branch A:</span>
             <select
               value={branchAId}
               aria-label="Select first branch to compare"
               onChange={(e) => setBranchAId(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
+              className="bg-canvas border border-border-subtle rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60 focus-visible:ring-1 focus-visible:ring-cyber-cyan"
             >
               {branches.map((b) => (
                 <option key={b.branch_id} value={b.branch_id}>
@@ -159,16 +159,16 @@ export const BranchCompareModal: React.FC<Props> = ({
             </select>
           </div>
 
-          <div className="flex items-center gap-1 text-slate-500">
+          <div className="flex items-center gap-1 text-text-tertiary">
             <ArrowRight size={14} />
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <span className="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap">Branch B:</span>
+            <span className="text-[10px] text-text-secondary font-bold uppercase whitespace-nowrap">Branch B:</span>
             <select
               value={branchBId}
               onChange={(e) => setBranchBId(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60"
+              className="bg-canvas border border-border-subtle rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-accent-500 font-mono w-full md:w-60"
             >
               {branches.map((b) => (
                 <option key={b.branch_id} value={b.branch_id}>
@@ -186,7 +186,7 @@ export const BranchCompareModal: React.FC<Props> = ({
               <CheckCircle2 size={14} className="text-accent-400 shrink-0" />
               <span>{bannerMessage}</span>
             </div>
-            <button onClick={() => setBannerMessage(null)} className="text-[10px] text-slate-400 hover:text-white">
+            <button onClick={() => setBannerMessage(null)} className="text-[10px] text-text-secondary hover:text-white">
               Dismiss
             </button>
           </div>
@@ -197,28 +197,28 @@ export const BranchCompareModal: React.FC<Props> = ({
           {isLoading ? (
             <div className="py-16 text-center space-y-3">
               <RefreshCw size={24} className="animate-spin text-accent-400 mx-auto" />
-              <p className="text-xs text-slate-400">Analyzing divergent trajectories with DeepSeek-R1...</p>
+              <p className="text-xs text-text-secondary">Analyzing divergent trajectories with DeepSeek-R1...</p>
             </div>
           ) : !diff ? (
-            <div className="py-12 text-center text-slate-500 italic">
+            <div className="py-12 text-center text-text-tertiary italic">
               Select two branches above to generate semantic diff analysis.
             </div>
           ) : (
             <>
               {/* Divergence Point Banner */}
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1.5">
+              <div className="p-3.5 rounded-xl bg-surface-elevated border border-border-subtle space-y-1">
+                <span className="text-[9px] uppercase font-bold text-text-tertiary tracking-wider flex items-center gap-1.5">
                   <GitBranch size={11} className="text-accent-400" />
                   Divergence Point
                 </span>
-                <p className="text-xs text-slate-200 font-sans leading-relaxed italic">
+                <p className="text-xs text-text font-sans leading-relaxed italic">
                   "{diff.divergence_point}"
                 </p>
               </div>
 
               {/* Side-by-Side Summaries */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
+                <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-accent-400 flex items-center gap-1.5">
                       <GitBranch size={13} />
@@ -233,10 +233,10 @@ export const BranchCompareModal: React.FC<Props> = ({
                       <span>Merge A</span>
                     </button>
                   </div>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">{diff.branch_a_summary}</p>
+                  <p className="text-[11px] text-text-secondary leading-relaxed">{diff.branch_a_summary}</p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
+                <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-verdigris-400 flex items-center gap-1.5">
                       <GitBranch size={13} />
@@ -251,13 +251,13 @@ export const BranchCompareModal: React.FC<Props> = ({
                       <span>Merge B</span>
                     </button>
                   </div>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">{diff.branch_b_summary}</p>
+                  <p className="text-[11px] text-text-secondary leading-relaxed">{diff.branch_b_summary}</p>
                 </div>
               </div>
 
               {/* Key Differences Table */}
               {diff.key_differences && diff.key_differences.length > 0 && (
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+                <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-3">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
                     <Sparkles size={14} className="text-amber-400" />
                     Key Differences & Divergence Aspects
@@ -266,7 +266,7 @@ export const BranchCompareModal: React.FC<Props> = ({
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-slate-800 text-slate-500 text-[10px] uppercase">
+                        <tr className="border-b border-border-subtle text-text-tertiary text-[10px] uppercase">
                           <th className="py-2 px-3 w-1/4">Aspect</th>
                           <th className="py-2 px-3 w-3/8 text-accent-300">Branch A</th>
                           <th className="py-2 px-3 w-3/8 text-verdigris-300">Branch B</th>
@@ -274,10 +274,10 @@ export const BranchCompareModal: React.FC<Props> = ({
                       </thead>
                       <tbody className="divide-y divide-slate-800/60 text-[11px]">
                         {diff.key_differences.map((diffItem, idx) => (
-                          <tr key={idx} className="hover:bg-slate-950/40">
-                            <td className="py-2.5 px-3 font-bold text-slate-300">{diffItem.aspect}</td>
-                            <td className="py-2.5 px-3 text-slate-400">{diffItem.branch_a}</td>
-                            <td className="py-2.5 px-3 text-slate-400">{diffItem.branch_b}</td>
+                          <tr key={idx} className="hover:bg-surface-base/60">
+                            <td className="py-2.5 px-3 font-bold text-text-secondary">{diffItem.aspect}</td>
+                            <td className="py-2.5 px-3 text-text-secondary">{diffItem.branch_a}</td>
+                            <td className="py-2.5 px-3 text-text-secondary">{diffItem.branch_b}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -289,22 +289,22 @@ export const BranchCompareModal: React.FC<Props> = ({
               {/* Recommendation & Mergeable Insights */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Recommendation */}
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
                     <Award size={14} className="text-verdigris-400" />
                     Evaluation Recommendation
                   </span>
-                  <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{diff.recommendation}</p>
+                  <p className="text-[11px] text-text-secondary leading-relaxed font-sans">{diff.recommendation}</p>
                 </div>
 
                 {/* Mergeable Insights */}
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
                     <GitMerge size={14} className="text-accent-400" />
                     Mergeable Insights
                   </span>
                   {diff.mergeable_insights && diff.mergeable_insights.length > 0 ? (
-                    <ul className="space-y-1.5 text-[11px] text-slate-300">
+                    <ul className="space-y-1.5 text-[11px] text-text-secondary">
                       {diff.mergeable_insights.map((ins, i) => (
                         <li key={i} className="flex items-start gap-1.5">
                           <span className="text-accent-400 font-bold">•</span>
@@ -313,7 +313,7 @@ export const BranchCompareModal: React.FC<Props> = ({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-slate-500 text-[11px] italic">No unique mergeable insights extracted.</p>
+                    <p className="text-text-tertiary text-[11px] italic">No unique mergeable insights extracted.</p>
                   )}
                 </div>
               </div>
@@ -322,13 +322,13 @@ export const BranchCompareModal: React.FC<Props> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 bg-slate-900/60 border-t border-slate-800 flex items-center justify-between">
-          <span className="text-[10px] text-slate-500">
-            Active Session: <span className="text-slate-300 font-mono">{currentBranchId}</span>
+        <div className="px-6 py-3 bg-surface-elevated/60 border-t border-border-subtle flex items-center justify-between">
+          <span className="text-[10px] text-text-tertiary">
+            Active Session: <span className="text-text-secondary font-mono">{currentBranchId}</span>
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all"
+            className="px-4 py-1.5 rounded-lg bg-surface-active hover:bg-surface-spotlight text-text-secondary font-bold text-xs transition-all"
           >
             Close
           </button>

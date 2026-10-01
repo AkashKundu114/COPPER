@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import {
   Brain,
   Search,
@@ -139,7 +139,7 @@ const AGENT_THEMES: Record<
   APEX: { name: "APEX", icon: Zap, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
   QUANTA: { name: "QUANTA", icon: BarChart3, color: "#6366f1", border: "border-indigo-500/40", bg: "bg-indigo-950/25", text: "text-indigo-400" },
   TENSOR: { name: "TENSOR", icon: Binary, color: "#ec4899", border: "border-pink-500/40", bg: "bg-pink-950/25", text: "text-pink-400" },
-  GOLIATH: { name: "GOLIATH", icon: Boxes, color: "#64748b", border: "border-slate-700/60", bg: "bg-slate-900/60", text: "text-slate-300" },
+  GOLIATH: { name: "GOLIATH", icon: Boxes, color: "#64748b", border: "border-border-highlight/60", bg: "bg-surface-elevated/60", text: "text-text-secondary" },
   PIVOT: { name: "PIVOT", icon: RefreshCw, color: "#22c55e", border: "border-green-500/40", bg: "bg-green-950/25", text: "text-green-400" },
 
   // OS & Desktop Automation
@@ -149,7 +149,7 @@ const AGENT_THEMES: Record<
   ZENITH: { name: "ZENITH", icon: Target, color: "#8b5cf6", border: "border-violet-500/40", bg: "bg-violet-950/25", text: "text-violet-400" },
   LEDGER: { name: "LEDGER", icon: Table2, color: "#eab308", border: "border-yellow-500/40", bg: "bg-yellow-950/25", text: "text-yellow-400" },
   VAULT: { name: "VAULT", icon: Lock, color: "#ef4444", border: "border-red-500/40", bg: "bg-red-950/25", text: "text-red-400" },
-  ECHO: { name: "ECHO", icon: ScrollText, color: "#64748b", border: "border-slate-700/60", bg: "bg-slate-900/60", text: "text-slate-300" },
+  ECHO: { name: "ECHO", icon: ScrollText, color: "#64748b", border: "border-border-highlight/60", bg: "bg-surface-elevated/60", text: "text-text-secondary" },
   WARDEN: { name: "WARDEN", icon: ShieldAlert, color: "#dc2626", border: "border-red-600/40", bg: "bg-red-950/25", text: "text-red-400" },
   PROXY: { name: "PROXY", icon: Globe, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
 
@@ -222,9 +222,9 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
       name: agent,
       icon: Zap,
       color: "#94a3b8",
-      border: "border-slate-700",
-      bg: "bg-slate-900/40",
-      text: "text-slate-300",
+      border: "border-border-highlight",
+      bg: "bg-surface-elevated/40",
+      text: "text-text-secondary",
     };
   };
 
@@ -254,7 +254,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
 
   return (
     <div
-      className={`rounded-2xl border border-purple-900/40 bg-slate-950/80 backdrop-blur-xl shadow-2xl p-4 text-xs font-mono text-slate-200 overflow-hidden ${className}`}
+      className={`rounded-2xl border border-purple-900/40 bg-surface-base backdrop-blur-xl shadow-2xl p-4 text-xs font-mono text-text overflow-hidden ${className}`}
     >
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-purple-950/60">
@@ -287,12 +287,12 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                 {isRunning ? "Executing DAG" : failedCount > 0 ? "Failed" : "Synthesized"}
               </span>
               {graph.total_duration_ms ? (
-                <span className="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800">
+                <span className="text-[10px] text-text-secondary bg-surface-elevated px-2 py-0.5 rounded-md border border-border-subtle">
                   {graph.total_duration_ms}ms
                 </span>
               ) : null}
             </div>
-            <p className="text-[11px] text-slate-400 font-sans mt-0.5 line-clamp-1 max-w-xl">
+            <p className="text-[11px] text-text-secondary font-sans mt-0.5 line-clamp-1 max-w-xl">
               {graph.goal || "Multi-Agent Collaborative Workflow"}
             </p>
           </div>
@@ -306,7 +306,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] transition-all ${
                 showMessages
                   ? "bg-purple-950/80 border-purple-500/50 text-purple-300"
-                  : "bg-slate-900/80 hover:bg-slate-800 border-slate-800 text-slate-400 hover:text-white"
+                  : "bg-surface-elevated hover:bg-surface-active border-border-subtle text-text-secondary hover:text-white"
               }`}
               title="Toggle Inter-Agent Redis Context Bus Stream"
             >
@@ -315,7 +315,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
             </button>
           )}
 
-          <div className="text-[11px] text-slate-400 bg-slate-900/90 border border-slate-800 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5">
+          <div className="text-[11px] text-text-secondary bg-surface-elevated border border-border-subtle px-2.5 py-1.5 rounded-xl flex items-center gap-1.5">
             <Layers size={12} className="text-purple-400" />
             <span>
               {completedCount}/{tasks.length} Done
@@ -330,10 +330,10 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
           <div key={layerIdx} className="space-y-2">
             {layers.length > 1 && (
               <div className="flex items-center gap-2 px-1">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                <span className="text-[10px] uppercase font-bold text-text-tertiary tracking-wider">
                   {layerIdx === 0 ? "Phase 1: Initial Dispatch" : `Phase ${layerIdx + 1}: Dependent Layer`}
                 </span>
-                <div className="flex-1 h-[1px] bg-slate-800/60" />
+                <div className="flex-1 h-[1px] bg-surface-active/60" />
               </div>
             )}
 
@@ -353,10 +353,10 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                       isActive
                         ? "bg-purple-950/30 border-purple-500/70 shadow-lg shadow-purple-950/50"
                         : task.status === "done"
-                        ? "bg-slate-900/70 border-slate-800 hover:border-slate-700"
+                        ? "bg-surface-elevated/70 border-border-subtle hover:border-border-highlight"
                         : task.status === "failed"
                         ? "bg-danger-950/20 border-danger-800/60 hover:border-danger-700"
-                        : "bg-slate-950/40 border-slate-900 opacity-60"
+                        : "bg-surface-base/60 border-border-subtle opacity-60"
                     }`}
                   >
                     {/* Node Header */}
@@ -392,7 +392,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                           <div className="flex items-center gap-1 text-[10px] text-emerald-400">
                             <CheckCircle2 size={12} />
                             {task.execution_time_ms ? (
-                              <span className="text-[9.5px] text-slate-400 font-mono">
+                              <span className="text-[9.5px] text-text-secondary font-mono">
                                 {task.execution_time_ms}ms
                               </span>
                             ) : null}
@@ -400,10 +400,10 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                         ) : task.status === "failed" ? (
                           <AlertTriangle size={13} className="text-danger-400" />
                         ) : (
-                          <Clock size={12} className="text-slate-500" />
+                          <Clock size={12} className="text-text-tertiary" />
                         )}
 
-                        <div className="text-slate-500 hover:text-slate-300 ml-1">
+                        <div className="text-text-tertiary hover:text-text-secondary ml-1">
                           {isExpanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
                         </div>
                       </div>
@@ -411,14 +411,14 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
 
                     {/* Task Title & Instruction */}
                     <div className="mt-2 text-[11px]">
-                      <p className="font-medium text-slate-200 line-clamp-1 font-sans">
+                      <p className="font-medium text-text line-clamp-1 font-sans">
                         {task.title || task.instruction}
                       </p>
                     </div>
 
                     {/* Dependencies indicator */}
                     {task.depends_on.length > 0 && (
-                      <div className="mt-2 pt-2 border-t border-slate-800/60 flex items-center gap-1 text-[10px] text-slate-400">
+                      <div className="mt-2 pt-2 border-t border-border-subtle flex items-center gap-1 text-[10px] text-text-secondary">
                         <ArrowRight size={10} className="text-purple-400" />
                         <span>depends on:</span>
                         <div className="flex items-center gap-1">
@@ -442,14 +442,14 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.15 }}
-                          className="mt-3 pt-2.5 border-t border-slate-800/80 space-y-2 text-[11px]"
+                          className="mt-3 pt-2.5 border-t border-border-subtle space-y-2 text-[11px]"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div>
-                            <div className="text-[9.5px] uppercase font-bold text-slate-400 mb-1">
+                            <div className="text-[9.5px] uppercase font-bold text-text-secondary mb-1">
                               Instruction:
                             </div>
-                            <p className="text-slate-300 bg-black/40 p-2 rounded-lg leading-relaxed border border-slate-800">
+                            <p className="text-text-secondary bg-black/40 p-2 rounded-lg leading-relaxed border border-border-subtle">
                               {task.instruction}
                             </p>
                           </div>
@@ -490,7 +490,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
 
       {/* Generated Artifacts Bar */}
       {artifacts.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2">
+        <div className="mt-3 pt-3 border-t border-border-subtle flex flex-wrap items-center gap-2">
           <span className="text-[10.5px] font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1">
             <BookOpen size={12} />
             <span>Generated Artifacts:</span>
@@ -519,7 +519,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
             exit={{ opacity: 0, height: 0 }}
             className="mt-3 pt-3 border-t border-purple-950/80 space-y-2"
           >
-            <div className="flex items-center justify-between text-[10px] text-slate-400 uppercase font-bold tracking-wider">
+            <div className="flex items-center justify-between text-[10px] text-text-secondary uppercase font-bold tracking-wider">
               <span>Inter-Agent Redis Pub/Sub Messages</span>
               <span className="text-purple-400">{messages.length} Dispatches</span>
             </div>
@@ -528,14 +528,14 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
               {messages.map((msg, i) => (
                 <div
                   key={msg.id || i}
-                  className="p-2 rounded-lg bg-black/40 border border-slate-800 flex items-start gap-2 text-[10.5px]"
+                  className="p-2 rounded-lg bg-black/40 border border-border-subtle flex items-start gap-2 text-[10.5px]"
                 >
                   <div className="flex items-center gap-1 font-bold flex-shrink-0">
                     <span className="text-amber-400">{msg.sender}</span>
-                    <ArrowRight size={10} className="text-slate-500" />
+                    <ArrowRight size={10} className="text-text-tertiary" />
                     <span className="text-cyan-400">{msg.recipient}</span>
                   </div>
-                  <div className="flex-1 text-slate-300 break-words">{msg.content}</div>
+                  <div className="flex-1 text-text-secondary break-words">{msg.content}</div>
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   Lock,
@@ -107,7 +107,7 @@ export function SecurityCenter() {
   };
 
   return (
-    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-slate-200 select-none font-mono text-xs">
+    <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
@@ -116,13 +116,13 @@ export function SecurityCenter() {
               Security
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Local firewall rules, privacy guards, and air-gapped protection
           </p>
         </div>
         <button
           onClick={exportAuditLog}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-accent-400 hover:text-white font-bold transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-elevated hover:bg-surface-active border border-border-subtle text-accent-400 hover:text-white font-bold transition-all"
         >
           <Download size={14} />
           <span>Export Audit Log</span>
@@ -146,7 +146,7 @@ export function SecurityCenter() {
 
       {/* Top 2 Core Status Badges */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-3.5 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle flex items-center gap-3.5 shadow-sm">
           <div className="p-2.5 rounded-xl bg-verdigris-500/10 text-verdigris-400 border border-verdigris-500/20">
             <Lock size={20} />
           </div>
@@ -154,13 +154,13 @@ export function SecurityCenter() {
             <p className="text-sm font-bold text-white font-sans">
               100% Air-Gapped Local Execution
             </p>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-text-secondary text-[11px]">
               All prompt completions stay on your local disk & GPU
             </p>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-3.5 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle flex items-center gap-3.5 shadow-sm">
           <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/20">
             <ShieldAlert size={20} />
           </div>
@@ -168,7 +168,7 @@ export function SecurityCenter() {
             <p className="text-sm font-bold text-white font-sans">
               Zero Outbound Telemetry
             </p>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-text-secondary text-[11px]">
               Zero remote analytics, ads, or data tracking servers
             </p>
           </div>
@@ -176,17 +176,17 @@ export function SecurityCenter() {
       </div>
 
       {/* Firewall Rules Toggles */}
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      <div className="p-6 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm">
+        <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Firewall Egress & Security Controls
         </h3>
         <div className="space-y-3">
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-canvas border border-border-subtle flex items-center justify-between">
             <div>
               <p className="font-bold text-white font-sans text-xs">
                 Strict Localhost Egress Lock
               </p>
-              <p className="text-slate-400 text-[11px]">
+              <p className="text-text-secondary text-[11px]">
                 Block all HTTP outbound sockets except 127.0.0.1 (Ollama &
                 Uvicorn)
               </p>
@@ -194,7 +194,7 @@ export function SecurityCenter() {
             <button
               onClick={() => toggleSwitch("localOnly")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                firewallToggles.localOnly ? "bg-verdigris-500" : "bg-slate-700"
+                firewallToggles.localOnly ? "bg-verdigris-500" : "bg-surface-spotlight"
               }`}
             >
               <div
@@ -205,12 +205,12 @@ export function SecurityCenter() {
             </button>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-canvas border border-border-subtle flex items-center justify-between">
             <div>
               <p className="font-bold text-white font-sans text-xs">
                 Automated PII & Secret Redaction
               </p>
-              <p className="text-slate-400 text-[11px]">
+              <p className="text-text-secondary text-[11px]">
                 Automatically mask credit cards, API keys, and passwords in
                 memory
               </p>
@@ -218,7 +218,7 @@ export function SecurityCenter() {
             <button
               onClick={() => toggleSwitch("piiMasking")}
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                firewallToggles.piiMasking ? "bg-verdigris-500" : "bg-slate-700"
+                firewallToggles.piiMasking ? "bg-verdigris-500" : "bg-surface-spotlight"
               }`}
             >
               <div
@@ -229,12 +229,12 @@ export function SecurityCenter() {
             </button>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-canvas border border-border-subtle flex items-center justify-between">
             <div>
               <p className="font-bold text-white font-sans text-xs">
                 Guardian Level 0 Safety Alignment
               </p>
-              <p className="text-slate-400 text-[11px]">
+              <p className="text-text-secondary text-[11px]">
                 Prevent accidental file system destruction and unsafe shell
                 injection
               </p>
@@ -244,7 +244,7 @@ export function SecurityCenter() {
               className={`w-12 h-6 rounded-full p-1 transition-colors ${
                 firewallToggles.guardianAlignment
                   ? "bg-verdigris-500"
-                  : "bg-slate-700"
+                  : "bg-surface-spotlight"
               }`}
             >
               <div
@@ -260,7 +260,7 @@ export function SecurityCenter() {
       </div>
 
       {/* Differential Privacy Memory Guarantees (Phase 4 Novelty) */}
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-sm font-mono text-xs">
+      <div className="p-6 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm font-mono text-xs">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
@@ -270,7 +270,7 @@ export function SecurityCenter() {
               <h3 className="text-xs font-semibold text-white uppercase tracking-wider font-sans">
                 Differential Privacy Memory Shield (ε, δ)
               </h3>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-text-secondary">
                 Mathematical privacy bounds over vector memory queries and embeddings
               </p>
             </div>
@@ -279,7 +279,7 @@ export function SecurityCenter() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setDpConfigOpen(!dpConfigOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-active hover:bg-surface-spotlight text-text-secondary text-xs transition-all"
             >
               <Sliders size={12} />
               <span>Configure Budget</span>
@@ -306,20 +306,20 @@ export function SecurityCenter() {
         {/* DP Budget Meter */}
         {dpBudget ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block">Epsilon (Per Query)</span>
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+              <span className="text-[10px] text-text-secondary block">Epsilon (Per Query)</span>
               <span className="text-lg font-bold text-white font-sans">ε = {dpBudget.epsilon}</span>
-              <span className="text-[9px] text-slate-500 block">δ = {dpBudget.delta}</span>
+              <span className="text-[9px] text-text-tertiary block">δ = {dpBudget.delta}</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block">Epsilon Spent</span>
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+              <span className="text-[10px] text-text-secondary block">Epsilon Spent</span>
               <span className="text-lg font-bold text-amber-400 font-sans">{dpBudget.total_spent.toFixed(2)}</span>
-              <span className="text-[9px] text-slate-500 block">of { (dpBudget.total_spent + dpBudget.remaining).toFixed(1) } max</span>
+              <span className="text-[9px] text-text-tertiary block">of { (dpBudget.total_spent + dpBudget.remaining).toFixed(1) } max</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block">Budget Used</span>
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+              <span className="text-[10px] text-text-secondary block">Budget Used</span>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div className="flex-1 h-2 rounded-full bg-surface-active overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       dpBudget.pct_used > 80 ? "bg-danger-500" : dpBudget.pct_used > 50 ? "bg-amber-500" : "bg-verdigris"
@@ -330,24 +330,24 @@ export function SecurityCenter() {
                 <span className="text-xs font-bold text-white">{Math.round(dpBudget.pct_used)}%</span>
               </div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-[10px] text-slate-400 block">Total Queries Filtered</span>
+            <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
+              <span className="text-[10px] text-text-secondary block">Total Queries Filtered</span>
               <span className="text-lg font-bold text-cyber-cyan font-sans">{dpBudget.queries}</span>
-              <span className="text-[9px] text-slate-500 block">Laplace / Gaussian noised</span>
+              <span className="text-[9px] text-text-tertiary block">Laplace / Gaussian noised</span>
             </div>
           </div>
         ) : (
-          <div className="p-4 rounded-xl bg-slate-950 text-center text-slate-500 text-xs">
+          <div className="p-4 rounded-xl bg-canvas text-center text-text-tertiary text-xs">
             Loading Differential Privacy status...
           </div>
         )}
 
         {/* Laplace Noise Distribution Visualization */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-purple-900/40 space-y-3">
+        <div className="p-4 rounded-xl bg-canvas border border-purple-900/40 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-purple-300 font-sans uppercase tracking-wider flex items-center gap-1.5">
               <span>Differential Privacy Noise Perturbation Curve</span>
-              <span className="text-[10px] text-slate-400 font-mono font-normal">
+              <span className="text-[10px] text-text-secondary font-mono font-normal">
                 (Laplace Scale b = Δf / ε = {(1.0 / (dpBudget?.epsilon || 1.0)).toFixed(2)})
               </span>
             </span>
@@ -387,24 +387,24 @@ export function SecurityCenter() {
                 );
               })()}
             </svg>
-            <div className="absolute inset-x-0 bottom-0 flex justify-between text-[9px] text-slate-500 font-mono pt-1">
+            <div className="absolute inset-x-0 bottom-0 flex justify-between text-[9px] text-text-tertiary font-mono pt-1">
               <span>-3.0σ (High Noise)</span>
               <span className="text-purple-400 font-bold">μ = 0 (Unperturbed Mean)</span>
               <span>+3.0σ (High Noise)</span>
             </div>
           </div>
-          <p className="text-[10px] text-slate-400 leading-normal pt-1 border-t border-slate-900">
+          <p className="text-[10px] text-text-secondary leading-normal pt-1 border-t border-border-subtle">
             Perturbation shield active: Mathematical calibrated Laplace noise is injected directly into vector memory similarities, ensuring plausible deniability against extraction attacks with (ε={dpBudget?.epsilon || 1.0}, δ=10⁻⁵) formal privacy.
           </p>
         </div>
 
         {/* Configuration Modal / Accordion */}
         {dpConfigOpen && (
-          <form onSubmit={handleSaveConfig} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 animate-fade-in">
+          <form onSubmit={handleSaveConfig} className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3 animate-fade-in">
             <h4 className="font-bold text-white text-xs">Update (ε, δ) Differential Privacy Parameters</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Epsilon (Privacy Budget, lower = more noise)</label>
+                <label className="text-[10px] text-text-secondary block mb-1">Epsilon (Privacy Budget, lower = more noise)</label>
                 <input
                   type="number"
                   step="0.1"
@@ -412,11 +412,11 @@ export function SecurityCenter() {
                   max="10.0"
                   value={newEpsilon}
                   onChange={(e) => setNewEpsilon(parseFloat(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-white"
+                  className="w-full bg-surface-elevated border border-border-subtle rounded-lg px-3 py-1.5 text-white"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Max Cumulative Epsilon Limit</label>
+                <label className="text-[10px] text-text-secondary block mb-1">Max Cumulative Epsilon Limit</label>
                 <input
                   type="number"
                   step="1.0"
@@ -424,7 +424,7 @@ export function SecurityCenter() {
                   max="50.0"
                   value={newBudgetLimit}
                   onChange={(e) => setNewBudgetLimit(parseFloat(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-white"
+                  className="w-full bg-surface-elevated border border-border-subtle rounded-lg px-3 py-1.5 text-white"
                 />
               </div>
             </div>
@@ -432,13 +432,13 @@ export function SecurityCenter() {
               <button
                 type="button"
                 onClick={() => setDpConfigOpen(false)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+                className="px-3 py-1.5 rounded-lg bg-surface-active text-text-secondary hover:text-white"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-1.5 rounded-lg bg-accent-500 text-slate-950 font-bold hover:bg-accent-400"
+                className="px-4 py-1.5 rounded-lg bg-accent-500 text-text-inverse font-bold hover:bg-accent-400"
               >
                 Save DP Config
               </button>
