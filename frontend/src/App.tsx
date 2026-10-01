@@ -68,8 +68,22 @@ function MainApp() {
 
   useEffect(() => {
     Promise.all([
-      axios.get("/api/activation/status").then((r) => r.data).catch(() => ({ activated: true })),
-      axios.get("/api/setup/state").then((r) => r.data).catch(() => ({ completed: true })),
+      axios
+        .get("/api/activation/status")
+        .then((r) =>
+          typeof r.data === "object" && r.data !== null && "activated" in r.data
+            ? r.data
+            : { activated: true }
+        )
+        .catch(() => ({ activated: true })),
+      axios
+        .get("/api/setup/state")
+        .then((r) =>
+          typeof r.data === "object" && r.data !== null && "completed" in r.data
+            ? r.data
+            : { completed: true }
+        )
+        .catch(() => ({ completed: true })),
     ]).then(([act, setup]) => {
       setIsActivated(!!act.activated);
       setIsSetupComplete(!!setup.completed);

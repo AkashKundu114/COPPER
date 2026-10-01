@@ -2,8 +2,23 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Critical User Flows - Live Local Models E2E", () => {
   test.setTimeout(120000);
-
   test.beforeEach(async ({ page }) => {
+    await page.route("**/api/activation/status", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ activated: true, license_status: "active" }),
+      });
+    });
+
+    await page.route("**/api/setup/state", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ completed: true }),
+      });
+    });
+
     await page.routeWebSocket(/.*\/chat\/ws\/.*/, (ws) => {
       ws.onMessage((message) => {
         try {
