@@ -8,14 +8,29 @@ echo ==================================================================
 
 cd /d "%~dp0..\.."
 
+:: 1. Detect Python with uvicorn available
+set "PYTHON_EXE=python"
+if exist "backend\.venv\Scripts\python.exe" (
+    backend\.venv\Scripts\python.exe -c "import uvicorn" >nul 2>&1
+    if not errorlevel 1 (
+        set "PYTHON_EXE=%~dp0..\..\backend\.venv\Scripts\python.exe"
+    )
+)
+if exist ".venv\Scripts\python.exe" (
+    .venv\Scripts\python.exe -c "import uvicorn" >nul 2>&1
+    if not errorlevel 1 (
+        set "PYTHON_EXE=%~dp0..\..\.venv\Scripts\python.exe"
+    )
+)
+
 echo [*] Launching Backend Server (127.0.0.1:8000)...
-start "COPPER Backend" cmd /k "python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000"
+start "COPPER Backend" cmd /k ""%PYTHON_EXE%" -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload"
 
 echo [*] Launching Frontend Development Server (localhost:5173)...
-start "COPPER Frontend" cmd /k "cd frontend && npm run dev"
+start "COPPER Frontend" cmd /k "cd frontend && npm.cmd run dev"
 
 echo [*] Opening Standalone Desktop Window...
-timeout /t 3 /nobreak >nul
+ping 127.0.0.1 -n 4 >nul
 
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --app=http://localhost:5173 --window-size=1360,860 --user-data-dir="%LOCALAPPDATA%\COPPER\ChromeProfile"

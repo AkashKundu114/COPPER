@@ -20,25 +20,43 @@ export function Activation({ onActivated }: ActivationProps) {
     activation_code: string;
   } | null>(null);
 
+  const fetchFingerprint = async () => {
+    try {
+      const res = await axios.get("/api/activation/fingerprint");
+      setFingerprint(res.data);
+      setError(null);
+    } catch {
+      try {
+        const fallback = await axios.get("http://127.0.0.1:8000/api/activation/fingerprint");
+        setFingerprint(fallback.data);
+        setError(null);
+      } catch {
+        setError("Backend is starting or unreachable on port 8000. Click 'Retry Detection' once online.");
+      }
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("/api/activation/fingerprint")
-      .then((res) => setFingerprint(res.data))
-      .catch(() => {});
+    fetchFingerprint();
   }, []);
 
   const handleActivateLocal = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post("/api/activation/activate/local");
+      let res;
+      try {
+        res = await axios.post("/api/activation/activate/local");
+      } catch {
+        res = await axios.post("http://127.0.0.1:8000/api/activation/activate/local");
+      }
       if (res.data.activated) {
         onActivated();
       } else {
         setError("Failed to verify local hardware requirements.");
       }
     } catch (err: any) {
-      setError(err?.response?.data?.detail || "Local activation failed.");
+      setError(err?.response?.data?.detail || "Local activation failed. Ensure backend is running.");
     } finally {
       setLoading(false);
     }
@@ -50,9 +68,16 @@ export function Activation({ onActivated }: ActivationProps) {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post("/api/activation/activate/owner-code", {
-        code: ownerCode.trim(),
-      });
+      let res;
+      try {
+        res = await axios.post("/api/activation/activate/owner-code", {
+          code: ownerCode.trim(),
+        });
+      } catch {
+        res = await axios.post("http://127.0.0.1:8000/api/activation/activate/owner-code", {
+          code: ownerCode.trim(),
+        });
+      }
       if (res.data.activated) {
         onActivated();
       } else {
@@ -144,9 +169,18 @@ export function Activation({ onActivated }: ActivationProps) {
         {mode === "local" && (
           <div className="space-y-5">
             <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-2.5">
-              <h4 className="text-2xs font-semibold text-text-tertiary uppercase tracking-wider">
-                Detected Hardware Profile
-              </h4>
+              <div className="flex justify-between items-center">
+                <h4 className="text-2xs font-semibold text-text-tertiary uppercase tracking-wider">
+                  Detected Hardware Profile
+                </h4>
+                <button
+                  type="button"
+                  onClick={fetchFingerprint}
+                  className="text-2xs text-copper hover:underline cursor-pointer font-medium"
+                >
+                  ↻ Refresh
+                </button>
+              </div>
               <div className="flex justify-between items-center text-xs py-1 border-b border-border-subtle">
                 <span className="text-text-secondary">GPU Device</span>
                 <span className="font-medium text-text">
