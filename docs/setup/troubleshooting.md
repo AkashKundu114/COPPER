@@ -72,3 +72,31 @@
 1. View diagnostic trace in `audit_log` table or Security Center UI.
 2. Check if local LLM context length was exceeded (switch task model to 32k context model).
 3. Confirm script execution permissions if running local CLI tool.
+
+---
+
+## 4. Hardware Licensing & Storage Diagnostics
+
+### Issue 4.1: GPU Not Detected / Code Stuck on "Detecting..." or "COPPER-..."
+**Symptom:** On initial launch, the Activation screen shows GPU Device as `Detecting...` and Hardware Code as `COPPER-...`.
+**Cause:** 
+1. The FastAPI backend is not running on `127.0.0.1:8000`.
+2. The Vite dev server was accessed directly without routing `/api` to the backend.
+**Resolution:**
+1. Launch both services together using `.\scripts\start_copper.bat` (or start `.\scripts\start_backend.bat` before `.\scripts\start_frontend.bat`).
+2. Verify Vite dev proxy in `frontend/vite.config.ts` forwards `/api` to `http://127.0.0.1:8000`.
+3. Click the **"↻ Refresh"** button on the Activation screen once the backend is initialized.
+
+### Issue 4.2: Master Activation Code vs. Remote GPU Sharing
+**Symptom:** User wonders if sharing their master activation code (`COPPER-XXXX-XXXX-XXXX`) connects remote peers to their GPU.
+**Clarification:**
+- The activation code is an **offline DRM licensing gate** only; it validates offline software authorization without cloud accounts.
+- It **does not** stream or share physical GPU kernels over the network. The recipient's machine runs models locally using their own hardware.
+- To share inference over the network, expose the local Ollama daemon (`OLLAMA_HOST=0.0.0.0:11434`) over a secure mesh VPN (e.g., Tailscale) and configure `OLLAMA_BASE_URL` on the client.
+
+### Issue 4.3: Low Disk Space on C: or D: Drive
+**Symptom:** System warning on low disk space due to temp build artifacts or duplicate model files.
+**Resolution:**
+1. **C: Drive Temp Cleanup:** Clear `%LOCALAPPDATA%\Temp` and run `cleanmgr.exe /d C:`.
+2. **D: Drive Model Deduplication:** C.O.P.P.E.R. models are managed directly via Ollama (`D:\Ollama\Models\blobs`). Any standalone `.gguf` copies under `ai-models/core` or `ai-models/subagents` are redundant and can be removed without impacting Ollama or runtime operations.
+

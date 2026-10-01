@@ -56,22 +56,29 @@ cd ..
 
 ## Running the Application
 
-### Option A: 1-Click Launch (Windows Dev Environment)
+### Option A: 1-Click Root Launchers (Windows Dev Environment)
 ```powershell
-.\scripts\dev\start_dev.bat
+# 1-Click Complete Startup (Backend + Frontend + App Window):
+.\scripts\start_copper.bat
+
+# Dedicated individual service launchers:
+.\scripts\start_backend.bat     # Launches FastAPI Backend on 127.0.0.1:8000
+.\scripts\start_frontend.bat    # Launches Vite Frontend on localhost:5173
+.\scripts\stop_copper.bat       # Cleanly stops all running COPPER processes
 ```
-*Launches the FastAPI backend on port 8000 and opens the Electron Standalone Desktop application.*
 
 ### Option B: Manual Multi-Terminal Startup
 
 **Terminal 1 — FastAPI Backend:**
 ```bash
-python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
+python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload
 ```
 
-**Terminal 2 — Electron Desktop App:**
+**Terminal 2 — Frontend Dev Server / Desktop App:**
 ```bash
 cd frontend
+npm run dev           # Vite dev server (proxies /api to 127.0.0.1:8000)
+# or for native electron window:
 npm run desktop
 ```
 

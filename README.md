@@ -362,7 +362,7 @@ To protect sovereignty without tethering to cloud authentication servers, C.O.P.
    ```text
    COPPER-033D-EE4E-C150
    ```
-   *(Validated against the embedded SHA-256 hash `71a81efef1517110a12be96f5ab37ab0be2d41c782c83bd58aa9d7719a0ebb8b` without requiring internet access).*
+   *(Validated against the embedded SHA-256 hash `71a81efef1517110a12be96f5ab37ab0be2d41c782c83bd58aa9d7719a0ebb8b` without requiring internet access. The access code functions as an offline DRM gate to authorize local execution; it does not network-stream or bridge physical GPU hardware).*
 3. **Owner CLI Generator:** Run `python scripts/generate_owner_code.py` to inspect hardware and generate fresh access hashes.
 
 ---
@@ -432,10 +432,15 @@ python backend/eval/benchmark.py
 
 ### 3. Launch Desktop Application (1-Click)
 ```bash
-# Windows 1-Click Launch:
-.\scripts\dev\start_dev.bat
+# Windows 1-Click Launch (Backend + Frontend + App Window):
+.\scripts\start_copper.bat
 
-# Or run frontend desktop dev server:
+# Dedicated service control:
+.\scripts\start_backend.bat     # FastAPI backend on 127.0.0.1:8000
+.\scripts\start_frontend.bat    # Vite dev server on localhost:5173
+.\scripts\stop_copper.bat       # Cleanly stop all processes
+
+# Or run manual dev server:
 cd frontend
 npm install
 npm run desktop

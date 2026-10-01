@@ -6,18 +6,25 @@ Tailored for modern hardware with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9*
 
 ## 1. Model Store Architecture & Manifest
 
-All models reside under the local [`ai-models/`](./) directory, orchestrated dynamically via [`ai-models/models_manifest.json`](./models_manifest.json):
+C.O.P.P.E.R. operates on a clean **Hybrid Model Architecture**:
 
-```
-ai-models/
-├── core/                  # 12B–14B Heavy Cognitive Models (ATLAS, VULCAN, PROMETHEUS, SCRIBE, DAEMON)
-├── subagents/             # 6 Resident Mini Reflex Models (AEGIS, MERCURY, FORGE, WARDEN, CRUCIBLE, CHRONOS, ORACLE)
-├── vision/                # Desktop Vision Model (ARGUS / Qwen2.5-VL 3B)
-├── image/                 # 100% Offline 1-Step Local Diffusion (PICASSO / SD-Turbo)
-├── embeddings/            # ChromaDB Dense Vectors (nomic-embed-text, ModernBERT, BGE Reranker)
-├── audio/                 # Kokoro-82M ONNX TTS, Silero VAD v5, Whisper Large v3 Turbo
-└── wakeword/              # openWakeWord Acoustic Models (hey_copper.onnx, embedding_model.onnx)
-```
+1. **LLM & Reasoning Models (Managed by Ollama Engine):**
+   - Core cognitive models (ATLAS 14B, VULCAN 14B, PROMETHEUS 14B, SCRIBE 14B, DAEMON 12B) and resident mini models (AEGIS, MERCURY, FORGE, WARDEN) are managed through the local **Ollama daemon** (`http://localhost:11434`).
+   - Weights reside in the active Ollama library directory (e.g., `D:\Ollama\Models\blobs`), eliminating redundant duplicate GGUF copies in workspace folders.
+   - Dynamic routing and VRAM lifecycle tiering are declared in [`ai-models/models_manifest.json`](../../ai-models/models_manifest.json).
+
+2. **Multimodal, Voice & Vision Assets (Stored in `ai-models/`):**
+   Non-Ollama specialized models run directly via ONNX / Torch runtimes and are housed in `ai-models/`:
+   ```
+   ai-models/
+   ├── models_manifest.json   # Central Agent Registry & Ollama Tag Mapping
+   ├── audio/                 # Kokoro-82M ONNX TTS, Silero VAD v5, Whisper Large v3 Turbo
+   │   ├── tts/               # Kokoro & Piper neural voice models
+   │   ├── vad/               # Silero voice activity detection
+   │   └── whisper/           # Whisper speech-to-text models
+   ├── image/                 # SD-Turbo safetensors offline 1-step diffusion
+   └── wakeword/              # "Hey Copper" openWakeWord ONNX acoustic models
+   ```
 
 ---
 
