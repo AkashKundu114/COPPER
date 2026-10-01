@@ -33,7 +33,7 @@ Open [`copper_architecture.html`](copper_architecture.html) in your browser (e.g
 
 ```mermaid
 flowchart TD
-    subgraph ClientTier["1. Desktop Client Shell (Electron 30 + React 19)"]
+    subgraph ClientTier["1. Desktop Client Shell (Electron 44 + React 19)"]
         direction TB
         Electron["Electron Shell (electron-main.cjs)<br/>• contextIsolation: true<br/>• nodeIntegration: false"]
         Preload["Preload Bridge (preload.cjs)<br/>• Whitelisted IPC Invocations<br/>• Clamped Parameters"]

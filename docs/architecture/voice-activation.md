@@ -1,8 +1,7 @@
 # C.O.P.P.E.R. — Wake-Word Voice Activation & Tiered Inference Master Prompt
 
-**Status:** New engineering spec (Phase 2.5, sits between "Guardian Engine & Zero-Trust Firewall" and "Multi-Device Sync" on the roadmap).
+**Status:** Implemented (v3.0.0)  
 **Supersedes:** Nothing — this is additive. It does not change the Guardian, Data Firewall, or Epistemic Memory specs.
-**Companion doc:** `COPPER_CONSCIOUSNESS_MASTER_PROMPTS.md` (this spec assumes that runtime system prompt is already in place; the Gatekeeper persona below is a *sibling* of COPPER, not a replacement).
 
 ---
 
@@ -190,7 +189,7 @@ The existing `/api/v1/chat/ws/{session_id}` event sequence (`copper_thinking` �
 
 1. Add `openwakeword`, `webrtcvad`, `python-docx`, `python-pptx`, `openpyxl`, `reportlab` to `backend/requirements.txt`.
 2. Land `model_tier_manager.py`, `wake_word_service.py`, `document_agent.py`, and the `wake.py` routes (all included in this patch).
-3. Update `constants.py` (`AgentType.DOCUMENT`), `agent_router.py` (SCRIBE keywords), `chat_service.py` (`AGENT_MAP` entry), `config.py` (Gatekeeper/keep-alive settings) — see `INTEGRATION_CHECKLIST.md`.
+3. Update `constants.py` (`AgentType.DOCUMENT`), `agent_router.py` (SCRIBE keywords), `chat_service.py` (`AGENT_MAP` entry), `config.py` (Gatekeeper/keep-alive settings).
 4. Update `ai-models/models_manifest.json` with the `gatekeeper` and `subagents.document_drafting` entries (included in this patch).
 5. Ship with the whisper-tiny fallback wake listener enabled by default (`WAKE_WORD_ENGINE=whisper_fallback`).
 6. Train `hey_copper.onnx` via the openWakeWord notebook, drop it in `ai-models/wakeword/`, flip `WAKE_WORD_ENGINE=openwakeword` in settings once validated.

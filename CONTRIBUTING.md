@@ -81,10 +81,10 @@ cd ..
 Before opening a pull request, you **MUST** pass all quality gates locally:
 
 ```bash
-# Gate 1: Full Pytest Test Suite (All 508 backend tests must pass)
+# Gate 1: Full Pytest Test Suite (All 573 backend tests must pass)
 python -m pytest tests/ -v
 
-# Gate 2: Frontend Unit Tests (All 38 Vitest tests must pass)
+# Gate 2: Frontend Unit Tests (All 41 Vitest tests must pass)
 cd frontend && npm run test && cd ..
 
 # Gate 3: Benchmark Evaluation Suite (100% Routing & Guardian accuracy across 1,740 samples)
@@ -117,4 +117,3 @@ cd frontend && npx tsc -b --noEmit && cd ..
 3. **Pass all Quality Gates** locally.
 4. **Push to your fork** and submit a Pull Request to `main`.
 5. **Link relevant issues** in the PR description (e.g., `Closes #42`).
-

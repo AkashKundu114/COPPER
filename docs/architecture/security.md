@@ -7,8 +7,8 @@ This document details the security architecture, Data Firewall rules, privacy cl
 ## 1. Zero-Trust Data Privacy Philosophy
 
 C.O.P.P.E.R. operates under a **Zero-Trust Local First Privacy Model**:
-1. All user prompts and local files remain private within the local environment by default.
-2. Local inference via Ollama is prioritized.
+1. 100% offline execution is the default — all user prompts, local files, and system interactions remain private within the local environment without external network calls.
+2. Local offline inference (quantized GGUF models via llama-cpp-python / local runtimes) is the default; COPPER does not rely on Ollama cloud or remote services for standard operation.
 3. If cloud offloading is explicitly requested or required due to model capability limits, no payload leaves the machine without passing through the **Data Firewall**.
 4. All external API transactions land in the human-readable **Security Center Audit Log**, featuring one-click export and instant permanent deletion (`delete-all`).
 
@@ -18,7 +18,7 @@ C.O.P.P.E.R. operates under a **Zero-Trust Local First Privacy Model**:
 
 ![Zero-Trust Data Firewall Flow](../images/data_firewall_pipeline.png)
 
-`	ext
+```text
                                 +---------------------------+
                                 | User Prompt / File Input  |
                                 +-------------+-------------+

@@ -8,7 +8,7 @@
 +-----------------------------------------------------------------------------------+
 | PHASE 1: CORE ENGINE & RECONCILIATION (Q3 2026) - [COMPLETED]                     |
 | - FastAPI Backend Architecture & SQLite/Postgres DB Models (13 models)             |
-| - 30-Agent Radial Neural Visualizer UI with Molten Copper Theme                   |
+| - 12 Active Agent + 5 Roadmap Neural Visualizer UI with Molten Copper Theme       |
 | - Epistemic Learner (Fact/Observation/Hypothesis Classification)                  |
 | - 257 REST API Endpoints across 50 Route Modules                                  |
 +-----------------------------------------------------------------------------------+
@@ -19,7 +19,7 @@
 | - Guardian Levels 0-3 Alignment Engine & GuardianChallengeModal                   |
 | - Data Firewall PII Scanner, Token Masking, and Security Center Audit Log         |
 | - Self-Healing Retry Loop & Automated Fallbacks                                   |
-| - 523 Pytest Tests (100% Passing), Full CI/CD Pipeline (9 GitHub Workflows)       |
+| - 573 Pytest Tests (100% Passing), Full CI/CD Pipeline (9 GitHub Workflows)       |
 +-----------------------------------------------------------------------------------+
                                         |
                                         v
@@ -38,7 +38,7 @@
 | - Chaos Harness: 55/55 Adversarial Fuzzing Payloads Intercepted                   |
 | - Dynamic VRAM Pager & WAL Crash-Consistent State Recovery                        |
 | - Full Observability Stack (Prometheus, Grafana, Loki, Tempo)                     |
-| - 561 Total Tests (523 Backend + 38 Frontend, 100% Pass Rate), ~59,800 LOC       |
+| - 614 Total Tests (573 Backend + 41 Frontend, 100% Pass Rate), ~60,500 LOC       |
 +-----------------------------------------------------------------------------------+
                                         |
                                         v
@@ -61,5 +61,5 @@
 | **v1.1.0** | Aug 2026 | Comprehensive test suite, CI/CD quality gates, ruff + oxlint, PR templates. | **Delivered** |
 | **v1.2.0** | Sep 2026 | TFP-Router (<0.10ms / ~9,856 QPS), UMF-EDR & PW-EBR epistemic memory, DFM-Guard adaptive friction, formal evaluation suites. | **Delivered** |
 | **v2.5.0** | Sep 2026 | Acoustic wake-word, Whisper Large v3 Turbo, Kokoro-82M TTS, SD-Turbo image studio, ambient intelligence layer. | **Delivered** |
-| **v3.0.0** | Sep 2026 | 14B Sovereign Core Fleet, chaos engineering (100% fuzzing intercept), VRAM pager, WAL crash recovery, 561 tests (100% passing), observability stack. | **Delivered** |
+| **v3.0.0** | Sep 2026 | 14B Sovereign Core Fleet, chaos engineering (100% fuzzing intercept), VRAM pager, WAL crash recovery, 573 backend + 41 frontend (614 total) tests (100% passing), observability stack. | **Delivered** |
 | **v4.0.0** | Q1 2027 | Encrypted multi-device sync, LoRA fine-tuning, mobile companion app. | **Planned** |

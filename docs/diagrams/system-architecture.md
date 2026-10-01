@@ -21,14 +21,14 @@ graph TD
         Router --> Guardian[Guardian Alignment Engine Levels 0-3]
         Guardian --> Firewall[Data Firewall PII Scanner]
         Firewall --> Orchestrator[Agent Orchestrator Pipeline]
-        Orchestrator --> Agents[10 Specialized Agents + 7 Micro-Subagents]
+        Orchestrator --> Agents[12 Specialized Agent Types + 7 Micro-Subagents]
         Orchestrator --> SelfHealing[Self-Healing Retry Loop]
         Orchestrator --> Learner[Epistemic Memory Learner]
     end
     
     subgraph Services ["Inference Services"]
-        Orchestrator -->|Local Protocol| Ollama[Ollama Local Engine Llama 3 / Qwen]
-        Firewall -->|Encrypted Cloud Egress| CloudLLM[OpenAI / Claude APIs]
+        Orchestrator -->|Local Protocol (100% Offline Default)| Ollama[Ollama Local Engine Llama 3 / Qwen]
+        Firewall -->|Optional Cloud Fallback (Disabled by Default)| CloudLLM[OpenAI / Claude APIs (Optional Fallback)]
     end
     
     subgraph Persistence ["Data Stores"]

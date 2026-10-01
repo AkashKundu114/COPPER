@@ -86,7 +86,7 @@ The desktop application is built on **Electron 44** with strict in-app navigatio
 │ Research     │                                                         │
 │ Automations  │    48 React Components across 14 Subsystems             │
 │ Memory       │    84 TypeScript/React Source Files                      │
-│ Agents       │    24,224 Frontend LOC                                   │
+│ Agents       │    ~24,300 Frontend LOC                                  │
 │ Activity     │                                                         │
 │ Insights     │                                                         │
 │ Benchmarks   │                                                         │
@@ -111,7 +111,7 @@ Evaluates instructions against schedule commitments, energy fatigue, and long-te
 ### 4.2 Cascaded Multi-Tier Router
 1. **Stage 0 (Exact & Token Similarity Memory):** Instant retrieval (< 0.05ms) from dynamically cached exemplars.
 2. **Stage 1 (High-Precision Regex & Pattern Suppression):** Deterministic routing for coding keywords, system administration, calendar scheduling, and media queries.
-3. **Stage 2 (Micro-LLM Intent Classifier):** Llama-3.2-1B / Qwen2.5-0.5B fallback for complex conversational nuances.
+3. **Stage 2 (Micro-LLM Intent Classifier):** Qwen2.5-1.5B (MERCURY) / Qwen2.5-0.5B fallback for complex conversational nuances.
 
 ### 4.3 Live Telemetry & Hardware Profiler
 - Polls CPU package temps, 8GB VRAM allocation splits, GPU hotspots, and system RAM usage dynamically via `psutil` and simulated hardware fallbacks.

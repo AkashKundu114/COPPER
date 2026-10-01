@@ -35,7 +35,7 @@ This document specifies the 3-layer state architecture (Live `state.json`, Relat
 
 ```json
 {
-  "version": "1.0.0",
+  "version": "3.0.0",
   "last_updated": "2026-08-12T17:40:00Z",
   "active_session": {
     "session_id": "sess_891823",

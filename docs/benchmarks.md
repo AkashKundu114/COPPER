@@ -16,7 +16,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 | **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.1 ms** | **~9,856 QPS** | 0 |
 | **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.008 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest & Vitest Suite** | 524 Backend + 41 Frontend | **100.0% / 100%** | **565 Total** | **524 + 41 Passing** | — | 0 |
+| **Pytest & Vitest Suite** | 573 Backend + 41 Frontend | **100.0% / 100%** | **614 Total** | **573 + 41 Passing** | — | 0 |
 
 ---
 
@@ -38,7 +38,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 ### VRAM Budget Allocation (NVIDIA RTX 5060 — 8.0 GB Total)
 ![VRAM Memory Allocation](images/vram_memory_allocation.png)
 
-- **Primary Core Model (7B/8B Q4_K_M Abliterated):** ~4.07 – 4.58 GB
+- **Primary Core Model (7B/8B Q4_K_M Abliterated / 14B IQ3_XS Active Slot):** ~4.07 – 5.95 GB
 - **Offline Image Studio (SD-Turbo Safetensors):** ~4.86 GB (transient on-demand slot)
 - **Active Micro-Subagent (1B-1.5B Q4_K_M):** ~0.94 – 1.09 GB
 - **KV Context Cache (8,192 token window):** ~0.90 GB
@@ -133,13 +133,18 @@ The distilled reasoning engine explores counter-factual trade-offs step-by-step 
 
 ### Device Compatibility:
 - **Processor:** AMD Ryzen 9 8940HX (16 Cores, 32 Threads) handles all background tokenization, regex filtering, SQLite persistence, and Whisper STT with $< 4\%$ CPU utilization.
-- **GPU:** NVIDIA GeForce RTX 5060 Laptop (8GB VRAM) effortlessly accommodates the **4.5GB Core Model + 1.1GB Subagent + 0.9GB Context Cache**, leaving **1.3GB of headroom** for zero thermal throttling.
+- **GPU:** NVIDIA GeForce RTX 5060 Laptop (8GB VRAM) effortlessly accommodates the **14B Sovereign Core Model (multiplexed via dynamic VRAM Pager) / 4.5GB Core Model + 1.1GB Subagent + 0.9GB Context Cache**, leaving **1.3GB of headroom** for zero thermal throttling.
 
 ### Architectural Specialization Summary:
-1. **Chat & Orchestration:** `Meta-Llama-3.1-8B-Instruct` (Empathetic, structured, conversational).
-2. **Software Engineering:** `Qwen2.5-Coder-7B-Instruct` (Precise, modern, zero-syntax-error coding).
-3. **Deep Inquiry & Fact Verification:** `DeepSeek-R1-Distill-Qwen-7B` (Exhaustive causal reasoning).
-4. **Instant Intent Classification:** `DynamicRoutingMemory` + `Llama-3.2-1B` (Sub-0.05ms dispatch).
+
+> [!NOTE]
+> **14B Sovereign Core Fleet Upgrade (v3.0.0):** In v3.0.0, COPPER upgrades the primary heavy cognitive tier from initial 7B/8B candidates to a specialized 14B Sovereign Core fleet (quantized losslessly with IQ3_XS, dynamically multiplexed via the VRAM Pager within the 8GB VRAM envelope):
+> 1. **Chat & Orchestration (ATLAS / C.O.P.P.E.R.):** `Qwen2.5-14B-Instruct` (IQ3_XS, 5.95 GB) — Empathetic, structured, conversational multi-turn orchestration (upgraded from `Meta-Llama-3.1-8B-Instruct`).
+> 2. **Software Engineering (VULCAN):** `Qwen2.5-Coder-14B-Instruct-abliterated` (IQ3_XS, 6.38 GB) — Full-stack code architecture, sandbox execution, zero syntax errors (upgraded from `Qwen2.5-Coder-7B-Instruct`).
+> 3. **Deep Inquiry & Reasoning (PROMETHEUS):** `DeepSeek-R1-Distill-Qwen-14B` (IQ3_XS, 6.38 GB) — Exhaustive causal reasoning, logic verification, and formal proofs (upgraded from `DeepSeek-R1-Distill-Qwen-7B`).
+> 4. **Academic Synthesis & Documentation (SCRIBE):** `Phi-4-14B` (IQ3_XS, 5.50 GB) — Multi-source research synthesis, technical documentation, and Markdown/LaTeX reporting.
+> 5. **Tool & Agent Execution (DAEMON):** `Mistral-Nemo-12B-Instruct` (IQ3_XS, 5.80 GB) — Deterministic JSON tool invocation, CLI system automation, and workflow execution.
+> 6. **Instant Intent Classification (Reflex Tier):** `DynamicRoutingMemory` + `Llama-3.2-1B` / `SmolLM2-1.7B` / `Qwen2.5-Coder-3B` resident micro-models (sub-0.05ms dispatch).
 
 ---
 

@@ -9,7 +9,7 @@ C.O.P.P.E.R/
 ├── backend/
 │   ├── app/
 │   │   ├── ai/                      # AI Core & Agent Subsystems
-│   │   │   ├── agents/              # 10 Specialized Agents + 7 Micro-Subagent configurations & implementations
+│   │   │   ├── agents/              # 12 Specialized Agent Types + 7 Micro-Subagent configurations & implementations
 │   │   │   ├── llm/                 # Ollama & OpenAI provider connectors
 │   │   │   ├── memory/              # Epistemic learner & ChromaDB RAG logic
 │   │   │   └── orchestration/       # Pipeline: Route -> Animate -> Respond -> Remember
@@ -29,7 +29,7 @@ C.O.P.P.E.R/
 │   │   └── main.py                  # FastAPI application entrypoint
 │   └── requirements.txt             # 44 Python dependencies
 ├── frontend/
-│   ├── src/                         # 84 source files, 24,224 LOC
+│   ├── src/                         # 84 source files, ~24,300 LOC
 │   │   ├── components/              # 48 React components across 14 subsystems
 │   │   │   ├── brain/               # NeuralBrain.tsx (SVG radial ganglia map)
 │   │   │   ├── chat/                # ChatDock, GuardianChallengeModal, SpeakingBar, TaskGraphVisualizer
@@ -44,7 +44,7 @@ C.O.P.P.E.R/
 │   │   └── App.tsx                  # Core App Shell & router setup
 │   ├── tailwind.config.js           # Molten Copper theme configuration
 │   └── package.json                 # 31 dependencies (React 19, Vite 8, Electron 44, Tailwind 4)
-├── tests/                           # 508 backend tests (73 files) + 38 frontend tests (5 files)
+├── tests/                           # 573 backend + 41 frontend (614 total)
 ├── ai-models/                       # ~47 GB, 34 GGUF/ONNX model files
 ├── infrastructure/                  # Docker, Kubernetes, Nginx, Prometheus, Grafana, Loki, Tempo
 └── docs/                            # 26 technical documentation files

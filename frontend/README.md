@@ -14,7 +14,7 @@ The frontend is a modern, high-performance web application packaged as a native 
 
 ## Architecture & Layout
 
-The UI is built around a persistent 13-section left sidebar and a dynamic workspace:
+The UI is built around a persistent 16-item navigation across 3 groups (Workspace, Productivity, Intelligence) and a dynamic workspace:
 
 - **src/pages/ (18 Views):** 
   - TodayView.tsx, DashboardView.tsx, ActivityView.tsx
@@ -27,7 +27,7 @@ The UI is built around a persistent 13-section left sidebar and a dynamic worksp
 
 ## The Neural Brain Visualizer (src/components/brain/)
 
-A core feature of the UI is the **30-agent radial SVG ganglia map**. 
+A core feature of the UI is the **12 active agent + 5 roadmap neural topology**. 
 - It uses deterministic layout math (guaranteeing a minimum of 49px spacing between nodes) rather than unpredictable force-directed physics.
 - The map animates organically with CSS orbital rotations and breathing opacities.
 - When an agent is invoked via the FastAPI backend, WebSockets stream `copper_thinking`, `route_decision`, and `agent_active` events to trigger electric "molten wire" animations in real-time.
@@ -58,7 +58,7 @@ npm run dist
 The frontend enforces strict quality gates via OxLint (116 rules across 91 files), Vitest, and Playwright:
 
 ```bash
-# Run 38 unit tests with component coverage (5 test suites)
+# Run 41 unit tests across 6 test suites with component coverage
 npx vitest run
 
 # Run with v8 coverage report (28.3% stmts overall, 100% key components)
@@ -110,4 +110,3 @@ The C.O.P.P.E.R. frontend interface draws architectural and visual design inspir
 
 8. **Sensor CRT & Tactical Telemetry**:
    - Subtle scanline texture and air-gapped system indicators for tactical workstation monitoring.
-

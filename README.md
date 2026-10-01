@@ -23,7 +23,7 @@
 ## Table of Contents
 - [Overview & Project Independence](#overview--project-independence)
 - [The 3-Tier Multi-Agent Routing Hierarchy](#the-3-tier-multi-agent-routing-hierarchy)
-- [Ambient Intelligence & Continuous Context (v2.5)](#ambient-intelligence--continuous-context-v25)
+- [Ambient Intelligence & Continuous Context](#ambient-intelligence-companion--knowledge-architecture)
 - [Campaign Intelligence Agent & DeltaX Ad-Tech Suite](#campaign-intelligence-agent--deltax-ad-tech-suite)
 - [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
 - [Safety Calibration](#safety-calibration)
@@ -158,9 +158,9 @@ like DeltaX Assistant for AI-driven campaign monitoring and optimization.
 
 ---
 
-## Ambient Intelligence, Companion & Knowledge Architecture (v2.5)
+## Ambient Intelligence, Companion & Knowledge Architecture
 
-C.O.P.P.E.R. v2.5 introduces an autonomous ambient layer that runs alongside daily engineering workflows without intrusion:
+C.O.P.P.E.R. includes an autonomous ambient layer that runs alongside daily engineering workflows without intrusion:
 
 ### 1. Frontend Command Views
 - **Research Dossier Hub (`/research`):** Autonomous multi-step deep research orchestrator with live step-by-step progress tracking, Markdown dossier viewer, source citations table, and report export.
@@ -355,7 +355,7 @@ The DFM-Guard friction coefficients were calibrated using grid search optimizati
 
 ## GPU Hardware Licensing & Master Access Gate
 
-To protect sovereignty without tethering to cloud authentication servers, C.O.P.P.E.R. v2.1 implements a **Dual-Mode Offline Hardware Authorization Gate** (`backend/app/core/gpu_activation.py`):
+To protect sovereignty without tethering to cloud authentication servers, C.O.P.P.E.R. implements a **Dual-Mode Offline Hardware Authorization Gate** (`backend/app/core/gpu_activation.py`):
 
 1. **Option A — Local GPU Fingerprint:** Automatically detects dedicated NVIDIA GPU hardware (`nvidia-smi`), VRAM capacity, CPU, and machine UUID to generate a deterministic local license `COPPER-XXXX-XXXX-XXXX` persisted to `~/.copper/activation.json`.
 2. **Option B — Owner Master Access Code:** When sharing the executable with colleagues or interviewers, recipients can input Akash's authorized master code:

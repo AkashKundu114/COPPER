@@ -4,7 +4,7 @@
 
 ## 1. System Scope & Technical Objectives
 
-This Technical Requirements Document specifies the operational criteria, performance targets, interface contracts, self-healing retries, and desktop/web packaging requirements for **C.O.P.P.E.R.**
+This Technical Requirements Document specifies the operational criteria, performance targets, interface contracts, self-healing retries, and desktop/web packaging requirements for **C.O.P.P.E.R.** Default operational mode is **100% offline local execution** across all reasoning, inference, and memory pipelines, with optional cloud offload available strictly as a user-configured fallback.
 
 ---
 
@@ -13,7 +13,7 @@ This Technical Requirements Document specifies the operational criteria, perform
 | Metric | Target SLA | Degraded Threshold | Fallback Action |
 | :--- | :--- | :--- | :--- |
 | **Local LLM First Token (TTFT)** | $< 800\text{ ms}$ | $> 2500\text{ ms}$ | Warm up model cache / stream placeholder thoughts |
-| **Local LLM Throughput** | $> 25\text{ tokens/sec}$ | $< 10\text{ tokens/sec}$ | Offer cloud offload via Data Firewall |
+| **Local LLM Throughput** | $> 25\text{ tokens/sec}$ | $< 10\text{ tokens/sec}$ | Adjust quantization/KV cache; optional user-opt-in cloud offload via Data Firewall (100% offline default) |
 | **Agent Routing Speed** | $< 50\text{ ms}$ | $> 150\text{ ms}$ | Fall back to keyword regex router |
 | **Epistemic Memory Retrieval** | $< 35\text{ ms}$ | $> 100\text{ ms}$ | Serve cached core user profile facts |
 | **WebSocket Event Latency** | $< 20\text{ ms}$ | $> 75\text{ ms}$ | Re-establish socket ping loop |
@@ -27,7 +27,7 @@ This Technical Requirements Document specifies the operational criteria, perform
 All endpoints conform to OpenAPI 3.0 standards and return JSON structures using standard HTTP status codes. The API encompasses **257 endpoints across 50 route modules**, backed by **13 SQLAlchemy database models**.
 
 - `POST /api/v1/chat/message`: Send synchronous user message.
-- `GET /api/v1/agents`: List all 30 orchestrated agents (10 specialized primary agents + subagents), active status, familiarity scores, and orbital tiers.
+- `GET /api/v1/agents`: List all 12 active specialized agent types + 5 roadmap targets, active status, familiarity scores, and orbital tiers.
 - `POST /api/v1/agents/{id}/rollback`: Trigger immediate version rollback for specified agent.
 - `GET /api/v1/memory`: Fetch epistemic user facts, observations, and hypotheses.
 - `POST /api/v1/memory/reset`: Clear all epistemic memories and vector embeddings.
@@ -42,7 +42,7 @@ Real-time bi-directional streaming for text generation and visualizer node state
   "type": "user_message",
   "content": "Plan a refactor of the database models and check for performance bottlenecks.",
   "session_id": "sess_991823",
-  "allow_cloud_fallback": true
+  "allow_cloud_fallback": false
 }
 ```
 
@@ -82,8 +82,8 @@ Real-time bi-directional streaming for text generation and visualizer node state
                  |                                                 |
                  v                                                 v
   +------------------------------+                  +------------------------------+
-  |    Re-execute Task           |                  |  Fallback to Cloud LLM       |
-  +------------------------------+                  |  via Data Firewall           |
+  |    Re-execute Task           |                  |  Optional Cloud Fallback     |
+  +------------------------------+                  |  via Firewall (Offline Def.) |
                                                     +--------------+---------------+
                                                                    |
                                                                    v

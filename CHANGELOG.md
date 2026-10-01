@@ -19,13 +19,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Chaos Engineering, Adversarial Reliability & Sovereign 14B Fleet
 
-> **Engineered** production-grade resilience and fault-tolerant local multi-agent operation **as measured by** 100.0% adversarial fuzzing threat interception (55/55 attacks blocked), zero CUDA OOM crashes under concurrency thrashing, 100% WAL crash recovery, and 561 passing tests (523 backend + 38 frontend, 100% pass rate), **by developing** a comprehensive Chaos Harness (`backend/eval/chaos_harness.py`), dynamic VRAM pager eviction algorithms, and append-only write-ahead log state recovery.
+> **Engineered** production-grade resilience and fault-tolerant local multi-agent operation **as measured by** 100.0% adversarial fuzzing threat interception (55/55 attacks blocked), zero CUDA OOM crashes under concurrency thrashing, 100% WAL crash recovery, and 614 passing tests (573 backend + 41 frontend, 100% pass rate), **by developing** a comprehensive Chaos Harness (`backend/eval/chaos_harness.py`), dynamic VRAM pager eviction algorithms, and append-only write-ahead log state recovery.
 
 ### Added
 - **Chaos Engineering & Adversarial Fuzzing Harness:** Evaluates system resilience across 55 mutated payloads testing evasion techniques against `DFM-Guard` (zero-width spaces, homoglyph confusion, command chaining, Base64 obfuscation, and hypothetical roleplay jailbreaks), achieving a **100.0% threat catch sensitivity** (0 breaches).
 - **Dynamic VRAM Pager & Overcommit Defense:** Managed dynamic swap/eviction policy preserving physical VRAM ceilings under high-concurrency model swapping (29 dynamic evictions enforced with 0 CUDA OOM exceptions).
 - **Crash-Consistent WAL & State Rollback:** Append-only CRC32 write-ahead log ensuring 100% deterministic state recovery and orphaned file cleanup across simulated SIGKILL hard interrupts.
-- **Expanded Pytest Test Suite:** Expanded test suite to **523 collected backend tests** (100% passing) plus **38 frontend unit tests** (Vitest + React Testing Library) spanning AI routing, DAG concurrency, REST APIs (257 endpoints across 50 route modules), audio pipelines, epistemic memory, sandboxing, adversarial fuzzing, and accessibility.
+- **Expanded Pytest Test Suite:** Expanded test suite to **573 collected backend tests** (100% passing) plus **41 frontend unit tests** (Vitest + React Testing Library) spanning AI routing, DAG concurrency, REST APIs (257 endpoints across 50 route modules), audio pipelines, epistemic memory, sandboxing, adversarial fuzzing, and accessibility.
+- **Forge Design System UI Revamp:** Complete UI revamp migrating 16+ views to the Forge warm-noir design tokens (`#D4845A` copper accent, Inter Variable + Geist typography, collapsible 56px/240px sidebar, Framer Motion spring presets, and WCAG AA compliance).
 - **Full Observability Stack:** Integrated Prometheus metrics, Grafana dashboards, Loki/Promtail log aggregation, and Tempo distributed tracing (OpenTelemetry) across the 8-service Docker Compose stack.
 - **Combinatorial Benchmark Evaluation:** Automated evaluation across 1,740 total samples (1,390 routing cases and 350 Guardian safety triggers) yielding 97.77% routing precision, 98.78% weighted F1, and ~2,049.53 QPS combinatorial throughput.
 
