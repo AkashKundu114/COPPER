@@ -24,4 +24,14 @@ if ($vitePids) {
     }
 }
 
+# Terminate Electron desktop client
+$electronProcs = Get-Process electron -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "*C.O.P.P.E.R*" }
+if ($electronProcs) {
+    foreach ($ep in $electronProcs) {
+        Write-Host "[*] Terminating Electron Desktop PID: $($ep.Id)" -ForegroundColor Yellow
+        Stop-Process -Id $ep.Id -Force -ErrorAction SilentlyContinue
+    }
+}
+
 Write-Host "[+] All C.O.P.P.E.R. services stopped." -ForegroundColor Green
+

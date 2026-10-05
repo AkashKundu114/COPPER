@@ -24,50 +24,59 @@ def seed_default_agents(db):
             "Chat Agent",
             "General conversational companion and assistance",
             "1.0.0",
+            "qwen2.5:14b",
         ),
         (
             "coding",
             "AXIS (Coding Agent)",
             "Software engineering, debugging, and code generation",
             "1.0.0",
+            "qwen2.5-coder:14b",
         ),
         (
             "automation",
             "Automation Agent",
             "Desktop, file system, process, and window management",
             "1.0.0",
+            "mistral-nemo:12b",
         ),
         (
             "reminder",
             "Reminder Agent",
             "Time management, scheduling, alarms, and task tracking",
             "1.0.0",
+            "qwen2.5:1.5b",
         ),
         (
             "research",
             "Research Agent",
             "Deep inquiry, fact-checking, and literature lookup",
             "1.0.0",
+            "deepseek-r1:14b",
         ),
         (
             "vision",
             "Vision Agent",
             "Visual reasoning, OCR, screen inspection, and diagram parsing",
             "1.0.0",
+            "qwen2.5-vl:3b",
         ),
         (
             "planner",
             "Planner Agent",
             "Project roadmap decomposition and milestone planning",
             "1.0.0",
+            "phi4:14b",
         ),
     ]
 
-    for agent_id, name, desc, ver in agents:
+    for agent_id, name, desc, ver, model in agents:
         existing = db.query(AgentVersion).filter(AgentVersion.agent_id == agent_id).first()
         if not existing:
             av = AgentVersion(
                 agent_id=agent_id,
+                display_name=name,
+                model_name=model,
                 version=ver,
                 is_current=True,
                 status=AgentStatus.ACTIVE,

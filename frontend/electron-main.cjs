@@ -26,10 +26,12 @@ app.commandLine.appendSwitch("force_high_performance_gpu");
 // Force Chromium accessibility engine for screen readers (NVDA, JAWS, Narrator, VoiceOver)
 app.commandLine.appendSwitch("force-renderer-accessibility");
 
+let isPrimaryInstance = false;
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
+  isPrimaryInstance = true;
   app.on("second-instance", () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -315,8 +317,10 @@ app.whenReady().then(() => {
 });
 
 app.on("will-quit", () => {
-  globalShortcut.unregisterAll();
-  stopBackend();
+  if (isPrimaryInstance) {
+    globalShortcut.unregisterAll();
+    stopBackend();
+  }
 });
 
 app.on("window-all-closed", function () {

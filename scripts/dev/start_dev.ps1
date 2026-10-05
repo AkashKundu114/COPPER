@@ -13,16 +13,24 @@ Set-Location $ROOT_DIR
 $PYTHON_CMD = "python"
 if (Test-Path "$ROOT_DIR\.venv\Scripts\python.exe") {
     $PYTHON_CMD = "$ROOT_DIR\.venv\Scripts\python.exe"
+} elseif (Test-Path "$ROOT_DIR\backend\.venv\Scripts\python.exe") {
+    try {
+        & "$ROOT_DIR\backend\.venv\Scripts\python.exe" -c "import uvicorn" 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            $PYTHON_CMD = "$ROOT_DIR\backend\.venv\Scripts\python.exe"
+        }
+    } catch {}
 }
 
 Write-Host "[*] Python Environment: $PYTHON_CMD" -ForegroundColor Yellow
 
 # 2. Start Backend FastAPI Server
 Write-Host "[*] Launching FastAPI Backend on 127.0.0.1:8000 ..." -ForegroundColor Green
-$backendProcess = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT_DIR'; $PYTHON_CMD -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload" -PassThru
+$backendProcess = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT_DIR'; & '$PYTHON_CMD' -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload" -PassThru
 
 # 3. Start Electron Desktop Application
 Write-Host "[*] Launching C.O.P.P.E.R. Electron Desktop App ..." -ForegroundColor Green
-$desktopProcess = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT_DIR\frontend'; npm run desktop" -PassThru
+$desktopProcess = Start-Process powershell -ArgumentList "-NoExit", "-ExecutionPolicy", "Bypass", "-Command", "cd '$ROOT_DIR\frontend'; npm.cmd run desktop" -PassThru
 
 Write-Host "`n[+] C.O.P.P.E.R. Electron Desktop App initiated! No web browser used." -ForegroundColor Cyan
+
