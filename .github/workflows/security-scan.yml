@@ -3,8 +3,9 @@ name: Security Scan
 on:
   push:
     branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+  # pull_request trigger disabled to avoid automated PR security scan and SARIF upload
+  # pull_request:
+  #   branches: [main, develop]
   schedule:
     - cron: '0 3 * * *' # Nightly at 03:00 UTC
   workflow_dispatch:

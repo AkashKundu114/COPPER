@@ -3,8 +3,9 @@ name: CodeQL Advanced Security Analysis
 on:
   push:
     branches: ["main", "develop"]
-  pull_request:
-    branches: ["main"]
+  # pull_request trigger disabled to avoid automated PR security scan and metered AI charges
+  # pull_request:
+  #   branches: ["main"]
   schedule:
     - cron: '0 6 * * 1' # Weekly on Mondays at 06:00 UTC
   workflow_dispatch:
