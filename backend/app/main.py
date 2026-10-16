@@ -312,4 +312,9 @@ async def health():
     from app.ai.llm.ollama_client import ollama_client
 
     ollama_ok = await ollama_client.is_available()
-    return {"status": "healthy", "ollama": ollama_ok, "version": settings.APP_VERSION}
+    return {
+        "status": "healthy",
+        "ollama": ollama_ok,
+        "version": settings.APP_VERSION,
+        "demo_mode": settings.COPPER_DEMO,
+    }

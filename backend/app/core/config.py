@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "COPPER"
     APP_VERSION: str = "3.0.0"
     APP_ENV: str = "development"
+    COPPER_DEMO: bool = False
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
