@@ -1,59 +1,138 @@
 version: 2
 updates:
-  # Python backend dependencies
   - package-ecosystem: "pip"
     directory: "/backend"
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
-    labels: ["dependencies", "backend"]
+    labels:
+      - "dependencies"
+      - "backend"
     commit-message:
       prefix: "chore(deps)"
     groups:
-      python-minor-patch:
-        update-types: ["minor", "patch"]
+      python-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
-  # React/Vite frontend dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "root"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      python-root-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
-    labels: ["dependencies", "frontend"]
+    labels:
+      - "dependencies"
+      - "frontend"
     commit-message:
       prefix: "chore(deps)"
     groups:
-      npm-minor-patch:
-        update-types: ["minor", "patch"]
+      frontend-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
-  # GitHub Actions themselves
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-    labels: ["dependencies", "ci"]
+    labels:
+      - "dependencies"
+      - "ci"
     commit-message:
       prefix: "chore(ci)"
+    groups:
+      actions-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
-  # Backend container base images
   - package-ecosystem: "docker"
     directory: "/infrastructure/docker/backend"
     schedule:
       interval: "weekly"
       day: "monday"
-    labels: ["dependencies", "docker", "backend"]
+    labels:
+      - "dependencies"
+      - "docker"
+      - "backend"
     commit-message:
       prefix: "chore(docker)"
+    groups:
+      docker-backend:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
-  # Frontend container base images
   - package-ecosystem: "docker"
     directory: "/infrastructure/docker/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
-    labels: ["dependencies", "docker", "frontend"]
+    labels:
+      - "dependencies"
+      - "docker"
+      - "frontend"
     commit-message:
       prefix: "chore(docker)"
+    groups:
+      docker-frontend:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
