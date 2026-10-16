@@ -97,7 +97,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       aria-label="Top Bar Controls and Status"
       className="drag-region h-11 bg-surface-base/90 backdrop-blur-sm border-b border-border flex items-center justify-between px-3 md:px-4 z-20 select-none flex-shrink-0"
     >
-      {/* Left: Section Title & Repository context */}
+
       <div className="flex items-center gap-2.5 flex-shrink-0">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-copper" aria-hidden="true" />
@@ -116,7 +116,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
 
-      {/* Center: Command Palette Trigger */}
+
       <div className="flex items-center justify-center flex-1 max-w-xs md:max-w-sm px-2">
         <button
           onClick={() => {
@@ -136,9 +136,9 @@ export const TopBar: React.FC<TopBarProps> = ({
         </button>
       </div>
 
-      {/* Right: Telemetry & Actions */}
+
       <div className={`flex items-center gap-2 flex-shrink-0 ${isElectron ? "pr-36" : "pr-1 sm:pr-2"}`}>
-        {/* Local Clock */}
+
         <div
           className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-elevated border border-border-subtle font-mono text-[10px] whitespace-nowrap cursor-default"
           title={`Local: ${timeLocal} | UTC: ${timeUtc}`}
@@ -148,10 +148,10 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="text-copper font-medium">{timeLocal}</span>
         </div>
 
-        {/* Real-Time Ambient Cognitive Load */}
+
         <CognitiveStatusBadge />
 
-        {/* Audio SFX Toggle */}
+
         <button
           onClick={() => {
             const next = soundFX.toggleMute();
@@ -164,7 +164,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           {sfxMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
         </button>
 
-        {/* Smart Clipboard Drawer Toggle */}
+
         {onToggleClipboard && (
           <button
             type="button"
@@ -185,7 +185,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        {/* Profile / Side Drawer Toggle */}
+
         {onToggleDrawer && (
           <button
             type="button"

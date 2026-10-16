@@ -261,9 +261,6 @@ export const branchingAPI = {
   },
 };
 
-// ==========================================
-// Ambient Intelligence & Phase 1-5 API Layer
-// ==========================================
 
 export const ambientAPI = {
   getTimeline: (hours = 24) => api.get(`/ambient/timeline?hours=${hours}`),
@@ -642,5 +639,4 @@ export const campaignAPI = {
 };
 
 export default api;
-
 

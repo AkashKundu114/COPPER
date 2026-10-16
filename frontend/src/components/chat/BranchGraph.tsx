@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { type BranchItem } from "../../services/api";
 
 interface BranchGraphProps {
@@ -9,7 +9,7 @@ interface BranchGraphProps {
 }
 
 const COLORS = [
-  "text-accent-400", // Main
+  "text-accent-400", 
   "text-amber-400",
   "text-emerald-400",
   "text-rose-400",
@@ -17,7 +17,7 @@ const COLORS = [
 ];
 
 const STROKE_COLORS = [
-  "stroke-accent-400", // Main
+  "stroke-accent-400", 
   "stroke-amber-400",
   "stroke-emerald-400",
   "stroke-rose-400",
@@ -25,7 +25,7 @@ const STROKE_COLORS = [
 ];
 
 const FILL_COLORS = [
-  "fill-accent-400", // Main
+  "fill-accent-400", 
   "fill-amber-400",
   "fill-emerald-400",
   "fill-rose-400",
@@ -40,7 +40,7 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
 }) => {
   const [hoveredBranchId, setHoveredBranchId] = useState<string | null>(null);
 
-  // Sorting branches: main first, then by divergence index
+
   const sortedBranches = [...branches].sort((a, b) => {
     if (a.is_main) return -1;
     if (b.is_main) return 1;
@@ -52,14 +52,14 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
     branchLanes.set(b.branch_id, i);
   });
 
-  // Calculate layout parameters
+
   const Y_SPACING = 30;
   const X_SPACING = 40;
   const NODE_RADIUS = 5;
   const MARGIN_X = 20;
   const MARGIN_Y = 20;
 
-  // Find max messages count for the height
+
   const maxMessages = Math.max(...sortedBranches.map((b) => b.messages_count || 1), 5);
   const totalHeight = maxMessages * Y_SPACING + MARGIN_Y * 2;
   const totalWidth = Math.max(sortedBranches.length * X_SPACING + MARGIN_X * 2, 200);
@@ -80,31 +80,31 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
           role="img"
           aria-label="Conversation branch graph visualization"
         >
-          {/* Draw paths first so they appear under nodes */}
+
           {sortedBranches.map((branch) => {
             const lane = branchLanes.get(branch.branch_id) || 0;
             const isMain = lane === 0;
             const colorClass = STROKE_COLORS[lane % STROKE_COLORS.length];
             const isActive = branch.branch_id === activeBranchId;
-            
+
             const startYIndex = branch.divergence_index || 0;
             const endYIndex = (branch.messages_count || 1) - 1;
-            
+
             let d = "";
             if (isMain) {
               d = `M ${getLaneX(lane)} ${getY(0)} L ${getLaneX(lane)} ${getY(endYIndex)}`;
             } else {
-              // Find parent lane (default to main)
+
               const parentBranch = sortedBranches.find((b) => b.branch_id === branch.parent_session_id) || sortedBranches[0];
               const parentLane = parentBranch ? (branchLanes.get(parentBranch.branch_id) || 0) : 0;
-              
+
               const startX = getLaneX(parentLane);
               const targetX = getLaneX(lane);
               const branchY = getY(startYIndex);
-              
+
               d = `M ${startX} ${branchY} C ${targetX} ${branchY}, ${targetX} ${branchY + Y_SPACING/2}, ${targetX} ${branchY + Y_SPACING} L ${targetX} ${getY(endYIndex)}`;
-              
-              // If merged, curve back to main (assuming merges back to main for simplicity if status is merged)
+
+
               if (branch.status === "merged") {
                 d += ` C ${targetX} ${getY(endYIndex) + Y_SPACING/2}, ${startX} ${getY(endYIndex) + Y_SPACING/2}, ${startX} ${getY(endYIndex) + Y_SPACING}`;
               }
@@ -121,33 +121,32 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
             );
           })}
 
-          {/* Draw nodes */}
+
           {sortedBranches.map((branch) => {
             const lane = branchLanes.get(branch.branch_id) || 0;
             const isMain = lane === 0;
             const strokeColor = STROKE_COLORS[lane % STROKE_COLORS.length];
             const fillColor = FILL_COLORS[lane % FILL_COLORS.length];
             const isActive = branch.branch_id === activeBranchId;
-            
+
             const startYIndex = branch.divergence_index || 0;
             const endYIndex = (branch.messages_count || 1) - 1;
-            
+
             const nodes = [];
-            
-            // For main branch, draw nodes from 0 to endYIndex
-            // For other branches, draw from startYIndex + 1 to endYIndex
+
+
             const startNodeIdx = isMain ? 0 : startYIndex;
-            
+
             for (let i = startNodeIdx; i <= endYIndex; i++) {
               const x = getLaneX(lane);
               const y = getY(i);
-              
-              // Draw divergence diamond at divergence index
+
+
               if (!isMain && i === startYIndex) {
-                // The divergence point is actually on the parent lane, so we draw it there
+
                 const parentBranch = sortedBranches.find((b) => b.branch_id === branch.parent_session_id) || sortedBranches[0];
                 const parentLane = parentBranch ? (branchLanes.get(parentBranch.branch_id) || 0) : 0;
-                
+
                 nodes.push(
                   <rect
                     key={`div-${branch.branch_id}-${i}`}
@@ -164,7 +163,7 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
                 );
                 continue;
               }
-              
+
               nodes.push(
                 <circle
                   key={`node-${branch.branch_id}-${i}`}
@@ -182,19 +181,19 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
           })}
         </svg>
 
-        {/* HTML overlay for tooltips/interactions */}
+
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
           {sortedBranches.map((branch) => {
             const lane = branchLanes.get(branch.branch_id) || 0;
             const isMain = lane === 0;
             const isActive = branch.branch_id === activeBranchId;
             const isHovered = hoveredBranchId === branch.branch_id;
-            
-            // Place label near the last node
+
+
             const endYIndex = (branch.messages_count || 1) - 1;
             const x = getLaneX(lane);
             const y = getY(endYIndex);
-            
+
             const colorText = COLORS[lane % COLORS.length];
             const colorBorder = STROKE_COLORS[lane % STROKE_COLORS.length].replace("stroke-", "border-");
 
@@ -230,8 +229,8 @@ export const BranchGraph: React.FC<BranchGraphProps> = ({
                     {branch.messages_count || 0}
                   </span>
                 </div>
-                
-                {/* Detailed Tooltip on Hover */}
+
+
                 {isHovered && branch.divergence_message && !isMain && (
                   <div className="absolute top-full mt-1 left-0 z-50 w-48 p-2 rounded-lg bg-canvas border border-border-highlight shadow-xl pointer-events-none">
                     <div className="text-[9px] uppercase font-bold text-text-tertiary mb-1">Diverged at</div>

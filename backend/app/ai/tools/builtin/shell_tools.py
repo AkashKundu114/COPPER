@@ -31,7 +31,7 @@ def _shell_command(command: str) -> list[str]:
         "required": ["command"],
     },
     return_description="Dictionary with stdout, stderr, and exit_code.",
-    guardian_level=3,  # SAFETY
+    guardian_level=3,
 )
 async def shell_execute(command: str, timeout: int = 30) -> dict[str, Any]:
     try:
@@ -84,7 +84,7 @@ async def shell_execute(command: str, timeout: int = 30) -> dict[str, Any]:
         "required": ["code"],
     },
     return_description="Dictionary containing stdout, stderr, and exit_code.",
-    guardian_level=2,  # CHALLENGE
+    guardian_level=2,
 )
 async def python_execute(code: str, timeout: int = 10) -> dict[str, Any]:
     try:

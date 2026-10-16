@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { X, Copy, Check, BookOpen, Compass, FileText } from "lucide-react";
 import type { ScientificSkill } from "../../services/api";
 
@@ -33,7 +33,7 @@ export const ScientificSkillModal: React.FC<ScientificSkillModalProps> = ({
         className="relative w-full max-w-2xl bg-surface-elevated border border-border-highlight/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-surface-base/50">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl border bg-emerald-950/40 border-emerald-500/40 text-emerald-400">
@@ -62,9 +62,9 @@ export const ScientificSkillModal: React.FC<ScientificSkillModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
+
         <div className="p-6 overflow-y-auto space-y-4 text-xs">
-          {/* Discipline Mandate */}
+
           <div className="bg-surface-base p-4 rounded-xl border border-border-subtle space-y-2">
             <div className="flex items-center gap-2 text-text-secondary uppercase text-[10px] font-semibold tracking-wider font-mono">
               <Compass size={12} className="text-emerald-400" />
@@ -75,7 +75,7 @@ export const ScientificSkillModal: React.FC<ScientificSkillModalProps> = ({
             </p>
           </div>
 
-          {/* Protocols & Instructions */}
+
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-text-secondary font-mono uppercase text-[10px] font-semibold tracking-wider flex items-center gap-1.5">
@@ -106,7 +106,7 @@ export const ScientificSkillModal: React.FC<ScientificSkillModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="px-6 py-4 border-t border-border-subtle bg-surface-base/50 flex items-center justify-between gap-3">
           <div className="text-[11px] text-text-tertiary font-mono">
             Scientific Protocol Engine: 1 of 165 Verified Disciplines

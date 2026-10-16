@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TrendingUp, CheckCircle, Sparkles, Network, Terminal, Play, CheckCircle2 } from "lucide-react";
 import { skillsAPI, federatedAPI, systemAPI } from "../services/api";
 
@@ -132,7 +132,7 @@ export function Insights() {
         </div>
       </div>
 
-      {/* Top 4 Metrics Grid */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.length === 0
           ? [1, 2, 3, 4].map((i) => (
@@ -168,7 +168,7 @@ export function Insights() {
         ))}
       </div>
 
-      {/* Model Distribution & Cognitive Focus Breakdown */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
           <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
@@ -246,7 +246,7 @@ export function Insights() {
         </div>
       </div>
 
-      {/* Compositional Learned Skills Library (Phase 3 Delegation Engine) */}
+
       <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -311,7 +311,7 @@ export function Insights() {
           </div>
         )}
 
-        {/* Skill Execution Modal / Drawer */}
+
         {selectedSkill && (
           <div className="p-4 rounded-xl bg-canvas border border-accent-500/30 space-y-3 animate-fade-in">
             <div className="flex items-center justify-between border-b border-border-subtle pb-2">
@@ -377,7 +377,7 @@ export function Insights() {
         )}
       </div>
 
-      {/* Federated Self-Improvement Mesh (Phase 5) */}
+
       <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

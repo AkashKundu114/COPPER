@@ -11,30 +11,23 @@ from app.database.models.campaign import CampaignMetric
 @dataclass
 class BudgetOptimization:
     total_budget: float
-    current_allocation: dict[str, float]  # campaign_id -> current spend
-    optimized_allocation: dict[str, float]  # campaign_id -> optimal spend
+    current_allocation: dict[str, float]
+    optimized_allocation: dict[str, float]
     projected_current_conversions: float
     projected_optimized_conversions: float
     improvement_percent: float
-    reasoning: list[str]  # explain each reallocation decision
+    reasoning: list[str]
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
 class BudgetOptimizer:
-    """
-    ML-driven budget allocator using diminishing-returns logarithmic response curves:
-      Conversions(Spend) = a * ln(Spend) + b
-    Solves constrained non-linear optimization with SLSQP to maximize total portfolio conversions.
-    """
+    """ML-driven budget allocator using diminishing-returns logarithmic response curves:"""
 
     @staticmethod
     def fit_response_curve(spends: list[float], conversions: list[float]) -> tuple[float, float]:
-        """
-        Fits conversions = a * ln(spend) + b.
-        Ensures a > 0 to guarantee concave diminishing returns.
-        """
+        """Fits conversions = a * ln(spend) + b."""
         if len(spends) < 2 or len(conversions) < 2:
             return 5.0, 0.0
 
@@ -42,11 +35,8 @@ class BudgetOptimizer:
         y = np.array(conversions, dtype=float)
 
         try:
-            # Polyfit on log-transformed spend: y = a * x + b
             a, b = np.polyfit(x, y, deg=1)
-            # Ensure strictly positive slope for diminishing returns modeling
             if a <= 0.05:
-                # Fallback slope grounded in empirical conversion efficiency
                 avg_spend = max(1.0, float(np.mean(spends)))
                 avg_conv = max(0.5, float(np.mean(conversions)))
                 a = max(0.5, avg_conv / np.log(max(2.0, avg_spend)))
@@ -70,18 +60,7 @@ class BudgetOptimizer:
         min_spend_ratio: float = 0.10,
         max_spend_ratio: float = 2.00,
     ) -> BudgetOptimization:
-        """
-        Optimizes budget allocation across campaigns.
-        campaign_historical_data format:
-          {
-            "cmp-id": {
-              "campaign_name": "...",
-              "current_spend": 1200.0,
-              "spends": [...],
-              "conversions": [...]
-            }
-          }
-        """
+        """Optimizes budget allocation across campaigns."""
         cids = list(campaign_historical_data.keys())
         n = len(cids)
         if n == 0:
@@ -95,7 +74,6 @@ class BudgetOptimizer:
                 reasoning=["No campaigns provided for optimization."],
             )
 
-        # Fit response curves and collect current spends
         curves: dict[str, tuple[float, float]] = {}
         current_alloc: dict[str, float] = {}
 
@@ -107,7 +85,6 @@ class BudgetOptimizer:
             curves[cid] = (a, b)
             current_alloc[cid] = float(data.get("current_spend", total_budget / n))
 
-        # Define bounds and constraints
         current_sum = sum(current_alloc.values()) or total_budget
         scale_to_budget = total_budget / max(1.0, current_sum)
         x0 = np.array([current_alloc[cid] * scale_to_budget for cid in cids], dtype=float)
@@ -119,7 +96,6 @@ class BudgetOptimizer:
             upper = max(lower * 2.0, cur * max_spend_ratio, total_budget * 0.85)
             bounds.append((lower, upper))
 
-        # Adjust bounds if unfeasible
         min_total = sum(b[0] for b in bounds)
         max_total = sum(b[1] for b in bounds)
         if total_budget < min_total:
@@ -127,7 +103,6 @@ class BudgetOptimizer:
         elif total_budget > max_total:
             bounds = [(b[0], max(b[1], total_budget * 0.95)) for b in bounds]
 
-        # Objective: minimize negative total conversions
         def objective(x: np.ndarray) -> float:
             total_conv = 0.0
             for idx, cid in enumerate(cids):
@@ -147,7 +122,6 @@ class BudgetOptimizer:
         )
 
         optimized_x = res.x if res.success else x0
-        # Re-normalize to guarantee exact sum = total_budget
         opt_sum = np.sum(optimized_x)
         if opt_sum > 0:
             optimized_x = (optimized_x / opt_sum) * total_budget
@@ -156,13 +130,11 @@ class BudgetOptimizer:
         for idx, cid in enumerate(cids):
             optimized_alloc[cid] = round(float(optimized_x[idx]), 2)
 
-        # Fix minor rounding discrepancy on largest allocation
         diff = total_budget - sum(optimized_alloc.values())
         if abs(diff) > 0.001:
             max_key = max(optimized_alloc, key=optimized_alloc.get)
             optimized_alloc[max_key] = round(optimized_alloc[max_key] + diff, 2)
 
-        # Calculate conversions
         proj_curr = sum(
             self.predict_conversions(current_alloc[cid], curves[cid][0], curves[cid][1]) for cid in cids
         )
@@ -172,7 +144,6 @@ class BudgetOptimizer:
 
         imp_pct = round(((proj_opt - proj_curr) / max(0.01, proj_curr)) * 100, 2)
 
-        # Generate intelligent reasoning explanations
         reasoning: list[str] = []
         for cid in cids:
             name = campaign_historical_data[cid].get("campaign_name", cid)

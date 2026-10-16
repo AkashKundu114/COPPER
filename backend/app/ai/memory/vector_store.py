@@ -53,7 +53,6 @@ def _get_chroma_client() -> Any:
     return _CHROMA_CLIENT_CACHE
 
 
-
 class VectorStore:
     def __init__(self, collection_name: str = "copper_default"):
         self.collection_name = collection_name

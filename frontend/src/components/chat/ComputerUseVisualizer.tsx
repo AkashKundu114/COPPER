@@ -45,7 +45,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
 
   if (!steps || steps.length === 0) return null;
 
-  // View either the user-selected step or the latest step
+
   const currentIndex =
     selectedStepIndex !== null && selectedStepIndex >= 0 && selectedStepIndex < steps.length
       ? selectedStepIndex
@@ -104,7 +104,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
     }
   };
 
-  // Crosshair overlay coordinates calculation
+
   let targetCoordPercent: { left: string; top: string } | null = null;
   if (currentStep.coordinates && naturalDim && naturalDim.w > 0 && naturalDim.h > 0) {
     const pX = (currentStep.coordinates.x / naturalDim.w) * 100;
@@ -119,7 +119,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
     <div
       className={`w-full rounded-2xl border border-border/80 bg-zinc-950/70 backdrop-blur-md overflow-hidden shadow-xl transition-all duration-300 my-4 ${className}`}
     >
-      {/* Visualizer Top Bar */}
+
       <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-white/[0.02]">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-zinc-300">
@@ -138,7 +138,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
           </div>
         </div>
 
-        {/* Step Navigation Controls */}
+
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-zinc-900/90 border border-zinc-800 rounded-lg px-2 py-1 text-xs font-mono text-zinc-300">
             <button
@@ -172,7 +172,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
         </div>
       </div>
 
-      {/* Screen Viewport with Action Overlay */}
+
       <div className="relative bg-black/90 flex items-center justify-center overflow-hidden border-b border-border/40">
         {currentStep.screenshot_b64 ? (
           <div className={`relative ${expanded ? "max-h-[700px]" : "max-h-[380px]"} w-full flex items-center justify-center overflow-hidden`}>
@@ -187,7 +187,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
               className="max-w-full max-h-full object-contain select-none"
             />
 
-            {/* Click / Target Coordinates Crosshair Overlay */}
+
             {targetCoordPercent && (
               <div
                 style={{
@@ -196,13 +196,13 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
                 }}
                 className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center"
               >
-                {/* Outer pulsing ring */}
+
                 <span className="absolute w-8 h-8 rounded-full border-2 border-cyan-400/80 animate-ping" />
-                {/* Inner target circle */}
+
                 <span className="w-5 h-5 rounded-full border-2 border-white bg-cyan-500/40 backdrop-blur-xs flex items-center justify-center shadow-lg">
                   <span className="w-1.5 h-1.5 rounded-full bg-white" />
                 </span>
-                {/* Coordinate label tag */}
+
                 <div className="absolute top-6 px-1.5 py-0.5 rounded bg-black/80 border border-cyan-500/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-md">
                   ({currentStep.coordinates?.x}, {currentStep.coordinates?.y})
                 </div>
@@ -216,7 +216,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
           </div>
         )}
 
-        {/* Live Badge for latest active step */}
+
         {isLive && isLastStep && currentStep.status === "running" && (
           <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 text-[10px] font-mono font-medium tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
@@ -225,9 +225,9 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
         )}
       </div>
 
-      {/* Step Details, Thought & Action Footer */}
+
       <div className="p-4 space-y-3 bg-zinc-900/40">
-        {/* Action Badge */}
+
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 border border-zinc-700/60 text-xs font-mono text-zinc-200">
@@ -254,7 +254,7 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
           </span>
         </div>
 
-        {/* Model Observation & Reasoning */}
+
         {currentStep.thought && (
           <div className="p-2.5 rounded-xl bg-black/40 border border-zinc-800/60 text-xs text-zinc-300 leading-relaxed font-sans font-light">
             <span className="text-zinc-400 font-mono text-[11px] block mb-1 font-medium">
@@ -264,14 +264,14 @@ export const ComputerUseVisualizer: React.FC<ComputerUseVisualizerProps> = ({
           </div>
         )}
 
-        {/* Step Summary / Result */}
+
         {currentStep.summary && currentStep.summary !== currentStep.thought && (
           <p className="text-xs text-zinc-400 font-mono italic">
             {currentStep.summary}
           </p>
         )}
 
-        {/* Step Thumbnail Filmstrip */}
+
         {steps.length > 1 && (
           <div className="flex items-center gap-2 pt-2 overflow-x-auto pb-1 custom-scrollbar">
             {steps.map((s, idx) => (

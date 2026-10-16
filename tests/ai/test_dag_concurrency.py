@@ -11,7 +11,6 @@ async def test_dag_parallel_branch_concurrency():
     """Verify that independent tasks run concurrently and merge cleanly into downstream nodes."""
     executor = TaskGraphExecutor()
 
-    # Plan with 2 independent root branches and 1 merge task
     plan = PlanResult(
         is_decomposition=True,
         goal="Fetch market research and compile financial data into a presentation",
@@ -68,7 +67,6 @@ async def test_dag_cyclic_dependency_rejection():
     """Verify that a cycle in task dependencies is cleanly detected and reported without deadlocking."""
     executor = TaskGraphExecutor()
 
-    # T1 depends on T2, T2 depends on T1 (Cycle)
     plan = PlanResult(
         is_decomposition=True,
         goal="Test cyclic deadlock protection",

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Activity,
   Clock,
@@ -60,7 +60,7 @@ export const ActivityDashboardWidget: React.FC = () => {
     return `${h}h ${m}m`;
   };
 
-  // Fallback defaults if telemetry is just starting
+
   const focusTime = stats?.focus_minutes ?? (stats?.total_active_minutes ? Math.round(stats.total_active_minutes * 0.72) : 210);
   const activeTime = stats?.total_active_minutes ?? 285;
   const switches = stats?.context_switches ?? 14;
@@ -85,7 +85,7 @@ export const ActivityDashboardWidget: React.FC = () => {
 
   return (
     <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm font-mono text-xs">
-      {/* Widget Header */}
+
       <div className="flex items-center justify-between border-b border-border-subtle pb-2.5">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/20">
@@ -106,9 +106,9 @@ export const ActivityDashboardWidget: React.FC = () => {
         </div>
       </div>
 
-      {/* 3 Core Metric Tiles */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* Focus Time */}
+
         <div className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-1">
           <div className="flex items-center justify-between text-text-secondary text-[10px]">
             <span className="flex items-center gap-1">
@@ -128,7 +128,7 @@ export const ActivityDashboardWidget: React.FC = () => {
           </span>
         </div>
 
-        {/* Context Switches */}
+
         <div className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-1">
           <div className="flex items-center justify-between text-text-secondary text-[10px]">
             <span className="flex items-center gap-1">
@@ -150,7 +150,7 @@ export const ActivityDashboardWidget: React.FC = () => {
           </span>
         </div>
 
-        {/* Productivity Index */}
+
         <div className="p-3.5 rounded-xl bg-canvas border border-border-subtle space-y-1">
           <div className="flex items-center justify-between text-text-secondary text-[10px]">
             <span className="flex items-center gap-1">
@@ -173,7 +173,7 @@ export const ActivityDashboardWidget: React.FC = () => {
         </div>
       </div>
 
-      {/* App Breakdown Bar */}
+
       <div className="space-y-2 p-3.5 rounded-xl bg-canvas border border-border-subtle">
         <div className="flex items-center justify-between text-[10px] text-text-secondary">
           <span className="flex items-center gap-1">
@@ -182,7 +182,7 @@ export const ActivityDashboardWidget: React.FC = () => {
           <span>{topApps.length} Tracked Workspaces</span>
         </div>
 
-        {/* Segmented Progress Bar */}
+
         <div className="w-full h-3 rounded-md bg-surface-active flex overflow-hidden">
           {topApps.map((app, idx) => (
             <div
@@ -194,7 +194,7 @@ export const ActivityDashboardWidget: React.FC = () => {
           ))}
         </div>
 
-        {/* Legend */}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
           {topApps.slice(0, 4).map((app, idx) => (
             <div key={app.app_name} className="flex items-center gap-1.5 text-[10px]">
@@ -206,7 +206,7 @@ export const ActivityDashboardWidget: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent Activity Timeline Sessions */}
+
       {sessions.length > 0 && (
         <div className="space-y-1.5">
           <span className="text-[10px] text-text-secondary block uppercase tracking-wider font-semibold">

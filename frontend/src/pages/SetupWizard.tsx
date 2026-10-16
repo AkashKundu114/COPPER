@@ -44,7 +44,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
       const res = await axios.get("/api/setup/system-check");
       setSystemInfo(res.data);
     } catch {
-      // Graceful fallback mock
+
       setSystemInfo({
         ready: true,
         gpu: { name: "NVIDIA GeForce GPU", vram_mb: 8192, available: true },
@@ -82,7 +82,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
   };
 
   const toggleAgent = (id: string) => {
-    if (["chat", "guardian", "planner"].includes(id)) return; // Always mandatory core
+    if (["chat", "guardian", "planner"].includes(id)) return; 
     setSelectedAgents((prev) =>
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
     );
@@ -108,7 +108,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas text-text p-6 overflow-y-auto">
       <div className="w-full max-w-3xl surface-card rounded-2xl p-7 border border-border shadow-elevation-modal relative my-auto">
-        {/* Step Indicator */}
+
         <div className="flex items-center justify-between border-b border-border pb-5 mb-6">
           <div>
             <span className="text-2xs uppercase tracking-widest text-copper font-semibold font-mono">
@@ -134,7 +134,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
           </div>
         </div>
 
-        {/* Step 1: System Pre-Flight */}
+
         {step === 1 && (
           <div className="space-y-5">
             <p className="text-xs text-text-secondary">
@@ -228,7 +228,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
           </div>
         )}
 
-        {/* Step 2: Agent Selection */}
+
         {step === 2 && (
           <div className="space-y-5">
             <div className="flex justify-between items-center">
@@ -240,7 +240,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
               </Badge>
             </div>
 
-            {/* Presets */}
+
             <div className="grid grid-cols-3 gap-2.5">
               {[
                 { id: "minimal", title: "Minimal (Reflex)", desc: "4 Core Agents (<2GB)" },
@@ -263,7 +263,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
               ))}
             </div>
 
-            {/* Agent Grid */}
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
               {ACTIVE_AGENTS.map((agent) => {
                 const isSelected = selectedAgents.includes(agent.id);
@@ -320,7 +320,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
           </div>
         )}
 
-        {/* Step 3: Voice & Creative Studio */}
+
         {step === 3 && (
           <div className="space-y-5">
             <p className="text-xs text-text-secondary">
@@ -328,7 +328,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              {/* Voice Selector */}
+
               <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-3">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 bg-copper-subtle text-copper rounded-lg">
@@ -369,7 +369,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
                 </div>
               </div>
 
-              {/* Creative Image Studio */}
+
               <div className="p-4 rounded-xl bg-surface-base border border-border-subtle space-y-3 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2.5 mb-3">
@@ -419,7 +419,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
           </div>
         )}
 
-        {/* Step 4: Model Provisioning */}
+
         {step === 4 && (
           <div className="space-y-5">
             <p className="text-xs text-text-secondary">
@@ -469,7 +469,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps) {
           </div>
         )}
 
-        {/* Step 5: Ready */}
+
         {step === 5 && (
           <div className="space-y-5 text-center py-4">
             <div className="w-14 h-14 bg-success-dim text-success rounded-full flex items-center justify-center mx-auto border border-success/30">

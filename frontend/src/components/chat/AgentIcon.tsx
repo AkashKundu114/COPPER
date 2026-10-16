@@ -57,7 +57,7 @@ import {
 import { AGENT_MAP } from "../../constants/agents";
 
 const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
-  // Lucide Icon Name mappings
+
   Brain,
   Search,
   Code2,
@@ -111,7 +111,7 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   Compass,
   Network,
 
-  // Direct Agent ID mappings for quick lookups
+
   CHRONOS: Compass,
   MNEMONIC: Brain,
   AEGIS: ShieldAlert,

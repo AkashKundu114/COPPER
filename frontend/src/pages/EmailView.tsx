@@ -31,11 +31,11 @@ export const EmailView: React.FC = () => {
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<Priority | 'Drafts'>('Urgent');
-  
+
   const [inbox, setInbox] = useState<Email[]>([]);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
-  
+
   const [configHost, setConfigHost] = useState('');
   const [configUser, setConfigUser] = useState('');
   const [configPass, setConfigPass] = useState('');
@@ -67,7 +67,7 @@ export const EmailView: React.FC = () => {
         fetchEmails(activeTab === 'Drafts' ? 'Urgent' : activeTab);
         fetchDrafts();
       } else {
-        // Fetch live audit entries as system alerts
+
         const auditRes = await auditAPI.list(undefined, 20).catch(() => ({ data: [] }));
         const auditLogs = auditRes.data || [];
         if (Array.isArray(auditLogs) && auditLogs.length > 0) {
@@ -215,7 +215,7 @@ export const EmailView: React.FC = () => {
       )}
 
       <div className="flex gap-4 h-full overflow-hidden">
-        {/* Sidebar */}
+
         <div className="w-1/3 flex flex-col border-r border-border-subtle pr-4">
           <div className="flex flex-wrap gap-2 mb-4">
             {(['Urgent', 'Needs Response', 'FYI', 'Spam', 'Drafts'] as const).map(tab => (
@@ -228,7 +228,7 @@ export const EmailView: React.FC = () => {
               </button>
             ))}
           </div>
-          
+
           <div className="flex-1 overflow-y-auto space-y-2 pr-2">
             {activeTab !== 'Drafts' ? (
               inbox.map(email => (
@@ -264,7 +264,7 @@ export const EmailView: React.FC = () => {
           </div>
         </div>
 
-        {/* Main Content */}
+
         <div className="w-2/3 flex flex-col pl-2">
           {selectedEmail ? (
             <div className="flex flex-col h-full bg-surface-active/10 p-4 border border-border-subtle">

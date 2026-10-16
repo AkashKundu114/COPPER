@@ -127,7 +127,7 @@ class StageProgressionItem:
     stage_id: str
     stage_number: int
     name: str
-    status: str  # "matched", "passed", "bypassed", "evaluated"
+    status: str
     decision: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -191,10 +191,7 @@ class RoutingExplanation:
 
 
 class RoutingExplainer:
-    """
-    Purely deterministic explainer (PRISM: Predictive Routing with Interpretability & Systematic Metrics).
-    Produces rich, human-readable explanations of agent routing decisions in < 0.05ms without LLM inference.
-    """
+    """Purely deterministic explainer (PRISM: Predictive Routing with Interpretability & Systematic Metrics)."""
 
     @classmethod
     def get_agent_codename(cls, agent: AgentType | str) -> str:
@@ -225,7 +222,6 @@ class RoutingExplainer:
                 for match in re.finditer(pat, lower_prompt, re.IGNORECASE):
                     start, end = match.span()
                     actual_term = prompt[start:end]
-                    # Avoid duplicate overlapping spans
                     if not any(h.start == start and h.end == end for h in highlights):
                         highlights.append(
                             KeywordHighlight(
@@ -238,7 +234,6 @@ class RoutingExplainer:
             except Exception:
                 continue
 
-        # Sort by occurrence in prompt
         highlights.sort(key=lambda h: h.start)
         return highlights
 
@@ -264,7 +259,6 @@ class RoutingExplainer:
                 )
             )
 
-        # Sort by score descending
         items.sort(key=lambda x: x.score, reverse=True)
         return items
 
@@ -286,7 +280,6 @@ class RoutingExplainer:
         runner_up = sorted_scores[1] if len(sorted_scores) > 1 else 0.0
         margin = max(0.0, top_score - runner_up)
 
-        # Platt / Sigmoid-like empirical calibration scaling
         entropy_penalty = min(0.15, routing_entropy * 0.08)
         calibrated_conf = max(0.50, min(0.99, confidence - entropy_penalty))
         if margin >= 3.0:
@@ -330,7 +323,6 @@ class RoutingExplainer:
 
         stages: list[StageProgressionItem] = []
 
-        # Stage 0: Dynamic Learned Memory Cache
         s0_matched = route_stage == "learned_memory_cache"
         stages.append(
             StageProgressionItem(
@@ -346,7 +338,6 @@ class RoutingExplainer:
             )
         )
 
-        # Stage 1: Fast Smalltalk / Greeting Filter
         s1_matched = route_stage == "fast_smalltalk_filter"
         stages.append(
             StageProgressionItem(
@@ -366,7 +357,6 @@ class RoutingExplainer:
             )
         )
 
-        # Stage 2: Weighted Pattern Scoring & Negative Suppression
         s2_matched = route_stage == "fast_pattern_scoring"
         top_score = max(scores.values()) if scores else 0.0
         stages.append(
@@ -387,7 +377,6 @@ class RoutingExplainer:
             )
         )
 
-        # Stage 3: Consequential Safety Boundary Flagging
         stages.append(
             StageProgressionItem(
                 stage_id="consequential_safety",
@@ -402,7 +391,6 @@ class RoutingExplainer:
             )
         )
 
-        # Stage 4: Micro-Router / Conversational Fallback
         s4_llm = route_stage == "llm_subagent_router"
         s4_fallback = route_stage == "default_conversational_fallback"
         stages.append(
@@ -434,10 +422,7 @@ class RoutingExplainer:
         matched_highlights: list[KeywordHighlight],
         prompt: str,
     ) -> str:
-        """
-        Generates the standard human-readable decision summary.
-        Example: "Routed to AXIS (confidence: 97%) because 'write a script' matched CODING keywords"
-        """
+        """Generates the standard human-readable decision summary."""
         codename = cls.get_agent_codename(agent)
         conf_pct = int(round(confidence * 100))
         agent_key = agent.value if isinstance(agent, AgentType) else str(agent)
@@ -457,7 +442,6 @@ class RoutingExplainer:
         if route_stage == "default_conversational_fallback":
             return f"Routed to COPPER (confidence: {conf_pct}%) via general conversational fallback"
 
-        # Pattern scoring stage
         if matched_highlights:
             trigger_word = matched_highlights[0].term.strip()
             if len(trigger_word) > 40:
@@ -469,7 +453,7 @@ class RoutingExplainer:
     @classmethod
     def explain(
         cls,
-        result: Any,  # RoutingResult
+        result: Any,
         prompt: str,
         suppressed_rules: list[dict[str, Any]] | None = None,
     ) -> RoutingExplanation:
@@ -491,10 +475,8 @@ class RoutingExplainer:
         codename = cls.get_agent_codename(agent)
         display_name = cls.get_agent_display(agent)
 
-        # Extract keyword highlights from original prompt
         highlights = cls.extract_keyword_matches(prompt, matched_keywords, agent)
 
-        # Format suppressed rules
         suppressed_list: list[dict[str, Any]] = []
         if suppressed_rules:
             for s in suppressed_rules:
@@ -511,18 +493,14 @@ class RoutingExplainer:
                     }
                 )
 
-        # Compute score breakdown
         score_breakdown = [item.to_dict() for item in cls.compute_score_breakdown(scores, agent)]
 
-        # Decision summary
         decision_summary = cls.generate_decision_summary(agent, confidence, route_stage, highlights, prompt)
 
-        # Confidence calibration
         calibration = cls.compute_confidence_calibration(
             confidence, scores, agent, routing_entropy, is_consequential, cascade_risk
         )
 
-        # Stage progression
         stage_progression = [
             s.to_dict() for s in cls.generate_stage_progression(route_stage, agent, scores, is_consequential)
         ]

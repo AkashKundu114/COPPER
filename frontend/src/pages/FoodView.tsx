@@ -115,7 +115,7 @@ export const FoodView: React.FC = () => {
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
-      {/* Header */}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight font-sans">
@@ -134,7 +134,7 @@ export const FoodView: React.FC = () => {
         </button>
       </div>
 
-      {/* Calorie Goal Summary Bar */}
+
       <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-sm text-white font-sans">
@@ -208,7 +208,7 @@ export const FoodView: React.FC = () => {
           </div>
         </div>
 
-        {/* Grocery Checklist Column */}
+
         <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
           <div className="flex items-center justify-between border-b border-border-subtle pb-2">
             <div className="flex items-center gap-2 font-bold text-white text-sm font-sans">
@@ -274,7 +274,7 @@ export const FoodView: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Meal Modal */}
+
       {isMealModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in text-xs">
           <div className="w-full max-w-md bg-surface-elevated border border-border-subtle rounded-2xl p-5 shadow-2xl space-y-4">

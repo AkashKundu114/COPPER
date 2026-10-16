@@ -1,21 +1,4 @@
-"""
-Crash-Consistent Write-Ahead Log (WAL) & Idempotent Checkpoint Engine.
-
-Distributed Systems & Database Internals Concept:
-    ARIES (Algorithms for Recovery and Isolation Exploiting Semantics).
-    Guaranteeing Atomicity and Durability (ACID) for multi-agent Directed Acyclic
-    Graph (DAG) workflows across unexpected process crashes, power failures, or SIGKILLs.
-
-Features:
-1. Append-only WAL persistence with CRC32 integrity checksums per entry to detect partial disk writes.
-2. Two-phase tool intent logging:
-   - TASK_INTENT -> (Tool / Agent Execution) -> MUTATION_RECORD -> TASK_COMMIT.
-3. Idempotency Key deduplication preventing duplicate external side-effects (e.g., file writes).
-4. Automated Startup Crash Recovery:
-   - Identifies active uncommitted DAGs.
-   - Reconstructs completed node state (redo phase).
-   - Executes compensation/rollback handlers for uncommitted partial writes (undo phase).
-"""
+"""Crash-Consistent Write-Ahead Log (WAL) & Idempotent Checkpoint Engine."""
 
 import hashlib
 import json
@@ -82,10 +65,7 @@ class WALRecord:
 
 
 class TaskWAL:
-    """
-    Append-only WAL manager for a single DAG run.
-    Thread-safe and flush-synced to disk (os.fsync) for true crash durability.
-    """
+    """Append-only WAL manager for a single DAG run."""
 
     def __init__(self, dag_id: str, wal_dir: Path | None = None):
         self.dag_id = dag_id
@@ -107,7 +87,7 @@ class TaskWAL:
         with open(self.file_path, "a", encoding="utf-8") as f:
             f.write(line)
             f.flush()
-            os.fsync(f.fileno())  # Ensure bytes hit physical storage
+            os.fsync(f.fileno())
         return record
 
     def read_records(self) -> list[WALRecord]:
@@ -127,12 +107,7 @@ class TaskWAL:
 
 
 class CrashRecoveryEngine:
-    """
-    ARIES-inspired Recovery Engine:
-    - Scans directory of WAL files.
-    - Replays committed task nodes to avoid re-execution.
-    - Compensates uncommitted side-effect mutations.
-    """
+    """ARIES-inspired Recovery Engine:"""
 
     def __init__(self, wal_dir: Path | None = None):
         self.wal_dir = wal_dir or DEFAULT_WAL_DIR
@@ -159,12 +134,7 @@ class CrashRecoveryEngine:
         return incomplete
 
     def analyze_dag_state(self, dag_id: str) -> dict[str, Any]:
-        """
-        Reconstructs the execution state of an interrupted DAG:
-        - completed_tasks: {task_id: output}
-        - uncommitted_mutations: list of files modified without a subsequent commit
-        - is_complete: bool
-        """
+        """Reconstructs the execution state of an interrupted DAG:"""
         wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
         records = wal.read_records()
 
@@ -178,7 +148,6 @@ class CrashRecoveryEngine:
             elif r.record_type == RecordType.TASK_COMMIT:
                 t_id = r.payload.get("task_id")
                 committed_tasks[t_id] = r.payload.get("output")
-                # Clear pending mutations associated with this task
                 pending_mutations = [m for m in pending_mutations if m.get("task_id") != t_id]
             elif r.record_type == RecordType.MUTATION_RECORD:
                 pending_mutations.append(r.payload)
@@ -192,10 +161,7 @@ class CrashRecoveryEngine:
         }
 
     def rollback_uncommitted_mutations(self, dag_id: str) -> int:
-        """
-        Compensates (rolls back) uncommitted side effects.
-        For created files without commit, removes the orphaned file.
-        """
+        """Compensates (rolls back) uncommitted side effects."""
         wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
         analysis = self.analyze_dag_state(dag_id)
         rollbacks_performed = 0

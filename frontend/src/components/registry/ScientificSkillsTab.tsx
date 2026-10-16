@@ -35,7 +35,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
       });
       if (res.data?.skills) {
         setSkills(res.data.skills);
-        // Extract unique categories
+
         const cats = Array.from(new Set(res.data.skills.map((s) => s.category))).filter(Boolean);
         setCategories((prev) => (prev.length === 0 ? cats : prev));
       }
@@ -47,7 +47,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
   }, []);
 
   useEffect(() => {
-    // Load skills
+
     loadSkills();
   }, [loadSkills]);
 
@@ -81,7 +81,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
 
   return (
     <div className="space-y-4 animate-fade-in font-sans">
-      {/* Header & Category Filters */}
+
       <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
             </div>
           </div>
 
-          {/* Search Box */}
+
           <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-emerald-500/50 transition-all w-full md:w-80">
             <Search size={14} className="text-text-tertiary" />
             <input
@@ -109,7 +109,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
           </div>
         </div>
 
-        {/* Category Filter Chips */}
+
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
           <button
             onClick={() => handleCategoryChange("all")}
@@ -142,7 +142,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       </div>
 
-      {/* Grid of Scientific Skill Cards */}
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-8">
           {[...Array(6)].map((_, i) => (
@@ -205,7 +205,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       )}
 
-      {/* Pagination */}
+
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/60 border border-border-subtle rounded-xl text-xs">
           <span className="text-text-secondary font-mono">
@@ -235,7 +235,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       )}
 
-      {/* Skill Modal */}
+
       <ScientificSkillModal
         skill={selectedSkill}
         onClose={() => setSelectedSkill(null)}

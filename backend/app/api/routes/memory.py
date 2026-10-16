@@ -16,7 +16,7 @@ class MemoryCreateInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     content: str
-    type: str | None = "observation"  # fact, observation, hypothesis
+    type: str | None = "observation"
     category: str | None = "General"
     confidence: float | None = 0.95
     evidenceCount: int | None = Field(default=None, alias="evidence_count")

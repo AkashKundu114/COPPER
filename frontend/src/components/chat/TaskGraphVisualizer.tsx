@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   Brain,
   Search,
@@ -116,7 +116,7 @@ const AGENT_THEMES: Record<
   string,
   { name: string; icon: any; color: string; border: string; bg: string; text: string }
 > = {
-  // Core Reasoning
+
   CHRONOS: { name: "CHRONOS", icon: Compass, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
   REMINDER: { name: "CHRONOS", icon: Clock, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
   MNEMONIC: { name: "MNEMONIC", icon: Brain, color: "#14b8a6", border: "border-teal-500/40", bg: "bg-teal-950/25", text: "text-teal-400" },
@@ -126,7 +126,7 @@ const AGENT_THEMES: Record<
   OMNI: { name: "OMNI", icon: Search, color: "#f97316", border: "border-orange-500/40", bg: "bg-orange-950/25", text: "text-orange-400" },
   RESEARCH: { name: "OMNI", icon: Search, color: "#f97316", border: "border-orange-500/40", bg: "bg-orange-950/25", text: "text-orange-400" },
 
-  // Code Engineering
+
   AXIS: { name: "AXIS", icon: Code2, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
   CODING: { name: "AXIS", icon: Code2, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
   CYPHER: { name: "CYPHER", icon: FileCode2, color: "#0ea5e9", border: "border-sky-500/40", bg: "bg-sky-950/25", text: "text-sky-400" },
@@ -142,7 +142,7 @@ const AGENT_THEMES: Record<
   GOLIATH: { name: "GOLIATH", icon: Boxes, color: "#64748b", border: "border-border-highlight/60", bg: "bg-surface-elevated/60", text: "text-text-secondary" },
   PIVOT: { name: "PIVOT", icon: RefreshCw, color: "#22c55e", border: "border-green-500/40", bg: "bg-green-950/25", text: "text-green-400" },
 
-  // OS & Desktop Automation
+
   ATLAS: { name: "ATLAS", icon: FolderTree, color: "#0ea5e9", border: "border-sky-500/40", bg: "bg-sky-950/25", text: "text-sky-400" },
   KINETIC: { name: "KINETIC", icon: Calendar, color: "#f59e0b", border: "border-amber-500/40", bg: "bg-amber-950/25", text: "text-amber-400" },
   PULSE: { name: "PULSE", icon: Activity, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
@@ -153,7 +153,7 @@ const AGENT_THEMES: Record<
   WARDEN: { name: "WARDEN", icon: ShieldAlert, color: "#dc2626", border: "border-red-600/40", bg: "bg-red-950/25", text: "text-red-400" },
   PROXY: { name: "PROXY", icon: Globe, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
 
-  // Vision & Screen RPA
+
   HAWK: { name: "HAWK", icon: Scan, color: "#ec4899", border: "border-pink-500/40", bg: "bg-pink-950/25", text: "text-pink-400" },
   TALON: { name: "TALON", icon: MousePointerClick, color: "#f43f5e", border: "border-rose-500/40", bg: "bg-rose-950/25", text: "text-rose-400" },
   PORTAL: { name: "PORTAL", icon: AppWindow, color: "#a855f7", border: "border-purple-500/40", bg: "bg-purple-950/25", text: "text-purple-400" },
@@ -166,7 +166,7 @@ const AGENT_THEMES: Record<
   PICASSO: { name: "PICASSO", icon: Palette, color: "#fbbf24", border: "border-yellow-500/40", bg: "bg-yellow-950/25", text: "text-yellow-400" },
   IMAGE: { name: "PICASSO", icon: Palette, color: "#fbbf24", border: "border-yellow-500/40", bg: "bg-yellow-950/25", text: "text-yellow-400" },
 
-  // Web & Streaming
+
   RAPTOR: { name: "RAPTOR", icon: DownloadCloud, color: "#22c55e", border: "border-green-500/40", bg: "bg-green-950/25", text: "text-green-400" },
   PHANTOM: { name: "PHANTOM", icon: Ghost, color: "#6366f1", border: "border-indigo-500/40", bg: "bg-indigo-950/25", text: "text-indigo-400" },
   VANGUARD: { name: "VANGUARD", icon: BookMarked, color: "#0ea5e9", border: "border-sky-500/40", bg: "bg-sky-950/25", text: "text-sky-400" },
@@ -176,7 +176,7 @@ const AGENT_THEMES: Record<
   GLITCH: { name: "GLITCH", icon: AlertCircle, color: "#f59e0b", border: "border-amber-500/40", bg: "bg-amber-950/25", text: "text-amber-400" },
   SPIDER: { name: "SPIDER", icon: Share2, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
 
-  // Audio & Language & Documents
+
   SONAR: { name: "SONAR", icon: Mic, color: "#06b6d4", border: "border-cyan-500/40", bg: "bg-cyan-950/25", text: "text-cyan-400" },
   ORACLE: { name: "ORACLE", icon: Volume2, color: "#8b5cf6", border: "border-violet-500/40", bg: "bg-violet-950/25", text: "text-violet-400" },
   HERMES: { name: "HERMES", icon: Mail, color: "#3b82f6", border: "border-blue-500/40", bg: "bg-blue-950/25", text: "text-blue-400" },
@@ -188,7 +188,7 @@ const AGENT_THEMES: Record<
   KINESIS: { name: "KINESIS", icon: FileText, color: "#a855f7", border: "border-purple-500/40", bg: "bg-purple-950/25", text: "text-purple-400" },
   DOCUMENT: { name: "KINESIS", icon: FileText, color: "#a855f7", border: "border-purple-500/40", bg: "bg-purple-950/25", text: "text-purple-400" },
 
-  // Master Orchestration & Synthesis
+
   CHAT: { name: "NEXUS", icon: Sparkles, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
   SYNTHESIZER: { name: "SYNTHESIS", icon: Sparkles, color: "#10b981", border: "border-emerald-500/40", bg: "bg-emerald-950/25", text: "text-emerald-400" },
 };
@@ -228,7 +228,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
     };
   };
 
-  // Group tasks into topological layers
+
   const layers: TaskGraphNode[][] = [];
   const assigned = new Set<string>();
 
@@ -241,7 +241,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
     );
 
     if (currentLayer.length === 0) {
-      // Break cycle or unresolvable dependencies
+
       layers.push(remaining);
       break;
     }
@@ -256,7 +256,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
     <div
       className={`rounded-2xl border border-purple-900/40 bg-surface-base backdrop-blur-xl shadow-2xl p-4 text-xs font-mono text-text overflow-hidden ${className}`}
     >
-      {/* Header Bar */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-purple-950/60">
         <div className="flex items-center gap-2.5">
           <div
@@ -298,7 +298,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
           </div>
         </div>
 
-        {/* Action Controls */}
+
         <div className="flex items-center gap-2">
           {messages.length > 0 && (
             <button
@@ -324,7 +324,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
         </div>
       </div>
 
-      {/* Interactive Topological DAG Hierarchy */}
+
       <div className="py-4 space-y-4">
         {layers.map((layer, layerIdx) => (
           <div key={layerIdx} className="space-y-2">
@@ -359,7 +359,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                         : "bg-surface-base/60 border-border-subtle opacity-60"
                     }`}
                   >
-                    {/* Node Header */}
+
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <div
@@ -381,7 +381,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                         </div>
                       </div>
 
-                      {/* Status Icon & Latency */}
+
                       <div className="flex items-center gap-1.5">
                         {task.status === "running" ? (
                           <div className="flex items-center gap-1 text-[10px] text-purple-400">
@@ -409,14 +409,14 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                       </div>
                     </div>
 
-                    {/* Task Title & Instruction */}
+
                     <div className="mt-2 text-[11px]">
                       <p className="font-medium text-text line-clamp-1 font-sans">
                         {task.title || task.instruction}
                       </p>
                     </div>
 
-                    {/* Dependencies indicator */}
+
                     {task.depends_on.length > 0 && (
                       <div className="mt-2 pt-2 border-t border-border-subtle flex items-center gap-1 text-[10px] text-text-secondary">
                         <ArrowRight size={10} className="text-purple-400" />
@@ -434,7 +434,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
                       </div>
                     )}
 
-                    {/* Expanded Drawer */}
+
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
@@ -488,7 +488,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
         ))}
       </div>
 
-      {/* Generated Artifacts Bar */}
+
       {artifacts.length > 0 && (
         <div className="mt-3 pt-3 border-t border-border-subtle flex flex-wrap items-center gap-2">
           <span className="text-[10.5px] font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1">
@@ -510,7 +510,7 @@ export function TaskGraphVisualizer({ graph, className = "" }: Props) {
         </div>
       )}
 
-      {/* Inter-Agent Shared Context Bus Log Drawer */}
+
       <AnimatePresence>
         {showMessages && messages.length > 0 && (
           <motion.div

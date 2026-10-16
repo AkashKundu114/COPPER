@@ -10,8 +10,8 @@ from typing import Any
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR.parent))
 
-from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed  # noqa: E402
-from app.core.guardian import DisagreementLevel, guardian_engine  # noqa: E402
+from app.ai.orchestration.agent_router import is_consequential_action, route_message_detailed
+from app.core.guardian import DisagreementLevel, guardian_engine
 
 
 def calculate_percentile(data: list[float], p: float) -> float:
@@ -295,7 +295,6 @@ async def run_benchmark():
     print("    C.O.P.P.E.R. COMPREHENSIVE BENCHMARK & EVALUATION SUITE       ")
     print("==================================================================")
 
-    # Prefer partitioned held-out test sets
     test_routing_path = BASE_DIR / "datasets" / "partitions" / "master_routing" / "test.jsonl"
     test_threats_path = BASE_DIR / "datasets" / "partitions" / "threats" / "test.jsonl"
 

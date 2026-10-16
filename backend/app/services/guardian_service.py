@@ -25,7 +25,6 @@ class GuardianService:
             )
             db.commit()
 
-            # Record Guardian outcome in self-model
             try:
                 import asyncio
 

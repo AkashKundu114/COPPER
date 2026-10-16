@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 interface HudCardProps {
   children: React.ReactNode;
@@ -34,7 +34,7 @@ export const HudCard: React.FC<HudCardProps> = ({
         active ? "hud-card-active" : ""
       } ${className}`}
     >
-      {/* Optional Top Right Technical Metadata Badge */}
+
       {(tag || subtag) && (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-text-muted select-none pointer-events-none">
           {tag && (

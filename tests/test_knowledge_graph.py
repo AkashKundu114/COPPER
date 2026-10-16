@@ -31,20 +31,17 @@ def test_canonicalize_name():
 
 
 def test_bayesian_confidence_update():
-    # Independent confirmation should increase confidence monotonically
     prior = 0.8
     updated = bayesian_confidence_update(prior, 0.9)
     assert updated > prior
     assert updated <= 0.99
 
-    # Reinforce again
     updated2 = bayesian_confidence_update(updated, 0.95)
     assert updated2 > updated
     assert updated2 <= 0.99
 
 
 def test_add_entity_and_deduplication():
-    # Add new entity
     ent1 = graph_store.add_entity(
         name="COPPER",
         entity_type="PROJECT",
@@ -57,7 +54,6 @@ def test_add_entity_and_deduplication():
     assert ent1["evidence_count"] == 1
     assert ent1["confidence"] == 0.85
 
-    # Re-add with slightly different casing (deduplication test)
     ent2 = graph_store.add_entity(
         name="copper",
         entity_type="PROJECT",
@@ -66,11 +62,10 @@ def test_add_entity_and_deduplication():
     )
     assert ent2["id"] == ent1["id"]
     assert ent2["evidence_count"] == 2
-    assert ent2["confidence"] > 0.85  # Bayesian increase
+    assert ent2["confidence"] > 0.85
 
 
 def test_add_relationship_and_deduplication():
-    # Add relationship
     rel1 = graph_store.add_relationship(
         source_name="Akash",
         target_name="COPPER",
@@ -84,7 +79,6 @@ def test_add_relationship_and_deduplication():
     assert rel1["evidence_count"] == 1
     assert rel1["confidence"] == 0.95
 
-    # Confirm same relationship again
     rel2 = graph_store.add_relationship(
         source_name="akash",
         target_name="copper",
@@ -110,13 +104,11 @@ def test_query_neighbors_and_subgraph():
         confidence=0.92,
     )
 
-    # 1-hop neighbors of COPPER
     neighbors = graph_store.query_neighbors("COPPER", depth=1)
     node_canons = [n["canonical_name"] for n in neighbors["nodes"]]
     assert "copper" in node_canons
     assert "fastapi" in node_canons
 
-    # Subgraph for D3
     subgraph = graph_store.get_subgraph("COPPER", depth=1)
     assert "nodes" in subgraph
     assert "links" in subgraph
@@ -131,11 +123,10 @@ def test_find_path():
 
     path = graph_store.find_path("Akash", "Starlette")
     assert path is not None
-    assert len(path) == 4  # Akash -> COPPER -> FastAPI -> Starlette
+    assert len(path) == 4
     assert path[0]["entity"]["canonical_name"] == "akash"
     assert path[-1]["entity"]["canonical_name"] == "starlette"
 
-    # Disconnected node
     graph_store.add_entity("Moon", "LOCATION", 0.7)
     no_path = graph_store.find_path("Akash", "Moon")
     assert no_path is None
@@ -228,7 +219,6 @@ async def test_graph_rag_get_graph_context():
     graph_store.add_relationship("Akash", "COPPER", "WORKS_ON", 0.95)
     graph_store.add_relationship("COPPER", "FastAPI", "USES", 0.90)
 
-    # Query mentioning COPPER
     ctx = await graph_rag.get_graph_context("What technologies does COPPER use and who works on it?")
     assert "KNOWLEDGE GRAPH CONTEXT:" in ctx
     assert "Akash WORKS_ON COPPER" in ctx
@@ -236,7 +226,6 @@ async def test_graph_rag_get_graph_context():
 
 
 def test_api_routes_knowledge_graph():
-    # 1. Create entity via POST
     res_ent = client.post(
         "/api/v1/knowledge/entities",
         json={"name": "ChromaDB", "type": "TECHNOLOGY", "confidence": 0.92, "context": "vector database"},
@@ -245,12 +234,10 @@ def test_api_routes_knowledge_graph():
     ent_data = res_ent.json()["entity"]
     ent_id = ent_data["id"]
 
-    # 2. Get entity
     res_get = client.get(f"/api/v1/knowledge/entities/{ent_id}")
     assert res_get.status_code == 200
     assert res_get.json()["entity"]["name"] == "ChromaDB"
 
-    # 3. Create relationship via POST
     res_rel = client.post(
         "/api/v1/knowledge/relationships",
         json={"source": "COPPER", "target": "ChromaDB", "type": "USES", "confidence": 0.93},
@@ -258,29 +245,24 @@ def test_api_routes_knowledge_graph():
     assert res_rel.status_code == 200
     assert res_rel.json()["relationship"]["type"] == "USES"
 
-    # 4. List entities
     res_list_ent = client.get("/api/v1/knowledge/entities?search=ChromaDB")
     assert res_list_ent.status_code == 200
     assert len(res_list_ent.json()["data"]) >= 1
 
-    # 5. List relationships
     res_list_rel = client.get("/api/v1/knowledge/relationships?type=USES")
     assert res_list_rel.status_code == 200
     assert len(res_list_rel.json()["data"]) >= 1
 
-    # 6. Subgraph endpoint
     res_sub = client.get("/api/v1/knowledge/subgraph?entity=COPPER")
     assert res_sub.status_code == 200
     sub_data = res_sub.json()
     assert "nodes" in sub_data
     assert "links" in sub_data
 
-    # 7. Stats endpoint
     res_stats = client.get("/api/v1/knowledge/stats")
     assert res_stats.status_code == 200
     assert res_stats.json()["stats"]["total_entities"] >= 2
 
-    # 8. Update entity via PATCH
     res_patch_ent = client.patch(
         f"/api/v1/knowledge/entities/{ent_id}",
         json={"confidence": 0.98, "context": "Upgraded vector database description"},
@@ -289,7 +271,6 @@ def test_api_routes_knowledge_graph():
     assert res_patch_ent.json()["entity"]["confidence"] == 0.98
     assert res_patch_ent.json()["entity"]["context"] == "Upgraded vector database description"
 
-    # 9. Update relationship via PATCH
     rel_id = res_rel.json()["relationship"]["id"]
     res_patch_rel = client.patch(
         f"/api/v1/knowledge/relationships/{rel_id}",
@@ -299,36 +280,30 @@ def test_api_routes_knowledge_graph():
     assert res_patch_rel.json()["relationship"]["type"] == "DEPENDS_ON"
     assert res_patch_rel.json()["relationship"]["confidence"] == 0.99
 
-    # 10. Delete relationship via DELETE
     res_del_rel = client.delete(f"/api/v1/knowledge/relationships/{rel_id}")
     assert res_del_rel.status_code == 200
     assert res_del_rel.json()["status"] == "success"
 
-    # 11. Delete entity
     res_del = client.delete(f"/api/v1/knowledge/entities/{ent_id}")
     assert res_del.status_code == 200
     assert res_del.json()["status"] == "success"
 
 
 def test_seed_defaults_and_export_import():
-    # Seed default architecture graph
     res_seed = client.post("/api/v1/knowledge/seed-defaults")
     assert res_seed.status_code == 200
     seed_data = res_seed.json()
     assert seed_data["seeded_entities"] >= 10
     assert seed_data["seeded_relationships"] >= 10
 
-    # Verify entities and relationships populated
     res_stats = client.get("/api/v1/knowledge/stats")
     assert res_stats.status_code == 200
     assert res_stats.json()["stats"]["total_entities"] >= 10
 
-    # Subgraph with filter
     res_sub = client.get("/api/v1/knowledge/subgraph?type=TECHNOLOGY&min_confidence=0.9")
     assert res_sub.status_code == 200
     assert len(res_sub.json()["nodes"]) > 0
 
-    # Export graph
     res_exp = client.get("/api/v1/knowledge/export")
     assert res_exp.status_code == 200
     exported = res_exp.json()
@@ -336,7 +311,6 @@ def test_seed_defaults_and_export_import():
     assert "relationships" in exported
     assert len(exported["entities"]) >= 10
 
-    # Import graph
     res_imp = client.post(
         "/api/v1/knowledge/import",
         json={

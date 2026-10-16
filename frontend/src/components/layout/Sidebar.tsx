@@ -172,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       } h-screen bg-surface-base border-r border-border flex flex-col justify-between p-2.5 z-30 select-none flex-shrink-0 transition-all duration-200`}
     >
       <div className="flex-1 flex flex-col min-h-0">
-        {/* Brand & Window Drag Region */}
+
         <div className="drag-region px-1.5 py-2 mb-2 border-b border-border flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 overflow-hidden">
             <div
@@ -207,7 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Quick Search Shortcut */}
+
         {onOpenCommandPalette && (
           <div className="no-drag mb-2 px-1 flex-shrink-0">
             <button
@@ -234,7 +234,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Navigation Sections */}
+
         <nav
           aria-label="Application Sections"
           className="no-drag space-y-3 overflow-y-auto flex-1 pr-0.5 min-h-0"
@@ -292,7 +292,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Bottom Telemetry & Status Panel */}
+
       <div className="rounded-lg bg-surface-elevated border border-border p-2 space-y-1.5 font-mono text-[9px] flex-shrink-0 mt-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 truncate">

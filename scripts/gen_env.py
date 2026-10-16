@@ -1,6 +1,5 @@
-import os
-import sys
 import secrets
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -37,14 +36,11 @@ def main():
     sec = generate_secure_secrets()
     template_text = ENV_EXAMPLE.read_text(encoding="utf-8")
 
-    # Substitute generated secrets into template
     for key, val in sec.items():
-        # Match placeholder or assignment
         pattern_old = f"{key}=CHANGE_ME"
         if pattern_old in template_text:
             template_text = template_text.replace(pattern_old, f"{key}={val}")
 
-    # Append explicitly generated secrets section
     generated_block = f"""
 # ------------------------------------------------------------------------------
 # AUTOMATICALLY GENERATED CRYPTOGRAPHIC SECRETS (scripts/gen_env.py)

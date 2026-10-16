@@ -1,7 +1,7 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { meetingsAPI } from '../services/api';
 
-// Types for meeting data
+
 interface Meeting {
   id: string;
   title: string;
@@ -29,11 +29,11 @@ export const MeetingsView: React.FC = () => {
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [notes, setNotes] = useState<MeetingNotes | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
-  
+
   const [isRecording, setIsRecording] = useState(false);
   const [activeMeetingId, setActiveMeetingId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   useEffect(() => {
@@ -78,19 +78,19 @@ export const MeetingsView: React.FC = () => {
 
   const startMeeting = async () => {
     try {
-      // Start API
+
       const res = await meetingsAPI.start(newTitle);
       const meetingId = res.data.id;
       setActiveMeetingId(meetingId);
       setIsRecording(true);
       setNewTitle('');
 
-      // Start local mic stream (simulated / basic MediaRecorder)
+
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(stream);
-        mediaRecorderRef.current.start(1000); // 1-second chunks
-        // Ideally, we'd stream this data to backend via WebSocket or POST chunks
+        mediaRecorderRef.current.start(1000); 
+
       }
 
       fetchMeetings();
@@ -126,12 +126,12 @@ export const MeetingsView: React.FC = () => {
 
   return (
     <div className="flex h-full w-full bg-surface-elevated text-verdigris font-mono text-xs overflow-hidden">
-      {/* Left panel: History & Controls */}
+
       <div className="w-1/3 border-r border-border-subtle flex flex-col">
         <div className="p-4 border-b border-border-subtle">
           <h2 className="text-sm font-display font-bold text-accent-400 mb-0.5 uppercase tracking-wider">Meetings & Transcripts</h2>
           <p className="text-[10px] text-zinc-400 mb-3 font-mono">Voice recording, transcription & AI summaries</p>
-          
+
           <div className="flex flex-col gap-2 mb-4">
             <input 
               type="text"
@@ -158,7 +158,7 @@ export const MeetingsView: React.FC = () => {
               </button>
             )}
           </div>
-          
+
           {isRecording && (
             <div className="text-accent-400 text-[10px] animate-pulse">
               [SYSTEM] Streaming local audio to C.O.P.P.E.R. core...
@@ -204,12 +204,12 @@ export const MeetingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Right panel: Details */}
+
       <div className="w-2/3 flex flex-col p-6 overflow-y-auto custom-scrollbar">
         {selectedMeeting ? (
           <div className="max-w-3xl w-full mx-auto space-y-6">
-            
-            {/* Header */}
+
+
             <div className="border-b border-border-subtle pb-4">
               <h1 className="text-2xl text-accent-400 mb-2">{selectedMeeting.title}</h1>
               <div className="flex gap-4 text-text-tertiary">
@@ -219,11 +219,11 @@ export const MeetingsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Notes Section */}
+
             {notes && (
               <div className="border border-border-subtle bg-surface-elevated/50 p-4">
                 <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Structured Synthesis</h3>
-                
+
                 <div className="space-y-4">
                   <div>
                     <div className="text-text-secondary mb-1 font-bold">Executive Summary</div>
@@ -264,7 +264,7 @@ export const MeetingsView: React.FC = () => {
               </div>
             )}
 
-            {/* Action Items */}
+
             {tasks && tasks.length > 0 && (
               <div className="border border-border-subtle bg-surface-elevated/50 p-4">
                 <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Action Items & Tasks</h3>
@@ -280,7 +280,7 @@ export const MeetingsView: React.FC = () => {
               </div>
             )}
 
-            {/* Full Transcription */}
+
             {selectedMeeting.transcription && (
               <div className="border border-border-subtle bg-surface-elevated/50 p-4">
                 <h3 className="text-accent-400 border-b border-border-subtle pb-2 mb-4 uppercase">Raw Transcription Log</h3>

@@ -1,6 +1,7 @@
 import json
 import os
 from dataclasses import asdict, dataclass
+from datetime import UTC
 
 from app.core.logger import logger
 
@@ -52,9 +53,9 @@ class ContextContinuityManager:
         next_steps: list[str],
         summary: str,
     ) -> SessionHandoff:
-        from datetime import datetime, timezone
+        from datetime import datetime
 
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         handoff = SessionHandoff(
             session_id=session_id,
             timestamp=timestamp,

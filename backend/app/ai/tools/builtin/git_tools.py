@@ -99,7 +99,6 @@ async def git_diff(
     if code != 0:
         return {"status": "error", "error": stderr or "Failed to run git diff"}
 
-    # Truncate large diffs to 500 lines / ~30KB to protect context
     lines = stdout.splitlines()
     truncated = False
     if len(lines) > 500:

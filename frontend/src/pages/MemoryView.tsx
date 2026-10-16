@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Search, X, Network, Brain } from "lucide-react";
 import { memoryCRUDAPI, knowledgeAPI, type EpistemicMemoryItem } from "../lib/api";
 import { KnowledgeGraphView } from "../components/knowledge/KnowledgeGraphView";
@@ -89,7 +89,7 @@ export const MemoryView: React.FC = () => {
 
   return (
     <div className="modern-page flex flex-col h-full w-full overflow-hidden text-text select-none font-mono text-xs">
-      {/* View Switcher Header Tab Bar */}
+
       <div className="px-6 pt-4 pb-2 border-b border-cyber-cyan/15 bg-black/60 backdrop-blur-xl flex items-center justify-between">
         <div className="flex items-center gap-1 p-1 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.10]">
           <button
@@ -160,7 +160,7 @@ export const MemoryView: React.FC = () => {
         )}
       </div>
 
-      {/* Main Content Area */}
+
       {activeTab === "graph" ? (
         <div className="flex-1 w-full overflow-hidden">
           <KnowledgeGraphView />
@@ -182,7 +182,7 @@ export const MemoryView: React.FC = () => {
             </div>
           </div>
 
-          {/* Search & Filter Bar */}
+
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="relative w-full sm:w-80">
               <Search size={14} className="absolute left-3 top-3 text-text-tertiary" />
@@ -211,7 +211,7 @@ export const MemoryView: React.FC = () => {
             </div>
           </div>
 
-          {/* Memory Items */}
+
           <div className="space-y-3">
             {loading ? (
               <div className="p-12 text-center text-text-tertiary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
@@ -272,7 +272,7 @@ export const MemoryView: React.FC = () => {
         </div>
       )}
 
-      {/* Add Memory Modal */}
+
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in text-xs">
           <div className="w-full max-w-md bg-surface-elevated border border-border-subtle rounded-2xl p-5 shadow-2xl space-y-4">

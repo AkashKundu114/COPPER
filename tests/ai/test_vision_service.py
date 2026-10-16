@@ -10,7 +10,6 @@ client = TestClient(app)
 
 @pytest.mark.asyncio
 async def test_vision_service_observe_frame():
-    # 1x1 transparent PNG base64
     dummy_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
 
     res_cam = await vision_service.observe_frame(dummy_b64, source="camera")

@@ -53,7 +53,7 @@ async def arxiv_search(query: str, max_results: int = 5) -> dict[str, Any]:
         if DefusedET is not None:
             root = DefusedET.fromstring(resp.text)
         else:
-            root = ET.fromstring(resp.text)  # nosec B314
+            root = ET.fromstring(resp.text)
         ns = {"atom": "http://www.w3.org/2005/Atom"}
         entries = []
 

@@ -8,7 +8,6 @@ def audit_workspace():
     print("C.O.P.P.E.R. WORKSPACE ARTIFACT & METRICS AUDIT")
     print("=" * 80)
 
-    # 1. Physical Checkpoint Sizes in ai-models/
     models_dir = Path("ai-models")
     print("\n--- 1. PHYSICAL MODEL CHECKPOINTS ON DISK ---")
     total_bytes = 0
@@ -21,16 +20,14 @@ def audit_workspace():
             total_bytes += size
             model_files.append((str(rel_p), size))
 
-    # Sort by size descending
     model_files.sort(key=lambda x: x[1], reverse=True)
     for rel_p, size in model_files:
-        size_gb = size / (1024 ** 3) # GiB
+        size_gb = size / (1024 ** 3)
         size_mb = size / (1024 ** 2)
         print(f"  {rel_p:<55} : {size_gb:6.2f} GiB ({size_mb:8.1f} MiB)")
 
     print(f"\nTotal Storage in ai-models/: {total_bytes / (1024**3):.2f} GiB ({total_bytes / 1e9:.2f} GB)")
 
-    # 2. Inspect models_manifest.json
     manifest_path = models_dir / "models_manifest.json"
     if manifest_path.exists():
         with open(manifest_path, encoding="utf-8") as f:
@@ -70,7 +67,6 @@ def audit_workspace():
 
         print(f"  Declared Sum of Model Sizes: {declared_total_gb:.2f} GB")
 
-    # 3. Data Manifests in backend/eval/datasets/
     print("\n--- 3. DATASET MANIFESTS & EXACT COUNTS ---")
     routing_dir = Path("backend/eval/datasets/routing")
     if routing_dir.exists():
@@ -80,7 +76,6 @@ def audit_workspace():
             with open(master_routing, encoding="utf-8") as f:
                 data = json.load(f)
             print(f"    master_routing_dataset.json: {len(data)} total samples")
-            # Count per category
             cats = {}
             for item in data:
                 c = item.get("expected_agent", item.get("category", "unknown"))
@@ -115,7 +110,6 @@ def audit_workspace():
                     d = json.load(f)
                 print(f"    {p.name:<32}: {len(d):5d} items")
 
-    # 4. Benchmark Metrics from JSON
     print("\n--- 4. STORED BENCHMARK EVALUATION OUTPUTS ---")
     bm_metrics_path = Path("backend/eval/benchmark_metrics.json")
     if bm_metrics_path.exists():

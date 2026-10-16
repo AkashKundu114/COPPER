@@ -6,24 +6,9 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-# Ensure backend root is in python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import app.database.models.agent_registry  # noqa: F401, E402
-import app.database.models.audit_log  # noqa: F401, E402
-import app.database.models.campaign  # noqa: F401, E402
-import app.database.models.episode  # noqa: F401, E402
-import app.database.models.history  # noqa: F401, E402
-import app.database.models.knowledge_graph  # noqa: F401, E402
-import app.database.models.lora_adapter  # noqa: F401, E402
-import app.database.models.memory_v2  # noqa: F401, E402
-import app.database.models.project  # noqa: F401, E402
-import app.database.models.response_evaluation  # noqa: F401, E402
-import app.database.models.schedule_event  # noqa: F401, E402
-import app.database.models.self_memory  # noqa: F401, E402
-import app.database.models.task  # noqa: F401, E402
-import app.database.models.workspace  # noqa: F401, E402
-from app.database.postgres import Base, db_url  # noqa: E402
+from app.database.postgres import Base, db_url
 
 config = context.config
 

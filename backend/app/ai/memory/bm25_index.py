@@ -14,10 +14,7 @@ def tokenize_text(text: str) -> list[str]:
 
 
 class BM25Index:
-    """
-    BM25 Keyword Index using rank_bm25.
-    Indexes documents and chat history, auto-updating dynamically as new entries are added.
-    """
+    """BM25 Keyword Index using rank_bm25."""
 
     def __init__(self, auto_bootstrap: bool = True):
         self._documents: dict[str, dict[str, Any]] = {}
@@ -102,10 +99,7 @@ class BM25Index:
         self._is_dirty = False
 
     def search(self, query: str, limit: int = 10) -> list[tuple[str, float]]:
-        """
-        Searches the BM25 index with a query string.
-        Returns: [(doc_id, bm25_score), ...] ranked in descending score order.
-        """
+        """Searches the BM25 index with a query string."""
         self._ensure_initialized()
 
         if self._is_dirty:
@@ -120,15 +114,12 @@ class BM25Index:
 
         scores = self._bm25.get_scores(tokens)
 
-        # Pair document IDs with positive scores
         results: list[tuple[str, float]] = []
         for doc_id, score in zip(self._corpus_ids, scores):
             score_f = float(score)
             if score_f > 0.0:
                 results.append((doc_id, round(score_f, 4)))
 
-        # Fallback to simple token-frequency matching if BM25 gives all zeros
-        # (e.g. on 2-document corpus where IDF can evaluate to 0 in standard Okapi formula)
         if not results:
             query_set = set(tokens)
             for doc_id in self._corpus_ids:
@@ -193,7 +184,6 @@ class BM25Index:
         from app.ai.memory.vector_store import VectorStore
         from app.core.constants import CHROMA_COLLECTION_CHAT
 
-        # 1. Documents store
         doc_store = VectorStore("copper_documents")
         if doc_store.collection:
             try:
@@ -215,7 +205,6 @@ class BM25Index:
             except Exception as e:
                 logger.debug(f"Could not bootstrap documents into BM25: {e}")
 
-        # 2. Chat memories store
         chat_store = VectorStore(CHROMA_COLLECTION_CHAT)
         if chat_store.collection:
             try:

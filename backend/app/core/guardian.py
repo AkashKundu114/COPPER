@@ -35,12 +35,7 @@ INVISIBLE_CHARS_REGEX = re.compile(r"[\u200b\u200c\u200d\ufeff\u200e\u200f\u202a
 
 
 def normalize_adversarial_text(text: str) -> str:
-    """
-    Normalizes text to defeat adversarial evasion techniques:
-    1. Strips zero-width and invisible directional Unicode characters.
-    2. Maps confusable Cyrillic/Greek homoglyphs to Latin ASCII.
-    3. Detects and decodes embedded base64 payloads to inspect inner commands.
-    """
+    """Normalizes text to defeat adversarial evasion techniques:"""
     if not text:
         return ""
     cleaned = INVISIBLE_CHARS_REGEX.sub("", text)
@@ -50,7 +45,6 @@ def normalize_adversarial_text(text: str) -> str:
 
     decoded_extras = []
 
-    # Hex payload extraction (e.g. bytes.fromhex('...'), \x72\x6d...)
     hex_matches = re.findall(r"(?:fromhex\(['\"]|\\x)([0-9a-fA-F]{2,})", normalized)
     for h in hex_matches:
         try:
@@ -61,7 +55,6 @@ def normalize_adversarial_text(text: str) -> str:
         except Exception:
             pass
 
-    # Base64 payload extraction (quoted and unquoted, e.g. -EncodedCommand / -enc)
     b64_matches = re.findall(
         r"(?:-encodedcommand\s+|-enc\s+|-e\s+|['\"]|\b)([A-Za-z0-9+/]{8,}={0,2})(?:['\"]|\b|$)",
         normalized,
@@ -96,8 +89,8 @@ class GuardianVerdict:
     confidence: str | None = None
     recommendation: str | None = None
     requires_confirmation: bool = False
-    friction_index: float = 0.0  # Novelty 3: Continuous DFM-Guard friction score [0.0 - 3.0]
-    fatigue_score: float = 0.0  # Real-time modeled session fatigue
+    friction_index: float = 0.0
+    fatigue_score: float = 0.0
 
     def to_dict(self) -> dict:
         return {
@@ -171,19 +164,13 @@ SAFETY_TRIGGERS = [
 ]
 
 SAFETY_PATTERNS = [
-    # Destructive SQL & DB attacks
     r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+constraint\s+.*cascade)\b",
-    # Filesystem & OS destruction
     r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+([a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
     r"\b(ri|remove-item)\s+([a-z]:|/|\*)",
-    # Privilege escalation, Persistence & Token tampering
     r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile)|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create)\b",
-    # Malicious payloads, exploits, piped shells & exfiltration
     r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
     r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib|pty\.spawn)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
-    # Secret harvesting & Poisoning
     r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
-    # Safety bypass, Defender tampering & jailbreaks
     r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux)|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+evil|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
 ]
 
@@ -216,9 +203,7 @@ CONFLICT_TRIGGERS = [
 ]
 
 
-# Computer Use Blacklists
 SENSITIVE_WINDOW_KEYWORDS = [
-    # Banking & Financial
     "bank",
     "chase",
     "wells fargo",
@@ -234,7 +219,6 @@ SENSITIVE_WINDOW_KEYWORDS = [
     "coinbase",
     "robinhood",
     "stripe dashboard",
-    # Medical & Healthcare
     "medical",
     "patient",
     "mychart",
@@ -244,7 +228,6 @@ SENSITIVE_WINDOW_KEYWORDS = [
     "hospital",
     "health records",
     "telehealth",
-    # Password Managers & Vaults
     "1password",
     "bitwarden",
     "lastpass",
@@ -279,10 +262,7 @@ PASSWORD_INPUT_TRIGGERS = [
 
 
 def calculate_fatigue_score(session_hours: float = 0.0, recent_error_rate: float = 0.0) -> float:
-    """
-    DFM-Guard: Models real-time user cognitive fatigue.
-    F(t) = tanh(t_hours / 4.0 + 0.5 * error_rate)
-    """
+    """DFM-Guard: Models real-time user cognitive fatigue."""
     z = (max(0.0, session_hours) / 4.0) + (0.5 * max(0.0, min(1.0, recent_error_rate)))
     return round(math.tanh(z), 3)
 
@@ -338,10 +318,7 @@ class FrictionConfig:
 
 
 def load_friction_config(config_path: str | Path | None = None) -> FrictionConfig:
-    """
-    Loads FrictionConfig from a JSON configuration file or report if available,
-    falling back to default calibrated values.
-    """
+    """Loads FrictionConfig from a JSON configuration file or report if available,"""
     candidates = []
     if config_path:
         candidates.append(Path(config_path))
@@ -356,7 +333,7 @@ def load_friction_config(config_path: str | Path | None = None) -> FrictionConfi
     for p in candidates:
         if p.is_file():
             try:
-                with open(p, "r", encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     data = json.load(f)
                 cfg_block = data.get("optimal_coefficients") or data.get("friction_config") or data
                 if isinstance(cfg_block, dict) and "risk_weight" in cfg_block:
@@ -377,14 +354,7 @@ def compute_dynamic_friction_index(
     bias: float | None = None,
     config: FrictionConfig | None = None,
 ) -> float:
-    """
-    Computes continuous Friction Index in [0.0, 3.0]:
-    F_idx = 3.0 * sigma(w_R * R + w_F * F + w_G * G - bias)
-
-    Coefficients calibrated via grid search over 350 adversarial
-    test cases optimizing for F1 score. See scripts/calibrate_friction.py
-    and docs/friction_calibration_report.json for methodology.
-    """
+    """Computes continuous Friction Index in [0.0, 3.0] calibrated via grid search over 350 adversarial test cases (scripts/calibrate_friction.py, docs/friction_calibration_report.json)."""
     cfg = config or DEFAULT_FRICTION_CONFIG
     effective_bias = bias if bias is not None else cfg.bias
     logit = (
@@ -410,11 +380,9 @@ class GuardianEngine:
 
         title_lower = window_title.lower()
 
-        # Whitelist override check
         if any(w.lower() in title_lower for w in self.window_whitelist):
             return GuardianVerdict(level=DisagreementLevel.EXECUTE)
 
-        # Blacklist check
         for forbidden in self.window_blacklist:
             if forbidden in title_lower:
                 return GuardianVerdict(
@@ -444,19 +412,16 @@ class GuardianEngine:
 
     def evaluate_screen_action(self, action_type: str, action_data: dict, window_title: str = "") -> GuardianVerdict:
         """Guardian evaluation specifically tailored for Computer Use Agent steps."""
-        # 1. Active window check
         win_verdict = self.check_window_safety(window_title)
         if win_verdict.level >= DisagreementLevel.CHALLENGE:
             return win_verdict
 
-        # 2. Text typing check
         if action_type == "type_text":
             text_to_type = action_data.get("text", "")
             typing_verdict = self.check_typing_safety(text_to_type)
             if typing_verdict.level >= DisagreementLevel.CHALLENGE:
                 return typing_verdict
 
-        # 3. Dangerous hotkeys check (e.g. system shutdown, format, deletion)
         if action_type == "hotkey":
             keys = [str(k).lower() for k in action_data.get("keys", [])]
             if ("alt" in keys and "f4" in keys) or ("ctrl" in keys and "alt" in keys and "del" in keys):
@@ -474,7 +439,6 @@ class GuardianEngine:
             context = {}
         action_lower = normalize_adversarial_text(proposed_action)
 
-        # Real-time cognitive & context telemetry
         session_hours = float(context.get("session_hours", 0.0))
         error_rate = float(context.get("error_rate", 0.0))
         fatigue = calculate_fatigue_score(session_hours, error_rate)
@@ -489,7 +453,6 @@ class GuardianEngine:
             risk, fatigue, goal_conflict, config=self.friction_config
         )
 
-        # 1. Hard-boundary Catastrophic Safety Interception (Guaranteed 100% catch rate)
         if (
             context.get("is_destructive")
             or any(t in action_lower for t in SAFETY_TRIGGERS)
@@ -504,7 +467,6 @@ class GuardianEngine:
                 fatigue_score=fatigue,
             )
 
-        # 2. Level 2 Challenge: Commitment Conflict, High Fatigue or Elevated Dynamic Friction
         if has_conflict or (risk >= 0.70 and fatigue >= 0.65) or friction >= 2.0:
             evidence = conflicts if conflicts else detected_conflicts
             reason = (
@@ -527,7 +489,6 @@ class GuardianEngine:
                 fatigue_score=fatigue,
             )
 
-        # 3. Level 1 Suggestion: Optimization Nudge or Moderate Fatigue Advisory
         suggestion = context.get("optimization_suggestion")
         if suggestion or (fatigue >= 0.50 and risk >= 0.30):
             reason = (

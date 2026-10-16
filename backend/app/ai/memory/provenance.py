@@ -130,7 +130,6 @@ class ProvenanceTracker:
         record = self.records[record_id]
         old_conf = record.current_confidence
 
-        # Bayesian downgrade approximation
         new_conf = old_conf * (1.0 - confidence)
 
         record.revision_history.append(
@@ -190,7 +189,6 @@ class ProvenanceTracker:
         record_id = self.hash_index.get(fact_hash)
 
         if not record_id:
-            # Try partial match
             matches = [r for r in self.records.values() if fact.lower() in r.fact.lower()]
             if not matches:
                 return {"error": "Fact not found"}

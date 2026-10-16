@@ -50,7 +50,7 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
       className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none"
     >
       <div className="copper-trace w-full max-w-lg bg-bg-panel border-2 border-molten/50 rounded-xl p-6 shadow-xl space-y-4">
-        {/* Header */}
+
         <div className="flex items-center gap-3 border-b border-molten/20 pb-4">
           <div className="w-10 h-10 rounded-lg bg-molten/15 border border-molten/40 flex items-center justify-center text-molten" aria-hidden="true">
             <ShieldAlert size={24} />
@@ -65,7 +65,7 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
           </div>
         </div>
 
-        {/* Content */}
+
         <div id="guardian-challenge-desc" className="space-y-2 text-xs text-text-muted leading-relaxed">
           <p className="font-medium text-text">{payload.reasoning}</p>
 
@@ -98,7 +98,7 @@ export const GuardianChallengeModal: React.FC<GuardianChallengeModalProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
+
         <div className="grid grid-cols-3 gap-2 pt-2">
           <button
             onClick={onFollowRecommendation}

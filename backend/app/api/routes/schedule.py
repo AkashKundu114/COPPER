@@ -128,7 +128,6 @@ def delete_schedule_event(event_id: str, db: Session = Depends(get_db)):
     return _delete_event(event_id, db)
 
 
-# Also provide the same endpoints under /events for direct access
 @events_router.get("")
 def list_events_direct(
     category: str | None = Query(None),

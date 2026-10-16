@@ -12,7 +12,7 @@ class CampaignMetric(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     campaign_id = Column(String(64), nullable=False, index=True)
     campaign_name = Column(String(128), nullable=False)
-    campaign_type = Column(String(32), nullable=False)  # "brand", "performance", "retargeting"
+    campaign_type = Column(String(32), nullable=False)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), index=True)
     impressions = Column(Integer, nullable=False, default=0)
     clicks = Column(Integer, nullable=False, default=0)

@@ -14,17 +14,14 @@ _self_memory_store = VectorStore("copper_self_memory")
 
 
 class SelfModelService:
-    # Bayesian update constants from docs/research/epistemic-memory.md
     LEARNING_RATE = 0.15
-    # Decay rates (per day)
     DECAY_RATES = {
-        SelfMemoryCategory.DECISION: 0.005,  # ~138 day half-life
-        SelfMemoryCategory.CORRECTION: 0.03,  # ~23 day half-life
-        SelfMemoryCategory.POSITION: 0.005,  # ~138 day half-life
-        SelfMemoryCategory.TRACK_RECORD: 0.005,  # ~138 day half-life
-        SelfMemoryCategory.OPEN_QUESTION: 0.10,  # ~7 day half-life
+        SelfMemoryCategory.DECISION: 0.005,
+        SelfMemoryCategory.CORRECTION: 0.03,
+        SelfMemoryCategory.POSITION: 0.005,
+        SelfMemoryCategory.TRACK_RECORD: 0.005,
+        SelfMemoryCategory.OPEN_QUESTION: 0.10,
     }
-    # Correction detection patterns
     CORRECTION_PATTERNS = [
         r"\bno[,.]?\s+(?:that'?s?\s+)?(?:wrong|incorrect|not right)",
         r"\bactually[,.]?\s+(?:I|i)\s+(?:prefer|want|need|meant)",
@@ -36,46 +33,38 @@ class SelfModelService:
     ]
 
     async def build_self_context(self, message: str) -> str:
-        """Build the self_context_snippet for the system prompt.
-        Retrieves top-5 relevant self_memory rows + unresolved open questions.
-        Returns a compact text block."""
+        """Build the self_context_snippet for the system prompt."""
         db = SessionLocal()
         try:
-            # Get unresolved open questions (always included)
             open_qs = (
                 db.query(SelfMemory)
                 .filter(
                     SelfMemory.category == SelfMemoryCategory.OPEN_QUESTION,
-                    SelfMemory.outcome == None,  # noqa: E711
+                    SelfMemory.outcome.is_(None),
                 )
                 .order_by(desc(SelfMemory.created_at))
                 .limit(2)
                 .all()
             )
 
-            # Vector search for relevant self-memories
             relevant = []
             try:
                 results = await _self_memory_store.search(message, n_results=5)
                 if results:
-                    # Get the actual DB rows for confidence-weighted ranking
                     for r in results:
                         mem_id = r.get("metadata", {}).get("self_memory_id")
                         if mem_id:
                             mem = db.query(SelfMemory).filter(SelfMemory.id == mem_id).first()
                             if mem:
                                 cosine_sim = max(0, 1 - r.get("distance", 1))
-                                # Hybrid score: S = 0.6 * cosine_sim + 0.4 * confidence
                                 score = 0.6 * cosine_sim + 0.4 * mem.confidence
                                 relevant.append((mem, score))
             except Exception as e:
                 logger.warning(f"Self-memory vector search fallback: {e}")
 
-            # Sort by hybrid score, take top 3
             relevant.sort(key=lambda x: x[1], reverse=True)
             top_memories = [m for m, _ in relevant[:3]]
 
-            # Merge with open questions (deduplicate)
             seen_ids = {m.id for m in top_memories}
             for oq in open_qs:
                 if oq.id not in seen_ids:
@@ -84,7 +73,6 @@ class SelfModelService:
             if not top_memories:
                 return ""
 
-            # Render compact text
             lines = []
             for mem in top_memories:
                 cat = mem.category.value.upper().replace("_", " ")
@@ -123,7 +111,6 @@ class SelfModelService:
         self, agent_type: str, decision: str, context: str, episode_id: int | None = None
     ) -> SelfMemory | None:
         """Record a significant decision COPPER made."""
-        # Only record decisions with substance (not trivial chat)
         if len(decision) < 20:
             return None
         content = f"Decided via {agent_type}: {decision[:300]}"
@@ -182,7 +169,6 @@ class SelfModelService:
             db.commit()
             db.refresh(entry)
 
-            # Index in vector store
             try:
                 await _self_memory_store.add(
                     text=content,
@@ -201,9 +187,7 @@ class SelfModelService:
             db.close()
 
     def apply_bayesian_update(self, memory_id: str) -> bool:
-        """Reinforce a self-memory entry using the Bayesian formula:
-        C_new = C_old + (1 - C_old) * alpha * log2(1 + E)
-        """
+        """Reinforce a self-memory entry using the Bayesian formula:"""
         db = SessionLocal()
         try:
             mem = db.query(SelfMemory).filter(SelfMemory.id == memory_id).first()
@@ -224,13 +208,10 @@ class SelfModelService:
             db.close()
 
     def apply_decay(self) -> int:
-        """Apply temporal decay to all self-memory entries.
-        C(t) = C_0 * e^(-lambda * delta_t)
-        Returns count of entries updated.
-        """
+        """Apply temporal decay to all self-memory entries."""
         db = SessionLocal()
         try:
-            entries = db.query(SelfMemory).filter(SelfMemory.superseded_by == None).all()  # noqa: E711
+            entries = db.query(SelfMemory).filter(SelfMemory.superseded_by.is_(None)).all()
             updated = 0
             now = datetime.now(UTC)
             for entry in entries:

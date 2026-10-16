@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Activity,
   Terminal,
@@ -55,7 +55,7 @@ export const ActivityView: React.FC = () => {
   const [showBenchmarkAnalytics, setShowBenchmarkAnalytics] = useState(false);
 
   useEffect(() => {
-    // Fetch live traces from backend if available
+
     fetch(`${API_BASE}/orchestration/traces?limit=10`)
       .then((r) => r.json())
       .then((traces) => {
@@ -78,7 +78,7 @@ export const ActivityView: React.FC = () => {
       })
       .catch(() => {});
 
-    // Fetch live PRISM routing history
+
     fetch(`${API_BASE}/routing/history?limit=20`)
       .then((r) => r.json())
       .then((data) => {
@@ -101,7 +101,7 @@ export const ActivityView: React.FC = () => {
       })
       .catch(() => {});
 
-    // Fetch live OpenTelemetry distributed traces
+
     fetchDistributedTraces(25)
       .then((data) => {
         if (data && Array.isArray(data.traces) && data.traces.length > 0) {
@@ -239,7 +239,7 @@ export const ActivityView: React.FC = () => {
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -292,7 +292,7 @@ export const ActivityView: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter Tabs */}
+
       <div className="flex flex-wrap gap-2 border-b border-border-subtle pb-3">
         {(
           [
@@ -331,21 +331,21 @@ export const ActivityView: React.FC = () => {
         ))}
       </div>
 
-      {/* PRISM Systematic Benchmark Analytics & Calibration Panel */}
+
       {showBenchmarkAnalytics && (
         <div className="transition-all animate-in fade-in duration-300">
           <RoutingBenchmarkView />
         </div>
       )}
 
-      {/* Passive Context & Activity Timeline View (Phase 1 Ambient Intelligence) */}
+
       {filter === "ambient" && (
         <div className="space-y-4 animate-in fade-in duration-300">
           <PassiveActivityTimeline />
         </div>
       )}
 
-      {/* Active Execution Pipeline Card */}
+
       <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
         <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider flex items-center justify-between">
           <span>Active Collaboration Architecture</span>
@@ -375,7 +375,7 @@ export const ActivityView: React.FC = () => {
         </div>
       </div>
 
-      {/* Real-time Activity Event Logs */}
+
       <div className="space-y-4">
         <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Execution Traces ({filtered.length})
@@ -386,7 +386,7 @@ export const ActivityView: React.FC = () => {
           </div>
         ) : (
           filtered.map((log) => {
-            // Render OpenTelemetry distributed trace waterfall
+
             if (log.distributedTrace) {
               return (
                 <div key={log.id} className="transition-all">
@@ -398,7 +398,7 @@ export const ActivityView: React.FC = () => {
               );
             }
 
-            // Render PRISM explainable routing card with horizontal bar charts, keyword highlights, and stage progression
+
             if (log.routingExplanation) {
               return (
                 <div key={log.id} className="transition-all">
@@ -470,21 +470,21 @@ export const ActivityView: React.FC = () => {
                   </div>
                 </div>
 
-                {/* If Log Contains Task Graph, Render Full Interactive Visualizer */}
+
                 {hasGraph && log.taskGraph && (
                   <div className="mt-3">
                     <TaskGraphVisualizer graph={log.taskGraph} />
                   </div>
                 )}
 
-                {/* If Log Contains Distributed Trace, Render Waterfall Visualizer */}
+
                 {log.distributedTrace && (
                   <div className="mt-3">
                     <TraceWaterfallVisualizer trace={log.distributedTrace} />
                   </div>
                 )}
 
-                {/* Expandable I/O Drawer for simple tools */}
+
                 {hasIO && isExpanded && (
                   <div className="p-4 bg-canvas/90 border border-border-subtle rounded-xl space-y-3 mt-2">
                     {log.io?.arguments && (

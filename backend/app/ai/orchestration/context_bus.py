@@ -14,7 +14,7 @@ class InterAgentMessage:
     dag_id: str
     sender: str
     recipient: str
-    message_type: str  # "data_transfer", "task_handoff", "query", "response", "status_update"
+    message_type: str
     content: str
     timestamp: float = field(default_factory=time.time)
     payload: dict[str, Any] = field(default_factory=dict)
@@ -33,17 +33,9 @@ class InterAgentMessage:
 
 
 class ContextBus:
-    """
-    Shared Context Bus for Multi-Agent Collaboration.
-    Supports:
-    - Redis Pub/Sub channels for distributed event streaming and inter-agent message passing
-    - High-speed async in-memory fallback when Redis is offline
-    - Key-value shared context bus for sharing artifacts, tables, and sub-task outputs
-    - Inter-agent message audit trail & execution trace storage
-    """
+    """Shared Context Bus for Multi-Agent Collaboration."""
 
     def __init__(self):
-        # In-memory storage structures for local execution / fallback
         self._contexts: dict[str, dict[str, Any]] = {}
         self._messages: dict[str, list[InterAgentMessage]] = {}
         self._subscribers: dict[str, list[Callable[[dict[str, Any]], Coroutine[Any, Any, None]]]] = {}
@@ -56,7 +48,6 @@ class ContextBus:
             self._contexts[dag_id] = {}
         self._contexts[dag_id][key] = value
 
-        # Try updating Redis if available
         try:
             r = await get_redis()
             if r:
@@ -69,11 +60,9 @@ class ContextBus:
 
     async def get_context(self, dag_id: str, key: str, default: Any = None) -> Any:
         """Retrieve a value from the shared context."""
-        # Check local memory first
         if dag_id in self._contexts and key in self._contexts[dag_id]:
             return self._contexts[dag_id][key]
 
-        # Check Redis if available
         try:
             r = await get_redis()
             if r:
@@ -117,10 +106,7 @@ class ContextBus:
         payload: dict[str, Any] | None = None,
         session_id: str | None = None,
     ) -> InterAgentMessage:
-        """
-        Pass a message from one specialist agent to another or to the bus.
-        Logs to audit history and publishes to Redis Pub/Sub + WebSockets.
-        """
+        """Pass a message from one specialist agent to another or to the bus."""
         msg_id = f"msg_{dag_id}_{int(time.time() * 1000)}_{len(self._messages.get(dag_id, [])) + 1}"
         msg = InterAgentMessage(
             id=msg_id,
@@ -139,7 +125,6 @@ class ContextBus:
 
         logger.info(f"ContextBus Inter-Agent [{sender} -> {recipient}] ({message_type}): {content[:80]}")
 
-        # Publish to Redis Pub/Sub
         try:
             r = await get_redis()
             if r:
@@ -148,7 +133,6 @@ class ContextBus:
         except Exception as e:
             logger.debug(f"Redis pub/sub message publish error: {e}")
 
-        # Broadcast via WebSocket if session_id is provided
         if session_id:
             try:
                 from app.api.websocket.manager import manager
@@ -161,7 +145,6 @@ class ContextBus:
             except Exception as ws_err:
                 logger.debug(f"ContextBus WebSocket message broadcast error: {ws_err}")
 
-        # Notify in-memory subscribers
         await self._notify_subscribers(dag_id, {"type": "inter_agent_message", "data": msg.to_dict()})
 
         return msg
@@ -177,10 +160,7 @@ class ContextBus:
         event_type: str,
         payload: dict[str, Any],
     ):
-        """
-        Publish a DAG execution lifecycle event to Redis Pub/Sub,
-        local subscribers, and connected WebSockets.
-        """
+        """Publish a DAG execution lifecycle event to Redis Pub/Sub,"""
         event_data = {
             "type": event_type,
             "dag_id": dag_id,
@@ -188,7 +168,6 @@ class ContextBus:
             **payload,
         }
 
-        # Publish to Redis
         try:
             r = await get_redis()
             if r:
@@ -197,7 +176,6 @@ class ContextBus:
         except Exception as e:
             logger.debug(f"Redis pub/sub event publish error: {e}")
 
-        # Forward directly to WebSocket manager for the active session
         if session_id:
             try:
                 from app.api.websocket.manager import manager
@@ -206,7 +184,6 @@ class ContextBus:
             except Exception as ws_err:
                 logger.debug(f"ContextBus WS event error: {ws_err}")
 
-        # Forward to local subscribers
         await self._notify_subscribers(dag_id, event_data)
 
     def subscribe(self, dag_id: str, callback: Callable[[dict[str, Any]], Coroutine[Any, Any, None]]):
@@ -243,7 +220,6 @@ class ContextBus:
         """Retrieve trace by DAG ID."""
         trace = self._traces.get(dag_id)
         if trace:
-            # Attach inter-agent messages to trace
             trace["inter_agent_messages"] = self.get_messages(dag_id)
             trace["shared_context"] = self._contexts.get(dag_id, {})
         return trace

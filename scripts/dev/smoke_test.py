@@ -1,6 +1,4 @@
 import sys
-import os
-import json
 from pathlib import Path
 
 # Ensure backend is on sys.path
@@ -8,11 +6,12 @@ sys.path.insert(0, str(Path("d:/C.O.P.P.E.R/backend").resolve()))
 sys.path.insert(0, str(Path("d:/C.O.P.P.E.R").resolve()))
 
 from fastapi.testclient import TestClient
-from app.main import app
-from app.core.guardian import guardian_engine, DisagreementLevel
-from app.database.postgres import SessionLocal, init_db
-from app.database.models.memory_v2 import UserMemoryV2, MemoryType, MemoryStatus
+
 from app.ai.memory.memory_manager import memory_manager
+from app.core.guardian import DisagreementLevel, guardian_engine
+from app.database.models.memory_v2 import MemoryStatus, MemoryType, UserMemoryV2
+from app.database.postgres import SessionLocal, init_db
+from app.main import app
 
 print("=" * 60)
 print("COPPER BASELINE SMOKE RUN")
@@ -49,19 +48,19 @@ try:
     db.commit()
     db.refresh(mem)
     print(f"Created memory ID {mem.id}: type={mem.type.value}, confidence={mem.confidence}")
-    
+
     # Read back
     retrieved = db.query(UserMemoryV2).filter(UserMemoryV2.id == mem.id).first()
     assert retrieved is not None
     assert retrieved.content == test_content
     print(f"Verified retrieval of memory ID {retrieved.id}: {retrieved.content}")
-    
+
     # Test Promotion to FACT via reinforcement
     promoted = memory_manager.reinforce_memory(db, mem.id, confidence_delta=0.25)
     print(f"Reinforced memory: confidence={promoted.confidence:.2f}, type={promoted.type.value}")
     assert promoted.type == MemoryType.FACT, f"Expected FACT, got {promoted.type}"
     print("Memory belief revision promotion test: PASSED (>=0.85 -> FACT)")
-    
+
     # Cleanup smoke test row
     db.delete(mem)
     db.commit()

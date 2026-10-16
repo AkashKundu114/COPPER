@@ -53,24 +53,9 @@ def init_db():
     if db_url.startswith("sqlite"):
         db_file = Path(settings.DB_PATH)
         db_file.parent.mkdir(parents=True, exist_ok=True)
-    import app.database.models.agent_registry  # noqa: F401
-    import app.database.models.audit_log  # noqa: F401
-    import app.database.models.campaign  # noqa: F401
-    import app.database.models.episode  # noqa: F401
-    import app.database.models.history  # noqa: F401
-    import app.database.models.knowledge_graph  # noqa: F401
-    import app.database.models.lora_adapter  # noqa: F401
-    import app.database.models.memory_v2  # noqa: F401
-    import app.database.models.project  # noqa: F401
-    import app.database.models.response_evaluation  # noqa: F401
-    import app.database.models.schedule_event  # noqa: F401
-    import app.database.models.self_memory  # noqa: F401
-    import app.database.models.task  # noqa: F401
-    import app.database.models.workspace  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
 
-    # Lightweight schema migration for SQLite
     if db_url.startswith("sqlite"):
         try:
             with engine.connect() as conn:

@@ -46,11 +46,9 @@ async def scientific_skill_lookup(skill_name: str) -> dict[str, Any]:
     catalog = _load_science_skills()
     q = skill_name.lower().strip()
 
-    # Exact match
     if q in catalog:
         return {"status": "success", "skill": catalog[q]}
 
-    # Partial match
     matches = []
     for k, v in catalog.items():
         if q in k or q in v.get("name", "").lower() or q in v.get("description", "").lower():

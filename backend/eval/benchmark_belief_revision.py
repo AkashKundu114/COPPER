@@ -1,24 +1,10 @@
-"""
-C.O.P.P.E.R. Epistemic Memory & Belief Revision Evaluation Suite
-Benchmarks PW-EBR and UMF-EDR (Unified Multi-Factor Epistemic Decay & Reinforcement) against:
-1. Baseline A: Last-Write-Wins (LWW)
-2. Baseline B: Naive Bayesian Update (without provenance or surprise bounding)
-3. Baseline C: Generative Agents Linear Scoring (Park et al., 2023) without retrieval plasticity
-4. Proposed Method: UMF-EDR + PW-EBR (Surprise-Gated Log-Odds with Retrieval Plasticity, Importance Floor, and Unified Scoring)
-
-Evaluated under four core challenges identified in 2024-2026 agent memory literature:
-- Challenge 1: Noise/Poisoning Resistance against ambient speculative statements.
-- Challenge 2: Instant Convergence under explicit user directives/corrections.
-- Challenge 3: Continuous temporal drift & contradiction adaptation after elapsed time.
-- Challenge 4: Multi-Factor Memory Dynamics (Retrieval Spacing Effect, Importance Floor, and Relevance Coupling).
-"""
+"""C.O.P.P.E.R. Epistemic Memory & Belief Revision Evaluation Suite"""
 
 import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-# Ensure backend root is in sys.path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.ai.memory.memory_manager import (
@@ -83,14 +69,12 @@ def run_pwebr_algorithm(
         )
         if ev.get("retrieved", False):
             curr_retrievals += 1
-            # Closed-loop testing effect: retrieval plastic reinforcement
             conf = min(0.99, conf + (0.03 * ev.get("importance", importance)))
     return conf
 
 
 def generate_benchmark_scenarios() -> list[EvaluationSample]:
     return [
-        # Scenario 1: Poisoning Defense (Ambient speculative noise followed by explicit user statement)
         EvaluationSample(
             stream_id="poison_defense_01",
             attribute="editor_theme",
@@ -126,7 +110,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
             ],
             ground_truth="dark",
         ),
-        # Scenario 2: Instant Convergence on User Correction
         EvaluationSample(
             stream_id="instant_convergence_02",
             attribute="user_name",
@@ -142,7 +125,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
             ],
             ground_truth="Akash Kundu",
         ),
-        # Scenario 3: Temporal Decay with Preference Shift
         EvaluationSample(
             stream_id="temporal_shift_03",
             attribute="frontend_framework",
@@ -161,7 +143,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
                     "elapsed_days": 10.0,
                     "polarity": 1,
                 },
-                # 60 days elapsed without mention (decay period)
                 {
                     "statement": "I have completely migrated my stack to Vue 3",
                     "value": "Vue 3",
@@ -172,7 +153,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
             ],
             ground_truth="Vue 3",
         ),
-        # Scenario 4: Multi-Turn Corroboration via Tool Successes
         EvaluationSample(
             stream_id="tool_verification_04",
             attribute="test_suite",
@@ -201,7 +181,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
             ],
             ground_truth="pytest",
         ),
-        # Scenario 5: Spacing Effect & Retrieval Plasticity (Memory accessed 6 times over 60 days)
         EvaluationSample(
             stream_id="spacing_plasticity_05",
             attribute="api_architecture",
@@ -257,7 +236,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
             ],
             ground_truth="FastAPI",
         ),
-        # Scenario 6: Importance-Bounded Floor (Core identity fact after 120 days of non-retrieval)
         EvaluationSample(
             stream_id="importance_floor_06",
             attribute="hardware_profile",
@@ -270,7 +248,6 @@ def generate_benchmark_scenarios() -> list[EvaluationSample]:
                     "polarity": 1,
                     "importance": 0.90,
                 },
-                # 120 days pass with 0 mentions
                 {
                     "statement": "Verify VRAM allocation",
                     "value": "RTX 5060",
@@ -307,12 +284,10 @@ def run_benchmark():
             lww_correct = lww_conf <= 0.35
             naive_correct = naive_conf <= 0.35
         elif sc.stream_id == "importance_floor_06":
-            # Importance floor preserves confidence >= 0.50 despite 120 days of non-retrieval
             pwebr_correct = pwebr_conf >= 0.50
             lww_correct = lww_conf >= 0.50
             naive_correct = naive_conf >= 0.50
         elif sc.stream_id == "spacing_plasticity_05":
-            # Spacing effect preserves high confidence >= 0.75 despite 60 days of decay
             pwebr_correct = pwebr_conf >= 0.75
             lww_correct = lww_conf >= 0.75
             naive_correct = naive_conf >= 0.75
@@ -354,7 +329,6 @@ def run_benchmark():
     print(f"[*] Overall Evaluation Rate - LWW Baseline:            {lww_rate:.1f}%")
     print("==================================================================")
 
-    # Multi-Factor Scoring Demonstration against Generative Agents
     print("\n--- UMF-EDR Multi-Factor Retrieval Scoring Demonstration ---")
     mem_high = {"dist": 0.25, "conf": 0.92, "imp": 0.90}
     mem_med = {"dist": 0.30, "conf": 0.55, "imp": 0.40}

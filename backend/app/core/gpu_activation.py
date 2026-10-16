@@ -1,27 +1,17 @@
-"""
-GPU Hardware Activation & Licensing Engine for C.O.P.P.E.R.
+"""GPU Hardware Activation & Licensing Engine for C.O.P.P.E.R."""
 
-Enforces zero-cloud offline hardware validation via deterministic fingerprinting:
-1. Option A (Local Hardware): Generates a hardware fingerprint from local GPU + machine UUID,
-   enabling direct execution on compatible user hardware.
-2. Option B (Owner Master Code): Allows friends/colleagues to enter the project owner's
-   (Akash's) pre-shared activation code, unlocking runtime access.
-"""
-
-from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import os
-from pathlib import Path
 import platform
 import subprocess
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any
 
 ACTIVATION_DIR = Path.home() / ".copper"
 ACTIVATION_FILE = ACTIVATION_DIR / "activation.json"
 
-# Default fallback hash if COPPER_OWNER_CODE_HASH is not set in environment.
-# This embeds the owner's authorized activation hash (derived from Akash's RTX 5060 fingerprint).
 DEFAULT_OWNER_CODE_HASH = os.getenv(
     "COPPER_OWNER_CODE_HASH",
     "71a81efef1517110a12be96f5ab37ab0be2d41c782c83bd58aa9d7719a0ebb8b",
@@ -52,7 +42,7 @@ class HardwareFingerprint:
 @dataclass
 class ActivationState:
     activated: bool = False
-    mode: str = "none"  # "local_gpu" | "owner_code" | "none"
+    mode: str = "none"
     fingerprint: str = ""
     activation_code: str = ""
     owner_code_hash: str = ""
@@ -63,11 +53,7 @@ class ActivationState:
 
 
 def detect_gpu() -> dict[str, Any]:
-    """
-    Detects dedicated NVIDIA GPU via nvidia-smi with graceful fallback
-    to Windows WMI or generic platform checks.
-    """
-    # 1. Try nvidia-smi
+    """Detects dedicated NVIDIA GPU via nvidia-smi with graceful fallback"""
     try:
         proc = subprocess.run(
             ["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader,nounits"],
@@ -89,7 +75,6 @@ def detect_gpu() -> dict[str, Any]:
     except Exception:
         pass
 
-    # 2. Windows WMI fallback
     if platform.system() == "Windows":
         try:
             cmd = "Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name"
@@ -138,7 +123,7 @@ def get_machine_uuid() -> str:
         for path in ["/etc/machine-id", "/var/lib/dbus/machine-id"]:
             if os.path.exists(path):
                 try:
-                    with open(path, "r", encoding="utf-8") as f:
+                    with open(path, encoding="utf-8") as f:
                         return f.read().strip()
                 except Exception:
                     pass
@@ -174,7 +159,7 @@ def load_activation() -> ActivationState:
     """Loads activation state from disk."""
     if ACTIVATION_FILE.exists():
         try:
-            with open(ACTIVATION_FILE, "r", encoding="utf-8") as f:
+            with open(ACTIVATION_FILE, encoding="utf-8") as f:
                 data = json.load(f)
             return ActivationState(**data)
         except Exception:
@@ -202,10 +187,7 @@ def activate_local_gpu() -> ActivationState:
 
 
 def validate_owner_code(input_code: str, expected_hash: str | None = None) -> bool:
-    """
-    Validates a user-supplied code against the owner's code hash.
-    Case-insensitive with whitespace trimmed.
-    """
+    """Validates a user-supplied code against the owner's code hash."""
     clean = input_code.strip().upper()
     target_hash = expected_hash or os.getenv("COPPER_OWNER_CODE_HASH") or DEFAULT_OWNER_CODE_HASH
     if not target_hash:

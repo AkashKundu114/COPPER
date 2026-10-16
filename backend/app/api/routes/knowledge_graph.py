@@ -203,10 +203,7 @@ async def get_subgraph(
     type: str | None = Query(None, description="Filter by entity type"),
     min_confidence: float = Query(0.0, ge=0.0, le=1.0, description="Minimum confidence threshold"),
 ):
-    """
-    Retrieve subgraph for D3.js force-directed graph visualization.
-    Returns nodes and links/edges formatted with coordinates readiness.
-    """
+    """Retrieve subgraph for D3.js force-directed graph visualization."""
     subgraph = graph_store.get_subgraph(
         entity_name=entity, depth=depth, max_nodes=max_nodes, entity_type=type, min_confidence=min_confidence
     )

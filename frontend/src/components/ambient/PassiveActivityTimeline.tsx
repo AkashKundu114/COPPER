@@ -5,8 +5,8 @@ import { Activity, Clock, Layers, Maximize2, Terminal, AlertCircle } from 'lucid
 export const PassiveActivityTimeline: React.FC = () => {
   const [hours, setHours] = useState<number>(24);
   const [loading, setLoading] = useState<boolean>(true);
-  
-  // Data states
+
+
   const [timeline, setTimeline] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
@@ -56,13 +56,13 @@ export const PassiveActivityTimeline: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 bg-surface-elevated border border-border-subtle rounded-lg text-text-secondary font-mono text-xs w-full max-w-4xl">
-      {/* Header & Controls */}
+
       <div className="flex justify-between items-center border-b border-border-subtle pb-3">
         <h2 className="text-purple-400 text-sm font-semibold flex items-center gap-2">
           <Activity size={16} />
           Passive Activity Monitor
         </h2>
-        
+
         <div className="flex gap-2">
           {[2, 8, 24].map((h) => (
             <button
@@ -86,11 +86,11 @@ export const PassiveActivityTimeline: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          {/* Main Column */}
+
+
           <div className="md:col-span-2 flex flex-col gap-4">
-            
-            {/* Current Context */}
+
+
             <div className="bg-surface-active/30 border border-border-highlight/50 p-3 rounded">
               <h3 className="text-accent-400 mb-2 flex items-center gap-2">
                 <Maximize2 size={14} />
@@ -110,7 +110,7 @@ export const PassiveActivityTimeline: React.FC = () => {
               )}
             </div>
 
-            {/* Daily Summary */}
+
             {summary && (
               <div className="bg-surface-active/30 border border-border-highlight/50 p-3 rounded">
                 <h3 className="text-accent-400 mb-2 flex items-center gap-2">
@@ -123,7 +123,7 @@ export const PassiveActivityTimeline: React.FC = () => {
               </div>
             )}
 
-            {/* Timeline View */}
+
             <div className="bg-surface-active/30 border border-border-highlight/50 p-3 rounded flex-1">
               <h3 className="text-accent-400 mb-3 flex items-center gap-2">
                 <Clock size={14} />
@@ -158,26 +158,26 @@ export const PassiveActivityTimeline: React.FC = () => {
 
           </div>
 
-          {/* Side Column - Stats */}
+
           <div className="flex flex-col gap-4">
-            
+
             <div className="bg-surface-active/30 border border-border-highlight/50 p-3 rounded">
               <h3 className="text-accent-400 mb-3 flex items-center gap-2">
                 <Layers size={14} />
                 Productivity Metrics
               </h3>
-              
+
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary">Focus Time</span>
                   <span className="text-purple-300">{formatDuration(stats?.focus_time_mins || stats?.focus_time || 0)}</span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary">Context Switches</span>
                   <span className="text-purple-300">{stats?.context_switches || 0}</span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary">Longest Streak</span>
                   <span className="text-purple-300">{formatDuration(stats?.longest_streak_mins || stats?.longest_streak || 0)}</span>
@@ -191,8 +191,8 @@ export const PassiveActivityTimeline: React.FC = () => {
                 {['coding', 'browsing', 'communication', 'documents', 'media'].map(category => {
                   const dist = stats?.categories || stats?.category_distribution || {};
                   const val = dist[category] || 0;
-                  // assuming val is percentage 0-100 or absolute mins. Let's treat it as percentage for visual.
-                  // If it's absolute, we can just show it. We'll show the value and a bar.
+
+
                   return (
                     <div key={category} className="flex flex-col gap-1">
                       <div className="flex justify-between text-[10px]">

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Check, Copy, ChevronDown, ChevronRight, Brain } from "lucide-react";
 
 interface Props {
@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const MarkdownContent: React.FC<Props> = ({ content }) => {
-  // Extract <think>...</think> if present
+
   const { thinkContent, mainContent, isThinkingStreaming } =
     React.useMemo(() => {
       let think = "";
@@ -220,7 +220,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
 
   return (
     <div className="space-y-3 text-sm leading-relaxed select-text">
-      {/* Claude / DeepSeek Style Collapsible Thinking Block */}
+
       {thinkContent && (
         <ThinkingProcessBlock
           thought={thinkContent}
@@ -228,7 +228,7 @@ export const MarkdownContent: React.FC<Props> = ({ content }) => {
         />
       )}
 
-      {/* Main Formatted Markdown Blocks */}
+
       {blocks.map((block, i) => {
         if (block.type === "heading") {
           if (block.level === 1)

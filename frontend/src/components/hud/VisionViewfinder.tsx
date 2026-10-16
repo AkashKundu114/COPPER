@@ -17,7 +17,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Stop active media stream
+
   const stopStream = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
@@ -28,7 +28,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
     }
   }, []);
 
-  // Switch video source
+
   const switchSource = async (source: "camera" | "screen" | "off") => {
     stopStream();
     setActiveSource(source);
@@ -47,7 +47,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
         });
         setLatestTag("ARGUS OPTICAL FEED ACTIVE // 30 FPS");
       } else {
-        // Screen capture
+
         stream = await navigator.mediaDevices.getDisplayMedia({
           video: { displaySurface: "monitor" },
           audio: false,
@@ -61,7 +61,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
         videoRef.current.play().catch(() => {});
       }
 
-      // Handle user stopping screen share via browser UI
+
       stream.getVideoTracks()[0].onended = () => {
         stopStream();
         setActiveSource("off");
@@ -74,7 +74,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
     }
   };
 
-  // Capture frame and send to observation endpoint
+
   const captureAndObserve = async () => {
     if (activeSource === "off" || !videoRef.current) return;
     setIsObserving(true);
@@ -126,7 +126,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
     <div
       className={`rounded-2xl border border-cyber-cyan/30 bg-[#05080e]/90 p-4 backdrop-blur-xl shadow-[0_0_25px_rgba(0,240,255,0.08)] flex flex-col gap-3 font-mono ${className}`}
     >
-      {/* Viewfinder Header */}
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${activeSource !== "off" ? "bg-verdigris animate-pulse" : "bg-zinc-600"}`} />
@@ -135,7 +135,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
           </span>
         </div>
 
-        {/* Source Switchers */}
+
         <div className="flex items-center gap-1 bg-black/50 p-1 rounded-lg border border-white/10">
           <button
             onClick={() => switchSource("camera")}
@@ -161,7 +161,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
         </div>
       </div>
 
-      {/* Video Viewport with HUD Crosshairs */}
+
       <div className="relative w-full h-44 rounded-xl overflow-hidden bg-black/80 border border-white/10 flex items-center justify-center">
         {activeSource !== "off" ? (
           <video
@@ -180,14 +180,14 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
           </div>
         )}
 
-        {/* Tactical Crosshair Overlay */}
+
         {activeSource !== "off" && (
           <div className="absolute inset-0 pointer-events-none p-3 flex flex-col justify-between">
             <div className="flex justify-between items-start text-[9px] text-cyber-cyan/70 font-mono">
-              <span>REC // 1080P</span>
+              <span>REC 1080P</span>
               <span>LOCK: ACQUIRED</span>
             </div>
-            {/* Center Reticle */}
+
             <div className="self-center w-10 h-10 border border-cyber-cyan/30 rounded-full flex items-center justify-center">
               <div className="w-1.5 h-1.5 bg-cyber-cyan/60 rounded-full" />
             </div>
@@ -199,7 +199,7 @@ export const VisionViewfinder: React.FC<VisionViewfinderProps> = ({
         )}
       </div>
 
-      {/* Status Banner & Frame Capture Trigger */}
+
       <div className="flex items-center justify-between gap-2 text-xs">
         <div className="truncate text-zinc-300 text-[10px] bg-black/40 px-2.5 py-1.5 rounded-lg border border-white/5 flex-1">
           {latestTag}

@@ -83,12 +83,8 @@ async def list_generated_documents():
 
 @router.post("/generate")
 async def generate_document(req: DocumentGenerateRequest):
-    """
-    Autonomous Document Generation Endpoint:
-    Creates PDF, Word (DOCX), Markdown, HTML, CSV/TSV, or JSON documents.
-    """
+    """Autonomous Document Generation Endpoint:"""
     try:
-        # If a natural language prompt was provided without manual sections, use DocumentAgent
         if req.prompt and not req.sections:
             from app.ai.agents.document_agent import document_agent
 
@@ -98,7 +94,6 @@ async def generate_document(req: DocumentGenerateRequest):
                 history=[],
                 memory_context="",
             )
-            # Find the most recently created document
             docs = document_service.list_generated_documents()
             latest = docs[0] if docs else None
             return {
@@ -107,7 +102,6 @@ async def generate_document(req: DocumentGenerateRequest):
                 "document": latest,
             }
 
-        # Otherwise create directly from structured section parameters
         doc_meta = await document_service.create_document(
             format=req.format,
             title=req.title,
@@ -153,10 +147,7 @@ async def parse_document_file(
     file: UploadFile = File(...),
     index_to_memory: bool = Form(True),
 ):
-    """
-    Upload and parse a document file (PDF, CSV, JSON, Markdown, Code, etc.).
-    Extracts text, calculates statistics, and indexes into vector memory for AI context.
-    """
+    """Upload and parse a document file (PDF, CSV, JSON, Markdown, Code, etc.)."""
     try:
         contents = await file.read()
         if len(contents) == 0:

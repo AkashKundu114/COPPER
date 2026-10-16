@@ -7,12 +7,11 @@ import httpx
 try:
     from bs4 import BeautifulSoup
 except ImportError:
-    BeautifulSoup = None  # type: ignore
+    BeautifulSoup = None
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
 
-# Modern browser fingerprint headers that mirror authentic client sessions
 STEALTH_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -45,34 +44,24 @@ def _clean_extracted_text(text: str) -> str:
 
 
 def _adaptive_content_extract(soup: Any, target_hint: str | None = None) -> str:
-    """
-    Self-healing element extraction.
-    If target_hint is given, attempts direct lookup, then falls back to semantic
-    container matching, and finally main-body text density.
-    """
-    # Remove script, style, nav, and iframe tags
+    """Self-healing element extraction."""
     for tag in soup(["script", "style", "nav", "footer", "header", "noscript", "svg"]):
         tag.decompose()
 
-    # Strategy 1: Target hint match (class, id, or tag name)
     if target_hint:
         hint_lower = target_hint.lower()
-        # By ID
         found = soup.find(id=re.compile(hint_lower, re.I))
         if found:
             return _clean_extracted_text(found.get_text(separator="\n"))
 
-        # By class
         found = soup.find(class_=re.compile(hint_lower, re.I))
         if found:
             return _clean_extracted_text(found.get_text(separator="\n"))
 
-        # By tag
         found = soup.find(hint_lower)
         if found:
             return _clean_extracted_text(found.get_text(separator="\n"))
 
-    # Strategy 2: Semantic main content tag
     for tag_name in ["article", "main", '[role="main"]', ".content", "#content", ".post"]:
         element = soup.select_one(tag_name)
         if element:
@@ -80,7 +69,6 @@ def _adaptive_content_extract(soup: Any, target_hint: str | None = None) -> str:
             if len(text.strip()) > 150:
                 return _clean_extracted_text(text)
 
-    # Strategy 3: Text density fallback over body
     body = soup.find("body") or soup
     return _clean_extracted_text(body.get_text(separator="\n"))
 
@@ -119,7 +107,6 @@ async def scrapling_scrape(
     extract_links: bool = True,
     max_length: int = 8000,
 ) -> dict[str, Any]:
-    # Basic URL validation
     parsed = urlparse(url)
     if not parsed.scheme or not parsed.netloc:
         return {"status": "error", "error": f"Invalid URL format: {url}"}
@@ -147,7 +134,6 @@ async def scrapling_scrape(
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # Extract title and meta description
         title_tag = soup.find("title")
         title = title_tag.get_text(strip=True) if title_tag else None
 
@@ -158,7 +144,6 @@ async def scrapling_scrape(
         if desc_tag and desc_tag.get("content"):
             meta_desc = desc_tag["content"].strip()
 
-        # Adaptive content extraction
         extracted_text = _adaptive_content_extract(soup, target_hint=selector_hint)
         truncated = False
         if len(extracted_text) > max_length:

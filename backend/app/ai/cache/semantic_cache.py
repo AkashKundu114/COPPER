@@ -14,7 +14,7 @@ from app.database.redis_client import get_redis
 
 @dataclass
 class CacheLookupResult:
-    status: str  # "hit", "hint", "miss"
+    status: str
     cached_response: str | None = None
     agent_type: str | None = None
     similarity: float = 0.0
@@ -28,18 +28,13 @@ class CacheLookupResult:
 
 
 class SemanticResponseCache:
-    """
-    ChromaDB-backed Semantic Response Cache for C.O.P.P.E.R.
-    Stores and serves previous LLM responses in <1ms based on cosine similarity
-    of query embeddings, with context-aware invalidation and time-to-live rules.
-    """
+    """ChromaDB-backed Semantic Response Cache for C.O.P.P.E.R."""
 
     COLLECTION_NAME = "copper_response_cache"
 
-    # Invalidation TTL constants
-    TTL_TIME_SENSITIVE = 3600  # 1 hour
-    TTL_FACTUAL = 86400  # 24 hours
-    TTL_TECHNICAL = 604800  # 7 days (code/technical)
+    TTL_TIME_SENSITIVE = 3600
+    TTL_FACTUAL = 86400
+    TTL_TECHNICAL = 604800
 
     SIMILARITY_HIT_THRESHOLD = 0.95
     SIMILARITY_HINT_THRESHOLD = 0.85
@@ -119,10 +114,7 @@ class SemanticResponseCache:
             logger.debug(f"Redis clear skipped: {e}")
 
     async def compute_embedding(self, text: str) -> list[float]:
-        """
-        Computes query embedding. Uses local Chroma default embedding function
-        or Ollama nomic-embed-text if configured and reachable.
-        """
+        """Computes query embedding. Uses local Chroma default embedding function"""
         import httpx
 
         ollama_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
@@ -139,7 +131,6 @@ class SemanticResponseCache:
         except Exception:
             pass
 
-        # Robust local in-process fallback using Chroma's ONNX embedding function
         if self._default_ef:
             try:
                 embeddings = self._default_ef([text])
@@ -148,18 +139,13 @@ class SemanticResponseCache:
             except Exception as e:
                 logger.debug(f"Default embedding function error: {e}")
 
-        # Deterministic pseudo-embedding fallback if all embedding engines fail
         h = hashlib.sha256(text.lower().strip().encode("utf-8")).digest()
         return [float((b - 128) / 128.0) for b in h]
 
     def classify_query(self, query: str, agent_type: str = "") -> tuple[str, int, bool]:
-        """
-        Classifies query to determine TTL and context dependency.
-        Returns: (category, ttl_seconds, is_context_dependent)
-        """
+        """Classifies query to determine TTL and context dependency."""
         q_lower = query.strip().lower()
 
-        # Context-dependent markers (user memory, personal facts)
         context_patterns = [
             r"\b(who am i|whats my name|what is my name|my age|how old am i)\b",
             r"\b(my preferences|my schedule|remember when|what did i say|about me)\b",
@@ -167,7 +153,6 @@ class SemanticResponseCache:
         ]
         is_context_dependent = any(re.search(pat, q_lower) for pat in context_patterns)
 
-        # Time-sensitive markers (containing "today", "now", "current")
         time_sensitive_patterns = [
             r"\b(today|now|current|right now|latest|yesterday|tomorrow)\b",
             r"\b(what time is it|current date|today's date|current time)\b",
@@ -176,7 +161,6 @@ class SemanticResponseCache:
         if any(re.search(pat, q_lower) for pat in time_sensitive_patterns):
             return "time_sensitive", self.TTL_TIME_SENSITIVE, is_context_dependent
 
-        # Code / technical markers
         code_patterns = [
             r"\b(code|python|function|bug|error|script|algorithm|class|def|import)\b",
             r"\b(sql|api|html|css|docker|git|bash|terminal|regex|json|syntax)\b",
@@ -185,18 +169,13 @@ class SemanticResponseCache:
         if agent_type in ("coding", "automation") or any(re.search(pat, q_lower) for pat in code_patterns):
             return "code_technical", self.TTL_TECHNICAL, is_context_dependent
 
-        # Context-dependent queries without temporal markers
         if is_context_dependent:
             return "context_dependent", self.TTL_FACTUAL, True
 
-        # Default: factual query
         return "factual", self.TTL_FACTUAL, False
 
     def compute_context_hash(self, memory_context: str = "", temporal_date: str = "") -> str:
-        """
-        context_hash = hash of (memory_context + temporal_date)
-        If memory changes or date changes, cache misses for context-dependent queries.
-        """
+        """context_hash = hash of (memory_context + temporal_date)"""
         if not temporal_date:
             temporal_date = datetime.now().strftime("%Y-%m-%d")
         payload = f"{memory_context.strip()}::{temporal_date}"
@@ -227,10 +206,7 @@ class SemanticResponseCache:
 
     @staticmethod
     def is_sensitive_payload(text: str | None) -> bool:
-        """
-        Detects API keys, passwords, bearer tokens, private keys, or canary tokens
-        to prevent caching and cross-session secret leakage.
-        """
+        """Detects API keys, passwords, bearer tokens, private keys, or canary tokens"""
         if not text:
             return False
         patterns = [
@@ -245,12 +221,7 @@ class SemanticResponseCache:
         return any(re.search(pat, text) for pat in patterns)
 
     async def lookup(self, query: str, context_hash: str = "") -> CacheLookupResult:
-        """
-        Before inference, compute query embedding and search cache with cosine similarity.
-        - similarity > 0.95: return cached response (< 1ms)
-        - 0.85 < similarity <= 0.95: return as "hint" but still run inference
-        - similarity <= 0.85: miss, run normal inference
-        """
+        """Before inference, compute query embedding and search cache with cosine similarity."""
         t0 = time.perf_counter()
 
         if not self.collection or not query.strip() or self.is_sensitive_payload(query):
@@ -260,7 +231,6 @@ class SemanticResponseCache:
         norm_query = query.strip().lower()
         now = time.time()
 
-        # 1. Fast in-memory exact match (<0.1ms)
         if norm_query in self._exact_cache:
             entry = self._exact_cache[norm_query]
             resp_text = entry.get("response_text", "")
@@ -284,7 +254,6 @@ class SemanticResponseCache:
                         match_id=entry.get("id"),
                     )
 
-        # 2. Redis exact match check (if healthy)
         exact_raw = await self._safe_redis_get(f"copper:cache:exact:{hashlib.sha256(norm_query.encode()).hexdigest()}")
         if exact_raw:
             try:
@@ -314,10 +283,8 @@ class SemanticResponseCache:
                 pass
 
         try:
-            # 3. Compute embedding for semantic vector lookup
             query_embedding = await self.compute_embedding(query)
 
-            # Query ChromaDB collection with cosine distance
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=1,
@@ -329,7 +296,6 @@ class SemanticResponseCache:
                 return CacheLookupResult(status="miss")
 
             distance = results["distances"][0][0]
-            # In cosine space, distance = 1 - cosine_similarity
             similarity = max(0.0, min(1.0, 1.0 - distance))
             doc = results["documents"][0][0]
             meta = results["metadatas"][0][0] if results["metadatas"] else {}
@@ -342,7 +308,6 @@ class SemanticResponseCache:
             stored_hash = meta.get("context_hash", "")
             agent_type = meta.get("agent_type", "chat")
 
-            # Invalidation Rule 0: Corrupted / Error Response Eviction
             if self.is_error_response(doc):
                 try:
                     if match_id:
@@ -353,7 +318,6 @@ class SemanticResponseCache:
                 self._misses += 1
                 return CacheLookupResult(status="miss", similarity=similarity)
 
-            # Invalidation Rule 1: TTL Expiration
             if now - created_at > ttl:
                 try:
                     if match_id:
@@ -363,7 +327,6 @@ class SemanticResponseCache:
                 self._misses += 1
                 return CacheLookupResult(status="miss", similarity=similarity)
 
-            # Invalidation Rule 2: Context Changed for Context-Dependent Queries
             if is_context_dep and context_hash and stored_hash != context_hash:
                 self._misses += 1
                 return CacheLookupResult(status="miss", similarity=similarity)
@@ -371,12 +334,10 @@ class SemanticResponseCache:
             t1 = time.perf_counter()
             latency_ms = round((t1 - t0) * 1000, 3)
 
-            # Rule 3: High Similarity Cache Hit (> 0.95) -> Instant recall
             if similarity > self.SIMILARITY_HIT_THRESHOLD:
                 self._hits += 1
-                self._total_time_saved_ms += 4500.0  # ~4.5s average saved inference
+                self._total_time_saved_ms += 4500.0
                 self._tokens_saved += len(doc.split())
-                # Update in-memory exact cache
                 self._exact_cache[norm_query] = {
                     "id": match_id,
                     "query_text": query,
@@ -399,7 +360,6 @@ class SemanticResponseCache:
                     match_id=match_id,
                 )
 
-            # Rule 4: Moderate Similarity Cache Hint (0.85 < similarity <= 0.95)
             if similarity > self.SIMILARITY_HINT_THRESHOLD:
                 self._hints += 1
                 return CacheLookupResult(
@@ -413,7 +373,6 @@ class SemanticResponseCache:
                     match_id=match_id,
                 )
 
-            # Rule 5: Low Similarity (<= 0.85) -> Miss
             self._misses += 1
             return CacheLookupResult(status="miss", similarity=round(similarity, 4))
 
@@ -430,19 +389,14 @@ class SemanticResponseCache:
         context_hash: str = "",
         memory_context: str = "",
     ) -> str | None:
-        """
-        Stores response in ChromaDB and Redis/Memory:
-        (query_embedding, query_text, response_text, agent_type, timestamp, context_hash)
-        """
+        """Stores response in ChromaDB and Redis/Memory:"""
         if not self.collection or not query.strip() or not response.strip():
             return None
 
-        # Ignore queries/responses containing credentials, secrets or canary tokens
         if self.is_sensitive_payload(query) or self.is_sensitive_payload(response):
             logger.info("Semantic cache: skipping storage of query/response containing sensitive payload or secret")
             return None
 
-        # Ignore trivial short responses or errors
         if self.is_error_response(response):
             return None
 
@@ -475,7 +429,6 @@ class SemanticResponseCache:
                 metadatas=[metadata],
             )
 
-            # Update exact caches
             cache_payload = {
                 "id": doc_id,
                 "query_text": query,
@@ -490,7 +443,6 @@ class SemanticResponseCache:
             norm_query = query.strip().lower()
             self._exact_cache[norm_query] = cache_payload
 
-            # Safe async write to Redis
             q_key = f"copper:cache:exact:{hashlib.sha256(norm_query.encode()).hexdigest()}"
             await self._safe_redis_set(q_key, json.dumps(cache_payload), ex=min(ttl, 604800))
 

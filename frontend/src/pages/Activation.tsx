@@ -123,7 +123,7 @@ export function Activation({ onActivated }: ActivationProps) {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {/* Option A: Local GPU */}
+
               <button
                 type="button"
                 onClick={() => setMode("local")}
@@ -143,7 +143,7 @@ export function Activation({ onActivated }: ActivationProps) {
                 </div>
               </button>
 
-              {/* Option B: Owner Shared Code */}
+
               <button
                 type="button"
                 onClick={() => setMode("owner")}

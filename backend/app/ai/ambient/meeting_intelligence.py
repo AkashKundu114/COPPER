@@ -4,7 +4,7 @@ import os
 import uuid
 import wave
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from app.core.logger import logger
@@ -12,7 +12,6 @@ from app.core.logger import logger
 try:
     import sounddevice as sd
 except (ImportError, OSError) as exc:
-    # Audio hardware/PortAudio is optional in CI and headless environments.
     sd = None
     SOUNDDEVICE_AVAILABLE = False
     logger.warning("Audio recording unavailable: %s", exc)
@@ -79,17 +78,16 @@ class MeetingIntelligence:
         meeting_id = str(uuid.uuid4())
         audio_path = os.path.join(DATA_DIR, f"{meeting_id}.wav")
 
-        record = MeetingRecord(meeting_id=meeting_id, title=title, started_at=datetime.now(timezone.utc), audio_path=audio_path)
+        record = MeetingRecord(meeting_id=meeting_id, title=title, started_at=datetime.now(UTC), audio_path=audio_path)
 
         if not SOUNDDEVICE_AVAILABLE or sd is None:
             record.status = "recording_simulated"
             logger.info("Sounddevice unavailable; using simulated recording")
         else:
             try:
-                _ = sd.default.device  # Test if sounddevice is available
+                _ = sd.default.device
                 self.active_recordings[meeting_id] = True
 
-                # Start background recording task
                 try:
                     loop = asyncio.get_running_loop()
                     loop.create_task(self._record_audio_task(meeting_id, audio_path))
@@ -150,12 +148,11 @@ class MeetingIntelligence:
 
         if record.status in ["recording", "recording_simulated"]:
             self.active_recordings[meeting_id] = False
-            record.ended_at = datetime.now(timezone.utc)
+            record.ended_at = datetime.now(UTC)
             record.duration_minutes = (record.ended_at - record.started_at).total_seconds() / 60.0
             record.status = "processing"
             self._save_index()
 
-            # Start processing pipeline in background if event loop is running
             try:
                 loop = asyncio.get_running_loop()
                 loop.create_task(self._process_meeting(meeting_id))
@@ -238,9 +235,7 @@ Transcript:
             is_avail = await ollama_client.is_available()
             if is_avail:
                 response = await ollama_client.chat(messages=messages, model="deepseek-r1:latest")
-                # Attempt to parse json from response
                 content = response.get("message", {}).get("content", "")
-                # naive extraction if wrapped in code blocks
                 if "```json" in content:
                     content = content.split("```json")[1].split("```")[0].strip()
                 elif "```" in content:
@@ -250,7 +245,6 @@ Transcript:
         except Exception as e:
             logger.error(f"LLM extraction error: {e}")
 
-        # Fallback basic extraction
         sentences = transcript.split(". ")
         actions = []
         for s in sentences:

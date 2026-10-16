@@ -32,8 +32,8 @@ class CognitiveLoadDetector:
         self.is_running = False
         self._task: asyncio.Task | None = None
         self.history: list[CognitiveProfile] = []
-        self.history_size = 720  # 24 hours at 2-min intervals
-        self.poll_interval = 120.0  # 2 minutes
+        self.history_size = 720
+        self.poll_interval = 120.0
         self.current_state = CognitiveState.IDLE
 
     def start(self):
@@ -75,11 +75,10 @@ class CognitiveLoadDetector:
         return []
 
     def detect_state(self) -> CognitiveProfile:
-        entries = context_watcher.get_timeline(hours=1 / 6.0)  # Last 10 minutes
+        entries = context_watcher.get_timeline(hours=1 / 6.0)
 
         now = datetime.now()
 
-        # IDLE check: no activity entries in last 5 minutes
         five_mins_ago = now - timedelta(minutes=5)
         recent_activity = [e for e in entries if e.timestamp >= five_mins_ago]
         if not recent_activity:
@@ -133,7 +132,7 @@ class CognitiveLoadDetector:
         elif entries:
             current_focus_streak_mins = (now - entries[-1].timestamp).total_seconds() / 60.0
 
-        window_switch_rate = switches / 10.0  # Last 10 minutes
+        window_switch_rate = switches / 10.0
 
         state = CognitiveState.NORMAL_FLOW
 

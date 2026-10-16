@@ -362,4 +362,3 @@ for s in subs:
     assert not res.is_safe
     assert res.risk_level == "blocked"
     assert len(res.violations) >= 2
-

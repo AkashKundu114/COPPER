@@ -5,10 +5,7 @@ from app.core.guardian import guardian_engine
 
 
 class GuardianAgent(BaseAgent):
-    """
-    AEGIS: Constitutional Safety and Security Gatekeeper.
-    Performs real-time action reversibility analysis, prompt injection defense, and safety boundary enforcement.
-    """
+    """AEGIS: Constitutional Safety and Security Gatekeeper."""
 
     def __init__(self):
         super().__init__(

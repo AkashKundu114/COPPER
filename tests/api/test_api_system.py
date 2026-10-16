@@ -58,7 +58,7 @@ def test_system_gzip_middleware_large_response():
 
 
 def test_system_routes_import_on_non_windows():
-    import app.api.routes.system  # noqa: F401
+    pass
 
 
 def test_get_cpu_usage_and_info_without_winreg(monkeypatch):

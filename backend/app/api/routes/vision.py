@@ -15,7 +15,7 @@ class ComputerUseRequest(BaseModel):
 
 class FrameObservationRequest(BaseModel):
     image_base64: str
-    source: str = "camera"  # "camera" or "screen"
+    source: str = "camera"
 
 
 @router.get("/status")
@@ -56,10 +56,7 @@ async def execute_task(req: ComputerUseRequest):
 
 @router.post("/observe")
 async def observe_frame(req: FrameObservationRequest):
-    """
-    Receives base64 webcam or screen frame snapshot, runs local optical inference,
-    and returns a concise contextual observation.
-    """
+    """Receives base64 webcam or screen frame snapshot, runs local optical inference,"""
     try:
         result = await vision_service.observe_frame(req.image_base64, source=req.source)
         return result

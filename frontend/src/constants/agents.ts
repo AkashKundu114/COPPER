@@ -1,4 +1,4 @@
-﻿export type Tier =
+export type Tier =
   | "MODEL_1_CORE"
   | "MODEL_2_CODE"
   | "MODEL_3_OS"
@@ -41,18 +41,15 @@ export const TIER_LABELS: Record<Tier, string> = {
 };
 
 export const TIER_COLORS: Record<Tier, string> = {
-  MODEL_1_CORE: "#4ADE9A", // Emerald
-  MODEL_2_CODE: "#38BCD8", // Electric Cyan
-  MODEL_3_OS: "#5B93F0",   // Sapphire Blue
-  MODEL_4_VISION: "#E06E9E", // Neon Pink
-  MODEL_5_WEB: "#E8A840",  // Molten Amber
-  MODEL_6_AUDIO: "#9B6DD8", // Royal Purple
+  MODEL_1_CORE: "#4ADE9A", 
+  MODEL_2_CODE: "#38BCD8", 
+  MODEL_3_OS: "#5B93F0",   
+  MODEL_4_VISION: "#E06E9E", 
+  MODEL_5_WEB: "#E8A840",  
+  MODEL_6_AUDIO: "#9B6DD8", 
 };
 
-/**
- * ACTIVE AGENTS: Exactly matches the 12 implemented AgentType enum values in backend.
- * Each active agent has a registered backend handler, assigned model, and test suite.
- */
+
 export const ACTIVE_AGENTS: AgentMeta[] = [
   {
     id: "chat",
@@ -236,10 +233,7 @@ export const ACTIVE_AGENTS: AgentMeta[] = [
   },
 ];
 
-/**
- * PLANNED AGENTS: Architectural roadmap targets currently in design.
- * Rendered with visual differentiation (dimmed/dashed) in the neural map.
- */
+
 export const PLANNED_AGENTS: AgentMeta[] = [
   {
     id: "behavior",
@@ -318,15 +312,10 @@ export const PLANNED_AGENTS: AgentMeta[] = [
   },
 ];
 
-/**
- * Standard AGENTS array exports ACTIVE_AGENTS to guarantee exact parity
- * with backend AgentType (12 implemented agents).
- */
+
 export const AGENTS: AgentMeta[] = ACTIVE_AGENTS;
 
-/**
- * Combined list containing active implemented agents and planned roadmap agents.
- */
+
 export const ALL_AGENTS: AgentMeta[] = [...ACTIVE_AGENTS, ...PLANNED_AGENTS];
 
 export const AGENT_MAP: Record<string, AgentMeta> = Object.fromEntries(

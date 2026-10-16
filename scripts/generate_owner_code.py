@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
-"""
-Owner GPU Code Generator for C.O.P.P.E.R.
-
-Run this script on the developer/owner system to extract your hardware fingerprint,
-format your master activation code, and generate the SHA-256 verification hash.
-
-Usage:
-    python scripts/generate_owner_code.py
-"""
+"""Owner GPU Code Generator for C.O.P.P.E.R."""
 
 import hashlib
 import sys
 from pathlib import Path
 
-# Ensure backend directory is in sys.path
 backend_path = Path(__file__).resolve().parent.parent / "backend"
 if str(backend_path) not in sys.path:
     sys.path.insert(0, str(backend_path))
@@ -30,14 +21,14 @@ def main():
     code = fp.activation_code
     code_hash = hashlib.sha256(code.encode("utf-8")).hexdigest()
 
-    print(f"\n[Hardware Detected]")
+    print("\n[Hardware Detected]")
     print(f"  GPU Name:         {fp.gpu_name}")
     print(f"  VRAM:             {fp.gpu_vram_mb} MB")
     print(f"  CPU:              {fp.cpu_name}")
     print(f"  OS:               {fp.os_type}")
     print(f"  Machine UUID:     {fp.machine_id}")
 
-    print(f"\n[Master Activation Credentials]")
+    print("\n[Master Activation Credentials]")
     print(f"  Activation Code:  {code}")
     print(f"  Validation Hash:  {code_hash}")
 

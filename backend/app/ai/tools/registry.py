@@ -12,7 +12,7 @@ class BaseTool:
     description: str
     parameters: dict[str, Any]
     return_description: str = "Result of tool execution"
-    guardian_level: int = 0  # 0: EXECUTE, 1: SUGGEST, 2: CHALLENGE, 3: SAFETY
+    guardian_level: int = 0
     func: Callable[..., Any | Coroutine[Any, Any, Any]] | None = None
 
     def validate_args(self, args: dict[str, Any]) -> tuple[bool, str | None]:
@@ -23,12 +23,10 @@ class BaseTool:
         schema_props = self.parameters.get("properties", {})
         required = self.parameters.get("required", [])
 
-        # Check for missing required fields
         missing = [req for req in required if req not in args]
         if missing:
             return False, f"Missing required arguments: {', '.join(missing)}"
 
-        # Type checks for basic primitive types
         type_map = {
             "string": str,
             "integer": int,
@@ -43,7 +41,6 @@ class BaseTool:
                 expected_type_str = schema_props[param_name].get("type")
                 if expected_type_str in type_map:
                     expected_type = type_map[expected_type_str]
-                    # Note: bool is a subclass of int in Python, so special check for boolean vs integer
                     if expected_type_str == "integer" and isinstance(val, bool):
                         return False, f"Argument '{param_name}' must be an integer, got boolean"
                     if not isinstance(val, expected_type):

@@ -76,10 +76,7 @@ class OllamaClient:
             return f"Error connecting to Ollama to unload models: {e}"
 
     async def unload_heavy_models(self, keep_mini: bool = True) -> dict[str, Any]:
-        """
-        Selectively evicts heavy models (7B/8B reasoning, coding, etc.) from GPU VRAM
-        while keeping the always-on mini model resident.
-        """
+        """Selectively evicts heavy models (7B/8B reasoning, coding, etc.) from GPU VRAM"""
         unloaded = []
         kept = []
         try:
@@ -91,7 +88,6 @@ class OllamaClient:
                         kept.append(m_name)
                         continue
 
-                    # Unload this model immediately
                     try:
                         await client.post(f"{self.base_url}/api/chat", json={"model": m_name, "keep_alive": 0})
                         unloaded.append(m_name)
@@ -109,10 +105,7 @@ class OllamaClient:
             return {"status": "error", "error": str(e), "unloaded_models": unloaded}
 
     async def evict_competing_heavy_models(self, target_model: str) -> None:
-        """
-        Under constrained 8GB VRAM, evicts any other heavy models (14B/12B) currently
-        in VRAM to guarantee dedicated GPU space for the target heavy model.
-        """
+        """Under constrained 8GB VRAM, evicts any other heavy models (14B/12B) currently"""
         try:
             loaded = await self.get_loaded_models()
             for m in loaded:
@@ -126,10 +119,7 @@ class OllamaClient:
             logger.debug(f"[VRAM] Error evicting competing models: {e}")
 
     async def warmup_mini_model(self) -> dict[str, Any]:
-        """
-        Loads the Always-On Mini Model into VRAM with keep_alive: -1.
-        Ensures instantaneous latency for voice interactions and sub-40ms routing.
-        """
+        """Loads the Always-On Mini Model into VRAM with keep_alive: -1."""
         mini_tag = model_manager.get_mini_model()
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -163,13 +153,11 @@ class OllamaClient:
         }
 
     def select_model(self, agent_type: Any = None, requested_model: str | None = None) -> str:
-        # Handle string passed into agent_type parameter
         if isinstance(agent_type, str):
             clean_type = agent_type.strip().lower()
             try:
                 agent_type = AgentType(clean_type)
             except ValueError:
-                # Check if it looks like a model tag (e.g. contains colon or known model name)
                 if any(
                     x in clean_type
                     for x in [":", "llama", "qwen", "mistral", "deepseek", "smollm", "falcon", "gemma", "granite"]
@@ -181,11 +169,9 @@ class OllamaClient:
             clean_req = requested_model.strip().lower()
             if clean_req in ["qwen2.5:1b", "qwen2.5-1b"]:
                 return "qwen2.5:1.5b"
-            # Ignore random greetings or invalid non-model strings
             if clean_req not in ["hi", "hello", "hey", "test", "null", "none", ""]:
                 return requested_model
 
-        # Dynamic Model Selection Optimization check
         if agent_type:
             try:
                 from app.ai.evaluation.model_optimizer import model_optimizer
@@ -330,13 +316,10 @@ class OllamaClient:
                                 chunk = json.loads(line)
                                 content = chunk.get("message", {}).get("content", "")
                                 if content:
-                                    # Repetition loop circuit breaker:
-                                    # Detect runaway degeneration loops (e.g. 15 identical symbols in a row)
                                     recent_tokens.append(content)
                                     if len(recent_tokens) > 20:
                                         recent_tokens.pop(0)
                                     if len(recent_tokens) >= 12 and len(set(recent_tokens[-12:])) <= 2:
-                                        # Repetition loop detected, break immediately
                                         logger.warning(
                                             f"Ollama repetition loop detected for '{target_model}'. Breaking stream."
                                         )

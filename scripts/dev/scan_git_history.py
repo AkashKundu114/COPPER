@@ -1,5 +1,5 @@
-import subprocess
 import re
+import subprocess
 from pathlib import Path
 
 REPO_ROOT = Path("d:/C.O.P.P.E.R")

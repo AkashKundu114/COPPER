@@ -55,7 +55,6 @@ class CrucibleJudge:
         """Schedules evaluation in the background without blocking conversation turns."""
         if not user_message or not assistant_response:
             return None
-        # Ignore trivial short messages (e.g., greetings or single-word acknowledgments)
         if len(user_message.strip()) < 3 or len(assistant_response.strip()) < 10:
             return None
 
@@ -126,10 +125,8 @@ class CrucibleJudge:
 
     def _parse_evaluation(self, raw: str) -> dict[str, Any]:
         """Strips DeepSeek-R1 <think> tags and parses structured JSON output."""
-        # Strip thinking tags
         clean_text = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL | re.IGNORECASE).strip()
 
-        # Extract JSON
         json_match = clean_text
         if "{" in clean_text and "}" in clean_text:
             start = clean_text.index("{")
@@ -244,7 +241,6 @@ class CrucibleJudge:
                 f"CRUCIBLE evaluated turn {record.id}: overall={record.overall_score:.2f}, model={model_name}, failures={record.failures}"
             )
 
-            # Record per-model performance for dynamic model routing optimization
             try:
                 from app.ai.evaluation.model_optimizer import model_optimizer
 
@@ -259,7 +255,6 @@ class CrucibleJudge:
             except Exception as opt_err:
                 logger.debug(f"Model performance tracking skipped: {opt_err}")
 
-            # If serious failure detected, record into self_model
             if record.failures and record.overall_score < 0.65:
                 try:
                     from app.database.models.self_memory import SelfMemoryCategory

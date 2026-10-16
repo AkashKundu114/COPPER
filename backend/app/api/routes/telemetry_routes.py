@@ -19,10 +19,7 @@ async def get_telemetry_status():
 
 @router.get("/traces")
 async def list_distributed_traces(limit: int = Query(50, ge=1, le=200)):
-    """
-    Returns recent OpenTelemetry distributed traces with full span hierarchy:
-    WebSocket -> Router -> Guardian -> Agent -> LLM -> Response.
-    """
+    """Returns recent OpenTelemetry distributed traces with full span hierarchy:"""
     traces = get_recent_traces(limit=limit)
     return {
         "traces": traces,
@@ -33,10 +30,7 @@ async def list_distributed_traces(limit: int = Query(50, ge=1, le=200)):
 
 @router.get("/traces/{trace_id}")
 async def get_distributed_trace(trace_id: str):
-    """
-    Returns detailed OpenTelemetry trace by trace_id including all child spans,
-    attributes, start/end timestamps, and deep-link to Grafana Tempo.
-    """
+    """Returns detailed OpenTelemetry trace by trace_id including all child spans,"""
     trace = get_trace_by_id(trace_id)
     if not trace:
         raise HTTPException(status_code=404, detail=f"Trace {trace_id} not found")

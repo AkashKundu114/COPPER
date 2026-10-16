@@ -44,12 +44,9 @@ async def _reflection_cycle():
         from app.database.models.self_memory import SelfMemoryCategory
         from app.services.self_model_service import self_model_service
 
-        # Apply decay on each cycle
         self_model_service.apply_decay()
 
-        # Check for recent activity
         now = time.time()
-        # Get recent conversation snippets
         recent_messages = []
         for sid, msgs in persistent_memory.sessions.items():
             for msg in msgs[-10:]:
@@ -59,14 +56,11 @@ async def _reflection_cycle():
             _last_reflection_time = now
             return
 
-        # Check if Ollama is available
         if not await ollama_client.is_available():
             return
 
-        # One LLM call with the summarizer/memory model
         summarizer_model = model_manager.get_model("subagents.memory", "smollm2:1.7b")
 
-        # Build recent activity summary
         activity = "\n".join([f"- [{m.get('role', '?')}]: {m.get('content', '')[:150]}" for m in recent_messages[-8:]])
 
         reflection_prompt = [
@@ -91,11 +85,9 @@ async def _reflection_cycle():
             _last_reflection_time = now
             return
 
-        # Try to parse structured output
         import json
 
         try:
-            # Extract JSON from response
             json_match = response
             if "{" in response:
                 start = response.index("{")
@@ -111,9 +103,8 @@ async def _reflection_cycle():
             if content:
                 await self_model_service.record_reflection(content, category, confidence)
 
-                # Only surface as toast if high confidence and rate-limited
                 if confidence >= settings.REFLECTION_CONFIDENCE_THRESHOLD:
-                    if (now - _last_reflection_alert_time) > 7200:  # 2-hour minimum gap
+                    if (now - _last_reflection_alert_time) > 7200:
                         from app.api.websocket.manager import manager
 
                         await manager.push_proactive(
@@ -216,14 +207,14 @@ def start_scheduler():
     )
     _scheduler.add_job(
         _prompt_optimization_cycle,
-        IntervalTrigger(seconds=7 * 86400),  # Weekly interval
+        IntervalTrigger(seconds=7 * 86400),
         id="prompt_optimization_cycle",
         name="COPPER Prompt Optimization Cycle",
         replace_existing=True,
     )
     _scheduler.add_job(
         _training_curation_cycle,
-        IntervalTrigger(seconds=86400),  # Daily interval
+        IntervalTrigger(seconds=86400),
         id="training_curation_cycle",
         name="CHRYSALIS Daily Training Data Curation",
         replace_existing=True,
@@ -305,4 +296,3 @@ def stop_scheduler():
         cognitive_load_detector.stop()
     except Exception as cl_err:
         logger.warning(f"Error stopping Cognitive Load Detector: {cl_err}")
-

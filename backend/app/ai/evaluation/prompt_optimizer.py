@@ -26,7 +26,7 @@ RULES:
 
 
 class PromptOptimizer:
-    FAILURE_THRESHOLD = 3  # Pattern emerges when > 3 failures of same category occur in 7 days
+    FAILURE_THRESHOLD = 3
 
     def __init__(self):
         self.model_identifier = "core_agents.reasoning"
@@ -36,9 +36,7 @@ class PromptOptimizer:
         return model_manager.get_model(self.model_identifier, self.fallback_model)
 
     async def run_optimization_cycle(self) -> list[dict[str, Any]]:
-        """Runs the weekly / on-demand analysis over the past 7 days of evaluations.
-        Identifies failure clusters (> 3 of same type) and proposes targeted edits.
-        """
+        """Runs the weekly / on-demand analysis over the past 7 days of evaluations."""
         db = SessionLocal()
         created_proposals: list[dict[str, Any]] = []
 
@@ -46,7 +44,6 @@ class PromptOptimizer:
             cutoff = datetime.now(UTC) - timedelta(days=7)
             recent_evals = db.query(ResponseEvaluation).filter(ResponseEvaluation.created_at >= cutoff).all()
 
-            # Cluster failures by (agent_type, failure_category)
             clusters: dict[tuple[str, str], list[ResponseEvaluation]] = {}
             for ev in recent_evals:
                 for f in ev.failures or []:
@@ -55,10 +52,8 @@ class PromptOptimizer:
                         key = (ev.agent_type or "chat", f_upper)
                         clusters.setdefault(key, []).append(ev)
 
-            # Check clusters against threshold
             for (agent_type, failure_category), evals in clusters.items():
                 if len(evals) > self.FAILURE_THRESHOLD:
-                    # Check if there is already a pending proposed edit
                     existing = (
                         db.query(ProposedPromptEdit)
                         .filter(
@@ -71,7 +66,6 @@ class PromptOptimizer:
                     if existing:
                         continue
 
-                    # Propose targeted edit
                     proposal = await self._propose_prompt_edit(
                         agent_type=agent_type,
                         failure_category=failure_category,
@@ -116,7 +110,6 @@ class PromptOptimizer:
         """Uses DeepSeek-R1 to propose minimal prompt modifications."""
         target_model = self.get_model()
 
-        # Build evidence text
         evidence_lines = []
         for i, ev in enumerate(sample_evals, 1):
             evidence_lines.append(
@@ -160,7 +153,6 @@ class PromptOptimizer:
         except Exception as e:
             logger.warning(f"LLM prompt proposal generation error: {e}")
 
-        # Heuristic fallback if LLM offline or unparseable
         fallback_templates = {
             "HALLUCINATION": (
                 "Verify all factual claims against available epistemic memory before asserting them.",
@@ -217,7 +209,6 @@ class PromptOptimizer:
             if edit.status == EditStatus.APPLIED.value:
                 return {"success": False, "error": f"Edit {edit_id} is already applied"}
 
-            # 1. Run baseline benchmark
             before_score = 0.0
             try:
                 from eval.benchmark import run_benchmark
@@ -228,10 +219,8 @@ class PromptOptimizer:
                 logger.warning(f"Baseline benchmark run failed: {bench_err}")
                 before_score = 99.5
 
-            # 2. Register prompt patch
             register_prompt_patch(edit.agent_type, edit.proposed_prompt_snippet)
 
-            # 3. Run post-apply benchmark to verify no regression
             after_score = before_score
             regressed = False
             try:
@@ -243,7 +232,6 @@ class PromptOptimizer:
             except Exception as bench_err:
                 logger.warning(f"Post-apply benchmark run failed: {bench_err}")
 
-            # 4. Update DB status
             edit.status = EditStatus.APPLIED.value
             edit.applied_at = datetime.now(UTC)
             edit.benchmark_before_score = before_score

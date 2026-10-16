@@ -17,8 +17,8 @@ class IncomingNotification:
     title: str
     message: str
     timestamp: str
-    category: str  # "urgent" | "batchable" | "fyi"
-    status: str  # "unread" | "suppressed" | "delivered" | "digested"
+    category: str
+    status: str
 
 
 class NotificationFilter:
@@ -86,7 +86,6 @@ class NotificationFilter:
         unread = self.get_notifications(status="unread")
         suppressed = self.get_notifications(status="suppressed")
 
-        # Combine both for digest
         targets = unread + suppressed
 
         urgent_count = len([n for n in targets if n.category == "urgent"])

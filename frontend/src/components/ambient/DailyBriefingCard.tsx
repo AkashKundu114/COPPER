@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { briefingAPI, predictionsAPI, contextSwitchAPI } from '../../services/api';
 import { Sun, Moon, Sparkles, Activity, CheckCircle, Clock, Calendar, Zap, RefreshCw } from 'lucide-react';
 
@@ -58,7 +58,7 @@ export const DailyBriefingCard: React.FC = () => {
 
   return (
     <div className="flex flex-col bg-surface-elevated border border-border-subtle rounded-lg p-4 font-mono text-xs w-full max-w-2xl gap-4">
-      {/* Header & Toggles */}
+
       <div className="flex items-center justify-between border-b border-border-subtle pb-2">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-accent-400" />
@@ -101,7 +101,7 @@ export const DailyBriefingCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Synthesis Card */}
+
       <div className="bg-surface-base/50 border border-border-subtle p-3 rounded-md">
         <h3 className="text-text-tertiary mb-1 flex items-center gap-1 uppercase tracking-wider text-[10px]">
           <Activity className="w-3 h-3" />
@@ -116,7 +116,7 @@ export const DailyBriefingCard: React.FC = () => {
         )}
       </div>
 
-      {/* Metrics Pills */}
+
       <div className="grid grid-cols-4 gap-2">
         <div className="bg-surface-elevated border border-border-subtle p-2 rounded flex flex-col items-center justify-center">
           <Calendar className="w-4 h-4 text-cyber-cyan mb-1" />
@@ -140,7 +140,7 @@ export const DailyBriefingCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Anticipation Strip */}
+
       {predictions.length > 0 && (
         <div className="mt-2 border-t border-border-subtle pt-3">
           <h3 className="text-text-tertiary mb-2 uppercase tracking-wider text-[10px] flex items-center gap-1">

@@ -1,19 +1,15 @@
-import pytest
-from app.core.constants import AgentType
 from app.core.agent_registry import (
     CORE_ACTIVE_AGENTS,
     ROADMAP_PLANNED_AGENTS,
-    ModelPoolTier,
     get_active_agent_count,
-    get_planned_agent_count,
     get_model_pool_count,
+    get_planned_agent_count,
 )
+from app.core.constants import AgentType
+
 
 def test_active_agents_parity_with_agent_type_enum():
-    """
-    Asserts that CORE_ACTIVE_AGENTS exactly matches every member of AgentType enum.
-    Prevents drift between registered agent metadata and backend execution routing.
-    """
+    """Asserts that CORE_ACTIVE_AGENTS exactly matches every member of AgentType enum."""
     enum_members = {a.value for a in AgentType}
     registered_ids = {a.id for a in CORE_ACTIVE_AGENTS}
 

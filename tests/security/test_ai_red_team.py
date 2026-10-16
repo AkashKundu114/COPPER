@@ -1,15 +1,14 @@
-import os
-import pytest
-from unittest.mock import AsyncMock, patch
-
-from app.core.guardian import DisagreementLevel, guardian_engine
-from app.ai.cache.semantic_cache import semantic_cache, CacheLookupResult
-from app.ai.memory.persistent_memory import persistent_memory
-from app.ai.memory.context_engine import context_engine
-from app.ai.tools.executor import tool_executor
-from app.utils.validators import validate_message
-from app.core.logger import RedactingFilter
 import logging
+
+import pytest
+
+from app.ai.cache.semantic_cache import semantic_cache
+from app.ai.memory.context_engine import context_engine
+from app.ai.memory.persistent_memory import persistent_memory
+from app.ai.tools.executor import tool_executor
+from app.core.guardian import DisagreementLevel, guardian_engine
+from app.core.logger import RedactingFilter
+from app.utils.validators import validate_message
 
 
 class TestGuardianAdversarialBypasses:
@@ -77,18 +76,14 @@ class TestCanarySecretIsolation:
         session_a = "test_session_isolated_a"
         session_b = "test_session_isolated_b"
 
-        # Record canary message in session A
         await context_engine.append_message(session_a, "user", f"My secret code is {canary}")
         await context_engine.append_message(session_a, "assistant", "Acknowledged. I will keep it secret.")
 
-        # Inspect session B context
         history_b, memory_text_b, self_context_b = await context_engine.build_context(session_b, "What is my secret code?")
 
-        # Assert canary is not in session B's history
         history_b_str = str(history_b)
         assert canary not in history_b_str, "Canary leaked into Session B chat history!"
 
-        # Assert canary was rejected by persistent memory facts
         profile_facts = persistent_memory.profile.get("facts", [])
         assert not any(canary in fact for fact in profile_facts), "Canary leaked into sovereign user profile facts!"
         assert canary not in memory_text_b, "Canary leaked into Session B memory snippet!"
@@ -146,7 +141,6 @@ class TestToolSecurityAndPathTraversal:
 
     @pytest.mark.asyncio
     async def test_path_traversal_restricted(self):
-        # Attempt to read protected/system files
         restricted_paths = [
             "../../../../Windows/System32/drivers/etc/hosts",
             "C:\\Windows\\System32\\cmd.exe",
@@ -167,10 +161,8 @@ class TestContextPressureAndValidation:
     """Verifies application behavior under oversized payloads and context pressure."""
 
     def test_message_validator_boundary(self):
-        # Extremely large prompt (100,000 characters)
         oversized = "A" * 100_000
         valid, err = validate_message(oversized)
-        # Message validation enforces reasonable user prompt limits
         assert valid is False
         assert "exceeds" in err.lower() or "maximum" in err.lower()
 

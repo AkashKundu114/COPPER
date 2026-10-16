@@ -48,7 +48,6 @@ def test_offline_fallback_generation(tmp_path):
     assert res["offline"] is True
     assert res["url"].startswith("/generated/copper_sd_")
 
-    # Verify PNG file was generated and is valid image
     generated_file = Path(res["file_path"])
     assert generated_file.exists()
     assert generated_file.is_file()
@@ -60,5 +59,4 @@ def test_offline_fallback_generation(tmp_path):
 
 def test_engine_unload():
     engine = LocalDiffusionEngine()
-    # Unload on uninitialized engine should return False cleanly
     assert engine.unload() is False

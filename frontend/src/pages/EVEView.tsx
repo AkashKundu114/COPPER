@@ -18,8 +18,8 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
-  
-  // Refs for VAD closures
+
+
   const speakingRef = useRef(speaking);
   const onSendRef = useRef(onSend);
   const stopAudioRef = useRef(stopAudio);
@@ -41,7 +41,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
     let animationFrame: number;
     let isCurrentlyRecording = false;
     let silenceStart = 0;
-    
+
     let recorder: MediaRecorder;
     let chunks: BlobPart[] = [];
 
@@ -53,14 +53,14 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
         audioContext = new AudioContext();
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 512;
-        analyser.minDecibels = -70; // Sensible threshold
-        
+        analyser.minDecibels = -70; 
+
         microphone = audioContext.createMediaStreamSource(stream);
         microphone.connect(analyser);
-        
+
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
-        
+
         const checkVolume = () => {
           analyser.getByteFrequencyData(dataArray);
           let sum = 0;
@@ -68,26 +68,26 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
             sum += dataArray[i];
           }
           const average = sum / bufferLength;
-          
-          // Threshold logic
-          if (average > 15) { // User is speaking
+
+
+          if (average > 15) { 
             if (!isCurrentlyRecording) {
-              if (speakingRef.current) stopAudioRef.current(); // Interrupt E.V.E.
-              
+              if (speakingRef.current) stopAudioRef.current(); 
+
               isCurrentlyRecording = true;
               setIsRecording(true);
               recorder = new MediaRecorder(stream);
               chunks = [];
-              
+
               recorder.ondataavailable = (e) => {
                 if (e.data.size > 0) chunks.push(e.data);
               };
-              
+
               recorder.onstop = async () => {
                 const audioBlob = new Blob(chunks, { type: "audio/webm" });
                 const formData = new FormData();
                 formData.append("file", audioBlob, "voice.webm");
-                
+
                 try {
                   const res = await fetch(`${API_BASE}/voice/transcribe`, {
                     method: "POST",
@@ -103,11 +103,11 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
               };
               recorder.start();
             }
-            silenceStart = 0; // Reset silence timer
+            silenceStart = 0; 
           } else {
             if (isCurrentlyRecording) {
               if (silenceStart === 0) silenceStart = performance.now();
-              else if (performance.now() - silenceStart > 1500) { // 1.5s of silence = stop talking
+              else if (performance.now() - silenceStart > 1500) { 
                 isCurrentlyRecording = false;
                 setIsRecording(false);
                 recorder.stop();
@@ -116,15 +116,15 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
           }
           animationFrame = requestAnimationFrame(checkVolume);
         };
-        
+
         checkVolume();
       } catch (e) {
         console.error("VAD init failed", e);
       }
     };
-    
+
     initVAD();
-    
+
     return () => {
       if (animationFrame) cancelAnimationFrame(animationFrame);
       if (stream) stream.getTracks().forEach(t => t.stop());
@@ -234,7 +234,7 @@ export function EVEView({ lines, thinking, speaking, onSend, stopAudio }: Props)
         <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
           <div className="w-96 h-96 bg-accent rounded-full blur-[120px]" />
         </div>
-        
+
         <motion.div
           variants={blobVariants}
           animate={currentState}

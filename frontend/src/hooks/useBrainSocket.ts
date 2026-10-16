@@ -302,13 +302,13 @@ export function useBrainSocket(
       try {
         wsRef.current.send(JSON.stringify({ action: "interrupt" }));
       } catch {
-        // ignore websocket send errors
+
       }
     }
   }, []);
 
   const connect = useCallback(() => {
-    // If a connection is already alive or connecting, don't open duplicate sockets
+
     if (
       wsRef.current &&
       (wsRef.current.readyState === WebSocket.OPEN ||
@@ -331,7 +331,7 @@ export function useBrainSocket(
       try {
         oldWs.close();
       } catch {
-        // ignore
+
       }
       wsRef.current = null;
     }
@@ -360,7 +360,7 @@ export function useBrainSocket(
         try {
           ws.close();
         } catch {
-          // ignore
+
         }
       }
     };
@@ -536,7 +536,7 @@ export function useBrainSocket(
               final_response: event.final_response,
             };
 
-            // Also attach completed taskGraph to the current assistant message in feed
+
             setLines((curLines) => {
               const lastIdx = curLines.reduce(
                 (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
@@ -653,7 +653,7 @@ export function useBrainSocket(
             return list;
           });
 
-          // Also attach live steps to the last assistant message in lines
+
           setLines((curLines) => {
             const lastIdx = curLines.reduce(
               (acc, l, idx) => (l.agent !== "YOU" && l.agent !== "user" ? idx : acc),
@@ -735,7 +735,7 @@ export function useBrainSocket(
         try {
           activeWs.close();
         } catch {
-          // ignore
+
         }
       }
     };

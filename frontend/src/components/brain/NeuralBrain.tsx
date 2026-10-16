@@ -40,7 +40,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
       aria-label="COPPER Neural Brain Visualization"
       className="relative w-full h-full flex items-center justify-center"
     >
-      {/* Screen Reader Accessible Summary and Agent Directory */}
+
       <div className="sr-only">
         <h2>Agent Neural Network Overview</h2>
         <p>COPPER Core Engine Status: {thinking ? "Thinking and reasoning active" : "Idle"}.</p>
@@ -90,7 +90,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
           </filter>
         </defs>
 
-        {/* Central COPPER Core */}
+
         <g data-testid="copper-core" role="group" aria-label={`COPPER Core Engine: ${thinking ? "Active Reasoning" : "Idle"}`}>
           <circle
             cx={CENTER}
@@ -122,7 +122,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
           </text>
         </g>
 
-        {/* Orbiting Agent Nodes (Active + Dimmed Planned) */}
+
         {ALL_AGENTS.map((agent) => {
           const pos = positions[agent.id] || { x: CENTER, y: CENTER };
           const orbit = computeOrbit(agent.id, agent.tier);
@@ -149,7 +149,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 willChange: "transform",
               }}
             >
-              {/* Spoke line from core to agent */}
+
               <motion.line
                 aria-hidden="true"
                 x1={CENTER}
@@ -169,7 +169,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 }}
               />
 
-              {/* Edge Pulse Animation */}
+
               <AnimatePresence>
                 {activeEdge?.to === agent.id && (
                   <motion.line
@@ -192,7 +192,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 )}
               </AnimatePresence>
 
-              {/* Active ripple ring */}
+
               {isActive && (
                 <motion.circle
                   aria-hidden="true"
@@ -208,7 +208,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 />
               )}
 
-              {/* Agent Node Circle */}
+
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
@@ -253,7 +253,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
                 }}
               />
 
-              {/* Counter-rotating Label */}
+
               <g
                 aria-hidden="true"
                 style={{
@@ -284,7 +284,7 @@ export const NeuralBrain: React.FC<NeuralBrainProps> = ({
         })}
       </svg>
 
-      {/* Visual Legend: Active Agent vs Planned Agent */}
+
       <div
         role="complementary"
         aria-label="Agent Visualization Legend"

@@ -1,17 +1,4 @@
-"""
-VRAM Pager & Dynamic Model Swapper.
-
-Operating Systems Concept: Virtual Memory Frame Allocation & Page Replacement.
-Under constrained consumer GPU memory (e.g., 8 GB - 16 GB), hosting 34 local models
-(totaling >50 GB) triggers CUDA Out-Of-Memory (OOM) errors if unmanaged.
-
-This pager models GPU VRAM as a bounded allocation space and implements a
-multi-factor weighted LRU + DAG Lookahead replacement algorithm:
-    Score(M) = w_recency * RecencyScore(M) + w_frequency * FrequencyScore(M) + w_lookahead * LookaheadPriority(M)
-
-Unpinned models with the lowest composite score are evicted (keep_alive=0)
-to free memory frames before loading target models. The Gatekeeper model is pinned.
-"""
+"""VRAM Pager & Dynamic Model Swapper."""
 
 import time
 from dataclasses import dataclass, field
@@ -22,9 +9,7 @@ import httpx
 from app.core.config import settings
 from app.core.logger import logger
 
-# VRAM estimates in GB dynamically synchronized with models_manifest.json v3.0
 MODEL_VRAM_ESTIMATES: dict[str, float] = {
-    # Core 12B - 14B Models (IQ3_XS / IQ3_M)
     "qwen2.5:14b": 6.38,
     "qwen2.5-14b-instruct": 6.38,
     "qwen2.5-coder-abliterated:14b": 6.38,
@@ -35,11 +20,9 @@ MODEL_VRAM_ESTIMATES: dict[str, float] = {
     "phi-4": 6.24,
     "mistral-nemo:12b": 5.72,
     "mistral-nemo-instruct-2407": 5.72,
-    # Vision & Image Studio
     "qwen2.5-vl:3b": 2.10,
     "qwen2.5-vl-3b-instruct": 2.10,
     "sd_turbo": 4.86,
-    # Subagents & Micro Models (0.5B - 3B)
     "qwen2.5-coder:3b": 1.80,
     "granite3.2-dense:2b": 1.44,
     "granite-3.2-2b-instruct": 1.44,
@@ -51,10 +34,8 @@ MODEL_VRAM_ESTIMATES: dict[str, float] = {
     "smollm2-1.7b-instruct": 1.00,
     "smollm2:360m": 0.36,
     "qwen2.5:0.5b": 0.45,
-    # Embeddings & Reranker
     "nomic-embed-text": 0.14,
     "bge-reranker-v2-m3": 0.32,
-    # Legacy fallbacks
     "llama3.1:8b": 4.80,
     "mistral:7b": 4.20,
     "qwen2.5-coder:7b": 4.40,
@@ -74,32 +55,22 @@ class ModelPage:
     lookahead_priority: float = 0.0
 
     def compute_priority_score(self, current_time: float) -> float:
-        """
-        Higher score = higher priority to STAY in VRAM.
-        Lower score = prime candidate for eviction.
-        """
+        """Higher score = higher priority to STAY in VRAM."""
         if self.is_pinned:
             return float("inf")
 
-        # Recency: exponential decay over seconds idle
         idle_seconds = max(0.0, current_time - self.last_accessed_at)
         recency = 1.0 / (1.0 + (idle_seconds / 60.0))
 
-        # Frequency: logarithmic saturation
         frequency = min(1.0, self.access_count / 10.0)
 
-        # Lookahead: injected by task scheduler / DAG lookahead (0.0 to 1.0)
         lookahead = max(0.0, min(1.0, self.lookahead_priority))
 
-        # Weights: 40% recency, 20% frequency, 40% future lookahead
         return (0.40 * recency) + (0.20 * frequency) + (0.40 * lookahead)
 
 
 class VRAMPager:
-    """
-    Virtual Memory Pager for Local LLM Instances.
-    Enforces strict VRAM ceiling bounds and manages dynamic warm-swapping.
-    """
+    """Virtual Memory Pager for Local LLM Instances."""
 
     def __init__(
         self,
@@ -111,7 +82,6 @@ class VRAMPager:
         self._pages: dict[str, ModelPage] = {}
         self._base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
 
-        # Metrics for observability and interview defense
         self.stats = {
             "total_requests": 0,
             "cache_hits": 0,
@@ -120,7 +90,6 @@ class VRAMPager:
             "preemptions": 0,
         }
 
-        # Initialize pinned gatekeeper
         self._pin_gatekeeper(pinned_gatekeeper)
 
     def _pin_gatekeeper(self, model_name: str) -> None:
@@ -151,10 +120,7 @@ class VRAMPager:
         return model_name in self._pages
 
     async def acquire_model(self, model_name: str, lookahead_priority: float = 0.0) -> bool:
-        """
-        Request model residency. If already resident, updates LRU metadata (cache hit).
-        If not resident (cache miss), evicts lowest priority models until headroom is created.
-        """
+        """Request model residency. If already resident, updates LRU metadata (cache hit)."""
         self.stats["total_requests"] += 1
         now = time.time()
 
@@ -166,22 +132,18 @@ class VRAMPager:
             self.stats["cache_hits"] += 1
             return True
 
-        # Cache miss: Model cold load required
         self.stats["cold_loads"] += 1
         required_vram = self.estimate_vram(model_name)
 
-        # Evict until we have enough headroom or no more evictable models
         while self.available_vram_gb < required_vram:
             evicted = await self._evict_lowest_priority()
             if not evicted:
-                # Could not free enough VRAM (pinned models consume space)
                 logger.warning(
                     f"[VRAMPager] Insufficient VRAM headroom ({self.available_vram_gb:.2f} GB) "
                     f"for {model_name} ({required_vram:.2f} GB). Pushing with overcommit."
                 )
                 break
 
-        # Register new page
         self._pages[model_name] = ModelPage(
             name=model_name,
             vram_gb=required_vram,
@@ -199,7 +161,6 @@ class VRAMPager:
         if not evictable:
             return False
 
-        # Sort ascending by score -> first item has lowest score
         evictable.sort(key=lambda p: p.compute_priority_score(now))
         victim = evictable[0]
 
@@ -208,7 +169,6 @@ class VRAMPager:
             f"(VRAM: {victim.vram_gb:.2f} GB, idle: {now - victim.last_accessed_at:.1f}s)"
         )
 
-        # Actively issue unload request to Ollama
         await self._unload_ollama_model(victim.name)
         self._pages.pop(victim.name, None)
         self.stats["evictions"] += 1
@@ -225,10 +185,7 @@ class VRAMPager:
             logger.debug(f"[VRAMPager] Ollama unload API notification failed for {model_name}: {e}")
 
     def update_dag_lookahead(self, upcoming_models: list[tuple[str, float]]) -> None:
-        """
-        Called by DAG Task Scheduler. Injects lookahead priority weights
-        (model_name, probability_of_execution_in_next_steps).
-        """
+        """Called by DAG Task Scheduler. Injects lookahead priority weights"""
         for model_name, priority in upcoming_models:
             if model_name in self._pages:
                 self._pages[model_name].lookahead_priority = priority

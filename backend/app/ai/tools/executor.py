@@ -5,7 +5,6 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
 from typing import Any
 
-import app.ai.tools.builtin  # noqa: F401 - Ensure all builtins are imported & registered
 from app.ai.tools.registry import tool_registry
 from app.core.guardian import DisagreementLevel, GuardianVerdict, guardian_engine
 from app.core.logger import logger
@@ -59,17 +58,10 @@ class ToolExecutor:
         self.max_steps = max_steps
 
     def parse_tool_call(self, text: str) -> ToolCall | None:
-        """
-        Parses a tool call from LLM response text.
-        Supports:
-        1. Explicit XML tags: <tool_call>{"tool": "...", "arguments": {...}}</tool_call>
-        2. Markdown fenced JSON containing "tool" and "arguments"
-        3. Raw JSON object with "tool" (or "name") and "arguments" (or "parameters")
-        """
+        """Parses a tool call from LLM response text."""
         if not text:
             return None
 
-        # Pattern 1: <tool_call>...</tool_call>
         xml_match = re.search(r"<tool_call>(.*?)</tool_call>", text, re.DOTALL | re.IGNORECASE)
         if xml_match:
             raw_json = xml_match.group(1).strip()
@@ -80,7 +72,6 @@ class ToolExecutor:
                 if tool_name:
                     return ToolCall(tool=str(tool_name).strip(), arguments=args, raw=xml_match.group(0))
 
-        # Pattern 2: Markdown JSON code block with "tool" / "arguments"
         code_blocks = re.findall(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", text)
         for block in code_blocks:
             parsed = self._safe_parse_json(block)
@@ -90,7 +81,6 @@ class ToolExecutor:
                 if tool_name and self.registry.get(str(tool_name).strip()):
                     return ToolCall(tool=str(tool_name).strip(), arguments=args, raw=block)
 
-        # Pattern 3: Clean top-level JSON object
         trimmed = text.strip()
         if (trimmed.startswith("{") and trimmed.endswith("}")) or ('"tool":' in trimmed and '"arguments":' in trimmed):
             json_candidate = re.search(r"\{[\s\S]*\}", trimmed)
@@ -108,7 +98,6 @@ class ToolExecutor:
         try:
             return json.loads(raw)
         except Exception:
-            # Try cleaning trailing commas or relaxed parsing
             cleaned = re.sub(r",\s*([\]}])", r"\1", raw)
             try:
                 return json.loads(cleaned)
@@ -122,10 +111,7 @@ class ToolExecutor:
         context: dict[str, Any] | None = None,
         on_event: Callable[[str, dict[str, Any]], Coroutine[Any, Any, None]] | None = None,
     ) -> ToolResult:
-        """
-        Execute a single tool call with parameter validation, Guardian safety gating,
-        and execution timing.
-        """
+        """Execute a single tool call with parameter validation, Guardian safety gating,"""
         start_time = time.perf_counter()
         if context is None:
             context = {}
@@ -146,7 +132,6 @@ class ToolExecutor:
                 execution_time_ms=round(elapsed_ms, 2),
             )
 
-        # 1. Validate Arguments
         valid, validation_err = tool.validate_args(arguments)
         if not valid:
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -159,8 +144,6 @@ class ToolExecutor:
                 execution_time_ms=round(elapsed_ms, 2),
             )
 
-        # 2. Guardian Safety Check
-        # Build action summary string
         action_summary = f"{tool_name}({', '.join(f'{k}={repr(v)[:50]}' for k, v in arguments.items())})"
         guardian_context = {
             **context,
@@ -173,7 +156,6 @@ class ToolExecutor:
             ),
         }
 
-        # Check safety triggers in arguments (e.g. command, code, script, or path)
         if "command" in arguments:
             action_summary += f" command: {arguments['command']}"
         if "code" in arguments:
@@ -199,7 +181,6 @@ class ToolExecutor:
                 execution_time_ms=round(elapsed_ms, 2),
             )
 
-        # Emit start event if hook provided
         if on_event:
             try:
                 await on_event(
@@ -213,7 +194,6 @@ class ToolExecutor:
             except Exception as ev_err:
                 logger.debug(f"Tool event callback error: {ev_err}")
 
-        # 3. Execute Tool
         try:
             output = await tool.execute(**arguments)
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -228,7 +208,6 @@ class ToolExecutor:
                 execution_time_ms=round(elapsed_ms, 2),
             )
 
-            # Emit end event
             if on_event:
                 try:
                     await on_event(

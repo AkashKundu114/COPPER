@@ -28,7 +28,6 @@ class DailyBriefingService:
 
         db = SessionLocal()
         try:
-            # Gather data
             schedule_events = db.query(ScheduleEvent).filter(ScheduleEvent.date == today).all()
             tasks = db.query(Task).filter(Task.status.in_(["inbox", "in_progress", "todo"])).all()
             projects = db.query(Project).filter(Project.health == "healthy").all()

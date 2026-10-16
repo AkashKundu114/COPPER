@@ -1,11 +1,9 @@
-import os
 import re
-import pytest
 from pathlib import Path
 
+from app.ai.orchestration.agent_router import _ROUTING_PATTERNS, KEYWORD_RULES
 from app.core.constants import AgentType
 from app.services.chat_service import AGENT_MAP
-from app.ai.orchestration.agent_router import KEYWORD_RULES, _ROUTING_PATTERNS
 
 
 def parse_frontend_active_agents() -> list[dict[str, str]]:
@@ -16,7 +14,6 @@ def parse_frontend_active_agents() -> list[dict[str, str]]:
 
     content = agents_ts_path.read_text(encoding="utf-8")
 
-    # Extract block between 'export const ACTIVE_AGENTS' and 'export const PLANNED_AGENTS'
     match = re.search(
         r"export\s+const\s+ACTIVE_AGENTS:\s*AgentMeta\[\]\s*=\s*\[([\s\S]*?)\];",
         content,
@@ -25,7 +22,6 @@ def parse_frontend_active_agents() -> list[dict[str, str]]:
 
     active_block = match.group(1)
 
-    # Extract all agent id fields
     agent_ids = re.findall(r'id:\s*["\']([^"\']+)["\']', active_block)
     agent_names = re.findall(r'name:\s*["\']([^"\']+)["\']', active_block)
 
@@ -70,10 +66,7 @@ def test_backend_matches_frontend_active_agents_count_and_keys():
 
 
 def test_every_agent_type_has_registered_handler():
-    """
-    Verify every agent type in AgentType has a registered handler in AGENT_MAP.
-    Fails if someone adds an enum value without a handler.
-    """
+    """Verify every agent type in AgentType has a registered handler in AGENT_MAP."""
     missing_handlers = [agent for agent in AgentType if agent not in AGENT_MAP]
     assert not missing_handlers, f"The following AgentType members lack registered handlers in AGENT_MAP: {missing_handlers}"
 
@@ -84,7 +77,7 @@ def test_every_agent_type_has_registered_handler():
     for agent_type, handler in AGENT_MAP.items():
         assert handler is not None, f"Handler for {agent_type} is None"
         assert hasattr(handler, "run"), f"Handler for {agent_type} missing 'run' coroutine"
-        assert callable(getattr(handler, "run")), f"Handler {agent_type}.run is not callable"
+        assert callable(handler.run), f"Handler {agent_type}.run is not callable"
         assert hasattr(handler, "name") and bool(handler.name), f"Handler for {agent_type} missing name"
         assert hasattr(handler, "description") and bool(handler.description), (
             f"Handler for {agent_type} missing description"
@@ -107,7 +100,6 @@ def test_topology_router_routes_only_to_implemented_agents():
 
 def test_fails_if_unregistered_enum_added():
     """Verify safeguard: If an enum value is not registered in AGENT_MAP, assertion fails."""
-    # Test our verification function with simulated unhandled agent
     class MockAgentType:
         CHAT = "chat"
         UNIMPLEMENTED = "unimplemented_rogue_agent"

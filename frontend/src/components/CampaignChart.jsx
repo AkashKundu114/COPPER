@@ -6,25 +6,25 @@ const METRIC_CONFIGS = {
   ctr: {
     label: "Click-Through Rate (CTR)",
     format: (v) => `${(v * 100).toFixed(2)}%`,
-    color: "#38bdf8", // Sky blue
+    color: "#38bdf8", 
     icon: Percent,
   },
   roas: {
     label: "Return on Ad Spend (ROAS)",
     format: (v) => `${v.toFixed(2)}x`,
-    color: "#34d399", // Emerald
+    color: "#34d399", 
     icon: TrendingUp,
   },
   spend: {
     label: "Hourly Spend ($)",
     format: (v) => `$${v.toFixed(2)}`,
-    color: "#f59e0b", // Amber
+    color: "#f59e0b", 
     icon: DollarSign,
   },
   conversions: {
     label: "Conversions",
     format: (v) => `${Math.round(v)}`,
-    color: "#a855f7", // Purple
+    color: "#a855f7", 
     icon: MousePointerClick,
   },
 };
@@ -85,7 +85,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
       label: METRIC_CONFIGS[selectedMetric].format(v),
     }));
 
-    // Find anomalies related to this campaign to render shaded warning zones
+
     const relevantAnomalies = anomalies.filter(
       (a) => a.campaign_id === campaign?.campaign_id
     );
@@ -124,7 +124,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
           </p>
         </div>
 
-        {/* Metric Selector Buttons */}
+
         <div className="flex items-center gap-1.5 bg-surface-base p-1 rounded-lg border border-border-subtle">
           {Object.entries(metricConfigs).map(([key, cfg]) => {
             const Icon = cfg.icon;
@@ -147,7 +147,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
         </div>
       </div>
 
-      {/* Main Chart Area */}
+
       {!hasData ? (
         <div className="h-64 flex items-center justify-center text-text-tertiary text-sm">
           No metrics available for {campaign?.campaign_name || "selected campaign"}.
@@ -166,7 +166,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
             </defs>
 
             <g transform={`translate(${svgContent.margin.left}, ${svgContent.margin.top})`}>
-              {/* Horizontal Grid lines */}
+
               {svgContent.yTicks.map((tick, i) => (
                 <g key={`y-grid-${i}`} transform={`translate(0, ${tick.y})`}>
                   <line
@@ -189,7 +189,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
                 </g>
               ))}
 
-              {/* Shaded Red Zone for Detected Anomalies */}
+
               {svgContent.relevantAnomalies.map((anom, idx) => {
                 const anomTime = new Date(anom.detected_at);
                 const xPos = svgContent.xScale(anomTime);
@@ -231,10 +231,10 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
                 return null;
               })}
 
-              {/* Area fill */}
+
               <path d={svgContent.areaData} fill={`url(#gradient-${selectedMetric})`} />
 
-              {/* Data curve line */}
+
               <path
                 d={svgContent.pathData}
                 fill="none"
@@ -243,7 +243,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
                 strokeLinecap="round"
               />
 
-              {/* X Axis Ticks */}
+
               {svgContent.xTicks.map((tick, i) => (
                 <g key={`x-tick-${i}`} transform={`translate(${tick.x}, ${svgContent.innerHeight})`}>
                   <line y1={0} y2={6} stroke="#334155" />
@@ -263,7 +263,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
         </div>
       )}
 
-      {/* Legend & Anomaly Notice */}
+
       <div className="flex flex-wrap items-center justify-between text-xs text-text-secondary pt-1">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">

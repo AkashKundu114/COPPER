@@ -124,7 +124,7 @@ export const SmartClipboardDrawer: React.FC<{ isOpen: boolean; onClose: () => vo
 
   return (
     <div className="fixed inset-y-0 right-0 w-96 bg-gray-900 border-l border-cyan-900/50 shadow-2xl shadow-cyan-900/20 flex flex-col font-mono text-sm text-gray-300 z-50 transform transition-transform duration-300 ease-in-out">
-      {/* Header */}
+
       <div className="flex items-center justify-between p-4 border-b border-cyan-900/50 bg-gray-900/80 backdrop-blur-sm">
         <h2 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
           <RotateCcw className="w-5 h-5" />
@@ -147,7 +147,7 @@ export const SmartClipboardDrawer: React.FC<{ isOpen: boolean; onClose: () => vo
         </div>
       </div>
 
-      {/* Controls */}
+
       <div className="p-4 flex flex-col gap-3 border-b border-cyan-900/30">
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyan-500/50" />
@@ -176,7 +176,7 @@ export const SmartClipboardDrawer: React.FC<{ isOpen: boolean; onClose: () => vo
         </div>
       </div>
 
-      {/* Content Stream */}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-cyan-900 scrollbar-track-transparent">
         {current && filterType === 'All' && search === '' && (
           <div className="mb-6">

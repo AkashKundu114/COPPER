@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+
 from app.core.constants import AgentType
+
 
 class ModelPoolTier(str, Enum):
     MODEL_1_CORE = "MODEL_1_CORE"
@@ -22,7 +23,7 @@ class AgentDefinition:
     domain: str
     blurb: str
     default_model: str
-    status: str  # "active" | "planned"
+    status: str
 
 CORE_ACTIVE_AGENTS: list[AgentDefinition] = [
     AgentDefinition(

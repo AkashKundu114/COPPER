@@ -15,10 +15,7 @@ class CacheClearResponse(BaseModel):
 
 @router.get("/stats")
 async def get_cache_stats():
-    """
-    Retrieves semantic response cache telemetry and performance statistics:
-    hit rate, size, hits/misses/hints, and average inference latency savings.
-    """
+    """Retrieves semantic response cache telemetry and performance statistics:"""
     try:
         stats = await semantic_cache.get_stats()
         return stats

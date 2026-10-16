@@ -15,7 +15,6 @@ def is_obsolete_model(model_name: str) -> bool:
     return any(p in clean for p in OBSOLETE_MODEL_PATTERNS)
 
 
-# In-memory routing cache for microsecond lookup during chat turn execution
 _active_model_routes: dict[str, str] = {}
 
 
@@ -30,7 +29,7 @@ class ModelSelectionOptimizer:
             try:
                 active_routes = (
                     db.query(AgentModelPerformance)
-                    .filter(AgentModelPerformance.is_active_route == True)  # noqa: E712
+                    .filter(AgentModelPerformance.is_active_route == True)
                     .all()
                 )
                 for r in active_routes:
@@ -99,11 +98,8 @@ class ModelSelectionOptimizer:
 
             db.commit()
 
-            # Dynamic routing evaluation
-            # Find all candidate models for this agent type with sufficient samples
             candidates = db.query(AgentModelPerformance).filter(AgentModelPerformance.agent_type == clean_agent).all()
 
-            # Route to highest quality score with >= 3 samples
             eligible = [c for c in candidates if c.sample_count >= 3]
             if eligible:
                 best_model = max(
@@ -113,12 +109,10 @@ class ModelSelectionOptimizer:
                         -c.avg_latency_ms,
                     ),
                 )
-                # Update routes
                 for c in candidates:
                     c.is_active_route = c.id == best_model.id
                 db.commit()
 
-                # Update in-memory cache
                 _active_model_routes[clean_agent] = best_model.model_name
                 logger.info(
                     f"Dynamic model route updated for {clean_agent} -> {best_model.model_name} "

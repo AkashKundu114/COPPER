@@ -1,7 +1,4 @@
-"""
-Unit tests for Crash-Consistent Write-Ahead Log (WAL) & Idempotent Agent Checkpointing.
-Verifies CRC32 checksums, crash recovery analysis, idempotency keys, and compensation rollbacks.
-"""
+"""Unit tests for Crash-Consistent Write-Ahead Log (WAL) & Idempotent Agent Checkpointing."""
 
 import tempfile
 from pathlib import Path
@@ -28,7 +25,6 @@ def test_wal_record_crc32_checksum():
     json_line = rec.to_json_line()
     assert rec.checksum != 0
 
-    # Parse back
     parsed = WALRecord.from_json_line(json_line)
     assert parsed.seq_num == 1
     assert parsed.dag_id == "test_dag_1"
@@ -47,7 +43,6 @@ def test_wal_corrupt_entry_detection():
     )
     json_line = rec.to_json_line()
 
-    # Tamper with the line (change payload without updating checksum)
     tampered = json_line.replace("Clean database", "DROP TABLE users")
     with pytest.raises(ValueError, match="checksum mismatch"):
         WALRecord.from_json_line(tampered)
@@ -75,18 +70,15 @@ def test_crash_recovery_engine_detects_incomplete_dag():
         wal_dir = Path(tmp_dir)
         engine = CrashRecoveryEngine(wal_dir=wal_dir)
 
-        # 1. Complete DAG
         wal1 = TaskWAL(dag_id="complete_1", wal_dir=wal_dir)
         wal1.append_record(RecordType.DAG_START, {"goal": "complete"})
         wal1.append_record(RecordType.DAG_COMMIT, {"status": "done"})
 
-        # 2. Incomplete (interrupted mid-flight) DAG
         wal2 = TaskWAL(dag_id="crashed_2", wal_dir=wal_dir)
         wal2.append_record(RecordType.DAG_START, {"goal": "crashed midway"})
         wal2.append_record(RecordType.TASK_INTENT, {"task_id": "T1", "agent": "AXIS"})
         wal2.append_record(RecordType.TASK_COMMIT, {"task_id": "T1", "output": "T1 done"})
         wal2.append_record(RecordType.TASK_INTENT, {"task_id": "T2", "agent": "FORGE"})
-        # No DAG_COMMIT!
 
         incomplete = engine.find_incomplete_dags()
         assert "crashed_2" in incomplete
@@ -101,10 +93,8 @@ def test_crash_recovery_engine_state_analysis_and_rollback():
         wal = TaskWAL(dag_id="crash_with_mutation", wal_dir=wal_dir)
         wal.append_record(RecordType.DAG_START, {"goal": "generate code"})
 
-        # Task 1 committed
         wal.append_record(RecordType.TASK_COMMIT, {"task_id": "T1", "output": "T1 output"})
 
-        # Task 2 created an orphaned file but process died before committing!
         orphaned_file = Path(tmp_dir) / "orphaned_script.py"
         orphaned_file.write_text("print('half-written')", encoding="utf-8")
         assert orphaned_file.exists()
@@ -113,17 +103,15 @@ def test_crash_recovery_engine_state_analysis_and_rollback():
             RecordType.MUTATION_RECORD,
             {"task_id": "T2", "type": "file_created", "path": str(orphaned_file)},
         )
-        # Process crash here! (no TASK_COMMIT for T2)
 
         state = engine.analyze_dag_state("crash_with_mutation")
         assert state["is_complete"] is False
         assert "T1" in state["committed_tasks"]
         assert len(state["uncommitted_mutations"]) == 1
 
-        # Execute compensation rollback
         rollbacks = engine.rollback_uncommitted_mutations("crash_with_mutation")
         assert rollbacks == 1
-        assert not orphaned_file.exists()  # Orphaned file deleted!
+        assert not orphaned_file.exists()
 
         records_after = wal.read_records()
         last_rec = records_after[-1]

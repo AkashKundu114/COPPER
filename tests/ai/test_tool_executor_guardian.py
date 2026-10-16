@@ -42,7 +42,6 @@ def test_parse_tool_call_markdown_json():
 
 @pytest.mark.asyncio
 async def test_guardian_safety_gate_blocking():
-    # Attempting to execute destructive shell command through executor
     res = await tool_executor.execute(
         tool_name="shell_execute",
         arguments={"command": "rm -rf /"},
@@ -50,7 +49,7 @@ async def test_guardian_safety_gate_blocking():
     assert res.success is False
     assert "Blocked by Guardian" in res.error
     assert res.guardian_verdict is not None
-    assert res.guardian_verdict["level"] == 3  # SAFETY level
+    assert res.guardian_verdict["level"] == 3
 
 
 @pytest.mark.asyncio

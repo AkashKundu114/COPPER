@@ -49,7 +49,7 @@ describe("NeuralBrain", () => {
   it("renders agent nodes and their labels", () => {
     render(<NeuralBrain {...defaultProps} />);
 
-    // Test a sample of agents across tiers
+
     const sampleAgents = [AGENTS[0], AGENTS[5], AGENTS[10]];
     sampleAgents.forEach((agent) => {
       expect(screen.getByTestId(`agent-group-${agent.id}`)).toBeInTheDocument();

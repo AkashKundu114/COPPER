@@ -83,7 +83,7 @@ export const CausalExplorerTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Why Query Box */}
+
       <form onSubmit={handleWhy} className="flex gap-3 items-center w-full">
         <div className="relative flex-1">
           <Search size={14} className="absolute left-3 top-3 text-text-tertiary" />
@@ -104,7 +104,7 @@ export const CausalExplorerTab: React.FC = () => {
         </button>
       </form>
 
-      {/* Suggested Causal Questions */}
+
       <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono">
         <span className="text-text-tertiary">Try asking:</span>
         {[
@@ -124,7 +124,7 @@ export const CausalExplorerTab: React.FC = () => {
         ))}
       </div>
 
-      {/* Causal Chain Visualization */}
+
       {whyResult && (
         <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -134,7 +134,7 @@ export const CausalExplorerTab: React.FC = () => {
           <p className="text-sm text-text-secondary leading-relaxed bg-canvas p-3 rounded-xl border border-border-subtle">
             {whyResult.explanation}
           </p>
-          
+
           {whyResult.chain && whyResult.chain.length > 0 && (
             <div className="mt-4 space-y-2">
               <h4 className="text-xs font-semibold text-text-secondary">Event Chain:</h4>
@@ -165,7 +165,7 @@ export const CausalExplorerTab: React.FC = () => {
         </div>
       )}
 
-      {/* Recent Events Stream */}
+
       <div className="space-y-3">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">
           <Info size={16} className="text-text-secondary" />

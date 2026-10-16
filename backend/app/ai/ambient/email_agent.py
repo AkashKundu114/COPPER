@@ -128,7 +128,6 @@ class EmailAgent:
                         from_addr = msg.get("From", "")
                         to_addr = msg.get("To", "")
 
-                        # Get body
                         body = ""
                         if msg.is_multipart():
                             for part in msg.walk():
@@ -148,10 +147,8 @@ class EmailAgent:
                                 except Exception:
                                     pass
 
-                        # Just basic timestamp fallback
                         received_at = datetime.now()
 
-                        # Basic classification to start with
                         email_msg = EmailMessage(
                             email_id=str(uuid4()),
                             from_addr=from_addr,
@@ -180,7 +177,6 @@ class EmailAgent:
         body_lower = email_msg.body.lower()
         subject_lower = email_msg.subject.lower()
 
-        # Heuristics
         if "unsubscribe" in body_lower or "viagra" in body_lower or "casino" in body_lower:
             return "spam"
         if "invite" in subject_lower or "calendar" in body_lower:
@@ -188,7 +184,6 @@ class EmailAgent:
         if "?" in subject_lower or "can you" in body_lower:
             return "needs_response"
 
-        # Try LLM
         if await ollama_client.is_available():
             try:
                 prompt = f"Classify this email into one of: urgent, needs_response, fyi, spam. Reply ONLY with the classification.\nSubject: {email_msg.subject}\nBody: {email_msg.body}"
@@ -219,7 +214,6 @@ class EmailAgent:
                 ]
             )
 
-            # Guardian check
             verdict = guardian_engine.evaluate(draft)
             if verdict.level >= DisagreementLevel.SAFETY:
                 logger.warning(f"Draft rejected by Guardian: {verdict.reasoning}")

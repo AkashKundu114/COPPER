@@ -26,13 +26,13 @@ class Settings(BaseSettings):
     IMAGE_MODELS_DIR: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "image")
     IMAGE_MODEL_PATH: str = str(Path(__file__).resolve().parents[3] / "ai-models" / "image" / "sd_turbo.safetensors")
     IMAGE_OUTPUT_DIR: str = str(Path(__file__).resolve().parents[3] / "frontend" / "public" / "generated")
-    IMAGE_DEVICE: str = "auto"  # "auto", "cuda", "cpu"
+    IMAGE_DEVICE: str = "auto"
     IMAGE_WIDTH: int = 512
     IMAGE_HEIGHT: int = 512
     IMAGE_INFERENCE_STEPS: int = 1
     IMAGE_OFFLINE_ONLY: bool = True
     TTS_OFFLINE_ONLY: bool = True
-    TTS_ENGINE: str = "auto"  # "auto", "local", "edge-tts"
+    TTS_ENGINE: str = "auto"
     AGENT_TIERS: list[tuple[int, str]] = [
         (0, "Stranger"),
         (1, "Acquaintance"),
@@ -59,16 +59,14 @@ class Settings(BaseSettings):
     SEARXNG_URL: str = "http://localhost:8888"
     WEB_SEARCH_ENABLED: bool = True
 
-    # Sandbox Isolation Configuration
-    SANDBOX_BACKEND: str = "auto"  # "auto", "pyodide", "docker"
+    SANDBOX_BACKEND: str = "auto"
     SANDBOX_TIMEOUT_SECONDS: int = 15
     SANDBOX_MEMORY_LIMIT_MB: int = 256
     SANDBOX_CPU_LIMIT: float = 1.0
     SANDBOX_NETWORK_ENABLED: bool = False
     SANDBOX_DOCKER_IMAGE: str = "python:3.12-slim"
 
-    # OpenTelemetry & Observability Configuration
-    OTEL_ENABLED: bool = False  # Set True to export to external Tempo/Grafana collector
+    OTEL_ENABLED: bool = False
     OTEL_SERVICE_NAME: str = "copper-backend"
     OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://localhost:4317"
     OTEL_EXPORTER_OTLP_HTTP_ENDPOINT: str = "http://localhost:4318/v1/traces"

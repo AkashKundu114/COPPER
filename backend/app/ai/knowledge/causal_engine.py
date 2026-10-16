@@ -158,7 +158,6 @@ class CausalEngine:
                     len(set(earlier_event.entities).union(set(later_event.entities))), 1
                 )
 
-                # temporal proximity score: 1.0 at 0 minutes, 0.0 at 30 minutes
                 temporal_proximity_score = max(0, 1.0 - (time_diff.total_seconds() / 1800.0))
                 category_compatibility = 1.0
 
@@ -175,7 +174,6 @@ class CausalEngine:
                         evidence=f"Inferred: shared entities {list(shared_entities)} within {int(time_diff.total_seconds() / 60)} mins.",
                     )
 
-                    # Avoid duplicates
                     if not any(lnk.cause_id == link.cause_id and lnk.effect_id == link.effect_id for lnk in self.links):
                         self.links.append(link)
                         new_links.append(link)
@@ -208,7 +206,7 @@ class CausalEngine:
 
         target_event = matches[0]
         chain_events = self.get_event_causes(target_event.event_id, depth=3)
-        chain_events.insert(0, target_event)  # Prepend the target event
+        chain_events.insert(0, target_event)
         chain_events.sort(key=lambda x: x.timestamp)
 
         event_ids = {e.event_id for e in chain_events}
@@ -287,7 +285,7 @@ class CausalEngine:
         return {
             "total_events": len(self.events),
             "total_links": len(self.links),
-            "avg_chain_length": 0,  # Placeholder
+            "avg_chain_length": 0,
             "categories_breakdown": categories,
         }
 

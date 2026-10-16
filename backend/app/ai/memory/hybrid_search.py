@@ -8,11 +8,7 @@ RRF_K_DEFAULT: int = 60
 
 
 class HybridSearch:
-    """
-    Hybrid Search combining ChromaDB vector semantic retrieval and BM25 keyword matching
-    fused using Reciprocal Rank Fusion (RRF):
-        RRF_score(d) = sum(1 / (k + rank_i(d)))
-    """
+    """Hybrid Search combining ChromaDB vector semantic retrieval and BM25 keyword matching"""
 
     def __init__(self, doc_store: VectorStore | None = None, rrf_k: int = RRF_K_DEFAULT):
         self.doc_store = doc_store or VectorStore("copper_documents")
@@ -26,34 +22,24 @@ class HybridSearch:
         rrf_k: int | None = None,
         source_filter: str | None = None,
     ) -> list[dict[str, Any]]:
-        """
-        Executes hybrid retrieval:
-        1. Query ChromaDB vector store for top candidates.
-        2. Query BM25 index for top keyword candidates.
-        3. Fuse both candidate lists using Reciprocal Rank Fusion with constant k (default 60).
-        4. Deduplicate and return top `limit` merged candidates.
-        """
+        """Executes hybrid retrieval:"""
         k_val = rrf_k if rrf_k is not None else self.rrf_k
         fetch_k = max(limit * candidate_multiplier, 15)
 
-        # 1. Vector Search
         vector_results: list[dict[str, Any]] = []
         try:
             vector_results = await self.doc_store.search(query, n_results=fetch_k)
         except Exception as e:
             logger.warning(f"Vector search branch in HybridSearch failed: {e}")
 
-        # 2. BM25 Search
         bm25_results: list[dict[str, Any]] = []
         try:
             bm25_results = bm25_index.search_documents(query, limit=fetch_k)
         except Exception as e:
             logger.warning(f"BM25 search branch in HybridSearch failed: {e}")
 
-        # 3. Reciprocal Rank Fusion
         candidates: dict[str, dict[str, Any]] = {}
 
-        # Process Vector candidates (rank starts at 1)
         for rank, item in enumerate(vector_results, start=1):
             doc_text = item.get("document", "").strip()
             if not doc_text:
@@ -64,7 +50,6 @@ class HybridSearch:
             key = doc_text.strip()
 
             dist = float(item.get("distance", 1.0))
-            # Normalized vector similarity score from distance
             vec_sim = max(0.0, min(1.0, 1.0 - (dist / 2.0)))
 
             candidates[key] = {
@@ -80,7 +65,6 @@ class HybridSearch:
                 "rrf_score": 1.0 / (k_val + rank),
             }
 
-        # Process BM25 candidates
         for rank, b_item in enumerate(bm25_results, start=1):
             doc_text = b_item.get("content", "").strip()
             if not doc_text:
@@ -112,12 +96,10 @@ class HybridSearch:
                     "rrf_score": 1.0 / (k_val + rank),
                 }
 
-        # Filter by source if requested
         merged = list(candidates.values())
         if source_filter:
             merged = [c for c in merged if c.get("source") == source_filter]
 
-        # Sort descending by RRF score
         merged.sort(key=lambda x: x["rrf_score"], reverse=True)
 
         for item in merged:

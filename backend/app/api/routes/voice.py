@@ -104,10 +104,7 @@ async def voice_conversation(
     file: UploadFile = File(...),
     session_id: str = Form("voice_session_default"),
 ):
-    """
-    End-to-End Voice Conversation Turn:
-    Receives user voice, transcribes it, runs agent logic, and returns text + synthesized audio.
-    """
+    """End-to-End Voice Conversation Turn:"""
     try:
         audio_bytes = await file.read()
         if len(audio_bytes) == 0:

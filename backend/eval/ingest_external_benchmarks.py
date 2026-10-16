@@ -1,8 +1,4 @@
-"""
-C.O.P.P.E.R. Direct External Benchmark Ingestion Engine
-Streams, fetches, and normalizes public open-source benchmark prompts from
-Hugging Face, GitHub, and open datasets into standard C.O.P.P.E.R. evaluation schemas.
-"""
+"""C.O.P.P.E.R. Direct External Benchmark Ingestion Engine"""
 
 import hashlib
 import json
@@ -11,14 +7,12 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-# Fix Windows console UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 BASE_DIR = Path(__file__).parent / "datasets" / "external"
 BASE_DIR.mkdir(parents=True, exist_ok=True)
 
-# Curated open datasets with raw downloadable URLs or structured API streams
 EXTERNAL_SOURCES = [
     {
         "name": "jailbreak_llms_github",

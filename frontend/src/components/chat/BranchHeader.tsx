@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   GitBranch,
   GitCompare,
@@ -54,7 +54,7 @@ export const BranchHeader: React.FC<Props> = ({
   return (
     <div className="w-full max-w-[850px] flex flex-col z-20">
       <div className="px-4 py-2 flex items-center justify-between border-b border-border-subtle bg-canvas/70 backdrop-blur text-xs font-mono select-none">
-        {/* Branch Selector Dropdown */}
+
         <div className="relative">
           <button
             ref={triggerButtonRef}
@@ -129,7 +129,7 @@ export const BranchHeader: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Action Buttons */}
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowGraph(!showGraph)}
@@ -143,7 +143,7 @@ export const BranchHeader: React.FC<Props> = ({
           >
             <GitGraph size={14} aria-hidden="true" />
           </button>
-          
+
           <button
             onClick={onOpenCompare}
             disabled={branches.length < 2}
@@ -168,8 +168,8 @@ export const BranchHeader: React.FC<Props> = ({
           )}
         </div>
       </div>
-      
-      {/* Branch Graph Visualization Panel */}
+
+
       {showGraph && (
         <div className="w-full border-b border-border-subtle shadow-inner">
           <BranchGraph

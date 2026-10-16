@@ -5,7 +5,7 @@ export type CompanionCoreState = "idle" | "listening" | "thinking" | "speaking" 
 
 interface ThinkingOrbProps {
   state?: CompanionCoreState;
-  audioLevel?: number; // 0.0 to 1.0 audio amplitude
+  audioLevel?: number; 
   size?: number;
   className?: string;
   onInteractivityClick?: () => void;
@@ -24,7 +24,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
   const rotationAngleRef = useRef(0);
   const smoothAudioRef = useRef(0);
 
-  // Handle tactile click pulse
+
   const handleClick = useCallback(() => {
     soundFX.play("click");
     clickRipplesRef.current.push({
@@ -47,7 +47,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
     let animId: number;
     let time = 0;
 
-    // Fixed filament nodes for fluid organic plasma
+
     const FILAMENT_COUNT = 8;
     const filaments = Array.from({ length: FILAMENT_COUNT }, (_, i) => ({
       baseAngle: (i * 2 * Math.PI) / FILAMENT_COUNT,
@@ -67,11 +67,11 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       const cy = h / 2;
       const baseRadius = Math.min(w, h) * 0.28;
 
-      // Smooth audio level
+
       smoothAudioRef.current += (audioLevel - smoothAudioRef.current) * 0.15;
       const curAudio = smoothAudioRef.current;
 
-      // State-specific speed and rotation
+
       let spinSpeed = 0.008;
       if (state === "thinking") spinSpeed = 0.032;
       else if (state === "speaking") spinSpeed = 0.018;
@@ -79,35 +79,35 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       rotationAngleRef.current += spinSpeed;
       const rot = rotationAngleRef.current;
 
-      // Color Palette Selection (inspired by libraries.dev/orbs & C.O.P.P.E.R. molten copper palette)
-      let primaryColor = "rgba(201, 124, 76, "; // Molten Copper Accent
-      let secondaryColor = "rgba(246, 230, 234, "; // Soft Blush
-      let coreGlow = "rgba(255, 140, 90, "; // Hot Core
-      let auraColor = "rgba(100, 25, 45, "; // Deep Burgundy Nebula
+
+      let primaryColor = "rgba(201, 124, 76, "; 
+      let secondaryColor = "rgba(246, 230, 234, "; 
+      let coreGlow = "rgba(255, 140, 90, "; 
+      let auraColor = "rgba(100, 25, 45, "; 
 
       if (state === "listening") {
-        primaryColor = "rgba(6, 182, 212, "; // Cyan / Verdigris
+        primaryColor = "rgba(6, 182, 212, "; 
         secondaryColor = "rgba(95, 168, 143, ";
         coreGlow = "rgba(125, 240, 220, ";
         auraColor = "rgba(10, 45, 55, ";
       } else if (state === "thinking") {
-        primaryColor = "rgba(168, 85, 247, "; // Cognitive Violet / Magenta
+        primaryColor = "rgba(168, 85, 247, "; 
         secondaryColor = "rgba(244, 114, 182, ";
         coreGlow = "rgba(216, 180, 254, ";
         auraColor = "rgba(45, 15, 65, ";
       } else if (state === "speaking") {
-        primaryColor = "rgba(251, 146, 60, "; // Amber / Electric Copper
+        primaryColor = "rgba(251, 146, 60, "; 
         secondaryColor = "rgba(254, 240, 138, ";
         coreGlow = "rgba(255, 215, 0, ";
         auraColor = "rgba(70, 30, 15, ";
       } else if (state === "alert") {
-        primaryColor = "rgba(239, 68, 68, "; // Crimson Alert
+        primaryColor = "rgba(239, 68, 68, "; 
         secondaryColor = "rgba(252, 165, 165, ";
         coreGlow = "rgba(254, 202, 202, ";
         auraColor = "rgba(60, 10, 15, ";
       }
 
-      // 1. Deep Atmospheric Nebula Aura (Outer glow)
+
       const auraBreath = Math.sin(time * 1.5) * 0.08 + (state === "speaking" ? curAudio * 0.35 : 0);
       const auraGrad = ctx.createRadialGradient(
         cx,
@@ -125,7 +125,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       ctx.arc(cx, cy, baseRadius * (1.8 + auraBreath), 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Active Acoustic Soundwave Ripples (Listening & Speaking states)
+
       if (state === "listening" || state === "speaking" || curAudio > 0.05) {
         const ringCount = state === "listening" ? 3 : 4;
         for (let r = 1; r <= ringCount; r++) {
@@ -144,13 +144,13 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
         }
       }
 
-      // 3. Fluid Organic Plasma Filaments (Thinking Orb core)
+
       ctx.save();
       ctx.translate(cx, cy);
 
       const dynamicRadius = baseRadius * (1 + Math.sin(time * 2) * 0.04 + curAudio * 0.25);
 
-      // Draw multi-layered organic petals / plasma filaments
+
       filaments.forEach((f) => {
         const currentAngle = f.baseAngle + rot * f.speed;
         const pulse = Math.sin(time * 3 + f.phase) * 0.15;
@@ -170,7 +170,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
         ctx.fill();
       });
 
-      // 4. Main Spherical Glass Body (Inner dense orb)
+
       const bodyGrad = ctx.createRadialGradient(
         -dynamicRadius * 0.25,
         -dynamicRadius * 0.25,
@@ -189,7 +189,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       ctx.arc(0, 0, dynamicRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      // 5. Dual Orbiting Electron / Plasma Rings (Thinking & Active state)
+
       const ringTilt = Math.sin(time) * 0.35;
       ctx.save();
       ctx.rotate(rot * 0.8);
@@ -200,7 +200,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       ctx.arc(0, 0, dynamicRadius * 1.25, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Orbiting Spark
+
       const sparkX = Math.cos(rot * 2) * dynamicRadius * 1.25;
       const sparkY = Math.sin(rot * 2) * dynamicRadius * 1.25;
       ctx.beginPath();
@@ -212,7 +212,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       ctx.shadowBlur = 0;
       ctx.restore();
 
-      // 6. Liquid Glass Specular Reflection Highlight (glass.samasante.com style)
+
       ctx.save();
       ctx.beginPath();
       ctx.ellipse(
@@ -237,9 +237,9 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
       ctx.fill();
       ctx.restore();
 
-      ctx.restore(); // restore cx, cy translation
+      ctx.restore(); 
 
-      // 7. Interactive Click Ripples
+
       clickRipplesRef.current = clickRipplesRef.current.filter((ripple) => {
         ripple.radius += ripple.speed;
         ripple.opacity -= 0.025;
@@ -289,7 +289,7 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
         style={{ width: `${size}px`, height: `${size}px` }}
         className="touch-none"
       />
-      {/* State Metadata Tag below orb */}
+
       <div className="absolute -bottom-1 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 shadow-lg text-[10px] font-mono tracking-wider uppercase text-zinc-300 pointer-events-none">
         <span
           className={`w-1.5 h-1.5 rounded-full animate-pulse ${

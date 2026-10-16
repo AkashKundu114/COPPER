@@ -22,9 +22,9 @@ class RoutingResult:
     scores: dict[str, float] = field(default_factory=dict)
     matched_keywords: list[str] = field(default_factory=list)
     is_consequential: bool = False
-    cascade_risk: float = 0.0  # Novelty 1: Topological DAG cascade failure probability
-    sub_tasks: list[str] = field(default_factory=list)  # Decomposed compound task pipeline
-    routing_entropy: float = 0.0  # Novelty 1: Shannon entropy H(R) = -sum(p_i * log2(p_i))
+    cascade_risk: float = 0.0
+    sub_tasks: list[str] = field(default_factory=list)
+    routing_entropy: float = 0.0
     explanation: dict[str, Any] | None = None
     suppressed_rules: list[dict[str, Any]] = field(default_factory=list)
 
@@ -63,10 +63,7 @@ class RoutingResult:
 
 
 class DynamicRoutingMemory:
-    """
-    Self-learning memory cache that stores verified user exemplar routes and
-    dynamically learns from live user interactions, corrections, and feedback.
-    """
+    """Self-learning memory cache that stores verified user exemplar routes and"""
 
     def __init__(self, storage_path: Path = LEARNED_ROUTES_FILE):
         self.storage_path = storage_path
@@ -495,12 +492,7 @@ def is_consequential_action(message: str) -> bool:
 
 
 def estimate_dag_cascade_risk(agent: AgentType, is_consequential: bool, sub_tasks: list[str] | None = None) -> float:
-    """
-    TFP-Router (Topological Failure-Predicting Router):
-    Estimates downstream execution graph (DAG) cascade failure probability.
-    Higher risk for autonomous mutating agents (automation, coding) and multi-node DAG workflows.
-    R_cascade = 1 - \\prod_{k \\in Children} (1 - P(fail_k))
-    """
+    """TFP-Router (Topological Failure-Predicting Router):"""
     base_failure_rates = {
         AgentType.CHAT: 0.01,
         AgentType.REMINDER: 0.02,
@@ -524,10 +516,7 @@ def estimate_dag_cascade_risk(agent: AgentType, is_consequential: bool, sub_task
 
 
 def decompose_compound_intent(message: str) -> list[str]:
-    """
-    Identifies compound task dependencies across multi-agent workflows.
-    e.g. "Read text in screenshot and open VSCode" -> ['vision', 'automation']
-    """
+    """Identifies compound task dependencies across multi-agent workflows."""
     lower = message.lower()
     tasks = []
     if any(k in lower for k in ["screenshot", "image", "photo", "ocr"]):
@@ -546,12 +535,7 @@ def decompose_compound_intent(message: str) -> list[str]:
 
 
 def calculate_routing_entropy(scores: dict[Any, float]) -> float:
-    r"""
-    Novelty 1: Formal Information-Theoretic Routing Entropy.
-    H(R) = - \sum_{i} p_i \log_2(p_i)
-    Measures distribution ambiguity across candidate agent specialists.
-    Zero entropy indicates absolute single-agent determinism.
-    """
+    """Novelty 1: Formal Information-Theoretic Routing Entropy."""
     total = sum(scores.values())
     if total <= 0:
         return 0.0
@@ -614,14 +598,7 @@ async def route_and_explain(message: str, use_llm: bool = False) -> tuple[Routin
 
 
 async def route_message_detailed(message: str, use_llm: bool = False) -> RoutingResult:
-    """
-    Multi-stage high-precision router:
-    Stage 0: Dynamic Memory & Self-Trained Query Cache (< 0.01ms)
-    Stage 1: Fast Smalltalk / Greeting filter -> CHAT
-    Stage 2: Weighted Pattern Matching with Negative Suppression
-    Stage 3: Consequential Safety Flagging
-    Stage 4: Optional LLM Micro-Router fallback for ambiguous queries
-    """
+    """Multi-stage high-precision router:"""
     start_time = time.perf_counter()
     msg_clean = message.strip()
     msg_lower = msg_clean.lower()
@@ -674,7 +651,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     stripped = DIRECTIVE_PREFIX_RE.sub("", msg_clean).strip()
     core_text = GREETING_PREFIX_RE.sub("", stripped).strip()
 
-    # Fast Smalltalk filter: ONLY trigger when input is purely conversational greeting/smalltalk
     if PURE_SMALLTALK_RE.match(msg_lower) or PURE_SMALLTALK_RE.match(stripped.lower()) or not core_text:
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
         return _finalize_result(

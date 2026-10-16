@@ -1,10 +1,9 @@
-import os
-import sys
-import re
 import json
+import os
+import re
 import subprocess
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 REPO_ROOT = Path("d:/C.O.P.P.E.R")
 LOGS_DIR = REPO_ROOT / "REMEDIATION" / "logs"
@@ -42,7 +41,7 @@ for root, dirs, files in os.walk(REPO_ROOT):
     parts = rel_root.parts
     if any(p in IGNORED_DIRS for p in parts):
         continue
-    
+
     if "__pycache__" in dirs:
         pycache_dirs.append(str(rel_root / "__pycache__"))
     if "chroma" in str(rel_root).lower():
@@ -55,22 +54,22 @@ for root, dirs, files in os.walk(REPO_ROOT):
             size = fpath.stat().st_size
         except Exception:
             continue
-            
+
         ext = fpath.suffix.lower()
         ext_counts[ext] += 1
-        
+
         if size > 1024 * 1024:
             large_files.append((str(rel_path), size))
-            
+
         if ext in {".db", ".sqlite", ".sqlite3"}:
             database_files.append((str(rel_path), size))
-            
+
         if ext in {".wav", ".mp3", ".ogg", ".flac", ".m4a"}:
             audio_recordings.append((str(rel_path), size))
-            
+
         if ext in {".py", ".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".sh", ".ps1", ".sql", ".yml", ".yaml", ".json", ".md"}:
             try:
-                with open(fpath, "r", encoding="utf-8", errors="ignore") as fp:
+                with open(fpath, encoding="utf-8", errors="ignore") as fp:
                     for line in fp:
                         sline = line.strip()
                         ext_lines[ext]["total"] += 1
@@ -108,13 +107,13 @@ for root, dirs, files in os.walk(REPO_ROOT):
     for f in files:
         fpath = Path(root) / f
         rel_path = str(fpath.relative_to(REPO_ROOT))
-        
+
         # skip binary files
         if fpath.suffix.lower() in {".exe", ".dll", ".pyc", ".png", ".jpg", ".ico", ".woff2", ".bin", ".onnx"}:
             continue
-            
+
         try:
-            with open(fpath, "r", encoding="utf-8", errors="ignore") as fp:
+            with open(fpath, encoding="utf-8", errors="ignore") as fp:
                 for line_num, line in enumerate(fp, 1):
                     for p_name, regex in secret_patterns.items():
                         m = regex.search(line)

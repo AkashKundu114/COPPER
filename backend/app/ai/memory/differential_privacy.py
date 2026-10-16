@@ -10,11 +10,11 @@ from app.core.logger import logger
 
 @dataclass
 class PrivacyBudget:
-    epsilon: float = 1.0  # Privacy parameter (lower = more private, range 0.1-10.0)
-    delta: float = 1e-5  # Probability of privacy failure
+    epsilon: float = 1.0
+    delta: float = 1e-5
     total_epsilon_spent: float = 0.0
     total_queries: int = 0
-    budget_limit: float = 10.0  # Max cumulative epsilon before reset required
+    budget_limit: float = 10.0
     last_reset: datetime = field(default_factory=datetime.utcnow)
 
 
@@ -27,7 +27,6 @@ class DifferentialPrivacyEngine:
     def add_noise_to_embedding(self, embedding: list[float], sensitivity: float = 1.0) -> list[float]:
         epsilon = max(self.budget.epsilon, 1e-6)
         delta = self.budget.delta
-        # Gaussian noise: sigma = sensitivity * sqrt(2 * ln(1.25/delta)) / epsilon
         sigma = sensitivity * np.sqrt(2 * np.log(1.25 / delta)) / epsilon
         noise = np.random.normal(0, sigma, len(embedding))
         noised_embedding = np.array(embedding) + noise

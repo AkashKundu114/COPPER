@@ -1,7 +1,4 @@
-"""
-C.O.P.P.E.R. Real System Telemetry & Hardware Resource API
-Queries live hardware metrics: CPU %, Host RAM, NVIDIA GPU VRAM, Temperatures, and Token counters.
-"""
+"""C.O.P.P.E.R. Real System Telemetry & Hardware Resource API"""
 
 import ctypes
 import json
@@ -83,7 +80,6 @@ def _get_cpu_usage_and_info():
         if total > 0:
             cpu_percent = round(((usr + ker) / total) * 100, 1)
     except Exception:
-        # Linux/macOS do not expose Windows GetSystemTimes.
         cpu_percent = 2.0
 
     return model, cores, cpu_percent
@@ -180,7 +176,6 @@ async def get_system_telemetry():
     ram_total_gb, ram_used_gb, ram_percent = _get_ram_info()
     gpu_info = _get_nvidia_gpu_info()
 
-    # Calculate approximate process footprint
     process_ram_mb = 180.0
     try:
         import psutil
@@ -292,10 +287,7 @@ def _get_routing_summary():
 
 @router.get("/cockpit")
 async def get_cockpit_status():
-    """
-    Returns consolidated live telemetry for the Sovereign Engineering Cockpit.
-    Eliminates all mockup data, returning real hardware, git, security, and model states.
-    """
+    """Returns consolidated live telemetry for the Sovereign Engineering Cockpit."""
     from app.ai.llm.model_manager import model_manager
     from app.ai.llm.ollama_client import ollama_client
 
@@ -346,4 +338,3 @@ async def get_cockpit_status():
             "summary_label": f"{len(loaded_models)} models loaded • Zero external egress" if loaded_models else "Always-on sovereign core standby • Zero external egress",
         },
     }
-

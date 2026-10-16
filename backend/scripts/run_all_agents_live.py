@@ -2,29 +2,25 @@ import asyncio
 import os
 import sys
 import time
-import json
 
-# Ensure OpenBLAS thread safety on Windows with Python 3.14
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
 
-# Add backend to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.core.constants import AgentType
-from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
+from app.ai.agents.automation_agent import automation_agent
+from app.ai.agents.campaign_agent import campaign_agent
 from app.ai.agents.coding_agent import coding_agent
 from app.ai.agents.document_agent import document_agent
-from app.ai.agents.automation_agent import automation_agent
+from app.ai.agents.image_agent import image_agent
 from app.ai.agents.reminder_agent import reminder_agent
 from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.agents.web_search_agent import web_search_agent
-from app.ai.agents.campaign_agent import campaign_agent
-from app.ai.agents.image_agent import image_agent
+from app.ai.llm.model_manager import model_manager
+from app.ai.llm.ollama_client import ollama_client
 from app.ai.orchestration.agent_router import _llm_subagent_route
-from app.services.chat_service import chat_service
+
 
 async def test_agent_with_model(
     agent_name: str,
@@ -74,7 +70,6 @@ async def main():
     print("      C.O.P.P.E.R. LIVE AGENTS & OLLAMA MODELS VERIFICATION HARNESS")
     print("======================================================================")
 
-    # 1. Verify Ollama availability
     available = await ollama_client.is_available()
     print(f"\n[Ollama Server Status]: {'ONLINE (127.0.0.1:11434)' if available else 'OFFLINE'}")
     if not available:
@@ -88,10 +83,8 @@ async def main():
 
     results = []
 
-    # Unload before starting to free up GPU memory
     await ollama_client.unload_all_models()
 
-    # --- Agent 1: Chat Agent (ATLAS) -> qwen2.5:14b ---
     chat_model = model_manager.get_model("core_agents.chat", "qwen2.5:14b")
     r1 = await test_agent_with_model(
         agent_name="Chat Agent",
@@ -108,7 +101,6 @@ async def main():
     )
     results.append(r1)
 
-    # --- Agent 2: Coding Agent (VULCAN) -> qwen2.5-coder-abliterated:14b ---
     coding_model = coding_agent.get_target_model()
     r2 = await test_agent_with_model(
         agent_name="Coding Agent",
@@ -123,7 +115,6 @@ async def main():
     )
     results.append(r2)
 
-    # --- Agent 3: Document Agent (SCRIBE / KINESIS) -> phi4:14b ---
     doc_model = document_agent.get_target_model()
     r3 = await test_agent_with_model(
         agent_name="Document Agent",
@@ -138,7 +129,6 @@ async def main():
     )
     results.append(r3)
 
-    # --- Agent 4: Automation Agent (DAEMON / FORGE) -> mistral-nemo:12b ---
     auto_model = automation_agent.get_target_model()
     r4 = await test_agent_with_model(
         agent_name="Automation Agent",
@@ -153,7 +143,6 @@ async def main():
     )
     results.append(r4)
 
-    # --- Agent 5: Research Agent (PROMETHEUS / OMNI) -> deepseek-r1:14b ---
     research_model = research_agent.get_target_model()
     r5 = await test_agent_with_model(
         agent_name="Research Agent",
@@ -168,7 +157,6 @@ async def main():
     )
     results.append(r5)
 
-    # --- Agent 6: Campaign Intelligence Agent (DELTA) -> deepseek-r1:14b ---
     campaign_model = campaign_agent.get_target_model()
     r6 = await test_agent_with_model(
         agent_name="Campaign Intelligence Agent",
@@ -183,7 +171,6 @@ async def main():
     )
     results.append(r6)
 
-    # --- Agent 7: Web Search Agent (RAPTOR) -> mistral-nemo:12b ---
     web_model = web_search_agent.get_target_model()
     r7 = await test_agent_with_model(
         agent_name="Web Search Agent",
@@ -198,7 +185,6 @@ async def main():
     )
     results.append(r7)
 
-    # --- Agent 8: Vision Agent (ARGUS / IRIS) -> qwen2.5-vl:3b ---
     vision_model = vision_agent.get_target_model()
     r8 = await test_agent_with_model(
         agent_name="Vision Agent",
@@ -215,7 +201,6 @@ async def main():
     )
     results.append(r8)
 
-    # --- Agent 9: Reminder Agent (CHRONOS) -> qwen2.5:14b ---
     reminder_model = reminder_agent.get_target_model()
     r9 = await test_agent_with_model(
         agent_name="Reminder Agent",
@@ -230,7 +215,6 @@ async def main():
     )
     results.append(r9)
 
-    # --- Agent 10: Image Studio (PICASSO) -> Local Engine ---
     r10 = await test_agent_with_model(
         agent_name="Image Studio Agent",
         codename="PICASSO",
@@ -242,7 +226,6 @@ async def main():
     )
     results.append(r10)
 
-    # --- Agent 11: Intent Router Micro-Agent (MERCURY) -> qwen2.5:1.5b ---
     router_model = model_manager.get_mini_model()
     r11 = await test_agent_with_model(
         agent_name="Intent Router Subagent",
@@ -253,7 +236,6 @@ async def main():
     )
     results.append(r11)
 
-    # --- Agent 12: Diagnostics Reasoning Micro-Agent (CRUCIBLE) -> deepseek-r1:1.5b ---
     r12 = await test_agent_with_model(
         agent_name="Diagnostics Subagent",
         codename="CRUCIBLE",
@@ -269,7 +251,6 @@ async def main():
     )
     results.append(r12)
 
-    # --- Agent 13: SQL & Schema Micro-Agent (ORACLE) -> granite3.2-dense:2b ---
     r13 = await test_agent_with_model(
         agent_name="SQL & Schema Subagent",
         codename="ORACLE",
@@ -285,7 +266,6 @@ async def main():
     )
     results.append(r13)
 
-    # --- Agent 14: Epistemic Memory & Summarizer (SPIDER / CHRONOS) -> smollm2:1.7b ---
     r14 = await test_agent_with_model(
         agent_name="Memory Extraction Subagent",
         codename="SPIDER",
@@ -301,7 +281,6 @@ async def main():
     )
     results.append(r14)
 
-    # --- Agent 15: Code Syntax & Shell Safety (FORGE / WARDEN) -> qwen2.5-coder:3b ---
     r15 = await test_agent_with_model(
         agent_name="Code Micro / Shell Safety Subagent",
         codename="FORGE / WARDEN",

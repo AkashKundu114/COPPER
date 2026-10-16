@@ -9,10 +9,8 @@ from app.ai.orchestration.task_graph import TaskGraphExecutor
 def test_nexus_planner_heuristics():
     planner = NexusPlanner()
 
-    # Simple prompt should not trigger decomposition
     assert planner.should_consider_decomposition("Hello, what is the weather?") is False
 
-    # Multi-step complex queries
     assert (
         planner.should_consider_decomposition(
             "Analyze this CSV sales data, write a Python script to visualize trends, and create a PDF report with the findings"
@@ -201,7 +199,6 @@ async def test_task_graph_wal_durability_records():
         res = await executor.execute_plan(plan)
         assert res.success is True
 
-        # Verify WAL records on disk
         wal = TaskWAL(res.dag_id)
         records = wal.read_records()
         record_types = [r.record_type for r in records]
@@ -210,4 +207,3 @@ async def test_task_graph_wal_durability_records():
         assert RecordType.TASK_INTENT in record_types
         assert RecordType.TASK_COMMIT in record_types
         assert RecordType.DAG_COMMIT in record_types
-

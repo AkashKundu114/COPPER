@@ -25,7 +25,6 @@ def test_guardian_hard_blocks_destructive_and_obfuscated_payloads(destructive_cm
     verdict = guardian_engine.evaluate(destructive_cmd, {})
     is_consequential = is_consequential_action(destructive_cmd)
 
-    # Must be categorized as SAFETY level or flagged as consequential
     is_protected = verdict.level == DisagreementLevel.SAFETY or is_consequential
     assert is_protected is True, f"Failed to protect against: {destructive_cmd}"
     assert verdict.requires_confirmation is True or is_consequential

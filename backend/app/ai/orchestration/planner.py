@@ -95,7 +95,7 @@ class SubTask:
     title: str = ""
     depends_on: list[str] = field(default_factory=list)
     output_key: str = ""
-    status: str = "pending"  # pending, running, done, failed
+    status: str = "pending"
     output: Any = None
     error: str | None = None
     execution_time_ms: float = 0.0
@@ -146,12 +146,7 @@ class NexusPlanner:
         self.model = model_manager.get_model("core_agents.reasoning", "deepseek-r1:14b")
 
     def should_consider_decomposition(self, message: str, router_confidence: float = 1.0) -> bool:
-        """
-        Fast heuristic to determine if a prompt warrants NEXUS multi-agent decomposition:
-        1. Explicit multi-action requests (e.g. analyze + code + PDF, research + implement + test)
-        2. Multi-step keywords ('first..., then...', 'and also create a PDF', 'write a script and execute')
-        3. Low router confidence or complex queries (>80 chars with multiple action verbs)
-        """
+        """Fast heuristic to determine if a prompt warrants NEXUS multi-agent decomposition:"""
         msg_lower = message.lower()
         if len(message) < 40:
             return False
@@ -233,20 +228,16 @@ class NexusPlanner:
             return PlanResult(is_decomposition=False, target_agent=AgentType.CHAT.value, raw_response=str(e))
 
     def _parse_plan_output(self, raw: str, fallback_message: str = "") -> PlanResult:
-        # Extract DeepSeek-R1 <think> block if present
         thinking_text = ""
         think_match = re.search(r"<think>(.*?)</think>", raw, re.DOTALL | re.IGNORECASE)
         if think_match:
             thinking_text = think_match.group(1).strip()
 
-        # Extract <plan> block
         match = re.search(r"<plan>(.*?)</plan>", raw, re.DOTALL | re.IGNORECASE)
         content = match.group(1).strip() if match else raw.strip()
 
-        # Strip think tags from content if still remaining
         content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL | re.IGNORECASE).strip()
 
-        # Check for SINGLE_AGENT response
         if "SINGLE_AGENT:" in content.upper() or (not content.startswith("{") and "{" not in content):
             agent_match = re.search(r"SINGLE_AGENT:\s*([A-Za-z0-9_]+)", content, re.IGNORECASE)
             agent_name = agent_match.group(1).upper() if agent_match else "CHAT"
@@ -257,19 +248,16 @@ class NexusPlanner:
                 raw_response=raw,
             )
 
-        # Extract JSON substring if wrapped in markdown or extra text
         json_content = content
         if "{" in content and "}" in content:
             start_idx = content.find("{")
             end_idx = content.rfind("}") + 1
             json_content = content[start_idx:end_idx]
 
-        # Strip comments and trailing commas that LLMs frequently output
         cleaned_json = re.sub(r"//.*", "", json_content)
         cleaned_json = re.sub(r"/\*.*?\*/", "", cleaned_json, flags=re.DOTALL)
         cleaned_json = re.sub(r",\s*([\]}])", r"\1", cleaned_json)
 
-        # Parse JSON DAG
         try:
             data = json.loads(cleaned_json)
             goal = data.get("goal", "Multi-agent collaborative task")
@@ -291,7 +279,6 @@ class NexusPlanner:
                 )
 
             if len(tasks) <= 1:
-                # Only 1 sub-task, treat as single agent
                 target = tasks[0].agent.lower() if tasks else "chat"
                 return PlanResult(
                     is_decomposition=False,

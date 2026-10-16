@@ -76,7 +76,7 @@ def pull_starter_model(model_name: str = DEFAULT_STARTER_MODEL) -> bool:
 
     print(f"[*] Pulling starter model '{model_name}' via Ollama...", flush=True)
     try:
-        proc = subprocess.run([ollama_bin, "pull", model_name], check=True)
+        subprocess.run([ollama_bin, "pull", model_name], check=True)
         print(f"[+] Successfully pulled '{model_name}'.", flush=True)
         return True
     except subprocess.CalledProcessError as e:
@@ -102,7 +102,7 @@ def ensure_ready(auto_pull: bool = False, model_name: str = DEFAULT_STARTER_MODE
     models = get_available_ollama_models()
     local_ggufs = check_local_gguf_files()
 
-    print(f"[*] Ollama Status:  ACTIVE (127.0.0.1:11434)")
+    print("[*] Ollama Status:  ACTIVE (127.0.0.1:11434)")
     print(f"[*] Active Models:  {len(models)} registered ({', '.join(models[:4]) if models else 'None'})")
     print(f"[*] Local GGUFs:    {len(local_ggufs)} found in ai-models/core/")
 
@@ -114,7 +114,7 @@ def ensure_ready(auto_pull: bool = False, model_name: str = DEFAULT_STARTER_MODE
 
     # 2. If local GGUF models exist, register them
     if local_ggufs:
-        registered = register_local_models()
+        register_local_models()
         models = get_available_ollama_models()
         if models:
             print("\n[+] Verification PASSED: Successfully registered local GGUF models.")

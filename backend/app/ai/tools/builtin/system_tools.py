@@ -19,7 +19,6 @@ from app.core.logger import logger
 )
 async def system_hardware_stats() -> dict[str, Any]:
     try:
-        # Disk usage for current drive
         total, used, free = shutil.disk_usage(".")
         disk_info = {
             "total_gb": round(total / (1024**3), 2),
@@ -28,7 +27,6 @@ async def system_hardware_stats() -> dict[str, Any]:
             "percent_used": round((used / total) * 100, 1),
         }
 
-        # OS and CPU info
         host_info = {
             "os": platform.system(),
             "os_release": platform.release(),
@@ -38,7 +36,6 @@ async def system_hardware_stats() -> dict[str, Any]:
             "cpu_cores": os.cpu_count() or 1,
         }
 
-        # Memory usage via psutil if available, otherwise fallback
         mem_info = {}
         try:
             import psutil
@@ -109,7 +106,6 @@ async def process_status(filter_name: str | None = None, limit: int = 15) -> dic
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 
-        # Sort by memory usage descending
         procs.sort(key=lambda x: x["memory_percent"], reverse=True)
 
         return {

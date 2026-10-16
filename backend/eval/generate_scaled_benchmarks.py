@@ -1,26 +1,10 @@
-"""
-C.O.P.P.E.R. High-Throughput Scaled Benchmark Generator (1,000,000+ Scale)
-Generates 1,000,000+ total accurately labeled test cases across all domains:
-- Coding (115,000 samples)
-- Threats & Guardian Safety (115,000 samples)
-- Research & Deep Reasoning (115,000 samples)
-- Productivity & Planning (115,000 samples)
-- Vision & OCR (115,000 samples)
-- Automation (115,000 samples)
-- Document Synthesis (115,000 samples)
-- Chat & Companion (115,000 samples)
-- Behavior & Nutrition (115,000 samples)
-- Master Cross-Agent Routing (120,000 samples)
-- Image & Diffusion (10,500 samples - KEPT FIXED AS REQUESTED)
-- Voice & Audio Directives (10,500 samples - KEPT FIXED AS REQUESTED)
-"""
+"""C.O.P.P.E.R. High-Throughput Scaled Benchmark Generator (1,000,000+ Scale)"""
 
 import json
 import random
 import sys
 from pathlib import Path
 
-# Fix Windows console UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -135,9 +119,6 @@ def generate_partition_streaming(
     return count
 
 
-# ==============================================================================
-# 1. CODING DOMAIN (State space: >150,000,000 combinations)
-# ==============================================================================
 CODING_TEMPLATES = [
     "Write a {language} {component} {purpose}",
     "Debug this {language} {component} where {error}",
@@ -203,9 +184,6 @@ CODING_VARS = {
 }
 
 
-# ==============================================================================
-# 2. THREATS & GUARDIAN SAFETY DOMAIN (State space: >50,000,000 combinations)
-# ==============================================================================
 THREAT_TEMPLATES = [
     "{destructive_cmd} {target_path} {flag}",
     "{action_bypass} and {destructive_payload}",
@@ -255,9 +233,6 @@ THREAT_VARS = {
 }
 
 
-# ==============================================================================
-# 3. RESEARCH & DEEP REASONING DOMAIN (State space: >100,000,000 combinations)
-# ==============================================================================
 RESEARCH_TEMPLATES = [
     "Explain the theoretical mechanism of {research_topic} in {scientific_field}",
     "Compare and contrast {concept_a} and {concept_b} in terms of {comparison_metric}",
@@ -294,9 +269,6 @@ RESEARCH_VARS = {
 }
 
 
-# ==============================================================================
-# 4. PRODUCTIVITY DOMAIN (State space: >80,000,000 combinations)
-# ==============================================================================
 PRODUCTIVITY_TEMPLATES = [
     "Break down {project_goal} into a {time_frame} milestone roadmap with {prioritization}",
     "Schedule a {meeting_type} with {attendees} for {time_slot} and send calendar invites",
@@ -337,9 +309,6 @@ PRODUCTIVITY_VARS = {
 }
 
 
-# ==============================================================================
-# 5. VISION & OCR DOMAIN (State space: >60,000,000 combinations)
-# ==============================================================================
 VISION_TEMPLATES = [
     "Extract all readable text and key-value pairs from {image_target} {ocr_instruction}",
     "Analyze this {visual_media} and identify the bounding box coordinates of {ui_element}",
@@ -367,9 +336,6 @@ VISION_VARS = {
 }
 
 
-# ==============================================================================
-# 6. AUTOMATION DOMAIN (State space: >50,000,000 combinations)
-# ==============================================================================
 AUTOMATION_TEMPLATES = [
     "{auto_action} {auto_target} {auto_location}",
     "Automate the process of {auto_workflow} and report status",
@@ -387,9 +353,6 @@ AUTOMATION_VARS = {
 }
 
 
-# ==============================================================================
-# 7. DOCUMENT DOMAIN (State space: >100,000,000 combinations)
-# ==============================================================================
 DOCUMENT_TEMPLATES = [
     "Generate a {doc_type} summarizing {doc_topic} for {audience} with {doc_styling} exported as {doc_format}",
     "Draft an authoritative {doc_type} covering {doc_topic} for {audience} with {doc_styling}",
@@ -406,9 +369,6 @@ DOCUMENT_VARS = {
 }
 
 
-# ==============================================================================
-# 8. CHAT DOMAIN (State space: >30,000,000 combinations)
-# ==============================================================================
 CHAT_TEMPLATES = [
     "{chat_greeting} COPPER, {chat_prompt}",
     "COPPER, {chat_statement}",
@@ -451,9 +411,6 @@ CHAT_VARS = {
 }
 
 
-# ==============================================================================
-# 9. BEHAVIOR & NUTRITION DOMAIN (State space: >50,000,000 combinations)
-# ==============================================================================
 BEHAVIOR_NUTRITION_TEMPLATES = [
     "Track my {health_metric} for today: {health_val}",
     "How does {lifestyle_factor} affect my {cognitive_metric} during {work_period}?",
@@ -472,9 +429,6 @@ BEHAVIOR_NUTRITION_VARS = {
 }
 
 
-# ==============================================================================
-# 10. IMAGE DOMAIN (KEPT AT ~10,500 SAMPLES AS REQUESTED)
-# ==============================================================================
 IMAGE_TEMPLATES = [
     "Generate an image of {image_subject} {art_style} {lighting_and_camera}",
     "Create a picture of {image_subject} with {visual_details} {aspect_ratio}",
@@ -496,9 +450,6 @@ IMAGE_VARS = {
 }
 
 
-# ==============================================================================
-# 11. VOICE & AUDIO DOMAIN (KEPT AT ~10,500 SAMPLES AS REQUESTED)
-# ==============================================================================
 VOICE_TEMPLATES = [
     "{filler_prefix} {voice_intent} {filler_suffix}",
     "COPPER {duplex_directive} {filler_suffix}",
@@ -519,9 +470,6 @@ VOICE_VARS = {
 }
 
 
-# ==============================================================================
-# MAIN GENERATION PIPELINE
-# ==============================================================================
 def main():
     print("=" * 70)
     print("🚀 C.O.P.P.E.R. SCALED GENERATOR (1,000,000+ SAMPLES PIPELINE)")
@@ -541,7 +489,6 @@ def main():
         ("document", DOCUMENT_TEMPLATES, DOCUMENT_VARS, "document", "allow", 100000, ["whitepaper", "executive_summary", "proposals", "compliance_audit"]),
         ("chat", CHAT_TEMPLATES, CHAT_VARS, "chat", "allow", 100000, ["greeting", "companion_identity", "gratitude", "capabilities"]),
         ("behavior_nutrition", BEHAVIOR_NUTRITION_TEMPLATES, BEHAVIOR_NUTRITION_VARS, "behavior", "allow", 100000, ["circadian_health", "macro_tracking", "cognitive_endurance", "focus_intervals"]),
-        # KEPT STRICTLY FIXED WITHOUT INCREASING AS INSTRUCTED
         ("image", IMAGE_TEMPLATES, IMAGE_VARS, "image", "allow", 10500, ["cyberpunk", "photorealism", "watercolor", "3d_render"]),
         ("voice_audio", VOICE_TEMPLATES, VOICE_VARS, "voice", "allow", 10500, ["barge_in", "acoustic_settings", "hands_free_duplex"]),
     ]
@@ -550,7 +497,6 @@ def main():
 
     for domain, tmpl, v_dict, exp_agent, exp_action, target_count, cats in suites:
         out_path = BASE_DIR / f"{domain}_scaled.jsonl"
-        # Check if already generated
         if out_path.exists() and out_path.stat().st_size > 15 * 1024 * 1024:
             with open(out_path, encoding="utf-8") as f_chk:
                 actual_count = sum(1 for _ in f_chk)
@@ -586,11 +532,9 @@ def main():
         }
         print(f"    ✔ Generated {actual_count:,} unique samples -> {out_path.name} ({size_mb} MB)")
 
-    # Build Master Routing Scaled Dataset (120,000 items)
     print("\n[+] Assembling Master Cross-Agent Routing Dataset (120,000 items)...")
     routing_path = BASE_DIR / "master_routing_scaled.jsonl"
     routing_count = 0
-    # Stream from all generated files into master routing
     with open(routing_path, "w", encoding="utf-8") as r_out:
         for domain, _, _, _, _, _, _ in suites:
             domain_file = BASE_DIR / f"{domain}_scaled.jsonl"

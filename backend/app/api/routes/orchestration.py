@@ -36,11 +36,7 @@ async def plan_task_decomposition(req: PlanRequest):
 
 @router.post("/execute")
 async def execute_task_graph(req: ExecuteRequest):
-    """
-    Execute a collaborative multi-agent workflow for a complex task.
-    Dispatches tasks in parallel/sequence, shares state across the ContextBus,
-    and synthesizes results.
-    """
+    """Execute a collaborative multi-agent workflow for a complex task."""
     session_id = req.session_id or generate_session_id()
     try:
         plan = await nexus_planner.plan(req.message, req.context)

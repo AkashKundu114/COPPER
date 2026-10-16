@@ -105,7 +105,6 @@ async def video_create_slideshow(
             "error": "FFmpeg executable not found on system PATH. Install ffmpeg to enable local video production.",
         }
 
-    # Determine pacing from pipeline if specified
     if pipeline and pipeline in OPENMONTAGE_PIPELINES and seconds_per_image is None:
         duration_per_img = OPENMONTAGE_PIPELINES[pipeline]["pacing_sec_per_scene"]
     else:

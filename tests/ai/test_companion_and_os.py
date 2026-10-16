@@ -10,10 +10,8 @@ from app.ai.os_integration.plugin_manager import plugin_manager
 
 
 def test_personality_manager():
-    # Save original warmth
     orig_warmth = personality_manager.config.warmth
 
-    # Update config
     personality_manager.update_config(warmth=0.9, formality=0.2, verbosity=0.3)
     assert personality_manager.config.warmth == 0.9
 
@@ -21,11 +19,9 @@ def test_personality_manager():
     assert isinstance(addon, str)
     assert "warm" in addon.lower()
 
-    # Adapt from message
     personality_manager.adapt_from_message("hey thanks cool awesome dude lol")
     assert personality_manager.config.formality <= 0.2
 
-    # Restore
     personality_manager.update_config(warmth=orig_warmth)
 
 
@@ -39,12 +35,10 @@ def test_accountability_tracker():
     assert comm is not None
     assert comm.status == "pending"
 
-    # Fulfill
     fulfilled = accountability_tracker.fulfill_commitment(comm.commitment_id)
     assert fulfilled is not None
     assert fulfilled.status == "fulfilled"
 
-    # Report
     report = accountability_tracker.get_accountability_report()
     assert "total_commitments" in report
     assert "follow_through_rate_pct" in report
@@ -110,14 +104,12 @@ def test_plugin_manager():
     assert isinstance(plugins, list)
     assert len(plugins) >= 1
 
-    # Test toggling
     pid = plugins[0].id
     orig_state = plugins[0].enabled
     toggled = plugin_manager.toggle_plugin(pid, not orig_state)
     assert toggled is not None
     assert toggled.enabled == (not orig_state)
 
-    # Restore
     plugin_manager.toggle_plugin(pid, orig_state)
 
     tools = plugin_manager.get_registered_tools()
@@ -130,7 +122,6 @@ def test_device_sync():
     assert payload.checksum is not None
     assert payload.device_name == "Workstation-Alpha"
 
-    # Convert to dict and receive
     payload_dict = {
         "payload_id": payload.payload_id,
         "device_id": payload.device_id,

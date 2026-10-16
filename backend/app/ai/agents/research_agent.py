@@ -24,11 +24,7 @@ RULES:
 
 
 class ResearchAgent(BaseAgent):
-    """
-    OMNI (Research Agent) with Hybrid RAG and Citation Grounding.
-    Executes hybrid search (vector + BM25) with Reciprocal Rank Fusion,
-    applies local cross-encoder re-ranking, and grounds syntheses with [Source N] citations.
-    """
+    """OMNI (Research Agent) with Hybrid RAG and Citation Grounding."""
 
     def __init__(self):
         super().__init__(
@@ -106,14 +102,12 @@ When you receive the <tool_result>, incorporate the findings and complete your a
         if history is None:
             history = []
 
-        # 1. Retrieve via Hybrid Search and Re-Rank
         try:
             top_sources = await self.retrieve_and_rerank(message, top_k=10, top_n=5)
         except Exception as e:
             logger.warning(f"Hybrid retrieval/rerank error in ResearchAgent: {e}")
             top_sources = []
 
-        # 2. Build Citation-Grounded Prompt
         ranked_text = self.format_ranked_sources(top_sources)
         system_prompt = self._build_citation_system_prompt(ranked_text)
 
@@ -124,7 +118,6 @@ When you receive the <tool_result>, incorporate the findings and complete your a
         messages.append({"role": "user", "content": message})
         target_model = self.get_target_model()
 
-        # Tool execution loop
         current_response = ""
         for step in range(self.max_tool_steps):
             try:
@@ -135,7 +128,6 @@ When you receive the <tool_result>, incorporate the findings and complete your a
                 )
             except Exception as e:
                 logger.error(f"LLM chat error in ResearchAgent step {step + 1}: {e}")
-                # Fallback to grounded summary
                 return (
                     f"Based on retrieved sources:\n\n{ranked_text}\n\n"
                     f"[Notice: Direct inference connection paused, sources surfaced above.]"

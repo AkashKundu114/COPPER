@@ -48,13 +48,9 @@ def _log_web_audit(
 
 def _fallback_extract_text(html_content: str, max_chars: int = 6000) -> str:
     """Fallback plain-text extractor when trafilatura is unavailable."""
-    # Strip script and style blocks
     cleaned = re.sub(r"<(script|style|nav|header|footer)[^>]*>[\s\S]*?</\1>", " ", html_content, flags=re.IGNORECASE)
-    # Strip HTML tags
     cleaned = re.sub(r"<[^>]+>", " ", cleaned)
-    # Unescape HTML entities
     cleaned = html.unescape(cleaned)
-    # Normalize whitespace
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
     return cleaned[:max_chars]
 
@@ -74,10 +70,9 @@ def _fallback_extract_text(html_content: str, max_chars: int = 6000) -> str:
         "required": ["query"],
     },
     return_description="List of search result items with title, snippet, and URL.",
-    guardian_level=1,  # Level 1: SUGGEST (Logged, opt-in via Settings)
+    guardian_level=1,
 )
 async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
-    # Check Settings opt-in
     if not getattr(settings, "WEB_SEARCH_ENABLED", True):
         return {
             "status": "disabled",
@@ -85,10 +80,8 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
             "results": [],
         }
 
-    # Data firewall: Strip user PII and secrets before sending query outside
     sanitized_query = redact(query).strip()
 
-    # 1. Try local SearXNG at configured URL (default localhost:8888)
     searxng_url = getattr(settings, "SEARXNG_URL", "http://localhost:8888")
     try:
         async with httpx.AsyncClient(timeout=4.0) as client:
@@ -126,7 +119,6 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
     except Exception as e:
         logger.debug(f"SearXNG search unavailable at {searxng_url}, falling back to DuckDuckGo: {e}")
 
-    # 2. DuckDuckGo HTML Fallback
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -223,10 +215,9 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
         "required": ["url"],
     },
     return_description="Extracted clean text content of the webpage.",
-    guardian_level=1,  # Level 1: SUGGEST
+    guardian_level=1,
 )
 async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
-    # Check Settings opt-in
     if not getattr(settings, "WEB_SEARCH_ENABLED", True):
         return {
             "status": "disabled",
@@ -262,7 +253,6 @@ async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
 
             html_content = res.text
 
-            # Extract clean text using trafilatura if available
             extracted_text = ""
             if trafilatura is not None:
                 try:
@@ -281,7 +271,6 @@ async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
             if not extracted_text:
                 extracted_text = _fallback_extract_text(html_content, max_chars=6000)
 
-            # Cap length to 6000 characters for token context budget
             extracted_text = extracted_text[:6000].strip()
 
             _log_web_audit(

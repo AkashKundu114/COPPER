@@ -13,8 +13,8 @@ from app.database.models.campaign import CampaignMetric
 class CampaignAnomaly:
     campaign_id: str
     campaign_name: str
-    anomaly_type: str  # "ctr_drop", "cpc_spike", "budget_burn", "conversion_drop", "roas_decline", etc.
-    severity: str  # "info", "warning", "critical"
+    anomaly_type: str
+    severity: str
     metric_name: str
     current_value: float
     expected_value: float
@@ -43,13 +43,7 @@ RECOMMENDATION_TEMPLATES: dict[str, str] = {
 
 
 class CampaignAnomalyDetector:
-    """
-    DeltaX-style anomaly detection engine for advertising campaigns.
-    Implements 3 core detection algorithms:
-      1. Statistical Z-Score (Rolling 7-day baseline)
-      2. Trend-Based Moving Average Crossover (3h vs 24h)
-      3. Budget Burn Rate Projection & Underutilization Analysis
-    """
+    """DeltaX-style anomaly detection engine for advertising campaigns."""
 
     def __init__(self, z_score_threshold: float = 2.0, trend_threshold: float = 0.15):
         self.z_score_threshold = z_score_threshold
@@ -66,16 +60,10 @@ class CampaignAnomalyDetector:
     def detect_statistical_anomalies(
         self, metrics: list[CampaignMetric], target_metric: CampaignMetric | None = None
     ) -> list[CampaignAnomaly]:
-        """
-        Z-Score Anomaly Detection:
-        Computes rolling 7-day (up to 168 hours) mean and std_dev for:
-        CTR, CPC, ROAS, conversions.
-        Flags any data point where |value - mean| > 2 * std_dev.
-        """
+        """Z-Score Anomaly Detection:"""
         if not metrics or len(metrics) < 10:
             return []
 
-        # Sort chronologically
         sorted_metrics = sorted(metrics, key=lambda m: m.timestamp if m.timestamp else datetime.min)
         current = target_metric or sorted_metrics[-1]
         baseline = sorted_metrics[:-1] if target_metric is None else sorted_metrics
@@ -103,7 +91,6 @@ class CampaignAnomalyDetector:
                 dev_pct = round(((current_val - mean) / max(abs(mean), 1e-6)) * 100, 2)
                 severity = "critical" if z_score > 3.0 else "warning"
 
-                # Check if it represents an adverse anomaly or notable deviation
                 if is_negative_direction(current_val, mean) or z_score >= 2.5:
                     resolved_type = anom_type if is_negative_direction(current_val, mean) else f"{attr}_spike"
                     rec = self.get_recommendation(resolved_type)
@@ -130,13 +117,7 @@ class CampaignAnomalyDetector:
     def detect_trend_anomalies(
         self, metrics: list[CampaignMetric], threshold: float | None = None
     ) -> list[CampaignAnomaly]:
-        """
-        Moving Average Crossover:
-        Short-term (3h) vs Long-term (24h) moving average.
-        - short_ma < long_ma * (1 - threshold) -> "declining trend"
-        - short_ma > long_ma * (1 + threshold) -> "improving trend"
-        Catches gradual decay (e.g. ad fatigue).
-        """
+        """Moving Average Crossover:"""
         thresh = threshold if threshold is not None else self.trend_threshold
         if not metrics or len(metrics) < 24:
             return []
@@ -144,7 +125,6 @@ class CampaignAnomalyDetector:
         sorted_metrics = sorted(metrics, key=lambda m: m.timestamp if m.timestamp else datetime.min)
         latest = sorted_metrics[-1]
 
-        # Analyze trends for primary efficiency metrics (CTR and ROAS)
         anomalies: list[CampaignAnomaly] = []
 
         for metric_key in ("ctr", "roas", "conversions"):
@@ -202,13 +182,7 @@ class CampaignAnomalyDetector:
         current_hour: int | None = None,
         daily_budget: float | None = None,
     ) -> list[CampaignAnomaly]:
-        """
-        Burn Rate Projection & Budget Underutilization:
-        Given daily_budget and current hourly spend rate:
-        - If projected exhaustion time leaves > 40% of the day unspent (i.e. exhaustion happens with
-          > 60% of day remaining or hours_to_exhaust < remaining_day * 0.6), flag as 'budget burning too fast'.
-        - If budget utilization < 30% with > 70% of day elapsed (hour >= 17), flag as 'budget underutilizing'.
-        """
+        """Burn Rate Projection & Budget Underutilization:"""
         if not metrics:
             return []
 
@@ -220,7 +194,6 @@ class CampaignAnomalyDetector:
         if budget <= 0:
             return []
 
-        # Calculate spend so far today (last `hour + 1` hours or current hourly rate)
         recent_window = min(len(sorted_metrics), max(1, hour + 1))
         today_metrics = sorted_metrics[-recent_window:]
         today_spend = sum(float(m.spend) for m in today_metrics)
@@ -232,11 +205,8 @@ class CampaignAnomalyDetector:
 
         anomalies: list[CampaignAnomaly] = []
 
-        # 1. Check Fast Burn Rate Projection
         if avg_hourly_spend > 0:
             hours_to_exhaust = (budget - today_spend) / avg_hourly_spend
-            # If hours to exhaust is significantly less than remaining hours of the day (e.g. < 60% of remaining day)
-            # or if exhaustion occurs when > 60% of the day is left
             is_fast_burn = (hours_to_exhaust < remaining_hours * 0.60) or (today_spend >= budget * 0.85 and hour < 14)
             if is_fast_burn and today_spend < budget:
                 exhaustion_clock_hour = int(min(23, hour + max(1, round(hours_to_exhaust))))
@@ -261,7 +231,6 @@ class CampaignAnomalyDetector:
                     )
                 )
 
-        # 2. Check Budget Underutilization: utilization < 30% with > 70% of day elapsed (hour >= 17)
         if day_elapsed_ratio > 0.70 and utilization_rate < 0.30:
             anomalies.append(
                 CampaignAnomaly(
@@ -303,7 +272,6 @@ class CampaignAnomalyDetector:
         )
         if not metrics:
             return []
-        # Return in ascending chronological order for algorithms
         metrics.reverse()
         return self.detect_all_anomalies(metrics)
 

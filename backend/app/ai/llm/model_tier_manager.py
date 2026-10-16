@@ -1,22 +1,4 @@
-"""
-Tiered inference / VRAM discipline manager.
-
-Policy:
-- Exactly one "Gatekeeper" model is pinned in VRAM permanently (keep_alive=-1).
-  It handles wake-word confirmation, fast-path routing fallback, and trivial
-  turns, so the GPU never has to cold-load a 7B model just to say "hi".
-- Every other model ("heavy" tier: chat/coding/automation/reasoning/vision/
-  document drafting) is loaded on demand with a numeric keep_alive window and
-  actively unloaded by a background sweep once that window has elapsed.
-- Unloading reuses the same Ollama trick already used by
-  `OllamaClient.unload_all_models()`: POST /api/chat with keep_alive=0.
-
-This module wraps `ollama_client` rather than replacing it — call
-`model_tier_manager.chat(...)` instead of `ollama_client.chat(...)` from agents
-that care about tiering; agents that don't care can keep calling
-`ollama_client.chat(...)` directly and simply won't participate in the idle
-sweep (they'll behave exactly as before this patch).
-"""
+"""Tiered inference / VRAM discipline manager."""
 
 import asyncio
 import time
@@ -47,9 +29,6 @@ class ModelTierManager:
         self._sweep_task: asyncio.Task | None = None
         self._base_url = getattr(settings, "OLLAMA_BASE_URL", "http://localhost:11434")
 
-    # ------------------------------------------------------------------ #
-    # Public chat entry points
-    # ------------------------------------------------------------------ #
     async def chat_gatekeeper(self, messages: list[dict[str, str]]) -> str:
         """Always issued with keep_alive=-1. This model is never swept."""
         await vram_pager.acquire_model(self.gatekeeper_model, lookahead_priority=1.0)
@@ -74,9 +53,6 @@ class ModelTierManager:
             logger.warning(f"[tier-manager] chat error for {model}: {e}")
             return await ollama_client.chat(messages, model=model)
 
-    # ------------------------------------------------------------------ #
-    # Idle sweep — unloads heavy models, never touches the Gatekeeper
-    # ------------------------------------------------------------------ #
     def _touch(self, model: str, idle_timeout_seconds: int) -> None:
         if model == self.gatekeeper_model:
             return

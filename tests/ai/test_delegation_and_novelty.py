@@ -85,18 +85,15 @@ def test_skill_learner_extraction_and_matching():
 
 
 def test_differential_privacy_engine():
-    # Noise on embeddings
     orig_emb = [0.1, 0.2, 0.3, 0.4, 0.5]
     noised_emb = dp_engine.add_noise_to_embedding(orig_emb, sensitivity=1.0)
     assert len(noised_emb) == len(orig_emb)
     assert noised_emb != orig_emb
 
-    # Noise on query results
     res = [{"id": "doc1", "distance": 0.42}]
     noised_res = dp_engine.add_noise_to_query_results(res)
     assert "distance" in noised_res[0]
 
-    # Budget tracking
     init_spent = dp_engine.budget.total_epsilon_spent
     spent_ok = dp_engine.spend_budget(0.05)
     assert spent_ok is True
@@ -122,12 +119,10 @@ def test_provenance_tracker():
     assert rec.fact == fact
     assert rec.current_confidence == 0.85
 
-    # Confirm fact increases confidence
     old_conf = rec.current_confidence
     provenance_tracker.confirm_fact(rec.fact_hash, "session_002", confidence=0.9)
     assert rec.current_confidence >= old_conf
 
-    # Contradict fact decreases confidence
     provenance_tracker.contradict_fact(rec.fact_hash, "session_003", "Alice stepped down", confidence=0.7)
     assert rec.current_confidence < 1.0
 

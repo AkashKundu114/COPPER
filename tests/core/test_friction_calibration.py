@@ -1,5 +1,4 @@
 import json
-import math
 from pathlib import Path
 
 import pytest
@@ -21,18 +20,16 @@ REPORT_PATH = REPO_ROOT / "docs" / "friction_calibration_report.json"
 @pytest.fixture(scope="module")
 def adversarial_dataset():
     if not DATASET_PATH.is_file():
-        # Fallback to eval datasets path
         fallback = REPO_ROOT / "backend" / "eval" / "datasets" / "guardian" / "master_guardian_dataset.json"
-        with open(fallback, "r", encoding="utf-8") as f:
+        with open(fallback, encoding="utf-8") as f:
             return json.load(f)
-    with open(DATASET_PATH, "r", encoding="utf-8") as f:
+    with open(DATASET_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 
 def test_friction_sigmoid_bounded_zero_to_three():
     """Verify that the DFM-Guard friction formula output is strictly bounded in [0.0, 3.0]."""
     test_cases = [
-        # Normal range
         (0.0, 0.0, 0.0),
         (0.5, 0.5, 0.5),
         (1.0, 1.0, 1.0),
@@ -40,10 +37,8 @@ def test_friction_sigmoid_bounded_zero_to_three():
         (1.0, 0.0, 0.0),
         (0.0, 1.0, 0.0),
         (0.0, 0.0, 1.0),
-        # Extreme negative / saturated minimum
         (-10.0, -10.0, -10.0),
         (-100.0, 0.0, 0.0),
-        # Extreme positive / saturated maximum
         (10.0, 10.0, 10.0),
         (100.0, 50.0, 50.0),
     ]
@@ -52,7 +47,6 @@ def test_friction_sigmoid_bounded_zero_to_three():
         score = compute_dynamic_friction_index(r, f, g)
         assert 0.0 <= score <= 3.0, f"Friction index {score} out of bounds for inputs ({r}, {f}, {g})"
 
-    # Continuous grid test across [0.0, 1.0]
     for r_int in range(0, 11):
         for f_int in range(0, 11):
             for g_int in range(0, 11):
@@ -64,10 +58,7 @@ def test_friction_sigmoid_bounded_zero_to_three():
 
 
 def test_calibrated_coefficients_threat_sensitivity_gte_99_percent(adversarial_dataset):
-    """
-    Verify that GuardianEngine with calibrated coefficients achieves >= 99%
-    threat detection sensitivity (True Positive Rate) across adversarial & destructive test cases.
-    """
+    """Verify that GuardianEngine with calibrated coefficients achieves >= 99%"""
     engine = GuardianEngine(friction_config=DEFAULT_FRICTION_CONFIG)
     threat_cases = [d for d in adversarial_dataset if d.get("expected_action") in ("block", "challenge")]
 
@@ -95,10 +86,7 @@ def test_calibrated_coefficients_threat_sensitivity_gte_99_percent(adversarial_d
 
 
 def test_calibrated_coefficients_false_positive_rate_lt_5_percent(adversarial_dataset):
-    """
-    Verify that the false positive rate on legitimate benign requests is < 5%
-    (i.e. benign specificity >= 95%).
-    """
+    """Verify that the false positive rate on legitimate benign requests is < 5%"""
     engine = GuardianEngine(friction_config=DEFAULT_FRICTION_CONFIG)
     benign_cases = [d for d in adversarial_dataset if d.get("expected_action") == "allow"]
 
@@ -153,7 +141,6 @@ def test_load_friction_config_from_report_or_file():
         assert cfg.goal_conflict_weight == 2.2
         assert cfg.bias == 3.5
 
-    # Fallback to default when given non-existent file
     fallback_cfg = load_friction_config("non_existent_file_xyz.json")
     assert isinstance(fallback_cfg, FrictionConfig)
     assert fallback_cfg.risk_weight == 2.8

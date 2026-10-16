@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Radio,
   Target,
@@ -38,7 +38,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
     agentMesh: true,
   });
 
-  // Camera angles
+
   const rotationRef = useRef({ yaw: 0.6, pitch: 0.25 });
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
@@ -63,7 +63,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Spherical to 3D Cartesian coordinates
+
     const toCartesian = (lat: number, lon: number, radius: number) => {
       const phi = (90 - lat) * (Math.PI / 180);
       const theta = (lon + 180) * (Math.PI / 180);
@@ -73,19 +73,19 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       return { x, y, z };
     };
 
-    // Rotate 3D vector by yaw and pitch
+
     const rotate3D = (
       p: { x: number; y: number; z: number },
       yaw: number,
       pitch: number
     ) => {
-      // Rotate around Y axis (yaw)
+
       const cosY = Math.cos(yaw);
       const sinY = Math.sin(yaw);
       const x1 = p.x * cosY + p.z * sinY;
       const z1 = -p.x * sinY + p.z * cosY;
 
-      // Rotate around X axis (pitch)
+
       const cosP = Math.cos(pitch);
       const sinP = Math.sin(pitch);
       const y2 = p.y * cosP - z1 * sinP;
@@ -94,7 +94,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       return { x: x1, y: y2, z: z2 };
     };
 
-    // Render loop
+
     const render = () => {
       const rect = canvas.getBoundingClientRect();
       const w = rect.width;
@@ -112,7 +112,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
 
       const { yaw, pitch } = rotationRef.current;
 
-      // 1. Globe Ambient Aura & Glow
+
       const glowGrad = ctx.createRadialGradient(cx, cy, radius * 0.5, cx, cy, radius * 1.3);
       glowGrad.addColorStop(0, "rgba(0, 240, 255, 0.08)");
       glowGrad.addColorStop(0.7, "rgba(0, 240, 255, 0.02)");
@@ -122,14 +122,14 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       ctx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Outer Globe Halo Ring
+
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(0, 240, 255, 0.25)";
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // 3. Latitude parallels
+
       const latSteps = [-60, -30, 0, 30, 60];
       latSteps.forEach((lat) => {
         ctx.beginPath();
@@ -138,7 +138,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
           const pt = toCartesian(lat, lon, radius);
           const r = rotate3D(pt, yaw, pitch);
           if (r.z > 0) {
-            // Front side of globe
+
             const alpha = 0.08 + (r.z / radius) * 0.22;
             ctx.strokeStyle = lat === 0 ? `rgba(0, 240, 255, ${alpha * 1.5})` : `rgba(0, 240, 255, ${alpha})`;
             ctx.lineWidth = lat === 0 ? 1.2 : 0.8;
@@ -155,7 +155,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         ctx.stroke();
       });
 
-      // 4. Longitude meridians
+
       const lonSteps = [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180];
       lonSteps.forEach((lon) => {
         ctx.beginPath();
@@ -180,7 +180,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         ctx.stroke();
       });
 
-      // 5. Radar Sweep Beam (God's Eye signature)
+
       if (activeLayers.radarSweep) {
         ctx.save();
         ctx.translate(cx, cy);
@@ -195,7 +195,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         ctx.fillStyle = sweepGrad;
         ctx.fill();
 
-        // Leading line
+
         const lx = Math.cos(radarAngle) * radius;
         const ly = Math.sin(radarAngle) * radius;
         ctx.beginPath();
@@ -207,7 +207,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         ctx.restore();
       }
 
-      // 6. Orbital Satellite Trajectories
+
       if (activeLayers.satellites) {
         const orbits = [
           { tilt: 0.35, rotSpeed: 0.008, satAngle: radarAngle * 0.9, r: radius * 1.22, color: "#00f0ff" },
@@ -230,7 +230,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Orbiting Satellite Vehicle
+
           const satRawX = Math.cos(orb.satAngle) * orb.r;
           const satRawZ = Math.sin(orb.satAngle) * orb.r;
           const satRawY = Math.sin(orb.satAngle) * orb.r * orb.tilt;
@@ -241,7 +241,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
           ctx.arc(cx + satPt.x, cy + satPt.y, 3, 0, Math.PI * 2);
           ctx.fill();
 
-          // Beacon ping pulse
+
           ctx.strokeStyle = orb.color;
           ctx.beginPath();
           ctx.arc(cx + satPt.x, cy + satPt.y, 7 + Math.sin(radarAngle * 4) * 2, 0, Math.PI * 2);
@@ -250,7 +250,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         });
       }
 
-      // 7. Agent Mesh Nodes on Surface
+
       if (activeLayers.agentMesh) {
         const visibleNodes: { node: AgentNode; x: number; y: number; z: number }[] = [];
 
@@ -262,7 +262,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
           }
         });
 
-        // Inter-node telemetry mesh connections
+
         ctx.strokeStyle = "rgba(0, 240, 255, 0.15)";
         ctx.lineWidth = 0.8;
         ctx.beginPath();
@@ -274,7 +274,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         }
         ctx.stroke();
 
-        // Render each node blip
+
         visibleNodes.forEach(({ node, x, y }) => {
           const isSelected = selectedNode?.id === node.id;
           const color =
@@ -284,7 +284,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
               ? "#a855f7"
               : "#00f0ff";
 
-          // Reticle Target Ring
+
           ctx.beginPath();
           ctx.arc(x, y, isSelected ? 8 : 4.5, 0, Math.PI * 2);
           ctx.fillStyle = color;
@@ -294,13 +294,13 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
           ctx.shadowBlur = 0;
 
           if (isSelected) {
-            // Sci-fi Target Reticle Brackets around selected node
+
             ctx.strokeStyle = "#00f0ff";
             ctx.lineWidth = 1.2;
             const sz = 12;
             ctx.strokeRect(x - sz, y - sz, sz * 2, sz * 2);
 
-            // Label
+
             ctx.fillStyle = "#ffffff";
             ctx.font = "bold 10px 'IBM Plex Mono', monospace";
             ctx.fillText(node.name.toUpperCase(), x + 16, y + 3);
@@ -312,12 +312,12 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
         });
       }
 
-      // 8. Crosshair reticles on canvas corners
+
       const chSize = 14;
       ctx.strokeStyle = "rgba(0, 240, 255, 0.35)";
       ctx.lineWidth = 1;
 
-      // Top-left
+
       ctx.beginPath();
       ctx.moveTo(16, 16);
       ctx.lineTo(16 + chSize, 16);
@@ -325,7 +325,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       ctx.lineTo(16, 16 + chSize);
       ctx.stroke();
 
-      // Top-right
+
       ctx.beginPath();
       ctx.moveTo(w - 16, 16);
       ctx.lineTo(w - 16 - chSize, 16);
@@ -333,7 +333,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       ctx.lineTo(w - 16, 16 + chSize);
       ctx.stroke();
 
-      // Bottom-left
+
       ctx.beginPath();
       ctx.moveTo(16, h - 16);
       ctx.lineTo(16 + chSize, h - 16);
@@ -341,7 +341,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
       ctx.lineTo(16, h - 16 - chSize);
       ctx.stroke();
 
-      // Bottom-right
+
       ctx.beginPath();
       ctx.moveTo(w - 16, h - 16);
       ctx.lineTo(w - 16 - chSize, h - 16);
@@ -360,7 +360,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
     };
   }, [isRotating, activeLayers, selectedNode]);
 
-  // Mouse drag handlers for manual 3D globe rotation
+
   const handleMouseDown = (e: React.MouseEvent) => {
     isDraggingRef.current = true;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
@@ -383,7 +383,7 @@ export const TacticalGlobe: React.FC<{ className?: string }> = ({
     <div
       className={`relative w-full rounded-3xl bg-[#1A0A0F]/95 border border-border/20 overflow-hidden shadow-[0_24px_56px_rgba(10,3,6,0.6),inset_0_1px_0_rgba(246,230,234,0.12)] select-none font-mono flex flex-col ${className}`}
     >
-      {/* HUD Header Bar */}
+
       <div className="flex items-center justify-between px-5 py-3 border-b border-border/15 bg-gradient-to-r from-blush-100/10 via-[#220D16] to-[#14070B]">
         <div className="flex items-center gap-2.5">
           <div className="w-2 h-2 rounded-full bg-blush-100 animate-ping shadow-[0_0_8px_rgba(246,230,234,0.9)]" />

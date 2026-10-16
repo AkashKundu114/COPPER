@@ -1,3 +1,16 @@
+[project]
+name = "copper"
+version = "0.1.0-alpha"
+description = "Centralized Omnifunctional Personal Productivity and Execution Routine"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Akash Kundu" }]
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+training = ["unsloth", "peft", "trl", "transformers", "datasets", "bitsandbytes"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py311"
@@ -5,18 +18,17 @@ src = ["backend", "."]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C4"]
-ignore = ["E501", "B008", "UP042", "E712", "B904", "B007", "B905"]
+ignore = ["E501", "B008", "UP042", "E712", "B904", "B007", "B905", "E402"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*" = ["E402"]
+"**/scripts/**" = ["E402"]
+"**/eval/**" = ["E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "backend/tests"]
 pythonpath = ["backend", "."]
 asyncio_mode = "auto"
-
-[project.optional-dependencies]
-training = ["unsloth", "peft", "trl", "transformers", "datasets", "bitsandbytes"]

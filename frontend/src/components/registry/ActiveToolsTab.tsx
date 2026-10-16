@@ -18,7 +18,7 @@ export const ActiveToolsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
-  // Diagram Studio Live State
+
   const [diagramType, setDiagramType] = useState<string>("flowchart");
   const [diagramTitle, setDiagramTitle] = useState<string>("Autonomous Agent Mesh");
   const [diagramSpec, setDiagramSpec] = useState<string>("User -> Router -> Core Fleet -> Output");
@@ -106,7 +106,7 @@ export const ActiveToolsTab: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
-      {/* Header & Filter Controls */}
+
       <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export const ActiveToolsTab: React.FC = () => {
             </div>
           </div>
 
-          {/* Search Box */}
+
           <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
             <Search size={14} className="text-text-tertiary" />
             <input
@@ -134,7 +134,7 @@ export const ActiveToolsTab: React.FC = () => {
           </div>
         </div>
 
-        {/* Guardian Level & Category Selectors */}
+
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-border-subtle">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             <button
@@ -162,7 +162,7 @@ export const ActiveToolsTab: React.FC = () => {
             ))}
           </div>
 
-          {/* Guardian Filter */}
+
           <div className="flex items-center gap-1">
             <span className="text-[10px] font-mono text-text-tertiary mr-1">Guardian:</span>
             {[
@@ -186,7 +186,7 @@ export const ActiveToolsTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Embedded Live Tool Studio (Diagram & Architecture Renderer) */}
+
       <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export const ActiveToolsTab: React.FC = () => {
         )}
       </div>
 
-      {/* Grid of Tool Cards */}
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[...Array(4)].map((_, i) => (
@@ -316,7 +316,7 @@ export const ActiveToolsTab: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Parameters Accordion */}
+
                 <div className="pt-2 border-t border-border-subtle">
                   <button
                     onClick={() => setExpandedTool(isExpanded ? null : t.name)}

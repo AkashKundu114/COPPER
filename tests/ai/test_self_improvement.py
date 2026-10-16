@@ -103,7 +103,6 @@ def test_crucible_judge_heuristic_fallback():
 async def test_crucible_judge_evaluate_turn_and_persist():
     db = SessionLocal()
     try:
-        # Evaluate turn with mock or heuristic
         eval_record = await crucible_judge.evaluate_turn(
             user_message="What is the capital of France?",
             assistant_response="The capital of France is Paris. It is also the country's most populous city.",
@@ -115,7 +114,6 @@ async def test_crucible_judge_evaluate_turn_and_persist():
         assert eval_record.agent_type == "chat"
         assert eval_record.overall_score >= 0.70
 
-        # Verify DB presence
         fetched = db.query(ResponseEvaluation).filter(ResponseEvaluation.id == eval_record.id).first()
         assert fetched is not None
         assert fetched.session_id == "test_session_eval_1"
@@ -142,14 +140,12 @@ def test_prompt_patches_and_injection():
 async def test_prompt_optimizer_cluster_and_apply():
     db = SessionLocal()
     try:
-        # Clear any prior test edits for research/VERBOSE to ensure idempotence
         db.query(ProposedPromptEdit).filter(
             ProposedPromptEdit.agent_type == "research",
             ProposedPromptEdit.failure_category == "VERBOSE",
         ).delete()
         db.commit()
 
-        # Create 4 evaluations with VERBOSE failures for research agent
         for i in range(4):
             ev = ResponseEvaluation(
                 session_id=f"verbose_test_{i}",
@@ -168,7 +164,6 @@ async def test_prompt_optimizer_cluster_and_apply():
             db.add(ev)
         db.commit()
 
-        # Run optimization cycle
         proposals = await prompt_optimizer.run_optimization_cycle()
         assert len(proposals) >= 1
         verbose_prop = next(
@@ -177,7 +172,6 @@ async def test_prompt_optimizer_cluster_and_apply():
         assert verbose_prop["failure_count"] >= 4
         assert verbose_prop["status"] == "pending"
 
-        # Apply the proposed edit
         edit_id = verbose_prop["id"]
         res = await prompt_optimizer.apply_proposed_edit(edit_id)
         assert res["success"] is True
@@ -185,12 +179,10 @@ async def test_prompt_optimizer_cluster_and_apply():
         assert res["benchmark_after"] > 0
         assert res["regression_detected"] is False
 
-        # Verify DB updated
         applied_edit = db.query(ProposedPromptEdit).filter(ProposedPromptEdit.id == edit_id).first()
         assert applied_edit.status == "applied"
         assert applied_edit.applied_at is not None
 
-        # Verify prompt patch was registered
         patches = get_prompt_patches_for_agent("research")
         assert any(applied_edit.proposed_prompt_snippet in p for p in patches)
     finally:
@@ -220,30 +212,25 @@ def test_improvement_tracker_metrics():
 def test_self_improvement_api_endpoints():
     client = TestClient(app)
 
-    # 1. GET /api/v1/self-improvement/metrics
     r_metrics = client.get("/api/v1/self-improvement/metrics?days=7")
     assert r_metrics.status_code == 200
     data = r_metrics.json()
     assert "overall_score" in data
     assert "dimensions" in data
 
-    # 2. GET /api/v1/self-improvement/failures
     r_failures = client.get("/api/v1/self-improvement/failures?limit=10")
     assert r_failures.status_code == 200
     fdata = r_failures.json()
     assert "category_counts" in fdata
 
-    # 3. GET /api/v1/self-improvement/proposed-edits
     r_edits = client.get("/api/v1/self-improvement/proposed-edits")
     assert r_edits.status_code == 200
     assert isinstance(r_edits.json(), list)
 
-    # 4. POST /api/v1/self-improvement/optimize-prompts
     r_opt = client.post("/api/v1/self-improvement/optimize-prompts")
     assert r_opt.status_code == 200
     assert r_opt.json()["status"] == "success"
 
-    # 5. POST /api/v1/self-improvement/run-benchmark
     r_bench = client.post("/api/v1/self-improvement/run-benchmark")
     assert r_bench.status_code == 200
     bdata = r_bench.json()
@@ -256,7 +243,6 @@ def test_model_selection_optimization():
     from app.ai.evaluation.model_optimizer import model_optimizer
     from app.ai.llm.ollama_client import ollama_client
 
-    # Record 3 high-quality turns for deepseek-r1:14b on coding agent
     for _ in range(3):
         model_optimizer.record_turn_performance(
             agent_type="coding",
@@ -266,15 +252,12 @@ def test_model_selection_optimization():
             has_failure=False,
         )
 
-    # Verify optimal model promoted
     optimal = model_optimizer.get_optimal_model("coding")
     assert optimal == "deepseek-r1:14b"
 
-    # Verify select_model routes to the optimal model
     selected = ollama_client.select_model(AgentType.CODING)
     assert selected == "deepseek-r1:14b"
 
-    # Verify model rankings endpoint returns metrics
     client = TestClient(app)
     r = client.get("/api/v1/self-improvement/model-rankings")
     assert r.status_code == 200

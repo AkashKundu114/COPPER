@@ -13,10 +13,7 @@ from app.core.logger import logger
 
 
 class WhisperSTTPipeline:
-    """
-    Offline Speech-To-Text Pipeline using faster-whisper.
-    Automatically loads local 'tiny' or configured model.
-    """
+    """Offline Speech-To-Text Pipeline using faster-whisper."""
 
     def __init__(self, models_dir: str | None = None):
         self.models_dir = Path(models_dir or settings.WHISPER_DIR)
@@ -74,13 +71,7 @@ class WhisperSTTPipeline:
 
 
 class PiperTTSPipeline:
-    """
-    High-fidelity Neural & Offline Text-To-Speech Pipeline.
-    Tiers:
-    1. pyttsx3 / Windows SAPI5 (Offline native WAV)
-    2. edge-tts (High fidelity Neural AI Voice)
-    3. Synthetic tone generator fallback
-    """
+    """High-fidelity Neural & Offline Text-To-Speech Pipeline."""
 
     def __init__(self, models_dir: str | None = None):
         self.models_dir = Path(models_dir or settings.TTS_DIR)
@@ -106,39 +97,28 @@ class PiperTTSPipeline:
 
     @staticmethod
     def format_spoken_summary(text: str, max_sentences: int = 2) -> str:
-        """
-        Distills a full response into a natural, conversational spoken summary.
-        Leaves long code blocks, tables, lists, and lengthy multi-paragraph text
-        for the user to read on screen, while speaking a punchy 1-2 sentence overview.
-        """
+        """Distills a full response into a natural, conversational spoken summary."""
         raw = text.strip()
         if not raw:
             return ""
 
-        # 1. Remove chain-of-thought tags
         if "<think>" in raw:
             raw = raw.split("</think>")[-1].strip()
 
-        # 2. Detect presence of code, tables, or lists
         has_code = bool(re.search(r"```[\s\S]*?```", raw))
         has_table = bool(re.search(r"^\s*\|.*\|\s*$", raw, flags=re.MULTILINE))
         has_list = bool(re.search(r"^\s*(\d+\.|\*|-|\+)\s+", raw, flags=re.MULTILINE))
 
-        # 3. Strip code blocks and markdown tables
         clean = re.sub(r"```[\s\S]*?```", "", raw)
         clean = re.sub(r"^\s*\|.*\|\s*$", "", clean, flags=re.MULTILINE)
 
-        # 4. Strip markdown headers (# Title, ## Subheading)
         clean = re.sub(r"^#{1,6}\s+.*$", "", clean, flags=re.MULTILINE)
 
-        # 5. Strip markdown bullet/numbered list markers
         clean = re.sub(r"^\s*(\d+\.|\*|-|\+)\s+", "", clean, flags=re.MULTILINE)
 
-        # 6. Strip URLs and formatting characters
         clean = re.sub(r"https?://\S+", "link", clean)
         clean = re.sub(r"[*_`~>]", "", clean)
 
-        # 7. Normalize paragraphs
         paragraphs = [p.strip() for p in clean.split("\n") if p.strip()]
         full_text = " ".join(paragraphs).strip()
 
@@ -149,25 +129,21 @@ class PiperTTSPipeline:
                 return "I've generated the data table for you on screen."
             return ""
 
-        # 8. Split into sentences
         raw_sentences = re.split(r"(?<=[.!?])\s+", full_text)
         sentences = [s.strip() for s in raw_sentences if len(s.strip()) > 3]
 
         if not sentences:
             return full_text[:160]
 
-        # If it's already a short, direct message with no stripped structural elements
         if len(sentences) <= max_sentences and len(full_text) <= 220 and not (has_code or has_table or has_list):
             return full_text
 
-        # Take first 1-2 core sentences as the conversational overview
         summary_sentences = sentences[:max_sentences]
         spoken = " ".join(summary_sentences).strip()
 
         if not spoken.endswith((".", "!", "?")):
             spoken += "."
 
-        # Append natural indicator that full content is on screen
         if len(sentences) > max_sentences or has_code or has_table or has_list:
             spoken += " I've left the rest on your screen for you to review."
 
@@ -176,10 +152,7 @@ class PiperTTSPipeline:
     async def synthesize(
         self, text: str, voice: str = "en-US-AvaNeural", speed: float = 1.0, summarize: bool = True
     ) -> bytes:
-        """
-        Synthesize text into natural human-like female neural audio bytes or Windows SAPI5 WAV.
-        If summarize=True (default), extracts a natural conversational spoken summary.
-        """
+        """Synthesize text into natural human-like female neural audio bytes or Windows SAPI5 WAV."""
         clean_text = self.format_spoken_summary(text) if summarize else text.strip()
         if "<think>" in clean_text:
             clean_text = clean_text.split("</think>")[-1].strip()
@@ -193,7 +166,6 @@ class PiperTTSPipeline:
         if target_voice in ["copper_synth", "female", "en_US-amy-medium", "default", "os_default"]:
             target_voice = "en-US-AvaNeural"
 
-        # 1. Check if offline TTS is required or requested
         is_explicit_offline = (
             target_voice.lower() in ["zira", "david", "sapi", "sapi5"]
             or getattr(settings, "TTS_OFFLINE_ONLY", True)
@@ -219,7 +191,6 @@ class PiperTTSPipeline:
             except Exception as e:
                 logger.info(f"edge-tts unavailable, falling back to local SAPI5 female voice: {e}")
 
-        # 2. Try pyttsx3 for offline Windows WAV synthesis (prioritizing female voice Microsoft Zira)
         try:
             import pyttsx3
 
@@ -316,10 +287,7 @@ class AudioPipelineManager:
     async def process_voice_turn(
         self, audio_bytes: bytes, session_id: str = "voice_session"
     ) -> AsyncGenerator[dict[str, Any], None]:
-        """
-        End-to-End Voice Loop:
-        Audio Input -> STT -> Agent Stream -> TTS Response
-        """
+        """End-to-End Voice Loop:"""
         stt_result = await self.stt.transcribe(audio_bytes)
         user_text = stt_result.get("text", "")
 

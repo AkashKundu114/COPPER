@@ -79,19 +79,19 @@ export const KnowledgeGraphView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("ALL");
 
-  // Selection Drawers
+
   const [selectedEntity, setSelectedEntity] = useState<KnowledgeEntityItem | null>(null);
   const [selectedRelationship, setSelectedRelationship] = useState<KnowledgeRelationshipItem | null>(null);
   const [focusedEntityName, setFocusedEntityName] = useState<string | null>(null);
 
-  // Physics state
+
   const [isPhysicsRunning, setIsPhysicsRunning] = useState(true);
   const isPhysicsRunningRef = useRef(isPhysicsRunning);
   useEffect(() => {
     isPhysicsRunningRef.current = isPhysicsRunning;
   }, [isPhysicsRunning]);
 
-  // Modals
+
   const [isExtractModalOpen, setIsExtractModalOpen] = useState(false);
   const [extractInput, setExtractInput] = useState("");
   const [isExtracting, setIsExtracting] = useState(false);
@@ -109,7 +109,7 @@ export const KnowledgeGraphView: React.FC = () => {
   const [relConfidence, setRelConfidence] = useState(0.9);
   const [relContext, setRelContext] = useState("");
 
-  // Path Finder Tool
+
   const [isPathModalOpen, setIsPathModalOpen] = useState(false);
   const [pathSource, setPathSource] = useState("");
   const [pathTarget, setPathTarget] = useState("");
@@ -117,7 +117,7 @@ export const KnowledgeGraphView: React.FC = () => {
   const [pathSearching, setPathSearching] = useState(false);
   const [pathError, setPathError] = useState<string | null>(null);
 
-  // Inline editing state
+
   const [isEditingEntity, setIsEditingEntity] = useState(false);
   const [editEntityName, setEditEntityName] = useState("");
   const [editEntityType, setEditEntityType] = useState("");
@@ -129,7 +129,7 @@ export const KnowledgeGraphView: React.FC = () => {
   const [editRelConf, setEditRelConf] = useState(0.8);
   const [editRelContext, setEditRelContext] = useState("");
 
-  // Zoom reference
+
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
   const fetchGraphData = async (focusEntity?: string) => {
@@ -157,7 +157,7 @@ export const KnowledgeGraphView: React.FC = () => {
     fetchGraphData(focusedEntityName || undefined);
   }, [focusedEntityName]);
 
-  // When selectedEntity changes, prepare edit fields
+
   useEffect(() => {
     if (selectedEntity) {
       setEditEntityName(selectedEntity.name);
@@ -169,7 +169,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   }, [selectedEntity]);
 
-  // When selectedRelationship changes, prepare edit fields
+
   useEffect(() => {
     if (selectedRelationship) {
       setEditRelType(selectedRelationship.type);
@@ -180,7 +180,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   }, [selectedRelationship]);
 
-  // Filtered nodes & links
+
   const filteredData = useMemo(() => {
     const matchedNodeNames = new Set<string>();
 
@@ -204,7 +204,7 @@ export const KnowledgeGraphView: React.FC = () => {
     return { nodes, links };
   }, [entities, relationships, selectedType, searchQuery]);
 
-  // D3 Force Simulation with curved multi-edges and interactive inspect
+
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
     const svg = d3.select(svgRef.current);
@@ -213,10 +213,10 @@ export const KnowledgeGraphView: React.FC = () => {
     const width = containerRef.current.clientWidth || 900;
     const height = containerRef.current.clientHeight || 650;
 
-    // Defs & Arrowheads
+
     const defs = svg.append("defs");
 
-    // Standard arrow
+
     defs
       .append("marker")
       .attr("id", "arrowhead")
@@ -231,7 +231,7 @@ export const KnowledgeGraphView: React.FC = () => {
       .attr("fill", "#00f0ff")
       .attr("opacity", 0.7);
 
-    // Golden path arrow
+
     defs
       .append("marker")
       .attr("id", "arrowhead-path")
@@ -246,7 +246,7 @@ export const KnowledgeGraphView: React.FC = () => {
       .attr("fill", "#fbbf24")
       .attr("opacity", 0.95);
 
-    // Glow filter
+
     const filter = defs.append("filter").attr("id", "glow");
     filter.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "coloredBlur");
     const feMerge = filter.append("feMerge");
@@ -255,7 +255,7 @@ export const KnowledgeGraphView: React.FC = () => {
 
     const g = svg.append("g").attr("class", "graph-root");
 
-    // Zoom behavior
+
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.15, 4])
@@ -265,7 +265,7 @@ export const KnowledgeGraphView: React.FC = () => {
     svg.call(zoom);
     zoomRef.current = zoom;
 
-    // Build Node Map
+
     const nodes: D3Node[] = filteredData.nodes.map((d) => ({
       ...d,
       r: Math.max(16, Math.min(30, 15 + (d.evidence_count || 1) * 1.8 + (d.confidence || 0.8) * 5)),
@@ -277,7 +277,7 @@ export const KnowledgeGraphView: React.FC = () => {
       nodeMap.set(n.name.toLowerCase().trim(), n);
     }
 
-    // Process Links & Group for Curved Paths
+
     const rawLinks: { rel: KnowledgeRelationshipItem; srcNode: D3Node; tgtNode: D3Node; pairKey: string }[] = [];
     const pairGroups: Record<string, number> = {};
 
@@ -313,7 +313,7 @@ export const KnowledgeGraphView: React.FC = () => {
       };
     });
 
-    // Active path node/link canonical sets
+
     const pathNodeCanons = new Set<string>();
     const pathLinkKeys = new Set<string>();
     if (activePath && activePath.length > 0) {
@@ -332,7 +332,7 @@ export const KnowledgeGraphView: React.FC = () => {
       }
     }
 
-    // Force Simulation
+
     const simulation = d3
       .forceSimulation<D3Node>(nodes)
       .force(
@@ -348,7 +348,7 @@ export const KnowledgeGraphView: React.FC = () => {
 
     simulationRef.current = simulation;
 
-    // Render Links as Curved Paths
+
     const linkGroup = g.append("g").attr("class", "links");
     const linkPath = linkGroup
       .selectAll("path")
@@ -401,7 +401,7 @@ export const KnowledgeGraphView: React.FC = () => {
         });
       });
 
-    // Link Labels
+
     const linkLabelGroup = g.append("g").attr("class", "link-labels");
     const linkLabels = linkLabelGroup
       .selectAll("text")
@@ -435,7 +435,7 @@ export const KnowledgeGraphView: React.FC = () => {
         });
       });
 
-    // Render Nodes
+
     const nodeGroup = g.append("g").attr("class", "nodes");
     const node = nodeGroup
       .selectAll("g")
@@ -457,7 +457,7 @@ export const KnowledgeGraphView: React.FC = () => {
           })
           .on("end", (_event, d) => {
             if (!isPhysicsRunningRef.current) return;
-            // Node stays pinned at drop location; double-click unpins
+
             d.fx = d.x;
             d.fy = d.y;
           }),
@@ -473,7 +473,7 @@ export const KnowledgeGraphView: React.FC = () => {
         if (isPhysicsRunningRef.current) simulation.alpha(0.2).restart();
       });
 
-    // Outer glow circle
+
     node
       .append("circle")
       .attr("r", (d) => (d.r || 18) + 4)
@@ -487,7 +487,7 @@ export const KnowledgeGraphView: React.FC = () => {
       .attr("opacity", 0.7)
       .attr("filter", "url(#glow)");
 
-    // Inner filled circle
+
     node
       .append("circle")
       .attr("r", (d) => d.r || 18)
@@ -502,7 +502,7 @@ export const KnowledgeGraphView: React.FC = () => {
       })
       .attr("stroke-width", 2);
 
-    // Node Type Initials
+
     node
       .append("text")
       .attr("text-anchor", "middle")
@@ -513,7 +513,7 @@ export const KnowledgeGraphView: React.FC = () => {
       .attr("fill", "#ffffff")
       .text((d) => d.name.slice(0, 3).toUpperCase());
 
-    // Node Label underneath
+
     node
       .append("text")
       .attr("text-anchor", "middle")
@@ -524,13 +524,13 @@ export const KnowledgeGraphView: React.FC = () => {
       .attr("fill", (d) => (pathNodeCanons.has(d.canonical_name.toLowerCase()) ? "#fbbf24" : "#e2e8f0"))
       .text((d) => d.name);
 
-    // Canvas click clears selection
+
     svg.on("click", () => {
       setSelectedEntity(null);
       setSelectedRelationship(null);
     });
 
-    // Curved Path Generator in Simulation Tick
+
     simulation.on("tick", () => {
       linkPath.attr("d", (d) => {
         const x1 = d.source.x || 0;
@@ -542,7 +542,7 @@ export const KnowledgeGraphView: React.FC = () => {
         const dy = y2 - y1;
         const dr = Math.sqrt(dx * dx + dy * dy) || 1;
 
-        // Trim endpoints to touch node borders cleanly
+
         const r1 = d.source.r || 18;
         const r2 = d.target.r || 18;
         const ux = dx / dr;
@@ -560,7 +560,7 @@ export const KnowledgeGraphView: React.FC = () => {
           return `M ${sx} ${sy} L ${tx} ${ty}`;
         }
 
-        // Quadratic Bézier curve with normal offset
+
         const nx = -dy / dr;
         const ny = dx / dr;
         const offset = (num - (total - 1) / 2) * 26;
@@ -610,7 +610,7 @@ export const KnowledgeGraphView: React.FC = () => {
     };
   }, [filteredData, activePath, selectedRelationship]);
 
-  // Zoom controls
+
   const handleZoom = (factor: number) => {
     if (!svgRef.current || !zoomRef.current) return;
     d3.select(svgRef.current).transition().duration(300).call(zoomRef.current.scaleBy, factor);
@@ -635,7 +635,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Seed default graph
+
   const handleSeedDefaults = async () => {
     setLoading(true);
     try {
@@ -648,7 +648,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Sync epistemic memories
+
   const handleSyncMemories = async () => {
     setLoading(true);
     try {
@@ -661,7 +661,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Export graph
+
   const handleExportGraph = async () => {
     try {
       const data = await knowledgeAPI.exportGraph();
@@ -677,7 +677,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Entity operations
+
   const handleAddEntity = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEntityName.trim()) return;
@@ -725,7 +725,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Relationship operations
+
   const handleAddRelationship = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!relSource.trim() || !relTarget.trim()) return;
@@ -774,7 +774,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Path Finder
+
   const handleFindPath = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pathSource.trim() || !pathTarget.trim()) return;
@@ -791,7 +791,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Text Extraction
+
   const handleExtractKnowledge = async () => {
     if (!extractInput.trim()) return;
     setIsExtracting(true);
@@ -807,7 +807,7 @@ export const KnowledgeGraphView: React.FC = () => {
     }
   };
 
-  // Neighbors of currently selected entity
+
   const selectedEntityNeighbors = useMemo(() => {
     if (!selectedEntity) return [];
     const canon = (selectedEntity.canonical_name || selectedEntity.name).toLowerCase();
@@ -826,7 +826,7 @@ export const KnowledgeGraphView: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full bg-[#05080e]/95 text-text select-none font-mono">
-      {/* Top HUD Banner */}
+
       <div className="px-6 py-3.5 border-b border-cyber-cyan/20 bg-black/40 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan shadow-[0_0_15px_rgba(0,240,255,0.25)]">
@@ -847,7 +847,7 @@ export const KnowledgeGraphView: React.FC = () => {
           </div>
         </div>
 
-        {/* Global Stats Counter */}
+
         {stats && (
           <div className="flex items-center gap-2.5 text-xs">
             <div className="px-2.5 py-1 rounded-lg bg-black/60 border border-cyber-cyan/20">
@@ -861,7 +861,7 @@ export const KnowledgeGraphView: React.FC = () => {
           </div>
         )}
 
-        {/* Action Controls */}
+
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setIsAddEntityModalOpen(true)}
@@ -920,7 +920,7 @@ export const KnowledgeGraphView: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter & Search Toolbar */}
+
       <div className="px-6 py-2.5 border-b border-zinc-800/80 bg-black/30 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-zinc-500 text-[11px] uppercase tracking-wider flex items-center gap-1">
@@ -969,11 +969,11 @@ export const KnowledgeGraphView: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Graph Canvas Area */}
+
       <div className="relative flex-1 w-full overflow-hidden" ref={containerRef}>
         <svg ref={svgRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
-        {/* Empty State Overlay */}
+
         {!loading && filteredData.nodes.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center">
             <div className="p-8 rounded-2xl bg-black/80 border border-cyber-cyan/30 backdrop-blur-2xl max-w-md pointer-events-auto space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.8)]">

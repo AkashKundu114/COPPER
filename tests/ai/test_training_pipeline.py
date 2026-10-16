@@ -61,7 +61,6 @@ def setup_training_env():
 def test_data_curator_cleaning_and_triviality():
     curator = ChrysalisDataCurator(output_path=TEST_JSONL)
 
-    # 1. Clean XML tags
     dirty_text = (
         "<think>Let me calculate the square root</think>\n"
         '<tool_call>{"name": "calculator"}</tool_call>\n'
@@ -74,7 +73,6 @@ def test_data_curator_cleaning_and_triviality():
     assert "<tool_result>" not in cleaned
     assert "The square root of 144 is 12." in cleaned
 
-    # 2. Trivial interactions check
     assert curator.is_trivial("hi", "Hello! How can I help you today?") is True
     assert curator.is_trivial("thanks", "You're very welcome!") is True
     assert (
@@ -103,7 +101,6 @@ async def test_data_curator_curation_and_deduplication():
         db.query(CuratedTrainingExample).filter(CuratedTrainingExample.content_hash == c_hash).delete()
         db.commit()
 
-        # Create a high-quality evaluation candidate
         ev_high = ResponseEvaluation(
             session_id="curate_test_001",
             user_message="How do I optimize postgres queries for time-series data?",
@@ -118,7 +115,6 @@ async def test_data_curator_curation_and_deduplication():
             failures=[],
             reasoning="Thorough, highly accurate architectural response.",
         )
-        # Create a failing evaluation (should be excluded)
         ev_fail = ResponseEvaluation(
             session_id="curate_test_002",
             user_message="What is the capital of Mars?",
@@ -139,11 +135,9 @@ async def test_data_curator_curation_and_deduplication():
         db.refresh(ev_high)
         db.refresh(ev_fail)
 
-        # Run curation sweep
         res = await curator.curate_from_evaluations(min_score=0.85, limit=50)
         assert res["curated_new"] >= 1
 
-        # Check curated record exists in DB
         curated_db = (
             db.query(CuratedTrainingExample).filter(CuratedTrainingExample.session_id == "curate_test_001").first()
         )
@@ -151,18 +145,15 @@ async def test_data_curator_curation_and_deduplication():
         assert curated_db.quality_score >= 0.85
         assert curated_db.difficulty in ["easy", "medium", "hard"]
 
-        # Check JSONL file was written
         assert TEST_JSONL.exists()
         with open(TEST_JSONL, encoding="utf-8") as f:
             lines = [json.loads(line) for line in f if line.strip()]
         assert any(entry["agent_type"] == "coding" for entry in lines)
 
-        # Deduplication test: Running curation again should skip existing hash
         res_dedup = await curator.curate_from_evaluations(min_score=0.85, limit=50)
         assert res_dedup["curated_new"] == 0
         assert res_dedup["skipped"] >= 1
 
-        # Check stats
         stats = curator.get_curation_stats()
         assert stats["total_examples"] >= 1
         assert "coding" in stats["agent_distribution"]
@@ -198,7 +189,6 @@ def test_lora_trainer_artifact_generation():
 def test_adapter_manager_lifecycle():
     db = SessionLocal()
     try:
-        # Register a test adapter in DB
         version_tag = "test_lora_lifecycle_v1"
         adapter = LoRAAdapter(
             version=version_tag,
@@ -215,30 +205,25 @@ def test_adapter_manager_lifecycle():
 
         adapter_id = adapter.id
 
-        # 1. Activate adapter (100%)
         act_res = adapter_manager.activate_adapter(adapter_id)
         assert act_res["success"] is True
         assert act_res["adapter"]["is_active"] is True
         assert act_res["adapter"]["status"] == "active"
         assert act_res["adapter"]["ab_test_percentage"] == 100
 
-        # Verify routing
         routed, routed_v = adapter_manager.should_route_to_adapter("coding")
         assert routed is True
         assert routed_v == version_tag
 
-        # 2. Configure A/B Test (e.g. 50%)
         ab_res = adapter_manager.start_ab_test(adapter_id, percentage=50)
         assert ab_res["success"] is True
         assert ab_res["adapter"]["status"] == "testing"
         assert ab_res["adapter"]["ab_test_percentage"] == 50
 
-        # 3. Deactivate adapter
         deact_res = adapter_manager.deactivate_adapter(adapter_id)
         assert deact_res["success"] is True
         assert deact_res["adapter"]["is_active"] is False
 
-        # 4. Merge adapter
         merge_res = adapter_manager.merge_adapter(adapter_id)
         assert merge_res["success"] is True
         assert merge_res["adapter"]["status"] == "merged"
@@ -249,7 +234,6 @@ def test_adapter_manager_lifecycle():
 def test_training_api_endpoints():
     client = TestClient(app)
 
-    # 1. GET /api/v1/training/stats
     r_stats = client.get("/api/v1/training/stats")
     assert r_stats.status_code == 200
     sdata = r_stats.json()
@@ -257,21 +241,17 @@ def test_training_api_endpoints():
     assert "difficulty_distribution" in sdata
     assert "agent_distribution" in sdata
 
-    # 2. POST /api/v1/training/curate
     r_curate = client.post("/api/v1/training/curate", json={"min_score": 0.85, "limit": 20})
     assert r_curate.status_code == 200
     assert r_curate.json()["status"] == "success"
 
-    # 3. GET /api/v1/training/adapters
     r_adapters = client.get("/api/v1/training/adapters")
     assert r_adapters.status_code == 200
     assert isinstance(r_adapters.json(), list)
 
-    # 4. GET /api/v1/training/status
     r_status = client.get("/api/v1/training/status")
     assert r_status.status_code == 200
 
-    # 5. POST /api/v1/training/start
     r_start = client.post("/api/v1/training/start", json={"base_model": "qwen2.5:14b", "target_agent": "coding"})
     assert r_start.status_code == 200
     jdata = r_start.json()

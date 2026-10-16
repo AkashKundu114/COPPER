@@ -88,7 +88,7 @@ export const TodayView: React.FC = () => {
 
   return (
     <div className="p-6 space-y-5 max-w-5xl mx-auto text-text select-none font-sans pb-16">
-      {/* Header */}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-text tracking-tight">
@@ -123,13 +123,13 @@ export const TodayView: React.FC = () => {
         </div>
       </div>
 
-      {/* Autonomous Ambient Briefing Card */}
+
       <DailyBriefingCard />
 
-      {/* Live Focus Widget */}
+
       <ActivityDashboardWidget />
 
-      {/* Schedule Recommendation Banner */}
+
       <div className="surface-card p-3.5 rounded-xl border border-border flex items-center justify-between text-xs">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-copper-subtle text-copper">
@@ -147,7 +147,7 @@ export const TodayView: React.FC = () => {
         <Badge variant="success">On Track</Badge>
       </div>
 
-      {/* Timeline Section */}
+
       <div className="surface-card p-4 rounded-xl border border-border space-y-3.5">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-semibold text-text uppercase tracking-wider">
@@ -233,7 +233,7 @@ export const TodayView: React.FC = () => {
         )}
       </div>
 
-      {/* Add Event Modal */}
+
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/80 backdrop-blur-sm animate-fade-in font-sans text-xs">
           <div className="w-full max-w-md surface-card border border-border rounded-xl p-5 shadow-elevation-modal space-y-4">

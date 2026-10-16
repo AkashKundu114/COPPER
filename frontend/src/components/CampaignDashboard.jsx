@@ -26,7 +26,7 @@ export const CampaignDashboard = () => {
   const [anomalies, setAnomalies] = useState([]);
   const [optimization, setOptimization] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "chart" | "alerts" | "optimizer"
+  const [activeTab, setActiveTab] = useState("overview"); 
   const [wsConnected, setWsConnected] = useState(false);
   const wsRef = useRef(null);
 
@@ -71,7 +71,7 @@ export const CampaignDashboard = () => {
     }
   }, [selectedCampaign, fetchMetricsForSelected]);
 
-  // Connect to live WebSocket for ad-tech anomaly alerts
+
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const host = window.location.hostname || "localhost";
@@ -158,7 +158,7 @@ export const CampaignDashboard = () => {
 
   return (
     <div className="w-full h-full flex flex-col p-6 overflow-y-auto bg-canvas text-text gap-6">
-      {/* Page Header */}
+
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-4">
         <div>
           <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export const CampaignDashboard = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* WebSocket Status Indicator */}
+
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-elevated border border-border-subtle text-xs">
             <span
               className={`w-2 h-2 rounded-full ${
@@ -203,9 +203,9 @@ export const CampaignDashboard = () => {
         </div>
       </div>
 
-      {/* 4 Summary KPI Cards */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Spend */}
+
         <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Daily Spend Run-Rate</span>
@@ -224,7 +224,7 @@ export const CampaignDashboard = () => {
           </span>
         </div>
 
-        {/* Total Conversions */}
+
         <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Projected Conversions</span>
@@ -243,7 +243,7 @@ export const CampaignDashboard = () => {
           </span>
         </div>
 
-        {/* Avg CTR */}
+
         <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Blended CTR</span>
@@ -261,7 +261,7 @@ export const CampaignDashboard = () => {
           </span>
         </div>
 
-        {/* Overall ROAS */}
+
         <div className="bg-surface-elevated border border-border-subtle rounded-xl p-4 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-text-secondary text-xs font-medium">
             <span>Portfolio ROAS</span>
@@ -280,7 +280,7 @@ export const CampaignDashboard = () => {
         </div>
       </div>
 
-      {/* Navigation Sub-Tabs */}
+
       <div className="flex items-center gap-2 border-b border-border-subtle pb-2">
         {[
           { id: "overview", label: "Overview & Campaigns", icon: BarChart3 },
@@ -307,10 +307,10 @@ export const CampaignDashboard = () => {
         })}
       </div>
 
-      {/* Tab 1: Overview & Campaign Table */}
+
       {activeTab === "overview" && (
         <div className="flex flex-col gap-6">
-          {/* Campaign Table */}
+
           <div className="bg-surface-elevated border border-border-subtle rounded-xl overflow-hidden shadow-lg backdrop-blur-md">
             <div className="p-4 border-b border-border-subtle flex items-center justify-between">
               <div>
@@ -397,7 +397,7 @@ export const CampaignDashboard = () => {
             </div>
           </div>
 
-          {/* Quick Chart Preview */}
+
           <CampaignChart
             campaign={selectedCampaign}
             metrics={campaignMetrics}
@@ -406,7 +406,7 @@ export const CampaignDashboard = () => {
         </div>
       )}
 
-      {/* Tab 2: Trajectory & Anomaly Chart */}
+
       {activeTab === "chart" && (
         <CampaignChart
           campaign={selectedCampaign}
@@ -415,7 +415,7 @@ export const CampaignDashboard = () => {
         />
       )}
 
-      {/* Tab 3: Live Anomaly Alerts Feed */}
+
       {activeTab === "alerts" && (
         <AnomalyAlerts
           anomalies={anomalies}
@@ -425,7 +425,7 @@ export const CampaignDashboard = () => {
         />
       )}
 
-      {/* Tab 4: Autonomous Budget Optimizer */}
+
       {activeTab === "optimizer" && (
         <BudgetOptimizer
           optimizationData={optimization}

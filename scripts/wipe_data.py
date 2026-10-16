@@ -1,4 +1,3 @@
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -50,7 +49,6 @@ def wipe_all_data(interactive: bool = True):
             print("[*] Aborted. No data was deleted.")
             sys.exit(0)
 
-    # 1. Delete SQLite databases
     db_files = list(DATA_DIR.glob("*.db*")) + list(REPO_ROOT.glob("backend/app/ai/ambient/*.db*"))
     for db in db_files:
         try:
@@ -60,7 +58,6 @@ def wipe_all_data(interactive: bool = True):
         except Exception as e:
             print(f"[!] Warning: Could not delete {db}: {e}")
 
-    # 2. Delete ChromaDB vector directory
     if CHROMA_DIR.exists():
         try:
             shutil.rmtree(CHROMA_DIR)
@@ -68,7 +65,6 @@ def wipe_all_data(interactive: bool = True):
         except Exception as e:
             print(f"[!] Warning: Could not delete Chroma directory: {e}")
 
-    # 3. Clean runtime folders
     runtime_dirs = [
         DATA_DIR / "audio",
         DATA_DIR / "conversations",
@@ -93,7 +89,6 @@ def wipe_all_data(interactive: bool = True):
                     print(f"[!] Warning deleting {item}: {e}")
             print(f"[+] Cleaned directory: {r_dir.relative_to(REPO_ROOT)}")
 
-    # 4. Reset state JSON files to clean defaults
     for fname, default_content in RESET_STATE_TEMPLATES.items():
         fpath = DATA_DIR / fname
         try:

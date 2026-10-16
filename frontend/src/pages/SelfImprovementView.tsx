@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sparkles,
   Play,
@@ -127,7 +127,7 @@ export const SelfImprovementView: React.FC = () => {
   const [modelRankings, setModelRankings] = useState<ModelRanking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Training & Adapter States
+
   const [trainingStats, setTrainingStats] = useState<TrainingStats | null>(null);
   const [adapters, setAdapters] = useState<LoRAAdapterItem[]>([]);
   const [trainingJob, setTrainingJob] = useState<any | null>(null);
@@ -276,7 +276,7 @@ export const SelfImprovementView: React.FC = () => {
     }
   };
 
-  // Training Action Handlers
+
   const handleCurateNow = async () => {
     setIsCurating(true);
     setBannerMessage("CHRYSALIS: Scanning evaluations for high-scoring triples (score >= 0.85)...");
@@ -372,7 +372,7 @@ export const SelfImprovementView: React.FC = () => {
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-mono text-xs">
-      {/* Header */}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+
       <div className="flex border-b border-border-subtle gap-1 pb-1">
         {[
           { id: "overview", label: "Overview", icon: Cpu },
@@ -435,7 +435,7 @@ export const SelfImprovementView: React.FC = () => {
         })}
       </div>
 
-      {/* Notification Banner */}
+
       {bannerMessage && (
         <div className="p-3.5 rounded-xl bg-accent-950/70 border border-accent-500/40 text-accent-300 flex items-center justify-between animate-fade-in shadow-sm">
           <div className="flex items-center gap-2.5">
@@ -451,7 +451,7 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       )}
 
-      {/* Overview Stat Cards */}
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-surface-elevated border border-border-subtle space-y-1 shadow-sm">
           <span className="text-text-tertiary text-[10px] uppercase font-bold tracking-wider">
@@ -513,10 +513,10 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       </div>
 
-      {/* TAB 1: OVERVIEW & FAILURE RADAR */}
+
       {activeTab === "overview" && (
         <div className="space-y-6 animate-fade-in">
-          {/* CRUCIBLE 5-Dimensional Quality Radar */}
+
           <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -580,9 +580,9 @@ export const SelfImprovementView: React.FC = () => {
             </div>
           </div>
 
-          {/* Failure Breakdown & Pending Optimizations Grid */}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Failure Categories Breakdown */}
+
             <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -632,7 +632,7 @@ export const SelfImprovementView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Recent Failure Details */}
+
               <div className="mt-4 pt-3 border-t border-border-subtle space-y-2">
                 <span className="text-[10px] text-text-secondary uppercase font-bold block">
                   Recent Critical Defect Log
@@ -665,7 +665,7 @@ export const SelfImprovementView: React.FC = () => {
               </div>
             </div>
 
-            {/* Prompt Optimizations Review */}
+
             <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -743,7 +743,7 @@ export const SelfImprovementView: React.FC = () => {
                 )}
               </div>
 
-              {/* Applied Edits History */}
+
               {appliedEdits.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-border-subtle space-y-2">
                   <span className="text-[10px] text-text-secondary uppercase font-bold block">
@@ -771,7 +771,7 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: IMPROVEMENT CURVES OVER TIME */}
+
       {activeTab === "curves" && (
         <div className="space-y-6 animate-fade-in">
           <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-5 shadow-sm">
@@ -786,7 +786,7 @@ export const SelfImprovementView: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Curve 1: Accuracy Trending Up */}
+
               <div className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-text-secondary font-bold text-xs flex items-center gap-1.5">
@@ -825,7 +825,7 @@ export const SelfImprovementView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Curve 2: Latency Trending Down */}
+
               <div className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-text-secondary font-bold text-xs flex items-center gap-1.5">
@@ -867,7 +867,7 @@ export const SelfImprovementView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Curve 3: User Correction Rate Decreasing */}
+
               <div className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-text-secondary font-bold text-xs flex items-center gap-1.5">
@@ -911,7 +911,7 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: DYNAMIC MODEL SELECTION OPTIMIZATION */}
+
       {activeTab === "models" && (
         <div className="space-y-6 animate-fade-in">
           <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm">
@@ -990,10 +990,10 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 4: ON-DEVICE QLORA FINE-TUNING (CHRYSALIS) */}
+
       {activeTab === "training" && (
         <div className="space-y-6 animate-fade-in">
-          {/* Privacy Preservation Hero Card */}
+
           <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-verdigris-500/30 space-y-3 shadow-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -1018,9 +1018,9 @@ export const SelfImprovementView: React.FC = () => {
             </p>
           </div>
 
-          {/* Dataset Curation & Training Controller Grid */}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Curated Dataset Card */}
+
             <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -1072,7 +1072,7 @@ export const SelfImprovementView: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Difficulty Distribution */}
+
                 <div className="mt-3 space-y-1.5">
                   <span className="text-[10px] text-text-secondary uppercase font-bold block">
                     Difficulty Breakdown
@@ -1098,7 +1098,7 @@ export const SelfImprovementView: React.FC = () => {
               </p>
             </div>
 
-            {/* QLoRA Fine-Tuning Execution Card */}
+
             <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -1151,7 +1151,7 @@ export const SelfImprovementView: React.FC = () => {
             </div>
           </div>
 
-          {/* Active / Recent Training Job Telemetry */}
+
           {trainingJob && (
             <div className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3">
               <div className="flex items-center justify-between">
@@ -1203,7 +1203,7 @@ export const SelfImprovementView: React.FC = () => {
             </div>
           )}
 
-          {/* LoRA Adapter Version Management & A/B Testing Matrix */}
+
           <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -1295,7 +1295,7 @@ export const SelfImprovementView: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* A/B Test Traffic Controller */}
+
                       <div className="p-3 rounded-lg bg-surface-elevated border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-3 text-[11px]">
                         <div className="flex items-center gap-3 w-full md:w-auto">
                           <span className="text-text-secondary font-bold whitespace-nowrap">
@@ -1337,7 +1337,7 @@ export const SelfImprovementView: React.FC = () => {
         </div>
       )}
 
-      {/* Comprehensive Benchmark Suite Runner Card */}
+
       <div className="p-6 rounded-2xl bg-surface-elevated border border-border-subtle space-y-5 shadow-sm">
         <div className="flex items-center justify-between">
           <div>

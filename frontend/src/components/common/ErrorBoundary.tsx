@@ -1,4 +1,4 @@
-﻿import { Component } from "react";
+import { Component } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Copy, Check } from "lucide-react";
 
@@ -45,7 +45,7 @@ export class ErrorBoundary extends Component<Props, State> {
       this.setState({ copied: true });
       setTimeout(() => this.setState({ copied: false }), 2000);
     } catch {
-      // Fallback if clipboard API is unavailable
+
     }
   };
 

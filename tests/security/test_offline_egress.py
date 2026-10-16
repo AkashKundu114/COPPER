@@ -1,22 +1,19 @@
 import socket
+
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
-from app.core.guardian import guardian_engine
-from app.core.data_firewall import redact
+from app.ai.memory.memory_manager import MemoryType, compute_unified_epistemic_decay
 from app.core.ast_validator import ast_security_validator
-from app.ai.memory.memory_manager import compute_unified_epistemic_decay, MemoryType
+from app.core.data_firewall import redact
+from app.core.guardian import guardian_engine
+from app.main import app
 
 ALLOWED_HOSTS = {"127.0.0.1", "localhost", "::1", "testclient"}
 
 @pytest.fixture(autouse=True)
 def enforce_zero_egress(monkeypatch):
-    """
-    Strict socket interceptor fixture.
-    Raises AssertionError if any code attempts to open a TCP/UDP socket
-    to an external non-loopback IP or host.
-    """
+    """Strict socket interceptor fixture."""
     real_connect = socket.socket.connect
 
     def guarded_connect(self, address):

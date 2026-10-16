@@ -7,9 +7,6 @@ from app.ai.memory.bm25_index import BM25Index, tokenize_text
 from app.ai.memory.hybrid_search import HybridSearch
 from app.ai.memory.reranker import LocalReRanker
 
-# ---------------------------------------------------------
-# BM25 Index Tests
-# ---------------------------------------------------------
 
 def test_tokenize_text():
     tokens = tokenize_text("Quantum Computing & Neural-Networks (v1.5)!")
@@ -31,20 +28,17 @@ def test_bm25_add_search_remove():
 
     assert index.count() == 3
 
-    # Keyword search for quantum
     results = index.search("quantum qubits", limit=5)
     assert len(results) >= 1
     top_doc_id, top_score = results[0]
     assert top_doc_id == "doc_2"
     assert top_score > 0.0
 
-    # Search with full documents
     doc_results = index.search_documents("deployment pipelines", limit=2)
     assert len(doc_results) >= 1
     assert doc_results[0]["doc_id"] == "doc_3"
     assert "Automated deployment" in doc_results[0]["content"]
 
-    # Remove document
     assert index.remove_document("doc_2") is True
     assert index.count() == 2
     res_after = index.search("quantum qubits", limit=5)
@@ -62,20 +56,14 @@ def test_bm25_auto_update_batch():
     index.add_documents(items)
     assert index.count() == 2
 
-    # Query matching newly added item
     results = index.search("sharding partitions", limit=2)
     assert len(results) >= 1
     assert results[0][0] == "b1"
 
 
-# ---------------------------------------------------------
-# Hybrid Search with Reciprocal Rank Fusion (RRF) Tests
-# ---------------------------------------------------------
-
 @pytest.mark.asyncio
 async def test_hybrid_search_rrf_scoring():
     mock_vector_store = AsyncMock()
-    # Vector store returns docA at rank 1, docB at rank 2
     mock_vector_store.search.return_value = [
         {"document": "Artificial intelligence architectures", "metadata": {"id": "docA"}, "distance": 0.20},
         {"document": "Cloud computing virtualization", "metadata": {"id": "docB"}, "distance": 0.80},
@@ -83,7 +71,6 @@ async def test_hybrid_search_rrf_scoring():
 
     hybrid = HybridSearch(doc_store=mock_vector_store, rrf_k=60)
 
-    # Populate BM25 index with docA (at rank 1) and docC (at rank 2)
     with patch("app.ai.memory.hybrid_search.bm25_index") as mock_bm25:
         mock_bm25.search_documents.return_value = [
             {"doc_id": "docA", "content": "Artificial intelligence architectures", "metadata": {"id": "docA"}, "bm25_score": 12.5, "source": "document"},
@@ -94,33 +81,24 @@ async def test_hybrid_search_rrf_scoring():
 
         assert len(results) == 3
 
-        # docA appears in BOTH vector (rank 1) and BM25 (rank 1)
-        # Expected RRF score = 1/(60+1) + 1/(60+1) = 2/61 ≈ 0.032787
         docA = next(r for r in results if r["doc_id"] == "docA")
         assert docA["vector_rank"] == 1
         assert docA["bm25_rank"] == 1
         expected_docA_rrf = round((1.0 / 61.0) + (1.0 / 61.0), 6)
         assert abs(docA["rrf_score"] - expected_docA_rrf) < 1e-4
 
-        # docB only in vector (rank 2) -> 1/(60+2) = 1/62 ≈ 0.016129
         docB = next(r for r in results if r["doc_id"] == "docB")
         assert docB["vector_rank"] == 2
         assert docB["bm25_rank"] is None
         expected_docB_rrf = round(1.0 / 62.0, 6)
         assert abs(docB["rrf_score"] - expected_docB_rrf) < 1e-4
 
-        # docC only in BM25 (rank 2) -> 1/(60+2) = 1/62 ≈ 0.016129
         docC = next(r for r in results if r["doc_id"] == "docC")
         assert docC["vector_rank"] is None
         assert docC["bm25_rank"] == 2
 
-        # Top result must be docA due to dual presence
         assert results[0]["doc_id"] == "docA"
 
-
-# ---------------------------------------------------------
-# Re-Ranker Tests
-# ---------------------------------------------------------
 
 @pytest.mark.asyncio
 async def test_reranker_heuristic_scoring():
@@ -144,7 +122,6 @@ async def test_reranker_heuristic_scoring():
         },
     ]
 
-    # Re-rank with query regarding reinforcement learning
     reranked = await reranker_inst.rerank("reinforcement learning gradients", candidates, top_n=2)
 
     assert len(reranked) == 2
@@ -152,9 +129,7 @@ async def test_reranker_heuristic_scoring():
         assert "relevance_score" in r
         assert 0.0 <= r["relevance_score"] <= 1.0
 
-    # Top result should be the policy gradients passage
     assert "policy gradients" in reranked[0]["content"]
-    # Sourdough passage must score significantly lower or not be in top 2
     assert reranked[0]["relevance_score"] > 0.50
 
 
@@ -174,10 +149,6 @@ async def test_reranker_with_mock_llm():
             assert reranked[0]["relevance_score"] == 0.92
             assert reranked[0]["rerank_reasoning"] == "Direct match"
 
-
-# ---------------------------------------------------------
-# Research Agent Citation Grounding Tests
-# ---------------------------------------------------------
 
 def test_research_agent_format_ranked_sources():
     sources = [

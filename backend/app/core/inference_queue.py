@@ -1,23 +1,4 @@
-"""
-Asynchronous Concurrency, Event Loop Isolation & Inference Priority Queue.
-
-Backend & Systems Architecture Concept:
-Decoupling the FastAPI async I/O network control plane from compute-heavy
-CPU/GPU inference tasks to eliminate Event Loop Starvation and P99 latency spikes.
-
-Architecture:
-1. Priority-Tiered Bounded Queue (asyncio.PriorityQueue):
-   - CRITICAL (0): Interactive User Voice, Wake-word, and Direct Chat.
-   - HIGH (1): Fast-path Intent Routing & Guardian Security Checks.
-   - NORMAL (2): Multi-Agent DAG Sub-tasks.
-   - BACKGROUND (3): Reflection cycle, Memory Decay, and Telemetry sweeps.
-2. Leaky-Bucket Backpressure:
-   - Gracefully sheds or defers background tasks when queue depth exceeds capacity.
-3. Event Loop Lag Heartbeat:
-   - Measures event loop scheduling delay in milliseconds. Alerts on blocking tasks.
-4. Concurrency Limiter:
-   - Strict semaphore bounds (default: 2 heavy concurrent inferences) to avoid GPU thrashing.
-"""
+"""Asynchronous Concurrency, Event Loop Isolation & Inference Priority Queue."""
 
 import asyncio
 import time
@@ -65,7 +46,6 @@ class InferenceQueueManager:
         self._workers: list[asyncio.Task] = []
         self._heartbeat_task: asyncio.Task | None = None
 
-        # Telemetry metrics
         self.metrics = {
             "total_enqueued": 0,
             "total_processed": 0,
@@ -83,12 +63,10 @@ class InferenceQueueManager:
             return
         self._running = True
 
-        # Launch worker pool
         for i in range(self.max_concurrency):
             t = asyncio.create_task(self._worker_loop(i), name=f"inference_worker_{i}")
             self._workers.append(t)
 
-        # Launch event loop lag monitor
         self._heartbeat_task = asyncio.create_task(self._lag_heartbeat_loop(), name="event_loop_heartbeat")
         logger.info(f"[InferenceQueue] Started with {self.max_concurrency} worker slots.")
 
@@ -106,16 +84,11 @@ class InferenceQueueManager:
         coro_fn: Callable[[], Coroutine[Any, Any, Any]],
         priority: PriorityTier = PriorityTier.NORMAL,
     ) -> Any:
-        """
-        Submits an inference coroutine to the priority queue with backpressure.
-        Returns the result once processed.
-        """
-        # Backpressure check: if queue is full and priority is BACKGROUND, shed load immediately
+        """Submits an inference coroutine to the priority queue with backpressure."""
         if self._queue.qsize() >= self.max_queue_size:
             if priority == PriorityTier.BACKGROUND:
                 self.metrics["total_rejected"] += 1
                 raise RuntimeError("InferenceQueue saturated: Background task shed under load.")
-            # For critical/high, wait or raise
             if self._queue.full():
                 self.metrics["total_rejected"] += 1
                 raise RuntimeError("InferenceQueue saturated: Queue full.")
@@ -132,7 +105,6 @@ class InferenceQueueManager:
         await self._queue.put(task)
         self.metrics["total_enqueued"] += 1
 
-        # Await completion
         return await future
 
     async def _worker_loop(self, worker_id: int) -> None:
@@ -158,11 +130,7 @@ class InferenceQueueManager:
                 logger.error(f"[InferenceQueue] Worker {worker_id} exception: {e}")
 
     async def _lag_heartbeat_loop(self) -> None:
-        """
-        Calculates Event Loop Lag (ms):
-        Sleeps for heartbeat_interval_s. The actual wall-clock elapsed time minus
-        the expected time indicates how long synchronous work blocked the event loop.
-        """
+        """Calculates Event Loop Lag (ms):"""
         while self._running:
             t0 = time.perf_counter()
             try:
@@ -175,7 +143,6 @@ class InferenceQueueManager:
                 if lag_ms > self.metrics["max_event_loop_lag_ms"]:
                     self.metrics["max_event_loop_lag_ms"] = round(lag_ms, 2)
 
-                # Lag > 50ms indicates significant event loop starvation
                 if lag_ms > 50.0:
                     self.metrics["event_loop_lag_spikes"] += 1
                     logger.warning(f"[EventLoopMonitor] High event loop lag detected: {lag_ms:.2f}ms")

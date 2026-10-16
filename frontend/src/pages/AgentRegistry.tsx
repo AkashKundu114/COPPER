@@ -41,7 +41,7 @@ export function AgentRegistry() {
   const [vramOptimizing, setVramOptimizing] = useState(false);
   const [catalogSummary, setCatalogSummary] = useState<CatalogSummary | null>(null);
 
-  // Runtime states for all agents initialized cleanly without random numbers
+
   const [runtimeState, setRuntimeState] = useState<Record<string, AgentRuntimeState>>(() => {
     const init: Record<string, AgentRuntimeState> = {};
     AGENTS.forEach((a) => {
@@ -139,7 +139,7 @@ export function AgentRegistry() {
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-6xl mx-auto text-text select-none font-sans text-xs">
-      {/* Header & High-Level Telemetry Bar */}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -166,7 +166,7 @@ export function AgentRegistry() {
         </button>
       </div>
 
-      {/* Main Tab Switcher Bar */}
+
       <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.10] w-fit overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab("core")}
@@ -217,7 +217,7 @@ export function AgentRegistry() {
         </button>
       </div>
 
-      {/* Ping Result Banner */}
+
       {pingResult && (
         <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 flex items-center justify-between animate-fade-in font-mono text-xs">
           <div className="flex items-center gap-2">
@@ -233,10 +233,10 @@ export function AgentRegistry() {
         </div>
       )}
 
-      {/* Tab 1: Core Fleet & Cognitive Tiers */}
+
       {activeTab === "core" && (
         <div className="space-y-6">
-          {/* Search & Tier Filters */}
+
           <div className="flex flex-col md:flex-row gap-3 items-center justify-between border-b border-border-subtle pb-4">
             <div className="flex items-center gap-2 w-full md:w-80 bg-surface-elevated border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all">
               <Search size={14} className="text-text-secondary" />
@@ -300,7 +300,7 @@ export function AgentRegistry() {
             </div>
           </div>
 
-          {/* Grid of Core Agent Cards */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredAgents.map((a) => {
               const state = runtimeState[a.id] || { status: "active", invocations: 0, lastActive: "Ready" };
@@ -316,14 +316,14 @@ export function AgentRegistry() {
                       : "bg-surface-base/60 border-border-subtle opacity-50"
                   }`}
                 >
-                  {/* Top Accent Line */}
+
                   <div
                     className="absolute top-0 left-0 right-0 h-0.5 opacity-60"
                     style={{ backgroundColor: a.color }}
                   />
 
                   <div className="space-y-2.5">
-                    {/* Card Header: Icon + Name + Status */}
+
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
                         <div
@@ -365,12 +365,12 @@ export function AgentRegistry() {
                       </span>
                     </div>
 
-                    {/* Blurb / Specialty Description */}
+
                     <p className="text-[11px] text-text-secondary line-clamp-2 leading-relaxed font-sans">
                       {a.blurb}
                     </p>
 
-                    {/* Model & Tier Metadata */}
+
                     <div className="pt-2 border-t border-border-subtle grid grid-cols-2 gap-2 text-[10px] font-mono">
                       <div>
                         <span className="text-text-tertiary block">Model:</span>
@@ -388,7 +388,7 @@ export function AgentRegistry() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
+
                   <div className="flex gap-2 pt-2 border-t border-border-subtle font-sans">
                     <button
                       onClick={() => handleTestPing(a.id, a.model)}
@@ -421,7 +421,7 @@ export function AgentRegistry() {
             })}
           </div>
 
-          {/* Planned Roadmap Agents Section */}
+
           <div className="pt-8 border-t border-border-subtle">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -480,13 +480,13 @@ export function AgentRegistry() {
         </div>
       )}
 
-      {/* Tab 2: Agency Specialist Personas (264 Personas across 18 Divisions) */}
+
       {activeTab === "personas" && <AgencyPersonasTab />}
 
-      {/* Tab 3: Scientific Agent Skills (165 Skills) */}
+
       {activeTab === "scientific" && <ScientificSkillsTab />}
 
-      {/* Tab 4: Active Tools & Guardian Armor (36 Tools) */}
+
       {activeTab === "tools" && <ActiveToolsTab />}
     </div>
   );

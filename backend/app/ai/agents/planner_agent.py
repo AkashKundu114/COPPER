@@ -5,10 +5,7 @@ from app.core.constants import AgentType, LLMProvider
 
 
 class PlannerAgent(BaseAgent):
-    """
-    NEXUS: Strategic Planner and Multi-Agent Task Decomposer.
-    Analyzes complex instructions, generates multi-stage DAG task graphs, and orchestrates agent handoffs.
-    """
+    """NEXUS: Strategic Planner and Multi-Agent Task Decomposer."""
 
     def __init__(self):
         super().__init__(

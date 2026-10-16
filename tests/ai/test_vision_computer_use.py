@@ -32,12 +32,10 @@ def test_parse_action_markdown_and_bare_json():
     """Verify fallback parsing for markdown blocks and bare JSON."""
     agent = VisionAgent()
 
-    # Markdown block
     md_output = 'Navigating down.\n```json\n{"type": "scroll", "x": 500, "y": 500, "direction": "down"}\n```'
     thought, action = agent.parse_action(md_output)
     assert action == {"type": "scroll", "x": 500, "y": 500, "direction": "down"}
 
-    # Bare JSON
     bare_output = 'Pausing for loading.\n{"type": "wait", "seconds": 2}'
     thought, action = agent.parse_action(bare_output)
     assert action == {"type": "wait", "seconds": 2}
@@ -45,20 +43,16 @@ def test_parse_action_markdown_and_bare_json():
 
 def test_guardian_window_safety():
     """Verify Guardian blocks interaction with blacklisted applications."""
-    # Banking
     v_bank = guardian_engine.check_window_safety("Chase Online Banking - Google Chrome")
     assert v_bank.level == DisagreementLevel.SAFETY
     assert "sensitive keyword" in v_bank.reasoning
 
-    # Medical
     v_med = guardian_engine.check_window_safety("MyChart Health Portal - Patient View")
     assert v_med.level == DisagreementLevel.SAFETY
 
-    # Password Vault
     v_pwd = guardian_engine.check_window_safety("1Password Vault - Desktop")
     assert v_pwd.level == DisagreementLevel.SAFETY
 
-    # Allowed Window
     v_ok = guardian_engine.check_window_safety("Visual Studio Code - app.py")
     assert v_ok.level == DisagreementLevel.EXECUTE
 
@@ -146,7 +140,6 @@ async def test_vision_agent_guardian_window_halt():
 
         assert "Guardian Intervention" in result
         assert "Fidelity Investments - Portfolio" in result
-        # Ensure LLM was not even called on sensitive screen
         assert mock_chat.call_count == 0
 
 

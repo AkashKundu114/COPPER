@@ -2,7 +2,7 @@ import hashlib
 import json
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -63,7 +63,7 @@ class DeviceSyncCoordinator:
             "payload_id": str(uuid.uuid4()),
             "device_id": self.device_id,
             "device_name": device_name,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "active_project": "default",
             "recent_tasks": [],
             "unresolved_queries": [],
@@ -78,7 +78,6 @@ class DeviceSyncCoordinator:
     def receive_handoff_payload(self, payload: dict) -> dict:
         logger.info(f"Receiving handoff payload from device: {payload.get('device_name')}")
 
-        # Verify checksum
         provided_checksum = payload.pop("checksum", None)
         checksum_str = json.dumps(payload, sort_keys=True)
         expected_checksum = hashlib.sha256(checksum_str.encode()).hexdigest()
@@ -87,7 +86,6 @@ class DeviceSyncCoordinator:
             logger.warning("Checksum validation failed for handoff payload")
             raise ValueError("Invalid checksum")
 
-        # Apply state
         state = self._load_state()
         device_id = payload.get("device_id")
         if device_id:
@@ -95,10 +93,9 @@ class DeviceSyncCoordinator:
                 "name": payload.get("device_name"),
                 "last_seen": payload.get("timestamp"),
             }
-            state["last_sync"] = datetime.now(timezone.utc).isoformat()
+            state["last_sync"] = datetime.now(UTC).isoformat()
             self._save_state(state)
 
-        # Return back the checksum for consistency
         payload["checksum"] = provided_checksum
         return {"status": "success", "applied_payload": payload}
 
