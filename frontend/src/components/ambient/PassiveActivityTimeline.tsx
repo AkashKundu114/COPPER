@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ambientAPI } from '../../services/api';
 import { Activity, Clock, Layers, Maximize2, Terminal, AlertCircle } from 'lucide-react';
 
@@ -13,11 +13,7 @@ export const PassiveActivityTimeline: React.FC = () => {
   const [currentContext, setCurrentContext] = useState<any>(null);
   const [summary, setSummary] = useState<any>(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [hours]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [
@@ -44,7 +40,11 @@ export const PassiveActivityTimeline: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [hours]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const formatDuration = (mins: number) => {
     if (!mins) return '0m';

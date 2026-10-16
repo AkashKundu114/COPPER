@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Wrench,
   Search,
@@ -25,11 +25,7 @@ export const ActiveToolsTab: React.FC = () => {
   const [diagramResult, setDiagramResult] = useState<string | null>(null);
   const [diagramRendering, setDiagramRendering] = useState(false);
 
-  useEffect(() => {
-    loadTools();
-  }, []);
-
-  const loadTools = async () => {
+  const loadTools = useCallback(async () => {
     setLoading(true);
     try {
       const res = await catalogAPI.getTools();
@@ -43,7 +39,11 @@ export const ActiveToolsTab: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadTools();
+  }, [loadTools]);
 
   const handleRenderDiagram = async () => {
     setDiagramRendering(true);

@@ -52,9 +52,9 @@ class ContextContinuityManager:
         next_steps: list[str],
         summary: str,
     ) -> SessionHandoff:
-        from datetime import datetime
+        from datetime import datetime, timezone
 
-        timestamp = datetime.utcnow().isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
         handoff = SessionHandoff(
             session_id=session_id,
             timestamp=timestamp,

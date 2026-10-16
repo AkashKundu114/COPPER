@@ -91,7 +91,7 @@ class SkillLearner:
             steps=steps_executed,
             input_params=input_params,
             output_format="dict",
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
             source_task=task_description,
         )
 

@@ -14,7 +14,8 @@ known-first-party = ["app"]
 "scripts/*" = ["E402"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "backend/tests"]
+pythonpath = ["backend", "."]
 asyncio_mode = "auto"
 
 [project.optional-dependencies]

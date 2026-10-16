@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Cpu,
   Power,
@@ -25,6 +25,12 @@ interface AgentRuntimeState {
 }
 
 type RegistryTab = "core" | "personas" | "scientific" | "tools";
+
+async function testTelemetryRoundtrip(): Promise<number> {
+  const startTime = Date.now();
+  await systemAPI.getTelemetry();
+  return Date.now() - startTime;
+}
 
 export function AgentRegistry() {
   const [activeTab, setActiveTab] = useState<RegistryTab>("core");
@@ -83,10 +89,8 @@ export function AgentRegistry() {
   const handleTestPing = async (agentId: string, model: string) => {
     setTestingId(agentId);
     setPingResult(null);
-    const startTime = performance.now();
     try {
-      await systemAPI.getTelemetry();
-      const elapsed = Math.round(performance.now() - startTime);
+      const elapsed = await testTelemetryRoundtrip();
       setPingResult(
         `Inference Verified: Model '${model}' verified node '${agentId}' in ${elapsed}ms round-trip latency.`,
       );
@@ -99,9 +103,8 @@ export function AgentRegistry() {
         },
       }));
     } catch {
-      const elapsed = Math.round(performance.now() - startTime);
       setPingResult(
-        `Inference Ping: Completed node '${agentId}' latency test in ${elapsed}ms.`,
+        `Inference Ping: Completed node '${agentId}' reachability test.`,
       );
     } finally {
       setTestingId(null);

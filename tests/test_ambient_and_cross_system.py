@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 
@@ -64,7 +64,7 @@ def test_cognitive_load_suppresses_clipboard_processing():
 
     entry = ClipboardEntry(
         id="test-entry-1",
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(timezone.utc),
         content="https://docs.astral.sh/uv/",
         content_type="url",
         content_preview="https://docs.astral.sh/uv/",

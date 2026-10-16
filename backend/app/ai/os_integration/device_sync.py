@@ -2,7 +2,7 @@ import hashlib
 import json
 import uuid
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -63,7 +63,7 @@ class DeviceSyncCoordinator:
             "payload_id": str(uuid.uuid4()),
             "device_id": self.device_id,
             "device_name": device_name,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "active_project": "default",
             "recent_tasks": [],
             "unresolved_queries": [],
@@ -95,7 +95,7 @@ class DeviceSyncCoordinator:
                 "name": payload.get("device_name"),
                 "last_seen": payload.get("timestamp"),
             }
-            state["last_sync"] = datetime.utcnow().isoformat()
+            state["last_sync"] = datetime.now(timezone.utc).isoformat()
             self._save_state(state)
 
         # Return back the checksum for consistency

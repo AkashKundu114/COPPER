@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { clipboardAPI } from '../../services/api';
 import { 
   X, 
@@ -33,15 +33,7 @@ export const SmartClipboardDrawer: React.FC<{ isOpen: boolean; onClose: () => vo
   const [filterType, setFilterType] = useState<ClipboardEntryType | 'All'>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      loadData();
-      const interval = setInterval(loadData, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [isOpen]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const hist = await clipboardAPI.getHistory();
       const curr = await clipboardAPI.getCurrent();
@@ -50,7 +42,15 @@ export const SmartClipboardDrawer: React.FC<{ isOpen: boolean; onClose: () => vo
     } catch (e) {
       console.error('Failed to load clipboard data', e);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadData();
+      const interval = setInterval(loadData, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen, loadData]);
 
   const handleProcess = async (id: string) => {
     try {

@@ -9,7 +9,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-614%20Passed%20(573%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-685%20Passed%20(644%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
 [![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-41%20Passed%20(100%25)-brightgreen.svg)](frontend/src/__tests__/)
 [![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components%20%26%20Boundaries-brightgreen.svg)](frontend/src/__tests__/)
 [![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
@@ -47,7 +47,7 @@ Unlike conventional cloud-tethered assistants that leak private telemetry and pr
 - **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms–2 s per response).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases [2].
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback [3].
-- **614 Total Passing Tests (573 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and data sanitization [4]. 573 backend Pytest tests (100% pass rate) across 77 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
+- **685 Total Passing Tests (644 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and data sanitization [4]. 644 backend Pytest tests (100% pass rate) across 87 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
 - **~60,500 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 77 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 18 pages/views.
 - **Local GGUF / ONNX Model Fleet (~47 GB / 12 Specialized Agent Types):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
@@ -537,6 +537,16 @@ To ensure full technical defensibility under source-code audit and interview scr
 - **Proprietary & Patent Protection:** The architectural concepts, TFP-Router cascade risk algorithms, UMF-EDR epistemic decay mathematical formulations ($C_i(\Delta t) = \max(C_{\text{floor}}, C_{i, 0} e^{-\lambda_{\text{eff}} \Delta t})$), DFM-Guard adaptive friction alignment mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
 - **Strict Prohibition:** No part of this software may be copied, reproduced, modified, distributed, sublicensed, commercially exploited, or used to train artificial intelligence models without the express prior written consent of the copyright owner.
 - **Terms of License:** See the [`LICENSE`](LICENSE) file for the full proprietary license terms.
+
+---
+
+## Core Documentation & Technical References
+
+- **System Architecture & Topology:** Read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for component boundaries, lifecycle sequence, and data flows.
+- **Developer Guide & Testing:** Read [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) for local setup, development servers, linting, and testing workflows.
+- **Configuration Reference:** Consult [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md) for environment variables, options, and platform defaults.
+- **Security & Privacy Architecture:** Review [`docs/SECURITY_AND_PRIVACY.md`](docs/SECURITY_AND_PRIVACY.md) for airgap boundaries, data firewall, and sandbox specifications.
+- **Verification Ledgers & Audits:** Explore [`docs/audit/README.md`](docs/audit/README.md) for all empirical test ledgers, benchmark reports, and red-team evaluations.
 
 ---
 

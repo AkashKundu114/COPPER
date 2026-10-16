@@ -4,7 +4,7 @@ import os
 import uuid
 import wave
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.core.logger import logger
@@ -79,7 +79,7 @@ class MeetingIntelligence:
         meeting_id = str(uuid.uuid4())
         audio_path = os.path.join(DATA_DIR, f"{meeting_id}.wav")
 
-        record = MeetingRecord(meeting_id=meeting_id, title=title, started_at=datetime.utcnow(), audio_path=audio_path)
+        record = MeetingRecord(meeting_id=meeting_id, title=title, started_at=datetime.now(timezone.utc), audio_path=audio_path)
 
         if not SOUNDDEVICE_AVAILABLE or sd is None:
             record.status = "recording_simulated"
@@ -150,7 +150,7 @@ class MeetingIntelligence:
 
         if record.status in ["recording", "recording_simulated"]:
             self.active_recordings[meeting_id] = False
-            record.ended_at = datetime.utcnow()
+            record.ended_at = datetime.now(timezone.utc)
             record.duration_minutes = (record.ended_at - record.started_at).total_seconds() / 60.0
             record.status = "processing"
             self._save_index()

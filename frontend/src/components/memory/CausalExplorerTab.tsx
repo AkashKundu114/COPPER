@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { causalAPI } from "../../services/api";
 import { Search, Link as LinkIcon, Activity, Info, BarChart2 } from "lucide-react";
 
@@ -183,7 +183,7 @@ export const CausalExplorerTab: React.FC = () => {
                   <span className="text-xs font-medium px-2 py-0.5 bg-surface-active text-text-secondary rounded uppercase tracking-wider">
                     {ev.category || 'General'}
                   </span>
-                  <span className="text-[10px] text-text-tertiary">{new Date(ev.timestamp || Date.now()).toLocaleString()}</span>
+                  <span className="text-[10px] text-text-tertiary">{ev.timestamp ? new Date(ev.timestamp).toLocaleString() : "Just now"}</span>
                 </div>
                 <p className="text-white text-sm mt-1">{ev.description}</p>
                 {ev.source && (

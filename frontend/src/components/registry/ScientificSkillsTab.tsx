@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Search,
   BookOpen,
@@ -25,12 +25,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
   const [page, setPage] = useState(1);
   const pageSize = 24;
 
-  useEffect(() => {
-    // Load skills
-    loadSkills();
-  }, []);
-
-  const loadSkills = async (cat = "all", search = "") => {
+  const loadSkills = useCallback(async (cat = "all", search = "") => {
     setLoading(true);
     try {
       const res = await catalogAPI.getScientificSkills({
@@ -42,14 +37,19 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         setSkills(res.data.skills);
         // Extract unique categories
         const cats = Array.from(new Set(res.data.skills.map((s) => s.category))).filter(Boolean);
-        if (categories.length === 0) setCategories(cats);
+        setCategories((prev) => (prev.length === 0 ? cats : prev));
       }
     } catch (err) {
       console.error("Failed to load scientific skills:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Load skills
+    loadSkills();
+  }, [loadSkills]);
 
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);

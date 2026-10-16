@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 type Priority = 'Urgent' | 'Needs Response' | 'FYI' | 'Spam';
 
@@ -40,7 +40,25 @@ export const EmailView: React.FC = () => {
   const [configUser, setConfigUser] = useState('');
   const [configPass, setConfigPass] = useState('');
 
-  const loadInitialState = async () => {
+  const fetchEmails = useCallback(async (priority: Priority) => {
+    try {
+      const res = await emailAPI.getInbox(priority);
+      setInbox(res.data || []);
+    } catch (error) {
+      console.error('Failed to fetch emails:', error);
+    }
+  }, []);
+
+  const fetchDrafts = useCallback(async () => {
+    try {
+      const res = await emailAPI.getDrafts();
+      setDrafts(res.data || []);
+    } catch (error) {
+      console.error('Failed to fetch drafts:', error);
+    }
+  }, []);
+
+  const loadInitialState = useCallback(async () => {
     try {
       const res = await emailAPI.isConfigured();
       const configured = Boolean(res.data?.configured);
@@ -72,35 +90,17 @@ export const EmailView: React.FC = () => {
       setInbox([]);
       setSelectedEmail(null);
     }
-  };
+  }, [activeTab, fetchEmails, fetchDrafts]);
 
   useEffect(() => {
     loadInitialState();
-  }, []);
+  }, [loadInitialState]);
 
   useEffect(() => {
     if (isConfigured && activeTab !== 'Drafts') {
       fetchEmails(activeTab as Priority);
     }
-  }, [activeTab, isConfigured]);
-
-  const fetchEmails = async (priority: Priority) => {
-    try {
-      const res = await emailAPI.getInbox(priority);
-      setInbox(res.data || []);
-    } catch (error) {
-      console.error('Failed to fetch emails:', error);
-    }
-  };
-
-  const fetchDrafts = async () => {
-    try {
-      const res = await emailAPI.getDrafts();
-      setDrafts(res.data || []);
-    } catch (error) {
-      console.error('Failed to fetch drafts:', error);
-    }
-  };
+  }, [activeTab, isConfigured, fetchEmails]);
 
   const handleSync = async () => {
     try {
