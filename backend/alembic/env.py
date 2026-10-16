@@ -36,12 +36,14 @@ is_sqlite = db_url.startswith("sqlite")
 
 
 def run_migrations_offline() -> None:
+    url = config.get_main_option("sqlalchemy.url") or db_url
+    is_sql = url.startswith("sqlite")
     context.configure(
-        url=db_url,
+        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=is_sqlite,
+        render_as_batch=is_sql,
     )
 
     with context.begin_transaction():
@@ -50,8 +52,10 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = db_url
-    connect_args = {"check_same_thread": False} if is_sqlite else {}
+    url = config.get_main_option("sqlalchemy.url") or db_url
+    configuration["sqlalchemy.url"] = url
+    is_sql = url.startswith("sqlite")
+    connect_args = {"check_same_thread": False} if is_sql else {}
 
     connectable = engine_from_config(
         configuration,
