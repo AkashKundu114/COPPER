@@ -106,5 +106,23 @@
     "timestamp": "2026-10-16T12:37:20.245870",
     "category": "urgent",
     "status": "digested"
+  },
+  {
+    "id": "ea470c49-ac0f-4077-a2d6-b9a1cd033c95",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-10-16T14:10:45.313885",
+    "category": "urgent",
+    "status": "digested"
+  },
+  {
+    "id": "1b618862-33de-4384-ad90-45ba60d30561",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-10-16T14:20:12.459247",
+    "category": "urgent",
+    "status": "digested"
   }
 ]

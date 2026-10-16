@@ -113,6 +113,12 @@ def main():
 
     print("\n[Dependency Status]")
     print("  Requirements file:", REQUIREMENTS_FILE)
+
+    provisioner = ROOT_DIR / "scripts" / "models" / "ensure_ollama_models.py"
+    if provisioner.exists():
+        print("\n[Model Readiness]")
+        print("  To verify or auto-pull local starter models, run:")
+        print(f"  python {provisioner} --auto")
     print("=" * 60)
 
 

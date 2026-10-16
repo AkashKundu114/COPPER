@@ -10,21 +10,24 @@
 
 | Test Suite | Framework | Target Directory | Tests Collected | Passed | Failed | Duration | Exit Code |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Backend Core & AI Suite** | Pytest | `D:\C.O.P.P.E.R\tests` | 598 | 598 | 0 | 184.2s | `0` |
-| **Backend Microservices Suite** | Pytest | `D:\C.O.P.P.E.R\backend\tests` | 36 | 36 | 0 | 24.3s | `0` |
-| **Frontend Unit & Component** | Vitest | `D:\C.O.P.P.E.R\frontend` | 41 | 41 | 0 | 6.39s | `0` |
+| **Backend Core & AI Suite** | Pytest | `D:\C.O.P.P.E.R\tests` | 608 | 608 | 0 | 120.5s | `0` |
+| **Backend Microservices Suite** | Pytest | `D:\C.O.P.P.E.R\backend\tests` | 36 | 36 | 0 | 9.7s | `0` |
+| **AI Red Team Security Suite** | Pytest | `tests/security/test_ai_red_team.py` | 34 | 34 | 0 | 3.42s | `0` |
+| **Frontend Unit & Component** | Vitest | `D:\C.O.P.P.E.R\frontend` | 41 | 41 | 0 | 4.70s | `0` |
 | **AST Sandbox Regression** | Pytest | `tests/core/test_ast_validator.py` | 31 | 31 | 0 | 0.07s | `0` |
 | **Guardian Defense Regression** | Pytest | `tests/core/test_guardian.py` | 24 | 24 | 0 | 0.04s | `0` |
 | **File Sandbox & Git Security** | Pytest | `tests/core/test_file_sandbox_security.py` | 3 | 3 | 0 | 1.09s | `0` |
 | **Backend Architecture Lifecycle** | Pytest | `tests/core/test_backend_architecture.py` | 6 | 6 | 0 | 0.65s | `0` |
 | **Frontend Production Build** | TypeScript / Vite | `frontend/` | 2,899 modules | Transformed | 0 errors | 1.13s | `0` |
 
-**Total Verified Tests:** **675 Automated Tests (634 Python + 41 TypeScript) — 100% Pass Rate**
+**Total Verified Tests:** **685 Automated Tests (644 Python + 41 TypeScript) — 100% Pass Rate**
 
 ---
 
 ## 2. Detailed Pytest Module Breakdown
 
+- `tests/security/test_ai_red_team.py`: **34 passed** (PowerShell, LOLBAS, Base64/Hex obfuscation, canaries)
+- `tests/ai/test_agent_consistency.py`: **5 passed** (12-agent topology, frontend/backend parity, handler maps)
 - `tests/ai/test_agent_memory.py`: 8 passed
 - `tests/ai/test_ambient_intelligence.py`: 12 passed
 - `tests/ai/test_branching.py`: 15 passed
@@ -47,6 +50,9 @@
 - `tests/api/test_api_voice.py`: 9 passed
 - `tests/api/test_api_wake.py`: 8 passed
 - `tests/audio/test_audio_pipeline.py`: 12 passed
+- `tests/audio/test_audio_streaming.py`: 6 passed
+- `tests/audio/test_stt_whisper.py`: 4 passed
+- `tests/audio/test_tts_piper.py`: 6 passed
 - `tests/audio/test_openwakeword_model.py`: 6 passed
 - `tests/core/test_ast_validator.py`: **31 passed** (including dynamic dunder and escape regression tests)
 - `tests/core/test_guardian.py`: **24 passed** (including piped shell and destructive evasion regression tests)

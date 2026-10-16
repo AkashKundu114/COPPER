@@ -89,5 +89,19 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "4760eac2-c73e-439d-95ae-6315a81f5990",
+    "effect_id": "6302872a-125f-413e-bef5-93493c49e374",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "1efebcc2-d7c4-444c-9696-4fb3ca7386e0",
+    "effect_id": "d3fb5d25-c71f-453d-a8eb-bce36a53229c",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]

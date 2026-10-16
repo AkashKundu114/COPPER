@@ -13,10 +13,19 @@ All notable changes made to C.O.P.P.E.R. during the October 16, 2026 Deep Audit 
   - Updated `_check_attr_builtins`: non-literal dynamic attribute lookups in `getattr()`, `setattr()`, and `delattr()` (such as `'__in' + 'it__'`) are now rejected as critical AST violations.
   - Prohibited unverified dunder attribute access.
 - **Guardian Defense Interception Hardening (`backend/app/core/guardian.py`):**
-  - Added regex for piped shell invocations (`\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b`) without boundary restrictions.
+  - Added boundary-agnostic unquoted Base64 extraction for `-EncodedCommand`, `-enc`, and raw CLI tokens.
+  - Added Hex decoding for `bytes.fromhex('...')` and inline `\x..` escaped bytecode payloads.
+  - Added regex patterns for piped shell invocations (`\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b`) without boundary restrictions.
   - Added regex patterns for inline Python deletion one-liners (`(os|shutil)\.(remove|unlink|rmdir|rmtree)` and `python -c ...`).
-  - Added regex for PowerShell deletion commands (`remove-item(\s+.*)?`).
-  - Updated `SAFETY_TRIGGERS` with `| perl`, `| python`, `| ruby`, `| pwsh`, `remove-item`.
+  - Added explicit regex triggers for destructive PowerShell cmdlets (`Clear-Disk`, `Format-Volume`, `Get-Disk`), LOLBAS persistence (`reg add ... /v Backdoor`, `certutil -urlcache`, `bitsadmin /transfer`), and SSH key exfiltration (`Invoke-RestMethod ... id_rsa`, `curl ... id_rsa`).
+  - Fixed non-word boundary matching on `ri C:\` drive wipe commands.
+- **Zero-Egress Airgap Lockdown (`frontend/index.html` & `backend/app/core/config.py`):**
+  - Completely removed external Google Fonts links (`fonts.googleapis.com`, `fonts.gstatic.com`) in `frontend/index.html`. Bundled local variable font files (`InterVariable.woff2`, `GeistMono-Variable.woff2`, `MoonWalk.otf`) under `/fonts/`.
+  - Configured `OTEL_ENABLED: bool = False` by default in `backend/app/core/config.py` to prevent background gRPC telemetry beacons.
+- **Resilient Audio & Wake-Word Pipeline (`backend/app/services/wake_word_service.py`):**
+  - Wrapped `_listen_loop()` in an exponential retry/backoff loop (up to 10 attempts with 2.0s delay) to recover gracefully from transient `sounddevice` or `PortAudioError` microphone disconnections.
+- **Truthful Dynamic Benchmark Reporting (`backend/eval/benchmark.py`):**
+  - Replaced hardcoded `500,000+ QPS` string literals with dynamically computed throughput based on empirically measured latency: `int(1000.0 / max(0.0001, avg_ms))`.
 - **Guardian Streaming & DB-Bypass Fixes (`backend/app/services/chat_service.py`):**
   - Enforced `verdict.level >= DisagreementLevel.CHALLENGE` check prior to token streaming in `stream_message()`, aborting prompt generation on destructive requests.
   - Removed database gating condition so Guardian challenges execute unconditionally.

@@ -146,8 +146,25 @@ Two major security vulnerabilities were identified, reproduced, surgically patch
 
 ---
 
+### 2.9 [COPPER-SEC-09] [CRITICAL] Adversarial Evasion via Obfuscation, PowerShell Commands, and LOLBAS
+
+- **CWE:** CWE-184 (Incomplete List of Disallowed Inputs), CWE-693 (Protection Mechanism Failure)
+- **Component:** `backend/app/core/guardian.py` (`normalize_adversarial_text`, `SAFETY_PATTERNS`, `SAFETY_TRIGGERS`)
+- **Severity:** **Critical (CVSS 9.1)**
+- **Vulnerability Description:**  
+  The Guardian Safety Engine's base64 extractor only inspected quoted base64 strings (`['\"]([A-Za-z0-9+/=]{8,})['\"]`), completely missing unquoted CLI commands like `powershell -EncodedCommand cm0g...` and raw hex strings (`bytes.fromhex('...')`). In addition, destructive PowerShell cmdlets (`Clear-Disk`, `Format-Volume`), LOLBAS persistence vectors (`reg add ... /v Backdoor`, `certutil -urlcache`, `bitsadmin /transfer`), and SSH exfiltration commands (`Invoke-RestMethod ... id_rsa`) evaded regex interception.
+- **Remediation Implemented:**  
+  1. Implemented boundary-agnostic Base64 extraction for `-EncodedCommand`, `-enc`, and standalone strings.
+  2. Implemented Hex string decoding for `bytes.fromhex(...)` and `\x..` escapes.
+  3. Added explicit regex patterns and triggers for: `Clear-Disk`, `Format-Volume`, `Get-Disk`, `reg add.*Run`, `certutil.*-urlcache`, `bitsadmin.*transfer`, `Invoke-RestMethod.*id_rsa`, and `curl.*id_rsa`.
+  4. Resolved regex non-word boundary trap for `ri C:\` commands.
+- **Regression Verification:**  
+  Passed 34/34 unit tests in `tests/security/test_ai_red_team.py` and 24/24 tests in `tests/core/test_guardian.py`.
+
+---
+
 ## 3. Threat Assessment of Epistemic Memory & Local Data Store
 
 - **Database Security:** `data/copper_memory.db` resides in local application storage. Foreign key constraints are enforced (`PRAGMA foreign_keys=ON`).
 - **Secret Scanning:** Scanned for hardcoded credentials with `.gitleaks.toml`. Replaced legacy tokens in `research/ieee_latexqc_report.json` with redacted strings.
-- **Data Egress Verification:** Zero cloud telemetry or external network calls are initiated by the backend. Network boundaries remain fully local (`127.0.0.1:8000`). ChromaDB telemetry and TTS cloud endpoints are explicitly disabled.
+- **Data Egress Verification:** Zero cloud telemetry or external network calls are initiated by the backend. Network boundaries remain fully local (`127.0.0.1:8000`). ChromaDB telemetry and TTS cloud endpoints are explicitly disabled. External Google Fonts were removed from `frontend/index.html` and replaced with local bundled fonts (`/fonts/`). OpenTelemetry background export is disabled by default (`OTEL_ENABLED=False`).

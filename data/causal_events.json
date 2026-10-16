@@ -845,5 +845,101 @@
       "test_runner"
     ],
     "metadata": {}
+  },
+  "4760eac2-c73e-439d-95ae-6315a81f5990": {
+    "event_id": "4760eac2-c73e-439d-95ae-6315a81f5990",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-10-16T14:10:52.973690",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "6302872a-125f-413e-bef5-93493c49e374": {
+    "event_id": "6302872a-125f-413e-bef5-93493c49e374",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-10-16T14:10:52.977112",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "62fe8768-8b85-4fe3-a8e0-d9b4fb1a2e49": {
+    "event_id": "62fe8768-8b85-4fe3-a8e0-d9b4fb1a2e49",
+    "description": "API test event",
+    "timestamp": "2026-10-16T14:11:50.215047",
+    "category": "system",
+    "source": "pytest",
+    "entities": [
+      "test_runner"
+    ],
+    "metadata": {}
+  },
+  "19b9496c-2450-4060-a579-1f5f1718c4b5": {
+    "event_id": "19b9496c-2450-4060-a579-1f5f1718c4b5",
+    "description": "Task completed: 'Optimize database indexes' (Project: Backend)",
+    "timestamp": "2026-10-16T14:12:18.607070",
+    "category": "task_completion",
+    "source": "task_manager",
+    "entities": [
+      "Backend"
+    ],
+    "metadata": {
+      "priority": "high"
+    }
+  },
+  "443f4bcd-16b3-499d-bfe9-82a419d3a6d7": {
+    "event_id": "443f4bcd-16b3-499d-bfe9-82a419d3a6d7",
+    "description": "Meeting concluded: 'Sprint Review' with 3 action items",
+    "timestamp": "2026-10-16T14:12:18.609824",
+    "category": "meeting_conclusion",
+    "source": "meeting_intelligence",
+    "entities": [
+      "Sprint Review"
+    ],
+    "metadata": {
+      "duration_seconds": 1800
+    }
+  },
+  "1efebcc2-d7c4-444c-9696-4fb3ca7386e0": {
+    "event_id": "1efebcc2-d7c4-444c-9696-4fb3ca7386e0",
+    "description": "User started coding on memory module",
+    "timestamp": "2026-10-16T14:20:20.064908",
+    "category": "workspace",
+    "source": "context_watcher",
+    "entities": [
+      "memory",
+      "Code.exe"
+    ],
+    "metadata": {}
+  },
+  "d3fb5d25-c71f-453d-a8eb-bce36a53229c": {
+    "event_id": "d3fb5d25-c71f-453d-a8eb-bce36a53229c",
+    "description": "High context switching detected due to compile error",
+    "timestamp": "2026-10-16T14:20:20.067073",
+    "category": "cognitive",
+    "source": "cognitive_load",
+    "entities": [
+      "memory",
+      "compile_error"
+    ],
+    "metadata": {}
+  },
+  "a45135cc-47b4-44c4-a347-4445637865de": {
+    "event_id": "a45135cc-47b4-44c4-a347-4445637865de",
+    "description": "API test event",
+    "timestamp": "2026-10-16T14:21:05.820079",
+    "category": "system",
+    "source": "pytest",
+    "entities": [
+      "test_runner"
+    ],
+    "metadata": {}
   }
 }

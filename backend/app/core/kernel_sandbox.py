@@ -170,6 +170,7 @@ class KernelSandboxRunner:
         try:
             proc = subprocess.Popen(
                 [sys.executable, script_path],
+                stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
