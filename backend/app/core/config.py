@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     APP_NAME: str = "COPPER"
-    APP_VERSION: str = "3.0.0"
+    APP_VERSION: str = "0.1.0-alpha"
     APP_ENV: str = "development"
     COPPER_DEMO: bool = False
     ALLOWED_ORIGINS: list[str] = [
