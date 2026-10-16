@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-10-16T20:17:30Z",
+  "hardware": {
+    "os": {
+      "system": "Windows",
+      "release": "11",
+      "version": "10.0.26300",
+      "machine": "AMD64",
+      "processor": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD"
+    },
+    "python": {
+      "version": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+      "executable": "C:\\Users\\Akash\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe"
+    },
+    "cpu": {
+      "logical_cores": 32,
+      "physical_cores": 16,
+      "current_freq_mhz": 2401.0,
+      "max_freq_mhz": 2401.0
+    },
+    "ram": {
+      "total_gb": 15.21,
+      "available_gb": 2.92,
+      "used_gb": 12.29,
+      "percent_used": 80.8
+    },
+    "gpu": [
+      {
+        "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+        "vram_total_mb": 8151.0,
+        "vram_free_mb": 7855.0,
+        "vram_used_mb": 45.0,
+        "driver_version": "617.14"
+      }
+    ],
+    "disk": {
+      "total_gb": 300.0,
+      "free_gb": 80.75,
+      "used_gb": 219.25
+    }
+  },
+  "ollama": {
+    "reachable": true,
+    "models": [],
+    "benchmarks": {},
+    "version": "0.40.5"
+  }
+}
