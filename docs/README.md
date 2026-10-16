@@ -78,6 +78,11 @@ docs/
 - **[Request Lifecycle & App Flow](diagrams/app-flow.md)**
 - **[State Machines Specification](diagrams/state-machines.md)**
 - **[Zero-Trust Threat Model](THREAT_MODEL.md)**
+- **[REST API Specification](API.md)**
+- **[Epistemic Memory Dynamics](MEMORY.md)**
+- **[Guardian Safety & Friction Engine](GUARDIAN.md)**
+- **[Multi-Agent Registry & Model Pools](AGENTS.md)**
+- **[Frequently Asked Questions (FAQ)](FAQ.md)**
 - **[Known Limitations & Release Constraints](KNOWN_LIMITATIONS.md)**
 - **[Development Setup Guide](setup/development.md)**
 - **[Troubleshooting Guide](setup/troubleshooting.md)**
