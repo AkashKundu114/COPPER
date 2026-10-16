@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you utilize C.O.P.P.E.R. in your academic research or evaluation benchmarks, please cite it as below."
+title: "C.O.P.P.E.R.: Centralized Omnifunctional Personal Productivity and Execution Routine"
+abstract: "A local-first, privacy-preserving personal AI operating system featuring tiered multi-agent orchestration, epistemic decaying memory, continuous dynamic friction alignment, and zero cloud egress."
+authors:
+  - family-names: "Kundu"
+    given-names: "Akash"
+version: 0.1.0-alpha
+date-released: 2026-10-17
+url: "https://github.com/AkashKundu114/COPPER"
+repository-code: "https://github.com/AkashKundu114/COPPER"
+keywords:
+  - "artificial intelligence"
+  - "multi-agent systems"
+  - "epistemic memory"
+  - "ai safety"
+  - "local llm"
+  - "privacy"

@@ -77,5 +77,7 @@ docs/
 - **[System Architecture](diagrams/system-architecture.md)**
 - **[Request Lifecycle & App Flow](diagrams/app-flow.md)**
 - **[State Machines Specification](diagrams/state-machines.md)**
+- **[Zero-Trust Threat Model](THREAT_MODEL.md)**
+- **[Known Limitations & Release Constraints](KNOWN_LIMITATIONS.md)**
 - **[Development Setup Guide](setup/development.md)**
 - **[Troubleshooting Guide](setup/troubleshooting.md)**
