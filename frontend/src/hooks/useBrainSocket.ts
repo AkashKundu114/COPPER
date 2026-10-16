@@ -211,7 +211,6 @@ export function useBrainSocket(
 ): BrainState {
   const [sessionId, setSessionIdState] = useState<string>(initialSessionId);
   const sessionIdRef = useRef<string>(initialSessionId);
-  sessionIdRef.current = sessionId;
 
   const [connected, setConnected] = useState(false);
   const [thinking, setThinking] = useState(false);

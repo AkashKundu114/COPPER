@@ -14,6 +14,7 @@ import httpx
 from pydantic import BaseModel, Field
 
 from app.ai.llm.model_manager import model_manager
+from app.core.config import settings
 from app.core.gpu_activation import detect_gpu
 
 router = APIRouter(prefix="/api/setup", tags=["setup"])
@@ -105,7 +106,7 @@ async def system_check() -> dict[str, Any]:
 
     try:
         async with httpx.AsyncClient(timeout=1.5) as client:
-            res = await client.get("http://127.0.0.1:11434/api/tags")
+            res = await client.get(f"{settings.OLLAMA_BASE_URL}/api/tags")
             if res.status_code == 200:
                 ollama_running = True
                 models_data = res.json().get("models", [])
@@ -151,10 +152,11 @@ def get_model_catalog() -> dict[str, Any]:
 @router.post("/pull-model", summary="Pull Ollama model tag")
 async def pull_model(req: PullModelRequest) -> dict[str, Any]:
     """Instructs local Ollama instance to pull the requested model tag."""
+    base_url = settings.OLLAMA_BASE_URL.rstrip("/")
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=300.0) as client:
             res = await client.post(
-                "http://127.0.0.1:11434/api/pull",
+                f"{base_url}/api/pull",
                 json={"name": req.model_tag, "stream": False},
             )
             if res.status_code in (200, 201):
@@ -163,5 +165,5 @@ async def pull_model(req: PullModelRequest) -> dict[str, Any]:
     except Exception as e:
         raise HTTPException(
             status_code=503,
-            detail=f"Failed to communicate with Ollama daemon at http://127.0.0.1:11434: {e}",
+            detail=f"Failed to communicate with Ollama daemon at {base_url}: {e}",
         )

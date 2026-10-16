@@ -837,5 +837,481 @@
     "avg_duration_seconds": 0.0,
     "tags": [],
     "source_task": "Analyze CSV and create report"
+  },
+  {
+    "skill_id": "21a29f53-b171-4439-a3c6-5fdbbc9df07b",
+    "name": "fetch_market_research_and_compile",
+    "description": "Skill extracted from: Fetch market research and compile financial data into a presentation",
+    "steps": [
+      {
+        "action": "Market Research",
+        "agent": "OMNI",
+        "description": "Gather market trends",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Financial Computation",
+        "agent": "AXIS",
+        "description": "Compute profit margins",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Compile Document",
+        "agent": "KINESIS",
+        "description": "Combine {T1.output} and {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T06:56:44.247826",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Fetch market research and compile financial data into a presentation"
+  },
+  {
+    "skill_id": "1a3b2095-f612-454b-91d0-02e41f574a6f",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T06:56:48.385453",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "69267b72-1792-4bd8-b598-9affced0f53f",
+    "name": "analyze_csv_and_create_report",
+    "description": "Skill extracted from: Analyze CSV and create report",
+    "steps": [
+      {
+        "action": "Analyze CSV",
+        "agent": "OMNI",
+        "description": "Step 1 data",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Generate Script",
+        "agent": "AXIS",
+        "description": "Step 2 code using {T1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1"
+        ]
+      },
+      {
+        "action": "Run Sandbox",
+        "agent": "FORGE",
+        "description": "Step 2.1 run {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T2"
+        ]
+      },
+      {
+        "action": "Build PDF",
+        "agent": "KINESIS",
+        "description": "Step 3 PDF from {T1.output} and {T2.1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2.1"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T06:56:58.735487",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Analyze CSV and create report"
+  },
+  {
+    "skill_id": "dff7873d-25aa-4823-a74c-84657c37fcc7",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T06:59:35.027724",
+    "last_used": "2026-10-16T06:59:35.030125+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 5.364418029785156e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "3e0b8aca-2b5d-4db5-811d-cdd8b2dbae5b",
+    "name": "fetch_market_research_and_compile",
+    "description": "Skill extracted from: Fetch market research and compile financial data into a presentation",
+    "steps": [
+      {
+        "action": "Market Research",
+        "agent": "OMNI",
+        "description": "Gather market trends",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Financial Computation",
+        "agent": "AXIS",
+        "description": "Compute profit margins",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Compile Document",
+        "agent": "KINESIS",
+        "description": "Combine {T1.output} and {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:03:28.615578",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Fetch market research and compile financial data into a presentation"
+  },
+  {
+    "skill_id": "e87c579e-658b-462e-bbdb-193b95e39b47",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:03:32.918536",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "7805115c-f769-48e4-8b3d-34a4a9ed7480",
+    "name": "analyze_csv_and_create_report",
+    "description": "Skill extracted from: Analyze CSV and create report",
+    "steps": [
+      {
+        "action": "Analyze CSV",
+        "agent": "OMNI",
+        "description": "Step 1 data",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Generate Script",
+        "agent": "AXIS",
+        "description": "Step 2 code using {T1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1"
+        ]
+      },
+      {
+        "action": "Run Sandbox",
+        "agent": "FORGE",
+        "description": "Step 2.1 run {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T2"
+        ]
+      },
+      {
+        "action": "Build PDF",
+        "agent": "KINESIS",
+        "description": "Step 3 PDF from {T1.output} and {T2.1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2.1"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:03:43.593515",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Analyze CSV and create report"
+  },
+  {
+    "skill_id": "b0ddb99a-f268-476c-9c84-87b3c071c7f2",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:05:24.456078",
+    "last_used": "2026-10-16T07:05:24.460151+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 7.081031799316406e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "a668a3b5-58ac-422b-bc3d-06805a4dfcd8",
+    "name": "fetch_market_research_and_compile",
+    "description": "Skill extracted from: Fetch market research and compile financial data into a presentation",
+    "steps": [
+      {
+        "action": "Market Research",
+        "agent": "OMNI",
+        "description": "Gather market trends",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Financial Computation",
+        "agent": "AXIS",
+        "description": "Compute profit margins",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Compile Document",
+        "agent": "KINESIS",
+        "description": "Combine {T1.output} and {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:07:23.723885",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Fetch market research and compile financial data into a presentation"
+  },
+  {
+    "skill_id": "077ce75c-fe63-4fae-b0af-d0761a0f7570",
+    "name": "extract_audio_file_and_convert",
+    "description": "Skill extracted from: extract audio file and convert to wav",
+    "steps": [
+      {
+        "tool": "ffmpeg",
+        "action": "extract_audio",
+        "input": "test.mp4"
+      },
+      {
+        "tool": "ffmpeg",
+        "action": "convert_wav",
+        "input": "test.aac"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:07:27.819684",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "extract audio file and convert to wav"
+  },
+  {
+    "skill_id": "73d7515e-1d5d-4259-83c1-506960a186c8",
+    "name": "analyze_csv_and_create_report",
+    "description": "Skill extracted from: Analyze CSV and create report",
+    "steps": [
+      {
+        "action": "Analyze CSV",
+        "agent": "OMNI",
+        "description": "Step 1 data",
+        "status": "done",
+        "dependencies": []
+      },
+      {
+        "action": "Generate Script",
+        "agent": "AXIS",
+        "description": "Step 2 code using {T1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1"
+        ]
+      },
+      {
+        "action": "Run Sandbox",
+        "agent": "FORGE",
+        "description": "Step 2.1 run {T2.output}",
+        "status": "done",
+        "dependencies": [
+          "T2"
+        ]
+      },
+      {
+        "action": "Build PDF",
+        "agent": "KINESIS",
+        "description": "Step 3 PDF from {T1.output} and {T2.1.output}",
+        "status": "done",
+        "dependencies": [
+          "T1",
+          "T2.1"
+        ]
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:07:35.824576",
+    "last_used": null,
+    "use_count": 0,
+    "success_count": 0,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 0.0,
+    "tags": [],
+    "source_task": "Analyze CSV and create report"
+  },
+  {
+    "skill_id": "2a525387-37c8-44fa-bb2f-e371fcc85d20",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:09:02.321000",
+    "last_used": "2026-10-16T07:09:02.324253+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 5.7697296142578125e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
+  },
+  {
+    "skill_id": "1571f308-bcb9-41ce-bda5-f56421b18e7a",
+    "name": "sync_local_repository_changes_and",
+    "description": "Skill extracted from: Sync local repository changes and create pull request",
+    "steps": [
+      {
+        "action": "git status",
+        "status": "clean"
+      },
+      {
+        "action": "git push origin main",
+        "status": "success"
+      },
+      {
+        "action": "gh pr create --title 'Feature' --body 'Auto'",
+        "status": "merged"
+      }
+    ],
+    "input_params": [],
+    "output_format": "dict",
+    "created_at": "2026-10-16T07:10:47.314590",
+    "last_used": "2026-10-16T07:10:47.317323+00:00",
+    "use_count": 1,
+    "success_count": 1,
+    "success_rate": 1.0,
+    "avg_duration_seconds": 5.030632019042969e-05,
+    "tags": [],
+    "source_task": "Sync local repository changes and create pull request"
   }
 ]

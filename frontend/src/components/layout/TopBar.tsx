@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GitBranch, Search, Volume2, VolumeX } from "lucide-react";
+import { GitBranch, Search, Volume2, VolumeX, ClipboardList, User } from "lucide-react";
 import type { ProfileResponse } from "../../lib/api";
 import { CognitiveStatusBadge } from "../ambient/CognitiveStatusBadge";
 import { soundFX } from "../../lib/soundFX";
@@ -41,11 +41,25 @@ const SECTION_TITLES: Record<string, string> = {
 
 export const TopBar: React.FC<TopBarProps> = ({
   sectionTitle,
+  profile,
+  drawerOpen,
+  onToggleDrawer,
   onOpenCommandPalette,
+  onToggleClipboard,
+  isClipboardOpen,
 }) => {
   const [timeUtc, setTimeUtc] = useState("");
   const [timeLocal, setTimeLocal] = useState("");
-  const [isElectron, setIsElectron] = useState(false);
+  const [isElectron] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean(
+      (window as any).copperAPI ||
+        (window as any).ipcRenderer ||
+        (window as any).require ||
+        (typeof navigator !== "undefined" &&
+          navigator.userAgent.toLowerCase().includes("electron"))
+    );
+  });
   const [sfxMuted, setSfxMuted] = useState(() => soundFX.isMuted());
   const [gitStatus, setGitStatus] = useState({ branch: "main", repo: "COPPER" });
 
@@ -64,15 +78,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   }, []);
 
   useEffect(() => {
-    const isRunningInElectron =
-      typeof window !== "undefined" &&
-      (Boolean((window as any).copperAPI) ||
-        Boolean((window as any).ipcRenderer) ||
-        Boolean((window as any).require) ||
-        (typeof navigator !== "undefined" &&
-          navigator.userAgent.toLowerCase().includes("electron")));
-    setIsElectron(isRunningInElectron);
-
     const updateTime = () => {
       const now = new Date();
       setTimeUtc(now.toISOString().slice(11, 19) + "Z");
@@ -158,6 +163,51 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           {sfxMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
         </button>
+
+        {/* Smart Clipboard Drawer Toggle */}
+        {onToggleClipboard && (
+          <button
+            type="button"
+            onClick={() => {
+              soundFX.play("click");
+              onToggleClipboard();
+            }}
+            className={`no-drag p-1 rounded-md transition-colors cursor-pointer ${
+              isClipboardOpen
+                ? "bg-copper-subtle text-copper border border-copper/30"
+                : "text-text-secondary hover:text-text hover:bg-surface-hover"
+            }`}
+            title="Toggle Smart Clipboard Drawer"
+            aria-label="Toggle Smart Clipboard Drawer"
+            aria-expanded={Boolean(isClipboardOpen)}
+          >
+            <ClipboardList size={14} />
+          </button>
+        )}
+
+        {/* Profile / Side Drawer Toggle */}
+        {onToggleDrawer && (
+          <button
+            type="button"
+            onClick={() => {
+              soundFX.play("click");
+              onToggleDrawer();
+            }}
+            className={`no-drag flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs transition-colors cursor-pointer ${
+              drawerOpen
+                ? "bg-copper text-text-inverse border-copper font-medium"
+                : "bg-surface-elevated hover:bg-surface-hover border-border-subtle text-text-secondary hover:text-text"
+            }`}
+            title="User Profile & Epistemic Facts"
+            aria-label="Open User Profile and Agent History Drawer"
+            aria-expanded={drawerOpen}
+          >
+            <User size={12} className={drawerOpen ? "text-text-inverse" : "text-copper"} />
+            <span className="text-[10px] font-medium hidden sm:inline">
+              {profile?.relationship_tier || "Profile"}
+            </span>
+          </button>
+        )}
       </div>
     </header>
   );

@@ -291,21 +291,47 @@ describe("Accessibility (a11y) Audit Suite", () => {
       expect(activeBtn).toHaveAttribute("aria-current", "page");
     });
 
-    it("renders TopBar with role='banner' and command palette button", async () => {
+    it("renders TopBar with role='banner', command palette, profile, and clipboard buttons", async () => {
+      const handleToggleDrawer = vi.fn();
+      const handleToggleClipboard = vi.fn();
+
       render(
         <TopBar
           sectionTitle="dashboard"
-          profile={null}
+          profile={{
+            facts: [],
+            total_interactions: 42,
+            relationship_tier: "Senior Partner",
+            most_used_agent: "VULCAN",
+            agents_met: 12,
+            agents_total: 30,
+          }}
           drawerOpen={false}
-          onToggleDrawer={vi.fn()}
+          onToggleDrawer={handleToggleDrawer}
           onOpenCommandPalette={vi.fn()}
+          onToggleClipboard={handleToggleClipboard}
+          isClipboardOpen={false}
         />
       );
 
       await waitFor(() => {
         expect(screen.getByRole("banner", { name: /top bar controls and status/i })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: /open command palette/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /open user profile and agent history drawer/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /toggle smart clipboard drawer/i })).toBeInTheDocument();
       });
+
+      // Verify drawer button click triggers callback
+      const profileBtn = screen.getByRole("button", { name: /open user profile and agent history drawer/i });
+      expect(profileBtn).toHaveAttribute("aria-expanded", "false");
+      fireEvent.click(profileBtn);
+      expect(handleToggleDrawer).toHaveBeenCalled();
+
+      // Verify clipboard button click triggers callback
+      const clipBtn = screen.getByRole("button", { name: /toggle smart clipboard drawer/i });
+      expect(clipBtn).toHaveAttribute("aria-expanded", "false");
+      fireEvent.click(clipBtn);
+      expect(handleToggleClipboard).toHaveBeenCalled();
     });
   });
 });

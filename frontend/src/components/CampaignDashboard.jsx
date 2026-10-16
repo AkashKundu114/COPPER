@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   DollarSign,
   TrendingUp,
@@ -11,7 +11,6 @@ import {
   RefreshCw,
   BarChart3,
   Sliders,
-  Radio,
   Zap,
 } from "lucide-react";
 import { campaignAPI } from "../services/api";
@@ -42,16 +41,14 @@ export const CampaignDashboard = () => {
         setAnomalies(res.data.active_anomalies || []);
         setOptimization(res.data.budget_optimization || null);
 
-        if (!selectedCampaign && cmps.length > 0) {
-          setSelectedCampaign(cmps[0]);
-        }
+        setSelectedCampaign((prev) => prev || (cmps.length > 0 ? cmps[0] : null));
       }
     } catch (err) {
       console.error("Failed to load campaign dashboard:", err);
     } finally {
       setLoading(false);
     }
-  }, [selectedCampaign]);
+  }, []);
 
   const fetchMetricsForSelected = useCallback(async (campaignId) => {
     try {
@@ -422,7 +419,7 @@ export const CampaignDashboard = () => {
       {activeTab === "alerts" && (
         <AnomalyAlerts
           anomalies={anomalies}
-          onAutoFixApplied={(anom) => {
+          onAutoFixApplied={(_anom) => {
             fetchDashboard();
           }}
         />

@@ -254,6 +254,26 @@ class ChatService:
             guardian_span.set_attribute("guardian.verdict_level", verdict.level.name)
             guardian_span.set_attribute("guardian.reasoning", verdict.reasoning or "Safety evaluation passed")
 
+            if verdict.level >= DisagreementLevel.CHALLENGE:
+                if db is not None:
+                    try:
+                        await guardian_service.evaluate_action(
+                            proposed_action=message,
+                            context=guardian_ctx,
+                            db=db,
+                            session_id=session_id,
+                            actor=str(agent_type),
+                        )
+                    except Exception as db_err:
+                        logger.warning(f"Failed to record guardian action in db: {db_err}")
+                challenge_text = guardian_engine.format_challenge(verdict)
+                return {
+                    "response": challenge_text,
+                    "agent_type": agent_type,
+                    "session_id": session_id,
+                    "guardian_verdict": verdict.to_dict(),
+                }
+
             if db is not None and is_consequential_action(message):
                 verdict = await guardian_service.evaluate_action(
                     proposed_action=message,
@@ -628,6 +648,11 @@ class ChatService:
             verdict = guardian_engine.evaluate(message, guardian_ctx)
             guardian_span.set_attribute("guardian.verdict_level", verdict.level.name)
             guardian_span.set_attribute("guardian.reasoning", verdict.reasoning or "Safety evaluation passed")
+
+            if verdict.level >= DisagreementLevel.CHALLENGE:
+                challenge_text = guardian_engine.format_challenge(verdict)
+                yield challenge_text
+                return
 
         history, memory_context, self_context = await context_engine.build_context(session_id, message)
         if cache_match.status == "hint" and cache_match.cached_response:

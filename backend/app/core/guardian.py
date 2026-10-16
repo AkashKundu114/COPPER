@@ -137,6 +137,11 @@ SAFETY_TRIGGERS = [
     "| sh",
     "| powershell",
     "| iex",
+    "| perl",
+    "| python",
+    "| ruby",
+    "| pwsh",
+    "remove-item",
     "nc -e",
     "ncat -e",
 ]
@@ -145,11 +150,12 @@ SAFETY_PATTERNS = [
     # Destructive SQL & DB attacks
     r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column)\b",
     # Filesystem & OS destruction
-    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item\s+-recurse|format\s+[a-z]:(?=\s|$)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq)\b",
+    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|format\s+[a-z]:(?=\s|$)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
     # Privilege escalation, Persistence & Token tampering
     r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile))\b",
-    # Malicious payloads, exploits & exfiltration
-    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?)\b",
+    # Malicious payloads, exploits, piped shells & exfiltration
+    r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
+    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib))\b",
     # Secret harvesting & Poisoning
     r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
     # Safety bypass, Defender tampering & jailbreaks

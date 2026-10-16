@@ -158,5 +158,95 @@
     "recommended_guide": "Tutorial outline for asyncio-distributed-locks-0a675a6a-4100-4716-96f5-49b96edf9ef6: 1. Basics 2. Intermediate concepts 3. Advanced usage",
     "difficulty_level": "beginner",
     "status": "resolved"
+  },
+  {
+    "gap_id": "0152f67d-63a8-4f30-8df5-c9ef42bd8227",
+    "topic": "asyncio-distributed-locks-fcbdce6b-d377-4205-b10d-ec547c8da15b",
+    "query_count": 3,
+    "first_observed": "2026-10-16T06:56:51.483921+00:00",
+    "last_observed": "2026-10-16T06:56:51.484953+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-fcbdce6b-d377-4205-b10d-ec547c8da15b: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "0b03551e-fe98-4d59-a9f9-5e8f25086746",
+    "topic": "api_test_topic_7cecf454-90a4-40bc-b643-855d64d0752a",
+    "query_count": 1,
+    "first_observed": "2026-10-16T06:57:47.005463+00:00",
+    "last_observed": "2026-10-16T06:57:47.005463+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "04a40d40-66c1-4194-a724-c9d0cfb90d4b",
+    "topic": "api_test_topic_63880e6e-860f-4d36-93bc-da2463bab845",
+    "query_count": 1,
+    "first_observed": "2026-10-16T07:01:50.789474+00:00",
+    "last_observed": "2026-10-16T07:01:50.789474+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "43d773b7-0f59-4a92-bd04-289645aff8a0",
+    "topic": "asyncio-distributed-locks-abf33dc5-bff1-49e7-b6f2-3dc8b7f128b3",
+    "query_count": 3,
+    "first_observed": "2026-10-16T07:03:25.046599+00:00",
+    "last_observed": "2026-10-16T07:03:25.048780+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-abf33dc5-bff1-49e7-b6f2-3dc8b7f128b3: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "d32e0db1-eb43-46c7-9685-f5a03f73f7e2",
+    "topic": "api_test_topic_5ca0d15a-8582-4eef-a540-7309cc857029",
+    "query_count": 1,
+    "first_observed": "2026-10-16T07:04:41.739087+00:00",
+    "last_observed": "2026-10-16T07:04:41.739087+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "7650bd4d-f064-43f8-ad7f-0b0f66c76d61",
+    "topic": "asyncio-distributed-locks-e1b02f42-35cf-4d62-a968-203ca3b396c2",
+    "query_count": 3,
+    "first_observed": "2026-10-16T07:07:20.242294+00:00",
+    "last_observed": "2026-10-16T07:07:20.243587+00:00",
+    "recommended_guide": "Tutorial outline for asyncio-distributed-locks-e1b02f42-35cf-4d62-a968-203ca3b396c2: 1. Basics 2. Intermediate concepts 3. Advanced usage",
+    "difficulty_level": "beginner",
+    "status": "resolved"
+  },
+  {
+    "gap_id": "e40787fe-c278-4c87-b0f2-92722c71ab28",
+    "topic": "api_test_topic_91685564-427f-42a9-8ee1-88b4084a8cd8",
+    "query_count": 1,
+    "first_observed": "2026-10-16T07:08:19.736675+00:00",
+    "last_observed": "2026-10-16T07:08:19.736675+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "cb7623f6-5ff1-43e5-bdae-3bd18230d2e1",
+    "topic": "api_test_topic_4518fdb8-6b8d-4e3e-b7ad-f27b7462f7ec",
+    "query_count": 1,
+    "first_observed": "2026-10-16T07:09:56.889148+00:00",
+    "last_observed": "2026-10-16T07:09:56.889148+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
+  },
+  {
+    "gap_id": "ad7bab50-31b3-4043-b40c-6055196e5071",
+    "topic": "api_test_topic_c613f983-bf17-4e44-b7e6-d8d7af994680",
+    "query_count": 1,
+    "first_observed": "2026-10-16T07:21:54.832821+00:00",
+    "last_observed": "2026-10-16T07:21:54.832821+00:00",
+    "recommended_guide": null,
+    "difficulty_level": "beginner",
+    "status": "detected"
   }
 ]

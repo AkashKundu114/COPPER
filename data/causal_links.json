@@ -68,5 +68,26 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "6f167f54-f2bc-4ece-b955-ba88a8a67952",
+    "effect_id": "21861f20-9994-41e3-8e7c-3b422e141429",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "d86130f7-c779-4a5d-b2cd-3d383a34d99b",
+    "effect_id": "b0af7bff-02f0-4fab-b15b-d80262c1a367",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
+  },
+  {
+    "cause_id": "74d79ccf-9b7e-4c0f-92ca-79e484531eeb",
+    "effect_id": "c736e7b9-0185-4847-9af8-08ea9ea85e22",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]

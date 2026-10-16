@@ -334,3 +334,32 @@ result = compute()
     res = ast_security_validator.validate(code)
     assert res.is_safe
     assert res.risk_level == "safe"
+
+
+def test_dynamic_attribute_resolution_getattr_blocked():
+    """Regression test: verify dynamic attribute resolution via concatenation or variables in getattr is blocked."""
+    code = "c = ().__class__\nb = getattr(c, '__ba' + 'ses__')[0]"
+    res = ast_security_validator.validate(code)
+    assert not res.is_safe
+    assert res.risk_level == "blocked"
+    assert any("dynamic or non-literal attribute" in v.description or "__class__" in v.description for v in res.violations)
+
+
+def test_sandbox_escape_subclasses_chain_blocked():
+    """Regression test: verify adversarial payload attempting __subclasses__ escape is fully blocked."""
+    payload = """
+c = ().__class__
+b = getattr(c, '__ba' + 'ses__')[0]
+subs = getattr(b, '__subclass' + 'es__')()
+for s in subs:
+    if s.__name__ == '_wrap_close':
+        fn = getattr(s, '__in' + 'it__')
+        glbs = getattr(fn, '__glo' + 'bals__')
+        sys_mod = glbs['sys']
+        break
+"""
+    res = ast_security_validator.validate(payload)
+    assert not res.is_safe
+    assert res.risk_level == "blocked"
+    assert len(res.violations) >= 2
+

@@ -172,8 +172,8 @@ export const ThinkingOrb: React.FC<ThinkingOrbProps> = ({
 
       // 4. Main Spherical Glass Body (Inner dense orb)
       const bodyGrad = ctx.createRadialGradient(
-        cx * 0 - dynamicRadius * 0.25,
-        cy * 0 - dynamicRadius * 0.25,
+        -dynamicRadius * 0.25,
+        -dynamicRadius * 0.25,
         dynamicRadius * 0.05,
         0,
         0,

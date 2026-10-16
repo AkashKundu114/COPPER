@@ -26,6 +26,9 @@ async def get_redis():
 async def redis_close():
     if redis_client:
         try:
-            await redis_client.close()
+            if hasattr(redis_client, "aclose"):
+                await redis_client.aclose()
+            else:
+                await redis_client.close()
         except Exception:
             pass

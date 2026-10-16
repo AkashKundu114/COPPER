@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Zap } from "lucide-react";
 import { ThinkingOrb } from "thinking-orbs";
 import { api } from "../../lib/api";
@@ -60,15 +60,15 @@ export function QuickBar() {
     try {
       if (query.startsWith("/task ") || query.startsWith("/event ")) {
         const title = query.replace(/^\/(task|event)\s+/, "").trim();
-        await api.post("/api/v1/schedule/events", { title, time: "Today", category: "Focus", completed: false });
+        await api.post("/schedule/events", { title, time: "Today", category: "Focus", completed: false });
         setResponse(`**Event scheduled:** ${title}`);
       } else if (query.startsWith("/remind ")) {
         const text = query.slice(8).trim();
-        await api.post("/api/v1/reminders/parse", { text });
+        await api.post("/reminders/parse", { text });
         setResponse(`**Reminder set for:** ${text}`);
       } else if (query.startsWith("/search ")) {
         const text = query.slice(8).trim();
-        const res = await api.post("/api/v1/memory/search", { query: text });
+        const res = await api.post("/memory/search", { query: text });
         const items = res.data?.items || res.data || [];
         if (Array.isArray(items) && items.length > 0) {
           setResponse(`Found ${items.length} items.\n\n` + items.map(i => `- ${i.content || i.title || JSON.stringify(i)}`).join("\n"));
@@ -76,7 +76,7 @@ export function QuickBar() {
           setResponse(`No memory items found for: ${text}`);
         }
       } else {
-        const res = await api.post("/api/v1/chat/message", { message: query });
+        const res = await api.post("/chat/message", { message: query });
         setResponse(res.data?.response || res.data?.message || "Processed your request.");
       }
     } catch (error: any) {

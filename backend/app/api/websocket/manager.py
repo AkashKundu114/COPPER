@@ -162,7 +162,8 @@ class ConnectionManager:
         }
         if session_id:
             await self.send(session_id, event)
-        await self.broadcast(event)
+        else:
+            await self.broadcast(event)
 
 
 manager = ConnectionManager()

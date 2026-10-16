@@ -193,8 +193,12 @@ class PiperTTSPipeline:
         if target_voice in ["copper_synth", "female", "en_US-amy-medium", "default", "os_default"]:
             target_voice = "en-US-AvaNeural"
 
-        # 1. Try edge-tts for natural human-like neural female voice
-        is_explicit_offline = target_voice.lower() in ["zira", "david", "sapi", "sapi5"]
+        # 1. Check if offline TTS is required or requested
+        is_explicit_offline = (
+            target_voice.lower() in ["zira", "david", "sapi", "sapi5"]
+            or getattr(settings, "TTS_OFFLINE_ONLY", True)
+            or getattr(settings, "TTS_ENGINE", "auto") == "local"
+        )
         if not is_explicit_offline:
             try:
                 import edge_tts

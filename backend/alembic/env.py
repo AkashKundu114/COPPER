@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import app.database.models.agent_registry  # noqa: F401, E402
 import app.database.models.audit_log  # noqa: F401, E402
+import app.database.models.campaign  # noqa: F401, E402
 import app.database.models.episode  # noqa: F401, E402
 import app.database.models.history  # noqa: F401, E402
 import app.database.models.knowledge_graph  # noqa: F401, E402

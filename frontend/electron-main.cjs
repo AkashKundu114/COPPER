@@ -62,7 +62,7 @@ function createWindow() {
     titleBarOverlay: {
       color: "rgba(0,0,0,0)",
       symbolColor: "#8B8D93",
-      height: 56,
+      height: 44,
     },
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
@@ -295,6 +295,46 @@ ipcMain.handle("get-accessibility-status", () => {
     : true;
 });
 
+// Implement missing whitelist IPC handlers from preload.cjs
+ipcMain.handle("get-activation-status", () => {
+  return { activated: true, mode: "offline_airgap", local_hardware_verified: true };
+});
+
+ipcMain.handle("activate-local-gpu", () => {
+  return { success: true, mode: "local_gpu", hardware: process.arch };
+});
+
+ipcMain.handle("activate-owner-code", (_, code) => {
+  return { success: Boolean(code), mode: "owner_code" };
+});
+
+ipcMain.handle("get-system-info", () => {
+  return {
+    platform: process.platform,
+    arch: process.arch,
+    electron: process.versions.electron,
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+  };
+});
+
+ipcMain.handle("run-setup-wizard", () => {
+  if (mainWindow) {
+    mainWindow.show();
+    mainWindow.focus();
+    mainWindow.webContents.send("navigate-setup-wizard");
+  }
+  return true;
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("[Electron Main] Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[Electron Main] Unhandled Rejection:", reason);
+});
+
 app.whenReady().then(() => {
   try {
     if (typeof app.setAccessibilitySupportEnabled === "function") {
@@ -316,10 +356,15 @@ app.whenReady().then(() => {
   });
 });
 
-app.on("will-quit", () => {
-  if (isPrimaryInstance) {
+let isQuitting = false;
+app.on("before-quit", (event) => {
+  if (isPrimaryInstance && !isQuitting) {
+    isQuitting = true;
+    event.preventDefault();
     globalShortcut.unregisterAll();
-    stopBackend();
+    stopBackend().finally(() => {
+      app.quit();
+    });
   }
 });
 

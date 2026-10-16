@@ -188,5 +188,75 @@
     "nudges_sent": 0,
     "created_at": "2026-09-30T04:58:51.834865+00:00",
     "completed_at": "2026-09-30T04:58:51.835702+00:00"
+  },
+  {
+    "commitment_id": "7b994100-e87d-43d6-a29e-b1f05b930e24",
+    "title": "Complete COPPER AI OS release 2b74f558-c64e-4988-bccf-e44802d13d7a",
+    "deadline": "2026-12-31T23:59:59Z",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T06:56:40.776622+00:00",
+    "completed_at": "2026-10-16T06:56:40.777354+00:00"
+  },
+  {
+    "commitment_id": "983c35f7-d7cd-4934-a0ad-d0f4a5c29901",
+    "title": "Deploy v2.4 staging release",
+    "deadline": "2026-09-12 18:00",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T06:59:36.909921+00:00",
+    "completed_at": "2026-10-16T06:59:36.910716+00:00"
+  },
+  {
+    "commitment_id": "d04ace24-1df6-4965-9f2e-75e9216ec9ea",
+    "title": "Complete COPPER AI OS release e90faa89-3a45-4254-a3e8-4b62fb95ae29",
+    "deadline": "2026-12-31T23:59:59Z",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T07:03:25.036974+00:00",
+    "completed_at": "2026-10-16T07:03:25.038519+00:00"
+  },
+  {
+    "commitment_id": "5018cc32-1553-4173-b0e0-07a7ff7eb9fd",
+    "title": "Deploy v2.4 staging release",
+    "deadline": "2026-09-12 18:00",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T07:05:26.378481+00:00",
+    "completed_at": "2026-10-16T07:05:26.379413+00:00"
+  },
+  {
+    "commitment_id": "b8ed052c-85c3-4b86-8563-ff825ccd02a8",
+    "title": "Complete COPPER AI OS release 096a9b88-cb01-4f9d-8ff7-19c505b7e02a",
+    "deadline": "2026-12-31T23:59:59Z",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T07:07:20.236913+00:00",
+    "completed_at": "2026-10-16T07:07:20.237821+00:00"
+  },
+  {
+    "commitment_id": "6809f17a-aaf0-4058-8e89-881fdb764715",
+    "title": "Deploy v2.4 staging release",
+    "deadline": "2026-09-12 18:00",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T07:09:04.252032+00:00",
+    "completed_at": "2026-10-16T07:09:04.253077+00:00"
+  },
+  {
+    "commitment_id": "b97bb213-0e18-4e2e-99fb-f1b475c8309f",
+    "title": "Deploy v2.4 staging release",
+    "deadline": "2026-09-12 18:00",
+    "status": "fulfilled",
+    "urgency": "high",
+    "nudges_sent": 0,
+    "created_at": "2026-10-16T07:10:49.233642+00:00",
+    "completed_at": "2026-10-16T07:10:49.234487+00:00"
   }
 ]

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Plus,
   Trash2,
@@ -51,15 +51,23 @@ export const FoodView: React.FC = () => {
       calories: Number(mealCalories) || 0,
     };
 
-    const newMeal = await workspaceAPI.create<MealEntry>("meal", payload);
-    setMeals((prev) => [...prev, newMeal]);
-    setMealName("");
-    setIsMealModalOpen(false);
+    try {
+      const newMeal = await workspaceAPI.create<MealEntry>("meal", payload);
+      setMeals((prev) => [...prev, newMeal]);
+      setMealName("");
+      setIsMealModalOpen(false);
+    } catch (err) {
+      console.error("Failed to add meal:", err);
+    }
   };
 
   const deleteMeal = async (id: string) => {
-    await workspaceAPI.remove("meal", id);
-    setMeals((prev) => prev.filter((m) => m.id !== id));
+    try {
+      await workspaceAPI.remove("meal", id);
+      setMeals((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("Failed to delete meal:", err);
+    }
   };
 
   const handleAddGrocery = async (e: React.FormEvent) => {
@@ -71,19 +79,31 @@ export const FoodView: React.FC = () => {
       completed: false,
     };
 
-    const newItem = await workspaceAPI.create<GroceryItem>("grocery", payload);
-    setGroceries((prev) => [...prev, newItem]);
-    setNewGroceryName("");
+    try {
+      const newItem = await workspaceAPI.create<GroceryItem>("grocery", payload);
+      setGroceries((prev) => [...prev, newItem]);
+      setNewGroceryName("");
+    } catch (err) {
+      console.error("Failed to add grocery item:", err);
+    }
   };
 
   const toggleGrocery = async (item: GroceryItem) => {
-    const updated = await workspaceAPI.update<GroceryItem>("grocery", item.id, { completed: !item.completed });
-    setGroceries((prev) => prev.map((g) => g.id === item.id ? updated : g));
+    try {
+      const updated = await workspaceAPI.update<GroceryItem>("grocery", item.id, { completed: !item.completed });
+      setGroceries((prev) => prev.map((g) => g.id === item.id ? updated : g));
+    } catch (err) {
+      console.error("Failed to toggle grocery item:", err);
+    }
   };
 
   const deleteGrocery = async (id: string) => {
-    await workspaceAPI.remove("grocery", id);
-    setGroceries((prev) => prev.filter((g) => g.id !== id));
+    try {
+      await workspaceAPI.remove("grocery", id);
+      setGroceries((prev) => prev.filter((g) => g.id !== id));
+    } catch (err) {
+      console.error("Failed to delete grocery item:", err);
+    }
   };
 
   const totalCalories = meals.reduce((acc, m) => acc + m.calories, 0);

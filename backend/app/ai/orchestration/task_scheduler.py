@@ -291,3 +291,18 @@ def stop_scheduler():
             _scheduler.shutdown(wait=False)
         logger.info("Spider-Sense Anomaly Sentinel stopped")
         _scheduler = None
+
+    try:
+        from app.ai.ambient.context_watcher import context_watcher
+
+        context_watcher.stop()
+    except Exception as cw_err:
+        logger.warning(f"Error stopping Context Watcher: {cw_err}")
+
+    try:
+        from app.ai.ambient.cognitive_load import cognitive_load_detector
+
+        cognitive_load_detector.stop()
+    except Exception as cl_err:
+        logger.warning(f"Error stopping Cognitive Load Detector: {cl_err}")
+

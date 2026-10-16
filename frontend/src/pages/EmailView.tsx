@@ -20,6 +20,13 @@ interface Draft {
 
 import { emailAPI, auditAPI } from '../services/api';
 
+function formatEmailDate(dateStr: string, timeOnly = false): string {
+  if (!dateStr) return "Recent";
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed.getTime())) return dateStr;
+  return timeOnly ? parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : parsed.toLocaleString();
+}
+
 export const EmailView: React.FC = () => {
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false);
@@ -50,7 +57,7 @@ export const EmailView: React.FC = () => {
             id: String(a.id),
             from: a.actor ? `${a.actor}@copper.local` : "system@copper.local",
             subject: a.summary || "System Activity Event",
-            date: a.created_at ? new Date(a.created_at).toLocaleTimeString() : "Just now",
+            date: a.created_at || new Date().toISOString(),
             body: a.detail || a.summary || "Security and system audit event recorded.",
             priority: a.category === "guardian_safety_block" ? "Urgent" : "FYI",
           }));
@@ -232,7 +239,7 @@ export const EmailView: React.FC = () => {
                 >
                   <div className="flex justify-between items-baseline mb-1">
                     <span className="font-bold truncate">{email.from}</span>
-                    <span className="text-[10px] text-text-tertiary">{new Date(email.date).toLocaleDateString()}</span>
+                    <span className="text-[10px] text-text-tertiary">{formatEmailDate(email.date, true)}</span>
                   </div>
                   <div className="truncate text-text-secondary">{email.subject}</div>
                 </div>
@@ -267,7 +274,7 @@ export const EmailView: React.FC = () => {
                   <span className="px-2 py-1 border border-border-highlight bg-surface-active text-[10px]">{selectedEmail.priority}</span>
                 </div>
                 <div className="text-text-secondary">From: <span className="text-cyber-cyan">{selectedEmail.from}</span></div>
-                <div className="text-text-secondary">Date: {new Date(selectedEmail.date).toLocaleString()}</div>
+                <div className="text-text-secondary">Date: {formatEmailDate(selectedEmail.date)}</div>
               </div>
               <div className="flex-1 overflow-y-auto text-text-secondary whitespace-pre-wrap mb-4">
                 {selectedEmail.body}

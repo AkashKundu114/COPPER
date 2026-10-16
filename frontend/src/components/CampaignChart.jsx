@@ -1,41 +1,41 @@
-﻿import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import * as d3 from "d3";
 import { TrendingUp, DollarSign, MousePointerClick, Percent } from "lucide-react";
+
+const METRIC_CONFIGS = {
+  ctr: {
+    label: "Click-Through Rate (CTR)",
+    format: (v) => `${(v * 100).toFixed(2)}%`,
+    color: "#38bdf8", // Sky blue
+    icon: Percent,
+  },
+  roas: {
+    label: "Return on Ad Spend (ROAS)",
+    format: (v) => `${v.toFixed(2)}x`,
+    color: "#34d399", // Emerald
+    icon: TrendingUp,
+  },
+  spend: {
+    label: "Hourly Spend ($)",
+    format: (v) => `$${v.toFixed(2)}`,
+    color: "#f59e0b", // Amber
+    icon: DollarSign,
+  },
+  conversions: {
+    label: "Conversions",
+    format: (v) => `${Math.round(v)}`,
+    color: "#a855f7", // Purple
+    icon: MousePointerClick,
+  },
+};
 
 export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
   const [selectedMetric, setSelectedMetric] = useState("ctr");
 
-  const metricConfigs = {
-    ctr: {
-      label: "Click-Through Rate (CTR)",
-      format: (v) => `${(v * 100).toFixed(2)}%`,
-      color: "#38bdf8", // Sky blue
-      icon: Percent,
-    },
-    roas: {
-      label: "Return on Ad Spend (ROAS)",
-      format: (v) => `${v.toFixed(2)}x`,
-      color: "#34d399", // Emerald
-      icon: TrendingUp,
-    },
-    spend: {
-      label: "Hourly Spend ($)",
-      format: (v) => `$${v.toFixed(2)}`,
-      color: "#f59e0b", // Amber
-      icon: DollarSign,
-    },
-    conversions: {
-      label: "Conversions",
-      format: (v) => `${Math.round(v)}`,
-      color: "#a855f7", // Purple
-      icon: MousePointerClick,
-    },
-  };
-
   const chartData = useMemo(() => {
     if (!metrics || metrics.length === 0) return [];
     return metrics.map((m) => ({
-      date: new Date(m.timestamp || Date.now()),
+      date: new Date(m.timestamp || 0),
       value: Number(m[selectedMetric] || 0),
       raw: m,
     }));
@@ -82,7 +82,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
 
     const yTicks = yScale.ticks(5).map((v) => ({
       y: yScale(v),
-      label: metricConfigs[selectedMetric].format(v),
+      label: METRIC_CONFIGS[selectedMetric].format(v),
     }));
 
     // Find anomalies related to this campaign to render shaded warning zones
@@ -109,7 +109,7 @@ export const CampaignChart = ({ campaign, metrics = [], anomalies = [] }) => {
     };
   }, [chartData, selectedMetric, anomalies, campaign]);
 
-  const activeConfig = metricConfigs[selectedMetric];
+  const activeConfig = METRIC_CONFIGS[selectedMetric];
 
   return (
     <div className="bg-surface-elevated border border-border-subtle rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-4">

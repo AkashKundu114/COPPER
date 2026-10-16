@@ -79,5 +79,32 @@
     "timestamp": "2026-09-30T10:28:51.846485",
     "category": "urgent",
     "status": "digested"
+  },
+  {
+    "id": "bee42f27-d798-45ad-a5fd-110d4a3df139",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-10-16T12:26:51.486699",
+    "category": "urgent",
+    "status": "digested"
+  },
+  {
+    "id": "aebd57dc-eb0f-4c4d-8183-f4fdcc5efed6",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-10-16T12:33:25.051823",
+    "category": "urgent",
+    "status": "digested"
+  },
+  {
+    "id": "1b78593a-e55f-4d5e-be1d-62df28fae0fb",
+    "source": "build_system",
+    "title": "Critical compilation alert",
+    "message": "Urgent: high memory threshold reached",
+    "timestamp": "2026-10-16T12:37:20.245870",
+    "category": "urgent",
+    "status": "digested"
   }
 ]

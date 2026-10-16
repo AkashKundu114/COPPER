@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as d3 from "d3";
 import {
   Search,
@@ -86,6 +86,10 @@ export const KnowledgeGraphView: React.FC = () => {
 
   // Physics state
   const [isPhysicsRunning, setIsPhysicsRunning] = useState(true);
+  const isPhysicsRunningRef = useRef(isPhysicsRunning);
+  useEffect(() => {
+    isPhysicsRunningRef.current = isPhysicsRunning;
+  }, [isPhysicsRunning]);
 
   // Modals
   const [isExtractModalOpen, setIsExtractModalOpen] = useState(false);
@@ -443,7 +447,7 @@ export const KnowledgeGraphView: React.FC = () => {
         d3
           .drag<SVGGElement, D3Node>()
           .on("start", (event, d) => {
-            if (!event.active && isPhysicsRunning) simulation.alphaTarget(0.3).restart();
+            if (!event.active && isPhysicsRunningRef.current) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
           })
@@ -452,7 +456,7 @@ export const KnowledgeGraphView: React.FC = () => {
             d.fy = event.y;
           })
           .on("end", (_event, d) => {
-            if (!isPhysicsRunning) return;
+            if (!isPhysicsRunningRef.current) return;
             // Node stays pinned at drop location; double-click unpins
             d.fx = d.x;
             d.fy = d.y;
@@ -466,7 +470,7 @@ export const KnowledgeGraphView: React.FC = () => {
         event.stopPropagation();
         d.fx = null;
         d.fy = null;
-        if (isPhysicsRunning) simulation.alpha(0.2).restart();
+        if (isPhysicsRunningRef.current) simulation.alpha(0.2).restart();
       });
 
     // Outer glow circle

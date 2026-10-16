@@ -323,3 +323,17 @@ def get_recent_traces(limit: int = 50) -> list[dict[str, Any]]:
 def get_trace_by_id(trace_id: str) -> dict[str, Any] | None:
     """Retrieve a single distributed trace with all spans."""
     return live_span_collector.get_trace_by_id(trace_id)
+
+
+def shutdown_telemetry() -> None:
+    """Safely shuts down OpenTelemetry tracer provider and flushes span processors."""
+    global _tracer_provider, _is_initialized
+    if _tracer_provider is not None:
+        try:
+            _tracer_provider.shutdown()
+        except Exception as e:
+            logger.debug(f"Telemetry provider shutdown warning: {e}")
+        finally:
+            _tracer_provider = None
+            _is_initialized = False
+

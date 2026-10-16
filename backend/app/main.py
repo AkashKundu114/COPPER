@@ -110,15 +110,63 @@ async def lifespan(app: FastAPI):
 
     logger.info("COPPER backend ready")
     yield
-    await wake_word_service.disable()
 
-    from app.ai.ambient.clipboard_monitor import clipboard_monitor
+    # Robust shutdown sequence with individual error isolation
+    try:
+        await wake_word_service.disable()
+    except Exception as e:
+        logger.warning(f"Shutdown error in wake_word_service.disable: {e}")
 
-    clipboard_monitor.stop()
+    try:
+        from app.ai.ambient.clipboard_monitor import clipboard_monitor
 
-    model_tier_manager.stop()
-    stop_scheduler()
-    await redis_close()
+        clipboard_monitor.stop()
+    except Exception as e:
+        logger.warning(f"Shutdown error in clipboard_monitor.stop: {e}")
+
+    try:
+        model_tier_manager.stop()
+    except Exception as e:
+        logger.warning(f"Shutdown error in model_tier_manager.stop: {e}")
+
+    try:
+        stop_scheduler()
+    except Exception as e:
+        logger.warning(f"Shutdown error in stop_scheduler: {e}")
+
+    try:
+        from app.ai.image.diffusion_engine import diffusion_engine
+
+        diffusion_engine.unload()
+    except Exception as e:
+        logger.warning(f"Shutdown error in diffusion_engine.unload: {e}")
+
+    try:
+        from app.ai.memory.vector_store import close_chroma_client
+
+        close_chroma_client()
+    except Exception as e:
+        logger.warning(f"Shutdown error in close_chroma_client: {e}")
+
+    try:
+        await redis_close()
+    except Exception as e:
+        logger.warning(f"Shutdown error in redis_close: {e}")
+
+    try:
+        from app.database.postgres import close_db
+
+        close_db()
+    except Exception as e:
+        logger.warning(f"Shutdown error in close_db: {e}")
+
+    try:
+        from app.core.telemetry import shutdown_telemetry
+
+        shutdown_telemetry()
+    except Exception as e:
+        logger.warning(f"Shutdown error in shutdown_telemetry: {e}")
+
     logger.info("COPPER backend shutdown complete")
 
 

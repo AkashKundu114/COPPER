@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     IMAGE_HEIGHT: int = 512
     IMAGE_INFERENCE_STEPS: int = 1
     IMAGE_OFFLINE_ONLY: bool = True
+    TTS_OFFLINE_ONLY: bool = True
+    TTS_ENGINE: str = "auto"  # "auto", "local", "edge-tts"
     AGENT_TIERS: list[tuple[int, str]] = [
         (0, "Stranger"),
         (1, "Acquaintance"),

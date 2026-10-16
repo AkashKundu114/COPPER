@@ -83,12 +83,20 @@ SUSPICIOUS_CALLS: frozenset[str] = frozenset({
 
 # Dunder attributes used in sandbox escape exploits and metaclass hijacking
 FORBIDDEN_DUNDERS: frozenset[str] = frozenset({
+    "__class__",
     "__subclasses__",
     "__globals__",
     "__builtins__",
     "__code__",
     "__bases__",
     "__mro__",
+    "__dict__",
+    "__init__",
+    "__closure__",
+    "__reduce__",
+    "__reduce_ex__",
+    "__getattribute__",
+    "__import__",
 })
 
 # Pathlib / file system modification and deletion methods
@@ -268,7 +276,7 @@ class ASTSecurityVisitor(ast.NodeVisitor):
                 )
 
     def _check_attr_builtins(self, node: ast.Call, builtin_name: str) -> None:
-        """Checks getattr, setattr, delattr against forbidden attributes and primitives."""
+        """Checks getattr, setattr, delattr against forbidden attributes, dunders, and dynamic bypasses."""
         if len(node.args) >= 2:
             attr_arg = node.args[1]
             if isinstance(attr_arg, ast.Constant) and isinstance(attr_arg.value, str):
@@ -277,6 +285,7 @@ class ASTSecurityVisitor(ast.NodeVisitor):
                     target_attr in FORBIDDEN_DUNDERS
                     or target_attr in FORBIDDEN_CALLS
                     or target_attr in ("system", "popen", "spawn")
+                    or (target_attr.startswith("__") and target_attr.endswith("__"))
                 ):
                     self.violations.append(
                         ASTViolation(
@@ -289,6 +298,18 @@ class ASTSecurityVisitor(ast.NodeVisitor):
                             severity="critical",
                         )
                     )
+            else:
+                # Dynamic attribute expression (BinOp, variable, call) cannot be statically verified safe
+                self.violations.append(
+                    ASTViolation(
+                        node_type="Call",
+                        line_number=node.lineno,
+                        description=(
+                            f"Call to {builtin_name}() with dynamic or non-literal attribute is blocked."
+                        ),
+                        severity="critical",
+                    )
+                )
 
 
 class ASTSecurityValidator:

@@ -7,6 +7,21 @@ from app.core.logger import logger
 _CHROMA_CLIENT_CACHE: Any = None
 
 
+def close_chroma_client() -> None:
+    """Closes the cached ChromaDB persistent client and releases file handles."""
+    global _CHROMA_CLIENT_CACHE
+    if _CHROMA_CLIENT_CACHE is not None:
+        try:
+            if hasattr(_CHROMA_CLIENT_CACHE, "close"):
+                _CHROMA_CLIENT_CACHE.close()
+            elif hasattr(_CHROMA_CLIENT_CACHE, "clear_system_cache"):
+                _CHROMA_CLIENT_CACHE.clear_system_cache()
+        except Exception as e:
+            logger.debug(f"Error closing ChromaDB client: {e}")
+        finally:
+            _CHROMA_CLIENT_CACHE = None
+
+
 def _get_chroma_client() -> Any:
     global _CHROMA_CLIENT_CACHE
     if _CHROMA_CLIENT_CACHE is not None:
@@ -27,10 +42,11 @@ def _get_chroma_client() -> Any:
         except Exception as e:
             logger.warning(f"Failed to connect to ChromaDB at {chroma_host}:{chroma_port}, falling back to local: {e}")
 
-    db_path = Path(__file__).parent.parent.parent.parent / "data" / "chroma"
+    db_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "chroma"
     db_path.mkdir(parents=True, exist_ok=True)
     _CHROMA_CLIENT_CACHE = chromadb.PersistentClient(path=str(db_path))
     return _CHROMA_CLIENT_CACHE
+
 
 
 class VectorStore:
