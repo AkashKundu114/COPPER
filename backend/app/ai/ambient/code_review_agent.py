@@ -1,11 +1,21 @@
 import asyncio
 import json
 import os
+import re
 import uuid
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+
+def _sanitize_git_ref(ref: str) -> str:
+    clean = ref.strip()
+    if not clean or clean.startswith("-"):
+        raise ValueError(f"Invalid git reference starting with dash or empty: {clean}")
+    if not re.match(r"^[a-zA-Z0-9_./@~^+-]+$", clean):
+        raise ValueError(f"Invalid git reference format: {clean}")
+    return clean
 
 from app.ai.llm.model_manager import model_manager
 from app.ai.llm.ollama_client import ollama_client
@@ -184,10 +194,16 @@ class CodeReviewAgent:
         self, repo_path: str, base_branch: str = "main", head_branch: str | None = None
     ) -> ReviewResult:
         if head_branch:
-            code, diff_out, err = await self._run_git(repo_path, "diff", f"{base_branch}...{head_branch}")
+            try:
+                base_ref = _sanitize_git_ref(base_branch)
+                head_ref = _sanitize_git_ref(head_branch)
+                code, diff_out, err = await self._run_git(repo_path, "diff", f"{base_ref}...{head_ref}", "--")
+            except ValueError as ve:
+                logger.error(f"Invalid git reference: {ve}")
+                code, diff_out, err = 1, "", str(ve)
             branch = head_branch
         else:
-            code, diff_out, err = await self._run_git(repo_path, "diff", "--staged")
+            code, diff_out, err = await self._run_git(repo_path, "diff", "--staged", "--")
             branch = "staged"
 
         if code != 0:
@@ -201,7 +217,7 @@ class CodeReviewAgent:
         pr_description, risk_analysis, suggestions = await self._analyze_with_llm(diff_out)
 
         # Get latest commit hash
-        c_code, c_out, c_err = await self._run_git(repo_path, "rev-parse", "HEAD")
+        c_code, c_out, c_err = await self._run_git(repo_path, "rev-parse", "--verify", "HEAD")
         commit_hash = c_out.strip() if c_code == 0 else "unknown"
 
         review = ReviewResult(
@@ -224,7 +240,12 @@ class CodeReviewAgent:
         return review
 
     async def analyze_commit(self, repo_path: str, commit_hash: str) -> ReviewResult:
-        code, diff_out, err = await self._run_git(repo_path, "show", commit_hash)
+        try:
+            commit_ref = _sanitize_git_ref(commit_hash)
+            code, diff_out, err = await self._run_git(repo_path, "show", commit_ref, "--")
+        except ValueError as ve:
+            logger.error(f"Invalid git commit hash: {ve}")
+            code, diff_out, err = 1, "", str(ve)
         if code != 0:
             logger.error(f"Git show failed: {err}")
             diff_out = ""

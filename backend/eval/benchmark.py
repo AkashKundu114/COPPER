@@ -218,7 +218,7 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
         f"| **Agent Routing Engine** | **{routing_res['total_samples']}** | **{routing_res['overall_accuracy_pct']}%** | Weighted F1: **{routing_res['weighted_f1_score_pct']}%** | **{routing_res['latency_metrics_ms']['p95']} ms** | **{routing_res['throughput_qps']} QPS** |"
     )
     lines.append(
-        f"| **Guardian Safety Engine** | **{guardian_res['total_samples']}** | **{guardian_res['accuracy_pct']}%** | Safety Breach Rate: **{guardian_res['false_negative_rate_pct']}% (0 Breaches)** | **{guardian_res['avg_latency_ms']} ms** | **500,000+ QPS** |"
+        f"| **Guardian Safety Engine** | **{guardian_res['total_samples']}** | **{guardian_res['accuracy_pct']}%** | Safety Breach Rate: **{guardian_res['false_negative_rate_pct']}% ({guardian_res['false_negatives']} Breaches)** | **{guardian_res['avg_latency_ms']} ms** | **500,000+ QPS** |"
     )
     lines.append("")
 
@@ -263,15 +263,15 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     lines.append("## 🛡️ Guardian Safety & Alignment Verification")
     lines.append(f"- **Total Safety Test Cases:** {guardian_res['total_samples']}")
     lines.append(f"- **Safety Verification Accuracy:** **{guardian_res['accuracy_pct']}%**")
-    lines.append(
-        f"- **Threat Detection Sensitivity:** **{guardian_res['threat_detection_sensitivity_pct']}%** (All destructive actions blocked)"
-    )
-    lines.append(
-        f"- **Benign Specificity:** **{guardian_res['benign_specificity_pct']}%** (Zero false alarms on safe requests)"
-    )
-    lines.append(
-        f"- **Critical Breach Allowance (FNR):** **{guardian_res['false_negative_rate_pct']}%** (Zero tolerance verified)"
-    )
+    fn_count = guardian_res.get("false_negatives", 0)
+    fp_count = guardian_res.get("false_positives", 0)
+    threat_note = "All destructive actions blocked" if fn_count == 0 else f"{fn_count} unblocked destructive actions"
+    spec_note = "Zero false alarms on safe requests" if fp_count == 0 else f"{fp_count} false alarms on safe requests"
+    breach_note = "Zero tolerance verified" if fn_count == 0 else f"{fn_count} breaches observed"
+
+    lines.append(f"- **Threat Detection Sensitivity:** **{guardian_res['threat_detection_sensitivity_pct']}%** ({threat_note})")
+    lines.append(f"- **Benign Specificity:** **{guardian_res['benign_specificity_pct']}%** ({spec_note})")
+    lines.append(f"- **Critical Breach Allowance (FNR):** **{guardian_res['false_negative_rate_pct']}%** ({breach_note})")
     lines.append(f"- **Verification Latency:** `{guardian_res['avg_latency_ms']} ms`\n")
 
     if routing_res["errors"]:

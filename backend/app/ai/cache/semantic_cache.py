@@ -60,13 +60,17 @@ class SemanticResponseCache:
         try:
             import chromadb
             import chromadb.utils.embedding_functions as ef
+            from chromadb.config import Settings as ChromaSettings
 
             self._default_ef = ef.DefaultEmbeddingFunction()
 
             db_path = Path(__file__).resolve().parents[4] / "backend" / "data" / "chroma"
             db_path.mkdir(parents=True, exist_ok=True)
 
-            client = chromadb.PersistentClient(path=str(db_path))
+            client = chromadb.PersistentClient(
+                path=str(db_path),
+                settings=ChromaSettings(anonymized_telemetry=False, is_persistent=True),
+            )
             self.collection = client.get_or_create_collection(
                 name=self.COLLECTION_NAME,
                 metadata={"hnsw:space": "cosine"},

@@ -40,6 +40,7 @@ class WakeWordService:
         self._task: asyncio.Task | None = None
         self._oww_model = None
         self._audio_ring: deque = deque(maxlen=50)
+        self._speech_queue: asyncio.Queue[bytes] = asyncio.Queue(maxsize=50)
 
     # ------------------------------------------------------------------ #
     # Lifecycle
@@ -59,6 +60,21 @@ class WakeWordService:
             self._task = None
         logger.info("[wake-word] Listening disabled, mic released")
         return self.status()
+
+    async def push_audio_chunk(self, chunk: bytes) -> bool:
+        """Pushes a raw PCM audio chunk (e.g. from Electron/Tauri mic capture) into the wake-word detection buffer."""
+        if not self._listening:
+            return False
+        try:
+            self._speech_queue.put_nowait(chunk)
+            return True
+        except asyncio.QueueFull:
+            try:
+                self._speech_queue.get_nowait()
+                self._speech_queue.put_nowait(chunk)
+                return True
+            except Exception:
+                return False
 
     def status(self) -> dict[str, Any]:
         return {
@@ -100,25 +116,40 @@ class WakeWordService:
             await self._run_whisper_fallback()
             return
 
-        import sounddevice as sd
+        try:
+            import sounddevice as sd
+        except Exception as e:
+            logger.warning(f"[wake-word] sounddevice unavailable ({e}) — falling back to whisper.")
+            self.engine = "whisper_fallback"
+            await self._run_whisper_fallback()
+            return
 
         chunk_samples = 1280  # ~80ms @ 16kHz, openWakeWord's expected frame size
 
         def audio_callback(indata, frames, time_info, status):
+            if status:
+                logger.debug(f"[wake-word] Audio stream status: {status}")
             self._audio_ring.append(indata.copy())
 
-        with sd.InputStream(
-            samplerate=16000, channels=1, dtype="int16", blocksize=chunk_samples, callback=audio_callback
-        ):
-            while self._listening:
-                if self._audio_ring:
-                    frame = self._audio_ring.popleft().flatten()
-                    scores = self._oww_model.predict(frame)
-                    for wake_name, score in scores.items():
-                        if score > 0.5:
-                            logger.info(f"[wake-word] '{wake_name}' triggered (score={score:.2f})")
-                            await self._on_wake_triggered()
-                await asyncio.sleep(0.01)
+        try:
+            with sd.InputStream(
+                samplerate=16000, channels=1, dtype="int16", blocksize=chunk_samples, callback=audio_callback
+            ):
+                while self._listening:
+                    if self._audio_ring:
+                        frame = self._audio_ring.popleft().flatten()
+                        scores = self._oww_model.predict(frame)
+                        for wake_name, score in scores.items():
+                            if score > 0.5:
+                                logger.info(f"[wake-word] '{wake_name}' triggered (score={score:.2f})")
+                                await self._on_wake_triggered()
+                    await asyncio.sleep(0.01)
+        except Exception as e:
+            logger.warning(
+                f"[wake-word] Audio input stream error ({type(e).__name__}: {e}) — falling back to whisper buffer ingestion."
+            )
+            self.engine = "whisper_fallback"
+            await self._run_whisper_fallback()
 
     async def _run_whisper_fallback(self) -> None:
         try:
@@ -148,13 +179,17 @@ class WakeWordService:
 
     async def _next_speech_window(self, vad) -> bytes | None:
         """
-        Integration point: platform-side mic capture pushes raw PCM16 chunks into
-        this service (e.g. via a WS binary frame from the desktop shell); this
-        stub yields control until one is available. Kept minimal here since the
-        actual audio I/O differs between Tauri/Electron/browser deployments.
+        Retrieves next PCM audio window from the incoming speech queue or yields
+        control gracefully if no chunk is available.
         """
-        await asyncio.sleep(0.5)
-        return None
+        try:
+            return await asyncio.wait_for(self._speech_queue.get(), timeout=0.5)
+        except asyncio.TimeoutError:
+            return None
+        except Exception as e:
+            logger.debug(f"[wake-word] Speech window buffer error: {e}")
+            await asyncio.sleep(0.1)
+            return None
 
     # ------------------------------------------------------------------ #
     # Confirmation + handoff

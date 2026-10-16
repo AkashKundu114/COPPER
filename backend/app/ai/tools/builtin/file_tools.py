@@ -1,15 +1,69 @@
 import fnmatch
 import os
+import tempfile
 from pathlib import Path
 from typing import Any
 
 from app.ai.tools.registry import tool_registry
+from app.core.config import settings
 from app.core.logger import logger
+
+RESTRICTED_FILENAMES = {".env", ".git", "id_rsa", "id_ed25519", "known_hosts"}
+RESTRICTED_SYSTEM_DIRS = [
+    Path(os.environ.get("WINDIR", "C:\\Windows")).resolve(),
+    Path(os.environ.get("ProgramFiles", "C:\\Program Files")).resolve(),
+    Path(os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")).resolve(),
+    Path("/etc").resolve(),
+    Path("/sys").resolve(),
+    Path("/proc").resolve(),
+    Path("/root").resolve(),
+]
+
+
+def _get_allowed_roots() -> list[Path]:
+    roots = [
+        Path(settings.DOCUMENTS_DIR).resolve(),
+        Path(__file__).resolve().parents[5],  # Project root D:\C.O.P.P.E.R
+        Path(tempfile.gettempdir()).resolve(),
+    ]
+    return [r for r in roots if r.exists()]
+
+
+def validate_safe_path(target_path: str | Path, allow_nonexistent: bool = False) -> tuple[bool, Path | None, str | None]:
+    """
+    Validates that target_path is confined to permitted directory roots (project workspace,
+    documents directory, or system temp) and does not access sensitive system paths or credentials.
+    """
+    try:
+        resolved = Path(target_path).resolve()
+
+        # Check forbidden filename patterns (.env, private keys)
+        if resolved.name.startswith(".env") or resolved.name.lower() in RESTRICTED_FILENAMES:
+            return False, None, f"Access denied: access to sensitive credential/configuration file '{resolved.name}' is prohibited."
+
+        for part in resolved.parts:
+            if part.lower() in {".ssh", ".aws", ".azure", ".gnupg"}:
+                return False, None, f"Access denied: directory '{part}' contains sensitive credentials."
+
+        # Check restricted OS system roots
+        for sys_dir in RESTRICTED_SYSTEM_DIRS:
+            if str(sys_dir).strip() and (resolved == sys_dir or sys_dir in resolved.parents):
+                return False, None, f"Access denied: path '{target_path}' is inside protected system directory '{sys_dir}'."
+
+        # Must be within at least one allowed root
+        allowed_roots = _get_allowed_roots()
+        is_allowed = any(resolved == root or root in resolved.parents for root in allowed_roots)
+        if not is_allowed:
+            return False, None, f"Access denied: path '{target_path}' is outside permitted workspace and document boundaries."
+
+        return True, resolved, None
+    except Exception as e:
+        return False, None, f"Invalid path validation: {e}"
 
 
 @tool_registry.tool(
     name="file_read",
-    description="Read the contents of a local file as text. Safe and read-only.",
+    description="Read the contents of a local file as text. Safe and read-only within permitted workspace boundaries.",
     parameters={
         "type": "object",
         "properties": {
@@ -23,7 +77,10 @@ from app.core.logger import logger
 )
 async def file_read(path: str, encoding: str = "utf-8") -> dict[str, Any]:
     try:
-        p = Path(path).resolve()
+        is_safe, p, err = validate_safe_path(path)
+        if not is_safe or p is None:
+            return {"status": "error", "error": err or f"Access denied for path: {path}"}
+
         if not p.exists():
             return {"status": "error", "error": f"File does not exist: {path}"}
         if not p.is_file():
@@ -68,7 +125,10 @@ async def file_read(path: str, encoding: str = "utf-8") -> dict[str, Any]:
 )
 async def file_write(path: str, content: str, mode: str = "overwrite") -> dict[str, Any]:
     try:
-        p = Path(path).resolve()
+        is_safe, p, err = validate_safe_path(path, allow_nonexistent=True)
+        if not is_safe or p is None:
+            return {"status": "error", "error": err or f"Access denied for path: {path}"}
+
         p.parent.mkdir(parents=True, exist_ok=True)
 
         write_mode = "a" if mode.lower() == "append" else "w"
@@ -103,7 +163,10 @@ async def file_write(path: str, content: str, mode: str = "overwrite") -> dict[s
 )
 async def file_list(directory: str = ".", pattern: str = "*") -> dict[str, Any]:
     try:
-        target_dir = Path(directory).resolve()
+        is_safe, target_dir, err = validate_safe_path(directory)
+        if not is_safe or target_dir is None:
+            return {"status": "error", "error": err or f"Access denied for directory: {directory}"}
+
         if not target_dir.exists():
             return {"status": "error", "error": f"Directory does not exist: {directory}"}
         if not target_dir.is_dir():
@@ -166,7 +229,10 @@ async def file_search(
     case_sensitive: bool = False,
 ) -> dict[str, Any]:
     try:
-        target_dir = Path(directory).resolve()
+        is_safe, target_dir, err = validate_safe_path(directory)
+        if not is_safe or target_dir is None:
+            return {"status": "error", "error": err or f"Access denied for directory: {directory}"}
+
         if not target_dir.exists():
             return {"status": "error", "error": f"Directory does not exist: {directory}"}
         if not target_dir.is_dir():

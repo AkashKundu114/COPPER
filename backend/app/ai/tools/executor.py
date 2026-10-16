@@ -166,7 +166,11 @@ class ToolExecutor:
             **context,
             "tool_name": tool_name,
             "guardian_level": tool.guardian_level,
-            "is_destructive": tool.guardian_level >= 3 or arguments.get("mode") == "overwrite",
+            "is_destructive": (
+                tool.guardian_level >= 3
+                or tool_name in ("file_write", "file_delete", "shell_execute")
+                or arguments.get("mode") in ("overwrite", "append")
+            ),
         }
 
         # Check safety triggers in arguments (e.g. command, code, script, or path)

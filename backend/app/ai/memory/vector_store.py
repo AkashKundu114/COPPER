@@ -28,6 +28,7 @@ def _get_chroma_client() -> Any:
         return _CHROMA_CLIENT_CACHE
 
     import chromadb
+    from chromadb.config import Settings as ChromaSettings
 
     chroma_host = os.environ.get("CHROMA_HOST")
     chroma_port = os.environ.get("CHROMA_PORT", "8000")
@@ -37,6 +38,7 @@ def _get_chroma_client() -> Any:
             _CHROMA_CLIENT_CACHE = chromadb.HttpClient(
                 host=chroma_host,
                 port=int(chroma_port),
+                settings=ChromaSettings(anonymized_telemetry=False),
             )
             return _CHROMA_CLIENT_CACHE
         except Exception as e:
@@ -44,7 +46,10 @@ def _get_chroma_client() -> Any:
 
     db_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "chroma"
     db_path.mkdir(parents=True, exist_ok=True)
-    _CHROMA_CLIENT_CACHE = chromadb.PersistentClient(path=str(db_path))
+    _CHROMA_CLIENT_CACHE = chromadb.PersistentClient(
+        path=str(db_path),
+        settings=ChromaSettings(anonymized_telemetry=False, is_persistent=True),
+    )
     return _CHROMA_CLIENT_CACHE
 
 
