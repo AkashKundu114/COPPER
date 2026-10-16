@@ -1,37 +1,14 @@
 #!/usr/bin/env python3
-"""
-DFM-Guard Friction Coefficient Calibration Script
-==================================================
-Empirical calibration and optimization of Dynamic Friction Model (DFM-Guard)
-coefficients for COPPER's GuardianEngine.
-
-Coefficients calibrated:
-  - risk_weight (w_R): Action reversibility semantic risk weight
-  - fatigue_weight (w_F): Real-time cognitive session fatigue weight
-  - goal_conflict_weight (w_G): Epistemic goal / commitment divergence weight
-  - bias: Activation threshold bias
-
-Methodology:
-  1. Loads 350 adversarial & destructive trigger test scenarios.
-  2. Runs each scenario through GuardianEngine under various parameter configurations.
-  3. Uses Grid Search and scipy.optimize.minimize to maximize Threat Detection
-     Sensitivity (TPR) while minimizing False Positive Rate (FPR) on benign requests.
-  4. Generates ROC curve data points and computes AUC-ROC.
-  5. Saves full calibration report to docs/friction_calibration_report.json.
-"""
+"""DFM-Guard Friction Coefficient Calibration Script"""
 
 import argparse
 import json
-import math
-import os
 import sys
-import time
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# Ensure backend is on sys.path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "backend"))
 
@@ -73,7 +50,7 @@ def find_dataset_path(custom_path: str | None = None) -> Path:
 
 
 def load_dataset(dataset_path: Path) -> list[dict[str, Any]]:
-    with open(dataset_path, "r", encoding="utf-8") as f:
+    with open(dataset_path, encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list) or len(data) == 0:
         raise ValueError(f"Dataset at {dataset_path} is empty or not a list.")
@@ -91,7 +68,7 @@ def extract_features(dataset: list[dict[str, Any]]) -> list[dict[str, Any]]:
         risk = compute_action_reversibility_risk(prompt)
         has_conflict = any(t in norm_text for t in CONFLICT_TRIGGERS)
         goal_conflict = 0.90 if has_conflict else 0.0
-        fatigue = 0.0  # default zero fatigue baseline; sessions vary
+        fatigue = 0.0
 
         extracted.append(
             {
@@ -193,7 +170,6 @@ def compute_roc_curve(
     thresholds = [round(i * (3.0 / num_steps), 3) for i in range(num_steps + 1)]
     roc_points = []
 
-    # Precompute friction score for each sample
     scores = []
     for item in samples:
         fric = compute_dynamic_friction_index(
@@ -222,7 +198,6 @@ def compute_roc_curve(
             }
         )
 
-    # Sort by FPR ascending for trapezoidal AUC integration
     sorted_roc = sorted(roc_points, key=lambda p: (p["fpr"], p["tpr"]))
     auc = 0.0
     for i in range(1, len(sorted_roc)):
@@ -248,7 +223,6 @@ def run_scipy_optimization(samples: list[dict[str, Any]]) -> dict[str, float]:
         logits = np.dot(X, w) - b
         probs = 1.0 / (1.0 + np.exp(-np.clip(logits, -12.0, 12.0)))
         eps = 1e-7
-        # Binary cross-entropy + mild regularization towards canonical baseline
         bce = -np.mean(y * np.log(probs + eps) + (1.0 - y) * np.log(1.0 - probs + eps))
         reg = 0.02 * np.sum((params - target) ** 2)
         return bce + reg
@@ -299,28 +273,23 @@ def calibrate_and_report(dataset_path: Path, output_report_path: Path) -> dict[s
     threat_samples = sum(1 for s in samples if s["is_threat"])
     benign_samples = total_samples - threat_samples
 
-    print(f"\n==================================================================")
-    print(f" C.O.P.P.E.R. DFM-Guard Friction Coefficient Calibration Engine")
-    print(f"==================================================================")
+    print("\n==================================================================")
+    print(" C.O.P.P.E.R. DFM-Guard Friction Coefficient Calibration Engine")
+    print("==================================================================")
     print(f"Dataset path:      {dataset_path}")
     print(f"Total test cases:  {total_samples}")
     print(f"Threat cases:      {threat_samples} (Block: 170, Challenge: 60)")
     print(f"Benign cases:      {benign_samples} (Allow: 120)")
-    print(f"Optimization goal: Maximize Threat Sensitivity >=99%, Minimize FPR <5%\n")
+    print("Optimization goal: Maximize Threat Sensitivity >=99%, Minimize FPR <5%\n")
 
-    # 1. Grid Search Evaluation
     print("Executing Grid Search over parameter space...")
     grid_results = run_grid_search(samples)
     print(f"Evaluated {len(grid_results)} coefficient combinations.")
 
-    # 2. Scipy Continuous Optimization
     print("Executing continuous objective optimization via scipy.optimize...")
     scipy_opt = run_scipy_optimization(samples)
     print(f"Scipy optimized coefficients: {scipy_opt}")
 
-    # 3. Canonical Selected Configuration
-    # Canonical optimal calibrated configuration:
-    # risk_weight = 2.8, fatigue_weight = 1.8, goal_conflict_weight = 2.2, bias = 3.5
     selected_config = FrictionConfig(
         risk_weight=2.8,
         fatigue_weight=1.8,
@@ -330,7 +299,6 @@ def calibrate_and_report(dataset_path: Path, output_report_path: Path) -> dict[s
         calibration_date=datetime.now().strftime("%Y-%m-%d"),
     )
 
-    # 4. Evaluation of selected config
     eval_metrics = evaluate_coefficients(
         samples,
         risk_weight=selected_config.risk_weight,
@@ -340,7 +308,6 @@ def calibrate_and_report(dataset_path: Path, output_report_path: Path) -> dict[s
         use_engine=True,
     )
 
-    # 5. ROC Curve Computation
     roc_points, auc_roc = compute_roc_curve(samples, selected_config, num_steps=30)
 
     report = {
@@ -380,7 +347,6 @@ def calibrate_and_report(dataset_path: Path, output_report_path: Path) -> dict[s
         ),
     }
 
-    # Ensure output directory exists
     output_report_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)

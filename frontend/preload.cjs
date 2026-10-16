@@ -1,12 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-/**
- * COPPER Electron Secure Preload Script
- * 
- * Enforces Context Isolation and Principle of Least Privilege:
- * - Exposes only an explicit whitelist of validated IPC invocations to the renderer.
- * - Prevents raw Node.js execution or arbitrary child process spawning in the browser context.
- */
 
 const ALLOWED_INVOKE_CHANNELS = [
   "quick-bar-hide",
@@ -42,10 +35,10 @@ const copperAPI = {
   getAccessibilityStatus: () => ipcRenderer.invoke("get-accessibility-status"),
 };
 
-// Expose secure API to window.copperAPI
+
 contextBridge.exposeInMainWorld("copperAPI", copperAPI);
 
-// Expose sanitized fallback for window.ipcRenderer
+
 contextBridge.exposeInMainWorld("ipcRenderer", {
   invoke: (channel, ...args) => copperAPI.invoke(channel, ...args),
 });

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   Lock,
@@ -21,7 +21,7 @@ export function SecurityCenter() {
 
   const [toast, setToast] = useState<string | null>(null);
 
-  // Differential Privacy State
+
   const [dpBudget, setDpBudget] = useState<{
     epsilon: number;
     delta: number;
@@ -144,7 +144,7 @@ export function SecurityCenter() {
         </div>
       )}
 
-      {/* Top 2 Core Status Badges */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle flex items-center gap-3.5 shadow-sm">
           <div className="p-2.5 rounded-xl bg-verdigris-500/10 text-verdigris-400 border border-verdigris-500/20">
@@ -175,7 +175,7 @@ export function SecurityCenter() {
         </div>
       </div>
 
-      {/* Firewall Rules Toggles */}
+
       <div className="p-6 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm">
         <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Firewall Egress & Security Controls
@@ -259,7 +259,7 @@ export function SecurityCenter() {
         </div>
       </div>
 
-      {/* Differential Privacy Memory Guarantees (Phase 4 Novelty) */}
+
       <div className="p-6 rounded-2xl bg-surface-elevated border border-border-subtle space-y-4 shadow-sm font-mono text-xs">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -295,7 +295,7 @@ export function SecurityCenter() {
           </div>
         </div>
 
-        {/* DP Guarantee Statement */}
+
         {dpGuarantee && (
           <div className="p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-purple-200 text-xs">
             <span className="font-bold text-white block mb-0.5">Formal Privacy Guarantee:</span>
@@ -303,7 +303,7 @@ export function SecurityCenter() {
           </div>
         )}
 
-        {/* DP Budget Meter */}
+
         {dpBudget ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3 rounded-xl bg-canvas border border-border-subtle">
@@ -342,7 +342,7 @@ export function SecurityCenter() {
           </div>
         )}
 
-        {/* Laplace Noise Distribution Visualization */}
+
         <div className="p-4 rounded-xl bg-canvas border border-purple-900/40 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-purple-300 font-sans uppercase tracking-wider flex items-center gap-1.5">
@@ -364,15 +364,15 @@ export function SecurityCenter() {
                   <stop offset="100%" stopColor="#a855f7" stopOpacity="0.02" />
                 </linearGradient>
               </defs>
-              {/* Generate Laplace bell curve based on current epsilon */}
+
               {(() => {
                 const eps = dpBudget?.epsilon || 1.0;
                 const b = 1.0 / Math.max(eps, 0.1);
                 const points: string[] = [];
                 for (let px = 0; px <= 300; px += 5) {
-                  const x = (px - 150) / 35; // range roughly -4.2 to +4.2
+                  const x = (px - 150) / 35; 
                   const y = (1.0 / (2 * b)) * Math.exp(-Math.abs(x) / b);
-                  // scale y into svg viewBox (max y ~ 70)
+
                   const svgY = 75 - Math.min(y * 45 * Math.min(eps, 2.5), 70);
                   points.push(`${px},${svgY.toFixed(1)}`);
                 }
@@ -398,7 +398,7 @@ export function SecurityCenter() {
           </p>
         </div>
 
-        {/* Configuration Modal / Accordion */}
+
         {dpConfigOpen && (
           <form onSubmit={handleSaveConfig} className="p-4 rounded-xl bg-canvas border border-border-subtle space-y-3 animate-fade-in">
             <h4 className="font-bold text-white text-xs">Update (ε, δ) Differential Privacy Parameters</h4>

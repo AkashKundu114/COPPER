@@ -15,6 +15,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.1.0-alpha] - 2026-10-17
+
+### Public Release Cleanup, Security Hardening & Empirical Release Gate
+
+> **Established** an honest, credible, reproducible, and secure open-source alpha baseline **as measured by** **728 automated tests passing** (687 backend pytest + 41 frontend vitest, 100% pass rate), 0 linting errors (Ruff and Oxlint), zero network egress under socket-level regression tests, 100% clean-database migration coverage, and empirical hardware telemetry on local workstation hardware.
+
+### Added
+- **Multi-Agent Single Source of Truth:** Data-driven registry (`backend/app/core/agent_registry.py`) defining exactly 12 active core agents, 8 hardware model pools, and 5 roadmap agents with automated test assertion (`tests/test_agent_registry_counts.py`).
+- **Standalone Offline Demo Mode:** Configurable via `COPPER_DEMO=1`, providing instant end-to-end evaluation with seeded epistemic context, mock chat completions, and visual demonstration without requiring running Ollama models.
+- **Offline Zero-Egress Regression Test:** Implemented `tests/security/test_offline_egress.py` intercepting `socket.socket.connect` to guarantee that all runtime network activity is restricted strictly to loopback addresses (`127.0.0.1`, `localhost`, `::1`).
+- **Terminal Safety & Evasion Corpus:** Implemented `tests/security/test_terminal_safety_corpus.py` testing 29 adversarial attack payloads (e.g., `rm -rf /`, piping `curl|sh`, PTY shell escapes, reverse shells, and base64 obfuscation).
+- **Epistemic Memory Boundary Verification:** Implemented `tests/memory/test_epistemic_thresholds.py` verifying mathematical boundaries for Fact ($\ge 0.85$), Observation ($0.50 \le C < 0.85$), and Hypothesis ($< 0.50$).
+- **Clean Database Migration Verification:** Implemented `tests/test_migrations_clean_db.py` verifying from-scratch SQLite table creation across all 15 Alembic migration revisions.
+- **Developer & Operational Tooling:** Added root `Makefile` (`dev`, `test`, `lint`, `build`, `docker-up`, `wipe-data`, `models`), `scripts/wipe_data.py`, `scripts/gen_env.py`, and Docker Compose service healthchecks.
+- **Complete Architecture Documentation:** Authored `docs/THREAT_MODEL.md`, `docs/API.md`, `docs/MEMORY.md`, `docs/GUARDIAN.md`, `docs/AGENTS.md`, `docs/FAQ.md`, `docs/KNOWN_LIMITATIONS.md`, `CITATION.cff`, and `NOTICE`.
+
+### Changed
+- **Version Alignment:** Standardized application version to `0.1.0-alpha` across `pyproject.toml`, `backend/app/core/config.py`, and `frontend/package.json`.
+- **Claim & Metric Harmonization:** Audited and corrected all repository claims to match verified code reality (728 tests, 12 active agents, 8 model tiers, 16 UI views).
+- **Source Code Hygiene (Rule 4):** Removed redundant comments, dead prototype code, and commented-out blocks across 290 source files while maintaining concise public docstrings and 100% test pass rate.
+
+### Fixed
+- Fixed PTY shell escaping in `backend/app/core/guardian.py` by detecting and intercepting `pty.spawn` breakouts.
+- Fixed Alembic migration engine (`backend/alembic/env.py`) to respect dynamic SQLAlchemy database URLs during testing.
+- Fixed JSX unclosed tag syntax error in `frontend/src/components/hud/VisionViewfinder.tsx`.
+
+---
+
 ## [3.0.0] - 2026-09-15
 
 ### Chaos Engineering, Adversarial Reliability & Sovereign 14B Fleet

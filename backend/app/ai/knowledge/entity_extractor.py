@@ -60,24 +60,19 @@ class EntityExtractor:
         return model_manager.get_model("subagents.summarizer", "qwen2.5:1.5b")
 
     def parse_extraction_output(self, raw_output: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-        """
-        Parses structured entities and relationships from the LLM output.
-        Handles <entities>...</entities>, <relationships>...</relationships>, markdown fences, and NO_ENTITIES.
-        """
+        """Parses structured entities and relationships from the LLM output."""
         if not raw_output or "NO_ENTITIES" in raw_output.strip().upper():
             return [], []
 
         entities: list[dict[str, Any]] = []
         relationships: list[dict[str, Any]] = []
 
-        # 1. Parse <entities>...</entities>
         entities_match = re.search(r"<entities>(.*?)</entities>", raw_output, re.DOTALL | re.IGNORECASE)
         entities_raw = entities_match.group(1).strip() if entities_match else ""
 
         if entities_raw:
             entities = self._clean_and_parse_json_list(entities_raw)
         else:
-            # Fallback: inspect whole text for entity-like JSON array
             array_matches = re.findall(r"\[\s*\{.*?\}\s*\]", raw_output, re.DOTALL)
             for arr_str in array_matches:
                 items = self._clean_and_parse_json_list(arr_str)
@@ -85,14 +80,12 @@ class EntityExtractor:
                     entities = items
                     break
 
-        # 2. Parse <relationships>...</relationships>
         rel_match = re.search(r"<relationships>(.*?)</relationships>", raw_output, re.DOTALL | re.IGNORECASE)
         rel_raw = rel_match.group(1).strip() if rel_match else ""
 
         if rel_raw:
             relationships = self._clean_and_parse_json_list(rel_raw)
         else:
-            # Fallback: inspect for relationship-like JSON array
             array_matches = re.findall(r"\[\s*\{.*?\}\s*\]", raw_output, re.DOTALL)
             for arr_str in array_matches:
                 items = self._clean_and_parse_json_list(arr_str)
@@ -100,7 +93,6 @@ class EntityExtractor:
                     relationships = items
                     break
 
-        # 3. Sanitize and validate entities
         cleaned_entities = []
         for e in entities:
             if not isinstance(e, dict):
@@ -126,7 +118,6 @@ class EntityExtractor:
                 }
             )
 
-        # 4. Sanitize and validate relationships
         cleaned_relationships = []
         for r in relationships:
             if not isinstance(r, dict):
@@ -158,11 +149,9 @@ class EntityExtractor:
 
     def _clean_and_parse_json_list(self, text: str) -> list[dict[str, Any]]:
         clean = text.strip()
-        # Remove markdown codeblocks ```json ... ```
         clean = re.sub(r"^```(?:json)?", "", clean, flags=re.IGNORECASE).strip()
         clean = re.sub(r"```$", "", clean).strip()
 
-        # Find array boundaries
         start = clean.find("[")
         end = clean.rfind("]")
         if start != -1 and end != -1 and end > start:
@@ -175,7 +164,6 @@ class EntityExtractor:
             elif isinstance(parsed, dict):
                 return [parsed]
         except Exception as e:
-            # Handle trailing commas or minor JSON errors
             try:
                 fixed = re.sub(r",\s*([\]}])", r"\1", clean)
                 parsed = json.loads(fixed)

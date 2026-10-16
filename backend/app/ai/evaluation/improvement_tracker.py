@@ -28,7 +28,6 @@ class ImprovementTracker:
             current_start = now - timedelta(days=days)
             prev_start = current_start - timedelta(days=days)
 
-            # Current window evaluations
             current_evals = (
                 db.query(ResponseEvaluation)
                 .filter(ResponseEvaluation.created_at >= current_start)
@@ -36,7 +35,6 @@ class ImprovementTracker:
                 .all()
             )
 
-            # Previous window evaluations for trend calculation
             prev_evals = (
                 db.query(ResponseEvaluation)
                 .filter(
@@ -46,10 +44,8 @@ class ImprovementTracker:
                 .all()
             )
 
-            # Total lifetime evaluations
             total_lifetime = db.query(ResponseEvaluation).count()
 
-            # Self-memory corrections count in current window
             try:
                 corrections_count = (
                     db.query(SelfMemory)
@@ -62,7 +58,6 @@ class ImprovementTracker:
             except Exception:
                 corrections_count = 0
 
-            # Default baseline metrics if no evaluations exist yet
             if not current_evals:
                 return {
                     "total_evaluations_7d": 0,
@@ -83,7 +78,6 @@ class ImprovementTracker:
                     "daily_history": self._generate_empty_history(days),
                 }
 
-            # Calculate averages for current window
             n = len(current_evals)
             avg_overall = sum(e.overall_score for e in current_evals) / n
             avg_accuracy = sum(e.accuracy for e in current_evals) / n
@@ -92,10 +86,8 @@ class ImprovementTracker:
             avg_helpfulness = sum(e.helpfulness for e in current_evals) / n
             avg_voice = sum(e.voice_consistency for e in current_evals) / n
 
-            # Previous window overall average
             prev_avg = sum(e.overall_score for e in prev_evals) / len(prev_evals) if prev_evals else avg_overall
 
-            # Trend direction & delta
             delta = avg_overall - prev_avg
             delta_pct = round(delta * 100, 1)
             trend_prefix = "+" if delta_pct >= 0 else ""
@@ -108,10 +100,8 @@ class ImprovementTracker:
             else:
                 trend_direction = "stable"
 
-            # Correction rate
             correction_rate = (corrections_count / max(1, n)) * 100.0
 
-            # Failure category breakdown
             failure_counts = dict.fromkeys(self.ALL_FAILURE_CATEGORIES, 0)
             for e in current_evals:
                 for f in e.failures or []:
@@ -119,7 +109,6 @@ class ImprovementTracker:
                     if f_upper in failure_counts:
                         failure_counts[f_upper] += 1
 
-            # Daily timeseries for improvement curves (accuracy, latency, corrections)
             daily_scores: dict[str, list[float]] = defaultdict(list)
             daily_latencies: dict[str, list[float]] = defaultdict(list)
             for e in current_evals:
@@ -129,7 +118,6 @@ class ImprovementTracker:
                     if e.latency_ms:
                         daily_latencies[date_str].append(e.latency_ms)
 
-            # Daily corrections
             daily_corrections: dict[str, int] = defaultdict(int)
             try:
                 corr_memories = (
@@ -162,7 +150,6 @@ class ImprovementTracker:
                     }
                 )
 
-            # Model Rankings
             model_rankings = []
             try:
                 from app.ai.evaluation.model_optimizer import model_optimizer
@@ -197,7 +184,6 @@ class ImprovementTracker:
         """Returns failure distribution and recent failure instances."""
         db = SessionLocal()
         try:
-            # All evaluations with at least one failure
             all_evals = db.query(ResponseEvaluation).all()
             category_counts = dict.fromkeys(self.ALL_FAILURE_CATEGORIES, 0)
 
@@ -207,7 +193,6 @@ class ImprovementTracker:
                     if f_upper in category_counts:
                         category_counts[f_upper] += 1
 
-            # Recent failures
             recent_failed_evals = (
                 db.query(ResponseEvaluation).order_by(desc(ResponseEvaluation.created_at)).limit(limit * 2).all()
             )

@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowUp,
   Mic,
@@ -88,7 +88,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
   const [selectedModel, setSelectedModel] = useState(COGNITIVE_MODES[0]);
   const [previewDoc, setPreviewDoc] = useState<ParsedDocument | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -96,7 +96,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
-  // Keyboard navigation for cognitive mode dropdown
+
   useEffect(() => {
     if (!modelDropdownOpen) return;
     const handleDropdownKey = (e: KeyboardEvent) => {
@@ -110,7 +110,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
     return () => window.removeEventListener("keydown", handleDropdownKey);
   }, [modelDropdownOpen]);
 
-  // Auto-resize textarea
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -119,7 +119,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
     }
   }, [draft]);
 
-  // Recording duration timer
+
   useEffect(() => {
     if (!isRecording) return;
     const timer = window.setInterval(() => {
@@ -292,7 +292,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
 
   return (
     <div className="w-full relative flex flex-col gap-2 select-none">
-      {/* Hidden File Input */}
+
       <input
         ref={fileInputRef}
         type="file"
@@ -302,7 +302,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         onChange={handleFileUpload}
       />
 
-      {/* Cognitive Intelligence Mode Selector Popover */}
+
       {modelDropdownOpen && (
         <div
           ref={dropdownMenuRef}
@@ -363,7 +363,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         </div>
       )}
 
-      {/* Interactive Full Document Reader & Inspector Modal */}
+
       {previewDoc && (
         <DocumentReaderModal
           document={previewDoc}
@@ -375,7 +375,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         />
       )}
 
-      {/* Attached Files & Documents Chips Bar */}
+
       {(attachedDocs.length > 0 || isUploading) && (
         <div className="flex flex-wrap items-center gap-2 px-2 animate-slide-up">
           {attachedDocs.map((doc, idx) => {
@@ -436,7 +436,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
         </div>
       )}
 
-      {/* Main God's Eye Tactical Input Capsule */}
+
       <div className="w-full flex flex-col items-center">
         <div
           className={`w-full relative flex flex-row items-center rounded-2xl bg-[#16080D]/90 backdrop-blur-2xl transition-all duration-300 shadow-[0_16px_40px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] border py-1.5 px-3 ${
@@ -463,7 +463,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
             </div>
           ) : (
             <>
-              {/* Plus / Attach Button */}
+
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -479,7 +479,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 )}
               </button>
 
-              {/* Input Text Area */}
+
               <div className="flex-1 py-1 px-2.5 flex items-center min-w-0">
                 <textarea
                   id="chat-message-input"
@@ -507,7 +507,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 />
               </div>
 
-              {/* Audio Waveform Equalizer (Shows when thinking or speaking) */}
+
               {(thinking || speaking) && (
                 <div aria-hidden="true" className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#14070B] border border-border/30 text-text shadow-sm flex-shrink-0 mr-1.5" title="Audio / Neural Telemetry Stream">
                   <div className="w-1 bg-blush-100 rounded-full eq-bar-1" />
@@ -518,7 +518,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
                 </div>
               )}
 
-              {/* Right Side Buttons */}
+
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 {!draft.trim() && attachedDocs.length === 0 && !thinking && (
                   <button
@@ -562,7 +562,7 @@ export function ChatDock({ thinking, speaking, onSend, onStop, onClear }: Props)
           )}
         </div>
 
-        {/* Bottom Model Selector Pill & Telemetry Status */}
+
         <div className="flex w-full justify-between items-center mt-2.5 px-2 font-mono text-[11px]">
           <button
             ref={dropdownTriggerRef}

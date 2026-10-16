@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   GitBranch,
   GitMerge,
@@ -34,7 +34,7 @@ export const BranchCompareModal: React.FC<Props> = ({
   const [isMerging, setIsMerging] = useState(false);
   const [bannerMessage, setBannerMessage] = useState<string | null>(null);
 
-  // Initialize selected branches
+
   useEffect(() => {
     if (branches.length >= 2) {
       setBranchAId(branches[0].branch_id);
@@ -45,7 +45,7 @@ export const BranchCompareModal: React.FC<Props> = ({
     }
   }, [branches, isOpen]);
 
-  // Load comparison whenever selection changes
+
   const runComparison = async () => {
     if (!branchAId || !branchBId) return;
     setIsLoading(true);
@@ -69,7 +69,7 @@ export const BranchCompareModal: React.FC<Props> = ({
     }
   }, [isOpen, branchAId, branchBId]);
 
-  // Close on Escape key
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -105,7 +105,7 @@ export const BranchCompareModal: React.FC<Props> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-mono text-xs"
     >
       <div className="bg-canvas border border-border-subtle rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-text">
-        {/* Modal Header */}
+
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-surface-elevated/60">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-accent-950/80 border border-accent-800/40 text-accent-400" aria-hidden="true">
@@ -141,7 +141,7 @@ export const BranchCompareModal: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Branch Selectors Bar */}
+
         <div className="px-6 py-3 bg-surface-elevated/40 border-b border-border-subtle flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 w-full md:w-auto">
             <span className="text-[10px] text-text-secondary font-bold uppercase whitespace-nowrap">Branch A:</span>
@@ -179,7 +179,7 @@ export const BranchCompareModal: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Notifications */}
+
         {bannerMessage && (
           <div className="mx-6 mt-3 p-3 rounded-xl bg-accent-950/60 border border-accent-500/40 text-accent-300 text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ export const BranchCompareModal: React.FC<Props> = ({
           </div>
         )}
 
-        {/* Modal Body */}
+
         <div className="p-6 overflow-y-auto space-y-5 flex-1">
           {isLoading ? (
             <div className="py-16 text-center space-y-3">
@@ -205,7 +205,7 @@ export const BranchCompareModal: React.FC<Props> = ({
             </div>
           ) : (
             <>
-              {/* Divergence Point Banner */}
+
               <div className="p-3.5 rounded-xl bg-surface-elevated border border-border-subtle space-y-1">
                 <span className="text-[9px] uppercase font-bold text-text-tertiary tracking-wider flex items-center gap-1.5">
                   <GitBranch size={11} className="text-accent-400" />
@@ -216,7 +216,7 @@ export const BranchCompareModal: React.FC<Props> = ({
                 </p>
               </div>
 
-              {/* Side-by-Side Summaries */}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <div className="flex items-center justify-between">
@@ -255,7 +255,7 @@ export const BranchCompareModal: React.FC<Props> = ({
                 </div>
               </div>
 
-              {/* Key Differences Table */}
+
               {diff.key_differences && diff.key_differences.length > 0 && (
                 <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-3">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
@@ -286,9 +286,9 @@ export const BranchCompareModal: React.FC<Props> = ({
                 </div>
               )}
 
-              {/* Recommendation & Mergeable Insights */}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Recommendation */}
+
                 <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
                     <Award size={14} className="text-verdigris-400" />
@@ -297,7 +297,7 @@ export const BranchCompareModal: React.FC<Props> = ({
                   <p className="text-[11px] text-text-secondary leading-relaxed font-sans">{diff.recommendation}</p>
                 </div>
 
-                {/* Mergeable Insights */}
+
                 <div className="p-4 rounded-xl bg-surface-elevated/60 border border-border-subtle space-y-2">
                   <span className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
                     <GitMerge size={14} className="text-accent-400" />
@@ -321,7 +321,7 @@ export const BranchCompareModal: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Modal Footer */}
+
         <div className="px-6 py-3 bg-surface-elevated/60 border-t border-border-subtle flex items-center justify-between">
           <span className="text-[10px] text-text-tertiary">
             Active Session: <span className="text-text-secondary font-mono">{currentBranchId}</span>

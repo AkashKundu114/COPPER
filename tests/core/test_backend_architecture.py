@@ -1,15 +1,13 @@
-import asyncio
 import pytest
 from sqlalchemy import text
 
-from app.core.config import settings
-from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
-from app.ai.ambient.context_watcher import context_watcher
 from app.ai.ambient.cognitive_load import cognitive_load_detector
-from app.database.postgres import engine, Base, close_db
-from app.ai.memory.vector_store import close_chroma_client, _get_chroma_client
+from app.ai.ambient.context_watcher import context_watcher
+from app.ai.memory.vector_store import _get_chroma_client, close_chroma_client
+from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.core.telemetry import init_telemetry, shutdown_telemetry
-from app.main import lifespan, app
+from app.database.postgres import Base, engine
+from app.main import app, lifespan
 
 
 @pytest.mark.asyncio
@@ -27,10 +25,8 @@ async def test_scheduler_starts_and_stops_ambient_monitors():
 @pytest.mark.asyncio
 async def test_lifespan_graceful_shutdown_resilience():
     """Verify lifespan shutdown continues executing all cleanup stages even if one fails."""
-    # Test entering and exiting lifespan
     async with lifespan(app):
         pass
-    # All background services should be stopped
     assert context_watcher.is_running is False
     assert cognitive_load_detector.is_running is False
 
@@ -45,7 +41,6 @@ def test_sqlite_wal_mode_and_concurrency_configured():
 
 def test_alembic_registers_all_db_models():
     """Verify that Alembic Base.metadata includes campaign_metrics and core tables."""
-    import app.database.models.campaign  # noqa: F401
     assert "campaign_metrics" in Base.metadata.tables
     assert "response_evaluations" in Base.metadata.tables
     assert "episodes" in Base.metadata.tables

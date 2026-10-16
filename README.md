@@ -1,20 +1,18 @@
 # C.O.P.P.E.R.
 
 **Centralized Omnifunctional Personal Productivity and Execution Routine**  
-*An independent, 100% offline, local-first personal AI operating system featuring 12 specialized agent types (plus 5 architectural roadmap targets), extensible multi-agent architecture, epistemic decaying memory, a multi-tier Guardian safety engine, and zero cloud egress.*
+*An independent, 100% offline, local-first personal AI operating system featuring 12 active specialized agents (plus 5 architectural roadmap targets), 8 hardware model pools, epistemic decaying memory, multi-tier Guardian safety, and zero cloud egress.*
 
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary%20%7C%20All%20Rights%20Reserved-red.svg)](LICENSE)
+[![Version: 0.1.0-alpha](https://img.shields.io/badge/Version-0.1.0--alpha-blue.svg)](pyproject.toml)
+[![License: Source-Available Evaluation](https://img.shields.io/badge/License-Source--Available%20Evaluation-orange.svg)](LICENSE)
 [![Author: Akash Kundu](https://img.shields.io/badge/Author-Akash%20Kundu-blue.svg)](https://github.com/AkashKundu114)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
-[![Electron](https://img.shields.io/badge/Electron-Desktop-47848F.svg)](https://www.electronjs.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-614%20Passed%20(573%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
-[![Frontend Unit Tests](https://img.shields.io/badge/Frontend%20Unit%20Tests-41%20Passed%20(100%25)-brightgreen.svg)](frontend/src/__tests__/)
-[![Frontend Coverage](https://img.shields.io/badge/Frontend%20Coverage-100%25%20Key%20Components%20%26%20Boundaries-brightgreen.svg)](frontend/src/__tests__/)
-[![Playwright E2E](https://img.shields.io/badge/Playwright%20E2E-Passing%20(Live%20Local%20Models)-blue.svg)](frontend/tests/)
+[![Electron 44](https://img.shields.io/badge/Electron-Desktop%2044-47848F.svg)](https://www.electronjs.org/)
+[![Tests Passing](https://img.shields.io/badge/Tests-728%20Passed%20(687%20Backend%20%2B%2041%20Frontend)-brightgreen.svg)](tests/)
 [![Routing Dispatch QPS](https://img.shields.io/badge/Routing%20Dispatch-~9%2C856%20QPS%20(Cache%20Hit)-blueviolet.svg)](backend/eval/benchmark_report.md)
-[![Guardian Catch Rate](https://img.shields.io/badge/Guardian%20Catch%20Rate-100.0%25-success.svg)](backend/eval/benchmark_report.md)
+[![Guardian Threat Intercept](https://img.shields.io/badge/Guardian%20Threat%20Intercept-100.0%25%20(350%20Cases)-success.svg)](backend/eval/benchmark_report.md)
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20%7C%20Zero%20Egress-success.svg)](docs/architecture/security.md)
 [![Security](https://img.shields.io/badge/CodeQL-Advanced%20Security%20Scanning-purple.svg)](.github/workflows/codeql.yml)
 
@@ -27,8 +25,7 @@
 - [Campaign Intelligence Agent & DeltaX Ad-Tech Suite](#campaign-intelligence-agent--deltax-ad-tech-suite)
 - [Zero-Trust Data Firewall & Guardian Safety Engine](#zero-trust-data-firewall--guardian-safety-engine)
 - [Safety Calibration](#safety-calibration)
-- [GPU Hardware Licensing & Master Access Gate](#gpu-hardware-licensing--master-access-gate)
-- [First-Run Setup Wizard & One-Click Installer](#first-run-setup-wizard--one-click-installer)
+- [First-Run Setup Wizard & Standalone Demo Mode](#first-run-setup-wizard--standalone-demo-mode)
 - [Directory Structure](#directory-structure)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
@@ -39,24 +36,24 @@
 
 ## Overview & Project Independence
 
-**C.O.P.P.E.R.** is an **independent, proprietary personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
+**C.O.P.P.E.R.** is an **independent, local-first personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
 
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **12 specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
 - **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms–2 s per response).
-- **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases [2].
+- **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases [2] and 29 terminal evasion corpus test cases.
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback [3].
-- **614 Total Passing Tests (573 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and data sanitization [4]. 573 backend Pytest tests (100% pass rate) across 77 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
-- **~60,500 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 77 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 18 pages/views.
-- **Local GGUF / ONNX Model Fleet (~47 GB / 12 Specialized Agent Types):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
+- **728 Total Passing Tests (687 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and zero-egress data sanitization [4]. 687 backend Pytest tests (100% pass rate) across 92 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
+- **~62,000 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 80 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 16 sidebar navigation views.
+- **Local GGUF / ONNX Model Fleet (12 Specialized Agent Types / 8 Model Pools):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
 
 ---
 
 ## Executive Summary & Key Technical Innovations
 
-> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 614 passing unit/integration tests (573 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **12 specialized agent types** and **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing dispatch (<0.10ms / ~9,856 QPS cache hit path)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
+> **Engineered** an independent, privacy-first personal AI operating system **as measured by** 100% offline local execution with zero cloud egress, 728 passing unit/integration tests (687 backend + 41 frontend, 100% pass rate), and 100% chaos fuzzing intercept, **by architecting** a multi-tier agent orchestration framework anchored on **12 specialized agent types**, **8 model pool tiers**, and **14B Sovereign Core models** (`Qwen2.5-14B`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), achieving **sub-millisecond routing dispatch (<0.10ms / ~9,856 QPS cache hit path)**, **100% Guardian threat sensitivity**, and autonomous self-healing execution loops.
 
 ### Key Architectural Pillars:
 
@@ -391,60 +388,87 @@ Modeled on the DeltaX enterprise digital advertising automation architecture, th
 
 ## Quick Start Guide
 
-### Live Telemetry & Benchmarking Tab
+### Hardware Requirements Table (Empirical Reference Benchmark)
 
-COPPER features a dedicated **Benchmarks & Metrics** tab inside the Electron Desktop Application providing real-time hardware telemetry:
-- **Token Velocity:** Real-time Prompt Tokens/Sec and Generation Tokens/Sec.
-- **Hardware Thermals:** Live GPU Core, Hotspot, and CPU Package Temperatures.
-- **VRAM Monitor:** Live 8GB VRAM allocation tracking (Core, Subagent, KV Cache).
-- **System RAM:** Sub-1GB active memory footprint monitoring.
-- **Live Evaluator:** Run synthetic benchmark test cases directly from the UI with real-time accuracy scoring.
+| Component | Minimum Specification | Recommended Specification | Reference Test Bench (Measured) |
+| :--- | :--- | :--- | :--- |
+| **Operating System** | Windows 10/11, macOS 13+, Ubuntu 22.04+ | Windows 11 or Linux x86_64 | **Windows 11 (AMD64)** |
+| **CPU** | 4 Physical Cores | 8–16 Cores | **16 Physical / 32 Logical Cores** |
+| **System RAM** | 8 GB | 16–32 GB | **15.21 GB Total (16 GB Physical)** |
+| **GPU / VRAM** | 4 GB VRAM (for 3B–7B models) | 8 GB+ VRAM (NVIDIA RTX 3060/4060/5060) | **NVIDIA GeForce RTX 5060 Laptop (8,151 MB VRAM)** |
+| **Disk Storage** | 15 GB free SSD space | 50 GB+ SSD space | **80.75 GB Free / 300 GB Total** |
+| **Ollama Daemon** | Optional (for Standalone Demo) | Installed locally (`localhost:11434`) | **Reachable on 127.0.0.1:11434** |
 
-### Prerequisites
-- **Python 3.11+**
-- **Node.js 20+** & **npm**
-- **Git**
+---
 
-### 1. Clone Repository & Setup Virtual Environment
+## Getting Started (< 15 Minutes)
+
+You can run C.O.P.P.E.R. via three paths:
+
+### Path A: Standalone Demo Mode (Zero Model Downloads Required)
+Evaluate all REST APIs, Guardian safety modals, epistemic memory, and UI layouts instantly without waiting for multi-gigabyte Ollama model downloads:
+
 ```bash
-git clone https://github.com/AkashKundu114/COPPER.git
+# 1. Clone the repository
+git clone -b release/public-cleanup https://github.com/AkashKundu114/COPPER.git
 cd COPPER
 
-# Setup Python Virtual Environment
-python -m venv .venv
-# Windows:
-.\.venv\Scripts\Activate.ps1
-# Linux/macOS:
-source .venv/bin/activate
+# 2. Launch backend in standalone demo mode
+python -c "import os; os.environ['COPPER_DEMO']='1'; import uvicorn; uvicorn.run('app.main:app', host='127.0.0.1', port=8000)"
 
-# Install Dependencies
-pip install -r backend/requirements.txt
-```
-
-### 2. Run Test Suite & Benchmark Validation
-```bash
-# Run all 573 unit & integration tests
-python -m pytest tests/ -v
-
-# Run the 1,740-sample evaluation benchmark
-python backend/eval/benchmark.py
-```
-
-### 3. Launch Desktop Application (1-Click)
-```bash
-# Windows 1-Click Launch (Backend + Frontend + App Window):
-.\scripts\start_copper.bat
-
-# Dedicated service control:
-.\scripts\start_backend.bat     # FastAPI backend on 127.0.0.1:8000
-.\scripts\start_frontend.bat    # Vite dev server on localhost:5173
-.\scripts\stop_copper.bat       # Cleanly stop all processes
-
-# Or run manual dev server:
+# 3. In a separate terminal, launch the frontend
 cd frontend
-npm install
-npm run desktop
+npm.cmd install
+npm.cmd run dev
+# Open http://localhost:5173
 ```
+
+### Path B: Native Local Development (Full Local LLMs)
+```bash
+# 1. Install dependencies
+make setup
+# Or manually:
+# python -m pip install -e .
+# cd frontend && npm.cmd install
+
+# 2. Verify and pull starter Ollama models (requires local Ollama running)
+make models
+
+# 3. Run development servers
+make dev
+# Or Windows 1-Click:
+# .\scripts\start_copper.bat
+```
+
+### Path C: Docker Compose
+```bash
+# Start all core services in background (Postgres, Redis, ChromaDB, Backend, Frontend)
+docker compose up -d
+
+# Verify service health
+docker compose ps
+```
+
+---
+
+## Automated Verification Suite
+
+Every release claim is verified by automated tests:
+
+```bash
+# Run all 687 backend pytest tests
+python -m pytest tests/ -q
+
+# Run all 41 frontend vitest component & a11y tests
+cd frontend && npm.cmd run test
+
+# Verify production Vite build (0 errors)
+npm.cmd run build
+
+# Run code linters (ruff & oxlint)
+make lint
+```
+**Current Status**: 728 / 728 tests passing (100% pass rate), 0 lint errors, 0 build failures.
 
 ---
 
@@ -454,49 +478,39 @@ npm run desktop
 COPPER/
 ├── backend/                       # FastAPI backend (202 modules), agent router, guardian, services
 │   ├── app/
-│   │   ├── ai/                    # Orchestration, 12 specialized agent types, memory, LLM clients, tools (15 categories)
-│   │   ├── api/                   # 50 REST route modules (257 endpoints: chat, voice, memory, episodes, audit)
-│   │   ├── core/                  # Guardian, data firewall, AST security validator, sandbox, telemetry
+│   │   ├── ai/                    # 12 active core agents, 8 model pools, memory, LLM orchestration
+│   │   ├── api/                   # 50 REST route modules (257 endpoints: chat, voice, memory, audit)
+│   │   ├── core/                  # Guardian, data firewall, AST security validator, sandbox, config
 │   │   ├── database/              # 13 SQLAlchemy models, Postgres/SQLite connections
-│   │   └── services/              # Chat, document, guardian, vision, audio, episode services
-│   └── eval/                      # Comprehensive benchmark suite & synthetic generator
-├── frontend/                      # Standalone Electron desktop app (React 19 + Vite + Tailwind v4)
-│   ├── src/                       # 84 source files: 48 components, 18 pages, hooks, stores
-│   └── electron-main.cjs          # Electron lifecycle, navigation guards, single-instance lock
-├── tests/                         # 573 Pytest unit and integration tests (77 test modules)
+│   │   └── services/              # Chat, document, guardian, vision, audio services
+│   ├── alembic/                   # Database migrations (15 tables verified from scratch)
+│   └── eval/                      # Evaluation benchmarks, chaos harness, and calibration suites
+├── frontend/                      # Standalone Electron desktop app (React 19 + Vite + Tailwind)
+│   ├── src/                       # 84 source files: 48 components, 16 views, hooks, stores
+│   ├── electron-main.cjs          # Electron lifecycle, navigation guards, single-instance lock
+│   └── launch-desktop.js          # Cross-platform desktop launcher
+├── tests/                         # 687 Pytest unit, security, memory, and integration tests
 │   ├── ai/                        # Agent router, prompts, LLM clients, task scheduler, DAG concurrency
 │   ├── api/                       # REST API route integration tests
-│   ├── audio/                     # Whisper STT, Piper TTS, and PCM stream tests
 │   ├── core/                      # Guardian, data firewall, AST validator, forge sandbox, self-healing
-│   ├── memory/                    # Context engine, episodic memory, vector store, CRDT sync
-│   └── services/                  # Document generation & service integration tests
-├── ai-models/                     # ~47 GB local GGUF/ONNX model fleet (~34 model files)
-│   ├── core/                      # 14B Sovereign Core models (5 heavyweight GGUFs)
-│   ├── subagents/                 # Resident mini-models (7 micro-subagent GGUFs)
-│   ├── audio/                     # Whisper, Piper TTS, Kokoro, Silero VAD
-│   ├── embeddings/                # bge-reranker, nomic-embed, ModernBERT
-│   ├── vision/                    # Qwen2.5-VL-3B
-│   ├── image/                     # SD-Turbo (PICASSO)
-│   └── wakeword/                  # openWakeWord "Hey COPPER" ONNX
-├── infrastructure/                # Production orchestration & observability
-│   ├── docker/                    # Dockerfiles, docker-compose.dev.yml, docker-compose.prod.yml
-│   ├── kubernetes/                # Modular k8s manifests (base, ingress, deployments)
-│   ├── nginx/                     # Reverse proxy with WebSocket streaming & SSL config
-│   ├── prometheus/                # Metrics collection & alerting rules
-│   ├── grafana/                   # Dashboard provisioning & datasource configs
-│   ├── loki/ & promtail/          # Log aggregation pipeline
-│   ├── tempo/                     # Distributed tracing (OpenTelemetry)
-│   └── systemd/                   # Linux systemd service unit
+│   ├── memory/                    # Epistemic decay dynamics, threshold transitions, CRDT sync
+│   └── security/                  # Adversarial red team, zero-egress offline airgap, terminal safety
 ├── scripts/                       # Operational scripts & utilities
-│   ├── dev/                       # Local dev launchers and test scripts
+│   ├── dev/                       # Local dev launchers, smoke test, benchmark measurement
 │   ├── models/                    # Model organizer & integrity verifier
-│   ├── windows/                   # Windows auto-start installer & background launchers
-│   └── db/                        # Database schema initializer & seed data loader
-├── data/                          # 100% Local data persistence layer (Memory, Vectors, Voice)
-├── .github/                       # 9 CI/CD workflows, issue templates, Dependabot, CodeQL
-│   └── workflows/                 # backend-ci, frontend-ci, pr-checks, deploy, security-scan, etc.
-└── docs/                          # 26 comprehensive technical and architectural specifications
-```
+│   ├── gen_env.py                 # Cryptographic secret generator for .env
+│   └── wipe_data.py               # Complete local runtime and database state purge utility
+├── infrastructure/                # Production orchestration & observability (Docker, Compose, Tempo)
+├── data/                          # 100% Local data persistence layer (Memory, Vectors, State)
+├── REMEDIATION/                   # Public release audit trail, claims verification, and test logs
+│   ├── AUDIT.md                   # Complete codebase structural and security audit
+│   ├── CLAIMS_AUDIT.md            # Line-by-line verification of marketing and benchmark claims
+│   ├── DEMO_SCRIPT.md             # 5-minute evaluator and recruiter walkthrough
+│   └── baseline/                  # Hardware telemetry and test summaries
+├── Makefile                       # Standard developer targets (setup, dev, test, lint, demo)
+└── docs/                          # Comprehensive technical and architectural specifications
+    ├── THREAT_MODEL.md            # Assets, trust boundaries, entry points, and adversarial defenses
+    └── KNOWN_LIMITATIONS.md       # Documented release constraints and alpha boundaries
 
 ---
 
@@ -537,6 +551,16 @@ To ensure full technical defensibility under source-code audit and interview scr
 - **Proprietary & Patent Protection:** The architectural concepts, TFP-Router cascade risk algorithms, UMF-EDR epistemic decay mathematical formulations ($C_i(\Delta t) = \max(C_{\text{floor}}, C_{i, 0} e^{-\lambda_{\text{eff}} \Delta t})$), DFM-Guard adaptive friction alignment mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
 - **Strict Prohibition:** No part of this software may be copied, reproduced, modified, distributed, sublicensed, commercially exploited, or used to train artificial intelligence models without the express prior written consent of the copyright owner.
 - **Terms of License:** See the [`LICENSE`](LICENSE) file for the full proprietary license terms.
+
+---
+
+## Core Documentation & Technical References
+
+- **Full Documentation Index:** Read [`docs/README.md`](docs/README.md) for complete visual architecture diagrams, API specs, and benchmarks.
+- **Zero-Trust Threat Model:** Consult [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) for assets, trust boundaries, entry points, and adversarial defenses.
+- **Known Limitations & Alpha Boundaries:** Read [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md) for documented runtime and hardware constraints.
+- **Evaluator & Recruiter Demo Script:** Follow [`REMEDIATION/DEMO_SCRIPT.md`](REMEDIATION/DEMO_SCRIPT.md) for a 5-minute interactive evaluation walkthrough.
+- **Verification Ledgers & Release Audit:** Explore [`REMEDIATION/AUDIT.md`](REMEDIATION/AUDIT.md) and [`REMEDIATION/CLAIMS_AUDIT.md`](REMEDIATION/CLAIMS_AUDIT.md) for line-by-line verification of code and metrics.
 
 ---
 

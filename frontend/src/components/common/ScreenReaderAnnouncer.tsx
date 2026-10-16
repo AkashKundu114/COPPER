@@ -34,7 +34,7 @@ export const ScreenReaderProvider: React.FC<ProviderProps> = ({ children }) => {
   return (
     <ScreenReaderContext.Provider value={{ announce }}>
       {children}
-      {/* Visually hidden live regions for screen reader announcements */}
+
       <div className="sr-only" aria-live="polite" aria-atomic="true" role="status" id="sr-polite-announcements">
         {politeMessage}
       </div>

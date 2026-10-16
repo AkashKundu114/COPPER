@@ -215,4 +215,3 @@ def test_guardian_adversarial_evasion_intercepted():
         verdict = guardian_engine.evaluate(cmd, {})
         assert verdict.level == DisagreementLevel.SAFETY, f"Failed on evasion payload: {cmd}"
         assert verdict.requires_confirmation is True
-

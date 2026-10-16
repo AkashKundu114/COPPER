@@ -1,15 +1,9 @@
-"""
-C.O.P.P.E.R. Hybrid Benchmark Synthesis Engine (1,000,000+ Scale)
-Merges local synthetic datasets with external ingested benchmarks,
-performs canonical deduplication via SHA-256 fingerprinting,
-and produces unified hybrid evaluation corpuses for every domain.
-"""
+"""C.O.P.P.E.R. Hybrid Benchmark Synthesis Engine (1,000,000+ Scale)"""
 
 import json
 import sys
 from pathlib import Path
 
-# Fix Windows console UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -81,7 +75,6 @@ def main():
     print("🧬 C.O.P.P.E.R. HYBRID SYNTHESIS & DEDUPLICATION ENGINE (1M+ SCALE)")
     print("=" * 70)
 
-    # Resolve either scaled .jsonl or fallback .json
     def get_gen_path(domain: str):
         scaled = GENERATED_DIR / f"{domain}_scaled.jsonl"
         return scaled if scaled.exists() else GENERATED_DIR / f"{domain}_10k.json"
@@ -149,7 +142,6 @@ def main():
         }
         print(f"    ✔ Merged and deduplicated: {count:,} samples ({size_mb} MB)")
 
-    # Build Master Routing Hybrid Dataset
     print("\n[*] Synthesizing Master Cross-Agent Routing Hybrid Dataset...")
     master_gen = GENERATED_DIR / "master_routing_scaled.jsonl"
     if not master_gen.exists():

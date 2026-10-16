@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# C.O.P.P.E.R. Environment Secrets Generator Wrapper
+python "$(dirname "$0")/gen_env.py" "$@"

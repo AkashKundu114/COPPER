@@ -9,14 +9,11 @@ Automates local environment provisioning for new systems:
 4. Checks GPU and CUDA capability.
 """
 
-import json
-import os
-from pathlib import Path
 import platform
 import shutil
 import subprocess
 import sys
-import urllib.request
+from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 BACKEND_DIR = ROOT_DIR / "backend"
@@ -96,18 +93,18 @@ def main():
     print("=" * 60)
 
     py_info = check_python_environment()
-    print(f"\n[Python Environment]")
+    print("\n[Python Environment]")
     print(f"  Version:     {py_info['version']} (Compatible: {py_info['satisfies_version']})")
     print(f"  Executable:  {py_info['executable']}")
     print(f"  In Venv:     {py_info['is_venv']}")
 
     ollama_info = check_ollama()
-    print(f"\n[Ollama Status]")
+    print("\n[Ollama Status]")
     print(f"  Installed:   {ollama_info['installed']}")
     print(f"  Running:     {ollama_info['running']}")
 
     disk_info = get_disk_space()
-    print(f"\n[Disk Storage]")
+    print("\n[Disk Storage]")
     print(f"  Free Space:  {disk_info['free_gb']} GB")
     print(f"  Sufficient:  {disk_info['sufficient_for_models']}")
 

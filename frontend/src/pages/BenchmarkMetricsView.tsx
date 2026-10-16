@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Zap,
@@ -257,7 +257,7 @@ export const BenchmarkMetricsView: React.FC = () => {
         guardianThreatCatch: guardianCatch,
       });
     } catch {
-      // Offline / fallback verification
+
       const latencies: number[] = [];
       for (let i = 1; i <= 5; i++) {
         const start = performance.now();
@@ -287,7 +287,7 @@ export const BenchmarkMetricsView: React.FC = () => {
 
   return (
     <div className="modern-page p-6 space-y-6 max-w-7xl mx-auto text-gray-200 select-none pb-16">
-      {/* Header Banner */}
+
       <div className="p-6 rounded-3xl bg-[linear-gradient(135deg,rgba(35,14,23,0.88),rgba(18,6,10,0.95))] border border-border/[0.15] shadow-[0_24px_56px_rgba(10,3,6,0.5),inset_0_1px_0_rgba(246,230,234,0.12)] relative overflow-hidden backdrop-blur-2xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blush-100/[0.08] rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -343,7 +343,7 @@ export const BenchmarkMetricsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Evaluation Progress Bar */}
+
         {isRunningLive && (
           <div className="mt-4 pt-3 border-t border-white/10">
             <div className="w-full bg-black/50 rounded-full h-2 overflow-hidden border border-white/10">
@@ -376,7 +376,7 @@ export const BenchmarkMetricsView: React.FC = () => {
         )}
       </div>
 
-      {/* Navigation Tabs */}
+
       <div className="flex items-center gap-1.5 p-1 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.10] w-fit overflow-x-auto scrollbar-none text-xs font-mono">
         <button
           onClick={() => setActiveTab("live-telemetry")}
@@ -421,12 +421,12 @@ export const BenchmarkMetricsView: React.FC = () => {
         </button>
       </div>
 
-      {/* TAB: LIVE HARDWARE & TOKEN MONITOR */}
+
       {activeTab === "live-telemetry" && (
         <div className="space-y-6">
-          {/* Top Live Stats: Tokens, Temperatures, VRAM, CPU */}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
-            {/* Live Token Processing */}
+
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
@@ -454,7 +454,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Live GPU VRAM & Power */}
+
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
@@ -480,7 +480,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Live Temperatures */}
+
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
@@ -505,7 +505,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Live CPU Load & Host RAM */}
+
             <div className="p-4 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-bold text-white">
@@ -534,9 +534,9 @@ export const BenchmarkMetricsView: React.FC = () => {
             </div>
           </div>
 
-          {/* Deep Real-Time Gauges Grid */}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* GPU & VRAM Live Telemetry Card */}
+
             <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-4 font-mono text-xs">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -603,7 +603,7 @@ export const BenchmarkMetricsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Token Generation Velocity Card */}
+
             <div className="p-5 rounded-2xl bg-bg-panel border border-border shadow-hud space-y-4 font-mono text-xs">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -678,7 +678,7 @@ export const BenchmarkMetricsView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB: OVERVIEW & TELEMETRY */}
+
       {activeTab === "overview" && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
@@ -760,7 +760,7 @@ export const BenchmarkMetricsView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB: MODEL COMPARISON MATRIX */}
+
       {activeTab === "models" && (
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-black/30 border border-white/10 flex items-center justify-between">
@@ -840,7 +840,7 @@ export const BenchmarkMetricsView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB: PROMPT EVALUATIONS & RATIONALE */}
+
       {activeTab === "prompts" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="space-y-3">

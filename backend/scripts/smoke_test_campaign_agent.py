@@ -1,10 +1,9 @@
 import asyncio
 import json
-import sys
 
 from app.ai.agents.campaign_agent import campaign_agent
 from app.ai.llm.model_manager import model_manager
-from app.ai.orchestration.agent_router import route_message, route_message_detailed
+from app.ai.orchestration.agent_router import route_message_detailed
 from app.core.constants import AgentType
 from app.services.chat_service import chat_service
 
@@ -14,7 +13,6 @@ async def run_smoke_test():
     print("      CAMPAIGN INTELLIGENCE AGENT (DELTA) SMOKE TEST")
     print("================================================================\n")
 
-    # 1. Perspective Model & Agent Metadata
     target_model = campaign_agent.get_target_model()
     manifest_info = model_manager.manifest.get("core_agents", {}).get("campaign_intelligence", {})
 
@@ -30,7 +28,6 @@ async def run_smoke_test():
     assert target_model == "deepseek-r1:14b", f"Expected deepseek-r1:14b, got {target_model}"
     print("  -> PASSED: Perspective model resolution verified.\n")
 
-    # 2. Router Smoke Test
     test_queries = [
         "How are my campaigns performing?",
         "Which campaign is underperforming?",
@@ -47,7 +44,6 @@ async def run_smoke_test():
         assert res.agent == AgentType.CAMPAIGN_INTELLIGENCE
     print("  -> PASSED: All 5 ad-tech queries routed to CAMPAIGN_INTELLIGENCE.\n")
 
-    # 3. Direct Agent Execution
     print("[Step 3] Testing Direct Agent Intelligence Execution:")
     resp_raw = await campaign_agent.run("How are my campaigns performing?")
     resp_json = json.loads(resp_raw)
@@ -62,7 +58,6 @@ async def run_smoke_test():
     assert "charts_data" in resp_json
     print("  -> PASSED: Agent produced structured JSON with full analytics telemetry.\n")
 
-    # 4. Streaming Execution
     print("[Step 4] Testing Agent Streaming Yield:")
     chunks = []
     async for chunk in campaign_agent.stream("Optimize my budget"):
@@ -76,7 +71,6 @@ async def run_smoke_test():
     print(f"  • Optimization Improvement: +{imp_pct:.1f}%")
     print("  -> PASSED: Streaming generator output validated.\n")
 
-    # 5. End-to-End ChatService Smoke Test
     print("[Step 5] Testing End-to-End ChatService Pipeline:")
     chat_result = await chat_service.process_message(session_id="smoke-test-session", message="How are my campaigns performing?")
     agent_val = chat_result.get("agent_type")

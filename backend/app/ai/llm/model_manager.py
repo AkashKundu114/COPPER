@@ -61,10 +61,7 @@ class ModelManager:
             logger.error(f"Failed to load models manifest: {e}")
 
     def get_model(self, path: str, default: str = "qwen2.5:14b") -> str:
-        """
-        Retrieves the Ollama tag from the manifest using dot notation (falling back to name or default).
-        Example: get_model("core_agents.chat") -> "qwen2.5:14b"
-        """
+        """Retrieves the Ollama tag from the manifest using dot notation (falling back to name or default)."""
         try:
             parts = path.split(".")
             current = self.manifest
@@ -82,10 +79,7 @@ class ModelManager:
             return default
 
     def get_ollama_tag(self, path: str, default: str = "qwen2.5:14b") -> str:
-        """
-        Retrieves the Ollama tag from the manifest using dot notation.
-        Example: get_ollama_tag("core_agents.chat") -> "qwen2.5:14b"
-        """
+        """Retrieves the Ollama tag from the manifest using dot notation."""
         try:
             parts = path.split(".")
             current = self.manifest
@@ -101,10 +95,7 @@ class ModelManager:
             return default
 
     def get_mini_model(self, prefer_tag: bool = True) -> str:
-        """
-        Returns the configured Always-On Mini Model name or Ollama tag.
-        This model is kept loaded in VRAM with keep_alive: -1 for fast voice and sub-40ms routing.
-        """
+        """Returns the configured Always-On Mini Model name or Ollama tag."""
         mini_cfg = self.manifest.get("always_on_mini_model", {})
         if prefer_tag and mini_cfg.get("ollama_tag"):
             return mini_cfg["ollama_tag"]
@@ -128,7 +119,6 @@ class ModelManager:
         clean = model_name.strip().lower()
         if clean in MINI_MODEL_IDENTIFIERS:
             return True
-        # Check against manifest always_on_mini_model
         mini_cfg = self.manifest.get("always_on_mini_model", {})
         if clean == mini_cfg.get("name", "").lower() or clean == mini_cfg.get("ollama_tag", "").lower():
             return True
@@ -138,11 +128,7 @@ class ModelManager:
         )
 
     def get_model_keep_alive(self, model_name: str | None) -> int | str:
-        """
-        Returns the keep-alive policy:
-        - Mini model: -1 (infinite residency in VRAM for instant voice turns and routing)
-        - Heavy models (12B/14B): '2m' or short duration to minimize GPU strain
-        """
+        """Returns the keep-alive policy:"""
         if self.is_mini_model(model_name):
             return -1
         policy = self.manifest.get("vram_policy", {})
@@ -161,10 +147,7 @@ class ModelManager:
         )
 
     def resolve_model_alias(self, alias: str) -> tuple[str, str]:
-        """
-        Resolves a user-friendly alias, size, or model family to an Ollama model tag and readable tier name.
-        Returns: (ollama_tag, tier_display_name)
-        """
+        """Resolves a user-friendly alias, size, or model family to an Ollama model tag and readable tier name."""
         clean = alias.strip().lower()
         if any(w in clean for w in ["mini", "small", "smaller", "tiny", "1b", "1.5b", "lightweight", "fast", "instant"]):
             return self.get_mini_model(), "Mini (1.5B Reflex Tier)"

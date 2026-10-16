@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   X,
   FileText,
@@ -30,7 +30,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
 
-  // Close on Escape key
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -48,7 +48,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
     "java", "c", "cpp", "h", "hpp", "sh", "bat", "ps1", "yaml", "yml", "xml"
   ].includes(ext);
 
-  // Pick Document Icon
+
   const DocIcon = useMemo(() => {
     if (isPdf) return BookOpen;
     if (isTable) return Table;
@@ -82,7 +82,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
     }
   };
 
-  // Search Results inside document
+
   const searchMatches = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
@@ -106,7 +106,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in">
       <div className="w-full max-w-5xl h-[88vh] flex flex-col rounded-3xl bg-surface-elevated/95 border border-border-highlight/80 shadow-2xl overflow-hidden font-sans text-text">
-        {/* Header Bar */}
+
         <div className="flex items-center justify-between px-6 py-4 bg-canvas border-b border-border-subtle">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2.5 rounded-xl bg-accent-500/10 text-accent-400 border border-accent-500/30 flex-shrink-0">
@@ -170,7 +170,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
           </div>
         </div>
 
-        {/* Tab Navigation Toolbar */}
+
         <div className="flex items-center justify-between px-6 py-2 bg-[#14060B]/90 border-b border-border/[0.10] text-xs font-mono">
           <div className="flex items-center gap-1 p-0.5 bg-[#1A0A0F]/80 rounded-xl border border-border/[0.08]">
             <button
@@ -222,7 +222,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             </button>
           </div>
 
-          {/* PDF Page Controls */}
+
           {isPdf && document.pages.length > 1 && activeTab === "reader" && (
             <div className="flex items-center gap-2 text-text-secondary">
               <button
@@ -246,12 +246,12 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
           )}
         </div>
 
-        {/* Content Body */}
+
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-surface-base/60">
-          {/* TAB 1: INTERACTIVE READER */}
+
           {activeTab === "reader" && (
             <div className="max-w-4xl mx-auto space-y-4">
-              {/* CSV / Tabular Viewer */}
+
               {isTable && document.structured_data?.headers && (
                 <div className="rounded-2xl border border-border-subtle bg-surface-elevated overflow-hidden shadow-lg">
                   <div className="p-3 bg-canvas border-b border-border-subtle flex items-center justify-between text-xs font-mono text-text-secondary">
@@ -287,7 +287,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                 </div>
               )}
 
-              {/* PDF Document Page View */}
+
               {isPdf && (
                 <div className="p-8 rounded-2xl bg-surface-elevated border border-border-subtle shadow-xl space-y-4 font-serif text-[14.5px] leading-relaxed text-text">
                   <div className="flex items-center justify-between pb-3 border-b border-border-subtle font-sans text-xs font-mono text-text-secondary">
@@ -300,7 +300,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                 </div>
               )}
 
-              {/* Code / Markdown / Text Line Gutter View */}
+
               {!isTable && !isPdf && (
                 <div className="rounded-2xl border border-border-subtle bg-surface-elevated shadow-xl overflow-hidden font-mono text-xs">
                   <div className="flex items-center justify-between px-4 py-2 bg-canvas border-b border-border-subtle text-[11px] text-text-secondary">
@@ -308,13 +308,13 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
                     <span>{document.line_count} total lines</span>
                   </div>
                   <div className="p-4 flex gap-4 overflow-x-auto custom-scrollbar select-text leading-relaxed">
-                    {/* Line numbers gutter */}
+
                     <div className="text-text-tertiary select-none text-right pr-3 border-r border-border-subtle font-mono">
                       {document.full_text.split("\n").map((_, i) => (
                         <div key={i}>{i + 1}</div>
                       ))}
                     </div>
-                    {/* Source content */}
+
                     <pre className="text-text flex-1 whitespace-pre">
                       {document.full_text}
                     </pre>
@@ -324,7 +324,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             </div>
           )}
 
-          {/* TAB 2: IN-DOCUMENT SEARCH */}
+
           {activeTab === "search" && (
             <div className="max-w-3xl mx-auto space-y-4 font-mono text-xs">
               <div className="relative">
@@ -369,7 +369,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             </div>
           )}
 
-          {/* TAB 3: DOCUMENT ANALYTICS */}
+
           {activeTab === "analytics" && (
             <div className="max-w-3xl mx-auto space-y-6 font-mono text-xs">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -422,7 +422,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
             </div>
           )}
 
-          {/* TAB 4: RAW SOURCE */}
+
           {activeTab === "raw" && (
             <div className="max-w-4xl mx-auto rounded-2xl bg-surface-elevated border border-border-subtle p-5 font-mono text-xs text-text select-text overflow-x-auto custom-scrollbar leading-relaxed">
               <pre className="whitespace-pre-wrap">{document.full_text}</pre>
@@ -430,7 +430,7 @@ export const DocumentReaderModal: React.FC<Props> = ({ document, onClose, onAskA
           )}
         </div>
 
-        {/* Footer Bar */}
+
         <div className="flex items-center justify-between px-6 py-3 bg-canvas border-t border-border-subtle text-xs font-mono text-text-secondary">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-verdigris-400 animate-pulse" />

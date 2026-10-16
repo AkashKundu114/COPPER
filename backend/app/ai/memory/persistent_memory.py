@@ -95,7 +95,6 @@ class PersistentMemoryStore:
         clean_name = name.strip()
         if not clean_name or len(clean_name) < 2:
             return
-        # Block single chars or commands from becoming names
         if len(clean_name) <= 2 or clean_name.lower() in [
             "f",
             "gf",
@@ -144,7 +143,6 @@ class PersistentMemoryStore:
         text = message.strip()
         lower = text.lower()
 
-        # Strict ignore for questions, single letters, short words, commands
         if (
             "?" in text
             or len(text) < 4
@@ -170,7 +168,6 @@ class PersistentMemoryStore:
         ):
             return
 
-        # ONLY recognize explicit name introductions (e.g. "My name is Akash", "Call me Akash Kundu")
         name_match = re.search(
             r"\b(?:my name is|call me|name's|name is)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\b", text
         ) or re.search(r"^(?:I am|I'm)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)$", text)
@@ -196,7 +193,6 @@ class PersistentMemoryStore:
                 self.set_user_name(detected)
                 return
 
-        # Explicit memory commands (e.g. "remember that I prefer dark mode")
         remember_match = re.search(
             r"\b(?:remember that|note that|don't forget that|keep in mind that)\s+(.*)", text, re.IGNORECASE
         )

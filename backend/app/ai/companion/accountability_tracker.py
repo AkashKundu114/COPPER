@@ -99,7 +99,7 @@ class AccountabilityTracker:
             "total_commitments": total,
             "fulfilled": fulfilled,
             "follow_through_rate_pct": follow_through_rate_pct,
-            "current_streak": 0,  # placeholder
+            "current_streak": 0,
             "active_nudges": sum(c.nudges_sent for c in self.commitments if c.status == "pending"),
         }
 

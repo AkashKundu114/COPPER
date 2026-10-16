@@ -44,22 +44,18 @@ def test_tool_argument_validation():
     registry.register(tool)
     assert registry.get("test_tool") is tool
 
-    # Valid args
     valid, err = tool.validate_args({"text": "hello", "count": 5})
     assert valid is True
     assert err is None
 
-    # Missing required arg
     valid, err = tool.validate_args({"count": 5})
     assert valid is False
     assert "Missing required" in err
 
-    # Type mismatch: string expected, int provided
     valid, err = tool.validate_args({"text": 123})
     assert valid is False
     assert "must be a string" in err
 
-    # Type mismatch: integer expected, boolean provided
     valid, err = tool.validate_args({"text": "ok", "count": True})
     assert valid is False
     assert "must be an integer" in err

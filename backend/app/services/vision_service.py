@@ -8,10 +8,7 @@ from app.core.logger import logger
 
 
 class VisionService:
-    """
-    Service for real-time ambient vision observation via Argus (Webcam)
-    and Iris (Screen Vision) sensors.
-    """
+    """Service for real-time ambient vision observation via Argus (Webcam)"""
 
     VISION_PROMPT = (
         "You are COPPER's Argus/Iris Optical Sensor observing the operator Akash. "
@@ -20,14 +17,10 @@ class VisionService:
     )
 
     async def observe_frame(self, image_base64: str, source: str = "camera") -> dict[str, Any]:
-        """
-        Processes a video frame snapshot from webcam or screen and returns
-        a concise contextual observation.
-        """
+        """Processes a video frame snapshot from webcam or screen and returns"""
         if not image_base64:
             return {"error": "No image data provided", "observation": "Optical sensor idle."}
 
-        # Select lightweight vision model from manifest
         vision_model = model_manager.get_model("vision_agents.vision_lightweight", "moondream:1.8b")
 
         try:
@@ -44,7 +37,6 @@ class VisionService:
                 clean = clean.replace("\n", " ").strip("\"' ")
 
                 if clean:
-                    # Update persistent memory context so chat turns are aware of vision
                     persistent_memory.set_preference("latest_vision_observation", clean)
                     return {
                         "source": source,
@@ -54,7 +46,6 @@ class VisionService:
         except Exception as e:
             logger.debug(f"Vision model inference fallback: {e}")
 
-        # Fallback tactical observation if vision model not downloaded
         if source == "camera":
             fallback = "Operator active at workstation. Optical telemetry synchronized."
         else:

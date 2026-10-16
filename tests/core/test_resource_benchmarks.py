@@ -1,12 +1,12 @@
 import os
 import time
+
 import psutil
 import pytest
-import asyncio
 
-from app.core.guardian import guardian_engine
 from app.ai.cache.semantic_cache import semantic_cache
 from app.ai.orchestration.agent_router import route_message_detailed
+from app.core.guardian import guardian_engine
 
 
 class TestResourceAndLatencyBenchmarks:
@@ -18,7 +18,6 @@ class TestResourceAndLatencyBenchmarks:
         mem_info = process.memory_info()
         rss_mb = mem_info.rss / (1024 * 1024)
         print(f"\n[BENCHMARK] Backend Process RSS: {rss_mb:.2f} MB")
-        # Ensure base memory footprint is reasonable (< 750 MB for test runner + loaded torch/chroma)
         assert rss_mb < 750.0
 
     def test_guardian_evaluation_latency(self):
@@ -43,19 +42,18 @@ class TestResourceAndLatencyBenchmarks:
         avg_latency_us = (total_time_s / iterations) * 1_000_000
 
         print(f"\n[BENCHMARK] Guardian Throughput: {evals_per_sec:.1f} evals/sec | Avg Latency: {avg_latency_us:.2f} µs")
-        # Guardian should evaluate in < 1ms per query
         assert avg_latency_us < 1000.0
 
     @pytest.mark.asyncio
     async def test_semantic_cache_lookup_latency(self):
         """Measures in-memory cache lookup latency."""
-        # Warm cache
         await semantic_cache.store("test benchmark query", "test benchmark response", agent_type="chat")
 
         iterations = 500
         t0 = time.perf_counter()
         for _ in range(iterations):
             res = await semantic_cache.lookup("test benchmark query")
+        assert res.status == "hit"
         t1 = time.perf_counter()
 
         total_time_s = t1 - t0

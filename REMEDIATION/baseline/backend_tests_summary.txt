@@ -1,0 +1,15 @@
+﻿backend/tests/test_web_search.py::test_raptor_react_search_and_synthesis PASSED [ 99%]
+backend/tests/test_web_search.py::test_raptor_max_three_fetches_limit PASSED [ 99%]
+backend/tests/test_web_search.py::test_agent_router_web_search_routing PASSED [ 99%]
+backend/tests/test_web_search.py::test_agent_router_negative_suppression PASSED [100%]
+
+============================== warnings summary ===============================
+C:\Users\Akash\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py:128
+  C:\Users\Akash\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py:128: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    if asyncio.iscoroutinefunction(f):
+
+<string>:8
+  <string>:8: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================= 676 passed, 2 warnings in 185.99s (0:03:05) =================

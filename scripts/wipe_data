@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# C.O.P.P.E.R. Data Purge & Reset Wrapper
+python "$(dirname "$0")/wipe_data.py" "$@"

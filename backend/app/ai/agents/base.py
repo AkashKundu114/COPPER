@@ -48,7 +48,6 @@ class BaseAgent:
         self.tools = tools if tools is not None else []
         self.max_tool_steps = max_tool_steps
 
-        # Register bindings in registry
         if self.tools:
             tool_registry.register_agent_tools(self.agent_type.value, self.tools)
 
@@ -89,7 +88,6 @@ class BaseAgent:
         messages.append({"role": "user", "content": message})
         target_model = self.get_target_model()
 
-        # If no tools, simple conversational invocation
         if not self.tools:
             try:
                 res = await ollama_client.chat(messages, model=target_model, agent_type=self.agent_type)
@@ -98,7 +96,6 @@ class BaseAgent:
                 logger.warning(f"Agent {self.name} fallback response: {e}")
                 return f"[{self.name} Response]: Processed prompt '{message}'."
 
-        # Tool-aware ReAct execution loop
         current_response = ""
         for step in range(self.max_tool_steps):
             try:
@@ -113,10 +110,8 @@ class BaseAgent:
 
             tool_call = tool_executor.parse_tool_call(current_response)
             if not tool_call:
-                # No more tool calls; return final text response
                 return current_response
 
-            # Validate tool belongs to agent or available tools
             if tool_call.tool not in self.tools and self.tools:
                 logger.warning(f"Agent {self.name} requested unauthorized tool '{tool_call.tool}'")
 

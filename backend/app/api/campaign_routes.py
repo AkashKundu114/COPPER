@@ -1,5 +1,4 @@
-import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
@@ -47,7 +46,6 @@ def get_campaigns(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
         )
         if latest:
             data = latest.to_dict()
-            # Determine health status based on detected anomalies
             sev = anomaly_map.get(cid, "healthy")
             data["status"] = sev if sev in ("warning", "critical") else "healthy"
             campaign_list.append(data)
@@ -147,7 +145,6 @@ def get_creative_fatigue(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
     now = datetime.now()
 
     for cid in distinct_cids:
-        # Generate representative creative historical data points for each campaign
         pts = [
             CreativeMetricPoint(
                 creative_id=f"crt-{cid}-v1",
@@ -193,7 +190,6 @@ def get_pacing_forecast(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
 def get_attribution() -> dict[str, Any]:
     """Computes Linear, Time-Decay, and Game-Theoretic Shapley Value attribution across marketing channels."""
     now = datetime.now()
-    # Sample cross-channel conversion journeys
     sample_journeys = [
         ConversionJourney(
             journey_id="j1",
@@ -259,7 +255,6 @@ async def campaign_alerts_websocket(websocket: WebSocket, db: Session = Depends(
     """WebSocket endpoint streaming real-time ad-tech anomaly alerts to frontend clients."""
     await manager.connect(websocket)
     try:
-        # Send initial active anomalies on connect
         ensure_simulated_campaign_data(db)
         anomalies = campaign_anomaly_detector.scan_all_campaigns(db, hours=72)
         initial_payload = {
@@ -269,7 +264,6 @@ async def campaign_alerts_websocket(websocket: WebSocket, db: Session = Depends(
         }
         await websocket.send_json(initial_payload)
 
-        # Listen for client heartbeat or manual refresh triggers
         while True:
             data = await websocket.receive_json()
             action = data.get("action")

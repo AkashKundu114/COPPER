@@ -28,19 +28,19 @@ export function QuickBar() {
 
   useEffect(() => {
     inputRef.current?.focus();
-    
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         getIpcRenderer()?.invoke("quick-bar-hide");
       }
     };
-    
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   useEffect(() => {
-    // Resize the window based on content
+
     if (containerRef.current) {
       const height = containerRef.current.offsetHeight;
       getIpcRenderer()?.invoke("quick-bar-resize", height + 16);
@@ -51,12 +51,12 @@ export function QuickBar() {
     if (e && "preventDefault" in e) {
       e.preventDefault();
     }
-    
+
     if (!query.trim()) return;
-    
+
     setLoading(true);
     setResponse(null);
-    
+
     try {
       if (query.startsWith("/task ") || query.startsWith("/event ")) {
         const title = query.replace(/^\/(task|event)\s+/, "").trim();

@@ -1,9 +1,4 @@
-"""
-C.O.P.P.E.R. Stratified 80 / 10 / 10 Train-Validation-Test Splitter & Leakage Auditor
-Splits hybrid benchmark datasets into deterministic 80% Train, 10% Validation, 10% Test partitions,
-packages them into streaming .jsonl and compressed .jsonl.gz files for massive scale (1M+ capacity),
-and runs strict SHA-256 cryptographic leakage checks to ensure 0.00% train/test contamination.
-"""
+"""C.O.P.P.E.R. Stratified 80 / 10 / 10 Train-Validation-Test Splitter & Leakage Auditor"""
 
 import gzip
 import json
@@ -11,7 +6,6 @@ import random
 import sys
 from pathlib import Path
 
-# Fix Windows console UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -148,7 +142,6 @@ def main():
     with open(manifest_path, "w", encoding="utf-8") as f:
         json.dump(master_manifest, f, indent=2)
 
-    # Also duplicate to main datasets folder for quick access
     with open(BASE_EVAL_DIR / "master_eval_manifest.json", "w", encoding="utf-8") as f:
         json.dump(master_manifest, f, indent=2)
 

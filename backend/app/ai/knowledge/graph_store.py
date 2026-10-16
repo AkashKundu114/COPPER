@@ -15,10 +15,7 @@ def canonicalize_name(name: str) -> str:
 
 
 def bayesian_confidence_update(prior: float, incoming: float, learning_rate: float = 0.4) -> float:
-    """
-    Bayesian confidence reinforcement using independent confirmation model (Noisy-OR).
-    Increases confidence when repeatedly confirmed, bounded in [0.5, 0.99].
-    """
+    """Bayesian confidence reinforcement using independent confirmation model (Noisy-OR)."""
     p_prior = max(0.01, min(0.99, float(prior)))
     p_incoming = max(0.01, min(0.99, float(incoming)))
     p_error = (1.0 - p_prior) * (1.0 - learning_rate * p_incoming)
@@ -75,7 +72,6 @@ class GraphStore:
     def _add_edge_to_graph(self, rel: KnowledgeRelationship):
         source_canon = canonicalize_name(rel.source_name)
         target_canon = canonicalize_name(rel.target_name)
-        # Add edge with unique key (rel.relation_type, rel.id)
         edge_key = f"{rel.relation_type}:{rel.id}"
         self.graph.add_edge(
             source_canon,
@@ -122,7 +118,6 @@ class GraphStore:
         try:
             existing = db.query(KnowledgeEntity).filter(KnowledgeEntity.canonical_name == canon).first()
             if existing:
-                # Deduplicate: update confidence and evidence count
                 new_conf = bayesian_confidence_update(existing.confidence, conf)
                 existing.confidence = new_conf
                 existing.evidence_count += 1
@@ -168,10 +163,7 @@ class GraphStore:
         metadata: dict | None = None,
         db: Session | None = None,
     ) -> dict:
-        """
-        Adds or updates a relationship between source and target entities.
-        Ensures both entities exist, then applies Bayesian confidence reinforcement if already present.
-        """
+        """Adds or updates a relationship between source and target entities."""
         self._ensure_initialized()
         src_clean = source_name.strip()
         tgt_clean = target_name.strip()
@@ -189,7 +181,6 @@ class GraphStore:
             close_db = True
 
         try:
-            # Ensure source and target entities exist
             src_entity = self.add_entity(name=src_clean, entity_type="CONCEPT", confidence=conf, db=db)
             tgt_entity = self.add_entity(name=tgt_clean, entity_type="CONCEPT", confidence=conf, db=db)
 
@@ -204,7 +195,6 @@ class GraphStore:
             )
 
             if not existing_rel:
-                # Also check case-insensitive match on canonical names
                 candidates = (
                     db.query(KnowledgeRelationship).filter(KnowledgeRelationship.relation_type == rel_type_clean).all()
                 )
@@ -260,7 +250,6 @@ class GraphStore:
             for node, data in self.graph.nodes(data=True):
                 if data.get("id") == target_id:
                     return data
-            # Fallback to DB
             db = SessionLocal()
             try:
                 e = db.query(KnowledgeEntity).filter(KnowledgeEntity.id == target_id).first()
@@ -280,16 +269,12 @@ class GraphStore:
             db.close()
 
     def query_neighbors(self, name: str, depth: int = 1, min_confidence: float = 0.0) -> dict:
-        """
-        Retrieves local neighborhood up to `depth` hops around an entity.
-        Returns nodes and edges filtered by `min_confidence`.
-        """
+        """Retrieves local neighborhood up to `depth` hops around an entity."""
         self._ensure_initialized()
         canon = canonicalize_name(name)
         if canon not in self.graph:
             return {"nodes": [], "edges": [], "links": []}
 
-        # Use undirected view to traverse edges in both directions
         undirected = self.graph.to_undirected(as_view=True)
         subgraph_nodes = {canon}
 
@@ -303,7 +288,6 @@ class GraphStore:
             subgraph_nodes.update(next_level)
             current_level = next_level
 
-        # Extract nodes and filter by min_confidence
         nodes = []
         valid_node_keys = set()
         for node_key in subgraph_nodes:
@@ -312,7 +296,6 @@ class GraphStore:
                 nodes.append(node_data)
                 valid_node_keys.add(node_key)
 
-        # Extract edges connecting these valid nodes
         edges = []
         for u, v, key, edge_data in self.graph.edges(keys=True, data=True):
             if u in valid_node_keys and v in valid_node_keys:
@@ -320,7 +303,6 @@ class GraphStore:
                     edge_dict = dict(edge_data)
                     edges.append(edge_dict)
 
-        # Sort nodes and edges by confidence descending
         nodes.sort(key=lambda x: x.get("confidence", 0.0), reverse=True)
         edges.sort(key=lambda x: x.get("confidence", 0.0), reverse=True)
 
@@ -328,14 +310,11 @@ class GraphStore:
             "center": canon,
             "nodes": nodes,
             "edges": edges,
-            "links": edges,  # D3.js alias
+            "links": edges,
         }
 
     def find_path(self, source: str, target: str) -> list[dict] | None:
-        """
-        Computes the shortest path between two entities in the graph.
-        Returns a sequential list of path step dictionaries containing entities and relationships.
-        """
+        """Computes the shortest path between two entities in the graph."""
         self._ensure_initialized()
         src_canon = canonicalize_name(source)
         tgt_canon = canonicalize_name(target)
@@ -357,7 +336,6 @@ class GraphStore:
 
             if i < len(path_nodes) - 1:
                 next_node = path_nodes[i + 1]
-                # Check edges in both directions
                 forward_edges = self.graph.get_edge_data(curr_node, next_node) or {}
                 backward_edges = self.graph.get_edge_data(next_node, curr_node) or {}
 
@@ -382,11 +360,7 @@ class GraphStore:
         entity_type: str | None = None,
         min_confidence: float = 0.0,
     ) -> dict:
-        """
-        Generates a D3.js-ready force-directed graph structure.
-        If `entity_name` is provided, generates an ego-graph; otherwise returns top entities.
-        Supports entity_type and min_confidence filters.
-        """
+        """Generates a D3.js-ready force-directed graph structure."""
         self._ensure_initialized()
         clean_type = entity_type.strip().upper() if entity_type and entity_type.upper() != "ALL" else None
 
@@ -408,7 +382,6 @@ class GraphStore:
                 "links": edges,
             }
 
-        # Global graph top subgraph
         nodes = [dict(data) for _, data in self.graph.nodes(data=True)]
         if min_confidence > 0.0:
             nodes = [n for n in nodes if n.get("confidence", 0.0) >= min_confidence]
@@ -445,7 +418,6 @@ class GraphStore:
                 return False
 
             canon = entity.canonical_name
-            # Delete relationships connected to this entity
             db.query(KnowledgeRelationship).filter(
                 or_(
                     KnowledgeRelationship.source_id == entity_id,
@@ -458,7 +430,6 @@ class GraphStore:
             db.delete(entity)
             db.commit()
 
-            # Remove from NetworkX
             if canon in self.graph:
                 self.graph.remove_node(canon)
 
@@ -488,7 +459,6 @@ class GraphStore:
             db.delete(rel)
             db.commit()
 
-            # Remove edge from NetworkX
             edge_to_remove = None
             for u, v, key, data in self.graph.edges(keys=True, data=True):
                 if data.get("id") == rel_id:

@@ -9,22 +9,21 @@ from app.core.constants import CHROMA_COLLECTION_CHAT, MEMORY_SEARCH_LIMIT
 from app.core.logger import logger
 from app.database.models.memory_v2 import MEMORY_PRIORITY, MemoryStatus, MemoryType, UserMemoryV2
 
-# PW-EBR: Provenance-Weighted Epistemic Belief Revision Constants
 PROVENANCE_WEIGHTS: dict[str, float] = {
-    "explicit_user": 1.00,  # Direct explicit command or correction from user
+    "explicit_user": 1.00,
     "user_directive": 1.00,
-    "tool_success": 0.85,  # Verified sandbox execution or compiler pass
-    "system_verified": 0.75,  # Confirmed system interaction
-    "chat": 0.50,  # Standard multi-turn dialog observation
+    "tool_success": 0.85,
+    "system_verified": 0.75,
+    "chat": 0.50,
     "observation": 0.50,
-    "ambient_inferred": 0.25,  # Inferred pattern or background hypothesis
+    "ambient_inferred": 0.25,
     "speculative": 0.15,
 }
 
 DECAY_CONSTANTS: dict[MemoryType, float] = {
-    MemoryType.FACT: 0.005,  # Half-life ~138 days
-    MemoryType.OBSERVATION: 0.030,  # Half-life ~23 days
-    MemoryType.HYPOTHESIS: 0.100,  # Half-life ~7 days
+    MemoryType.FACT: 0.005,
+    MemoryType.OBSERVATION: 0.030,
+    MemoryType.HYPOTHESIS: 0.100,
 }
 
 
@@ -35,29 +34,16 @@ def compute_unified_epistemic_decay(
     importance: float = 0.50,
     retrieval_count: int = 0,
 ) -> float:
-    """
-    UMF-EDR (Unified Multi-Factor Epistemic Decay and Reinforcement):
-    Integrates:
-    1. Base tier decay constants (lambda_Fact=0.005, lambda_Obs=0.030, lambda_Hyp=0.100).
-    2. Spacing / Testing Effect: Retrieval-Induced Plasticity:
-       lambda_eff = lambda_T / (1.0 + beta * ln(1 + N_retrievals))
-    3. Importance-Bounded Confidence Floor:
-       C_floor = C_min + (C_base_floor - C_min) * Importance
-    Formula:
-       C(t) = max(C_floor, C_0 * exp(-lambda_eff * delta_t))
-    """
+    """UMF-EDR (Unified Multi-Factor Epistemic Decay and Reinforcement):"""
     lam_base = DECAY_CONSTANTS.get(mem_type, 0.030)
     beta_plasticity = 0.40
     lam_eff = lam_base / (1.0 + beta_plasticity * math.log(1.0 + max(0, retrieval_count)))
 
-    # Importance-bounded resistance floor (high-importance memories never decay below floor,
-    # and floor is bounded by initial confidence so low-confidence hypotheses decay downwards)
     c_floor = min(confidence, 0.05 + (0.50 * max(0.0, min(1.0, importance))))
     decayed = confidence * math.exp(-lam_eff * max(0.0, elapsed_days))
     return max(c_floor, min(0.99, decayed))
 
 
-# Backward-compatible alias
 compute_temporal_decay = compute_unified_epistemic_decay
 
 
@@ -69,11 +55,7 @@ def compute_unified_retrieval_score(
     alpha_conf: float = 0.35,
     alpha_imp: float = 0.15,
 ) -> float:
-    """
-    UMF-EDR Unified Context Scoring Function:
-    S_unified = alpha_rel * Relevance(v_q, v_m) + alpha_conf * Confidence(m) + alpha_imp * Importance(m)
-    where Relevance = max(0.0, 1.0 - (distance / 2.0))
-    """
+    """UMF-EDR Unified Context Scoring Function:"""
     relevance = max(0.0, min(1.0, 1.0 - (semantic_distance / 2.0)))
     score = (alpha_rel * relevance) + (alpha_conf * confidence) + (alpha_imp * importance)
     return round(score, 4)
@@ -88,32 +70,21 @@ def compute_surprise_gated_log_odds(
     importance: float = 0.50,
     retrieval_count: int = 0,
 ) -> float:
-    """
-    PW-EBR Algorithm with UMF-EDR integration:
-    L_{t+1} = L_prior * exp(-lambda_eff * delta_t) + gamma_s * Surprise * polarity
-    where Surprise = -log2(1 - |C_prior - y| + 1e-4)
-    and C_{new} = 1 / (1 + exp(-L_{t+1}))
-    """
-    # 1. Decay prior confidence over elapsed time using UMF-EDR multi-factor formulation
+    """PW-EBR Algorithm with UMF-EDR integration:"""
     c_prior = compute_unified_epistemic_decay(current_confidence, mem_type, elapsed_days, importance, retrieval_count)
     c_prior = max(0.01, min(0.99, c_prior))
 
-    # 2. Prior log-odds
     l_prior = math.log(c_prior / (1.0 - c_prior))
 
-    # 3. Information-theoretic surprise calculation
     target_y = 1.0 if polarity > 0 else 0.0
     surprise = -math.log2(max(1e-4, 1.0 - abs(c_prior - target_y) + 1e-4))
 
-    # 4. Provenance weighting factor
     gamma_s = PROVENANCE_WEIGHTS.get(provenance_source.lower(), 0.50)
 
-    # 5. Updated log-odds with provenance-scaled surprise step
     scale = 2.5 if gamma_s >= 0.90 else (1.8 if gamma_s >= 0.70 else 1.0)
     delta_l = polarity * gamma_s * min(3.5, surprise * scale)
     l_new = l_prior + delta_l
 
-    # 6. Convert back to confidence probability
     c_new = 1.0 / (1.0 + math.exp(-l_new))
     return round(max(0.05, min(0.99, c_new)), 3)
 
@@ -221,7 +192,6 @@ class MemoryManager:
                         "unified_score": unified_score,
                     }
                 )
-        # Sort by UMF-EDR unified ranking score descending
         memories.sort(key=lambda m: m.get("unified_score", 0.0), reverse=True)
         return memories
 
@@ -319,7 +289,6 @@ class MemoryManager:
         if confidence_delta is not None and confidence_delta != 0.05:
             mem.confidence = min(0.99, mem.confidence + confidence_delta)
         else:
-            # Novelty 2: PW-EBR with UMF-EDR Multi-Factor Scaling
             mem.confidence = compute_surprise_gated_log_odds(
                 current_confidence=mem.confidence,
                 mem_type=mem.type,
@@ -342,15 +311,11 @@ class MemoryManager:
         return mem
 
     def record_retrieval(self, db: Session, memory_id: int) -> UserMemoryV2 | None:
-        """
-        UMF-EDR Closed-Loop Retrieval Plasticity (Testing / Spacing Effect):
-        Reinforces memory stability when accessed during task execution.
-        """
+        """UMF-EDR Closed-Loop Retrieval Plasticity (Testing / Spacing Effect):"""
         mem = db.query(UserMemoryV2).filter(UserMemoryV2.id == memory_id).first()
         if not mem:
             return None
         mem.retrieval_count += 1
-        # Plasticity bonus: reinforces confidence and slows future decay
         mem.confidence = min(0.99, mem.confidence + (0.02 * mem.importance))
         db.commit()
         db.refresh(mem)

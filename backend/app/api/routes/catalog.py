@@ -26,19 +26,16 @@ async def get_catalog_summary():
     science_data = _load_science_skills()
     tools = tool_registry.list_tools()
 
-    # Division counts
     division_counts: dict[str, int] = {}
     for p in agency_data.values():
         div = p.get("division", "other")
         division_counts[div] = division_counts.get(div, 0) + 1
 
-    # Science category counts
     science_categories: dict[str, int] = {}
     for s in science_data.values():
         cat = s.get("category", "General")
         science_categories[cat] = science_categories.get(cat, 0) + 1
 
-    # Tool guardian level counts
     guardian_counts: dict[int, int] = {0: 0, 1: 0, 2: 0, 3: 0}
     for t in tools:
         lvl = getattr(t, "guardian_level", 0)
@@ -203,7 +200,6 @@ async def get_scientific_skill_detail(skill_id: str):
     if skill_key in skills:
         return skills[skill_key]
 
-    # Partial match fallback
     for k, v in skills.items():
         if skill_key in k.lower() or skill_key in v.get("name", "").lower():
             return v
@@ -256,7 +252,6 @@ async def get_tools_catalog(
             }
         )
 
-    # Sort tools by category, then by name
     result.sort(key=lambda x: (x["category"], x["name"]))
 
     return {

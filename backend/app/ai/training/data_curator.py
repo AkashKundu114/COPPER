@@ -76,7 +76,6 @@ class ChrysalisDataCurator:
         skipped_count = 0
 
         try:
-            # Query candidate evaluations
             evals = (
                 db.query(ResponseEvaluation)
                 .filter(ResponseEvaluation.overall_score >= min_score)
@@ -85,14 +84,12 @@ class ChrysalisDataCurator:
                 .all()
             )
 
-            # Query recent correction sessions to exclude corrected turns
             corrections = db.query(SelfMemory).filter(SelfMemory.category == SelfMemoryCategory.CORRECTION).all()
             corrected_snippets = [
                 c.content.lower().strip() for c in corrections if c.content and len(c.content.strip()) >= 5
             ]
 
             for ev in evals:
-                # Exclude turns with detected failure categories
                 valid_fails = [f for f in ev.failures or [] if str(f).upper() != "NONE"]
                 if valid_fails:
                     skipped_count += 1
@@ -101,12 +98,10 @@ class ChrysalisDataCurator:
                 user_text = self.clean_text(ev.user_message)
                 asst_text = self.clean_text(ev.assistant_response)
 
-                # Exclude trivial interactions
                 if self.is_trivial(user_text, asst_text):
                     skipped_count += 1
                     continue
 
-                # Exclude if user corrected this response
                 if any(
                     len(snip) >= 5
                     and (snip in user_text.lower() or (len(user_text) >= 10 and user_text[:30].lower() in snip))
@@ -115,7 +110,6 @@ class ChrysalisDataCurator:
                     skipped_count += 1
                     continue
 
-                # Deduplication check
                 c_hash = self.compute_content_hash(user_text, asst_text)
                 existing = (
                     db.query(CuratedTrainingExample).filter(CuratedTrainingExample.content_hash == c_hash).first()
@@ -124,14 +118,12 @@ class ChrysalisDataCurator:
                     skipped_count += 1
                     continue
 
-                # Classify difficulty & quality tags via LLM or heuristic
                 classification = await self._classify_example(ev.agent_type, user_text, asst_text)
 
                 if classification["decision"] != "include":
                     skipped_count += 1
                     continue
 
-                # Generate system prompt appropriate for agent
                 try:
                     agent_enum = AgentType(ev.agent_type.lower())
                 except Exception:
@@ -153,7 +145,6 @@ class ChrysalisDataCurator:
                 db.commit()
                 db.refresh(example)
 
-                # Append to JSONL dataset
                 self._append_to_jsonl(example)
                 curated_count += 1
 
@@ -202,7 +193,6 @@ class ChrysalisDataCurator:
         except Exception as e:
             logger.debug(f"LLM classification fallback: {e}")
 
-        # Heuristic classification
         has_code = "```" in asst_msg
         has_structure = "\n- " in asst_msg or "\n1. " in asst_msg
         length = len(asst_msg)

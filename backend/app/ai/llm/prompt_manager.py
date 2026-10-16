@@ -92,7 +92,6 @@ def get_system_prompt(agent_type: AgentType, memory_context: str = "", self_cont
 
     formatted_base = BASE_COPPER_SYSTEM_PROMPT.replace("{self_context_snippet}", self_snippet)
 
-    # Inject CRUCIBLE optimized directives if present
     patches = get_prompt_patches_for_agent(agent_type.value)
     patch_snippet = ""
     if patches:

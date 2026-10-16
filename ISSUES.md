@@ -1,6 +1,6 @@
 # C.O.P.P.E.R. Issue Tracking & Reporting Guidelines
 
-Welcome to the C.O.P.P.E.R. Issue Tracker guide. We appreciate your help in making C.O.P.P.E.R. stable, secure, and performant! This repository adheres strictly to **Microsoft Code Quality** and **Red Team Security** standards.
+> **Notice**: For current alpha release constraints and deferred items, see [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) and [REMEDIATION/ISSUES_TO_FILE.md](REMEDIATION/ISSUES_TO_FILE.md).
 
 ---
 

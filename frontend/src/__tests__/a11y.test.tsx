@@ -11,7 +11,7 @@ import { Sidebar } from "../components/layout/Sidebar";
 import { TopBar } from "../components/layout/TopBar";
 import { AGENTS } from "../constants/agents";
 
-// Mock helper component to test useAnnounce
+
 function TestAnnouncerComponent({ message, politeness }: { message: string; politeness?: "polite" | "assertive" }) {
   const { announce } = useAnnounce();
   return (
@@ -96,7 +96,7 @@ describe("Accessibility (a11y) Audit Suite", () => {
       expect(screen.getByRole("heading", { name: /agent neural network overview/i, level: 2 })).toBeInTheDocument();
       expect(screen.getByText(/COPPER Core Engine Status: Thinking and reasoning active/i)).toBeInTheDocument();
 
-      // Ensure screen reader directory buttons exist for each agent
+
       const firstAgent = AGENTS[0];
       const srButton = screen.getByRole("button", { name: new RegExp(`Select ${firstAgent.name}:`, "i") });
       expect(srButton).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe("Accessibility (a11y) Audit Suite", () => {
       const handleSelect = vi.fn();
       render(<NeuralBrain {...defaultProps} onSelectAgent={handleSelect} />);
 
-      // The SVG interactive node circle
+
       const reminderSvgButton = screen.getByRole("button", { name: /^Reminder,/i });
       expect(reminderSvgButton).toHaveAttribute("aria-label");
       expect(reminderSvgButton).toHaveAttribute("tabindex", "0");
@@ -136,24 +136,24 @@ describe("Accessibility (a11y) Audit Suite", () => {
         />
       );
 
-      // Chat input textarea
+
       const textarea = screen.getByRole("textbox", { name: /message input for copper intelligence/i });
       expect(textarea).toBeInTheDocument();
 
-      // Plus attach button
+
       const attachBtn = screen.getByRole("button", { name: /attach reconnaissance documents/i });
       expect(attachBtn).toBeInTheDocument();
 
-      // Voice record button
+
       const micBtn = screen.getByRole("button", { name: /start voice recording/i });
       expect(micBtn).toBeInTheDocument();
 
-      // Cognitive mode dropdown button
+
       const modeBtn = screen.getByRole("button", { name: /cognitive intelligence mode:/i });
       expect(modeBtn).toHaveAttribute("aria-haspopup", "listbox");
       expect(modeBtn).toHaveAttribute("aria-expanded", "false");
 
-      // Open dropdown
+
       await user.click(modeBtn);
       expect(modeBtn).toHaveAttribute("aria-expanded", "true");
 
@@ -163,7 +163,7 @@ describe("Accessibility (a11y) Audit Suite", () => {
       const options = screen.getAllByRole("option");
       expect(options.length).toBe(5);
 
-      // Select another mode
+
       await user.click(options[1]);
       expect(modeBtn).toHaveAttribute("aria-expanded", "false");
     });
@@ -236,11 +236,11 @@ describe("Accessibility (a11y) Audit Suite", () => {
       const options = screen.getAllByRole("option");
       expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-      // Arrow Down moves active option
+
       fireEvent.keyDown(combobox, { key: "ArrowDown" });
       expect(options[1]).toHaveAttribute("aria-selected", "true");
 
-      // Enter selects active option
+
       fireEvent.keyDown(combobox, { key: "Enter" });
       expect(handleSelectSection).toHaveBeenCalled();
       expect(handleClose).toHaveBeenCalled();
@@ -321,13 +321,13 @@ describe("Accessibility (a11y) Audit Suite", () => {
         expect(screen.getByRole("button", { name: /toggle smart clipboard drawer/i })).toBeInTheDocument();
       });
 
-      // Verify drawer button click triggers callback
+
       const profileBtn = screen.getByRole("button", { name: /open user profile and agent history drawer/i });
       expect(profileBtn).toHaveAttribute("aria-expanded", "false");
       fireEvent.click(profileBtn);
       expect(handleToggleDrawer).toHaveBeenCalled();
 
-      // Verify clipboard button click triggers callback
+
       const clipBtn = screen.getByRole("button", { name: /toggle smart clipboard drawer/i });
       expect(clipBtn).toHaveAttribute("aria-expanded", "false");
       fireEvent.click(clipBtn);

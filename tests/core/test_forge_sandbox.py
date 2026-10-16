@@ -96,7 +96,7 @@ def test_sandbox_pyodide_wasm_execution():
     """Verify Pyodide WebAssembly runner executes and produces structured output."""
     runner = PyodideWasmRunner()
     if not runner.is_available():
-        return  # Skipped if environment lacks node/pyodide
+        return
     res = forge_sandbox.run_python_code("print('Pyodide WASM active!')", backend="pyodide")
     assert res["exit_code"] == 0
     assert "Pyodide WASM active!" in res["stdout"]
@@ -119,7 +119,6 @@ def test_sandbox_filesystem_isolation():
     res = forge_sandbox.run_python_code(code, backend="pyodide", skip_ast_validation=True)
     assert res["exit_code"] == 0
     assert "/home/pyodide" in res["stdout"]
-    # Ensure host files (like pyproject.toml, backend) are NOT in the virtual cwd
     assert "pyproject.toml" not in res["stdout"]
 
 
@@ -188,7 +187,6 @@ def test_sandbox_docker_runner_isolation_flags():
         assert res["stdout"] == "docker stdout"
 
         called_cmd = mock_popen.call_args[0][0]
-        # Verify strict security flags
         assert "--network=none" in called_cmd
         assert "--read-only" in called_cmd
         assert "--cap-drop=ALL" in called_cmd

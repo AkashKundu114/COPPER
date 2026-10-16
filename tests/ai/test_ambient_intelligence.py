@@ -48,7 +48,6 @@ async def test_daily_briefing_synthesis():
 
 
 def test_clipboard_processor_classification():
-    # URL
     t_url = clipboard_monitor.detect_type("https://github.com/AkashKundu114/COPPER")
     assert t_url == "url"
 
@@ -63,7 +62,6 @@ def test_clipboard_processor_classification():
     assert "suggested_actions" in proc_url
     assert any("browser" in a.lower() or "save" in a.lower() for a in proc_url["suggested_actions"])
 
-    # Code
     code_text = "def quicksort(arr):\n    return arr if len(arr) <= 1 else arr"
     t_code = clipboard_monitor.detect_type(code_text)
     assert t_code == "code"
@@ -78,10 +76,8 @@ def test_clipboard_processor_classification():
     proc_code = clipboard_processor.process_entry(entry_code)
     assert "suggested_actions" in proc_code
 
-    # Email
     assert clipboard_monitor.detect_type("contact@copper-ai.local") == "email"
 
-    # JSON
     assert clipboard_monitor.detect_type('{"status": "online", "nodes": 4}') == "json"
 
 

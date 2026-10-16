@@ -29,7 +29,6 @@ def test_image_generate_api():
     assert data["url"].startswith("/generated/copper_sd_")
     assert data["offline"] is True
 
-    # Test static file retrieval through FastAPI static mount
     static_url = data["url"]
     static_res = client.get(static_url)
     assert static_res.status_code == 200

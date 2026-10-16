@@ -23,10 +23,7 @@ Respond ONLY with a valid JSON object matching this schema:
 
 
 class DiffAnalyzer:
-    """
-    Analyzes semantic differences, outcomes, and mergeable insights
-    between two conversation branches using DeepSeek-R1 / Ollama.
-    """
+    """Analyzes semantic differences, outcomes, and mergeable insights"""
 
     def __init__(self):
         self.model_identifier = "core_agents.reasoning"
@@ -57,7 +54,6 @@ class DiffAnalyzer:
         msgs_a = branch_a.get("messages", [])
         msgs_b = branch_b.get("messages", [])
 
-        # 1. Identify divergence point
         div_idx = 0
         min_len = min(len(msgs_a), len(msgs_b))
         for i in range(min_len):
@@ -69,7 +65,6 @@ class DiffAnalyzer:
         div_msg = msgs_a[div_idx] if div_idx < len(msgs_a) else (msgs_b[div_idx] if div_idx < len(msgs_b) else {})
         div_text = div_msg.get("content", "Common root of conversation")
 
-        # 2. Extract divergent messages
         diff_a = msgs_a[div_idx + 1 :] or msgs_a[div_idx:]
         diff_b = msgs_b[div_idx + 1 :] or msgs_b[div_idx:]
 
@@ -83,7 +78,6 @@ class DiffAnalyzer:
             or "No subsequent messages."
         )
 
-        # 3. LLM comparison prompt
         user_prompt = (
             f"Compare two conversation branches that diverged from the same point.\n\n"
             f"DIVERGENCE POINT:\n{div_text}\n\n"
@@ -112,7 +106,6 @@ class DiffAnalyzer:
         except Exception as e:
             logger.warning(f"LLM branch comparison failed, using structural fallback: {e}")
 
-        # 4. Fallback structural comparison
         return self._heuristic_diff(
             branch_a=branch_a,
             branch_b=branch_b,
@@ -180,7 +173,6 @@ class DiffAnalyzer:
             },
         ]
 
-        # Recommendation based on completeness
         if len_a > len_b:
             rec = f"{title_a} developed deeper exploration with {len_a} interaction turns."
         elif len_b > len_a:

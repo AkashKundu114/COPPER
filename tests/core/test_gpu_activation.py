@@ -3,19 +3,14 @@ Unit tests for the C.O.P.P.E.R. GPU hardware activation and licensing engine.
 """
 
 import hashlib
-import json
-from pathlib import Path
 
 import pytest
 
 from app.core.gpu_activation import (
-    ACTIVATION_FILE,
-    ActivationState,
     HardwareFingerprint,
     activate_local_gpu,
     activate_with_owner_code,
     detect_gpu,
-    generate_fingerprint,
     is_activated,
     load_activation,
     revoke_activation,
@@ -83,12 +78,10 @@ def test_validate_and_activate_with_owner_code():
     test_code = "COPPER-TEST-1234-ABCD"
     test_hash = hashlib.sha256(test_code.encode("utf-8")).hexdigest()
 
-    # Invalid code
     assert validate_owner_code("COPPER-WRONG-CODE", expected_hash=test_hash) is False
     failed_state = activate_with_owner_code("COPPER-WRONG-CODE", expected_hash=test_hash)
     assert failed_state.activated is False
 
-    # Valid code (case and whitespace insensitive)
     assert validate_owner_code("  copper-test-1234-abcd  ", expected_hash=test_hash) is True
     success_state = activate_with_owner_code("copper-test-1234-abcd", expected_hash=test_hash)
     assert success_state.activated is True

@@ -1,0 +1,44 @@
+C.O.P.P.E.R. (Centralized Omnifunctional Personal Productivity and Execution Routine)
+Copyright (c) 2026 Akash Kundu.
+
+This software incorporates or interacts with the following open-source projects:
+
+1. FastAPI (MIT License)
+   Copyright (c) 2018 Sebastián Ramírez
+
+2. React (MIT License)
+   Copyright (c) Meta Platforms, Inc. and affiliates.
+
+3. Electron (MIT License)
+   Copyright (c) Electron contributors
+   Copyright (c) 2013-2020 GitHub Inc.
+
+4. Pydantic (MIT License)
+   Copyright (c) 2017 Samuel Colvin
+
+5. SQLAlchemy (MIT License)
+   Copyright (c) 2005-2024 Michael Bayer
+
+6. Alembic (MIT License)
+   Copyright (c) 2009-2024 Michael Bayer
+
+7. ChromaDB (Apache License 2.0)
+   Copyright (c) 2023 Chroma
+
+8. OpenTelemetry Python (Apache License 2.0)
+   Copyright (c) The OpenTelemetry Authors
+
+9. Vitest (MIT License)
+   Copyright (c) 2021 Anthony Fu, VoidZero Inc.
+
+10. Pytest (MIT License)
+    Copyright (c) 2004 Holger Krekel and others
+
+11. openWakeWord (Apache License 2.0)
+    Copyright (c) 2022 David Scripka
+
+12. Lucide Icons (ISC License)
+    Copyright (c) 2022 Lucide Contributors
+
+13. Tailwind CSS (MIT License)
+    Copyright (c) Tailwind Labs, Inc.

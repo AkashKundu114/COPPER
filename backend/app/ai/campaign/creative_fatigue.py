@@ -1,24 +1,17 @@
-"""
-Creative Fatigue Detection Engine for C.O.P.P.E.R. (DELTA Agent).
-
-Modeled on DeltaX Creative Solutions & Insights:
-Monitors ad creative health by correlating exposure frequency, monotonic CTR decay,
-and creative lifespan to flag creative exhaustion before CPA/ROAS degrades.
-"""
+"""Creative Fatigue Detection Engine for C.O.P.P.E.R. (DELTA Agent)."""
 
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
-import numpy as np
 
 
 @dataclass
 class CreativeMetricPoint:
     creative_id: str
     campaign_id: str
-    frequency: float  # Avg impressions per unique user
-    ctr: float  # Click-through rate
-    cpa: float  # Cost per acquisition
+    frequency: float
+    ctr: float
+    cpa: float
     timestamp: datetime
 
 
@@ -26,12 +19,12 @@ class CreativeMetricPoint:
 class CreativeFatigueReport:
     creative_id: str
     campaign_id: str
-    fatigue_level: str  # "healthy" | "early_decay" | "saturated" | "exhausted"
+    fatigue_level: str
     frequency: float
     ctr_decay_percent: float
     is_fatigued: bool
     recommendation: str
-    detected_at: datetime = datetime.now(timezone.utc)
+    detected_at: datetime = datetime.now(UTC)
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -40,12 +33,7 @@ class CreativeFatigueReport:
 
 
 class CreativeFatigueDetector:
-    """
-    Detects creative fatigue through multi-factor signal analysis:
-    1. High Exposure Frequency: Frequency > 3.0x indicates audience saturation.
-    2. Monotonic CTR Decay: >20% decline from historical peak CTR.
-    3. CPA Run-Up: >25% cost per conversion escalation.
-    """
+    """Detects creative fatigue through multi-factor signal analysis:"""
 
     def __init__(self, frequency_threshold: float = 3.2, decay_threshold: float = 0.20):
         self.frequency_threshold = frequency_threshold
@@ -68,7 +56,6 @@ class CreativeFatigueDetector:
                 recommendation="Insufficient historical creative data.",
             )
 
-        # Sort chronologically
         sorted_pts = sorted(history, key=lambda p: p.timestamp)
         ctrs = [p.ctr for p in sorted_pts]
         current_freq = sorted_pts[-1].frequency
@@ -81,7 +68,6 @@ class CreativeFatigueDetector:
             else 0.0
         )
 
-        # Determine fatigue classification
         is_fatigued = False
         if current_freq >= self.frequency_threshold and ctr_decay >= self.decay_threshold:
             fatigue_level = "exhausted"

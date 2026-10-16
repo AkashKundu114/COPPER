@@ -1,12 +1,6 @@
-"""
-Automated Campaign Executive Reporting Bridge.
+"""Automated Campaign Executive Reporting Bridge."""
 
-Modeled on DeltaX Intelligent Automation & Reporting:
-Synthesizes campaign health, budget optimization decisions, and creative fatigue
-into structured executive briefings and PDF documentation via SCRIBE.
-"""
-
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -22,10 +16,10 @@ class CampaignReportGenerator:
         optimizations: dict[str, Any] | None = None,
         fatigue_alerts: list[dict[str, Any]] | None = None,
     ) -> str:
-        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        date_str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
 
         lines = [
-            f"# C.O.P.P.E.R. Campaign Intelligence Executive Briefing",
+            "# C.O.P.P.E.R. Campaign Intelligence Executive Briefing",
             f"**Generated:** {date_str} | **Engine:** DELTA Ad-Tech Suite (DeltaX Architecture)",
             "",
             "## 1. Portfolio Performance Snapshot",

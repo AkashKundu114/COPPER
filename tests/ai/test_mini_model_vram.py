@@ -23,11 +23,9 @@ def test_model_manager_document_model():
 
 
 def test_model_manager_keep_alive_policy():
-    # Mini model should have persistent keep-alive (-1)
     assert model_manager.get_model_keep_alive("qwen2.5:1.5b") == -1
     assert model_manager.get_model_keep_alive("smollm2:1.7b") == -1
 
-    # Heavy models should have short transient TTL
     heavy_ttl = model_manager.get_model_keep_alive("deepseek-r1:14b")
     assert heavy_ttl in ["2m", "1m", "60s"] or isinstance(heavy_ttl, str)
 

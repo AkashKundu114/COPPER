@@ -21,7 +21,6 @@ async def test_coding_explanation():
     assert "AXIS" in exp["decision_summary"]
     assert "CODING" in exp["decision_summary"] or "coding" in exp["decision_summary"].lower()
 
-    # Check keyword highlights
     assert len(exp["matched_terms"]) > 0
     first_term = exp["matched_terms"][0]
     assert "term" in first_term
@@ -29,20 +28,17 @@ async def test_coding_explanation():
     assert "end" in first_term
     assert prompt[first_term["start"] : first_term["end"]] == first_term["term"]
 
-    # Check score breakdown
     assert len(exp["score_breakdown"]) > 0
     winner = exp["score_breakdown"][0]
     assert winner["is_winner"] is True
     assert winner["agent"] == "coding"
     assert winner["codename"] == "AXIS"
 
-    # Check confidence calibration
     calib = exp["confidence_calibration"]
     assert "raw_confidence" in calib
     assert "calibrated_confidence" in calib
     assert calib["certainty_tier"] in ["HIGH_CERTAINTY", "MODERATE_CERTAINTY", "AMBIGUOUS"]
 
-    # Check 5-stage progression
     stages = exp["stage_progression"]
     assert len(stages) == 5
     stage_ids = [s["stage_id"] for s in stages]
@@ -67,14 +63,11 @@ async def test_smalltalk_explanation():
 
 @pytest.mark.asyncio
 async def test_negative_rule_suppression_tracking():
-    # Prompt contains words that could look like automation ("write a script to...")
-    # but negative rules suppress automation in favor of coding
     prompt = "Write a script to delete old temp files and clean directory"
     res = await route_message_detailed(prompt)
 
     exp = res.explanation
     assert exp is not None
-    # Verify suppressed_rules list exists and contains entries if negative rules fired
     assert "suppressed_rules" in exp
     assert isinstance(exp["suppressed_rules"], list)
 
@@ -90,7 +83,6 @@ async def test_consequential_safety_flag():
     assert exp["is_consequential"] is True
     assert exp["confidence_calibration"]["is_consequential"] is True
 
-    # Check safety gate stage
     safety_stage = next(s for s in exp["stage_progression"] if s["stage_id"] == "consequential_safety")
     assert "Consequential" in safety_stage["decision"] or "safety" in safety_stage["decision"].lower()
 
@@ -107,7 +99,6 @@ async def test_routing_history_store():
     assert len(history) == 1
     assert history[0]["agent"] == "coding"
 
-    # Filter by agent
     assert len(routing_history_store.get_history(agent_type="coding")) == 1
     assert len(routing_history_store.get_history(agent_type="vision")) == 0
 
@@ -116,14 +107,12 @@ async def test_routing_history_store():
 async def test_routing_analytics_api():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        # 1. History endpoint
         hist_resp = await client.get("/api/v1/routing/history?limit=10")
         assert hist_resp.status_code == 200
         hist_data = hist_resp.json()
         assert "history" in hist_data
         assert isinstance(hist_data["history"], list)
 
-        # 2. Confusion matrix endpoint
         cm_resp = await client.get("/api/v1/routing/confusion-matrix")
         assert cm_resp.status_code == 200
         cm_data = cm_resp.json()
@@ -131,7 +120,6 @@ async def test_routing_analytics_api():
         assert "overall_accuracy_pct" in cm_data
         assert cm_data["overall_accuracy_pct"] >= 50.0
 
-        # 3. Confidence calibration endpoint
         cal_resp = await client.get("/api/v1/routing/confidence-calibration")
         assert cal_resp.status_code == 200
         cal_data = cal_resp.json()

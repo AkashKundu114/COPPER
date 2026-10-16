@@ -77,12 +77,8 @@ class SkillLearner:
     def extract_skill(self, task_description: str, steps_executed: list[dict], result: dict) -> LearnedSkill:
         name = self._generate_name(task_description)
 
-        # Simple extraction logic: find input_params based on common variations
-        # In a real system, we'd use LLM to generalize the task steps
-        # For now, create a basic templatization
 
         input_params = []
-        # Mock parameter extraction, just add a generic 'input_data' if steps are empty or use dummy logic
 
         skill = LearnedSkill(
             skill_id=str(uuid4()),
@@ -91,7 +87,7 @@ class SkillLearner:
             steps=steps_executed,
             input_params=input_params,
             output_format="dict",
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
             source_task=task_description,
         )
 
@@ -134,8 +130,6 @@ class SkillLearner:
         try:
             logger.info(f"Executing skill {skill.name} ({skill_id}) with params {params}")
 
-            # Execute each step - this would ideally integrate with workflow_engine.py
-            # For this simplified version, we just mock successful execution
 
             duration = time.time() - start_time
             total_duration = skill.avg_duration_seconds * skill.success_count

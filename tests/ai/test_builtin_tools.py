@@ -16,17 +16,14 @@ async def test_file_tools_lifecycle():
     with tempfile.TemporaryDirectory() as tmpdir:
         test_file = Path(tmpdir) / "test_artifact.txt"
 
-        # 1. Write
         write_res = await file_write(path=str(test_file), content="Hello COPPER tool execution!")
         assert write_res["status"] == "success"
         assert write_res["bytes_written"] > 0
 
-        # 2. Read
         read_res = await file_read(path=str(test_file))
         assert read_res["status"] == "success"
         assert "Hello COPPER tool execution!" in read_res["content"]
 
-        # 3. List
         list_res = await file_list(directory=tmpdir, pattern="*.txt")
         assert list_res["status"] == "success"
         assert list_res["total_matches"] == 1
@@ -58,14 +55,12 @@ async def test_shell_execute():
 
 @pytest.mark.asyncio
 async def test_memory_tools():
-    # Store
     store_res = await memory_store(
         content="User prefers Python over JavaScript", memory_type="preference", confidence=0.95
     )
     assert store_res["status"] == "success"
     assert "memory_id" in store_res
 
-    # Query
     query_res = await memory_query(query="Python preference", limit=3)
     assert query_res["status"] == "success"
     assert isinstance(query_res["memories"], list)
@@ -73,12 +68,10 @@ async def test_memory_tools():
 
 @pytest.mark.asyncio
 async def test_calendar_and_reminder_tools():
-    # Calendar create
     cal_res = await calendar_create(title="Architecture Sync", datetime="tomorrow 2pm", duration_minutes=45)
     assert cal_res["status"] == "success"
     assert "evt_" in cal_res["event_id"]
 
-    # Reminder set
     rem_res = await reminder_set(time="15 minutes", message="Check build pipeline", priority="high")
     assert rem_res["status"] == "success"
     assert "rem_" in rem_res["reminder_id"]

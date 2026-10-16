@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Search,
   BookOpen,
@@ -25,12 +25,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
   const [page, setPage] = useState(1);
   const pageSize = 24;
 
-  useEffect(() => {
-    // Load skills
-    loadSkills();
-  }, []);
-
-  const loadSkills = async (cat = "all", search = "") => {
+  const loadSkills = useCallback(async (cat = "all", search = "") => {
     setLoading(true);
     try {
       const res = await catalogAPI.getScientificSkills({
@@ -40,16 +35,21 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
       });
       if (res.data?.skills) {
         setSkills(res.data.skills);
-        // Extract unique categories
+
         const cats = Array.from(new Set(res.data.skills.map((s) => s.category))).filter(Boolean);
-        if (categories.length === 0) setCategories(cats);
+        setCategories((prev) => (prev.length === 0 ? cats : prev));
       }
     } catch (err) {
       console.error("Failed to load scientific skills:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+
+    loadSkills();
+  }, [loadSkills]);
 
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);
@@ -81,7 +81,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
 
   return (
     <div className="space-y-4 animate-fade-in font-sans">
-      {/* Header & Category Filters */}
+
       <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
             </div>
           </div>
 
-          {/* Search Box */}
+
           <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-emerald-500/50 transition-all w-full md:w-80">
             <Search size={14} className="text-text-tertiary" />
             <input
@@ -109,7 +109,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
           </div>
         </div>
 
-        {/* Category Filter Chips */}
+
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
           <button
             onClick={() => handleCategoryChange("all")}
@@ -142,7 +142,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       </div>
 
-      {/* Grid of Scientific Skill Cards */}
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-8">
           {[...Array(6)].map((_, i) => (
@@ -205,7 +205,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       )}
 
-      {/* Pagination */}
+
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/60 border border-border-subtle rounded-xl text-xs">
           <span className="text-text-secondary font-mono">
@@ -235,7 +235,7 @@ export const ScientificSkillsTab: React.FC<ScientificSkillsTabProps> = ({
         </div>
       )}
 
-      {/* Skill Modal */}
+
       <ScientificSkillModal
         skill={selectedSkill}
         onClose={() => setSelectedSkill(null)}

@@ -27,7 +27,7 @@ export const SettingsView: React.FC = () => {
   );
   const [toast, setToast] = useState<string | null>(null);
 
-  // Personality & Communication Style Adaptation State
+
   const [personality, setPersonality] = useState({
     warmth: 0.7,
     formality: 0.4,
@@ -162,7 +162,7 @@ export const SettingsView: React.FC = () => {
       )}
 
       <div className="space-y-4">
-        {/* Backend Toggle */}
+
         <div className="surface-card p-4 rounded-xl border border-border flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2 text-text font-semibold text-sm">
@@ -190,7 +190,7 @@ export const SettingsView: React.FC = () => {
           </button>
         </div>
 
-        {/* Continuous Voice Toggle */}
+
         <div className="surface-card p-4 rounded-xl border border-border flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2 text-text font-semibold text-sm">
@@ -223,7 +223,7 @@ export const SettingsView: React.FC = () => {
           </button>
         </div>
 
-        {/* Voice Preference */}
+
         <div className="surface-card p-4 rounded-xl border border-border space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -289,7 +289,7 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Model Storage Directory */}
+
         <div className="surface-card p-4 rounded-xl border border-border space-y-3">
           <div className="flex items-center gap-2 text-text font-semibold text-sm">
             <HardDrive size={16} className="text-copper" />
@@ -311,7 +311,7 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Personality Adaptation */}
+
         <div className="surface-card p-4 rounded-xl border border-border space-y-3.5 text-xs">
           <div className="flex items-center gap-2 text-text font-semibold text-sm">
             <Sparkles size={16} className="text-copper" />

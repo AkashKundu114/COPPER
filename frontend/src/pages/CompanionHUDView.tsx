@@ -42,7 +42,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
   const [showVision, setShowVision] = useState(false);
   const [muted, setMuted] = useState(() => soundFX.isMuted());
 
-  // Audio & VAD Refs
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
@@ -60,14 +60,14 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
     stopAudioRef.current = stopAudio;
   }, [speaking, onSend, stopAudio]);
 
-  // Determine official ThinkingOrb state reacting to live duplex voice companion activity
+
   let autoDotsState: OrbState = "breathing";
   if (speaking) autoDotsState = "weaving";
   else if (thinking) autoDotsState = "solving";
   else if (isRecording) autoDotsState = "listening";
   else if (handsFree) autoDotsState = "connecting";
 
-  // Toggle Hands-Free Continuous Voice Mode
+
   const toggleHandsFree = () => {
     const nextVal = !handsFree;
     setHandsFree(nextVal);
@@ -78,7 +78,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
     }
   };
 
-  // Setup Continuous Web Audio VAD
+
   useEffect(() => {
     if (!handsFree) {
       if (audioContextRef.current) {
@@ -126,10 +126,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           }
           const avg = sum / bufferLength;
 
-          // Threshold for human speech
+
           if (avg > 14) {
             if (!isRecordingRef.current) {
-              // BARGE-IN: If COPPER is speaking, immediately cut audio!
+
               if (speakingRef.current) {
                 stopAudioRef.current();
               }
@@ -169,10 +169,10 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
             }
             silenceTimerRef.current = performance.now();
           } else {
-            // Silence detection
+
             if (isRecordingRef.current) {
               if (performance.now() - silenceTimerRef.current > 1300) {
-                // 1.3 seconds of silence after speaking: finalize speech chunk
+
                 isRecordingRef.current = false;
                 setIsRecording(false);
                 if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
@@ -203,7 +203,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
     };
   }, [handsFree]);
 
-  // Push-to-talk fallback when hands-free is off
+
   const handleManualPushToTalk = async () => {
     if (isRecording) {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
@@ -252,12 +252,12 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-between p-6 select-none overflow-hidden font-sans bg-canvas text-text">
-      {/* Subtle Ambient Glow */}
+
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div className="w-[500px] h-[500px] bg-copper-subtle rounded-full blur-[140px] opacity-40" />
       </div>
 
-      {/* Top Status Bar */}
+
       <div className="w-full max-w-5xl flex items-center justify-between z-10">
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-2 bg-surface-elevated px-3 py-1.5 rounded-lg border border-border shadow-sm">
@@ -312,7 +312,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </div>
       </div>
 
-      {/* Main Center Stage: Thinking Orb Visualizer */}
+
       <div className="flex-1 w-full max-w-5xl flex items-center justify-center relative my-2">
         <div className="relative flex items-center justify-center select-none py-10">
           <div
@@ -333,7 +333,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           </div>
         </div>
 
-        {/* Ambient Vision Dock */}
+
         <AnimatePresence>
           {showVision && (
             <motion.div
@@ -352,7 +352,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Recent Conversational Dialogue Overlays */}
+
       <div className="w-full max-w-2xl flex flex-col gap-2.5 mb-3 z-10">
         <AnimatePresence>
           {recentLines.map((line) => {
@@ -380,9 +380,9 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Bottom Control Deck */}
+
       <div className="w-full max-w-3xl flex items-center justify-between gap-4 z-10 surface-glass p-2.5 px-4 rounded-xl border border-border">
-        {/* Quick Directives */}
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
@@ -406,7 +406,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           </button>
         </div>
 
-        {/* Center Mic / Interrupt Button */}
+
         <div className="flex items-center gap-3">
           <button
             onClick={handleManualPushToTalk}
@@ -432,7 +432,7 @@ export const CompanionHUDView: React.FC<CompanionHUDViewProps> = ({
           )}
         </div>
 
-        {/* Clear Log button */}
+
         <button
           onClick={() => {
             soundFX.play("click");

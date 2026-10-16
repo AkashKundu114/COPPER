@@ -29,7 +29,7 @@ export const TactileDial: React.FC<TactileDialProps> = ({
   const startValRef = useRef<number>(value);
   const lastStepTickRef = useRef<number>(value);
 
-  // Map value to angle (-135 deg to +135 deg -> 270 deg total range)
+
   const range = max - min;
   const progress = Math.max(0, Math.min(1, (value - min) / (range || 1)));
   const angle = -135 + progress * 270;
@@ -46,10 +46,10 @@ export const TactileDial: React.FC<TactileDialProps> = ({
     (e: MouseEvent) => {
       if (!isDragging) return;
       const deltaY = dragStartYRef.current - e.clientY;
-      const sensitivity = (max - min) / 120; // 120px drag across full range
+      const sensitivity = (max - min) / 120; 
       let nextVal = startValRef.current + deltaY * sensitivity;
 
-      // Snap to step
+
       if (step > 0) {
         nextVal = Math.round(nextVal / step) * step;
       }
@@ -83,11 +83,11 @@ export const TactileDial: React.FC<TactileDialProps> = ({
 
   const displayVal = formatValue ? formatValue(value) : `${value}${unit}`;
 
-  // SVG arc calculation
+
   const strokeWidth = 5;
   const radius = (size - strokeWidth * 2) / 2;
   const circumference = 2 * Math.PI * radius;
-  // 270 degrees is 0.75 of circle
+
   const arcLength = circumference * 0.75;
   const strokeDashoffset = arcLength * (1 - progress);
 
@@ -119,13 +119,13 @@ export const TactileDial: React.FC<TactileDialProps> = ({
           }
         }}
       >
-        {/* Background track SVG */}
+
         <svg
           width={size}
           height={size}
           className="absolute inset-0 -rotate-[225deg] pointer-events-none"
         >
-          {/* Rail Track */}
+
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -136,7 +136,7 @@ export const TactileDial: React.FC<TactileDialProps> = ({
             strokeDasharray={`${arcLength} ${circumference}`}
             strokeLinecap="round"
           />
-          {/* Active Value Glow Track */}
+
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -151,7 +151,7 @@ export const TactileDial: React.FC<TactileDialProps> = ({
           />
         </svg>
 
-        {/* Center Metallic / Glass Knob */}
+
         <div
           className="relative rounded-full flex items-center justify-center border border-white/10 shadow-inner transition-transform duration-75"
           style={{
@@ -162,13 +162,13 @@ export const TactileDial: React.FC<TactileDialProps> = ({
             transform: `rotate(${angle}deg)`,
           }}
         >
-          {/* Rotary Notch Indicator */}
+
           <div className="absolute top-1.5 w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_#C97C4C]" />
           <div className="w-1 h-3 -mt-2 rounded-full bg-accent/80" />
         </div>
       </div>
 
-      {/* Numerical Display & Label (inspired by dialkit.dev & typeface.fyi) */}
+
       <div className="mt-2 text-center">
         <span className="font-mono text-xs font-bold text-white tabular-nums tracking-tight">
           {displayVal}

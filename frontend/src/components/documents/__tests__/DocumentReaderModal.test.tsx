@@ -62,22 +62,22 @@ describe("DocumentReaderModal", () => {
       />
     );
 
-    // Initial tab: Interactive Reader
+
     expect(screen.getByText(/5 total lines/i)).toBeInTheDocument();
 
-    // Switch to Search in Doc
+
     await user.click(screen.getByRole("button", { name: /search in doc/i }));
     expect(
       screen.getByPlaceholderText(/search keywords or phrases in document/i)
     ).toBeInTheDocument();
 
-    // Switch to Doc Analytics
+
     await user.click(screen.getByRole("button", { name: /doc analytics/i }));
     expect(screen.getByText("Document Metadata & AI Ingestion")).toBeInTheDocument();
     expect(screen.getByText("CHROMA RAG INDEX")).toBeInTheDocument();
     expect(screen.getByText("Ready (3 chunks)")).toBeInTheDocument();
 
-    // Switch to Raw Text
+
     await user.click(screen.getByRole("button", { name: /raw text/i }));
     expect(screen.getByText(/Autonomous 30-agent coordination/i)).toBeInTheDocument();
   });
@@ -159,7 +159,7 @@ describe("DocumentReaderModal", () => {
     await user.click(closeBtn);
     expect(handleClose).toHaveBeenCalledTimes(1);
 
-    // Escape key
+
     fireEvent.keyDown(window, { key: "Escape" });
     expect(handleClose).toHaveBeenCalledTimes(2);
   });

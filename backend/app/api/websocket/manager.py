@@ -14,7 +14,6 @@ class ConnectionManager:
         await ws.accept()
         self.active.append(ws)
         if session_id:
-            # Prune and close any stale prior websocket connections for this session
             existing = list(self.sessions.get(session_id, []))
             for old_ws in existing:
                 if old_ws != ws:

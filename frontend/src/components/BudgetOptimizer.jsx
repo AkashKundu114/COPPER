@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   TrendingUp,
   Sliders,
@@ -50,7 +50,7 @@ export const BudgetOptimizer = ({
     }
   };
 
-  // Find max spend across both current and optimized to scale bars
+
   const maxSpend = Math.max(
     ...Object.values(currentAlloc),
     ...Object.values(optimizedAlloc),
@@ -59,7 +59,7 @@ export const BudgetOptimizer = ({
 
   return (
     <div className="bg-surface-elevated border border-border-subtle rounded-xl p-5 backdrop-blur-md shadow-lg flex flex-col gap-5">
-      {/* Header and KPI cards */}
+
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-500 text-white shadow-md shadow-cyan-950/50">
@@ -75,7 +75,7 @@ export const BudgetOptimizer = ({
           </div>
         </div>
 
-        {/* Custom Budget Form */}
+
         <form onSubmit={handleRunOptimize} className="flex items-center gap-2">
           <div className="relative">
             <span className="absolute left-2.5 top-2 text-xs text-text-tertiary">$</span>
@@ -97,7 +97,7 @@ export const BudgetOptimizer = ({
         </form>
       </div>
 
-      {/* Metrics Highlights Card */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-4 rounded-xl bg-canvas/70 border border-border-subtle flex flex-col justify-between">
           <span className="text-xs text-text-secondary font-medium">Projected Improvement</span>
@@ -149,7 +149,7 @@ export const BudgetOptimizer = ({
         </div>
       </div>
 
-      {/* Allocation Comparison Bar Chart */}
+
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between text-xs text-text-secondary">
           <span className="font-semibold uppercase tracking-wider text-text-secondary">
@@ -203,14 +203,14 @@ export const BudgetOptimizer = ({
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  {/* Current Bar */}
+
                   <div className="w-full bg-surface-elevated rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-surface-spotlight h-full rounded-full transition-all duration-500"
                       style={{ width: `${Math.min(100, Math.max(2, curPct))}%` }}
                     />
                   </div>
-                  {/* Optimized Bar */}
+
                   <div className="w-full bg-surface-elevated rounded-full h-2.5 overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
@@ -224,7 +224,7 @@ export const BudgetOptimizer = ({
         </div>
       </div>
 
-      {/* AI Allocation Reasoning */}
+
       {opt?.reasoning && opt.reasoning.length > 0 && (
         <div className="flex flex-col gap-2 bg-surface-base p-4 rounded-xl border border-border-subtle">
           <span className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
@@ -242,7 +242,7 @@ export const BudgetOptimizer = ({
         </div>
       )}
 
-      {/* Apply Optimization CTA */}
+
       <div className="flex items-center justify-between pt-2">
         <div className="text-xs text-text-tertiary">
           *Applies bid cap and daily budget changes directly to simulated campaign ad sets.

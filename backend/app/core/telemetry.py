@@ -18,16 +18,10 @@ from app.core.logger import logger
 
 
 class LiveSpanCollector(SpanProcessor):
-    """
-    In-memory ring buffer collector that stores completed root traces and their
-    hierarchical child spans (WebSocket -> Router -> Guardian -> Agent -> LLM -> Response).
-    Allows the frontend Activity View to render real-time span waterfalls with zero
-    external dependency on Tempo or network latency.
-    """
+    """In-memory ring buffer collector that stores completed root traces and their"""
 
     def __init__(self, max_traces: int = 200):
         self.max_traces = max_traces
-        # Maps trace_id_hex -> list of raw span records
         self._traces: OrderedDict[str, list[dict[str, Any]]] = OrderedDict()
 
     def on_start(self, span: Span, parent_context=None) -> None:
@@ -42,12 +36,10 @@ class LiveSpanCollector(SpanProcessor):
         span_id_hex = f"{ctx.span_id:016x}"
         parent_id_hex = f"{span.parent.span_id:016x}" if span.parent else None
 
-        # Convert nanoseconds to milliseconds
         start_ms = span.start_time / 1e6
         end_ms = (span.end_time or time.time_ns()) / 1e6
         duration_ms = max(0.01, round(end_ms - start_ms, 2))
 
-        # Format attributes safely
         clean_attrs = {}
         for k, v in (span.attributes or {}).items():
             if isinstance(v, (str, int, float, bool)):
@@ -87,13 +79,11 @@ class LiveSpanCollector(SpanProcessor):
             if not spans:
                 continue
 
-            # Identify root span (either no parent, or first registered span)
             root_span = next((s for s in spans if s["parent_id"] is None), spans[0])
             overall_start = min(s["start_time_ms"] for s in spans)
             overall_end = max(s["end_time_ms"] for s in spans)
             total_duration_ms = round(overall_end - overall_start, 2)
 
-            # Compute relative offsets for waterfall rendering
             formatted_spans = []
             for s in spans:
                 offset_ms = round(max(0.0, s["start_time_ms"] - overall_start), 2)
@@ -152,7 +142,6 @@ class LiveSpanCollector(SpanProcessor):
         }
 
 
-# Global singleton instances
 live_span_collector = LiveSpanCollector()
 _tracer_provider: TracerProvider | None = None
 _is_initialized: bool = False
@@ -171,10 +160,7 @@ def format_grafana_tempo_url(trace_id: str) -> str:
 
 
 def init_telemetry(app: FastAPI | None = None) -> TracerProvider:
-    """
-    Initializes OpenTelemetry TracerProvider, OTLP Exporter targeting Grafana Tempo,
-    in-memory live span collector, and instruments FastAPI if app is supplied.
-    """
+    """Initializes OpenTelemetry TracerProvider, OTLP Exporter targeting Grafana Tempo,"""
     global _tracer_provider, _is_initialized
 
     if _is_initialized and _tracer_provider is not None:
@@ -190,14 +176,11 @@ def init_telemetry(app: FastAPI | None = None) -> TracerProvider:
 
     provider = TracerProvider(resource=resource)
 
-    # 1. Attach live in-memory span collector (guarantees frontend Activity View always works)
     provider.add_span_processor(live_span_collector)
 
-    # 2. Attach OTLP Exporter targeting Tempo if enabled
     if settings.OTEL_ENABLED:
         try:
             endpoint = settings.OTEL_EXPORTER_OTLP_ENDPOINT
-            # Default to gRPC exporter
             otlp_exporter = OTLPGrpcSpanExporter(
                 endpoint=endpoint,
                 insecure=True,
@@ -219,7 +202,6 @@ def init_telemetry(app: FastAPI | None = None) -> TracerProvider:
     _tracer_provider = provider
     _is_initialized = True
 
-    # 3. Instrument FastAPI app if provided
     if app is not None:
         try:
             FastAPIInstrumentor.instrument_app(
@@ -241,10 +223,7 @@ def get_tracer(name: str = "copper") -> trace.Tracer:
 
 @contextlib.contextmanager
 def trace_span(name: str, attributes: dict[str, Any] | None = None, parent_context=None):
-    """
-    Synchronous / asynchronous context manager for tracing execution stages.
-    Records duration, status, attributes, and exceptions.
-    """
+    """Synchronous / asynchronous context manager for tracing execution stages."""
     tracer = get_tracer()
     with tracer.start_as_current_span(name, context=parent_context) as span:
         if attributes:
@@ -264,11 +243,7 @@ def start_request_trace(
     session_id: str | None = None,
     attributes: dict[str, Any] | None = None,
 ) -> tuple[trace.Span, str, str]:
-    """
-    Starts a root trace span for a request/turn and activates it in the current context,
-    returning: (span, trace_id_hex, span_id_hex).
-    When span.end() is called, context is automatically detached.
-    """
+    """Starts a root trace span for a request/turn and activates it in the current context,"""
     tracer = get_tracer()
     span = tracer.start_span(name)
     ctx = span.get_span_context()
@@ -282,7 +257,6 @@ def start_request_trace(
             if v is not None:
                 span.set_attribute(k, v if isinstance(v, (str, int, float, bool)) else str(v))
 
-    # Activate span in current context so all subsequent child spans automatically nest under it
     token = context.attach(trace.set_span_in_context(span))
     original_end = span.end
 
@@ -293,7 +267,7 @@ def start_request_trace(
             pass
         return original_end(*args, **kwargs)
 
-    span.end = wrapped_end  # type: ignore
+    span.end = wrapped_end
     return span, trace_id_hex, span_id_hex
 
 
@@ -336,4 +310,3 @@ def shutdown_telemetry() -> None:
         finally:
             _tracer_provider = None
             _is_initialized = False
-

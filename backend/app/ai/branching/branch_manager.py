@@ -13,10 +13,7 @@ BRANCH_STORE_FILE = BRANCHES_DIR / "branch_store.json"
 
 
 class BranchManager:
-    """
-    Manages conversation branching trees.
-    Branches share history up to the divergence point, then diverge into independent timelines.
-    """
+    """Manages conversation branching trees."""
 
     def __init__(self, storage_path: Path | str | None = None):
         self.storage_file = Path(storage_path) if storage_path else BRANCH_STORE_FILE
@@ -41,16 +38,13 @@ class BranchManager:
 
     def _get_session_messages(self, session_id: str) -> list[dict[str, str]]:
         """Retrieves messages for a session from persistent memory or SQLite history."""
-        # 1. Check persistent memory
         history = persistent_memory.get_history(session_id)
         if history:
             return [dict(m) for m in history]
 
-        # 2. Check if it's an existing branch
         if session_id in self._store:
             return [dict(m) for m in self._store[session_id].get("messages", [])]
 
-        # 3. Fallback to SQLite ChatHistory
         try:
             from app.database.models.history import ChatHistory
             from app.database.postgres import SessionLocal
@@ -78,15 +72,11 @@ class BranchManager:
         message_index: int,
         title: str | None = None,
     ) -> dict[str, Any]:
-        """
-        Creates a new branch starting from `message_index`.
-        Shares history up to the divergence point, then diverges into an isolated thread.
-        """
+        """Creates a new branch starting from `message_index`."""
         parent_messages = self._get_session_messages(session_id)
         if not parent_messages:
             raise ValueError(f"Session '{session_id}' has no messages to branch from.")
 
-        # Clamp index
         if message_index < 0:
             message_index = 0
         if message_index >= len(parent_messages):
@@ -95,11 +85,9 @@ class BranchManager:
         shared_slice = [dict(m) for m in parent_messages[: message_index + 1]]
         divergence_turn = parent_messages[message_index]
 
-        # Resolve root session
         parent_branch = self._store.get(session_id)
         root_session_id = parent_branch.get("root_session_id", session_id) if parent_branch else session_id
 
-        # Unique branch id
         branch_id = f"{session_id}_b{uuid.uuid4().hex[:6]}"
         auto_title = title or f"Branch @ turn {message_index + 1}: {divergence_turn.get('content', '')[:35]}..."
 
@@ -117,11 +105,9 @@ class BranchManager:
             "updated_at": datetime.now(UTC).isoformat(),
         }
 
-        # Store branch in local store
         self._store[branch_id] = branch_data
         self._save_store()
 
-        # Register in persistent_memory.sessions so chat turns work immediately
         persistent_memory.sessions[branch_id] = [dict(m) for m in shared_slice]
         persistent_memory._save_sessions()
 
@@ -135,13 +121,11 @@ class BranchManager:
         """
         Lists all branches associated with a conversation (both child branches and root).
         """
-        # Determine root ID
         curr = self._store.get(session_id)
         root_id = curr.get("root_session_id", session_id) if curr else session_id
 
         branches: list[dict[str, Any]] = []
 
-        # 1. Include Root / Main representation
         root_messages = self._get_session_messages(root_id)
         branches.append(
             {
@@ -157,10 +141,8 @@ class BranchManager:
             }
         )
 
-        # 2. Include all child branches sharing this root
         for b_id, b_data in self._store.items():
             if b_data.get("root_session_id") == root_id or b_data.get("parent_session_id") == root_id:
-                # Synchronize live message count from persistent memory
                 live_msgs = persistent_memory.sessions.get(b_id, b_data.get("messages", []))
                 entry = dict(b_data)
                 entry["messages_count"] = len(live_msgs)
@@ -173,12 +155,10 @@ class BranchManager:
         """Retrieves a single branch with synchronized latest messages."""
         if branch_id in self._store:
             data = dict(self._store[branch_id])
-            # Sync with live persistent memory
             if branch_id in persistent_memory.sessions:
                 data["messages"] = [dict(m) for m in persistent_memory.sessions[branch_id]]
             return data
 
-        # Check if it's the main timeline
         history = self._get_session_messages(branch_id)
         if history:
             return {
@@ -219,7 +199,6 @@ class BranchManager:
         if not divergent_msgs:
             summary = f"Branch '{branch['title']}' has no new divergent turns beyond divergence point."
         else:
-            # Build concise synthesized summary of new discoveries
             disc_lines = []
             for m in divergent_msgs:
                 role = m.get("role", "assistant").capitalize()
@@ -227,11 +206,9 @@ class BranchManager:
                 disc_lines.append(f"- {role}: {content[:180]}")
             summary = f"Merged {len(divergent_msgs)} turn(s) from [{branch['title']}]:\n" + "\n".join(disc_lines[:6])
 
-        # Inject into target session history
         merge_notification = f"🔀 [Branch Merged: {branch['title']}]\n\n{summary}"
         persistent_memory.append_message(target_id, "assistant", merge_notification)
 
-        # Update branch status in store
         if branch_id in self._store:
             self._store[branch_id]["status"] = "merged"
             self._store[branch_id]["merged_at"] = datetime.now(UTC).isoformat()

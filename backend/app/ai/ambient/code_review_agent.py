@@ -8,6 +8,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from app.ai.llm.model_manager import model_manager
+from app.ai.llm.ollama_client import ollama_client
+from app.core.logger import logger
+
 
 def _sanitize_git_ref(ref: str) -> str:
     clean = ref.strip()
@@ -16,10 +20,6 @@ def _sanitize_git_ref(ref: str) -> str:
     if not re.match(r"^[a-zA-Z0-9_./@~^+-]+$", clean):
         raise ValueError(f"Invalid git reference format: {clean}")
     return clean
-
-from app.ai.llm.model_manager import model_manager
-from app.ai.llm.ollama_client import ollama_client
-from app.core.logger import logger
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent.parent / "data"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -143,9 +143,7 @@ class CodeReviewAgent:
         return list(set(files))
 
     def _detect_test_gaps(self, changed_files: list[str]) -> list[str]:
-        # Filter for source files
         src_files = [f for f in changed_files if (f.startswith("src/") or f.startswith("app/")) and f.endswith(".py")]
-        # Any test files changed?
         test_files = [f for f in changed_files if "test" in f]
 
         if src_files and not test_files:
@@ -173,7 +171,6 @@ class CodeReviewAgent:
             prompt_sugg = f"Suggest improvements for code quality, performance, or readability. Respond in JSON array format [{{'file': '...', 'line': '...', 'suggestion': '...', 'reason': '...'}}]. Diff:\n\n{diff_text[:4000]}"
             sugg_text = await ollama_client.chat([{"role": "user", "content": prompt_sugg}], model=model)
 
-            # Simple JSON extraction (best effort)
             def _extract_json(text: str) -> list[dict]:
                 import re
 
@@ -216,7 +213,6 @@ class CodeReviewAgent:
 
         pr_description, risk_analysis, suggestions = await self._analyze_with_llm(diff_out)
 
-        # Get latest commit hash
         c_code, c_out, c_err = await self._run_git(repo_path, "rev-parse", "--verify", "HEAD")
         commit_hash = c_out.strip() if c_code == 0 else "unknown"
 

@@ -1,13 +1,14 @@
-from datetime import UTC, datetime, timedelta
 import json
+from datetime import UTC, datetime, timedelta
+
 import pytest
 from fastapi.testclient import TestClient
 
 from app.ai.agents.campaign_agent import campaign_agent
-from app.ai.budget_optimizer import budget_optimizer, BudgetOptimizer
+from app.ai.budget_optimizer import BudgetOptimizer, budget_optimizer
 from app.ai.campaign_anomaly_detector import (
-    CampaignAnomalyDetector,
     RECOMMENDATION_TEMPLATES,
+    CampaignAnomalyDetector,
     campaign_anomaly_detector,
 )
 from app.ai.orchestration.agent_router import route_message, route_message_detailed
@@ -21,7 +22,6 @@ from app.services.campaign_simulator import (
 )
 
 
-# 1. Test campaign data generation produces valid metrics
 def test_campaign_data_generation_valid_metrics():
     now = datetime.now(UTC)
     for cmp_cfg in DEFAULT_CAMPAIGNS:
@@ -40,29 +40,23 @@ def test_campaign_data_generation_valid_metrics():
         assert "cpa" in d
 
 
-# 2. Test 30-day campaign history generation
 def test_campaign_history_generation():
     metrics = generate_campaign_history(days=2, db=None)
-    # 2 days * 24 hours * 5 campaigns = 240 records
     assert len(metrics) == 2 * 24 * len(DEFAULT_CAMPAIGNS)
-    # Ensure all 5 campaign IDs are present
     cids = {m.campaign_id for m in metrics}
     assert len(cids) == len(DEFAULT_CAMPAIGNS)
 
 
-# 3. Test Z-score anomaly detection catches injected CTR drop
 def test_z_score_anomaly_detection_catches_injected_ctr_drop():
     detector = CampaignAnomalyDetector(z_score_threshold=2.0)
     cmp_cfg = DEFAULT_CAMPAIGNS[0]
     now = datetime.now(UTC)
 
-    # Build 40 hours of normal baseline metrics
     baseline = [
         generate_hourly_metric(cmp_cfg, now - timedelta(hours=40 - i))
         for i in range(40)
     ]
 
-    # Inject sudden CTR collapse on the latest metric
     anomalous = generate_hourly_metric(
         cmp_cfg, now, anomaly_type="ctr_drop", anomaly_intensity=2.0
     )
@@ -79,25 +73,21 @@ def test_z_score_anomaly_detection_catches_injected_ctr_drop():
     assert "creative" in anom.recommendation.lower()
 
 
-# 4. Test Z-score anomaly detection does NOT flag normal variance
 def test_z_score_anomaly_detection_does_not_flag_normal_variance():
     detector = CampaignAnomalyDetector(z_score_threshold=2.5)
     cmp_cfg = DEFAULT_CAMPAIGNS[1]
     now = datetime.now(UTC)
 
-    # 50 hours of nominal data with normal stochastic noise
     normal_series = [
         generate_hourly_metric(cmp_cfg, now - timedelta(hours=50 - i))
         for i in range(50)
     ]
 
     anomalies = detector.detect_statistical_anomalies(normal_series)
-    # Under regular variance, no critical statistical anomalies should be flagged
     crit_anoms = [a for a in anomalies if a.severity == "critical"]
     assert len(crit_anoms) == 0
 
 
-# 5. Test Z-score anomaly detection catches CPC spike
 def test_z_score_anomaly_detection_catches_cpc_spike():
     detector = CampaignAnomalyDetector(z_score_threshold=2.0)
     cmp_cfg = DEFAULT_CAMPAIGNS[1]
@@ -118,21 +108,18 @@ def test_z_score_anomaly_detection_catches_cpc_spike():
     assert "competitor" in cpc_anoms[0].recommendation.lower()
 
 
-# 6. Test trend detector catches gradual CTR decay
 def test_trend_detector_catches_gradual_ctr_decay():
     detector = CampaignAnomalyDetector(trend_threshold=0.15)
     cmp_cfg = DEFAULT_CAMPAIGNS[0]
     now = datetime.now(UTC)
 
     metrics: list[CampaignMetric] = []
-    # 24 hours of normal performance
     for i in range(24):
         metrics.append(generate_hourly_metric(cmp_cfg, now - timedelta(hours=28 - i)))
 
-    # Last 4 hours suffer gradual performance decay (e.g. ad fatigue)
     for i in range(4):
         decayed = generate_hourly_metric(cmp_cfg, now - timedelta(hours=3 - i))
-        decayed.ctr = decayed.ctr * 0.55  # 45% decay below 24h baseline
+        decayed.ctr = decayed.ctr * 0.55
         decayed.roas = decayed.roas * 0.50
         metrics.append(decayed)
 
@@ -142,7 +129,6 @@ def test_trend_detector_catches_gradual_ctr_decay():
     assert declining[0].deviation_percent < -15.0
 
 
-# 7. Test trend detector catches improving trend
 def test_trend_detector_catches_improving_trend():
     detector = CampaignAnomalyDetector(trend_threshold=0.15)
     cmp_cfg = DEFAULT_CAMPAIGNS[2]
@@ -152,7 +138,6 @@ def test_trend_detector_catches_improving_trend():
         generate_hourly_metric(cmp_cfg, now - timedelta(hours=30 - i))
         for i in range(26)
     ]
-    # Surge in recent 3 hours
     for i in range(3):
         surging = generate_hourly_metric(cmp_cfg, now - timedelta(hours=2 - i))
         surging.ctr = surging.ctr * 1.50
@@ -165,18 +150,16 @@ def test_trend_detector_catches_improving_trend():
     assert improving[0].deviation_percent > 15.0
 
 
-# 8. Test budget burn rate projector flags fast burn
 def test_budget_burn_rate_projector_flags_fast_burn():
     detector = CampaignAnomalyDetector()
     cmp_cfg = DEFAULT_CAMPAIGNS[1]
-    daily_budget = 2400.0  # nominal hourly spend ~$100
+    daily_budget = 2400.0
     now = datetime.now(UTC)
 
-    # Simulate 6 hours elapsed (00:00 to 06:00), but spending $300/hour
     fast_burn_metrics = []
     for i in range(6):
         m = generate_hourly_metric(cmp_cfg, now - timedelta(hours=5 - i))
-        m.spend = 320.0  # At $320/hr, budget exhausts in ~7.5 hours total (by 07:30 AM)
+        m.spend = 320.0
         m.daily_budget = daily_budget
         fast_burn_metrics.append(m)
 
@@ -189,14 +172,12 @@ def test_budget_burn_rate_projector_flags_fast_burn():
     assert burn_anoms[0].severity == "critical"
 
 
-# 9. Test budget underutilization detection
 def test_budget_underutilization_detected():
     detector = CampaignAnomalyDetector()
     cmp_cfg = DEFAULT_CAMPAIGNS[0]
     daily_budget = 2000.0
     now = datetime.now(UTC)
 
-    # 19 hours elapsed (hour 18, >70% of day elapsed), but only spent $250 (<30% utilization)
     under_metrics = []
     for i in range(19):
         m = generate_hourly_metric(cmp_cfg, now - timedelta(hours=18 - i))
@@ -212,19 +193,16 @@ def test_budget_underutilization_detected():
     assert "expand" in under_anoms[0].recommendation.lower()
 
 
-# 10. Test response curve fitting on synthetic data
 def test_response_curve_fitting_on_synthetic_data():
     spends = [100.0, 250.0, 500.0, 1000.0, 2000.0]
-    # Logarithmic synthetic conversions: conversions = 8 * ln(spend) + 12
     conversions = [8.0 * __import__("math").log(s) + 12.0 for s in spends]
 
     a, b = BudgetOptimizer.fit_response_curve(spends, conversions)
-    assert a > 0.0  # Strictly concave diminishing returns
+    assert a > 0.0
     assert abs(a - 8.0) < 0.5
     assert abs(b - 12.0) < 1.0
 
 
-# 11. Test budget optimizer produces valid allocation (sum = budget)
 def test_budget_optimizer_produces_valid_allocation():
     data = {
         "cmp-1": {
@@ -250,26 +228,21 @@ def test_budget_optimizer_produces_valid_allocation():
     target_budget = 6000.0
     result = budget_optimizer.optimize_budget(data, total_budget=target_budget)
 
-    # Constraint check: sum of allocations must equal target budget exactly
     total_allocated = sum(result.optimized_allocation.values())
     assert abs(total_allocated - target_budget) < 0.05
     assert len(result.optimized_allocation) == 3
-    # Check bounds (all allocations positive)
     for alloc in result.optimized_allocation.values():
         assert alloc > 0
 
 
-# 12. Test budget optimizer improves projected conversions
 def test_budget_optimizer_improves_projected_conversions():
     data = {
-        # High elasticity / high yield campaign currently underfunded
         "cmp-high-yield": {
             "campaign_name": "High Yield Retargeting",
             "current_spend": 500.0,
             "spends": [100, 200, 400, 500],
             "conversions": [20, 38, 65, 78],
         },
-        # Saturated campaign currently overfunded
         "cmp-saturated": {
             "campaign_name": "Saturated Awareness",
             "current_spend": 3500.0,
@@ -284,7 +257,6 @@ def test_budget_optimizer_improves_projected_conversions():
     assert len(result.reasoning) >= 2
 
 
-# 13. Test campaign agent routes correctly from cascade router
 @pytest.mark.asyncio
 async def test_campaign_agent_routes_correctly_from_cascade_router():
     queries = [
@@ -304,7 +276,6 @@ async def test_campaign_agent_routes_correctly_from_cascade_router():
         assert detailed.confidence >= 0.60
 
 
-# 14. Test campaign agent structured response
 @pytest.mark.asyncio
 async def test_campaign_agent_structured_response():
     resp_str = await campaign_agent.run("How are my campaigns performing?")
@@ -318,7 +289,6 @@ async def test_campaign_agent_structured_response():
     assert len(data["recommendations"]) > 0
 
 
-# 15. Test recommendation text is populated for each anomaly type
 def test_recommendation_text_populated_for_each_anomaly_type():
     expected_types = [
         "ctr_drop",
@@ -334,11 +304,9 @@ def test_recommendation_text_populated_for_each_anomaly_type():
         assert len(rec) > 15
 
 
-# 16. Test API endpoints return correct data shapes
 def test_api_endpoints_return_correct_data_shapes():
     client = TestClient(app)
 
-    # 1. GET /api/campaigns
     res_cmps = client.get("/api/campaigns")
     assert res_cmps.status_code == 200
     cmps = res_cmps.json()
@@ -346,19 +314,16 @@ def test_api_endpoints_return_correct_data_shapes():
     assert len(cmps) >= 1
     first_cmp_id = cmps[0]["campaign_id"]
 
-    # 2. GET /api/campaigns/{campaign_id}/metrics
     res_metrics = client.get(f"/api/campaigns/{first_cmp_id}/metrics?hours=24")
     assert res_metrics.status_code == 200
     metrics = res_metrics.json()
     assert isinstance(metrics, list)
     assert len(metrics) >= 1
 
-    # 3. GET /api/campaigns/anomalies
     res_anom = client.get("/api/campaigns/anomalies?hours=72")
     assert res_anom.status_code == 200
     assert isinstance(res_anom.json(), list)
 
-    # 4. POST /api/campaigns/optimize-budget
     res_opt = client.post(
         "/api/campaigns/optimize-budget",
         json={"total_budget": 10000.0, "campaign_ids": [c["campaign_id"] for c in cmps]},
@@ -368,7 +333,6 @@ def test_api_endpoints_return_correct_data_shapes():
     assert opt_data["total_budget"] == 10000.0
     assert "optimized_allocation" in opt_data
 
-    # 5. GET /api/campaigns/dashboard
     res_dash = client.get("/api/campaigns/dashboard")
     assert res_dash.status_code == 200
     dash_data = res_dash.json()
@@ -378,7 +342,6 @@ def test_api_endpoints_return_correct_data_shapes():
     assert "budget_optimization" in dash_data
 
 
-# 17. Test WebSocket alert streaming delivers anomalies
 def test_websocket_alert_streaming_delivers_anomalies():
     client = TestClient(app)
     with client.websocket_connect("/ws/campaign-alerts") as websocket:
@@ -386,7 +349,6 @@ def test_websocket_alert_streaming_delivers_anomalies():
         assert initial["type"] == "campaign_alerts_snapshot"
         assert "anomalies" in initial
         assert "count" in initial
-        # Send client ping
         websocket.send_json({"action": "ping"})
         pong = websocket.receive_json()
         assert pong["type"] == "pong"

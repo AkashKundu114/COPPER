@@ -39,7 +39,7 @@ describe("ChatDock", () => {
 
     await user.type(textarea, "Analyze local GPU thermals");
 
-    // Send button appears when draft has text
+
     const sendButton = screen.getByRole("button", { name: /send message/i });
     await user.click(sendButton);
 
@@ -87,18 +87,18 @@ describe("ChatDock", () => {
     const modeButton = screen.getByText("Adaptive Intent");
     await user.click(modeButton);
 
-    // Dropdown list appears
+
     expect(screen.getByText("Cognitive Intelligence Mode")).toBeInTheDocument();
     expect(screen.getByText("Deep Cognitive")).toBeInTheDocument();
     expect(screen.getByText("Software Architect")).toBeInTheDocument();
 
-    // Select Software Architect mode
+
     await user.click(screen.getByText("Software Architect"));
 
-    // Verify selected mode updated
+
     expect(screen.getByText("Software Architect")).toBeInTheDocument();
 
-    // Send message with new mode
+
     const textarea = screen.getByPlaceholderText(
       /input command or prompt for god's eye intelligence/i
     );

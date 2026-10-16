@@ -45,11 +45,7 @@ class BaseSandboxRunner:
 
 
 class PyodideWasmRunner(BaseSandboxRunner):
-    """Executes Python code inside an isolated WebAssembly (Pyodide) VM.
-
-    Provides memory isolation via V8 engine memory limits, zero host filesystem access
-    via Emscripten in-memory virtual filesystem (MEMFS), and blocks network access primitives.
-    """
+    """Executes Python code inside an isolated WebAssembly (Pyodide) VM."""
 
     name: str = "pyodide"
 
@@ -61,18 +57,15 @@ class PyodideWasmRunner(BaseSandboxRunner):
             return False
         if not PYODIDE_RUNNER_SCRIPT.exists():
             return False
-        # Check node_modules for pyodide
         pyodide_dir = BACKEND_DIR / "node_modules" / "pyodide"
         return pyodide_dir.exists()
 
     def run(self, code: str, timeout: int, memory_limit_mb: int, network_enabled: bool) -> dict:
         env = dict(os.environ)
-        # Ensure node can locate backend node_modules
         node_modules = str(BACKEND_DIR / "node_modules")
         existing_node_path = env.get("NODE_PATH", "")
         env["NODE_PATH"] = f"{node_modules}{os.pathsep}{existing_node_path}" if existing_node_path else node_modules
 
-        # Node V8 memory limit flag: --max-old-space-size
         node_cmd = [
             self.node_executable,
             f"--max-old-space-size={memory_limit_mb}",
@@ -105,7 +98,6 @@ class PyodideWasmRunner(BaseSandboxRunner):
                     "error": "ProcessFailure",
                 }
 
-            # Parse JSON output from pyodide_runner.cjs
             try:
                 result = json.loads(stdout)
                 return {
@@ -140,14 +132,7 @@ class PyodideWasmRunner(BaseSandboxRunner):
 
 
 class DockerContainerRunner(BaseSandboxRunner):
-    """Executes Python code inside an isolated Docker container.
-
-    Provides strict Linux container isolation:
-    - Resource limits: CPU limit (--cpus), memory limit (-m), PIDs limit (--pids-limit)
-    - Network isolation: disabled (--network none) by default
-    - Filesystem isolation: read-only root (--read-only) with ephemeral tmpfs (/tmp)
-    - Capabilities: dropped all (--cap-drop=ALL)
-    """
+    """Executes Python code inside an isolated Docker container."""
 
     name: str = "docker"
 
@@ -186,7 +171,7 @@ class DockerContainerRunner(BaseSandboxRunner):
             "--pids-limit=64",
             "--read-only",
             "--tmpfs",
-            "/tmp:rw,noexec,nosuid,size=64m",  # nosec: B108
+            "/tmp:rw,noexec,nosuid,size=64m",
             "--cap-drop=ALL",
             self.image,
             "python",
@@ -227,9 +212,7 @@ class DockerContainerRunner(BaseSandboxRunner):
 
 
 class SubprocessSanitizedRunner(BaseSandboxRunner):
-    """Fallback runner with environment sanitization and process timeout.
-    Used when neither Docker nor Node/Pyodide is available in the host environment.
-    """
+    """Fallback runner with environment sanitization and process timeout."""
 
     name: str = "subprocess_sanitized"
 
@@ -338,7 +321,6 @@ class ForgeSandbox:
             logger.warning("Pyodide WASM runner unavailable; falling back to kernel sandbox runner.")
             return self.kernel_runner if self.kernel_runner.is_available() else self.subprocess_runner
 
-        # Auto detection: prefer Docker if running, otherwise Pyodide WASM, otherwise Kernel Job Object
         if self.docker_runner.is_available():
             return self.docker_runner
         if self.pyodide_runner.is_available():
@@ -373,7 +355,6 @@ class ForgeSandbox:
             "cpu_limit": getattr(settings, "SANDBOX_CPU_LIMIT", 1.0),
         }
 
-        # Keep in-memory trail
         audit_record = {
             "id": uuid.uuid4().hex,
             "session_id": session_id,
@@ -385,7 +366,6 @@ class ForgeSandbox:
         }
         self._audit_history.append(audit_record)
 
-        # Persist to database if available
         try:
             from app.database.models.audit_log import AuditLogEntry
             from app.database.postgres import SessionLocal
@@ -427,7 +407,6 @@ class ForgeSandbox:
 
         start_time = time.perf_counter()
 
-        # Static safety filter layer
         code_lower = code.lower()
         for pattern in FORBIDDEN_CODE_PATTERNS:
             if pattern in code_lower:
@@ -451,7 +430,6 @@ class ForgeSandbox:
                 )
                 return blocked_res
 
-        # AST-level static security validation
         if not skip_ast_validation:
             ast_res = ast_security_validator.validate(code)
             if ast_res.risk_level in ("blocked", "dangerous"):
@@ -513,7 +491,6 @@ class ForgeSandbox:
         result["backend"] = runner.name
         result["duration_ms"] = duration_ms
 
-        # Audit logging of all sandbox executions
         self._log_audit_entry(
             code=code,
             result=result,

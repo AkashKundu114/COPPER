@@ -6,24 +6,9 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-# Ensure backend root is in python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import app.database.models.agent_registry  # noqa: F401, E402
-import app.database.models.audit_log  # noqa: F401, E402
-import app.database.models.campaign  # noqa: F401, E402
-import app.database.models.episode  # noqa: F401, E402
-import app.database.models.history  # noqa: F401, E402
-import app.database.models.knowledge_graph  # noqa: F401, E402
-import app.database.models.lora_adapter  # noqa: F401, E402
-import app.database.models.memory_v2  # noqa: F401, E402
-import app.database.models.project  # noqa: F401, E402
-import app.database.models.response_evaluation  # noqa: F401, E402
-import app.database.models.schedule_event  # noqa: F401, E402
-import app.database.models.self_memory  # noqa: F401, E402
-import app.database.models.task  # noqa: F401, E402
-import app.database.models.workspace  # noqa: F401, E402
-from app.database.postgres import Base, db_url  # noqa: E402
+from app.database.postgres import Base, db_url
 
 config = context.config
 
@@ -36,12 +21,14 @@ is_sqlite = db_url.startswith("sqlite")
 
 
 def run_migrations_offline() -> None:
+    url = config.get_main_option("sqlalchemy.url") or db_url
+    is_sql = url.startswith("sqlite")
     context.configure(
-        url=db_url,
+        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=is_sqlite,
+        render_as_batch=is_sql,
     )
 
     with context.begin_transaction():
@@ -50,8 +37,10 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = db_url
-    connect_args = {"check_same_thread": False} if is_sqlite else {}
+    url = config.get_main_option("sqlalchemy.url") or db_url
+    configuration["sqlalchemy.url"] = url
+    is_sql = url.startswith("sqlite")
+    connect_args = {"check_same_thread": False} if is_sql else {}
 
     connectable = engine_from_config(
         configuration,

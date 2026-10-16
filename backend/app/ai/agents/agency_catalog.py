@@ -26,17 +26,12 @@ def _load_catalog() -> dict[str, dict[str, Any]]:
 
 
 def get_persona(identifier: str) -> dict[str, Any] | None:
-    """
-    Retrieve persona definition by key identifier.
-    Supports either 'division:agent-id' (e.g. 'engineering:engineering-software-architect')
-    or partial matching by role name / slug (e.g. 'devops_engineer', 'software_architect').
-    """
+    """Retrieve persona definition by key identifier."""
     catalog = _load_catalog()
     if identifier in catalog:
         return catalog[identifier]
 
     id_lower = identifier.lower().replace("_", "-")
-    # Search by exact key match or slug match
     for key, p in catalog.items():
         slug = key.split(":")[-1].lower()
         if slug == id_lower or id_lower in slug or identifier.lower() == p.get("name", "").lower():

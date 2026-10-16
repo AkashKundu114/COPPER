@@ -1,16 +1,13 @@
-"""
-FastAPI REST endpoints for the C.O.P.P.E.R. First-Run Setup Wizard,
-system requirement diagnostics, and dependency management.
-"""
+"""FastAPI REST endpoints for the C.O.P.P.E.R. First-Run Setup Wizard,"""
 
 import json
-from pathlib import Path
 import shutil
 import sys
+from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
 import httpx
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from app.ai.llm.model_manager import model_manager
@@ -25,7 +22,7 @@ SETUP_STATE_FILE = Path.home() / ".copper" / "setup_state.json"
 class SetupStatePayload(BaseModel):
     completed: bool = False
     current_step: int = 1
-    selected_preset: str = "recommended"  # "minimal" | "recommended" | "full"
+    selected_preset: str = "recommended"
     selected_agents: list[str] = Field(default_factory=list)
     selected_voice: str = "af_bella"
     selected_image_model: str = "sd_turbo"
@@ -39,7 +36,7 @@ class PullModelRequest(BaseModel):
 def _load_setup_state() -> dict[str, Any]:
     if SETUP_STATE_FILE.exists():
         try:
-            with open(SETUP_STATE_FILE, "r", encoding="utf-8") as f:
+            with open(SETUP_STATE_FILE, encoding="utf-8") as f:
                 return json.load(f)
         except Exception:
             pass
@@ -86,10 +83,8 @@ def save_state(payload: SetupStatePayload) -> dict[str, Any]:
 @router.get("/system-check", summary="System requirements verification")
 async def system_check() -> dict[str, Any]:
     """Performs pre-flight checks on host GPU, disk, Python, and Ollama."""
-    # 1. GPU Check
     gpu = detect_gpu()
 
-    # 2. Disk Space Check
     install_path = Path(__file__).resolve().parent.parent.parent.parent.parent
     try:
         total, used, free = shutil.disk_usage(install_path)
@@ -99,7 +94,6 @@ async def system_check() -> dict[str, Any]:
         free_gb = 50.0
         total_gb = 500.0
 
-    # 3. Ollama Check
     ollama_installed = shutil.which("ollama") is not None
     ollama_running = False
     ollama_models: list[str] = []

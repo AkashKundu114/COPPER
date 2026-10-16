@@ -1,21 +1,14 @@
-"""
-Multi-Touch Attribution (MTA) Engine for C.O.P.P.E.R. (DELTA Agent).
+"""Multi-Touch Attribution (MTA) Engine for C.O.P.P.E.R. (DELTA Agent)."""
 
-Modeled on DeltaX Measurement & Attribution:
-Calculates cross-channel attribution credit across multi-point conversion paths
-using Linear, Time-Decay, and Game-Theoretic Shapley Value models.
-"""
-
-from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
 import itertools
 import math
-from typing import Any
+from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
 class Touchpoint:
-    channel: str  # "search", "social", "display", "retargeting", "email"
+    channel: str
     campaign_id: str
     timestamp: datetime
 
@@ -49,10 +42,7 @@ class MultiTouchAttributionEngine:
     def time_decay_attribution(
         journeys: list[ConversionJourney], half_life_days: float = 7.0
     ) -> dict[str, float]:
-        """
-        Exponentially weights touchpoints closer to the conversion moment.
-        Credit decays with a specified half-life (default 7 days).
-        """
+        """Exponentially weights touchpoints closer to the conversion moment."""
         scores: dict[str, float] = {}
         half_life_seconds = half_life_days * 86400.0
 
@@ -63,7 +53,6 @@ class MultiTouchAttributionEngine:
             weights = []
             for tp in j.touchpoints:
                 delta_sec = max(0.0, (j.converted_at - tp.timestamp).total_seconds())
-                # Exponential decay formula: 2^(-delta / half_life)
                 weight = math.pow(2.0, -delta_sec / max(1.0, half_life_seconds))
                 weights.append(weight)
 
@@ -76,18 +65,13 @@ class MultiTouchAttributionEngine:
 
     @staticmethod
     def shapley_value_attribution(journeys: list[ConversionJourney]) -> dict[str, float]:
-        """
-        Game-Theoretic Shapley Value Attribution.
-        Computes marginal contributions across all channel coalition subsets:
-        phi_i = sum( (|S|! * (|N| - |S| - 1)! / |N|!) * [v(S U {i}) - v(S)] )
-        """
-        # Collect unique channels
+        """Game-Theoretic Shapley Value Attribution."""
         channels = set()
         for j in journeys:
             for tp in j.touchpoints:
                 channels.add(tp.channel)
 
-        channel_list = sorted(list(channels))
+        channel_list = sorted(channels)
         n = len(channel_list)
         if n == 0:
             return {}
@@ -95,17 +79,15 @@ class MultiTouchAttributionEngine:
             total_val = sum(j.conversion_value for j in journeys)
             return {channel_list[0]: round(total_val, 2)}
 
-        # Characteristic function v(S) evaluates conversion value achieved by channel set S
         def coalition_value(coalition: frozenset[str]) -> float:
             val = 0.0
             for j in journeys:
                 j_channels = {tp.channel for tp in j.touchpoints}
-                # If all touchpoints in this journey belong to the coalition, credit is counted
                 if j_channels.issubset(coalition):
                     val += j.conversion_value
             return val
 
-        shapley_scores: dict[str, float] = {ch: 0.0 for ch in channel_list}
+        shapley_scores: dict[str, float] = dict.fromkeys(channel_list, 0.0)
 
         for i in channel_list:
             other_players = [ch for ch in channel_list if ch != i]
@@ -115,7 +97,6 @@ class MultiTouchAttributionEngine:
                     S_with_i = S | frozenset([i])
                     marginal = coalition_value(S_with_i) - coalition_value(S)
                     cardinality_S = len(S)
-                    # Shapley weight
                     weight = (
                         math.factorial(cardinality_S)
                         * math.factorial(n - cardinality_S - 1)

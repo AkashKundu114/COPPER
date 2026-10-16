@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 from bs4 import BeautifulSoup
 
 from app.ai.agents.agency_catalog import (
@@ -48,27 +48,23 @@ async def test_codebase_mapping_and_symbol_lookup(tmp_path):
 @pytest.mark.asyncio
 async def test_agency_catalog_full():
     cat = _load_catalog()
-    assert len(cat) >= 250  # Over 260 agents compiled
+    assert len(cat) >= 250
 
     divs = list_divisions()
     assert len(divs) >= 15
     assert "engineering" in divs
     assert "security" in divs
 
-    # Lookup by full ID
     arch = get_persona("engineering:engineering-software-architect")
     assert arch is not None
     assert "Software Architect" in arch["name"]
 
-    # Lookup by partial slug
     sec = get_persona("engineering-devops-automator")
     assert sec is not None
 
-    # Prompt injection
     injected = inject_persona("You are base assistant.", "engineering:engineering-software-architect")
     assert "[SPECIALIST PERSONA ACTIVE:" in injected
 
-    # Tool lookup
     tool_res = await agency_persona_lookup(domain="engineering")
     assert tool_res["status"] == "success"
     assert len(tool_res["personas"]) > 0
@@ -76,7 +72,6 @@ async def test_agency_catalog_full():
 
 @pytest.mark.asyncio
 async def test_scientific_skills_catalog():
-    # 165 scientific skills test
     bio_res = await scientific_skill_lookup("biopython")
     assert bio_res["status"] == "success"
     assert "biopython" in bio_res["skill"]["name"].lower()
@@ -85,7 +80,6 @@ async def test_scientific_skills_catalog():
     rdkit_res = await scientific_skill_lookup("rdkit")
     assert rdkit_res["status"] == "success"
 
-    # List skills
     list_res = await scientific_skill_list(filter_query="data", limit=10)
     assert list_res["status"] == "success"
     assert list_res["returned"] > 0
@@ -141,25 +135,21 @@ async def test_dataset_summary(tmp_path):
 
 @pytest.mark.asyncio
 async def test_video_and_openmontage_pipelines():
-    # Test pipeline list
     pipe_res = await video_pipeline_list()
     assert pipe_res["status"] == "success"
     assert "screen-demo" in pipe_res["pipelines"]
     assert "clip-factory" in pipe_res["pipelines"]
 
-    # Test error handling on missing files
     res = await video_create_slideshow(["missing.png"], "out.mp4", pipeline="screen-demo")
     assert res["status"] == "error"
 
 
 @pytest.mark.asyncio
 async def test_diagram_generator_multi_types():
-    # 1. Flowchart
     flow_res = await workflow_diagram_render(title="DAG Test", steps=["Step 1", "Step 2"])
     assert flow_res["status"] == "success"
     assert "graph TD" in flow_res["raw_code"]
 
-    # 2. Sequence diagram
     seq_res = await workflow_diagram_render(
         title="Agent Handoff",
         diagram_type="sequence",
@@ -174,7 +164,6 @@ async def test_diagram_generator_multi_types():
     assert "sequenceDiagram" in seq_res["raw_code"]
     assert "User->>Router: Build feature" in seq_res["raw_code"]
 
-    # 3. ER Diagram
     er_res = await workflow_diagram_render(
         title="Database Schema",
         diagram_type="er_diagram",

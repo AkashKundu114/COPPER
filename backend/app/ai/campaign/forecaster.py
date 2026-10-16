@@ -1,14 +1,8 @@
-"""
-Predictive Campaign Pacing & Budget Exhaustion Forecaster.
-
-Modeled on DeltaX Predictive Analytics:
-Forecasts intraday and multi-day campaign metrics (spend, conversions, exhaustion timing)
-using zero-overhead exponential smoothing to conserve GPU VRAM.
-"""
+"""Predictive Campaign Pacing & Budget Exhaustion Forecaster."""
 
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta, timezone
 from typing import Any
+
 import numpy as np
 
 
@@ -21,7 +15,7 @@ class ForecastResult:
     projected_exhaustion_time: str | None
     is_at_risk_of_early_exhaustion: bool
     confidence_interval: tuple[float, float]
-    trend: str  # "accelerating" | "stable" | "decelerating"
+    trend: str
     recommendation: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -50,7 +44,7 @@ class CampaignForecaster:
         campaign_id: str,
         daily_budget: float,
         hourly_spends: list[float],
-        current_hour: int = 14,  # e.g., 2 PM (14:00)
+        current_hour: int = 14,
     ) -> ForecastResult:
         if not hourly_spends or daily_budget <= 0:
             return ForecastResult(
@@ -70,12 +64,10 @@ class CampaignForecaster:
         std_spend = float(np.std(smoothed)) if len(smoothed) > 1 else mean_spend * 0.1
         current_cumulative = sum(hourly_spends)
 
-        # Remaining hours in the day
         remaining_hours = max(1, 24 - current_hour)
         projected_spend_per_hour = smoothed[-1]
         projected_total = current_cumulative + (projected_spend_per_hour * remaining_hours)
 
-        # Calculate exhaustion hour if burning too quickly
         exhaustion_time = None
         is_at_risk = False
         remaining_budget = max(0.0, daily_budget - current_cumulative)
@@ -96,7 +88,6 @@ class CampaignForecaster:
         else:
             rec = f"Budget pacing is on schedule to utilize {min(100.0, (projected_total / daily_budget) * 100):.1f}% of daily allocation."
 
-        # Trend detection
         if len(smoothed) >= 3:
             recent_delta = smoothed[-1] - smoothed[-3]
             trend = "accelerating" if recent_delta > 0.05 * mean_spend else "decelerating" if recent_delta < -0.05 * mean_spend else "stable"

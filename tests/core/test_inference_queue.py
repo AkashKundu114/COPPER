@@ -1,7 +1,4 @@
-"""
-Unit tests for Asynchronous Concurrency, Event Loop Isolation & Inference Priority Queue.
-Verifies priority dispatch order, concurrency throttling, backpressure shedding, and lag metrics.
-"""
+"""Unit tests for Asynchronous Concurrency, Event Loop Isolation & Inference Priority Queue."""
 
 import asyncio
 
@@ -12,7 +9,6 @@ from app.core.inference_queue import InferenceQueueManager, PriorityTier
 
 @pytest.mark.asyncio
 async def test_inference_queue_priority_ordering():
-    # Setup queue with concurrency = 1 to test strict serialized ordering
     iq = InferenceQueueManager(max_concurrent_inferences=1, max_queue_size=10)
     await iq.start()
 
@@ -26,12 +22,10 @@ async def test_inference_queue_priority_ordering():
         return _run
 
     try:
-        # First task runs immediately to occupy worker 0
         task_occupy = await make_task("occupy", delay=0.08)
         f_occupy = asyncio.create_task(iq.submit("task_0", task_occupy, priority=PriorityTier.NORMAL))
-        await asyncio.sleep(0.01)  # Ensure it starts running
+        await asyncio.sleep(0.01)
 
-        # While worker is busy, submit Background task first, then Critical task
         task_bg = await make_task("background", delay=0.01)
         task_crit = await make_task("critical", delay=0.01)
 
@@ -40,7 +34,6 @@ async def test_inference_queue_priority_ordering():
 
         await asyncio.gather(f_occupy, f_bg, f_crit)
 
-        # "critical" must execute BEFORE "background", despite background being submitted first!
         assert execution_order == ["occupy", "critical", "background"]
     finally:
         await iq.stop()
@@ -66,7 +59,6 @@ async def test_inference_queue_concurrency_throttling():
         results = await asyncio.gather(*tasks)
         assert len(results) == 5
         assert all(r == "done" for r in results)
-        # Max active workers should never exceed max_concurrency (2)
         assert max(active_counts) <= 2
     finally:
         await iq.stop()
@@ -75,17 +67,13 @@ async def test_inference_queue_concurrency_throttling():
 @pytest.mark.asyncio
 async def test_inference_queue_backpressure_shedding():
     iq = InferenceQueueManager(max_concurrent_inferences=1, max_queue_size=2)
-    # Queue is capacity 2
-    # Fill the queue without starting workers
     async def dummy():
         return 1
 
-    # Occupy queue to capacity
     _task_one = asyncio.create_task(iq.submit("t1", dummy, priority=PriorityTier.NORMAL))
     _task_two = asyncio.create_task(iq.submit("t2", dummy, priority=PriorityTier.NORMAL))
     await asyncio.sleep(0.01)
 
-    # 3rd submission with BACKGROUND priority should be rejected by backpressure
     with pytest.raises(RuntimeError, match="Background task shed under load"):
         await iq.submit("t3", dummy, priority=PriorityTier.BACKGROUND)
 

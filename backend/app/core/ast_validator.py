@@ -1,10 +1,4 @@
-"""Abstract Syntax Tree (AST) Security Validator for COPPER Sandbox.
-
-Performs static analysis of Python source code prior to execution to enforce
-strict isolation boundaries, intercepting arbitrary code execution, unauthorized
-imports, sensitive dunder reflection, destructive filesystem operations, and
-unauthorized network calls before processes are spawned.
-"""
+"""Abstract Syntax Tree (AST) Security Validator for COPPER Sandbox."""
 
 from __future__ import annotations
 
@@ -22,7 +16,7 @@ class ASTViolation:
     node_type: str
     line_number: int
     description: str
-    severity: str  # "warning" | "critical"
+    severity: str
 
 
 @dataclass
@@ -31,10 +25,9 @@ class ASTValidationResult:
 
     is_safe: bool
     violations: list[ASTViolation] = field(default_factory=list)
-    risk_level: str = "safe"  # "safe" | "suspicious" | "dangerous" | "blocked"
+    risk_level: str = "safe"
 
 
-# Modules strictly disallowed from being imported in the sandbox
 FORBIDDEN_MODULES: frozenset[str] = frozenset({
     "os",
     "subprocess",
@@ -53,7 +46,6 @@ FORBIDDEN_MODULES: frozenset[str] = frozenset({
     "posix",
     "nt",
     "asyncio.subprocess",
-    # Network libraries
     "urllib",
     "urllib3",
     "requests",
@@ -66,7 +58,6 @@ FORBIDDEN_MODULES: frozenset[str] = frozenset({
     "xmlrpc",
 })
 
-# Root function calls strictly forbidden (code execution / reflection escapes)
 FORBIDDEN_CALLS: frozenset[str] = frozenset({
     "eval",
     "exec",
@@ -75,13 +66,11 @@ FORBIDDEN_CALLS: frozenset[str] = frozenset({
     "globals",
 })
 
-# Calls flagged as suspicious (warnings)
 SUSPICIOUS_CALLS: frozenset[str] = frozenset({
     "locals",
     "vars",
 })
 
-# Dunder attributes used in sandbox escape exploits and metaclass hijacking
 FORBIDDEN_DUNDERS: frozenset[str] = frozenset({
     "__class__",
     "__subclasses__",
@@ -99,7 +88,6 @@ FORBIDDEN_DUNDERS: frozenset[str] = frozenset({
     "__import__",
 })
 
-# Pathlib / file system modification and deletion methods
 PATH_WRITE_METHODS: frozenset[str] = frozenset({
     "unlink",
     "rmdir",
@@ -115,7 +103,6 @@ PATH_WRITE_METHODS: frozenset[str] = frozenset({
     "hardlink_to",
 })
 
-# Modes in open() that permit writing, appending, or mutating files
 WRITE_MODES: frozenset[str] = frozenset({"w", "a", "x", "+"})
 
 
@@ -208,7 +195,6 @@ class ASTSecurityVisitor(ast.NodeVisitor):
 
         elif isinstance(node.func, ast.Attribute):
             attr_name = node.func.attr
-            # ast.literal_eval is explicitly allowed and safe
             if attr_name == "literal_eval":
                 pass
             elif attr_name in FORBIDDEN_CALLS:
@@ -265,7 +251,6 @@ class ASTSecurityVisitor(ast.NodeVisitor):
                         )
                     )
             else:
-                # Dynamic mode expression cannot be statically proven safe
                 self.violations.append(
                     ASTViolation(
                         node_type="Call",
@@ -299,7 +284,6 @@ class ASTSecurityVisitor(ast.NodeVisitor):
                         )
                     )
             else:
-                # Dynamic attribute expression (BinOp, variable, call) cannot be statically verified safe
                 self.violations.append(
                     ASTViolation(
                         node_type="Call",
@@ -374,5 +358,4 @@ class ASTSecurityValidator:
         return ASTValidationResult(is_safe=True, violations=[], risk_level="safe")
 
 
-# Default global instance
 ast_security_validator = ASTSecurityValidator()

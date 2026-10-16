@@ -16,8 +16,8 @@ class FirewallResult:
     redacted_text: str
     classification: DataClass
     redaction_count: int
-    audit_hash: str = ""  # Novelty 6: Zero-knowledge cryptographic provenance integrity hash
-    redacted_categories: list[str] = field(default_factory=list)  # Preserved structural tags
+    audit_hash: str = ""
+    redacted_categories: list[str] = field(default_factory=list)
 
 
 _PATTERNS: list[tuple[re.Pattern, str, DataClass]] = [
@@ -94,7 +94,6 @@ def classify_and_redact(text: str) -> FirewallResult:
             if severity_order.index(classification) > severity_order.index(worst):
                 worst = classification
 
-    # Cryptographic integrity provenance hash for zero-trust tracking
     audit_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16] if redaction_count > 0 else ""
 
     return FirewallResult(

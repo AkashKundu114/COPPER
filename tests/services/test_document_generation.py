@@ -149,7 +149,6 @@ async def test_create_document_high_level(doc_service):
     assert meta["title"] == "High-Level Architecture Document"
     assert Path(meta["filepath"]).exists()
 
-    # Verify listing and safe path retrieval
     docs = doc_service.list_generated_documents()
     assert len(docs) >= 1
     assert any(d["filename"] == meta["filename"] for d in docs)

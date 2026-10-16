@@ -12,27 +12,27 @@ from app.core.logger import logger
 
 @dataclass
 class FederatedPeer:
-    peer_id: str  # uuid4 or hash
-    name: str  # Human-readable name (e.g., "COPPER-Home", "COPPER-Work")
-    host: str  # IP/hostname
-    port: int  # Port
+    peer_id: str
+    name: str
+    host: str
+    port: int
     last_seen: datetime | None = None
     last_sync: datetime | None = None
-    status: str = "discovered"  # discovered, connected, syncing, synced, offline
+    status: str = "discovered"
     rounds_participated: int = 0
 
 
 @dataclass
 class FederatedRound:
-    round_id: str  # uuid4
+    round_id: str
     started_at: datetime
     completed_at: datetime | None = None
-    status: str = "in_progress"  # in_progress, aggregating, completed, failed
-    peers_contributed: list[str] = field(default_factory=list)  # peer_ids
-    adapter_name: str = ""  # Which adapter was improved
-    delta_count: int = 0  # Number of weight deltas received
-    privacy_epsilon_spent: float = 0.0  # Total privacy cost for this round
-    improvement_metric: float = 0.0  # Measured improvement (if any)
+    status: str = "in_progress"
+    peers_contributed: list[str] = field(default_factory=list)
+    adapter_name: str = ""
+    delta_count: int = 0
+    privacy_epsilon_spent: float = 0.0
+    improvement_metric: float = 0.0
 
 
 class FederatedLearner:
@@ -42,9 +42,9 @@ class FederatedLearner:
         self.self_peer_id = None
         self.self_name = None
         self.port = 8000
-        self.peers = {}  # peer_id -> FederatedPeer
-        self.rounds = {}  # round_id -> FederatedRound
-        self.active_deltas = {}  # round_id -> list of deltas
+        self.peers = {}
+        self.rounds = {}
+        self.active_deltas = {}
         os.makedirs("data", exist_ok=True)
         self._load_config()
         self._load_rounds()
@@ -128,7 +128,6 @@ class FederatedLearner:
         return peer
 
     def discover_peers(self) -> list[FederatedPeer]:
-        # Placeholder for actual mDNS / network discovery
         for p in self.peers.values():
             p.last_seen = datetime.now(UTC)
             p.status = "connected"
@@ -139,11 +138,9 @@ class FederatedLearner:
     def generate_weight_delta(self, adapter_path: str, epsilon: float = 1.0) -> dict:
         logger.info(f"Generating weight delta for adapter {adapter_path} with epsilon {epsilon}")
 
-        # Fake delta for now
         shape = (10, 10)
         raw_delta = np.random.normal(0, 0.1, shape)
 
-        # Apply differential privacy noise
         sensitivity = 1.0
         noise_scale = sensitivity / epsilon
         noise = np.random.laplace(0, noise_scale, shape)
@@ -194,7 +191,6 @@ class FederatedLearner:
         deltas = self.active_deltas[round_id]
         logger.info(f"Aggregating {len(deltas)} deltas for round {round_id}")
 
-        # FedAvg
         arrays = [np.array(d["delta"]) for d in deltas if "delta" in d]
         if not arrays:
             return {}
@@ -222,13 +218,11 @@ class FederatedLearner:
 
         rnd.status = "aggregating"
 
-        # Aggregate
         self.aggregate_deltas(round_id)
 
         rnd.status = "completed"
         rnd.completed_at = datetime.now(UTC)
 
-        # Clean up memory
         if round_id in self.active_deltas:
             del self.active_deltas[round_id]
 

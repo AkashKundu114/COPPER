@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   AlertTriangle,
   ShieldAlert,
@@ -74,7 +74,7 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
           </div>
         </div>
 
-        {/* Severity Filter Tabs */}
+
         <div className="flex items-center gap-1 bg-canvas p-1 rounded-lg border border-border-subtle text-xs font-medium">
           {["all", "critical", "warning", "info"].map((sev) => (
             <button
@@ -162,7 +162,7 @@ export const AnomalyAlerts = ({ anomalies = [], onAutoFixApplied }) => {
                     </div>
                   </div>
 
-                  {/* Auto-Fix button */}
+
                   {anom.auto_fixable && !isFixed && (
                     <button
                       onClick={() => handleAutoFix(idx, anom)}

@@ -23,21 +23,17 @@ RESTRICTED_SYSTEM_DIRS = [
 def _get_allowed_roots() -> list[Path]:
     roots = [
         Path(settings.DOCUMENTS_DIR).resolve(),
-        Path(__file__).resolve().parents[5],  # Project root D:\C.O.P.P.E.R
+        Path(__file__).resolve().parents[5],
         Path(tempfile.gettempdir()).resolve(),
     ]
     return [r for r in roots if r.exists()]
 
 
 def validate_safe_path(target_path: str | Path, allow_nonexistent: bool = False) -> tuple[bool, Path | None, str | None]:
-    """
-    Validates that target_path is confined to permitted directory roots (project workspace,
-    documents directory, or system temp) and does not access sensitive system paths or credentials.
-    """
+    """Validates that target_path is confined to permitted directory roots (project workspace,"""
     try:
         resolved = Path(target_path).resolve()
 
-        # Check forbidden filename patterns (.env, private keys)
         if resolved.name.startswith(".env") or resolved.name.lower() in RESTRICTED_FILENAMES:
             return False, None, f"Access denied: access to sensitive credential/configuration file '{resolved.name}' is prohibited."
 
@@ -45,12 +41,10 @@ def validate_safe_path(target_path: str | Path, allow_nonexistent: bool = False)
             if part.lower() in {".ssh", ".aws", ".azure", ".gnupg"}:
                 return False, None, f"Access denied: directory '{part}' contains sensitive credentials."
 
-        # Check restricted OS system roots
         for sys_dir in RESTRICTED_SYSTEM_DIRS:
             if str(sys_dir).strip() and (resolved == sys_dir or sys_dir in resolved.parents):
                 return False, None, f"Access denied: path '{target_path}' is inside protected system directory '{sys_dir}'."
 
-        # Must be within at least one allowed root
         allowed_roots = _get_allowed_roots()
         is_allowed = any(resolved == root or root in resolved.parents for root in allowed_roots)
         if not is_allowed:
@@ -86,7 +80,6 @@ async def file_read(path: str, encoding: str = "utf-8") -> dict[str, Any]:
         if not p.is_file():
             return {"status": "error", "error": f"Path is not a regular file: {path}"}
 
-        # Size check limit: 5MB
         size = p.stat().st_size
         if size > 5 * 1024 * 1024:
             return {"status": "error", "error": f"File is too large ({size} bytes > 5MB limit)."}
@@ -121,7 +114,7 @@ async def file_read(path: str, encoding: str = "utf-8") -> dict[str, Any]:
         "required": ["path", "content"],
     },
     return_description="Status confirmation and bytes written.",
-    guardian_level=2,  # CHALLENGE
+    guardian_level=2,
 )
 async def file_write(path: str, content: str, mode: str = "overwrite") -> dict[str, Any]:
     try:
@@ -191,7 +184,7 @@ async def file_list(directory: str = ".", pattern: str = "*") -> dict[str, Any]:
             "status": "success",
             "directory": str(target_dir),
             "total_matches": len(entries),
-            "entries": entries[:100],  # cap at 100 entries for context safety
+            "entries": entries[:100],
         }
     except Exception as e:
         logger.error(f"file_list error for '{directory}': {e}")
@@ -282,7 +275,6 @@ async def file_search(
                             break
 
             except Exception:
-                # Silently skip files we can't read
                 continue
 
             if len(matches) >= max_results:

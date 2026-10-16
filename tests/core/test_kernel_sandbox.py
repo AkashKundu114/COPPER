@@ -1,7 +1,4 @@
-"""
-Unit tests for OS Kernel Sandboxing & Windows Job Objects.
-Verifies process execution, timeout enforcement, and memory quota isolation.
-"""
+"""Unit tests for OS Kernel Sandboxing & Windows Job Objects."""
 
 import sys
 
@@ -30,7 +27,6 @@ def test_kernel_sandbox_runner_safe_code_execution():
 
 def test_kernel_sandbox_timeout_enforcement():
     runner = KernelSandboxRunner()
-    # Infinite loop script
     code = "import time\nwhile True:\n    time.sleep(0.1)"
     res = runner.run(code, timeout=1)
 

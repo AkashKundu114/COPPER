@@ -79,7 +79,6 @@ async def test_context_bus_subscriptions_and_events():
 
     bus.unsubscribe(dag_id, listener)
     await bus.publish_event(session_id=None, dag_id=dag_id, event_type="task_graph_complete", payload={})
-    # Should not receive after unsubscribe
     assert len(received_events) == 1
 
 

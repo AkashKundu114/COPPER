@@ -1,19 +1,4 @@
-"""
-Kernel-Level Sandboxing & Hardware Quota Enforcement (Windows Job Objects & POSIX rlimit).
-
-Operating Systems & Systems Security Concept:
-Application-level sandboxing (e.g., regex filters or Python timeouts) fails against:
-1. Fork bombs (`:(){ :|:& };:`) or spawning detached daemon background child processes.
-2. Sudden runaway heap allocation causing host OS freeze or OOM panic.
-3. 100% multi-core CPU monopolization.
-
-This module enforces kernel-level limits:
-- On Windows: Uses Windows Job Objects (CreateJobObjectW, SetInformationJobObject)
-  - JOB_OBJECT_LIMIT_PROCESS_MEMORY: Hard memory ceiling (e.g. 256 MB).
-  - JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE: Atomic kernel destruction of the entire child process tree.
-  - JOB_OBJECT_CPU_RATE_CONTROL: Throttles maximum CPU share (e.g. max 25% CPU core usage).
-- On Linux/POSIX: Uses prlimit/setrlimit (RLIMIT_AS for memory, RLIMIT_CPU for execution time).
-"""
+"""Kernel-Level Sandboxing & Hardware Quota Enforcement (Windows Job Objects & POSIX rlimit)."""
 
 import ctypes
 import os
@@ -24,7 +9,6 @@ from typing import Any
 
 from app.core.logger import logger
 
-# Windows Job Object Constants
 JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
 JOB_OBJECT_LIMIT_PROCESS_MEMORY = 0x00000100
 JOB_OBJECT_CPU_RATE_CONTROL_ENABLE = 0x00000001
@@ -72,7 +56,7 @@ class JOBOBJECT_EXTENDED_LIMIT_INFORMATION(ctypes.Structure):
 class JOBOBJECT_CPU_RATE_CONTROL_INFORMATION(ctypes.Structure):
     _fields_ = [
         ("ControlFlags", ctypes.c_uint32),
-        ("CpuRate", ctypes.c_uint32),  # In units of 1/100 of 1% (e.g. 2500 = 25%)
+        ("CpuRate", ctypes.c_uint32),
     ]
 
 
@@ -95,7 +79,6 @@ class WindowsKernelJob:
             logger.warning("[KernelSandbox] Failed to create Windows Job Object.")
             return
 
-        # 1. Extended Limit Information: Memory cap + Kill-on-Close
         ext_limits = JOBOBJECT_EXTENDED_LIMIT_INFORMATION()
         limit_flags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE | JOB_OBJECT_LIMIT_PROCESS_MEMORY
         ext_limits.BasicLimitInformation.LimitFlags = limit_flags
@@ -110,10 +93,9 @@ class WindowsKernelJob:
         if not success:
             logger.warning(f"[KernelSandbox] Failed to set memory limits on Job Object: {ctypes.GetLastError()}")
 
-        # 2. CPU Rate Control: Hard Cap
         cpu_limits = JOBOBJECT_CPU_RATE_CONTROL_INFORMATION()
         cpu_limits.ControlFlags = JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP
-        cpu_limits.CpuRate = self.cpu_rate_pct * 100  # 25 * 100 = 2500 (25%)
+        cpu_limits.CpuRate = self.cpu_rate_pct * 100
 
         kernel32.SetInformationJobObject(
             self.handle,
@@ -144,10 +126,7 @@ class WindowsKernelJob:
 
 
 class KernelSandboxRunner:
-    """
-    Subprocess Runner backed by OS Kernel-level Quotas.
-    Enforces memory ceiling, CPU rate throttling, and process hierarchy tree termination.
-    """
+    """Subprocess Runner backed by OS Kernel-level Quotas."""
 
     name = "kernel_job_object"
 
@@ -156,7 +135,6 @@ class KernelSandboxRunner:
         self.cpu_rate_pct = cpu_rate_pct
 
     def is_available(self) -> bool:
-        # Supported on Windows natively; POSIX fallback supported via rlimit
         return sys.platform == "win32" or hasattr(os, "setrlimit")
 
     def run(self, code: str, timeout: int = 10, memory_limit_mb: int | None = None) -> dict[str, Any]:
@@ -174,17 +152,15 @@ class KernelSandboxRunner:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                creationflags=0x08000000 if sys.platform == "win32" else 0,  # CREATE_NO_WINDOW
+                creationflags=0x08000000 if sys.platform == "win32" else 0,
             )
 
-            # Assign process to Job Object immediately
             if job.is_supported and job.handle:
                 job.assign_process(proc.pid)
 
             stdout, stderr = proc.communicate(timeout=timeout)
             exit_code = proc.returncode
 
-            # Check if terminated by memory quota violation (Windows 0xC0000044: STATUS_QUOTA_EXCEEDED or 0xC0000005)
             is_memory_killed = False
             if exit_code in (-1073741819, 3221225477, -1073741756, 3221225540):
                 is_memory_killed = True

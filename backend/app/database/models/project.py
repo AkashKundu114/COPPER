@@ -11,7 +11,7 @@ class Project(Base):
 
     id = Column(String(64), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(255), nullable=False)
-    health = Column(String(20), nullable=False, default="healthy")  # healthy, at_risk, blocked, completed
+    health = Column(String(20), nullable=False, default="healthy")
     reason = Column(Text, nullable=True, default="Project milestone tracking active.")
     completed_tasks = Column(Integer, nullable=False, default=0)
     total_tasks = Column(Integer, nullable=False, default=1)

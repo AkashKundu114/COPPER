@@ -30,18 +30,9 @@ MODEL_TIERS = {
 
 
 class OperatorDirectiveService:
-    """
-    Parses and executes natural-language operational directives from the user:
-    - Model selection & sizing (e.g. 'use a smaller model', 'switch to 1b', 'use 8b model')
-    - Cognitive mode switching (e.g. 'switch to reasoning mode', 'fast mode')
-    - Voice selection (e.g. 'change voice to Jenny', 'use Ava')
-    - Hands-free / Continuous voice toggle (e.g. 'enable hands-free mode')
-    - VRAM & Memory operations (e.g. 'unload models', 'clear vram', 'purge chat')
-    """
+    """Parses and executes natural-language operational directives from the user:"""
 
-    # Model Directive Patterns
     MODEL_DIRECTIVE_PATTERNS = [
-        # Smaller / Mini / 1B / Lightweight
         (
             r"\b(?:use|switch to|change to|set|talk with|respond with|answer with)\s+(?:a\s+)?(?:much\s+)?(?:smaller|mini|lightweight|tiny|compact|fast|instant|1b)\s+(?:models?|ai|llm)?(?:\s+(?:to\s+talk\s+(?:to|with)\s+me|for\s+chat|to\s+answer))?",
             "mini",
@@ -50,7 +41,6 @@ class OperatorDirectiveService:
             r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:llama3\.2:1b|llama3\.2-abliterated:1b|1b|llama\s*1b)\b",
             "1b",
         ),
-        # Medium / 3B
         (
             r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:medium|mid-size|balanced|3b)\s+(?:models?|ai|llm)?\b",
             "3b",
@@ -59,17 +49,14 @@ class OperatorDirectiveService:
             r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:llama3\.2:3b|llama3\.2-abliterated:3b|3b|llama\s*3b)\b",
             "3b",
         ),
-        # Reflex / 1.5B
         (
             r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:micro|ultra-light|reflex|1\.5b|qwen\s*1\.5b)\s+(?:models?|ai|llm)?\b",
             "1.5b",
         ),
-        # 3B Subagents (Forge / Warden)
         (
             r"\b(?:use|switch to|change to|set)\s+(?:a\s+)?(?:3b|qwen\s*3b|coder\s*3b)\s+(?:models?|ai|llm)?\b",
             "3b",
         ),
-        # Standard / 14B / Heavy / Full Cognitive
         (
             r"\b(?:use|switch to|switch back to|change to|set|restore)\s+(?:a\s+)?(?:larger?|full|heavy|14b|standard|default|atlas)\s+(?:models?|ai|llm)?\b",
             "14b",
@@ -78,16 +65,13 @@ class OperatorDirectiveService:
             r"\b(?:use|switch to|change to)\s+(?:the\s+)?(?:qwen2\.5:14b|qwen\s*14b|atlas)\b",
             "14b",
         ),
-        # Specific Model Families
         (r"\b(?:use|switch to)\s+(?:the\s+)?deepseek(?:\s*r1|\s*14b|\s*1\.5b)?\b", "deepseek"),
         (r"\b(?:use|switch to)\s+(?:the\s+)?qwen(?:\s*coder|\s*14b|\s*3b)?\b", "coder"),
         (r"\b(?:use|switch to)\s+(?:the\s+)?phi(?:\s*4|\s*14b)?\b", "phi"),
         (r"\b(?:use|switch to)\s+(?:the\s+)?mistral(?:\s*nemo|\s*12b)?\b", "mistral"),
-        # Reset to Adaptive Default
         (r"\b(?:reset|clear|auto|adaptive)\s+models?\b", "auto"),
     ]
 
-    # Cognitive Mode Patterns
     MODE_PATTERNS = [
         (r"\b(?:switch to|enter|enable|activate|set)\s+reasoning\s+mode\b", "reasoning"),
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:coding|code|developer)\s+mode\b", "coding"),
@@ -98,7 +82,6 @@ class OperatorDirectiveService:
         (r"\b(?:switch to|enter|enable|activate|set)\s+(?:adaptive|autonomous|auto)\s+mode\b", "auto"),
     ]
 
-    # Voice Engine Patterns
     VOICE_PATTERNS = [
         (r"\b(?:change|switch|set)\s+voice\s+to\s+(ava|jenny|david|zira)\b", r"\1"),
         (r"\buse\s+(ava|jenny|david|zira)(?:'s)?\s+voice\b", r"\1"),
@@ -111,7 +94,6 @@ class OperatorDirectiveService:
         "zira": ("zira", "Zira (Windows Native Female)"),
     }
 
-    # Continuous Voice / Hands-Free Patterns
     HANDS_FREE_ENABLE = [
         r"\b(?:enable|turn on|start|activate)\s+(?:hands-free|continuous voice|eve mode)\b",
         r"\b(?:listen continuously|keep mic open)\b",
@@ -121,7 +103,6 @@ class OperatorDirectiveService:
         r"\b(?:stop continuous listening|push to talk mode)\b",
     ]
 
-    # VRAM Unload Patterns
     VRAM_UNLOAD_PATTERNS = [
         r"^unload\s+(?:all\s+)?models?$",
         r"^unload\s+(?:ur|your)\s+(?:pre-?loaded\s+)?models?$",
@@ -131,7 +112,6 @@ class OperatorDirectiveService:
         r"^unload$",
     ]
 
-    # Purge Chat / Reset Conversation
     PURGE_PATTERNS = [
         r"^(?:clear|purge|reset)\s+(?:chat|conversation|logs|session|history)$",
         r"^new\s+session$",
@@ -139,15 +119,10 @@ class OperatorDirectiveService:
     ]
 
     async def evaluate(self, message: str, session_id: str = "default") -> DirectiveResult:
-        """
-        Scans message for operational directives.
-        If found, executes state changes and returns structured confirmation.
-        Also separates any accompanying query (e.g. 'use a smaller model and whats my age').
-        """
+        """Scans message for operational directives."""
         clean_msg = message.strip()
         lower_msg = clean_msg.lower()
 
-        # 1. Check VRAM Unload Directive
         for pat in self.VRAM_UNLOAD_PATTERNS:
             if re.search(pat, lower_msg):
                 logger.info("[Directive] Executing VRAM unload request")
@@ -163,7 +138,6 @@ class OperatorDirectiveService:
                     updates={"vram_unloaded": True},
                 )
 
-        # 2. Check Session Purge Directive
         for pat in self.PURGE_PATTERNS:
             if re.search(pat, lower_msg):
                 logger.info(f"[Directive] Purging session history for {session_id}")
@@ -178,7 +152,6 @@ class OperatorDirectiveService:
                     updates={"session_cleared": True},
                 )
 
-        # 3. Check Hands-Free / Continuous Voice Directives
         for pat in self.HANDS_FREE_ENABLE:
             if re.search(pat, lower_msg):
                 persistent_memory.set_preference("continuous_voice", True)
@@ -205,7 +178,6 @@ class OperatorDirectiveService:
                     updates={"continuous_voice": False},
                 )
 
-        # 4. Check Voice Engine Directive
         for pat, _ in self.VOICE_PATTERNS:
             match = re.search(pat, lower_msg)
             if match:
@@ -222,7 +194,6 @@ class OperatorDirectiveService:
                     updates={"voice": voice_id, "voice_name": voice_name},
                 )
 
-        # 5. Check Cognitive Mode Directive
         for pat, mode_target in self.MODE_PATTERNS:
             if re.search(pat, lower_msg):
                 persistent_memory.set_cognitive_mode(mode_target)
@@ -244,8 +215,6 @@ class OperatorDirectiveService:
                     updates={"cognitive_mode": mode_target},
                 )
 
-        # 6. Check Model Selection & Sizing Directive
-        # Check reset model directive
         reset_match = re.search(r"\b(?:reset|clear|auto|adaptive)\s+models?\b", lower_msg)
         if reset_match:
             remaining = self._extract_remaining_prompt(clean_msg, reset_match.span())
@@ -263,7 +232,6 @@ class OperatorDirectiveService:
                 updates={"chat_model": None, "chat_tier": "auto"},
             )
 
-        # Check explicit model size directive before generic matching (e.g., 'switch to 3b model', 'switch back to 8b model')
         size_match = re.search(r"\b(1|3|8)\s*b\b", lower_msg)
         if size_match and any(w in lower_msg for w in ["switch", "use", "change", "set", "model", "back"]):
             size = size_match.group(1)
@@ -353,7 +321,6 @@ class OperatorDirectiveService:
         before = full_text[: matched_span[0]].strip()
         after = full_text[matched_span[1] :].strip()
 
-        # Clean connector words at the beginning of after
         after = re.sub(r"^(?:and|then|please|also|now|so|[,.:;])\s*", "", after, flags=re.IGNORECASE).strip()
         before = re.sub(r"\s*(?:and|then|please|also|now|so|[,.:;])$", "", before, flags=re.IGNORECASE).strip()
 

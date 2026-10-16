@@ -12,9 +12,9 @@ class Task(Base):
     id = Column(String(64), primary_key=True, default=lambda: str(uuid.uuid4()))
     title = Column(String(255), nullable=False)
     project = Column(String(100), nullable=False, default="General")
-    priority = Column(String(20), nullable=False, default="medium")  # high, medium, low
+    priority = Column(String(20), nullable=False, default="medium")
     duration = Column(String(50), nullable=False, default="30m")
-    status = Column(String(20), nullable=False, default="inbox")  # inbox, planned, active, completed
+    status = Column(String(20), nullable=False, default="inbox")
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     updated_at = Column(
         DateTime(timezone=True),

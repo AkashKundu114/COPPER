@@ -20,10 +20,10 @@ function getPythonExecutable(rootDir) {
   return "python";
 }
 
-// Force NVIDIA Dedicated High-Performance GPU
+
 app.commandLine.appendSwitch("force_high_performance_gpu");
 
-// Force Chromium accessibility engine for screen readers (NVDA, JAWS, Narrator, VoiceOver)
+
 app.commandLine.appendSwitch("force-renderer-accessibility");
 
 let isPrimaryInstance = false;
@@ -90,7 +90,7 @@ function createWindow() {
       url.startsWith("http://127.0.0.1") ||
       url.startsWith("file://");
     if (!isLocal) {
-      event.preventDefault(); // Block external URL navigation completely
+      event.preventDefault(); 
     }
   });
 
@@ -157,7 +157,7 @@ function toggleQuickBar() {
   if (quickBarWindow.isVisible()) {
     quickBarWindow.hide();
   } else {
-    // Center on the active screen
+
     const { screen } = require("electron");
     const cursor = screen.getCursorScreenPoint();
     const activeDisplay = screen.getDisplayNearestPoint(cursor);
@@ -299,7 +299,7 @@ ipcMain.handle("get-accessibility-status", () => {
     : true;
 });
 
-// Implement missing whitelist IPC handlers from preload.cjs
+
 ipcMain.handle("get-activation-status", () => {
   return { activated: true, mode: "offline_airgap", local_hardware_verified: true };
 });

@@ -6,10 +6,7 @@ from app.core.constants import AgentType, LLMProvider
 
 
 class ChatAgent(BaseAgent):
-    """
-    ATLAS: Primary conversational interface and dialogue orchestrator.
-    Handles general knowledge, conversational flow, persona alignment, and multi-turn dialogue.
-    """
+    """ATLAS: Primary conversational interface and dialogue orchestrator."""
 
     def __init__(self):
         super().__init__(

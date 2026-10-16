@@ -6,25 +6,22 @@ import os
 import sys
 from typing import Any
 
-# Ensure headless virtual display is defined before importing GUI libraries on Linux
 if not os.environ.get("DISPLAY"):
     os.environ["DISPLAY"] = ":99"
 
 try:
     import pyautogui
 
-    # Configure PyAutoGUI fail-safe and timings
     pyautogui.FAILSAFE = True
     pyautogui.PAUSE = 0.05
 except Exception:
-    pyautogui = None  # type: ignore
+    pyautogui = None
 
 from PIL import Image, ImageGrab
 
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
 
-# Ensure DPI awareness on Windows so screen coordinates match physical pixels
 if sys.platform == "win32":
     try:
         ctypes.windll.user32.SetProcessDPIAware()
@@ -89,19 +86,16 @@ async def screenshot(max_dimension: int = 1920) -> dict[str, Any]:
         ensure_interactive_desktop()
         img = None
 
-        # 1. Primary high-speed capture via mss (hardware-accelerated desktop capture)
         try:
             import mss
 
             with mss.MSS() as sct:
-                # Primary monitor is sct.monitors[1]
                 mon = sct.monitors[1] if len(sct.monitors) > 1 else sct.monitors[0]
                 sct_img = sct.grab(mon)
                 img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "BGRX")
         except Exception as mss_err:
             logger.debug(f"mss capture fallback to ImageGrab: {mss_err}")
 
-        # 2. Fallback capture via PIL ImageGrab
         if img is None:
             img = ImageGrab.grab(all_screens=False)
 
@@ -156,7 +150,7 @@ async def click(x: int, y: int, button: str = "left") -> dict[str, Any]:
 
         pyautogui.moveTo(x, y, duration=0.15)
         pyautogui.click(x=x, y=y, button=btn)
-        await asyncio.sleep(0.3)  # Small delay for UI update
+        await asyncio.sleep(0.3)
 
         return {
             "status": "success",
@@ -219,7 +213,6 @@ async def double_click(x: int, y: int) -> dict[str, Any]:
 async def type_text(text: str, interval: float = 0.02) -> dict[str, Any]:
     """Type text into active input field."""
     try:
-        # Check if text contains non-ASCII characters that pyautogui.typewrite struggles with
         try:
             text.encode("ascii")
             pyautogui.typewrite(text, interval=max(0.01, float(interval)))
@@ -292,7 +285,6 @@ async def scroll(x: int, y: int, direction: str = "down", amount: int = 3) -> di
         dir_clean = direction.lower().strip() if direction else "down"
         clicks = int(amount) if amount else 3
 
-        # In pyautogui, positive is scroll up, negative is scroll down
         scroll_amount = clicks * 120 if dir_clean == "up" else -clicks * 120
         pyautogui.scroll(scroll_amount, x=x, y=y)
         await asyncio.sleep(0.3)

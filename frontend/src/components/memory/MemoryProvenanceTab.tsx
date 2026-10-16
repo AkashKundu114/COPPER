@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { provenanceAPI } from "../../services/api";
 import { Search, ShieldAlert, CheckCircle2, XCircle, HelpCircle, History, Tag } from "lucide-react";
 
@@ -94,7 +94,7 @@ export const MemoryProvenanceTab: React.FC = () => {
         />
       </form>
 
-      {/* Facts List */}
+
       <div className="space-y-4">
         {loading ? (
           <div className="p-8 text-center text-text-tertiary bg-surface-elevated/60 rounded-2xl border border-border-subtle">
@@ -160,7 +160,7 @@ export const MemoryProvenanceTab: React.FC = () => {
                 </button>
               </div>
 
-              {/* Explanation Dropdown */}
+
               {explanation && explaining !== fact.id && explanation.fact === fact.fact && (
                 <div className="mt-3 p-3 bg-canvas rounded-xl border border-border-subtle text-sm text-text-secondary leading-relaxed">
                   <strong className="text-white block mb-1">Belief Explanation:</strong>

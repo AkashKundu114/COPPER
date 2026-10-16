@@ -116,7 +116,6 @@ async def get_history(session_id: str, db: Session = Depends(get_db)):
     if records:
         return [r.to_dict() for r in records]
 
-    # Fallback to persistent memory / branch session history
     from app.ai.memory.persistent_memory import persistent_memory
 
     mem_history = persistent_memory.get_history(session_id)
@@ -238,7 +237,6 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                     sentinel.dismiss_alert(data.get("alert_id"))
                 continue
 
-            # Cancel any previous task still executing
             if active_task and not active_task.done():
                 active_task.cancel()
 

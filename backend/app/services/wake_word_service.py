@@ -1,26 +1,4 @@
-"""
-Offline "Hey COPPER" wake-word listener.
-
-Two engines, selected by `settings.WAKE_WORD_ENGINE`:
-
-- "openwakeword" (recommended once `hey_copper.onnx` has been trained):
-  continuous CPU-only acoustic wake-word scoring, ~1-3% of one core, zero GPU.
-- "whisper_fallback" (default until a custom model is trained): VAD-gated
-  faster-whisper "tiny" transcription of short speech windows, regex-matched
-  against "hey copper" / "copper". Reuses infra already in `audio_service.py`.
-
-Neither path touches the network. Neither path persists raw audio to disk —
-everything lives in an in-memory ring buffer for the duration of one
-detection window.
-
-On a confirmed wake, this service:
-  1. Broadcasts {"type": "wake_detected"} over the WS manager so the frontend
-     can show a listening pulse immediately.
-  2. Captures the following utterance via the existing STT pipeline.
-  3. Hands the transcript to the Gatekeeper (model_tier_manager.chat_gatekeeper)
-     for a CONFIRM/IGNORE pass before opening a real chat turn — this is what
-     stops "...saw a copper pipe on TV..." from waking a full conversation.
-"""
+"""Offline "Hey COPPER" wake-word listener."""
 
 import asyncio
 import re
@@ -42,9 +20,6 @@ class WakeWordService:
         self._audio_ring: deque = deque(maxlen=50)
         self._speech_queue: asyncio.Queue[bytes] = asyncio.Queue(maxsize=50)
 
-    # ------------------------------------------------------------------ #
-    # Lifecycle
-    # ------------------------------------------------------------------ #
     async def enable(self) -> dict[str, Any]:
         if self._listening:
             return self.status()
@@ -83,9 +58,6 @@ class WakeWordService:
             "gatekeeper_confirmation_enabled": True,
         }
 
-    # ------------------------------------------------------------------ #
-    # Engine dispatch
-    # ------------------------------------------------------------------ #
     async def _listen_loop(self) -> None:
         consecutive_failures = 0
         while self._listening and consecutive_failures < 10:
@@ -131,7 +103,7 @@ class WakeWordService:
             await self._run_whisper_fallback()
             return
 
-        chunk_samples = 1280  # ~80ms @ 16kHz, openWakeWord's expected frame size
+        chunk_samples = 1280
 
         def audio_callback(indata, frames, time_info, status):
             if status:
@@ -167,12 +139,6 @@ class WakeWordService:
 
         from app.services.audio_service import audio_pipeline
 
-        # Placeholder capture cadence: in production this pulls short PCM windows
-        # from the mic via sounddevice, gated by webrtcvad, then transcribes each
-        # speech window. The mic I/O itself is intentionally left to the platform
-        # layer (Tauri/Electron) which already owns microphone permission prompts
-        # in this codebase (see ChatDock.tsx / EVEView.tsx VAD implementation) —
-        # this backend loop is the transcription+match half of the pipeline.
         vad = webrtcvad.Vad(2) if webrtcvad else None
         while self._listening:
             audio_window = await self._next_speech_window(vad)
@@ -185,22 +151,16 @@ class WakeWordService:
                 await self._on_wake_triggered(seed_transcript=text)
 
     async def _next_speech_window(self, vad) -> bytes | None:
-        """
-        Retrieves next PCM audio window from the incoming speech queue or yields
-        control gracefully if no chunk is available.
-        """
+        """Retrieves next PCM audio window from the incoming speech queue or yields"""
         try:
             return await asyncio.wait_for(self._speech_queue.get(), timeout=0.5)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return None
         except Exception as e:
             logger.debug(f"[wake-word] Speech window buffer error: {e}")
             await asyncio.sleep(0.1)
             return None
 
-    # ------------------------------------------------------------------ #
-    # Confirmation + handoff
-    # ------------------------------------------------------------------ #
     async def _on_wake_triggered(self, seed_transcript: str | None = None) -> None:
         from app.api.websocket.manager import manager
 
@@ -208,10 +168,6 @@ class WakeWordService:
 
         if seed_transcript:
             await self._confirm_and_dispatch(seed_transcript)
-        # else: acoustic engines wait for the platform layer to capture the
-        # follow-up utterance and post it to the normal chat WS with
-        # source="voice_wake"; confirmation happens in chat_service via the
-        # Gatekeeper CONFIRM/IGNORE pass described in the master prompt.
 
     async def _confirm_and_dispatch(self, transcript: str) -> None:
         from app.ai.llm.model_tier_manager import model_tier_manager

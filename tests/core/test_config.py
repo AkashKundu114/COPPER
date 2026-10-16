@@ -8,7 +8,7 @@ def test_config_app_name():
 
 
 def test_config_version():
-    assert settings.APP_VERSION == "3.0.0"
+    assert settings.APP_VERSION == "0.1.0-alpha"
 
 
 def test_config_agent_tiers_count():

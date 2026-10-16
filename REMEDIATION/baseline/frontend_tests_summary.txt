@@ -1,0 +1,15 @@
+﻿ [32m✓[39m src/components/chat/__tests__/GuardianChallengeModal.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 257[2mms[22m[39m
+ [32m✓[39m src/components/brain/__tests__/NeuralBrain.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 362[2mms[22m[39m
+ [32m✓[39m src/components/documents/__tests__/DocumentReaderModal.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 677[2mms[22m[39m
+ [32m✓[39m src/__tests__/a11y.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 578[2mms[22m[39m
+ [32m✓[39m src/components/chat/__tests__/ChatDock.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1690[2mms[22m[39m
+   [32m✓[39m ChatDock [2m(7)[22m
+     [33m[2m✓[22m[39m sends message when user types text and clicks send button[33m 556[2mms[22m[39m
+     [33m[2m✓[22m[39m sends message on Enter key without Shift[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m opens cognitive mode dropdown and allows selecting another mode[33m 525[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m41 passed[39m[22m[90m (41)[39m
+[2m   Start at [22m 00:53:21
+[2m   Duration [22m 4.48s[2m (environment 52%, tests 19%, setup 13%, import 12%, transform 4%)[22m
+

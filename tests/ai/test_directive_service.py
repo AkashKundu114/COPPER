@@ -18,13 +18,11 @@ async def test_directive_smaller_model():
 
 @pytest.mark.asyncio
 async def test_directive_specific_sizes():
-    # 3B model
     res_3b = await directive_service.evaluate("switch to 3b model")
     assert res_3b.is_directive is True
     assert "3b" in res_3b.updates.get("chat_model", "").lower()
     assert persistent_memory.get_chat_model() == res_3b.updates.get("chat_model")
 
-    # 8B model
     res_8b = await directive_service.evaluate("switch back to 8b model")
     assert res_8b.is_directive is True
     assert "8b" in res_8b.updates.get("chat_model", "").lower()
@@ -82,17 +80,14 @@ async def test_compound_directive_and_question():
 
 @pytest.mark.asyncio
 async def test_chat_service_resolves_preferred_model():
-    # When user ordered a smaller model:
     await directive_service.evaluate("use a smaller model")
     resolved = chat_service._resolve_chat_model(AgentType.CHAT, "whats my age")
     assert any(tag in resolved.lower() for tag in ["1b", "1.5b", "mini"])
 
-    # When user reset model, adaptive intent for "whats my age" still picks fast mini model:
     await directive_service.evaluate("reset model")
     adaptive_resolved = chat_service._resolve_chat_model(AgentType.CHAT, "whats my age")
     assert any(tag in adaptive_resolved.lower() for tag in ["1b", "1.5b", "mini"])
 
-    # Complex conversation without preference picks 8B:
     complex_resolved = chat_service._resolve_chat_model(
         AgentType.CHAT,
         "can you provide an in-depth philosophical treatise on the epistemology of synthetic neural architectures?",

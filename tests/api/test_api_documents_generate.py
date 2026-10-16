@@ -39,7 +39,6 @@ def test_generate_document_api():
     assert "document" in data
     filename = data["document"]["filename"]
 
-    # Test download endpoint
     dl_res = client.get(f"/api/v1/documents/download/{filename}")
     assert dl_res.status_code == 200
     assert len(dl_res.content) > 50

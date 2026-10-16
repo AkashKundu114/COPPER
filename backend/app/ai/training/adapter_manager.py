@@ -9,7 +9,6 @@ from app.core.logger import logger
 from app.database.models.lora_adapter import AdapterStatus, LoRAAdapter
 from app.database.postgres import SessionLocal
 
-# In-memory routing state for zero-overhead routing in the request loop
 _active_adapters_cache: dict[str, dict[str, Any]] = {}
 
 
@@ -70,7 +69,6 @@ class AdapterManager:
             if adapter.status == AdapterStatus.REJECTED.value:
                 return {"success": False, "error": "Cannot activate an adapter that failed regression safety tests."}
 
-            # Deactivate other adapters for the same target agent
             db.query(LoRAAdapter).filter(
                 LoRAAdapter.target_agent == adapter.target_agent,
                 LoRAAdapter.id != adapter.id,
@@ -163,7 +161,6 @@ class AdapterManager:
         if percentage >= 100:
             return (True, info["version"])
 
-        # Stochastic routing for A/B testing
         roll = random.uniform(0, 100)
         if roll < percentage:
             return (True, info["version"])
@@ -177,14 +174,12 @@ class AdapterManager:
             if not adapter:
                 return {"success": False, "error": f"Adapter {adapter_id} not found."}
 
-            # Check stability: active for at least 1 day or explicitly approved
             adapter.status = AdapterStatus.MERGED.value
             adapter.is_active = True
             adapter.ab_test_percentage = 100
             db.commit()
             db.refresh(adapter)
 
-            # Record merge metadata
             merge_info_path = Path(adapter.adapter_dir) / "merged_metadata.json"
             merge_info_path.parent.mkdir(parents=True, exist_ok=True)
             merge_data = {

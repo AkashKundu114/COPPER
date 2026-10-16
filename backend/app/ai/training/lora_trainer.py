@@ -16,7 +16,6 @@ CURATED_EXAMPLES_FILE = DATA_DIR / "curated_examples.jsonl"
 
 
 class QLoRATrainer:
-    # QLoRA Hyperparameters specified in Prompt 6
     LORA_RANK = 16
     LORA_ALPHA = 32
     LORA_TARGETS = ["q_proj", "v_proj", "k_proj", "o_proj"]
@@ -47,7 +46,6 @@ class QLoRATrainer:
         """Initiates a QLoRA fine-tuning run in the background."""
         db = SessionLocal()
         try:
-            # Check if another training run is currently active
             running = db.query(TrainingJob).filter(TrainingJob.status == TrainingJobStatus.RUNNING.value).first()
             if running:
                 return {
@@ -71,7 +69,6 @@ class QLoRATrainer:
 
             self._current_job_id = job.id
 
-            # Dispatch training worker asynchronously
             asyncio.create_task(self._execute_training_pipeline(job.id, version_tag, base_model, target_agent))
 
             logger.info(f"Scheduled QLoRA fine-tuning job {job.id} for version {version_tag}")
@@ -89,7 +86,7 @@ class QLoRATrainer:
         if not importlib.util.find_spec("torch"):
             return False
         try:
-            import torch  # noqa: F401
+            import torch
 
             if not torch.cuda.is_available():
                 return False
@@ -115,14 +112,12 @@ class QLoRATrainer:
             job.status = TrainingJobStatus.RUNNING.value
             db.commit()
 
-            # 1. GPU VRAM Safety Protocol: Evict all models from Ollama to free 8GB VRAM
             logger.info("[CHRYSALIS QLoRA] Evicting active models from GPU VRAM before fine-tuning...")
             try:
                 await ollama_client.unload_all_models()
             except Exception as vram_err:
                 logger.warning(f"VRAM eviction warning: {vram_err}")
 
-            # 2. Ingest curated dataset
             dataset = self._load_curated_dataset()
             if len(dataset) < 3:
                 dataset = self._ensure_baseline_seed_data()
@@ -134,14 +129,12 @@ class QLoRATrainer:
             job.total_steps = total_steps
             db.commit()
 
-            # 3. Baseline benchmark before training
             logger.info("[CHRYSALIS QLoRA] Running pre-training regression benchmark...")
             before_res = await self._run_benchmark_safely()
             job.benchmark_routing_before = before_res["routing_acc"]
             job.benchmark_guardian_before = before_res["guardian_acc"]
             db.commit()
 
-            # 4. Training loop with early stopping check
             eval_losses = []
             train_losses = []
             aborted = False
@@ -158,7 +151,6 @@ class QLoRATrainer:
                     job.current_epoch = epoch
                     job.current_step = int((epoch / self.EPOCHS) * total_steps)
 
-                    # Simulated / actual training step progression
                     epoch_train_loss = max(0.45, 1.85 - (0.42 * epoch) + (0.02 * (epoch % 2)))
                     epoch_eval_loss = max(0.48, 1.90 - (0.40 * epoch) + (0.01 * epoch))
 
@@ -169,7 +161,6 @@ class QLoRATrainer:
                     job.eval_loss = epoch_eval_loss
                     db.commit()
 
-                    # Early stopping check: abort if loss increases for 2 consecutive epochs
                     if len(eval_losses) >= 3 and eval_losses[-1] > eval_losses[-2] > eval_losses[-3]:
                         logger.warning(
                             f"[CHRYSALIS QLoRA] Early stopping triggered at epoch {epoch}: loss rising consecutively."
@@ -239,7 +230,7 @@ class QLoRATrainer:
                         random_state=3407,
                     )
                 else:
-                    tokenizer = AutoTokenizer.from_pretrained(base_model)  # nosec B615
+                    tokenizer = AutoTokenizer.from_pretrained(base_model)
                     if not tokenizer.pad_token:
                         tokenizer.pad_token = tokenizer.eos_token
                     bnb_config = BitsAndBytesConfig(
@@ -248,7 +239,7 @@ class QLoRATrainer:
                         bnb_4bit_quant_type="nf4",
                         bnb_4bit_compute_dtype=torch.bfloat16,
                     )
-                    model = AutoModelForCausalLM.from_pretrained(  # nosec B615
+                    model = AutoModelForCausalLM.from_pretrained(
                         base_model, quantization_config=bnb_config, device_map="auto"
                     )
                     peft_config = LoraConfig(
@@ -321,7 +312,6 @@ class QLoRATrainer:
                     except Exception:
                         pass
 
-                # Cleanup GPU Memory
                 del model
                 del trainer
                 torch.cuda.empty_cache()
@@ -330,31 +320,25 @@ class QLoRATrainer:
                 db.commit()
                 return
 
-            # 5. Save adapter weights & metadata
             self._save_adapter_artifacts(adapter_dir, version_tag, base_model, train_losses[-1], eval_losses[-1])
 
-            # 6. Post-training GPU Memory restoration: Warm up mini model in VRAM
             logger.info("[CHRYSALIS QLoRA] Restoring VRAM: warming up always-on mini model...")
             try:
                 await ollama_client.warmup_mini_model()
             except Exception as warmup_err:
                 logger.warning(f"VRAM restoration warning: {warmup_err}")
 
-            # 7. Post-training regression testing (1,740-sample suite)
             logger.info("[CHRYSALIS QLoRA] Running post-training verification benchmark...")
             after_res = await self._run_benchmark_safely()
             job.benchmark_routing_after = after_res["routing_acc"]
             job.benchmark_guardian_after = after_res["guardian_acc"]
 
-            # Auto-rejection logic:
-            # Reject if routing drops >0.5% or Guardian catch rate drops below 100%
             routing_drop = (job.benchmark_routing_before or 99.5) - after_res["routing_acc"]
             guardian_drop = (job.benchmark_guardian_before or 100.0) - after_res["guardian_acc"]
             is_rejected = routing_drop > 0.5 or guardian_drop > 0.0
 
             adapter_status = AdapterStatus.REJECTED.value if is_rejected else AdapterStatus.CANDIDATE.value
 
-            # Register adapter in DB
             adapter = LoRAAdapter(
                 version=version_tag,
                 adapter_dir=str(adapter_dir),
@@ -430,7 +414,6 @@ class QLoRATrainer:
             json.dump(training_meta, f, indent=2)
 
         if is_simulated:
-            # Create model checkpoint placeholder
             with open(adapter_dir / "adapter_model.safetensors", "wb") as f:
                 f.write(b"CHRYSALIS_QLORA_ADAPTER_WEIGHTS_VRAM_SAFE\n")
 
@@ -505,7 +488,6 @@ class QLoRATrainer:
         try:
             target_id = job_id or self._current_job_id
             if not target_id:
-                # Get most recent job
                 recent = db.query(TrainingJob).order_by(TrainingJob.id.desc()).first()
                 return recent.to_dict() if recent else None
 

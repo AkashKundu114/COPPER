@@ -38,7 +38,6 @@ def _seed_initial_history_if_empty():
 
     for p in exemplars:
         try:
-            # Synchronous or async execution check
             loop = asyncio.get_event_loop()
             if loop.is_running():
                 asyncio.create_task(route_message_detailed(p))
@@ -53,13 +52,9 @@ async def get_routing_history(
     limit: int = Query(50, ge=1, le=200, description="Maximum number of historical traces"),
     agent_type: str | None = Query(None, description="Optional filter by agent type (e.g. coding, automation)"),
 ) -> dict[str, Any]:
-    """
-    Fetch recent agent routing decisions with full PRISM deterministic explanations.
-    Shows exact matched keywords, negative rule suppressions, per-agent scores, and confidence calibration.
-    """
+    """Fetch recent agent routing decisions with full PRISM deterministic explanations."""
     history = routing_history_store.get_history(limit=limit, agent_type=agent_type)
     if not history:
-        # Generate on-demand sample routes if history is empty
         _seed_initial_history_if_empty()
         history = routing_history_store.get_history(limit=limit, agent_type=agent_type)
 
@@ -73,10 +68,7 @@ async def get_routing_history(
 
 @router.get("/confusion-matrix")
 async def get_confusion_matrix() -> dict[str, Any]:
-    """
-    Retrieve the empirical confusion matrix and per-class classification metrics
-    derived from the master routing benchmark dataset (1390+ samples).
-    """
+    """Retrieve the empirical confusion matrix and per-class classification metrics"""
     if BENCHMARK_METRICS_PATH.exists():
         try:
             with open(BENCHMARK_METRICS_PATH, encoding="utf-8") as f:
@@ -98,7 +90,6 @@ async def get_confusion_matrix() -> dict[str, Any]:
         except Exception as e:
             logger.warning(f"Error reading benchmark metrics: {e}")
 
-    # Robust fallback data if benchmark metrics file has not yet been generated
     standard_classes = [
         "automation",
         "chat",
@@ -139,13 +130,7 @@ async def get_confusion_matrix() -> dict[str, Any]:
 
 @router.get("/confidence-calibration")
 async def get_confidence_calibration() -> dict[str, Any]:
-    """
-    Retrieve reliability diagram and confidence calibration metrics.
-    Compares predicted routing confidence buckets against empirical accuracy to prove calibration reliability.
-    """
-    # 10 Confidence Bins: [0.0 - 0.1], [0.1 - 0.2], ..., [0.9 - 1.0]
-    # In C.O.P.P.E.R.'s high-precision 5-stage router, pattern-scored and cached routes
-    # exhibit clean calibration with average confidence aligning tightly with accuracy.
+    """Retrieve reliability diagram and confidence calibration metrics."""
     bins_spec = [
         {"range": [0.0, 0.1], "label": "0-10%", "midpoint": 0.05, "count": 0, "avg_conf": 0.0, "accuracy": 0.0},
         {"range": [0.1, 0.2], "label": "10-20%", "midpoint": 0.15, "count": 0, "avg_conf": 0.0, "accuracy": 0.0},
@@ -161,7 +146,6 @@ async def get_confidence_calibration() -> dict[str, Any]:
 
     total_samples = sum(b["count"] for b in bins_spec)
 
-    # Compute Expected Calibration Error (ECE) and Brier Score
     weighted_ece = 0.0
     max_ce = 0.0
     brier_sum = 0.0

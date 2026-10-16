@@ -96,7 +96,6 @@ class ClipboardProcessor:
                 suggested_actions = ["Draft reply", "Summarize email", "Extract action items"]
 
             elif entry.content_type == "file_path":
-                # Remove quotes if present
                 path = content.strip("\"'")
                 exists = os.path.exists(path)
 
@@ -111,7 +110,7 @@ class ClipboardProcessor:
 
                 suggested_actions = ["Open file", "Show in explorer", "Read contents"]
 
-            else:  # plain_text
+            else:
                 words = len(content.split())
                 sentences = len(re.split(r"[.!?]+", content)) - 1
                 is_question = "?" in content
@@ -123,7 +122,6 @@ class ClipboardProcessor:
             logger.error(f"Error processing clipboard entry {entry.id}: {e}")
             analysis = {"error": str(e)}
 
-        # Check cognitive load state to protect deep focus flow
         from app.ai.ambient.cognitive_load import CognitiveState, cognitive_load_detector
 
         is_deep_focus = cognitive_load_detector.current_state == CognitiveState.DEEP_FOCUS

@@ -130,7 +130,6 @@ async def test_scroll_execution():
         assert res["status"] == "success"
         assert res["action"] == "scroll"
         mock_move.assert_called_once_with(500, 400, duration=0.1)
-        # down direction is negative scroll
         mock_scroll.assert_called_once_with(-600, x=500, y=400)
 
 

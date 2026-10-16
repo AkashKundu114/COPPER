@@ -5,14 +5,7 @@ MEMORY_SEARCH_LIMIT = 5
 
 
 class AgentType(str, Enum):
-    """
-    Core specialized agent types in C.O.P.P.E.R.
-    Each agent type corresponds to a fully implemented, registered agent with:
-    - A dedicated handler/class subclassing BaseAgent
-    - Prompt and tool bindings
-    - An assigned Ollama model
-    - Full automated test coverage
-    """
+    """Core specialized agent types in C.O.P.P.E.R."""
 
     CHAT = "chat"
     """ATLAS: Primary conversational interface, dialogue orchestrator, and general reasoning."""

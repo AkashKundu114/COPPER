@@ -1,12 +1,7 @@
-"""
-Unit tests for DeltaX Campaign Intelligence enhancements:
-- Creative Fatigue Detection
-- Predictive Pacing & Budget Exhaustion Forecaster
-- Multi-Touch Attribution Engine (Linear, Time-Decay, Shapley Values)
-- Automated Reporting Generator
-"""
+"""Unit tests for DeltaX Campaign Intelligence enhancements:"""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
 import pytest
 
 from app.ai.campaign.attribution import ConversionJourney, Touchpoint, mta_engine
@@ -16,8 +11,7 @@ from app.ai.campaign.report_generator import campaign_report_generator
 
 
 def test_creative_fatigue_detection():
-    now = datetime.now(timezone.utc)
-    # Series with escalating frequency and steep CTR decay
+    now = datetime.now(UTC)
     history = [
         CreativeMetricPoint(
             creative_id="crt-test-1",
@@ -38,8 +32,8 @@ def test_creative_fatigue_detection():
         CreativeMetricPoint(
             creative_id="crt-test-1",
             campaign_id="cmp-perf-01",
-            frequency=3.6,  # Above threshold 3.2
-            ctr=0.022,  # >50% decay from peak
+            frequency=3.6,
+            ctr=0.022,
             cpa=44.0,
             timestamp=now,
         ),
@@ -53,9 +47,6 @@ def test_creative_fatigue_detection():
 
 
 def test_campaign_forecaster_exhaustion():
-    # Spends running at $100/hr from 00:00 to 14:00 ($1400 spent).
-    # Daily budget is $1500. Remaining budget is $100.
-    # At $100/hr, budget will exhaust in 1 hour (around 15:00).
     spends = [100.0] * 14
     forecast = campaign_forecaster.forecast_budget_exhaustion(
         campaign_id="cmp-test-fast",
@@ -71,11 +62,8 @@ def test_campaign_forecaster_exhaustion():
 
 
 def test_multi_touch_attribution_shapley_efficiency_axiom():
-    """
-    Shapley efficiency axiom: The sum of attributed values to all channels
-    must equal the total conversion value across all journeys.
-    """
-    now = datetime.now(timezone.utc)
+    """Shapley efficiency axiom: The sum of attributed values to all channels"""
+    now = datetime.now(UTC)
     journeys = [
         ConversionJourney(
             journey_id="j1",

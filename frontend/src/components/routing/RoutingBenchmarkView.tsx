@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart3,
   CheckCircle2,
@@ -85,7 +85,7 @@ export const RoutingBenchmarkView: React.FC = () => {
 
   return (
     <div className="p-5 rounded-2xl bg-surface-elevated border border-border-subtle space-y-5 font-sans text-xs">
-      {/* Header Banner */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-subtle pb-4">
         <div>
           <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export const RoutingBenchmarkView: React.FC = () => {
         </div>
       </div>
 
-      {/* Metric Cards Row */}
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3 rounded-xl bg-canvas border border-border-subtle/90 space-y-1">
           <div className="text-[10px] text-text-secondary uppercase font-mono">Overall Accuracy</div>
@@ -177,7 +177,7 @@ export const RoutingBenchmarkView: React.FC = () => {
         </div>
       </div>
 
-      {/* TAB 1: Confusion Matrix Grid */}
+
       {activeTab === "matrix" && cmData && (
         <div className="space-y-4">
           <div className="overflow-x-auto rounded-xl border border-border-subtle bg-surface-base p-3">
@@ -238,7 +238,7 @@ export const RoutingBenchmarkView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: Confidence Calibration Reliability Diagram */}
+
       {activeTab === "calibration" && calData && (
         <div className="space-y-4">
           <div className="p-4 rounded-xl border border-border-subtle bg-surface-base space-y-3">

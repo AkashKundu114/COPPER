@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { X, Copy, Check, Sparkles, Shield, Terminal, UserCheck } from "lucide-react";
 import type { AgencyPersona } from "../../services/api";
 
@@ -60,7 +60,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
         className="relative w-full max-w-2xl bg-surface-elevated border border-border-highlight/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
+
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-surface-base/50">
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-xl border ${colors.bg} ${colors.border} ${colors.text}`}>
@@ -91,9 +91,9 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
           </button>
         </div>
 
-        {/* Modal Content */}
+
         <div className="p-6 overflow-y-auto space-y-4 text-xs">
-          {/* Mission & Role */}
+
           <div className="bg-surface-base p-4 rounded-xl border border-border-subtle space-y-2">
             <div className="flex items-center gap-2 text-text-secondary uppercase text-[10px] font-semibold tracking-wider font-mono">
               <Shield size={12} className="text-cyan-400" />
@@ -104,7 +104,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
             </p>
           </div>
 
-          {/* Persona Vibe & Tone */}
+
           {persona.vibe && (
             <div className="bg-surface-base/60 p-3 rounded-xl border border-border-subtle flex items-center justify-between">
               <span className="text-text-secondary font-mono text-[11px]">Operational Persona & Vibe:</span>
@@ -114,7 +114,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
             </div>
           )}
 
-          {/* Directive / System Prompt Directive */}
+
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-text-secondary font-mono uppercase text-[10px] font-semibold tracking-wider flex items-center gap-1.5">
@@ -145,7 +145,7 @@ export const PersonaDossierModal: React.FC<PersonaDossierModalProps> = ({
           </div>
         </div>
 
-        {/* Modal Footer */}
+
         <div className="px-6 py-4 border-t border-border-subtle bg-surface-base/50 flex items-center justify-between gap-3">
           <div className="text-[11px] text-text-tertiary font-mono">
             Autonomous Specialist Fleet: 1 of 264 Verified Personas

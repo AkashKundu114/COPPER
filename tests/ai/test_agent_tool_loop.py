@@ -35,7 +35,6 @@ async def test_agent_tool_react_loop():
         max_tool_steps=3,
     )
 
-    # Mock Ollama chat to return a tool call on step 1 and final response on step 2
     step1_response = """Let me calculate that for you.
 <tool_call>
 {"tool": "python_execute", "arguments": {"code": "print(2 + 2)"}}

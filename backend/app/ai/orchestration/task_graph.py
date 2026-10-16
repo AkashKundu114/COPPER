@@ -56,8 +56,8 @@ class TaskGraphResult:
     execution_trace: list[dict[str, Any]] = field(default_factory=list)
     inter_agent_messages: list[dict[str, Any]] = field(default_factory=list)
     artifacts: list[dict[str, Any]] = field(default_factory=list)
-    vads_layers: int = 0  # Novelty 4: VADS scheduled topological layers
-    peak_vram_budget_gb: float = 8.0  # Novelty 4: Hardware VRAM ceiling bound
+    vads_layers: int = 0
+    peak_vram_budget_gb: float = 8.0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -76,11 +76,7 @@ class TaskGraphResult:
 
 
 class TaskGraphExecutor:
-    """
-    Asynchronous DAG Task Graph Orchestrator for Multi-Agent Collaboration.
-    Dispatches tasks in parallel or sequence based on topological dependency resolution,
-    shares state via the ContextBus, passes inter-agent messages, and synthesizes results.
-    """
+    """Asynchronous DAG Task Graph Orchestrator for Multi-Agent Collaboration."""
 
     def __init__(self):
         pass
@@ -93,10 +89,7 @@ class TaskGraphExecutor:
         return None
 
     def _substitute_placeholders(self, instruction: str, outputs: dict[str, Any]) -> str:
-        """
-        Replaces placeholders like {T1.output}, {T1}, {T2.1.output}, or {key}
-        with corresponding output strings from previously executed tasks.
-        """
+        """Replaces placeholders like {T1.output}, {T1}, {T2.1.output}, or {key}"""
         result = instruction
         for task_id, out in outputs.items():
             out_str = str(out) if out is not None else ""
@@ -110,10 +103,7 @@ class TaskGraphExecutor:
         return result
 
     async def _execute_forge_sandbox_task(self, instruction: str) -> str:
-        """
-        Special execution for FORGE / Sandbox tasks:
-        Extracts code if present and executes in Forge Sandbox or OS executor.
-        """
+        """Special execution for FORGE / Sandbox tasks:"""
         code_match = re.search(r"```(?:python)?\s*([\s\S]*?)\s*```", instruction)
         code_to_run = code_match.group(1) if code_match else instruction
 
@@ -129,7 +119,6 @@ class TaskGraphExecutor:
             except Exception as e:
                 logger.warning(f"Forge Sandbox direct python execution fallback: {e}")
 
-        # Fallback to normal automation agent
         return await automation_agent.run(instruction, history=[], memory_context="")
 
     async def execute_plan(
@@ -139,12 +128,7 @@ class TaskGraphExecutor:
         session_id: str | None = None,
         on_event: Callable[[str, dict[str, Any]], Coroutine[Any, Any, None]] | None = None,
     ) -> TaskGraphResult:
-        """
-        Executes a planned DAG of sub-tasks in dependency order:
-        - Resolves unblocked nodes at each layer and runs them concurrently (`asyncio.gather`)
-        - Shares context and publishes inter-agent messages through `context_bus`
-        - Merges specialist outputs in the final synthesis stage
-        """
+        """Executes a planned DAG of sub-tasks in dependency order:"""
         start_time = time.perf_counter()
         dag_id = f"dag_{uuid.uuid4().hex[:8]}"
 
@@ -164,7 +148,6 @@ class TaskGraphExecutor:
         execution_trace: list[dict[str, Any]] = []
         artifacts: list[dict[str, Any]] = []
 
-        # Store initial DAG meta in ContextBus
         await context_bus.set_context(dag_id, "goal", plan.goal)
         await context_bus.set_context(dag_id, "total_tasks", len(plan.tasks))
 
@@ -175,7 +158,6 @@ class TaskGraphExecutor:
             "tasks": [t.to_dict() for t in plan.tasks],
         }
 
-        # Initialize WAL for crash-consistent durability
         wal = TaskWAL(dag_id)
         wal.append_record(RecordType.DAG_START, start_payload)
 
@@ -189,7 +171,6 @@ class TaskGraphExecutor:
 
         while len(completed_task_ids) + len(failed_task_ids) < len(plan.tasks):
             layer_count += 1
-            # Find tasks whose dependencies have all completed
             ready_tasks: list[SubTask] = []
             for t in plan.tasks:
                 if t.id not in completed_task_ids and t.id not in failed_task_ids and t.status == "pending":
@@ -204,7 +185,6 @@ class TaskGraphExecutor:
                         ready_tasks.append(t)
 
             if not ready_tasks:
-                # Cycle detection or blocked state
                 if len(completed_task_ids) + len(failed_task_ids) < len(plan.tasks):
                     for t in plan.tasks:
                         if t.id not in completed_task_ids and t.id not in failed_task_ids:
@@ -213,7 +193,6 @@ class TaskGraphExecutor:
                             failed_task_ids.add(t.id)
                 break
 
-            # Execute all ready tasks concurrently in this layer
             async def run_single_task(sub_task: SubTask):
                 sub_task.status = "running"
                 t_start = time.perf_counter()
@@ -230,11 +209,9 @@ class TaskGraphExecutor:
                 if on_event:
                     await on_event("task_graph_step_start", step_start_payload)
 
-                # Interpolate inputs from prior tasks
                 merged_outputs = {**outputs_by_id, **outputs_by_key}
                 interpolated_instruction = self._substitute_placeholders(sub_task.instruction, merged_outputs)
 
-                # Send handoff message from dependencies to this agent
                 if sub_task.depends_on:
                     for dep_id in sub_task.depends_on:
                         dep_task = next((t for t in plan.tasks if t.id == dep_id), None)
@@ -249,7 +226,6 @@ class TaskGraphExecutor:
                             session_id=session_id,
                         )
 
-                # Log intent to WAL
                 wal.append_record(
                     RecordType.TASK_INTENT,
                     {
@@ -284,7 +260,6 @@ class TaskGraphExecutor:
                     sub_task.output = res
                     sub_task.execution_time_ms = dur
 
-                    # Append TASK_COMMIT to WAL for crash-consistent durability
                     wal.append_record(
                         RecordType.TASK_COMMIT,
                         {
@@ -303,7 +278,6 @@ class TaskGraphExecutor:
                     await context_bus.set_context(dag_id, f"{sub_task.id}_output", res)
                     completed_task_ids.add(sub_task.id)
 
-                    # Extract document artifact links if created
                     if "Document Artifact Created Successfully" in str(res):
                         url_match = re.search(r"Download URL\]:\s*\[(.*?)\]\((.*?)\)", str(res))
                         if url_match:
@@ -316,7 +290,6 @@ class TaskGraphExecutor:
                                 }
                             )
 
-                    # Send status update message on bus
                     await context_bus.send_message(
                         dag_id=dag_id,
                         sender=sub_task.agent,
@@ -335,7 +308,6 @@ class TaskGraphExecutor:
                     sub_task.execution_time_ms = dur
                     failed_task_ids.add(sub_task.id)
 
-                    # Append TASK_FAIL to WAL for crash-consistent durability
                     wal.append_record(
                         RecordType.TASK_FAIL,
                         {
@@ -373,13 +345,11 @@ class TaskGraphExecutor:
 
             await asyncio.gather(*(run_single_task(t) for t in ready_tasks))
 
-        # Final Synthesis Step
         synthesis_spec = plan.synthesis or {"agent": "CHAT", "instruction": "Synthesize all specialist findings."}
         synth_inst_raw = synthesis_spec.get("instruction", "Synthesize the following outputs:")
         merged_outputs = {**outputs_by_id, **outputs_by_key}
         synth_instruction = self._substitute_placeholders(synth_inst_raw, merged_outputs)
 
-        # Append detailed outputs block if placeholders were not comprehensive
         outputs_block = "\n\n".join(
             f"### Output from {t.agent} ({t.id} - {t.title}):\n{t.output or t.error}" for t in plan.tasks
         )
@@ -423,7 +393,6 @@ class TaskGraphExecutor:
         elapsed_total = round((time.perf_counter() - start_time) * 1000.0, 2)
         success = len(failed_task_ids) == 0
 
-        # Record terminal state in WAL for crash consistency
         if success:
             wal.append_record(
                 RecordType.DAG_COMMIT,
@@ -456,10 +425,8 @@ class TaskGraphExecutor:
             peak_vram_budget_gb=8.0,
         )
 
-        # Record trace in ContextBus
         context_bus.record_trace(dag_id, result.to_dict())
 
-        # Auto-extract reusable compositional skill after successful multi-agent DAG
         if success and len(plan.tasks) > 1:
             try:
                 from app.ai.ambient.skill_learner import skill_learner

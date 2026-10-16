@@ -128,7 +128,6 @@ async def workflow_diagram_render(
         elif diagram_type == "er_diagram" and tables:
             mermaid_code = generate_mermaid_er(tables)
         else:
-            # Flowchart / Architecture fallback
             step_list = steps or ["Start", "Process Task", "Complete"]
             nodes = [{"id": "START", "label": f"Trigger: {title}", "shape": "circle"}]
             edges = []

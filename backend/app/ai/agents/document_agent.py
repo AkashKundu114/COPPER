@@ -11,11 +11,7 @@ from app.services.document_service import document_service
 
 
 class DocumentAgent(BaseAgent):
-    """
-    KINESIS (Document Architect and Synthesizer)
-    Autonomous Document Generation Agent within C.O.P.P.E.R.
-    Generates professional PDFs, Word DOCX, Markdown, HTML, CSV/TSV, and JSON files.
-    """
+    """KINESIS (Document Architect and Synthesizer)"""
 
     def __init__(self):
         super().__init__(
@@ -121,7 +117,6 @@ Ensure content is rigorous, thorough, actionable, and formatted for direct publi
         try:
             raw_response = await ollama_client.chat(messages, model=target_model)
 
-            # Extract JSON block to build the actual file artifact
             json_match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", raw_response)
             created_doc_meta = None
 
@@ -146,7 +141,6 @@ Ensure content is rigorous, thorough, actionable, and formatted for direct publi
                     logger.warning(f"Could not parse generated document JSON: {parse_err}")
 
             if not created_doc_meta:
-                # Direct fallback creation using raw message text
                 title_clean = re.sub(r"[^\w\s]", "", message[:40]).strip().title() or "AI Document"
                 created_doc_meta = await document_service.create_document(
                     format=format_detected,
@@ -172,7 +166,6 @@ Ensure content is rigorous, thorough, actionable, and formatted for direct publi
 
         except Exception as e:
             logger.error(f"DocumentAgent execution failed: {e}")
-            # Resilient fallback creation
             fallback_meta = await document_service.create_document(
                 format=format_detected,
                 title="Generated Summary Document",

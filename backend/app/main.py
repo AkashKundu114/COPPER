@@ -1,17 +1,14 @@
 import os
 from contextlib import asynccontextmanager
 
-# Set headless display mode for CI/headless environments
 if not os.environ.get("DISPLAY"):
     os.environ["DISPLAY"] = ":99"
 
-# Enforce NVIDIA dedicated GPU isolation
 os.environ.setdefault("CUDA_DEVICE_ORDER", "PCI_BUS_ID")
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 os.environ.setdefault("HIP_VISIBLE_DEVICES", "")
 os.environ.setdefault("ROCR_VISIBLE_DEVICES", "")
 
-# Set matplotlib to use non-interactive backend before any GUI imports
 try:
     import matplotlib
 
@@ -29,6 +26,7 @@ from starlette.responses import JSONResponse, Response
 
 from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
+from app.api import campaign_routes
 from app.api.routes import (
     accountability,
     activation,
@@ -78,7 +76,6 @@ from app.api.routes import (
     wake,
     workspace,
 )
-from app.api import campaign_routes
 from app.core.config import settings
 from app.core.logger import logger
 from app.core.telemetry import init_telemetry
@@ -111,7 +108,6 @@ async def lifespan(app: FastAPI):
     logger.info("COPPER backend ready")
     yield
 
-    # Robust shutdown sequence with individual error isolation
     try:
         await wake_word_service.disable()
     except Exception as e:
@@ -192,8 +188,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
     """Guards against memory exhaustion DoS by enforcing request body size ceilings."""
 
-    MAX_STANDARD_SIZE = 10 * 1024 * 1024  # 10 MB for standard API calls
-    MAX_UPLOAD_SIZE = 25 * 1024 * 1024  # 25 MB for document/vision uploads
+    MAX_STANDARD_SIZE = 10 * 1024 * 1024
+    MAX_UPLOAD_SIZE = 25 * 1024 * 1024
 
     async def dispatch(self, request: Request, call_next):
         content_length = request.headers.get("content-length")
@@ -297,7 +293,6 @@ app.include_router(campaign_routes.ws_router)
 app.include_router(activation.router)
 app.include_router(setup.router)
 
-# Mount static files directory for generated image assets
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)
 app.mount("/generated", StaticFiles(directory=settings.IMAGE_OUTPUT_DIR), name="generated")
 
@@ -312,4 +307,9 @@ async def health():
     from app.ai.llm.ollama_client import ollama_client
 
     ollama_ok = await ollama_client.is_available()
-    return {"status": "healthy", "ollama": ollama_ok, "version": settings.APP_VERSION}
+    return {
+        "status": "healthy",
+        "ollama": ollama_ok,
+        "version": settings.APP_VERSION,
+        "demo_mode": settings.COPPER_DEMO,
+    }

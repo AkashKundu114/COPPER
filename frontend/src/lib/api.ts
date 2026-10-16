@@ -65,20 +65,108 @@ export interface ProfileResponse {
   agents_total: number;
 }
 
+export const IS_DEMO =
+  import.meta.env.VITE_COPPER_DEMO === "1" ||
+  import.meta.env.VITE_COPPER_DEMO === "true";
+
 export const fetchAgents = () =>
-  api.get<AgentStats[]>("/agents").then((r) => r.data);
+  api
+    .get<AgentStats[]>("/agents")
+    .then((r) => r.data)
+    .catch((err) => {
+      if (IS_DEMO) {
+        return [
+          {
+            id: "chat",
+            name: "ATLAS",
+            tier: "1",
+            tier_label: "Core",
+            color: "#60A5FA",
+            domain: "Dialogue & Coordination",
+            blurb: "Primary conversational interface",
+            times_invoked: 24,
+            familiarity_score: 0.85,
+            familiarity_tier: "Regular",
+            glow: 1,
+            last_active: new Date().toISOString(),
+          },
+          {
+            id: "coding",
+            name: "FORGE",
+            tier: "1",
+            tier_label: "Core",
+            color: "#34D399",
+            domain: "Code Synthesis",
+            blurb: "Development specialist",
+            times_invoked: 18,
+            familiarity_score: 0.72,
+            familiarity_tier: "Regular",
+            glow: 0.8,
+            last_active: new Date().toISOString(),
+          },
+        ];
+      }
+      throw err;
+    });
+
 export const fetchAgentHistory = (id: string, limit = 20) =>
   api
     .get<InteractionRecord[]>(`/agents/${id}/history`, {
       params: { limit },
     })
     .then((r) => r.data);
+
 export const fetchProfile = () =>
-  api.get<ProfileResponse>("/memory/profile").then((r) => r.data);
+  api
+    .get<ProfileResponse>("/memory/profile")
+    .then((r) => r.data)
+    .catch((err) => {
+      if (IS_DEMO) {
+        return {
+          facts: [
+            {
+              key: "name",
+              value: "Demo User",
+              confidence: 0.95,
+              observed_n: 5,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              key: "theme",
+              value: "dark",
+              confidence: 0.9,
+              observed_n: 3,
+              updated_at: new Date().toISOString(),
+            },
+          ],
+          total_interactions: 42,
+          relationship_tier: "Regular Collaborator",
+          most_used_agent: "ATLAS",
+          agents_met: 12,
+          agents_total: 12,
+        };
+      }
+      throw err;
+    });
+
 export const resetProfile = () =>
   api.post("/memory/reset").then((r) => r.data);
+
 export const sendMessage = (message: string) =>
-  api.post("/chat/message", { message }).then((r) => r.data);
+  api
+    .post("/chat/message", { message })
+    .then((r) => r.data)
+    .catch((err) => {
+      if (IS_DEMO) {
+        return {
+          response: `[DEMO MODE] Received: "${message}". Operating in standalone demo mode.`,
+          agent_type: "chat",
+          session_id: "demo-session",
+          guardian_verdict: { level: 0, reason: "Demo pass" },
+        };
+      }
+      throw err;
+    });
 export const fetchLogs = (filter?: string) =>
   api
     .get("/audit/logs", { params: { filter } })
@@ -457,5 +545,4 @@ export const fetchDistributedTraces = (limit = 50) =>
 
 export const fetchDistributedTraceById = (traceId: string) =>
   api.get<DistributedTrace>(`/telemetry/traces/${traceId}`).then((r) => r.data);
-
 

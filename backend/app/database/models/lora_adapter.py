@@ -34,7 +34,7 @@ class CuratedTrainingExample(Base):
     user_message = Column(Text, nullable=False)
     assistant_response = Column(Text, nullable=False)
     quality_score = Column(Float, nullable=False, default=1.0)
-    difficulty = Column(String(20), nullable=False, default="medium")  # easy, medium, hard
+    difficulty = Column(String(20), nullable=False, default="medium")
     quality_tags = Column(JSON, nullable=False, default=list)
     content_hash = Column(String(64), nullable=False, unique=True, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
@@ -119,7 +119,7 @@ class LoRAAdapter(Base):
     base_model = Column(String(100), nullable=False, default="qwen2.5:14b")
     target_agent = Column(String(50), nullable=False, default="all", index=True)
     status = Column(String(20), nullable=False, default=AdapterStatus.CANDIDATE.value, index=True)
-    ab_test_percentage = Column(Integer, nullable=False, default=0)  # 0-100%
+    ab_test_percentage = Column(Integer, nullable=False, default=0)
     evaluation_quality_score = Column(Float, nullable=True)
     is_active = Column(Boolean, nullable=False, default=False)
     training_loss = Column(Float, nullable=True)

@@ -1,20 +1,4 @@
-"""
-Conflict-Free Replicated Data Types (CRDTs) & Offline P2P Epistemic Memory Sync.
-
-Distributed Systems Internals Concept:
-Strong Eventual Consistency (SEC) across multi-device networks (laptop, workstation, edge server)
-without requiring a centralized cloud coordinator or distributed lock manager.
-
-Features:
-1. Lamport Logical Clocks & Vector Clocks for causal ordering across network partitions.
-2. State-Based LWW-Element-Set (Last-Write-Wins Element Set CRDT):
-   - Mathematically Commutative (A * B = B * A)
-   - Associative ((A * B) * C = A * (B * C))
-   - Idempotent (A * A = A)
-3. Delta-Based Peer-to-Peer Synchronization:
-   - Exports delta snapshots for transmission over local sockets/mDNS.
-   - Deterministically merges divergent concurrent memory mutations.
-"""
+"""Conflict-Free Replicated Data Types (CRDTs) & Offline P2P Epistemic Memory Sync."""
 
 import json
 import time
@@ -62,15 +46,11 @@ class VectorClock:
 
 
 class LWWElementSet:
-    """
-    Last-Write-Wins Element Set CRDT.
-    Guarantees convergence regardless of packet arrival order or network partitions.
-    """
+    """Last-Write-Wins Element Set CRDT."""
 
     def __init__(self, node_id: str):
         self.node_id = node_id
         self.vclock = VectorClock(node_id)
-        # Element ID -> CRDTRecord
         self.add_set: dict[str, CRDTRecord] = {}
         self.remove_set: dict[str, CRDTRecord] = {}
 
@@ -122,7 +102,6 @@ class LWWElementSet:
         if rem_rec is None:
             return add_rec.value
 
-        # If remove is newer than add, element is considered deleted
         if self._is_newer(rem_rec, add_rec):
             return None
         return add_rec.value
@@ -137,16 +116,12 @@ class LWWElementSet:
         return active
 
     def merge(self, other_state: dict[str, Any]) -> int:
-        """
-        Merges an external peer's CRDT state.
-        Returns the number of local mutations applied.
-        """
+        """Merges an external peer's CRDT state."""
         mutations_applied = 0
         other_adds = other_state.get("add_set", {})
         other_rems = other_state.get("remove_set", {})
         other_clock = other_state.get("vector_clock", {})
 
-        # Merge Adds
         for elem_id, rec_data in other_adds.items():
             incoming = CRDTRecord.from_dict(rec_data)
             current = self.add_set.get(elem_id)
@@ -154,7 +129,6 @@ class LWWElementSet:
                 self.add_set[elem_id] = incoming
                 mutations_applied += 1
 
-        # Merge Removes
         for elem_id, rec_data in other_rems.items():
             incoming = CRDTRecord.from_dict(rec_data)
             current = self.remove_set.get(elem_id)
@@ -162,7 +136,6 @@ class LWWElementSet:
                 self.remove_set[elem_id] = incoming
                 mutations_applied += 1
 
-        # Update Vector Clock
         self.vclock.merge(other_clock)
         return mutations_applied
 
@@ -176,10 +149,7 @@ class LWWElementSet:
 
 
 class P2PEpistemicSyncEngine:
-    """
-    High-level P2P Sync Engine for COPPER Epistemic Memory.
-    Exchanges memory snapshots across multiple peer devices.
-    """
+    """High-level P2P Sync Engine for COPPER Epistemic Memory."""
 
     def __init__(self, local_node_id: str = "copper_node_local"):
         self.local_node_id = local_node_id

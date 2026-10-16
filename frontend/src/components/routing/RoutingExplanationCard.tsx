@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   ChevronDown,
   ChevronRight,
@@ -110,13 +110,13 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
   const codename = data.agent_codename || agentKey.toUpperCase();
   const confPct = data.confidence_pct ?? Math.round(data.confidence * 100);
 
-  // Render prompt with highlighted keyword spans
+
   const renderHighlightedPrompt = (promptText: string, terms: KeywordMatchTerm[]) => {
     if (!terms || terms.length === 0) {
       return <span className="text-text-secondary">{promptText}</span>;
     }
 
-    // Sort terms by start offset
+
     const sorted = [...terms].sort((a, b) => a.start - b.start);
     const segments: React.ReactNode[] = [];
     let lastIdx = 0;
@@ -156,7 +156,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
 
   return (
     <div className="rounded-2xl bg-surface-elevated border border-border-subtle overflow-hidden hover:border-border-highlight/80 transition-all font-sans text-xs">
-      {/* Header Bar */}
+
       <div
         onClick={() => setIsExpanded(!isExpanded)}
         className="p-4 cursor-pointer select-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-surface-elevated via-surface-base to-canvas hover:bg-surface-hover transition-colors"
@@ -189,7 +189,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
               )}
             </div>
 
-            {/* Decision Summary Text */}
+
             <p className="text-text-secondary text-xs mt-1.5 font-medium leading-relaxed">
               {data.decision_summary}
             </p>
@@ -206,10 +206,10 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
         </div>
       </div>
 
-      {/* Expandable PRISM Drawer */}
+
       {isExpanded && (
         <div className="border-t border-border-subtle bg-surface-base p-4 space-y-4">
-          {/* Drawer Sub-tabs */}
+
           <div className="flex flex-wrap gap-1.5 border-b border-border-subtle pb-2.5">
             <button
               onClick={() => setActiveTab("scores")}
@@ -262,7 +262,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
             </button>
           </div>
 
-          {/* TAB 1: Horizontal Score Breakdown Bar Chart */}
+
           {activeTab === "scores" && (
             <div className="space-y-3">
               <div className="flex items-center justify-between text-[11px] text-text-secondary">
@@ -300,7 +300,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
                           </div>
                         </div>
 
-                        {/* Animated Bar */}
+
                         <div className="h-2 w-full rounded-full bg-surface-elevated overflow-hidden border border-border-subtle">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
@@ -319,10 +319,10 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
             </div>
           )}
 
-          {/* TAB 2: Keyword Highlights & Suppressed Rules */}
+
           {activeTab === "keywords" && (
             <div className="space-y-4">
-              {/* Highlighted Prompt */}
+
               {data.prompt && (
                 <div className="p-3 rounded-xl bg-surface-elevated border border-border-subtle space-y-1.5">
                   <div className="text-[10px] font-mono text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
@@ -335,7 +335,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
                 </div>
               )}
 
-              {/* Matched Keywords Badges */}
+
               <div className="space-y-2">
                 <div className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
                   Triggered Pattern Rules ({data.matched_keywords?.length || 0})
@@ -356,7 +356,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
                 )}
               </div>
 
-              {/* Suppressed Rules / Negative Patterns */}
+
               {data.suppressed_rules && data.suppressed_rules.length > 0 && (
                 <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-800/40 space-y-2">
                   <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
@@ -387,7 +387,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
             </div>
           )}
 
-          {/* TAB 3: 5-Stage Pipeline Progression */}
+
           {activeTab === "stages" && (
             <div className="space-y-3">
               <div className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
@@ -451,7 +451,7 @@ export const RoutingExplanationCard: React.FC<Props> = ({ data, initialExpanded 
             </div>
           )}
 
-          {/* TAB 4: Confidence Calibration & Information Metrics */}
+
           {activeTab === "calibration" && data.confidence_calibration && (
             <div className="space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">

@@ -17,7 +17,6 @@ class ContextEngine:
 
         epistemic_parts = [temporal_snippet, profile_snippet]
 
-        # Knowledge Graph Context (ATLAS)
         try:
             graph_context = await graph_rag.get_graph_context(message)
             if graph_context:
@@ -25,7 +24,6 @@ class ContextEngine:
         except Exception as e:
             logger.warning(f"Knowledge graph context retrieval fallback: {e}")
 
-        # Vector Memories (ChromaDB)
         try:
             epistemic_memories = await memory_manager.get_relevant_memories(message)
             if epistemic_memories:
@@ -67,7 +65,6 @@ class ContextEngine:
         if role == "user":
             persistent_memory.extract_and_store_facts(content)
         elif role == "assistant":
-            # Asynchronously evaluate turn quality with CRUCIBLE Response Judge
             try:
                 from app.ai.evaluation.judge import crucible_judge
 
@@ -89,7 +86,6 @@ class ContextEngine:
             except Exception as judge_err:
                 logger.debug(f"[CRUCIBLE Judge] Scheduling error: {judge_err}")
 
-            # Asynchronously extract entities & relationships from the completed conversation turn
             try:
                 history = persistent_memory.get_history(session_id)
                 last_user_msg = ""

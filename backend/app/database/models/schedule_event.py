@@ -10,9 +10,9 @@ class ScheduleEvent(Base):
     __tablename__ = "schedule_events"
 
     id = Column(String(64), primary_key=True, default=lambda: str(uuid.uuid4()))
-    time = Column(String(50), nullable=False)  # e.g. "10:00 AM"
+    time = Column(String(50), nullable=False)
     title = Column(String(255), nullable=False)
-    category = Column(String(50), nullable=False, default="Focus")  # Focus, Meeting, Break, Review
+    category = Column(String(50), nullable=False, default="Focus")
     completed = Column(Boolean, nullable=False, default=False)
     date = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))

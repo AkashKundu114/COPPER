@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Search,
   Users,
@@ -27,7 +27,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
   const pageSize = 24;
 
   useEffect(() => {
-    // Load divisions
+
     catalogAPI
       .getDivisions()
       .then((res) => {
@@ -37,7 +37,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
       })
       .catch(() => {});
 
-    // Load initial batch of personas
+
     loadPersonas();
   }, []);
 
@@ -121,7 +121,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
 
   return (
     <div className="space-y-4 animate-fade-in font-sans">
-      {/* Search & Division Filter Header */}
+
       <div className="bg-surface-elevated/60 border border-border-subtle p-4 rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
             </div>
           </div>
 
-          {/* Search Box */}
+
           <div className="flex items-center gap-2 bg-canvas border border-border-subtle px-3 py-1.5 rounded-xl focus-within:border-cyan-500/50 transition-all w-full md:w-80">
             <Search size={14} className="text-text-tertiary" />
             <input
@@ -149,7 +149,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
           </div>
         </div>
 
-        {/* Division Filter Chips */}
+
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
           <button
             onClick={() => handleDivisionChange("all")}
@@ -183,7 +183,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
         </div>
       </div>
 
-      {/* Grid of Persona Cards */}
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-8">
           {[...Array(6)].map((_, i) => (
@@ -216,7 +216,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
                 className="group p-4 rounded-2xl bg-surface-elevated/70 hover:bg-surface-elevated border border-border-subtle hover:border-border-highlight transition-all cursor-pointer flex flex-col justify-between space-y-3 shadow-md hover:shadow-xl hover:shadow-cyan-950/10"
               >
                 <div className="space-y-2">
-                  {/* Card Header: Division Tag + Role */}
+
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <span
@@ -242,20 +242,20 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
                     </button>
                   </div>
 
-                  {/* Vibe Badge */}
+
                   {p.vibe && (
                     <div className="text-[11px] text-cyan-400/90 font-mono bg-cyan-950/30 px-2 py-0.5 rounded-lg border border-cyan-800/30 line-clamp-1">
                       "{p.vibe}"
                     </div>
                   )}
 
-                  {/* Mission / Description */}
+
                   <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed font-sans">
                     {p.description}
                   </p>
                 </div>
 
-                {/* Card Footer Actions */}
+
                 <div className="pt-2.5 border-t border-border-subtle flex items-center justify-between text-[11px] font-mono text-text-secondary">
                   <span className="truncate max-w-[140px] opacity-75">{p.id.split(":")[1] || p.id}</span>
                   <div className="flex items-center gap-1 text-cyan-400 group-hover:translate-x-0.5 transition-transform font-bold">
@@ -269,7 +269,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
         </div>
       )}
 
-      {/* Pagination Bar */}
+
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/60 border border-border-subtle rounded-xl text-xs">
           <span className="text-text-secondary font-mono">
@@ -299,7 +299,7 @@ export const AgencyPersonasTab: React.FC<AgencyPersonasTabProps> = ({
         </div>
       )}
 
-      {/* Dossier Modal */}
+
       <PersonaDossierModal
         persona={selectedPersona}
         onClose={() => setSelectedPersona(null)}

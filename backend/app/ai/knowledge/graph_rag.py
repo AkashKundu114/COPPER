@@ -11,10 +11,7 @@ class GraphRAG:
         pass
 
     def extract_mentioned_entities(self, query: str) -> list[str]:
-        """
-        Extracts entities present in the knowledge graph that are mentioned in the query.
-        Matches case-insensitively with word-boundary awareness.
-        """
+        """Extracts entities present in the knowledge graph that are mentioned in the query."""
         if not query or not query.strip():
             return []
 
@@ -22,7 +19,6 @@ class GraphRAG:
         query_text = query.strip()
         matched_canons: list[str] = []
 
-        # Get all node canonical names and display names, sorted by length descending
         candidates = []
         for node_canon, data in graph_store.graph.nodes(data=True):
             display_name = data.get("name", node_canon)
@@ -31,7 +27,6 @@ class GraphRAG:
         candidates.sort(key=lambda x: x[0], reverse=True)
 
         for _, canon, display_name in candidates:
-            # Word boundary regex search
             pattern = rf"\b{re.escape(display_name)}\b"
             if re.search(pattern, query_text, re.IGNORECASE):
                 if canon not in matched_canons:
@@ -58,7 +53,6 @@ class GraphRAG:
         for canon in mentioned_entities:
             neighborhood = graph_store.query_neighbors(canon, depth=1, min_confidence=min_confidence)
             for edge in neighborhood.get("edges", []):
-                # Unique key across directed endpoints and relation type
                 edge_key = (
                     canonicalize_name(edge.get("source", "")),
                     canonicalize_name(edge.get("target", "")),
@@ -68,7 +62,6 @@ class GraphRAG:
                     seen_edge_keys.add(edge_key)
                     collected_edges.append(edge)
 
-        # Rank by confidence descending, then evidence count
         collected_edges.sort(
             key=lambda x: (x.get("confidence", 0.0), x.get("evidence_count", 1)),
             reverse=True,
@@ -77,12 +70,7 @@ class GraphRAG:
         return collected_edges[:max_relationships]
 
     def format_graph_context(self, relationships: list[dict[str, Any]]) -> str:
-        """
-        Formats extracted relationships into the standard ATLAS knowledge graph context block:
-        KNOWLEDGE GRAPH CONTEXT:
-        - Akash WORKS_ON COPPER (confidence: 95%)
-        - COPPER USES FastAPI (confidence: 90%)
-        """
+        """Formats extracted relationships into the standard ATLAS knowledge graph context block:"""
         if not relationships:
             return ""
 

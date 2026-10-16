@@ -1,7 +1,6 @@
-from collections.abc import AsyncGenerator
-from datetime import datetime
 import json
 import re
+from collections.abc import AsyncGenerator
 from typing import Any
 
 from app.ai.agents.base import BaseAgent
@@ -16,11 +15,7 @@ from app.services.campaign_simulator import ensure_simulated_campaign_data
 
 
 class CampaignIntelligenceAgent(BaseAgent):
-    """
-    Campaign Intelligence Agent modeled on DeltaX Assistant:
-    Monitors advertising campaign metrics, detects statistical/trend/budget anomalies,
-    optimizes cross-campaign budget allocation, and provides actionable recommendations.
-    """
+    """Campaign Intelligence Agent modeled on DeltaX Assistant:"""
 
     def __init__(self):
         super().__init__(
@@ -42,7 +37,6 @@ class CampaignIntelligenceAgent(BaseAgent):
         db = SessionLocal()
         try:
             ensure_simulated_campaign_data(db)
-            # Fetch latest 168 hours of metrics for analysis
             metrics = (
                 db.query(CampaignMetric)
                 .order_by(CampaignMetric.timestamp.desc())
@@ -70,14 +64,12 @@ class CampaignIntelligenceAgent(BaseAgent):
         metrics = self._get_active_campaign_metrics()
         db = SessionLocal()
         try:
-            # Group metrics by campaign
             campaigns: dict[str, list[CampaignMetric]] = {}
             for m in metrics:
                 campaigns.setdefault(m.campaign_id, []).append(m)
 
-            # Compute portfolio aggregate stats from latest hour
             latest_per_cmp = [cmp_list[-1] for cmp_list in campaigns.values() if cmp_list]
-            total_spend = sum(float(m.spend) for m in latest_per_cmp) * 24.0  # Daily run-rate
+            total_spend = sum(float(m.spend) for m in latest_per_cmp) * 24.0
             total_conversions = sum(int(m.conversions) for m in latest_per_cmp) * 24
             total_revenue = sum(float(m.revenue) for m in latest_per_cmp) * 24.0
             avg_ctr = (
@@ -94,13 +86,11 @@ class CampaignIntelligenceAgent(BaseAgent):
                 round(total_revenue / max(1.0, total_spend), 2) if total_spend > 0 else 0.0
             )
 
-            # Run anomaly detection
             anomalies = campaign_anomaly_detector.scan_all_campaigns(db, hours=168)
             anom_dicts = [a.to_dict() for a in anomalies]
 
-            # Prepare charts data (aggregate timeline for frontend visualizer)
             timeline_map: dict[str, dict[str, Any]] = {}
-            for m in metrics[-120:]:  # last 24 hours of 5 campaigns
+            for m in metrics[-120:]:
                 ts_key = m.timestamp.strftime("%Y-%m-%d %H:00") if m.timestamp else ""
                 if ts_key not in timeline_map:
                     timeline_map[ts_key] = {"timestamp": ts_key, "spend": 0.0, "conversions": 0, "clicks": 0, "impressions": 0}
@@ -126,7 +116,6 @@ class CampaignIntelligenceAgent(BaseAgent):
                 ],
             }
 
-            # Response dispatch based on specific ad-tech intent
             if intent == "optimize_budget":
                 opt_result = budget_optimizer.optimize_from_db(db)
                 return {
@@ -166,7 +155,7 @@ class CampaignIntelligenceAgent(BaseAgent):
                 return {
                     "summary": summary,
                     "metrics": {
-                        "flagged_campaign_count": len(set(a.campaign_id for a in flagged)),
+                        "flagged_campaign_count": len({a.campaign_id for a in flagged}),
                         "total_active_anomalies": len(flagged),
                         "portfolio_roas": overall_roas,
                     },
@@ -220,7 +209,6 @@ class CampaignIntelligenceAgent(BaseAgent):
                     "charts_data": charts_data,
                 }
 
-            # Default: performance_summary
             summary = (
                 f"Portfolio Performance Overview: 5 active campaigns running at ${total_spend:,.2f}/day run-rate, "
                 f"generating {total_conversions:,} conversions with a blended ROAS of {overall_roas:.2f}x (CTR: {avg_ctr * 100:.2f}%, CPC: ${avg_cpc:.2f})."
@@ -249,10 +237,7 @@ class CampaignIntelligenceAgent(BaseAgent):
     async def synthesize_with_perspective_model(
         self, user_query: str, intelligence_result: dict[str, Any]
     ) -> str:
-        """
-        Uses the perspective model (deepseek-r1:14b) via Ollama to generate an authoritative
-        ad-tech domain synthesis grounded in the calculated telemetry and anomalies.
-        """
+        """Uses the perspective model (deepseek-r1:14b) via Ollama to generate an authoritative"""
         try:
             from app.ai.llm.ollama_client import ollama_client
 

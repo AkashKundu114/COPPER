@@ -29,12 +29,7 @@ RULES:
 
 
 class WebSearchAgent(BaseAgent):
-    """
-    RAPTOR: Privacy-preserving Local Web Search Agent.
-    Bridges COPPER's offline-first architecture with the open web via a local SearXNG metasearch instance.
-    Runs a ReAct loop with <search> and <fetch> tags, strictly enforcing a 3-page fetch limit,
-    data firewall PII stripping, and [Source: URL] citation grounding.
-    """
+    """RAPTOR: Privacy-preserving Local Web Search Agent."""
 
     def __init__(self):
         super().__init__(
@@ -50,30 +45,22 @@ class WebSearchAgent(BaseAgent):
         return model_manager.get_model("core_agents.web_search", "mistral-nemo:12b")
 
     def _build_system_prompt(self, memory_context: str = "") -> str:
-        # Internal memory content is kept private and not passed to web search prompts
         return RAPTOR_SYSTEM_PROMPT
 
     def _parse_action(self, text: str) -> tuple[str | None, dict[str, Any] | None, str]:
-        """
-        Parses <search>...</search> or <fetch>...</fetch> tags from model output.
-        Falls back to standard <tool_call> if emitted.
-        Returns (action_type, payload_dict, matched_tag_str).
-        """
-        # 1. Check <search> tag
+        """Parses <search>...</search> or <fetch>...</fetch> tags from model output."""
         search_match = re.search(r"<search>(.*?)</search>", text, re.DOTALL | re.IGNORECASE)
         if search_match:
             raw = search_match.group(1).strip()
             payload = self._parse_json_or_raw(raw, default_key="query")
             return "search", payload, search_match.group(0)
 
-        # 2. Check <fetch> tag
         fetch_match = re.search(r"<fetch>(.*?)</fetch>", text, re.DOTALL | re.IGNORECASE)
         if fetch_match:
             raw = fetch_match.group(1).strip()
             payload = self._parse_json_or_raw(raw, default_key="url")
             return "fetch", payload, fetch_match.group(0)
 
-        # 3. Fallback: <tool_call> tag
         tool_match = re.search(r"<tool_call>(.*?)</tool_call>", text, re.DOTALL | re.IGNORECASE)
         if tool_match:
             try:
@@ -146,7 +133,6 @@ class WebSearchAgent(BaseAgent):
 
             action_type, payload, tag_str = self._parse_action(current_response)
             if not action_type:
-                # No further web actions requested; return synthesized response
                 return current_response
 
             observation_content = ""
@@ -154,7 +140,6 @@ class WebSearchAgent(BaseAgent):
             if action_type == "search":
                 query = payload.get("query", "")
                 num_results = int(payload.get("num_results", 5))
-                # Privacy: strip PII and any memory leakage
                 sanitized_query = redact(query).strip()
                 logger.info(f"RAPTOR executing web search for: '{sanitized_query}'")
                 search_res = await web_search(query=sanitized_query, num_results=num_results)

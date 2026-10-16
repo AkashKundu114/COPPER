@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
-"""
-CHRYSALIS QLoRA Fine-Tuning Script for C.O.P.P.E.R.
-Targeted for RTX 5060 (8GB VRAM) local fine-tuning using Unsloth / PEFT + BitsAndBytes.
-
-Features:
-- GPU VRAM safety: evicts Ollama models before training, reloads Always-On Mini Model after.
-- 4-bit quantization with NF4 and double quantization.
-- LoRA hyperparameters: rank=16, alpha=32, targets=['q_proj','v_proj','k_proj','o_proj'], dropout=0.05.
-- Training: 3 epochs, batch_size=4, lr=2e-4, warmup_ratio=0.03, max_seq_len=2048, 10% holdout.
-- Early stopping: aborts if validation loss increases for 2 consecutive epochs.
-- Saves adapter artifacts in data/training/adapters/{version_tag}/.
-- Automated regression testing against C.O.P.P.E.R. benchmark suite.
-"""
+"""CHRYSALIS QLoRA Fine-Tuning Script for C.O.P.P.E.R."""
 
 import argparse
 import asyncio
@@ -20,7 +8,6 @@ import json
 import sys
 from pathlib import Path
 
-# Add backend directory to path
 backend_path = Path(__file__).resolve().parents[1] / "backend"
 sys.path.insert(0, str(backend_path))
 
@@ -93,7 +80,6 @@ def format_prompts(batch, tokenizer):
     """Formats chat messages into model-specific chat template."""
     texts = []
     for messages in batch:
-        # Standard chat template formatting
         formatted = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
         texts.append(formatted)
     return texts
@@ -125,7 +111,6 @@ def run_training_unsloth(args, dataset):
         random_state=42,
     )
 
-    # Convert to HuggingFace dataset
     raw_samples = [ex["messages"] for ex in dataset]
     hf_dataset = Dataset.from_dict({"messages": raw_samples})
     split_dataset = hf_dataset.train_test_split(test_size=args.val_split, seed=42)
@@ -265,13 +250,10 @@ async def main_async():
         args.output_dir = Path(args.output_dir)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Clear GPU VRAM before fine-tuning
     await evict_ollama_models(args.ollama_url)
 
-    # 2. Ingest dataset
     dataset = load_dataset(dataset_path)
 
-    # 3. Train with unsloth or peft fallback
     try:
         if importlib.util.find_spec("unsloth") is not None:
             print("[+] Using Unsloth FastLanguageModel engine.")
@@ -280,7 +262,6 @@ async def main_async():
             print("[*] Unsloth not detected. Falling back to Transformers + PEFT.")
             run_training_peft(args, dataset)
     finally:
-        # 4. Always restore always-on mini model in VRAM
         await restore_mini_model(args.ollama_url, args.mini_model)
 
     print(f"[SUCCESS] QLoRA training run for '{args.version_tag}' completed.")

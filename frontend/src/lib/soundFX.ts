@@ -1,8 +1,4 @@
-/**
- * C.O.P.P.E.R. Sound FX Engine
- * Inspired by uisfx.com semantic UI sound design.
- * Built with pure Web Audio API: 100% offline, procedural synthesis with zero external audio assets.
- */
+
 
 export type SoundCue = "click" | "toggle" | "tab" | "listen" | "speak" | "send" | "success" | "warning";
 
@@ -53,7 +49,7 @@ class SoundFXEngine {
 
       switch (cue) {
         case "click": {
-          // Crisp 1.2kHz acoustic micro-click (12ms)
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sine";
@@ -69,7 +65,7 @@ class SoundFXEngine {
         }
 
         case "toggle": {
-          // Dual-tone pop (400Hz -> 850Hz)
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "triangle";
@@ -85,7 +81,7 @@ class SoundFXEngine {
         }
 
         case "tab": {
-          // Muted wooden tactile tick (8ms)
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sine";
@@ -101,7 +97,7 @@ class SoundFXEngine {
         }
 
         case "listen": {
-          // Ascending soft harmonic chime (A5 -> E6)
+
           const osc1 = ctx.createOscillator();
           const osc2 = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -126,11 +122,11 @@ class SoundFXEngine {
         }
 
         case "speak": {
-          // Soft resonant bell tone
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sine";
-          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(523.25, now); 
           gain.gain.setValueAtTime(0.06, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
           osc.connect(gain);
@@ -141,7 +137,7 @@ class SoundFXEngine {
         }
 
         case "send": {
-          // Swift swoosh-ping
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sine";
@@ -157,7 +153,7 @@ class SoundFXEngine {
         }
 
         case "success": {
-          // Major chord resolve (C5 -> E5 -> G5)
+
           [523.25, 659.25, 783.99].forEach((freq, idx) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
@@ -175,7 +171,7 @@ class SoundFXEngine {
         }
 
         case "warning": {
-          // Low dissonance buzz
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sawtooth";
@@ -190,7 +186,7 @@ class SoundFXEngine {
         }
       }
     } catch {
-      // Audio context might be restricted or pending user gesture
+
     }
   }
 }

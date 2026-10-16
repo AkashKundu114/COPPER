@@ -7,7 +7,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-// Polyfill window.matchMedia
+
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
@@ -22,21 +22,21 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// Polyfill ResizeObserver
+
 globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 } as any;
 
-// Polyfill IntersectionObserver
+
 globalThis.IntersectionObserver = class IntersectionObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 } as any;
 
-// Polyfill HTMLCanvasElement.getContext
+
 HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
   fillRect: vi.fn(),
   clearRect: vi.fn(),
@@ -64,7 +64,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
   clip: vi.fn(),
 }) as any;
 
-// Polyfill URL.createObjectURL and revokeObjectURL
+
 if (!window.URL.createObjectURL) {
   window.URL.createObjectURL = vi.fn(() => "blob:mock-url");
 }
@@ -72,7 +72,7 @@ if (!window.URL.revokeObjectURL) {
   window.URL.revokeObjectURL = vi.fn();
 }
 
-// Polyfill navigator.clipboard
+
 if (!navigator.clipboard) {
   Object.defineProperty(navigator, "clipboard", {
     value: {
@@ -84,7 +84,7 @@ if (!navigator.clipboard) {
   });
 }
 
-// Mock systemAPI and cognitiveAPI to prevent dangling network calls in TopBar & ambient components
+
 vi.mock("../services/api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../services/api")>();
   return {

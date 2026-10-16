@@ -35,13 +35,11 @@ class ClipboardMonitor:
         if not text:
             return "plain_text"
 
-        # URL
         if re.match(r"^(https?://|www\.)[^\s/$.?#].[^\s]*$", text, re.IGNORECASE) or re.match(
             r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[^\s]*)?$", text
         ):
             return "url"
 
-        # Error Message
         error_keywords = ["error", "exception", "traceback", "failed", "stack trace", "fatal"]
         lower_text = text.lower()
         if any(kw in lower_text for kw in error_keywords) and (
@@ -49,13 +47,11 @@ class ClipboardMonitor:
         ):
             return "error_message"
 
-        # Email
         if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", text):
             return "email"
         if "From:" in text and "To:" in text and "Subject:" in text:
             return "email"
 
-        # JSON
         if (text.startswith("{") and text.endswith("}")) or (text.startswith("[") and text.endswith("]")):
             try:
                 json.loads(text)
@@ -63,11 +59,9 @@ class ClipboardMonitor:
             except ValueError:
                 pass
 
-        # File Path
         if re.match(r"^[a-zA-Z]:\\[^*|\"<>?]*$", text) or re.match(r"^/[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$", text):
             return "file_path"
 
-        # Code
         code_patterns = [
             r"def\s+\w+\s*\(",
             r"class\s+\w+",
@@ -94,7 +88,6 @@ class ClipboardMonitor:
 
             user32.OpenClipboard(0)
 
-            # CF_UNICODETEXT = 13
             if user32.IsClipboardFormatAvailable(13):
                 handle = user32.GetClipboardData(13)
                 if handle:
@@ -118,7 +111,6 @@ class ClipboardMonitor:
         logger.info("Starting clipboard monitor")
         while self.is_running:
             try:
-                # Check sequence number to see if clipboard changed
                 seq_num = user32.GetClipboardSequenceNumber()
 
                 if seq_num != self._last_sequence_number and self._last_sequence_number != 0:

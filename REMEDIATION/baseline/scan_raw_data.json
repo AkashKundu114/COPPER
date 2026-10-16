@@ -1,0 +1,1497 @@
+{
+  "ext_counts": {
+    "": 31,
+    ".example": 2,
+    ".toml": 3,
+    ".md": 97,
+    ".yml": 22,
+    ".json": 175,
+    ".txt": 8,
+    ".html": 70,
+    ".mjs": 220,
+    ".tag": 1,
+    ".db": 19,
+    ".onnx": 6,
+    ".bin": 23,
+    ".safetensors": 1,
+    ".ini": 1,
+    ".lock": 1,
+    ".py": 353,
+    ".pyc": 538,
+    ".cjs": 3,
+    ".sqlite3": 1,
+    ".pdf": 22,
+    ".wal": 147,
+    ".jsonl": 61,
+    ".gz": 38,
+    ".png": 413,
+    ".js": 8,
+    ".ts": 17,
+    ".css": 5,
+    ".info": 1,
+    ".svg": 3,
+    ".woff2": 3,
+    ".otf": 1,
+    ".ttf": 1,
+    ".tsx": 78,
+    ".jsx": 4,
+    ".webm": 1,
+    ".conf": 3,
+    ".sql": 1,
+    ".yaml": 6,
+    ".service": 1,
+    ".log": 9,
+    ".zip": 2,
+    ".cls": 5,
+    ".sty": 15,
+    ".tex": 8,
+    ".xxx": 2,
+    ".bbl": 3,
+    ".docx": 6,
+    ".bst": 2,
+    ".bat": 5,
+    ".sh": 1,
+    ".ps1": 7,
+    ".vbs": 1
+  },
+  "ext_lines": {
+    ".md": {
+      "total": 22610,
+      "blank": 2750,
+      "comment": 1792,
+      "code": 18068
+    },
+    ".yml": {
+      "total": 2283,
+      "blank": 237,
+      "comment": 62,
+      "code": 1984
+    },
+    ".json": {
+      "total": 2658673,
+      "blank": 10,
+      "comment": 4,
+      "code": 2658659
+    },
+    ".html": {
+      "total": 145478,
+      "blank": 3743,
+      "comment": 4268,
+      "code": 137467
+    },
+    ".py": {
+      "total": 62948,
+      "blank": 9504,
+      "comment": 1949,
+      "code": 51495
+    },
+    ".js": {
+      "total": 2613,
+      "blank": 81,
+      "comment": 64,
+      "code": 2468
+    },
+    ".ts": {
+      "total": 3210,
+      "blank": 264,
+      "comment": 74,
+      "code": 2872
+    },
+    ".css": {
+      "total": 1129,
+      "blank": 48,
+      "comment": 38,
+      "code": 1043
+    },
+    ".tsx": {
+      "total": 22903,
+      "blank": 1673,
+      "comment": 194,
+      "code": 21036
+    },
+    ".jsx": {
+      "total": 1196,
+      "blank": 86,
+      "comment": 4,
+      "code": 1106
+    },
+    ".sql": {
+      "total": 16,
+      "blank": 2,
+      "comment": 3,
+      "code": 11
+    },
+    ".yaml": {
+      "total": 800,
+      "blank": 23,
+      "comment": 41,
+      "code": 736
+    },
+    ".sh": {
+      "total": 75,
+      "blank": 6,
+      "comment": 29,
+      "code": 40
+    },
+    ".ps1": {
+      "total": 293,
+      "blank": 49,
+      "comment": 38,
+      "code": 206
+    }
+  },
+  "large_files": [
+    [
+      ".mypy_cache\\3.14\\cache.0.db",
+      3010560
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.1.db",
+      3264512
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.10.db",
+      3801088
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.11.db",
+      3170304
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.12.db",
+      2494464
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.13.db",
+      2965504
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.14.db",
+      3117056
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.15.db",
+      2408448
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.2.db",
+      2736128
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.3.db",
+      3710976
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.4.db",
+      4812800
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.5.db",
+      2490368
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.6.db",
+      2908160
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.7.db",
+      2990080
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.8.db",
+      3915776
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.9.db",
+      2977792
+    ],
+    [
+      "ai-models\\audio\\tts\\en_US-amy-medium.onnx",
+      63201294
+    ],
+    [
+      "ai-models\\audio\\tts\\en_US-ryan-medium.onnx",
+      63201294
+    ],
+    [
+      "ai-models\\audio\\tts\\kokoro-v0_19.onnx",
+      325525180
+    ],
+    [
+      "ai-models\\audio\\tts\\voices.bin",
+      5758648
+    ],
+    [
+      "ai-models\\audio\\vad\\silero_vad.onnx",
+      2327524
+    ],
+    [
+      "ai-models\\audio\\whisper\\ggml-large-v3-turbo.bin",
+      874188075
+    ],
+    [
+      "ai-models\\audio\\whisper\\ggml-tiny.en.bin",
+      77704715
+    ],
+    [
+      "ai-models\\image\\sd_turbo.safetensors",
+      5214561328
+    ],
+    [
+      "ai-models\\wakeword\\embedding_model.onnx",
+      1326578
+    ],
+    [
+      "ai-models\\wakeword\\hey_copper.onnx",
+      1271370
+    ],
+    [
+      "backend\\app\\ai\\ambient\\ambient_history.db",
+      5001216
+    ],
+    [
+      "backend\\data\\agency_agents_full_catalog.json",
+      1230028
+    ],
+    [
+      "backend\\data\\copper_memory.db",
+      2105344
+    ],
+    [
+      "backend\\data\\chroma\\chroma.sqlite3",
+      7065600
+    ],
+    [
+      "backend\\eval\\benchmark_metrics.json",
+      1851130
+    ],
+    [
+      "backend\\eval\\benchmark_report.md",
+      1369317
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\automation_10k.json",
+      3637586
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\automation_scaled.jsonl",
+      36166204
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\behavior_nutrition_10k.json",
+      3951007
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\behavior_nutrition_scaled.jsonl",
+      34878016
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\chat_10k.json",
+      3228050
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\chat_scaled.jsonl",
+      27403996
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\coding_10k.json",
+      3316515
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\coding_scaled.jsonl",
+      32653647
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\document_10k.json",
+      3997381
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\document_scaled.jsonl",
+      38585077
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\image_10k.json",
+      4466436
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\image_scaled.jsonl",
+      4073266
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\master_routing_15k.json",
+      5396591
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\master_routing_scaled.jsonl",
+      38661853
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\productivity_10k.json",
+      3892690
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\productivity_scaled.jsonl",
+      38423454
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\research_10k.json",
+      3803999
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\research_scaled.jsonl",
+      37683797
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\threats_10k.json",
+      3334322
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\threats_scaled.jsonl",
+      33067766
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\vision_10k.json",
+      3774958
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\vision_scaled.jsonl",
+      28116095
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\voice_audio_10k.json",
+      3421523
+    ],
+    [
+      "backend\\eval\\datasets\\generated\\voice_audio_scaled.jsonl",
+      2964145
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\automation_hybrid.jsonl",
+      40924725
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\behavior_nutrition_hybrid.json",
+      4906507
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\behavior_nutrition_hybrid.jsonl",
+      39016206
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\chat_hybrid.json",
+      4183550
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\chat_hybrid.jsonl",
+      31541829
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\coding_hybrid.json",
+      4272015
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\coding_hybrid.jsonl",
+      37412162
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\document_hybrid.json",
+      4952881
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\document_hybrid.jsonl",
+      42723055
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\image_hybrid.json",
+      5424125
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\image_hybrid.jsonl",
+      4509411
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\master_routing_hybrid.json",
+      7579258
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\master_routing_hybrid.jsonl",
+      44228941
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\productivity_hybrid.json",
+      9443440
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\productivity_hybrid.jsonl",
+      43183697
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\research_hybrid.json",
+      4761699
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\research_hybrid.jsonl",
+      42443880
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\threats_hybrid.json",
+      4291922
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\threats_hybrid.jsonl",
+      37828108
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\vision_hybrid.json",
+      4730458
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\vision_hybrid.jsonl",
+      31695338
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\voice_audio_hybrid.json",
+      5157682
+    ],
+    [
+      "backend\\eval\\datasets\\hybrid\\voice_audio_hybrid.jsonl",
+      3993376
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\automation\\test.jsonl",
+      4091569
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\automation\\train.jsonl",
+      32740015
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\automation\\train.jsonl.gz",
+      2769637
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\automation\\val.jsonl",
+      4093141
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\behavior_nutrition\\test.jsonl",
+      3905969
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\behavior_nutrition\\train.jsonl",
+      31208798
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\behavior_nutrition\\train.jsonl.gz",
+      2564456
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\behavior_nutrition\\val.jsonl",
+      3901439
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\chat\\test.jsonl",
+      3156947
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\chat\\train.jsonl",
+      25231592
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\chat\\train.jsonl.gz",
+      2372179
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\chat\\val.jsonl",
+      3153290
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\coding\\test.jsonl",
+      3740852
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\coding\\train.jsonl",
+      29929985
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\coding\\train.jsonl.gz",
+      3690493
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\coding\\val.jsonl",
+      3741325
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\document\\test.jsonl",
+      4274408
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\document\\train.jsonl",
+      34177238
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\document\\train.jsonl.gz",
+      2811967
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\document\\val.jsonl",
+      4271409
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\image\\train.jsonl",
+      3607585
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\master_routing\\test.jsonl",
+      4426864
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\master_routing\\train.jsonl",
+      35379060
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\master_routing\\train.jsonl.gz",
+      5850866
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\master_routing\\val.jsonl",
+      4423017
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\productivity\\test.jsonl",
+      4317610
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\productivity\\train.jsonl",
+      34549735
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\productivity\\train.jsonl.gz",
+      3229613
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\productivity\\val.jsonl",
+      4316352
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\research\\test.jsonl",
+      4245735
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\research\\train.jsonl",
+      33952132
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\research\\train.jsonl.gz",
+      3365148
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\research\\val.jsonl",
+      4246013
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\threats\\test.jsonl",
+      3782507
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\threats\\train.jsonl",
+      30261768
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\threats\\train.jsonl.gz",
+      3138175
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\threats\\val.jsonl",
+      3783833
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\vision\\test.jsonl",
+      3166483
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\vision\\train.jsonl",
+      25360526
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\vision\\train.jsonl.gz",
+      2181619
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\vision\\val.jsonl",
+      3168329
+    ],
+    [
+      "backend\\eval\\datasets\\partitions\\voice_audio\\train.jsonl",
+      3195890
+    ],
+    [
+      "research\\arxiv_submission.tar.gz",
+      5813078
+    ],
+    [
+      "research\\arxiv_submission.zip",
+      5884635
+    ],
+    [
+      "research\\ieee_latexqc_compiled.pdf",
+      6148876
+    ],
+    [
+      "research\\paper.pdf",
+      6302844
+    ],
+    [
+      "research\\arxiv_package\\main.pdf",
+      6302844
+    ],
+    [
+      "research\\arxiv_submission\\arxiv_submission.tar.gz",
+      5813078
+    ],
+    [
+      "research\\arxiv_submission\\arxiv_submission.zip",
+      5884635
+    ],
+    [
+      "research\\arxiv_submission\\compiled_preview.pdf",
+      6148876
+    ],
+    [
+      "research\\arxiv_submission\\paper.pdf",
+      6302844
+    ],
+    [
+      "research\\arxiv_submission\\source\\main.pdf",
+      6302844
+    ],
+    [
+      "research\\ieee_submission\\COPPER_IEEE_TCE_Manuscript.pdf",
+      6148876
+    ],
+    [
+      "research\\legacy\\paper_mlsys.docx",
+      6154175
+    ],
+    [
+      "research\\legacy\\paper_mlsys.pdf",
+      5673694
+    ],
+    [
+      "research\\submissions\\paper.docx",
+      6564182
+    ],
+    [
+      "research\\submissions\\paper.pdf",
+      5834795
+    ],
+    [
+      "research\\submissions\\whitepaper.docx",
+      4410355
+    ],
+    [
+      "research\\submissions\\whitepaper.pdf",
+      1530601
+    ]
+  ],
+  "database_files": [
+    [
+      ".mypy_cache\\3.14\\cache.0.db",
+      3010560
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.1.db",
+      3264512
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.10.db",
+      3801088
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.11.db",
+      3170304
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.12.db",
+      2494464
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.13.db",
+      2965504
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.14.db",
+      3117056
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.15.db",
+      2408448
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.2.db",
+      2736128
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.3.db",
+      3710976
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.4.db",
+      4812800
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.5.db",
+      2490368
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.6.db",
+      2908160
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.7.db",
+      2990080
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.8.db",
+      3915776
+    ],
+    [
+      ".mypy_cache\\3.14\\cache.9.db",
+      2977792
+    ],
+    [
+      "backend\\app\\ai\\ambient\\ambient_history.db",
+      5001216
+    ],
+    [
+      "backend\\data\\copper_memory.db",
+      2105344
+    ],
+    [
+      "backend\\data\\chroma\\chroma.sqlite3",
+      7065600
+    ],
+    [
+      "data\\copper_memory.db",
+      0
+    ]
+  ],
+  "audio_recordings": [],
+  "chroma_dirs": [
+    "backend\\data\\chroma",
+    "backend\\data\\chroma\\5a870297-ec08-4d49-84b9-f90182d0443f",
+    "backend\\data\\chroma\\7d04afed-07cd-4ed1-902f-10ec0ad8ec9c",
+    "backend\\data\\chroma\\7f6a9b70-001b-44c4-9dc8-1cfe5e6c08cc",
+    "backend\\data\\chroma\\815c49b1-8c96-4fd9-81f1-663a559cc5ab",
+    "backend\\data\\chroma\\aaeb9a88-9735-4de1-ac17-198bd72fca70"
+  ],
+  "pycache_dirs": [
+    "__pycache__",
+    "backend\\alembic\\__pycache__",
+    "backend\\alembic\\versions\\__pycache__",
+    "backend\\app\\__pycache__",
+    "backend\\app\\ai\\__pycache__",
+    "backend\\app\\ai\\agents\\__pycache__",
+    "backend\\app\\ai\\ambient\\__pycache__",
+    "backend\\app\\ai\\branching\\__pycache__",
+    "backend\\app\\ai\\cache\\__pycache__",
+    "backend\\app\\ai\\campaign\\__pycache__",
+    "backend\\app\\ai\\companion\\__pycache__",
+    "backend\\app\\ai\\evaluation\\__pycache__",
+    "backend\\app\\ai\\image\\__pycache__",
+    "backend\\app\\ai\\knowledge\\__pycache__",
+    "backend\\app\\ai\\llm\\__pycache__",
+    "backend\\app\\ai\\memory\\__pycache__",
+    "backend\\app\\ai\\orchestration\\__pycache__",
+    "backend\\app\\ai\\os_integration\\__pycache__",
+    "backend\\app\\ai\\tools\\__pycache__",
+    "backend\\app\\ai\\tools\\builtin\\__pycache__",
+    "backend\\app\\ai\\training\\__pycache__",
+    "backend\\app\\api\\__pycache__",
+    "backend\\app\\api\\routes\\__pycache__",
+    "backend\\app\\api\\websocket\\__pycache__",
+    "backend\\app\\core\\__pycache__",
+    "backend\\app\\database\\__pycache__",
+    "backend\\app\\database\\models\\__pycache__",
+    "backend\\app\\services\\__pycache__",
+    "backend\\app\\utils\\__pycache__",
+    "backend\\eval\\__pycache__",
+    "backend\\scripts\\__pycache__",
+    "backend\\tests\\__pycache__",
+    "scripts\\__pycache__",
+    "scripts\\db\\__pycache__",
+    "scripts\\dev\\__pycache__",
+    "scripts\\models\\__pycache__",
+    "scripts\\setup\\__pycache__",
+    "tests\\__pycache__",
+    "tests\\ai\\__pycache__",
+    "tests\\api\\__pycache__",
+    "tests\\audio\\__pycache__",
+    "tests\\core\\__pycache__",
+    "tests\\memory\\__pycache__",
+    "tests\\security\\__pycache__",
+    "tests\\services\\__pycache__"
+  ],
+  "working_tree_findings": {
+    "personal_email": [
+      {
+        "file": "CODE_OF_CONDUCT.md",
+        "line": 52,
+        "match": "akashkundu1152@gmail.com"
+      },
+      {
+        "file": "CONTRIBUTING.md",
+        "line": 22,
+        "match": "akashkundu1152@gmail.com"
+      },
+      {
+        "file": "ISSUES.md",
+        "line": 75,
+        "match": "akashkundu1152@gmail.com"
+      },
+      {
+        "file": "SECURITY.md",
+        "line": 33,
+        "match": "akashkundu1152@gmail.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\architecture-delta.test.mjs",
+        "line": 48,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\architecture-delta.test.mjs",
+        "line": 494,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\brand-marks.test.mjs",
+        "line": 568,
+        "match": "secret@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence-types.test.mjs",
+        "line": 49,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence-types.test.mjs",
+        "line": 127,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence-types.test.mjs",
+        "line": 208,
+        "match": "git@gitee.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 28,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 204,
+        "match": "git@gitee.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 205,
+        "match": "git@gitee.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 353,
+        "match": "SYNTHETIC_TOKEN@gitee.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 493,
+        "match": "not-a-real-token@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 494,
+        "match": "not-a-real-token@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 495,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 496,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 567,
+        "match": "not-a-real-token@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 583,
+        "match": "FAKE_SECRET@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 597,
+        "match": "not-a-real-token@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 602,
+        "match": "VALIDATE_SECRET@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 617,
+        "match": "not-a-real-token@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 636,
+        "match": "PREVIEW_SECRET@github.com"
+      },
+      {
+        "file": ".agents\\skills\\archify\\test\\repository-evidence.test.mjs",
+        "line": 671,
+        "match": "git@github.com"
+      },
+      {
+        "file": ".github\\SECURITY.md",
+        "line": 17,
+        "match": "security@copper-ai.local"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 50,
+        "match": "warnings._OptionError8builtins.Exception@builtins.BaseException2builtins.obj"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 92,
+        "match": "warnings._OptionError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 125,
+        "match": "8getopt.GetoptError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 136,
+        "match": "builtins.UserWarning4builtins.Warning8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 158,
+        "match": "Fselectors.DefaultSelectorJselectors._BaseSelectorImpl@selectors.BaseSelector2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 184,
+        "match": "frozenlist.FrozenList@typing.MutableSequence2typing.Sequence6typing.Reversible6typing.Collection2typing.Iterable4typing."
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 310,
+        "match": "builtins.SyntaxError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 329,
+        "match": "xml.dom.minidom.TextPQBxml.dom.minidom.CommentPQLxml.dom.minidom.CDATASectionPQ@xml.dom.minidom.EntityPQDxml.dom.minidom"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 339,
+        "match": "builtins.ValueError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 371,
+        "match": "urllib.error.URLError4builtins.OSError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 383,
+        "match": "Zpyparsing.results.ParseResults.List.builtins.list@typing.MutableSequence2typing.Sequence6typing.Reversible6typing.Colle"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 388,
+        "match": "builtins.RuntimeError8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 396,
+        "match": "Nlogging.config.ConvertingList.builtins.list@typing.MutableSequence2typing.Sequence6typing.Reversible6typing.Collection2"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 471,
+        "match": "Xchromadb.errors.AuthorizationErrorJchromadb.errors.ChromaError8builtins.Exception@builtins.BaseExceptionXoverrides.enfo"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 472,
+        "match": "chromadb.errors.BatchSizeExceededErrorJchromadb.errors.ChromaError8builtins.Exception@builtins.BaseExceptionXoverrides.e"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 515,
+        "match": "starlette.concurrency._StopIteration8builtins.Exception@builtins.BaseException2builtins.object"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 528,
+        "match": "jsqlalchemy.orm.evaluator.UnevaluatableErrorXsqlalchemy.exc.InvalidRequestErrorPsqlalchemy.exc.SQLAlchemyErrorVsqlalchem"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 536,
+        "match": "abcFsqlalchemy.event.registryFsqlalchemy.sql.annotation@sqlalchemy.sql.lambdas"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 539,
+        "match": "sqlalchemy.sql.baseDsqlalchemy.sql.cache_keyDsqlalchemy.sql.operatorsBsqlalchemy.sql.visitors@sqlalchemy.util.typing"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 545,
+        "match": "sqlalchemy.util.queue@sqlalchemy.util.typingLsqlalchemy.engine.interfaces0sqlalchemy.exc2sqlalchemy.util"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 558,
+        "match": "_typeshed@sqlalchemy.engine.base"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 564,
+        "match": "sqlalchemy.sql.baseBsqlalchemy.sql.elementsFsqlalchemy.sql.selectable@sqlalchemy.util.typing"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 569,
+        "match": "sqlalchemy.sql.schemaBsqlalchemy.sql.type_api@sqlalchemy.util.typing"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 581,
+        "match": "sqlalchemy.sql.rolesJsqlalchemy.util.langhelpers@sqlalchemy.util.typingBsqlalchemy.sql.elements0sqlalchemy.orm0sqlalchem"
+      }
+    ],
+    "postgres_uri_with_password": [
+      {
+        "file": "docker-compose.prod.yml",
+        "line": 180,
+        "match": "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@"
+      },
+      {
+        "file": "docker-compose.yml",
+        "line": 25,
+        "match": "postgresql://copper:copperpass@"
+      },
+      {
+        "file": ".github\\workflows\\backend-ci.yml",
+        "line": 94,
+        "match": "postgresql://copper:copperpass@"
+      },
+      {
+        "file": ".github\\workflows\\backend-ci.yml",
+        "line": 177,
+        "match": "postgresql://copper:copperpass@"
+      },
+      {
+        "file": "backend\\data\\agency_agents_full_catalog.json",
+        "line": 1820,
+        "match": "postgresql://user:password@"
+      },
+      {
+        "file": "docs\\setup\\deployment.md",
+        "line": 55,
+        "match": "postgresql://copper_user:copper_pass@"
+      },
+      {
+        "file": "infrastructure\\docker\\docker-compose.dev.yml",
+        "line": 16,
+        "match": "postgresql://copper:copperpass@"
+      },
+      {
+        "file": "infrastructure\\docker\\docker-compose.prod.yml",
+        "line": 15,
+        "match": "postgresql://${POSTGRES_USER:-copper}:${POSTGRES_PASSWORD}@"
+      }
+    ],
+    "absolute_windows_user_path": [
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 91,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 93,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 94,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 96,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 104,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 106,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 111,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 115,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 118,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 123,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 124,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 127,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 128,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 130,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 134,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 136,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 137,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 140,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 143,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 144,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 145,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 146,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 147,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 150,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 151,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 152,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 155,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 157,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 158,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 160,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 163,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 164,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 165,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 171,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 175,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 177,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 180,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 182,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 184,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 189,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 190,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 194,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 195,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 196,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 201,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 203,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 205,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 207,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 208,
+        "match": "C:\\Users\\Akash"
+      },
+      {
+        "file": ".mypy_cache\\3.14\\cache.0.db",
+        "line": 210,
+        "match": "C:\\Users\\Akash"
+      }
+    ],
+    "hardcoded_jwt": [
+      {
+        "file": "backend\\app\\ai\\ambient\\ambient_history.db",
+        "line": 1802,
+        "match": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImYxMGY4NzQwNWE5NzljMWRmMzZkZjI2NjA2NzM0ZjMzY2Q4NWMyNzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2Nvd"
+      },
+      {
+        "file": "backend\\app\\ai\\ambient\\ambient_history.db",
+        "line": 5443,
+        "match": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjFhYWY2MGMyMTk5ZjkxMTI2ZjcxMzFiMGJjNDk3OGI5In0.eyJhcHBfaWQiOiJZTDVFMkNDQTRF"
+      },
+      {
+        "file": "backend\\app\\ai\\ambient\\ambient_history.db",
+        "line": 5457,
+        "match": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjFhYWY2MGMyMTk5ZjkxMTI2ZjcxMzFiMGJjNDk3OGI5In0.eyJhcHBfaWQiOiJZTDVFMkNDQTRF"
+      },
+      {
+        "file": "backend\\app\\ai\\ambient\\ambient_history.db",
+        "line": 11172,
+        "match": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk0M2EzYTVkN2Q5MTk2MjVhNDU0ZTQ4OWI3NWMyOWFkYWI1N2FjYmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2Nvd"
+      }
+    ],
+    "redis_uri_with_password": [
+      {
+        "file": "backend\\data\\agency_agents_full_catalog.json",
+        "line": 1820,
+        "match": "redis://:password@"
+      },
+      {
+        "file": "infrastructure\\docker\\docker-compose.prod.yml",
+        "line": 16,
+        "match": "redis://:${REDIS_PASSWORD}@"
+      },
+      {
+        "file": "scripts\\dev\\run_audit_inspection.py",
+        "line": 92,
+        "match": "redis://:[^@"
+      }
+    ],
+    "absolute_unix_home_path": [
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 32928,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 32960,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 32967,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33039,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33071,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33078,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33223,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33255,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33262,
+        "match": "/home/akash"
+      },
+      {
+        "file": "backend\\data\\chroma\\chroma.sqlite3",
+        "line": 33274,
+        "match": "/home/akash"
+      },
+      {
+        "file": "docs\\benchmarks\\local_models_e2e_report.md",
+        "line": 78,
+        "match": "/home/user"
+      },
+      {
+        "file": "docs\\benchmarks\\local_models_e2e_report.md",
+        "line": 79,
+        "match": "/home/user"
+      }
+    ],
+    "generic_api_key": [
+      {
+        "file": "infrastructure\\kubernetes\\deployments\\copper-full-deployment.yaml",
+        "line": 23,
+        "match": "SECRET_KEY: \"CHANGE_ME_64_CHAR_HEX\""
+      },
+      {
+        "file": "tests\\security\\test_ai_red_team.py",
+        "line": 130,
+        "match": "api_key: 'sk-1234567890abcdef1234567890abcdef'"
+      }
+    ]
+  },
+  "git_log_findings_count": 38
+}

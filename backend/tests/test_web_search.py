@@ -25,7 +25,6 @@ async def test_web_search_pii_sanitization():
 
         result = await web_search(raw_query)
         assert result["status"] == "success"
-        # Verify call params sent to SearXNG did NOT include raw email or API key
         called_kwargs = mock_get.call_args[1]
         sent_query = called_kwargs.get("params", {}).get("q", "")
         assert "akash@example.com" not in sent_query
@@ -118,9 +117,7 @@ async def test_raptor_react_search_and_synthesis():
     """Verify RAPTOR agent parses <search> tag, feeds observation, and outputs final response with citation."""
     agent = WebSearchAgent()
 
-    # Step 1: Model emits <search>
     llm_step1 = '<search>{"query": "latest rust updates", "num_results": 2}</search>'
-    # Step 2: Model emits final synthesis with citation
     llm_step2 = (
         "Rust 1.85 has been released with new edition features and async improvements. "
         "[Source: https://blog.rust-lang.org/2026/02/rust-1.85.0.html]"
@@ -155,7 +152,7 @@ async def test_raptor_max_three_fetches_limit():
         '<fetch>{"url": "https://example.com/page1"}</fetch>',
         '<fetch>{"url": "https://example.com/page2"}</fetch>',
         '<fetch>{"url": "https://example.com/page3"}</fetch>',
-        '<fetch>{"url": "https://example.com/page4"}</fetch>',  # Exceeds max 3
+        '<fetch>{"url": "https://example.com/page4"}</fetch>',
         "Synthesized final response from all three pages. [Source: https://example.com/page1]",
     ]
 
@@ -164,7 +161,6 @@ async def test_raptor_max_three_fetches_limit():
             mock_fetch.return_value = {"status": "success", "text": "Sample text", "length": 11}
 
             final_resp = await agent.run("Fetch and compare four articles")
-            # web_fetch should have been executed exactly 3 times
             assert mock_fetch.call_count == 3
             assert "Synthesized final response" in final_resp
 
@@ -188,17 +184,14 @@ async def test_agent_router_web_search_routing():
 @pytest.mark.asyncio
 async def test_agent_router_negative_suppression():
     """Verify negative keywords prevent routing to WEB_SEARCH when answering from local knowledge."""
-    # Local facts or personal identity -> CHAT
     res_identity = await route_message("who am i and what is my name")
     assert res_identity != AgentType.WEB_SEARCH
 
     res_notes = await route_message("search in my notes for my password")
     assert res_notes != AgentType.WEB_SEARCH
 
-    # Reminders with search words -> REMINDER
     res_reminder = await route_message("remind me tomorrow to search for groceries")
     assert res_reminder == AgentType.REMINDER
 
-    # Coding requests with search words -> CODING
     res_code = await route_message("write a python function to search for an item in a list")
     assert res_code == AgentType.CODING

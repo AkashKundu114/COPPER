@@ -68,12 +68,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
     return () => clearInterval(interval);
   }, [fetchLiveTelemetry, fetchOperationalData]);
 
-  // Greeting determination
+
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-  // GPU readings or fallbacks
+
   const gpuModel = cockpit?.hardware?.gpu?.model
     ? cockpit.hardware.gpu.model.replace("NVIDIA GeForce ", "")
     : "System GPU";
@@ -88,7 +88,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
       animate="animate"
       className="p-5 md:p-6 space-y-5 max-w-6xl mx-auto text-text font-sans pb-16"
     >
-      {/* Hero Banner / Greeting */}
+
       <motion.div
         variants={staggerItem}
         className="surface-card p-5 rounded-2xl relative overflow-hidden"
@@ -138,7 +138,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Action Strip */}
+
         <div className="mt-4 pt-3.5 border-t border-border-hairline flex flex-wrap gap-2">
           <Button
             variant="primary"
@@ -171,12 +171,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </div>
       </motion.div>
 
-      {/* 3-Column Bento Grid */}
+
       <motion.div
         variants={staggerItem}
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
-        {/* Column 1: Schedule */}
+
         <Card variant="default">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -231,7 +231,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </CardContent>
         </Card>
 
-        {/* Column 2: Agent Fleet */}
+
         <Card variant="default">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -280,7 +280,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           </CardContent>
         </Card>
 
-        {/* Column 3: Guardian Intelligence */}
+
         <Card variant="default">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -336,7 +336,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
         </Card>
       </motion.div>
 
-      {/* Hardware & Telemetry Matrix */}
+
       <motion.div variants={staggerItem}>
         <Card variant="default">
           <CardHeader>

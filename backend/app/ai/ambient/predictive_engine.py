@@ -107,7 +107,6 @@ class PredictiveEngine:
                         )
                         new_predictions.append(prediction)
 
-            # Context-watcher ambient integration
             try:
                 from app.ai.ambient.context_watcher import context_watcher
 
@@ -137,7 +136,6 @@ class PredictiveEngine:
             self._predictions = final_predictions
             self._save_predictions()
 
-            # Save history
             try:
                 history_data = {"last_analyzed": now.isoformat(), "patterns_found": len(new_predictions)}
                 with open(self.history_file, "w") as f:

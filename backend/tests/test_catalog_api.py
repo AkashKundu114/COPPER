@@ -17,21 +17,18 @@ def test_catalog_summary():
 
 
 def test_catalog_personas_list_and_filter():
-    # Test all personas (paginated)
     response = client.get("/api/v1/catalog/personas?limit=10")
     assert response.status_code == 200
     data = response.json()
     assert data["total"] == 264
     assert len(data["personas"]) == 10
 
-    # Test division filter
     response_eng = client.get("/api/v1/catalog/personas?division=engineering&limit=100")
     assert response_eng.status_code == 200
     data_eng = response_eng.json()
     assert data_eng["total"] == 64
     assert all(p["division"] == "engineering" for p in data_eng["personas"])
 
-    # Test search
     response_search = client.get("/api/v1/catalog/personas?search=architect")
     assert response_search.status_code == 200
     data_search = response_search.json()
@@ -54,7 +51,6 @@ def test_catalog_scientific_skills():
     assert data["total"] == 165
     assert len(data["skills"]) == 10
 
-    # Test detail
     skill_resp = client.get("/api/v1/catalog/scientific-skills/biopython")
     assert skill_resp.status_code == 200
     skill = skill_resp.json()

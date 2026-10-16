@@ -19,7 +19,6 @@ class ImageAgent(BaseAgent):
         self.engine = diffusion_engine
 
     def extract_prompt(self, message: str) -> str:
-        # Simple extraction: remove command words
         lower = message.lower()
         prefixes = [
             "generate an image of",
@@ -47,7 +46,6 @@ class ImageAgent(BaseAgent):
         for p in prefixes:
             if lower.startswith(p):
                 prompt = message[len(p) :].strip()
-                # Remove leading 'a' or 'an' if it was part of the remaining text
                 if prompt.lower().startswith("an "):
                     prompt = prompt[3:]
                 elif prompt.lower().startswith("a "):
@@ -68,7 +66,6 @@ class ImageAgent(BaseAgent):
         if not prompt:
             prompt = "a futuristic cyber city"
 
-        # Execute generation in worker thread to prevent event loop starvation
         loop = asyncio.get_running_loop()
         res = await loop.run_in_executor(None, self.engine.generate, prompt)
 

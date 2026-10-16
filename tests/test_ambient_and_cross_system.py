@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 
@@ -45,12 +45,10 @@ async def test_skill_learner_extract_and_execute():
     assert len(skill.steps) == 3
     assert skill.success_rate == 1.0
 
-    # Test retrieval
     found = skill_learner.get_skill(skill.skill_id)
     assert found is not None
     assert found.name == skill.name
 
-    # Test execution
     exec_res = await skill_learner.execute_skill(skill.skill_id, {"repo": "core"})
     assert exec_res["status"] == "success"
     assert exec_res["skill_id"] == skill.skill_id
@@ -59,12 +57,11 @@ async def test_skill_learner_extract_and_execute():
 
 def test_cognitive_load_suppresses_clipboard_processing():
     """Verify that DEEP_FOCUS suppresses active notifications and marks flow protection."""
-    # Set deep focus
     cognitive_load_detector.current_state = CognitiveState.DEEP_FOCUS
 
     entry = ClipboardEntry(
         id="test-entry-1",
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(UTC),
         content="https://docs.astral.sh/uv/",
         content_type="url",
         content_preview="https://docs.astral.sh/uv/",
@@ -74,7 +71,6 @@ def test_cognitive_load_suppresses_clipboard_processing():
     assert result["suppressed_for_focus"] is True
     assert result["notifications_suppressed"] is True
 
-    # Set normal flow
     cognitive_load_detector.current_state = CognitiveState.NORMAL_FLOW
     result_normal = clipboard_processor.process_entry(entry)
     assert result_normal["suppressed_for_focus"] is False
@@ -102,7 +98,6 @@ def test_predictive_engine_ambient_integration():
     engine = PredictiveEngine()
     predictions = engine.analyze_patterns()
     assert isinstance(predictions, list)
-    # Check if context_watcher_ambient prediction is registered
     ambient_preds = [p for p in engine._predictions if p.pattern_source == "context_watcher_ambient"]
     assert len(ambient_preds) >= 1
 
@@ -110,7 +105,6 @@ def test_predictive_engine_ambient_integration():
 @pytest.mark.asyncio
 async def test_causal_engine_auto_recording():
     """Verify causal engine event recording, querying, and link inference."""
-    # Record task completion event
     event1 = causal_engine.record_event(
         description="Task completed: 'Optimize database indexes' (Project: Backend)",
         category="task_completion",
@@ -121,7 +115,6 @@ async def test_causal_engine_auto_recording():
     assert event1 is not None
     assert event1.event_id in causal_engine.events
 
-    # Record meeting event
     event2 = causal_engine.record_event(
         description="Meeting concluded: 'Sprint Review' with 3 action items",
         category="meeting_conclusion",
@@ -131,7 +124,6 @@ async def test_causal_engine_auto_recording():
     )
     assert event2 is not None
 
-    # Query why
     why = await causal_engine.query_why("Why was the database index task completed?")
     assert why is not None
     assert why.query == "Why was the database index task completed?"
@@ -148,7 +140,6 @@ def test_personality_manager_adaptation():
     assert "Very warm" in addon or "Casual" in addon or "concise" in addon
     assert "Priority: Show code examples first" in addon
 
-    # Test conversational adaptation heuristic
     personality_manager.adapt_from_message("hey dude thanks awesome work!")
     assert personality_manager.config.formality <= 0.25
 

@@ -94,17 +94,14 @@ class PersonalityManager:
         return " ".join(addon)
 
     def adapt_from_message(self, user_message: str):
-        # Lightweight heuristic sentiment/style analyzer
         msg_lower = user_message.lower()
 
-        # Verbosity
         words = user_message.split()
         if len(words) < 5:
             self.config.verbosity = max(0.0, self.config.verbosity - 0.05)
         elif len(words) > 50:
             self.config.verbosity = min(1.0, self.config.verbosity + 0.05)
 
-        # Formality
         casual_words = ["hey", "hi", "thanks", "cool", "awesome", "dude", "lol"]
         formal_words = ["please", "kindly", "appreciate", "furthermore", "therefore"]
 
