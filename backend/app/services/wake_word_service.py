@@ -87,15 +87,22 @@ class WakeWordService:
     # Engine dispatch
     # ------------------------------------------------------------------ #
     async def _listen_loop(self) -> None:
-        try:
-            if self.engine == "openwakeword":
-                await self._run_openwakeword()
-            else:
-                await self._run_whisper_fallback()
-        except asyncio.CancelledError:
-            raise
-        except Exception as e:
-            logger.error(f"[wake-word] Listener crashed, disabling: {e}")
+        consecutive_failures = 0
+        while self._listening and consecutive_failures < 10:
+            try:
+                if self.engine == "openwakeword":
+                    await self._run_openwakeword()
+                else:
+                    await self._run_whisper_fallback()
+                consecutive_failures = 0
+            except asyncio.CancelledError:
+                raise
+            except Exception as e:
+                consecutive_failures += 1
+                logger.warning(f"[wake-word] Listener stream warning (attempt {consecutive_failures}/10): {e}")
+                await asyncio.sleep(2.0)
+        if consecutive_failures >= 10:
+            logger.error("[wake-word] Listener reached maximum consecutive failures, disabling.")
             self._listening = False
 
     async def _run_openwakeword(self) -> None:

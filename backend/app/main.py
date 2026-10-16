@@ -25,7 +25,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 
 from app.ai.llm.model_tier_manager import model_tier_manager
 from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
@@ -189,6 +189,33 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
+class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
+    """Guards against memory exhaustion DoS by enforcing request body size ceilings."""
+
+    MAX_STANDARD_SIZE = 10 * 1024 * 1024  # 10 MB for standard API calls
+    MAX_UPLOAD_SIZE = 25 * 1024 * 1024  # 25 MB for document/vision uploads
+
+    async def dispatch(self, request: Request, call_next):
+        content_length = request.headers.get("content-length")
+        if content_length:
+            try:
+                length = int(content_length)
+                is_upload = request.url.path.startswith(("/api/v1/documents", "/api/v1/vision", "/api/v1/images"))
+                limit = self.MAX_UPLOAD_SIZE if is_upload else self.MAX_STANDARD_SIZE
+                if length > limit:
+                    return JSONResponse(
+                        status_code=413,
+                        content={
+                            "status": "error",
+                            "error": "Payload Too Large",
+                            "message": f"Request body ({length} bytes) exceeds configured size ceiling ({limit} bytes).",
+                        },
+                    )
+            except ValueError:
+                pass
+        return await call_next(request)
+
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -196,6 +223,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestSizeLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -204,6 +232,19 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization", "Accept", "Origin"],
 )
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "status": "error",
+            "error": "Internal Server Error",
+            "message": "An internal server error occurred.",
+        },
+    )
 app.include_router(ambient.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(clipboard.router, prefix="/api/v1")

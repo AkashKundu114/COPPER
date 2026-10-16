@@ -225,6 +225,25 @@ class SemanticResponseCache:
         ]
         return any(ind in lower for ind in error_indicators)
 
+    @staticmethod
+    def is_sensitive_payload(text: str | None) -> bool:
+        """
+        Detects API keys, passwords, bearer tokens, private keys, or canary tokens
+        to prevent caching and cross-session secret leakage.
+        """
+        if not text:
+            return False
+        patterns = [
+            r"sk-[a-zA-Z0-9_\-]{20,}",
+            r"ghp_[a-zA-Z0-9]{36,}",
+            r"AKIA[0-9A-Z]{16}",
+            r"-----BEGIN [A-Z ]*PRIVATE KEY-----",
+            r"(?i)\b(password|passwd|secret|api_key|apikey|token|bearer)\s*[:=]\s*['\"][^\s'\"]{6,}['\"]",
+            r"(?i)bearer\s+[a-zA-Z0-9_\-\.]{20,}",
+            r"CANARY_SECRET_[A-Z0-9_]+",
+        ]
+        return any(re.search(pat, text) for pat in patterns)
+
     async def lookup(self, query: str, context_hash: str = "") -> CacheLookupResult:
         """
         Before inference, compute query embedding and search cache with cosine similarity.
@@ -234,7 +253,7 @@ class SemanticResponseCache:
         """
         t0 = time.perf_counter()
 
-        if not self.collection or not query.strip():
+        if not self.collection or not query.strip() or self.is_sensitive_payload(query):
             self._misses += 1
             return CacheLookupResult(status="miss")
 
@@ -416,6 +435,11 @@ class SemanticResponseCache:
         (query_embedding, query_text, response_text, agent_type, timestamp, context_hash)
         """
         if not self.collection or not query.strip() or not response.strip():
+            return None
+
+        # Ignore queries/responses containing credentials, secrets or canary tokens
+        if self.is_sensitive_payload(query) or self.is_sensitive_payload(response):
+            logger.info("Semantic cache: skipping storage of query/response containing sensitive payload or secret")
             return None
 
         # Ignore trivial short responses or errors

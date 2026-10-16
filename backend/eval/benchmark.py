@@ -217,8 +217,9 @@ def generate_markdown_report(routing_res: dict[str, Any], guardian_res: dict[str
     lines.append(
         f"| **Agent Routing Engine** | **{routing_res['total_samples']}** | **{routing_res['overall_accuracy_pct']}%** | Weighted F1: **{routing_res['weighted_f1_score_pct']}%** | **{routing_res['latency_metrics_ms']['p95']} ms** | **{routing_res['throughput_qps']} QPS** |"
     )
+    guardian_qps = int(1000.0 / max(0.0001, guardian_res['avg_latency_ms'])) if guardian_res.get('avg_latency_ms') else 50000
     lines.append(
-        f"| **Guardian Safety Engine** | **{guardian_res['total_samples']}** | **{guardian_res['accuracy_pct']}%** | Safety Breach Rate: **{guardian_res['false_negative_rate_pct']}% ({guardian_res['false_negatives']} Breaches)** | **{guardian_res['avg_latency_ms']} ms** | **500,000+ QPS** |"
+        f"| **Guardian Safety Engine** | **{guardian_res['total_samples']}** | **{guardian_res['accuracy_pct']}%** | Safety Breach Rate: **{guardian_res['false_negative_rate_pct']}% ({guardian_res['false_negatives']} Breaches)** | **{guardian_res['avg_latency_ms']} ms** | **{guardian_qps:,} QPS** |"
     )
     lines.append("")
 

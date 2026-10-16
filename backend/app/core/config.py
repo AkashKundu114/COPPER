@@ -67,7 +67,7 @@ class Settings(BaseSettings):
     SANDBOX_DOCKER_IMAGE: str = "python:3.12-slim"
 
     # OpenTelemetry & Observability Configuration
-    OTEL_ENABLED: bool = True
+    OTEL_ENABLED: bool = False  # Set True to export to external Tempo/Grafana collector
     OTEL_SERVICE_NAME: str = "copper-backend"
     OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://localhost:4317"
     OTEL_EXPORTER_OTLP_HTTP_ENDPOINT: str = "http://localhost:4318/v1/traces"

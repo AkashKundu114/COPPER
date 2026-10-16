@@ -117,9 +117,22 @@ class PersistentMemoryStore:
         self._save_profile(self.profile)
         logger.info(f"User name updated in persistent memory: {clean_name}")
 
+    SENSITIVE_PATTERNS = [
+        r"sk-[a-zA-Z0-9_\-]{20,}",
+        r"ghp_[a-zA-Z0-9]{36,}",
+        r"AKIA[0-9A-Z]{16}",
+        r"-----BEGIN [A-Z ]*PRIVATE KEY-----",
+        r"(?i)\b(password|passwd|secret|api_key|apikey|token|bearer)\s*[:=]\s*['\"][^\s'\"]{6,}['\"]",
+        r"(?i)bearer\s+[a-zA-Z0-9_\-\.]{20,}",
+        r"CANARY_SECRET_[A-Z0-9_]+",
+    ]
+
     def add_fact(self, fact: str):
         fact_clean = fact.strip()
         if not fact_clean or len(fact_clean) < 3:
+            return
+        if any(re.search(pat, fact_clean) for pat in self.SENSITIVE_PATTERNS):
+            logger.warning("Rejected persistent fact containing sensitive credentials or tokens.")
             return
         facts = self.profile.setdefault("facts", [])
         if fact_clean not in facts:

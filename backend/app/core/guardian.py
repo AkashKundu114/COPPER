@@ -48,15 +48,33 @@ def normalize_adversarial_text(text: str) -> str:
         cleaned = cleaned.replace(cyr, lat)
     normalized = unicodedata.normalize("NFKD", cleaned)
 
-    b64_matches = re.findall(r"['\"]([A-Za-z0-9+/=]{8,})['\"]", normalized)
     decoded_extras = []
+
+    # Hex payload extraction (e.g. bytes.fromhex('...'), \x72\x6d...)
+    hex_matches = re.findall(r"(?:fromhex\(['\"]|\\x)([0-9a-fA-F]{2,})", normalized)
+    for h in hex_matches:
+        try:
+            if len(h) % 2 == 0:
+                dec = bytes.fromhex(h).decode("utf-8", errors="ignore")
+                if dec.strip():
+                    decoded_extras.append(dec.strip())
+        except Exception:
+            pass
+
+    # Base64 payload extraction (quoted and unquoted, e.g. -EncodedCommand / -enc)
+    b64_matches = re.findall(
+        r"(?:-encodedcommand\s+|-enc\s+|-e\s+|['\"]|\b)([A-Za-z0-9+/]{8,}={0,2})(?:['\"]|\b|$)",
+        normalized,
+        re.IGNORECASE,
+    )
     for candidate in b64_matches:
         try:
             dec = base64.b64decode(candidate).decode("utf-8", errors="ignore")
-            if dec.strip():
+            if dec.strip() and any(c.isalnum() for c in dec):
                 decoded_extras.append(dec.strip())
         except Exception:
             pass
+
     if decoded_extras:
         normalized += " " + " ".join(decoded_extras)
 
@@ -97,7 +115,6 @@ class GuardianVerdict:
 
 SAFETY_TRIGGERS = [
     "rm -rf",
-    "format ",
     "format c:",
     "format d:",
     "format /fs:",
@@ -142,24 +159,32 @@ SAFETY_TRIGGERS = [
     "| ruby",
     "| pwsh",
     "remove-item",
+    "clear-disk",
+    "format-volume",
+    "ri c:",
+    "ri d:",
+    "certutil -urlcache",
+    "bitsadmin /transfer",
+    "schtasks /create",
     "nc -e",
     "ncat -e",
 ]
 
 SAFETY_PATTERNS = [
     # Destructive SQL & DB attacks
-    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column)\b",
+    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+constraint\s+.*cascade)\b",
     # Filesystem & OS destruction
-    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|format\s+[a-z]:(?=\s|$)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
+    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+([a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
+    r"\b(ri|remove-item)\s+([a-z]:|/|\*)",
     # Privilege escalation, Persistence & Token tampering
-    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile))\b",
+    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile)|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create)\b",
     # Malicious payloads, exploits, piped shells & exfiltration
     r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
-    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib))\b",
+    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
     # Secret harvesting & Poisoning
     r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
     # Safety bypass, Defender tampering & jailbreaks
-    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux)|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+evil|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode)\b",
+    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux)|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+evil|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
 ]
 
 COMPILED_SAFETY_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SAFETY_PATTERNS]

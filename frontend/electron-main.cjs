@@ -219,21 +219,25 @@ async function startBackend() {
 
   try {
     const pythonExec = getPythonExecutable(rootDir);
+    const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+    const uvicornArgs = [
+      "-m",
+      "uvicorn",
+      "app.main:app",
+      "--app-dir",
+      "backend",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8000",
+    ];
+    if (isDev) {
+      uvicornArgs.push("--reload");
+    }
 
     backendProcess = spawn(
       pythonExec,
-      [
-        "-m",
-        "uvicorn",
-        "app.main:app",
-        "--app-dir",
-        "backend",
-        "--host",
-        "127.0.0.1",
-        "--port",
-        "8000",
-        "--reload",
-      ],
+      uvicornArgs,
       {
         cwd: rootDir,
         detached: true,
