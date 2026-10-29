@@ -1,8 +1,8 @@
 {
   "calibration_metadata": {
-    "calibration_date": "2026-09-30",
+    "calibration_date": "2026-10-29",
     "calibration_method": "grid_search_f1_optimized",
-    "dataset_source": "D:/C.O.P.P.E.R/tests/data/adversarial_guardian_350.json",
+    "dataset_source": "tests/data/adversarial_guardian_350.json",
     "total_samples": 350,
     "threat_samples": 230,
     "benign_samples": 120,
@@ -14,7 +14,7 @@
     "goal_conflict_weight": 2.2,
     "bias": 3.5,
     "calibration_method": "grid_search_f1_optimized",
-    "calibration_date": "2026-09-30"
+    "calibration_date": "2026-10-29"
   },
   "performance_metrics": {
     "sensitivity_pct": 100.0,
@@ -27,13 +27,13 @@
     "true_negatives": 120,
     "false_positives": 0,
     "false_negatives": 0,
-    "auc_roc": 1.0
+    "auc_roc": 0.9848
   },
   "scipy_continuous_optimization": {
-    "risk_weight": 4.168,
+    "risk_weight": 4.073,
     "fatigue_weight": 1.8,
-    "goal_conflict_weight": 3.221,
-    "bias": 2.145
+    "goal_conflict_weight": 3.165,
+    "bias": 2.012
   },
   "grid_search_top_candidates": [
     {
@@ -225,57 +225,57 @@
     {
       "threshold": 0.2,
       "fpr": 0.0,
-      "tpr": 1.0,
-      "sensitivity": 100.0,
+      "tpr": 0.9696,
+      "sensitivity": 96.96,
       "specificity": 100.0
     },
     {
       "threshold": 0.3,
       "fpr": 0.0,
-      "tpr": 1.0,
-      "sensitivity": 100.0,
+      "tpr": 0.9696,
+      "sensitivity": 96.96,
       "specificity": 100.0
     },
     {
       "threshold": 0.4,
       "fpr": 0.0,
-      "tpr": 1.0,
-      "sensitivity": 100.0,
+      "tpr": 0.9696,
+      "sensitivity": 96.96,
       "specificity": 100.0
     },
     {
       "threshold": 0.5,
       "fpr": 0.0,
-      "tpr": 1.0,
-      "sensitivity": 100.0,
+      "tpr": 0.9696,
+      "sensitivity": 96.96,
       "specificity": 100.0
     },
     {
       "threshold": 0.6,
       "fpr": 0.0,
-      "tpr": 1.0,
-      "sensitivity": 100.0,
+      "tpr": 0.9696,
+      "sensitivity": 96.96,
       "specificity": 100.0
     },
     {
       "threshold": 0.7,
       "fpr": 0.0,
-      "tpr": 0.7522,
-      "sensitivity": 75.22,
+      "tpr": 0.7217,
+      "sensitivity": 72.17,
       "specificity": 100.0
     },
     {
       "threshold": 0.8,
       "fpr": 0.0,
-      "tpr": 0.7522,
-      "sensitivity": 75.22,
+      "tpr": 0.7217,
+      "sensitivity": 72.17,
       "specificity": 100.0
     },
     {
       "threshold": 0.9,
       "fpr": 0.0,
-      "tpr": 0.7522,
-      "sensitivity": 75.22,
+      "tpr": 0.7217,
+      "sensitivity": 72.17,
       "specificity": 100.0
     },
     {

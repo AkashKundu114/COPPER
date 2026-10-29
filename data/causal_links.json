@@ -103,5 +103,12 @@
     "relationship": "leads_to",
     "confidence": 0.9,
     "evidence": ""
+  },
+  {
+    "cause_id": "a592e9d0-77ad-4ba5-be9f-2560ee801586",
+    "effect_id": "edf3fe8d-7665-4feb-bbb2-a6a794fc7d11",
+    "relationship": "leads_to",
+    "confidence": 0.9,
+    "evidence": ""
   }
 ]
