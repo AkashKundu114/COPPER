@@ -31,7 +31,7 @@ def db_session():
 def _test_lifecycle_cleanup():
     """Periodic garbage collection across test runs."""
     yield
-    gc.collect(1)
+    gc.collect()
 
 
 @pytest.fixture(scope="module", autouse=True)

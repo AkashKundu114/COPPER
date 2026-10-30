@@ -1,5 +1,6 @@
 import gc
 import os
+import sys
 import time
 
 import psutil
@@ -23,6 +24,16 @@ class TestResourceAndLatencyBenchmarks:
                 torch.cuda.empty_cache()
         except Exception:
             pass
+        if sys.platform == "win32":
+            try:
+                import ctypes
+                k32 = ctypes.windll.kernel32
+                psapi = ctypes.windll.psapi
+                k32.GetCurrentProcess.restype = ctypes.c_void_p
+                psapi.EmptyWorkingSet.argtypes = [ctypes.c_void_p]
+                psapi.EmptyWorkingSet(k32.GetCurrentProcess())
+            except Exception:
+                pass
 
         process = psutil.Process(os.getpid())
         mem_info = process.memory_info()

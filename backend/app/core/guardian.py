@@ -91,6 +91,7 @@ class GuardianVerdict:
     requires_confirmation: bool = False
     friction_index: float = 0.0
     fatigue_score: float = 0.0
+    is_hard_safety: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -103,6 +104,7 @@ class GuardianVerdict:
             "requires_confirmation": self.requires_confirmation,
             "friction_index": round(self.friction_index, 3),
             "fatigue_score": round(self.fatigue_score, 3),
+            "is_hard_safety": self.is_hard_safety,
         }
 
 
@@ -516,6 +518,7 @@ class GuardianEngine:
                     requires_confirmation=True,
                     recommendation="The memory instructing this action lacks provenance authority. Verify or re-authorize manually.",
                     friction_index=3.0,
+                    is_hard_safety=True,
                     fatigue_score=fatigue,
                 )
             elif auth_verdict == "CHALLENGE":
@@ -543,18 +546,19 @@ class GuardianEngine:
             any(t in action_lower for t in SAFETY_TRIGGERS)
             or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
         )
-        if is_hard_safety:
+        if is_hard_safety or context.get("is_destructive"):
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
                 reasoning="This action is destructive, adversarial, or violates safety boundaries.",
-                requires_confirmation=False,
+                requires_confirmation=True,
                 recommendation="Action is forbidden by system invariants. Choose a safer alternative.",
                 friction_index=max(2.85, friction),
+                is_hard_safety=is_hard_safety,
                 fatigue_score=fatigue,
             )
 
         # 2. Consequential operations or destructive disk modifications (Require operator confirmation)
-        if context.get("is_destructive") or risk >= 0.85:
+        if risk >= 0.85:
             return GuardianVerdict(
                 level=DisagreementLevel.CHALLENGE,
                 reasoning="High-impact or destructive disk modification requested.",
