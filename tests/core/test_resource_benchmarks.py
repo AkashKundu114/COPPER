@@ -1,3 +1,4 @@
+import gc
 import os
 import time
 
@@ -14,6 +15,15 @@ class TestResourceAndLatencyBenchmarks:
 
     def test_process_memory_footprint(self):
         """Measures current Python process RSS memory footprint."""
+        gc.collect()
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+
         process = psutil.Process(os.getpid())
         mem_info = process.memory_info()
         rss_mb = mem_info.rss / (1024 * 1024)

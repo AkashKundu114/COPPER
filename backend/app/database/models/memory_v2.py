@@ -16,6 +16,9 @@ class MemoryStatus(str, PyEnum):
     ACTIVE = "active"
     SUPERSEDED = "superseded"
     REJECTED = "rejected"
+    QUARANTINED = "quarantined"
+    EXPIRED = "expired"
+    ARCHIVED = "archived"
 
 
 class UserMemoryV2(Base):
@@ -47,9 +50,9 @@ class UserMemoryV2(Base):
 
     @importance.setter
     def importance(self, val: float):
-        if not self.extra_metadata:
-            self.extra_metadata = {}
-        self.extra_metadata["importance"] = max(0.05, min(1.0, float(val)))
+        d = dict(self.extra_metadata or {})
+        d["importance"] = max(0.05, min(1.0, float(val)))
+        self.extra_metadata = d
 
     @property
     def retrieval_count(self) -> int:
@@ -59,30 +62,32 @@ class UserMemoryV2(Base):
 
     @retrieval_count.setter
     def retrieval_count(self, val: int):
-        if not self.extra_metadata:
-            self.extra_metadata = {}
-        self.extra_metadata["retrieval_count"] = max(0, int(val))
+        d = dict(self.extra_metadata or {})
+        d["retrieval_count"] = max(0, int(val))
+        self.extra_metadata = d
 
     def to_dict(self) -> dict:
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "content": self.content,
-            "type": self.type.value if self.type else None,
+            "type": self.type.value if hasattr(self.type, "value") else str(self.type),
             "category": self.category,
             "source": self.source,
-            "confidence": self.confidence,
+            "confidence": round(self.confidence, 3),
+            "importance": round(self.importance, 2),
             "evidence_count": self.evidence_count,
-            "importance": self.importance,
             "retrieval_count": self.retrieval_count,
-            "status": self.status.value if self.status else None,
+            "status": self.status.value if hasattr(self.status, "value") else str(self.status),
             "supersedes_id": self.supersedes_id,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
             "last_confirmed_at": self.last_confirmed_at.isoformat() if self.last_confirmed_at else None,
         }
 
-    def __repr__(self) -> str:
-        return f"<UserMemoryV2 id={self.id} type={self.type} conf={self.confidence:.2f}>"
 
-
-MEMORY_PRIORITY = {MemoryType.FACT: 3, MemoryType.OBSERVATION: 2, MemoryType.HYPOTHESIS: 1}
+MEMORY_PRIORITY = {
+    MemoryType.FACT: 3,
+    MemoryType.OBSERVATION: 2,
+    MemoryType.HYPOTHESIS: 1,
+}

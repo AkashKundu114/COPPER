@@ -1,3 +1,4 @@
+import gc
 import os
 import sys
 from pathlib import Path
@@ -24,6 +25,27 @@ except Exception:
 def db_session():
     """Mock or session fixture for database operations."""
     return
+
+
+@pytest.fixture(autouse=True)
+def _test_lifecycle_cleanup():
+    """Periodic garbage collection across test runs."""
+    yield
+    gc.collect(1)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _module_lifecycle_cleanup():
+    """Full garbage collection and handle release between test modules."""
+    yield
+    gc.collect()
+    try:
+        import torch
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except Exception:
+        pass
 
 
 @pytest.fixture
