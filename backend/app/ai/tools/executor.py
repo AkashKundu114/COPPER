@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.ai.tools.registry import tool_registry
+import app.ai.tools.builtin  # noqa: F401 - Ensure builtin tools are registered
 from app.core.guardian import DisagreementLevel, GuardianVerdict, guardian_engine
 from app.core.logger import logger
 
@@ -167,7 +168,10 @@ class ToolExecutor:
 
         verdict: GuardianVerdict = guardian_engine.evaluate(action_summary, guardian_context)
 
-        if verdict.level == DisagreementLevel.SAFETY or (verdict.requires_confirmation and tool.guardian_level >= 3):
+        # Guardian Safety Gate:
+        # 1. Hard SAFETY invariant: always blocked unconditionally
+        # 2. Requires confirmation: blocked unless operator_confirmed is True in context
+        if verdict.level == DisagreementLevel.SAFETY or (verdict.requires_confirmation and not context.get("operator_confirmed", False)):
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
             block_msg = f"Blocked by Guardian Safety Gate (Level {verdict.level.name}): {verdict.reasoning} Recommendation: {verdict.recommendation}"
             logger.warning(f"Guardian blocked tool '{tool_name}': {block_msg}")

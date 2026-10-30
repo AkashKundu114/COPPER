@@ -286,6 +286,52 @@ def compute_action_reversibility_risk(proposed_action: str) -> float:
     return 0.05
 
 
+def evaluate_memory_authority(
+    memory_provenance: str,
+    memory_confidence: float,
+    action_reversibility: float,
+) -> tuple[float, str]:
+    """
+    Evaluates Dual-Plane Memory Governance Authority:
+        Authority(m, a) = gamma(m) * C(m) * (1 - R(a))
+    
+    Calibration decision boundaries:
+      - Authority >= 0.65 -> ALLOW (Silent autonomous execution)
+      - 0.25 <= Authority < 0.65 -> CHALLENGE (Require explicit operator confirmation)
+      - Authority < 0.25 -> BLOCK (Safety boundary quarantine interdiction)
+      
+    Returns:
+        (authority_score, verdict_string) where verdict_string in ("ALLOW", "CHALLENGE", "BLOCK")
+    """
+    prov_key = str(memory_provenance).lower().strip()
+    
+    provenance_weights = {
+        "user_explicit": 1.00,
+        "user_verified": 1.00,
+        "system_verified": 0.95,
+        "local_file": 0.85,
+        "file_system": 0.85,
+        "observation": 0.75,
+        "chat": 0.50,
+        "web_search": 0.35,
+        "external_untrusted": 0.15,
+        "injected": 0.10,
+    }
+    gamma = provenance_weights.get(prov_key, 0.50)
+    conf = max(0.0, min(1.0, float(memory_confidence)))
+    rev = max(0.0, min(1.0, float(action_reversibility)))
+    
+    authority = round(gamma * conf * (1.0 - rev), 4)
+    if authority >= 0.65:
+        verdict = "ALLOW"
+    elif authority >= 0.25:
+        verdict = "CHALLENGE"
+    else:
+        verdict = "BLOCK"
+        
+    return authority, verdict
+
+
 @dataclass
 class FrictionConfig:
     risk_weight: float = 2.8
@@ -449,21 +495,72 @@ class GuardianEngine:
         has_conflict = bool(conflicts or detected_conflicts)
         goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
 
+        # Workstream C: Dual-Plane MemoryQuarantine Evaluation
+        mem_prov = context.get("memory_provenance")
+        mem_conf = context.get("memory_confidence")
+        if mem_prov is not None or mem_conf is not None:
+            prov_str = str(mem_prov or "chat")
+            conf_val = float(mem_conf) if mem_conf is not None else 0.50
+            auth_score, auth_verdict = evaluate_memory_authority(prov_str, conf_val, risk)
+            
+            if auth_verdict == "BLOCK":
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Blocked by MemoryQuarantine: Insufficient authority ({auth_score:.3f} < 0.25) for action with reversibility risk {risk:.2f} using '{prov_str}' memory.",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="The memory instructing this action lacks provenance authority. Verify or re-authorize manually.",
+                    friction_index=3.0,
+                    fatigue_score=fatigue,
+                )
+            elif auth_verdict == "CHALLENGE":
+                return GuardianVerdict(
+                    level=DisagreementLevel.CHALLENGE,
+                    reasoning=f"MemoryQuarantine Challenge: Action requires operator verification (Authority: {auth_score:.3f}, Reversibility risk: {risk:.2f}, Provenance: '{prov_str}').",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="Confirm explicitly before executing action derived from intermediate-authority memory.",
+                    friction_index=max(2.0, compute_dynamic_friction_index(risk, fatigue, goal_conflict, config=self.friction_config)),
+                    fatigue_score=fatigue,
+                )
+
         friction = compute_dynamic_friction_index(
             risk, fatigue, goal_conflict, config=self.friction_config
         )
 
-        if (
-            context.get("is_destructive")
-            or any(t in action_lower for t in SAFETY_TRIGGERS)
+        # 1. Hard safety invariants: permanently forbidden adversarial and wiping operations
+        is_hard_safety = (
+            any(t in action_lower for t in SAFETY_TRIGGERS)
             or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
-        ):
+        )
+        if is_hard_safety:
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
                 reasoning="This action is destructive, adversarial, or violates safety boundaries.",
-                requires_confirmation=True,
-                recommendation="Confirm explicitly before I proceed, or choose a safer alternative.",
+                requires_confirmation=False,
+                recommendation="Action is forbidden by system invariants. Choose a safer alternative.",
                 friction_index=max(2.85, friction),
+                fatigue_score=fatigue,
+            )
+
+        # 2. Consequential operations or destructive disk modifications (Require operator confirmation)
+        if context.get("is_destructive") or risk >= 0.85:
+            return GuardianVerdict(
+                level=DisagreementLevel.CHALLENGE,
+                reasoning="High-impact or destructive disk modification requested.",
+                requires_confirmation=True,
+                recommendation="Confirm explicitly before proceeding with disk modification.",
+                friction_index=max(2.0, friction),
                 fatigue_score=fatigue,
             )
 
