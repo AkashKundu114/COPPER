@@ -189,6 +189,15 @@ papers/
 research/*
 !research/experiments/
 !research/generate_all_academic_figures.py
+!research/paper_revised.tex
+!research/references.bib
+!research/tables/
+!research/EXPERIMENTAL_METHODOLOGY.md
+!research/RESULTS_PROVENANCE.md
+!research/RELATED_WORK_MATRIX.md
+!research/REVIEWER_OBJECTION_REGISTER.md
+!research/REPRODUCIBILITY.md
+!research/LIMITATIONS.md
 
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md

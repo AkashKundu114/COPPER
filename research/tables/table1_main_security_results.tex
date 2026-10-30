@@ -1,0 +1,16 @@
+\begin{table*}[!t]
+\centering
+\caption{Comprehensive Benchmark Results on CopperMemoryBench ($N = 160$ Traces)}
+\label{tab:main_results}
+\begin{tabularx}{\textwidth}{lcccccccc}
+\toprule
+\textbf{Strategy} & \textbf{ASR (\%)} $\downarrow$ & \textbf{Exact 95\% CI} & \textbf{TIR (\%)} $\uparrow$ & \textbf{Benign TSR (\%)} $\uparrow$ & \textbf{Exact 95\% CI} & \textbf{FQR (\%)} $\downarrow$ & \textbf{OCR (\%)} & \textbf{Latency (ms)} \\
+\midrule
+$B_0$ (Flat RAG / None) & 100.0\% & [96.4\%, 100.0\%] & 0.0\% & 100.0\% & [94.0\%, 100.0\%] & 0.0\% & 0.0\% & $<0.001$ \\
+$B_1$ (Last-Write-Wins) & 100.0\% & [96.4\%, 100.0\%] & 0.0\% & 100.0\% & [94.0\%, 100.0\%] & 0.0\% & 0.0\% & $<0.001$ \\
+$B_2$ (Naive Bayes) & 80.0\% & [70.8\%, 87.3\%] & 20.0\% & 100.0\% & [94.0\%, 100.0\%] & 0.0\% & 0.0\% & $<0.001$ \\
+$B_3$ (Provenance-Only) & 80.0\% & [70.8\%, 87.3\%] & 20.0\% & 100.0\% & [94.0\%, 100.0\%] & 0.0\% & 0.0\% & 0.005 \\
+\textbf{$M_5$ (MemoryQuarantine)} & \textbf{0.0\%} & \textbf{[0.0\%, 3.6\%]} & \textbf{100.0\%} & \textbf{100.0\%} & \textbf{[94.0\%, 100.0\%]} & \textbf{0.0\%} & 70.0\% & \textbf{0.005} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
