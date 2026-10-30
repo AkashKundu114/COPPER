@@ -189,8 +189,13 @@ papers/
 research/*
 !research/experiments/
 !research/generate_all_academic_figures.py
+!research/generate_memoryquarantine_academic_figures.py
+!research/build_memoryquarantine_arxiv_package.py
 !research/paper_revised.tex
 !research/references.bib
+!research/figures/
+research/figures/*
+!research/figures/fig*_mq_*.png
 !research/tables/
 !research/EXPERIMENTAL_METHODOLOGY.md
 !research/RESULTS_PROVENANCE.md

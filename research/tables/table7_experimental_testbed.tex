@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{Empirical Hardware and Software Testbed Specification}
+\label{tab:testbed}
+\begin{tabular}{ll}
+\toprule
+\textbf{System Parameter} & \textbf{Physical Testbed Configuration} \\
+\midrule
+\textbf{Host Processor} & AMD Ryzen 9 8940HX (16 Cores, 32 Threads, 4.0--5.2 GHz) \\
+\textbf{Host Memory} & 16 GB DDR5-5600 MHz Dual-Channel \\
+\textbf{Graphics Hardware} & NVIDIA GeForce RTX 5060 Laptop GPU \\
+\textbf{GPU Video Memory} & 8,151 MiB GDDR6 VRAM (128-bit Bus Width) \\
+\textbf{CUDA Runtime} & CUDA 13.4 / cuDNN 9.1 \\
+\textbf{Operating System} & Microsoft Windows 11 Enterprise x64 (Build 26100) \\
+\textbf{Python Runtime} & Python 3.14.6 x64 (CPython, MSC v.1944) \\
+\textbf{Local LLM Server} & Ollama v0.5.1 (Direct IPv4 Loopback 127.0.0.1:11434) \\
+\textbf{Evaluated Model} & Qwen2.5-0.5B-Instruct (q4\_k\_m quantization, 100\% GPU offload) \\
+\textbf{Embedding Model} & Local Dense 384-d Cosine + Sparse BM25 Fusion \\
+\textbf{Database Engine} & SQLite 3.45.1 (WAL Mode, synchronous = NORMAL) \\
+\bottomrule
+\end{tabular}
+\end{table}

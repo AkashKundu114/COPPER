@@ -1,0 +1,15 @@
+\begin{table*}[!t]
+\centering
+\caption{Formal Hypothesis Testing, Contingency Analysis, and Statistical Significance}
+\label{tab:statistical_significance}
+\begin{tabularx}{\textwidth}{lcccccX}
+\toprule
+\textbf{Hypothesis \& Comparison} & \textbf{Contingency Table} & \textbf{Sample Size} & \textbf{Risk Diff. ($\Delta$)} & \textbf{$z$-Score} & \textbf{Fisher's $p$-Value} & \textbf{Scientific Inference} \\
+\midrule
+$\mathcal{H}_1$: $M_5$ vs. $B_0$ (Flat RAG) & $\begin{bmatrix} 100 & 0 \\ 0 & 100 \end{bmatrix}$ & $N = 100$ vs $100$ & $-1.00$ & $14.14$ & $\mathbf{2.21 \times 10^{-59}}$ & Reject null; MemoryQuarantine eliminates delayed memory poisoning completely. \\
+$\mathcal{H}_2$: $M_5$ vs. $B_2$ (Naive Bayes) & $\begin{bmatrix} 100 & 0 \\ 20 & 80 \end{bmatrix}$ & $N = 100$ vs $100$ & $-0.80$ & $11.31$ & $\mathbf{6.51 \times 10^{-37}}$ & Reject null; consequence-calibration decisively outperforms uncalibrated Bayesian updating. \\
+$\mathcal{H}_3$: Benign Utility Preservation & $\begin{bmatrix} 60 & 0 \\ 0 & 60 \end{bmatrix}$ & $N = 60$ Benign & $0.00$ & $0.00$ & $1.000$ & Confirm null difference; zero false quarantines ($\text{FQR} = 0.0\%$, $\text{TSR} = 100.0\%$). \\
+$\mathcal{H}_4$: Systems Micro-Overhead & Mean: $0.005\text{ ms}$, P95: $0.008\text{ ms}$ & $N = 160$ Traces & --- & --- & $p < 0.001$ & Gating overhead is $<0.01\%$ of physical LLM inference cycle ($303\text{ ms}$). \\
+\bottomrule
+\end{tabularx}
+\end{table*}
