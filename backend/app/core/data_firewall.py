@@ -1,3 +1,15 @@
+"""Application-Layer Data Firewall and PII/Credential Sanitizer.
+
+Architectural Clarification (ISS-08 / COPPER-AUD-10-EGRESS):
+This component operates strictly as an in-memory application-layer regex sanitizer
+with cryptographic SHA-256 audit hashing. It is NOT an operating system network socket
+filter, Windows Filtering Platform (WFP) driver, eBPF packet interdictor, or hardware
+airgap. It enforces privacy boundaries at the application string boundary by masking
+passwords, API tokens, cryptographic private keys, emails, SSNs, credit cards, and local
+filesystem paths before data leaves user context into vector databases, log outputs, or
+authorized external queries.
+"""
+
 import hashlib
 import re
 from dataclasses import dataclass, field

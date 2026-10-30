@@ -1,6 +1,22 @@
+from enum import Enum
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class NetworkMode(str, Enum):
+    """Enforceable network isolation modes for local-first operations.
+
+    OFFLINE_AIRGAP: Strict total isolation. All outbound WAN and external network calls
+        are prohibited and intercepted.
+    LOCAL_SERVICES: Outbound calls permitted exclusively to local loopback services
+        (e.g., SearXNG on 127.0.0.1, Ollama, Redis, PostgreSQL). Public WAN egress blocked.
+    USER_AUTHORIZED_EGRESS: Full local services plus user-authorized outbound web requests
+        passing through application-layer PII/credential redaction.
+    """
+    OFFLINE_AIRGAP = "offline_airgap"
+    LOCAL_SERVICES = "local_services"
+    USER_AUTHORIZED_EGRESS = "user_authorized_egress"
 
 
 class Settings(BaseSettings):
@@ -58,6 +74,7 @@ class Settings(BaseSettings):
     HEAVY_MODEL_IDLE_UNLOAD_SECONDS: int = 240
     SEARXNG_URL: str = "http://localhost:8888"
     WEB_SEARCH_ENABLED: bool = True
+    NETWORK_MODE: NetworkMode = NetworkMode.USER_AUTHORIZED_EGRESS
 
     SANDBOX_BACKEND: str = "auto"
     SANDBOX_TIMEOUT_SECONDS: int = 15
