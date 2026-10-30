@@ -25,7 +25,7 @@ PURE_SMALLTALK_RE = re.compile(
     r"^(how\s+are\s+you(\s+today)?|who\s+are\s+you|what\s+can\s+you\s+do|nice\s+to\s+meet\s+you|what\'?s\s+up|how(\'s|\s+is)\s+it\s+going)[\.!\?,\s]*$|"
     r"^(thank\s+you|thanks|thank\s+you\s+so\s+much)(\s+for\s+(the\s+)?assistance)?[\.!\?,\s]*$|"
     r"^(goodbye|bye|talk\s+to\s+you\s+later|goodbye\s+for\s+now[,\s]*talk\s+to\s+you\s+later)?[\.!\?,\s]*$|"
-    r"^(hello|hi|hey|good\s+(morning|afternoon|evening|day)|yo)(\s+(there|copper|assistant))?[,\s:]+(how\s+are\s+you(\s+today)?|what\'?s\s+up|sup|hope\s+you\s+are\s+ready\s+for\s+work)[\.!\?,\s]*$",
+    r"^(hello|hi|hey|good\s+(morning|afternoon|evening|day)|yo)(\s+(there|copper|assistant))?[,\s:!\.\?]+(how\s+are\s+you(\s+today)?|what\'?s\s+up|sup|hope\s+you\s+are\s+ready\s+for\s+work)[\.!\?,\s]*$",
     re.IGNORECASE,
 )
 
