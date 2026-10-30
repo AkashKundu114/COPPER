@@ -12,6 +12,23 @@ from app.core.logger import logger
 
 LEARNED_ROUTES_FILE = Path(__file__).parent / "learned_routes.json"
 
+DIRECTIVE_PREFIX_RE = re.compile(
+    r"^(system\s+directive|workstation\s+command|priority\s+action|task\s+request|autonomous\s+directive|developer\s+prompt|execute\s+immediately|assistant,\s+please|could\s+you|can\s+we|can\s+you|please|would\s+you\s+mind\s+helping\s+me\s+to|i\s+need\s+you\s+to|i\s+want\s+you\s+to|kindly|help\s+me)[,\s:!—\-\.]*",
+    re.IGNORECASE,
+)
+GREETING_PREFIX_RE = re.compile(
+    r"^(hey|hello|hi|good\s+(morning|afternoon|evening|day)|greetings|howdy|yo|sup)?(\s*copper)?[,\s:!—\-\.]*",
+    re.IGNORECASE,
+)
+PURE_SMALLTALK_RE = re.compile(
+    r"^(hi|hello|hey|greetings|howdy|sup|yo|good\s+(morning|afternoon|evening|day|night))(\s+(there|copper|assistant))?[\.!\?,\s]*$|"
+    r"^(how\s+are\s+you(\s+today)?|who\s+are\s+you|what\s+can\s+you\s+do|nice\s+to\s+meet\s+you|what\'?s\s+up|how(\'s|\s+is)\s+it\s+going)[\.!\?,\s]*$|"
+    r"^(thank\s+you|thanks|thank\s+you\s+so\s+much)(\s+for\s+(the\s+)?assistance)?[\.!\?,\s]*$|"
+    r"^(goodbye|bye|talk\s+to\s+you\s+later|goodbye\s+for\s+now[,\s]*talk\s+to\s+you\s+later)?[\.!\?,\s]*$|"
+    r"^(hello|hi|hey|good\s+(morning|afternoon|evening|day)|yo)(\s+(there|copper|assistant))?[,\s:]+(how\s+are\s+you(\s+today)?|what\'?s\s+up|sup|hope\s+you\s+are\s+ready\s+for\s+work)[\.!\?,\s]*$",
+    re.IGNORECASE,
+)
+
 
 @dataclass
 class RoutingResult:
@@ -27,6 +44,9 @@ class RoutingResult:
     routing_entropy: float = 0.0
     explanation: dict[str, Any] | None = None
     suppressed_rules: list[dict[str, Any]] = field(default_factory=list)
+    intent_status: str = "supported"
+    clarification_prompt: str | None = None
+    detected_intents: list[str] = field(default_factory=list)
 
     @property
     def agent_type(self) -> AgentType:
@@ -47,6 +67,9 @@ class RoutingResult:
             "routing_entropy": self.routing_entropy,
             "explanation": self.explanation,
             "suppressed_rules": self.suppressed_rules,
+            "intent_status": self.intent_status,
+            "clarification_prompt": self.clarification_prompt,
+            "detected_intents": self.detected_intents,
         }
 
     def __str__(self) -> str:
@@ -634,20 +657,6 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
             )
         )
 
-    DIRECTIVE_PREFIX_RE = re.compile(
-        r"^(system\s+directive|workstation\s+command|priority\s+action|task\s+request|autonomous\s+directive|developer\s+prompt|execute\s+immediately|assistant,\s+please|could\s+you|can\s+we|can\s+you|please|would\s+you\s+mind\s+helping\s+me\s+to|i\s+need\s+you\s+to|i\s+want\s+you\s+to|kindly|help\s+me)[,\s:!—\-\.]*",
-        re.IGNORECASE,
-    )
-    GREETING_PREFIX_RE = re.compile(
-        r"^(hey|hello|hi|good\s+(morning|afternoon|evening|day)|greetings|howdy|yo|sup)?(\s*copper)?[,\s:!—\-\.]*",
-        re.IGNORECASE,
-    )
-    PURE_SMALLTALK_RE = re.compile(
-        r"^(hi|hello|hey|greetings|howdy|sup|yo|good\s+(morning|afternoon|evening|day))(\s+copper)?[\.!\?]*$|"
-        r"^(how\s+are\s+you|who\s+are\s+you|what\s+can\s+you\s+do|nice\s+to\s+meet\s+you|thank\s+you|thanks|goodbye|talk\s+to\s+you\s+later)[\.!\?]*$",
-        re.IGNORECASE,
-    )
-
     stripped = DIRECTIVE_PREFIX_RE.sub("", msg_clean).strip()
     core_text = GREETING_PREFIX_RE.sub("", stripped).strip()
 
@@ -664,24 +673,25 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 cascade_risk=estimate_dag_cascade_risk(AgentType.CHAT, False),
                 sub_tasks=[],
                 routing_entropy=0.0,
+                intent_status="supported",
             )
         )
 
-    search_text = f"{msg_lower} {core_text.lower()}"
-
+    core_lower = core_text.lower()
     if consequential:
         scores[AgentType.GUARDIAN] += 12.0
         matched[AgentType.GUARDIAN].append("consequential_safety_override")
 
     for agent, rules in COMPILED_KEYWORD_RULES.items():
         for compiled_pat, weight, raw_pat in rules:
-            if compiled_pat.search(search_text):
+            m = compiled_pat.search(core_lower) or compiled_pat.search(msg_lower)
+            if m:
                 scores[agent] += weight
                 matched[agent].append(raw_pat)
 
     for agent, neg_rules in COMPILED_NEGATIVE_RULES.items():
         for compiled_pat, penalty in neg_rules:
-            m = compiled_pat.search(search_text)
+            m = compiled_pat.search(core_lower) or compiled_pat.search(msg_lower)
             if m:
                 scores[agent] = max(0.0, scores[agent] - penalty)
                 suppressed_rules.append(
@@ -698,8 +708,74 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
     best_score = scores[best_agent]
     total_score = sum(scores.values())
 
+    sorted_scores = sorted(scores.values(), reverse=True)
+    margin = sorted_scores[0] - sorted_scores[1] if len(sorted_scores) > 1 else sorted_scores[0]
     confidence = round(best_score / total_score, 3) if total_score > 0 else 0.0
     entropy = calculate_routing_entropy(scores)
+
+    # Decisive pattern match with sufficient score and margin
+    if best_score >= 2.0 and margin >= 1.0:
+        elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+        return _finalize_result(
+            RoutingResult(
+                agent=best_agent,
+                confidence=min(1.0, confidence),
+                latency_ms=round(elapsed_ms, 3),
+                route_stage="fast_pattern_scoring",
+                scores={k.value: round(v, 2) for k, v in scores.items()},
+                matched_keywords=matched[best_agent],
+                is_consequential=consequential,
+                cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
+                sub_tasks=sub_tasks,
+                routing_entropy=entropy,
+                intent_status="supported",
+            )
+        )
+
+    # Stage 1.5: GPU Semantic Classifier Escalation (Neural Embedding Intent Matching)
+    try:
+        from app.ai.orchestration.semantic_router import gpu_semantic_router
+        if gpu_semantic_router.is_available:
+            sem_class, sem_conf, sem_probs, is_ood = gpu_semantic_router.classify(msg_clean)
+            elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+
+            # Confident OOD rejection
+            if (is_ood or sem_class == "unsupported_ood") and sem_conf >= 0.55:
+                return _finalize_result(
+                    RoutingResult(
+                        agent=AgentType.CHAT,
+                        confidence=sem_conf,
+                        latency_ms=round(elapsed_ms, 3),
+                        route_stage="gpu_semantic_ood_abstention",
+                        scores=sem_probs,
+                        is_consequential=False,
+                        cascade_risk=0.0,
+                        sub_tasks=sub_tasks,
+                        routing_entropy=entropy,
+                        intent_status="unsupported_ood",
+                        clarification_prompt="This request targets an intent outside supported operational agents. Would you like me to handle it conversationally or clarify?",
+                    )
+                )
+
+            # Confident semantic escalation for supported operational agents
+            if sem_class in [a.value for a in AgentType] and sem_conf >= 0.55:
+                resolved_agent = AgentType(sem_class)
+                return _finalize_result(
+                    RoutingResult(
+                        agent=resolved_agent,
+                        confidence=sem_conf,
+                        latency_ms=round(elapsed_ms, 3),
+                        route_stage="gpu_semantic_escalation",
+                        scores=sem_probs,
+                        is_consequential=consequential,
+                        cascade_risk=estimate_dag_cascade_risk(resolved_agent, consequential, sub_tasks),
+                        sub_tasks=sub_tasks,
+                        routing_entropy=round(1.0 - sem_conf, 3),
+                        intent_status="supported",
+                    )
+                )
+    except Exception as sem_err:
+        logger.debug(f"GPU semantic escalation fallback: {sem_err}")
 
     if best_score >= 1.5:
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -715,6 +791,7 @@ async def route_message_detailed(message: str, use_llm: bool = False) -> Routing
                 cascade_risk=estimate_dag_cascade_risk(best_agent, consequential, sub_tasks),
                 sub_tasks=sub_tasks,
                 routing_entropy=entropy,
+                intent_status="supported",
             )
         )
 

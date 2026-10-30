@@ -186,7 +186,8 @@ papers/
 !papers/references.md
 
 # ── Unpublished Research & Academic Papers (Embargoed until publication) ──────
-research/
+research/*
+!research/experiments/
 
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md

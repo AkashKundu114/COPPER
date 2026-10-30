@@ -1,0 +1,25 @@
+{
+  "classes": [
+    "chat",
+    "coding",
+    "document",
+    "automation",
+    "reminder",
+    "research",
+    "vision",
+    "image",
+    "web_search",
+    "campaign_intelligence",
+    "planner",
+    "guardian",
+    "unsupported_ood"
+  ],
+  "vocab_size": 16333,
+  "hidden_dim": 256,
+  "num_classes": 13,
+  "test_accuracy": 0.9998,
+  "test_macro_f1": 0.909,
+  "test_weighted_f1": 0.9999,
+  "trained_at": "2026-10-30T20:26:40Z",
+  "device": "cuda"
+}

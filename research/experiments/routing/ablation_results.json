@@ -1,0 +1,1504 @@
+{
+  "Curated (1,390)": [
+    {
+      "config_id": "C1",
+      "config_name": "Regex Only",
+      "total_samples": 1390,
+      "correct": 1359,
+      "accuracy_pct": 97.77,
+      "macro_f1_pct": 98.93,
+      "weighted_f1_pct": 98.78,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 0.247,
+        "p50": 0.247,
+        "p95": 0.357,
+        "p99": 0.401
+      },
+      "throughput_qps": 4035.19,
+      "stages": {
+        "regex_pattern": 1270,
+        "regex_fallback_sink": 114,
+        "regex_smalltalk": 6
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "coding": {
+          "support": 160,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 100.0,
+          "recall": 82.39,
+          "f1": 90.34
+        },
+        "vision": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C2",
+      "config_name": "Cache Only",
+      "total_samples": 1390,
+      "correct": 120,
+      "accuracy_pct": 8.63,
+      "macro_f1_pct": 1.77,
+      "weighted_f1_pct": 1.37,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 0.005,
+        "p50": 0.005,
+        "p95": 0.006,
+        "p99": 0.007
+      },
+      "throughput_qps": 176047.42,
+      "stages": {
+        "cache_miss": 1390
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 120,
+          "precision": 8.63,
+          "recall": 100.0,
+          "f1": 15.89
+        },
+        "coding": {
+          "support": 160,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 120,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    {
+      "config_id": "C3",
+      "config_name": "Regex + Cache",
+      "total_samples": 1390,
+      "correct": 1359,
+      "accuracy_pct": 97.77,
+      "macro_f1_pct": 98.93,
+      "weighted_f1_pct": 98.78,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 0.25,
+        "p50": 0.251,
+        "p95": 0.353,
+        "p99": 0.416
+      },
+      "throughput_qps": 3976.69,
+      "stages": {
+        "c3_regex_pattern": 1270,
+        "c3_regex_fallback_sink": 114,
+        "c3_regex_smalltalk": 6
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "coding": {
+          "support": 160,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 100.0,
+          "recall": 82.39,
+          "f1": 90.34
+        },
+        "vision": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C4",
+      "config_name": "Semantic Neural (GPU)",
+      "total_samples": 1390,
+      "correct": 1390,
+      "accuracy_pct": 100.0,
+      "macro_f1_pct": 100.0,
+      "weighted_f1_pct": 100.0,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 1.124,
+        "p50": 0.926,
+        "p95": 1.272,
+        "p99": 1.392
+      },
+      "throughput_qps": 886.47,
+      "stages": {
+        "semantic_neural": 1390
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "coding": {
+          "support": 160,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "vision": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C5",
+      "config_name": "SLM Only",
+      "total_samples": 1390,
+      "correct": 1390,
+      "accuracy_pct": 100.0,
+      "macro_f1_pct": 100.0,
+      "weighted_f1_pct": 100.0,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 43.384,
+        "p50": 43.358,
+        "p95": 43.566,
+        "p99": 43.715
+      },
+      "throughput_qps": 1126.68,
+      "stages": {
+        "slm_classifier": 1390
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "coding": {
+          "support": 160,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "vision": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C6",
+      "config_name": "Full Cascade (Production)",
+      "total_samples": 1390,
+      "correct": 1357,
+      "accuracy_pct": 97.63,
+      "macro_f1_pct": 98.86,
+      "weighted_f1_pct": 98.7,
+      "ood_rejection_pct": 100.0,
+      "latency_ms": {
+        "mean": 0.479,
+        "p50": 0.406,
+        "p95": 1.148,
+        "p99": 1.371
+      },
+      "throughput_qps": 2074.88,
+      "stages": {
+        "fast_pattern_scoring": 1255,
+        "gpu_semantic_escalation": 129,
+        "fast_smalltalk_filter": 6
+      },
+      "per_class": {
+        "automation": {
+          "support": 170,
+          "precision": 100.0,
+          "recall": 98.82,
+          "f1": 99.41
+        },
+        "chat": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "coding": {
+          "support": 160,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 177,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 132,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 142,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 193,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 176,
+          "precision": 100.0,
+          "recall": 82.39,
+          "f1": 90.34
+        },
+        "vision": {
+          "support": 120,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    }
+  ],
+  "Scaled Test (12,204)": [
+    {
+      "config_id": "C1",
+      "config_name": "Regex Only",
+      "total_samples": 12204,
+      "correct": 6850,
+      "accuracy_pct": 56.13,
+      "macro_f1_pct": 63.36,
+      "weighted_f1_pct": 56.63,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.486,
+        "p50": 0.455,
+        "p95": 0.796,
+        "p99": 0.974
+      },
+      "throughput_qps": 2049.04,
+      "stages": {
+        "regex_pattern": 6725,
+        "regex_fallback_sink": 5479
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 93.29,
+          "recall": 70.21,
+          "f1": 80.12
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 19.45,
+          "recall": 95.26,
+          "f1": 32.3
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 85.8,
+          "recall": 71.55,
+          "f1": 78.03
+        },
+        "document": {
+          "support": 1095,
+          "precision": 100.0,
+          "recall": 56.26,
+          "f1": 72.0
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 100.0,
+          "recall": 83.57,
+          "f1": 91.05
+        },
+        "image": {
+          "support": 1067,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 69.53,
+          "recall": 51.74,
+          "f1": 59.33
+        },
+        "research": {
+          "support": 1041,
+          "precision": 71.15,
+          "recall": 55.43,
+          "f1": 62.31
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 100.0,
+          "recall": 41.27,
+          "f1": 58.43
+        }
+      }
+    },
+    {
+      "config_id": "C2",
+      "config_name": "Cache Only",
+      "total_samples": 12204,
+      "correct": 1139,
+      "accuracy_pct": 9.33,
+      "macro_f1_pct": 1.71,
+      "weighted_f1_pct": 1.59,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.007,
+        "p50": 0.007,
+        "p95": 0.01,
+        "p99": 0.013
+      },
+      "throughput_qps": 118083.49,
+      "stages": {
+        "cache_miss": 12204
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 9.33,
+          "recall": 100.0,
+          "f1": 17.07
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "document": {
+          "support": 1095,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "image": {
+          "support": 1067,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "research": {
+          "support": 1041,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    {
+      "config_id": "C3",
+      "config_name": "Regex + Cache",
+      "total_samples": 12204,
+      "correct": 6850,
+      "accuracy_pct": 56.13,
+      "macro_f1_pct": 63.36,
+      "weighted_f1_pct": 56.63,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.528,
+        "p50": 0.489,
+        "p95": 0.873,
+        "p99": 1.15
+      },
+      "throughput_qps": 1886.59,
+      "stages": {
+        "c3_regex_pattern": 6725,
+        "c3_regex_fallback_sink": 5479
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 93.29,
+          "recall": 70.21,
+          "f1": 80.12
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 19.45,
+          "recall": 95.26,
+          "f1": 32.3
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 85.8,
+          "recall": 71.55,
+          "f1": 78.03
+        },
+        "document": {
+          "support": 1095,
+          "precision": 100.0,
+          "recall": 56.26,
+          "f1": 72.0
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 100.0,
+          "recall": 83.57,
+          "f1": 91.05
+        },
+        "image": {
+          "support": 1067,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 69.53,
+          "recall": 51.74,
+          "f1": 59.33
+        },
+        "research": {
+          "support": 1041,
+          "precision": 71.15,
+          "recall": 55.43,
+          "f1": 62.31
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 100.0,
+          "recall": 41.27,
+          "f1": 58.43
+        }
+      }
+    },
+    {
+      "config_id": "C4",
+      "config_name": "Semantic Neural (GPU)",
+      "total_samples": 12204,
+      "correct": 12202,
+      "accuracy_pct": 99.98,
+      "macro_f1_pct": 99.99,
+      "weighted_f1_pct": 99.99,
+      "ood_rejection_pct": 99.92,
+      "latency_ms": {
+        "mean": 1.08,
+        "p50": 1.049,
+        "p95": 1.425,
+        "p99": 1.69
+      },
+      "throughput_qps": 922.27,
+      "stages": {
+        "semantic_neural": 9834,
+        "semantic_ood": 2370
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 99.91,
+          "recall": 100.0,
+          "f1": 99.96
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 1095,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 1067,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 1041,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 100.0,
+          "recall": 99.92,
+          "f1": 99.96
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C5",
+      "config_name": "SLM Only",
+      "total_samples": 12204,
+      "correct": 12202,
+      "accuracy_pct": 99.98,
+      "macro_f1_pct": 99.99,
+      "weighted_f1_pct": 99.99,
+      "ood_rejection_pct": 99.92,
+      "latency_ms": {
+        "mean": 43.444,
+        "p50": 43.386,
+        "p95": 43.777,
+        "p99": 43.925
+      },
+      "throughput_qps": 1054.8,
+      "stages": {
+        "slm_classifier": 9834,
+        "slm_ood": 2370
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 99.91,
+          "recall": 100.0,
+          "f1": 99.96
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 1095,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 1067,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 1041,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 100.0,
+          "recall": 99.92,
+          "f1": 99.96
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C6",
+      "config_name": "Full Cascade (Production)",
+      "total_samples": 12204,
+      "correct": 11345,
+      "accuracy_pct": 92.96,
+      "macro_f1_pct": 94.02,
+      "weighted_f1_pct": 93.79,
+      "ood_rejection_pct": 83.73,
+      "latency_ms": {
+        "mean": 1.245,
+        "p50": 1.085,
+        "p95": 2.411,
+        "p99": 2.847
+      },
+      "throughput_qps": 800.09,
+      "stages": {
+        "fast_pattern_scoring": 6764,
+        "gpu_semantic_ood_abstention": 1986,
+        "gpu_semantic_escalation": 3449,
+        "default_conversational_fallback": 5
+      },
+      "per_class": {
+        "automation": {
+          "support": 1128,
+          "precision": 95.1,
+          "recall": 96.45,
+          "f1": 95.77
+        },
+        "chat": {
+          "support": 1139,
+          "precision": 99.54,
+          "recall": 95.26,
+          "f1": 97.35
+        },
+        "coding": {
+          "support": 1030,
+          "precision": 88.84,
+          "recall": 93.5,
+          "f1": 91.11
+        },
+        "document": {
+          "support": 1095,
+          "precision": 100.0,
+          "recall": 92.69,
+          "f1": 96.21
+        },
+        "guardian": {
+          "support": 1150,
+          "precision": 99.83,
+          "recall": 100.0,
+          "f1": 99.91
+        },
+        "image": {
+          "support": 1067,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 1094,
+          "precision": 80.48,
+          "recall": 91.96,
+          "f1": 85.84
+        },
+        "research": {
+          "support": 1041,
+          "precision": 81.28,
+          "recall": 97.6,
+          "f1": 88.69
+        },
+        "unsupported_ood": {
+          "support": 2372,
+          "precision": 100.0,
+          "recall": 83.73,
+          "f1": 91.14
+        },
+        "vision": {
+          "support": 1088,
+          "precision": 100.0,
+          "recall": 89.06,
+          "f1": 94.21
+        }
+      }
+    }
+  ],
+  "Adversarial Perturbations": [
+    {
+      "config_id": "C1",
+      "config_name": "Regex Only",
+      "total_samples": 84,
+      "correct": 62,
+      "accuracy_pct": 73.81,
+      "macro_f1_pct": 75.56,
+      "weighted_f1_pct": 69.27,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.35,
+        "p50": 0.341,
+        "p95": 0.421,
+        "p99": 0.45
+      },
+      "throughput_qps": 2848.36,
+      "stages": {
+        "regex_pattern": 55,
+        "regex_fallback_sink": 29
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 24.14,
+          "recall": 100.0,
+          "f1": 38.89
+        },
+        "coding": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 85.71,
+          "f1": 92.31
+        },
+        "document": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C2",
+      "config_name": "Cache Only",
+      "total_samples": 84,
+      "correct": 7,
+      "accuracy_pct": 8.33,
+      "macro_f1_pct": 1.4,
+      "weighted_f1_pct": 1.28,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.006,
+        "p50": 0.006,
+        "p95": 0.007,
+        "p99": 0.015
+      },
+      "throughput_qps": 157038.7,
+      "stages": {
+        "cache_miss": 84
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 8.33,
+          "recall": 100.0,
+          "f1": 15.38
+        },
+        "coding": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "document": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "research": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    {
+      "config_id": "C3",
+      "config_name": "Regex + Cache",
+      "total_samples": 84,
+      "correct": 62,
+      "accuracy_pct": 73.81,
+      "macro_f1_pct": 75.56,
+      "weighted_f1_pct": 69.27,
+      "ood_rejection_pct": 0.0,
+      "latency_ms": {
+        "mean": 0.357,
+        "p50": 0.356,
+        "p95": 0.437,
+        "p99": 0.466
+      },
+      "throughput_qps": 2796.79,
+      "stages": {
+        "c3_regex_pattern": 55,
+        "c3_regex_fallback_sink": 29
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 24.14,
+          "recall": 100.0,
+          "f1": 38.89
+        },
+        "coding": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 85.71,
+          "f1": 92.31
+        },
+        "document": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "vision": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C4",
+      "config_name": "Semantic Neural (GPU)",
+      "total_samples": 84,
+      "correct": 65,
+      "accuracy_pct": 77.38,
+      "macro_f1_pct": 73.71,
+      "weighted_f1_pct": 72.49,
+      "ood_rejection_pct": 92.86,
+      "latency_ms": {
+        "mean": 0.875,
+        "p50": 0.864,
+        "p95": 0.967,
+        "p99": 1.401
+      },
+      "throughput_qps": 1137.81,
+      "stages": {
+        "semantic_neural": 54,
+        "semantic_ood": 30
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1": 93.33
+        },
+        "coding": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 85.71,
+          "f1": 92.31
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1": 93.33
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 57.14,
+          "f1": 72.73
+        },
+        "research": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 43.33,
+          "recall": 92.86,
+          "f1": 59.09
+        },
+        "vision": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C5",
+      "config_name": "SLM Only",
+      "total_samples": 84,
+      "correct": 65,
+      "accuracy_pct": 77.38,
+      "macro_f1_pct": 73.71,
+      "weighted_f1_pct": 72.49,
+      "ood_rejection_pct": 92.86,
+      "latency_ms": {
+        "mean": 43.364,
+        "p50": 43.357,
+        "p95": 43.43,
+        "p99": 43.556
+      },
+      "throughput_qps": 1152.83,
+      "stages": {
+        "slm_classifier": 54,
+        "slm_ood": 30
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1": 93.33
+        },
+        "coding": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 85.71,
+          "f1": 92.31
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1": 93.33
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 57.14,
+          "f1": 72.73
+        },
+        "research": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 43.33,
+          "recall": 92.86,
+          "f1": 59.09
+        },
+        "vision": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    },
+    {
+      "config_id": "C6",
+      "config_name": "Full Cascade (Production)",
+      "total_samples": 84,
+      "correct": 75,
+      "accuracy_pct": 89.29,
+      "macro_f1_pct": 87.29,
+      "weighted_f1_pct": 86.08,
+      "ood_rejection_pct": 85.71,
+      "latency_ms": {
+        "mean": 0.778,
+        "p50": 0.498,
+        "p95": 1.478,
+        "p99": 1.887
+      },
+      "throughput_qps": 1280.61,
+      "stages": {
+        "fast_pattern_scoring": 55,
+        "gpu_semantic_escalation": 8,
+        "gpu_semantic_ood_abstention": 19,
+        "default_conversational_fallback": 2
+      },
+      "per_class": {
+        "automation": {
+          "support": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "chat": {
+          "support": 7,
+          "precision": 77.78,
+          "recall": 100.0,
+          "f1": 87.5
+        },
+        "coding": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "document": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "guardian": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "image": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "planner": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "reminder": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "research": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        },
+        "unsupported_ood": {
+          "support": 14,
+          "precision": 63.16,
+          "recall": 85.71,
+          "f1": 72.73
+        },
+        "vision": {
+          "support": 7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1": 100.0
+        }
+      }
+    }
+  ]
+}
