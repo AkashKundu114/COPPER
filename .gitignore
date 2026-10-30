@@ -187,6 +187,10 @@ papers/
 
 # ── Unpublished Research & Academic Papers (Embargoed until publication) ──────
 research/*
+!research/README.md
+!research/MEMORYQUARANTINE_METADATA.txt
+!research/ARXIV_SUBMISSION_GUIDE_MEMORYQUARANTINE.md
+!research/validate_memoryquarantine_paper.py
 !research/experiments/
 !research/generate_all_academic_figures.py
 !research/generate_memoryquarantine_academic_figures.py
@@ -203,6 +207,10 @@ research/figures/*
 !research/REVIEWER_OBJECTION_REGISTER.md
 !research/REPRODUCIBILITY.md
 !research/LIMITATIONS.md
+!research/00_initial_inventory.md
+!research/01_claim_evidence_register.csv
+!research/02_related_work_and_novelty.md
+!research/03_study_protocol.md
 
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md
