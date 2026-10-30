@@ -15,7 +15,13 @@ from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.orchestration.context_bus import context_bus
 from app.ai.orchestration.planner import PlanResult, SubTask
-from app.ai.orchestration.wal_executor import RecordType, TaskWAL, crash_recovery_engine
+from app.ai.orchestration.wal_executor import (
+    RecordType,
+    TaskWAL,
+    crash_recovery_engine,
+    current_task_id,
+    current_wal,
+)
 from app.core.forge_sandbox import forge_sandbox
 from app.core.logger import logger
 
@@ -239,6 +245,8 @@ class TaskGraphExecutor:
                 )
 
                 agent_inst = self._resolve_agent(sub_task.agent)
+                wal_tok = current_wal.set(wal)
+                task_tok = current_task_id.set(sub_task.id)
                 try:
                     logger.info(f"NEXUS DAG [{dag_id}] executing sub-task {sub_task.id} with agent {sub_task.agent}")
 
@@ -327,6 +335,9 @@ class TaskGraphExecutor:
                         payload={"task_id": sub_task.id, "status": "failed", "error": str(e)},
                         session_id=session_id,
                     )
+                finally:
+                    current_wal.reset(wal_tok)
+                    current_task_id.reset(task_tok)
 
                 step_end_payload = {
                     "dag_id": dag_id,

@@ -176,7 +176,8 @@ class VRAMPager:
 
     async def _unload_ollama_model(self, model_name: str) -> None:
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
+            timeout = httpx.Timeout(1.0, connect=0.25)
+            async with httpx.AsyncClient(timeout=timeout) as client:
                 await client.post(
                     f"{self._base_url}/api/chat",
                     json={"model": model_name, "keep_alive": 0},

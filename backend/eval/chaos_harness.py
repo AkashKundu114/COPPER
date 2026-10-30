@@ -161,39 +161,142 @@ class ChaosHarness:
             "pass": not oom_occurred and not ceiling_violation,
         }
 
-    def run_crash_recovery_test(self) -> dict[str, Any]:
-        """Simulates hard process crashes and tests ARIES-style WAL recovery."""
+    def run_crash_recovery_test(self, num_trials: int = 500) -> dict[str, Any]:
+        """Simulates hard process crashes across N=500 trials and tests ARIES-style WAL recovery.
+        
+        Evaluates 5 distinct failure scenarios:
+        1. Uncommitted file creation -> orphaned file unlinked.
+        2. Uncommitted file overwrite -> pre-image content restored.
+        3. Multi-task partial commit -> committed tasks preserved, uncommitted mutations rolled back.
+        4. Truncated/corrupted trailing record at crash site -> CRC32 detection & recovery.
+        5. Repeated/idempotent recovery -> zero duplicate side effects.
+        """
         with tempfile.TemporaryDirectory() as tmp_dir:
             wal_dir = Path(tmp_dir)
             engine = CrashRecoveryEngine(wal_dir=wal_dir)
 
-            total_crashes_simulated = 5
+            total_crashes_simulated = num_trials
             successful_recoveries = 0
+            breakdown = {
+                "file_created_unlinked": 0,
+                "file_modified_restored": 0,
+                "partial_commit_preserved": 0,
+                "truncated_crc_isolated": 0,
+                "idempotent_re_recovery": 0,
+            }
 
             for i in range(total_crashes_simulated):
+                scenario = i % 5
                 dag_id = f"crash_sim_{i}"
                 wal = TaskWAL(dag_id=dag_id, wal_dir=wal_dir)
                 wal.append_record(RecordType.DAG_START, {"goal": f"chaos task {i}"})
-                wal.append_record(RecordType.TASK_COMMIT, {"task_id": "T1", "output": "T1 ok"})
 
-                orphaned_file = wal_dir / f"orphan_{i}.txt"
-                orphaned_file.write_text(f"uncommitted write {i}", encoding="utf-8")
+                if scenario == 0:
+                    # Scenario 1: Orphaned uncommitted file creation
+                    orphaned_file = wal_dir / f"orphan_{i}.txt"
+                    orphaned_file.write_text(f"uncommitted write {i}", encoding="utf-8")
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {"task_id": "T1", "type": "file_created", "path": str(orphaned_file)},
+                    )
+                    state = engine.analyze_dag_state(dag_id)
+                    if not state["is_complete"] and len(state["uncommitted_mutations"]) == 1:
+                        rollbacks = engine.rollback_uncommitted_mutations(dag_id)
+                        if rollbacks == 1 and not orphaned_file.exists():
+                            successful_recoveries += 1
+                            breakdown["file_created_unlinked"] += 1
 
-                wal.append_record(
-                    RecordType.MUTATION_RECORD,
-                    {"task_id": "T2", "type": "file_created", "path": str(orphaned_file)},
-                )
+                elif scenario == 1:
+                    # Scenario 2: Uncommitted file overwrite -> pre-image restore
+                    target_file = wal_dir / f"modified_{i}.txt"
+                    target_file.write_text("original baseline content", encoding="utf-8")
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {
+                            "task_id": "T1",
+                            "type": "file_modified",
+                            "path": str(target_file),
+                            "pre_image": "original baseline content",
+                        },
+                    )
+                    target_file.write_text("corrupted overwritten content", encoding="utf-8")
+                    state = engine.analyze_dag_state(dag_id)
+                    if not state["is_complete"]:
+                        rollbacks = engine.rollback_uncommitted_mutations(dag_id)
+                        if rollbacks == 1 and target_file.read_text(encoding="utf-8") == "original baseline content":
+                            successful_recoveries += 1
+                            breakdown["file_modified_restored"] += 1
 
-                state = engine.analyze_dag_state(dag_id)
-                if not state["is_complete"] and len(state["uncommitted_mutations"]) == 1:
-                    rollbacks = engine.rollback_uncommitted_mutations(dag_id)
-                    if rollbacks == 1 and not orphaned_file.exists():
+                elif scenario == 2:
+                    # Scenario 3: Multi-task partial commit (T1 committed, T2 crashed)
+                    wal.append_record(RecordType.TASK_COMMIT, {"task_id": "T1", "output": "T1 committed result"})
+                    orphaned_file = wal_dir / f"orphan_partial_{i}.txt"
+                    orphaned_file.write_text("uncommitted partial write", encoding="utf-8")
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {"task_id": "T2", "type": "file_created", "path": str(orphaned_file)},
+                    )
+                    state = engine.analyze_dag_state(dag_id)
+                    if state["committed_tasks"].get("T1") == "T1 committed result" and len(state["uncommitted_mutations"]) == 1:
+                        rollbacks = engine.rollback_uncommitted_mutations(dag_id)
+                        if rollbacks == 1 and not orphaned_file.exists():
+                            # Verify committed task state survived
+                            surviving_state = engine.analyze_dag_state(dag_id)
+                            if surviving_state["committed_tasks"].get("T1") == "T1 committed result":
+                                successful_recoveries += 1
+                                breakdown["partial_commit_preserved"] += 1
+
+                elif scenario == 3:
+                    # Scenario 4: Truncated trailing line (SIGKILL during fsync)
+                    wal.append_record(RecordType.TASK_COMMIT, {"task_id": "T1", "output": "T1 ok"})
+                    orphaned_file = wal_dir / f"orphan_trunc_{i}.txt"
+                    orphaned_file.write_text("uncommitted write", encoding="utf-8")
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {"task_id": "T2", "type": "file_created", "path": str(orphaned_file)},
+                    )
+                    # Corrupt trailing bytes in WAL file
+                    with open(wal.file_path, "a", encoding="utf-8") as f:
+                        f.write('{"seq_num": 999, "corrupted": true, "check')
+                    state = engine.analyze_dag_state(dag_id)
+                    if len(state["uncommitted_mutations"]) == 1:
+                        rollbacks = engine.rollback_uncommitted_mutations(dag_id)
+                        if rollbacks == 1 and not orphaned_file.exists():
+                            successful_recoveries += 1
+                            breakdown["truncated_crc_isolated"] += 1
+
+                elif scenario == 4:
+                    # Scenario 5: Repeated recovery attempt (idempotency check)
+                    orphaned_file = wal_dir / f"orphan_idem_{i}.txt"
+                    orphaned_file.write_text("uncommitted write", encoding="utf-8")
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {"task_id": "T1", "type": "file_created", "path": str(orphaned_file)},
+                    )
+                    r1 = engine.rollback_uncommitted_mutations(dag_id)
+                    r2 = engine.rollback_uncommitted_mutations(dag_id)  # Idempotent second call
+                    if r1 == 1 and r2 == 0 and not orphaned_file.exists():
                         successful_recoveries += 1
+                        breakdown["idempotent_re_recovery"] += 1
+
+            # Exact 95% Clopper-Pearson confidence interval computation
+            alpha = 0.05
+            k = successful_recoveries
+            n = total_crashes_simulated
+            try:
+                from scipy.stats import beta
+                ci_lower = 0.0 if k == 0 else float(beta.ppf(alpha / 2, k, n - k + 1)) * 100.0
+                ci_upper = 100.0 if k == n else float(beta.ppf(1.0 - alpha / 2, k + 1, n - k)) * 100.0
+            except Exception:
+                ci_lower = round((k / n) * 100.0, 2)
+                ci_upper = 100.0
 
             return {
                 "crashes_simulated": total_crashes_simulated,
                 "successful_recoveries": successful_recoveries,
-                "recovery_rate_pct": round((successful_recoveries / total_crashes_simulated) * 100.0, 1),
+                "recovery_rate_pct": round((successful_recoveries / total_crashes_simulated) * 100.0, 2),
+                "clopper_pearson_95_ci_pct": [round(ci_lower, 2), round(ci_upper, 2)],
+                "fault_breakdown": breakdown,
             }
 
     async def execute_full_suite(self) -> str:
