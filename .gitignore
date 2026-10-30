@@ -188,6 +188,7 @@ papers/
 # ── Unpublished Research & Academic Papers (Embargoed until publication) ──────
 research/*
 !research/experiments/
+!research/generate_all_academic_figures.py
 
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md

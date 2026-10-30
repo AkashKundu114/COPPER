@@ -1,7 +1,7 @@
 # C.O.P.P.E.R.
 
 **Centralized Omnifunctional Personal Productivity and Execution Routine**  
-*An independent, 100% offline, local-first personal AI operating system featuring 12 active specialized agents (plus 5 architectural roadmap targets), 8 hardware model pools, epistemic decaying memory, multi-tier Guardian safety, and zero cloud egress.*
+*An independent, 100% offline, local-first personal AI agent runtime environment featuring 12 active specialized agents (plus 18 task personas), 8 hardware model pools, epistemic decaying memory, multi-tier Guardian safety, and zero cloud egress.*
 
 [![Version: 0.1.0-alpha](https://img.shields.io/badge/Version-0.1.0--alpha-blue.svg)](pyproject.toml)
 [![License: Source-Available Evaluation](https://img.shields.io/badge/License-Source--Available%20Evaluation-orange.svg)](LICENSE)
@@ -36,7 +36,9 @@
 
 ## Overview & Project Independence
 
-**C.O.P.P.E.R.** is an **independent, local-first personal AI operating system** created, architected, and engineered solely by **Akash Kundu**. 
+**C.O.P.P.E.R.** is an **independent, local-first personal AI agent runtime environment** created, architected, and engineered solely by **Akash Kundu**. 
+
+> **Architectural Note (Runtime vs Kernel):** C.O.P.P.E.R. operates as a user-space agent runtime environment and cognitive orchestrator (FastAPI backend + Electron desktop interface). It does not replace the host operating system kernel, but manages local LLM processes, task graphs, persistent epistemic memory, and tool permissions on Windows and Linux workstations. 
 
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **12 specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
