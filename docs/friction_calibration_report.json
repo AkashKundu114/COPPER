@@ -1,8 +1,8 @@
 {
   "calibration_metadata": {
-    "calibration_date": "2026-10-29",
+    "calibration_date": "2026-10-30",
     "calibration_method": "grid_search_f1_optimized",
-    "dataset_source": "tests/data/adversarial_guardian_350.json",
+    "dataset_source": "D:/C.O.P.P.E.R/tests/data/adversarial_guardian_350.json",
     "total_samples": 350,
     "threat_samples": 230,
     "benign_samples": 120,
@@ -14,7 +14,7 @@
     "goal_conflict_weight": 2.2,
     "bias": 3.5,
     "calibration_method": "grid_search_f1_optimized",
-    "calibration_date": "2026-10-29"
+    "calibration_date": "2026-10-30"
   },
   "performance_metrics": {
     "sensitivity_pct": 100.0,
