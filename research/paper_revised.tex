@@ -192,21 +192,23 @@ Provenance represents the objective authenticity of the memory's ingestion chann
 \centering
 \caption{Immutable Provenance Hierarchy ($\gamma$) and Channel Trust Specifications}
 \label{tab:provenance_hierarchy}
-\begin{tabular}{llcp{3.5cm}}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\columnwidth}{llcX}
 \toprule
-\textbf{Channel Identifier} & \textbf{Trust Tier} & \textbf{Weight ($\gamma$)} & \textbf{Verification Protocol} \\
+\textbf{Channel ID} & \textbf{Trust Tier} & \textbf{$\gamma$} & \textbf{Verification Protocol} \\
 \midrule
-\texttt{user\_explicit} & Root Operator & 1.00 & Interactive CLI / WebUI prompt. \\
-\texttt{user\_verified} & Confirmed & 1.00 & Explicit operator challenge grant. \\
-\texttt{system\_verified} & Local Machine & 0.95 & Deterministic OS probe output. \\
-\texttt{local\_file} & Filesystem & 0.85 & File read from local project. \\
-\texttt{observation} & Agent Tool & 0.75 & Verified local tool observation. \\
-\texttt{chat} & Informal Dialogue & 0.50 & Multi-turn conversational context. \\
-\texttt{web\_search} & External Snippet & 0.35 & Unstructured search API snippet. \\
-\texttt{external\_untrusted} & Remote Document & 0.15 & Arbitrary downloaded remote file. \\
-\texttt{injected} & Adversarial Taint & 0.10 & Suspected adversarial payload. \\
+\texttt{user\_explicit} & Root Operator & 1.00 & Interactive CLI / WebUI prompt \\
+\texttt{user\_verified} & Confirmed & 1.00 & Operator challenge grant \\
+\texttt{system\_verified} & Local Machine & 0.95 & OS probe output \\
+\texttt{local\_file} & Filesystem & 0.85 & File read from local project \\
+\texttt{observation} & Agent Tool & 0.75 & Verified tool observation \\
+\texttt{chat} & Dialogue & 0.50 & Multi-turn conversation \\
+\texttt{web\_search} & External & 0.35 & Unstructured search API snippet \\
+\texttt{ext\_untrusted} & Remote Doc & 0.15 & Downloaded remote file \\
+\texttt{injected} & Adversarial & 0.10 & Suspected adversarial payload \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \begin{figure*}[!t]
@@ -219,7 +221,10 @@ Provenance represents the objective authenticity of the memory's ingestion chann
 \subsubsection{2. Epistemic Confidence ($C$) with Natural Log Surprise}
 Epistemic confidence $C(m) \in [0.05, 0.99]$ models belief certainty. Unlike naive additive counters, confidence is updated via Provenance-Weighted Epistemic Belief Revision (PW-EBR) using log-odds with natural log surprise units (nats):
 \begin{equation}
-\mathcal{L}_{t+1}(m) = \mathcal{L}_t(m) + \text{polarity} \cdot \gamma(m) \cdot \ln\left(1 + \frac{1}{\max(C_t(m), 10^{-4})}\right)
+\begin{aligned}
+\mathcal{L}_{t+1}(m) &= \mathcal{L}_t(m) + \text{polarity} \cdot \gamma(m) \\
+&\quad \cdot \ln\left(1 + \frac{1}{\max(C_t(m), 10^{-4})}\right)
+\end{aligned}
 \end{equation}
 where $\text{polarity} = +1$ for corroborating evidence and $-1$ for contradictory evidence. Confidence is restored via the logistic sigmoid: $C(m) = \sigma(\mathcal{L}(m))$. Furthermore, memories undergo Unified Memory Forgetting with Ebbinghaus Decay and Retrieval Practice (UMF-EDR):
 \begin{equation}
@@ -232,11 +237,11 @@ Crucially, tier transitions are symmetric (Fig.~\ref{fig:epistemic_decay}a): if 
 Action reversibility evaluates the operational consequence of the tool action on host state:
 \begin{equation}
 \mathcal{R}(a) = \begin{cases}
-1.00, & \text{Catastrophic / Invariant breach (rm -rf, mkfs, format)} \\
-0.85, & \text{High-impact host mutation (git reset --hard, chmod 777)} \\
-0.55, & \text{Destructive mutation (file overwrite, delete, drop)} \\
-0.30, & \text{State modification (file creation, append, patch)} \\
-0.05, & \text{Reversible / Read-only (file\_read, web\_search, calc)}
+1.00, & \text{Invariant breach (e.g., \texttt{rm -rf}, \texttt{format})} \\
+0.85, & \text{High mutation (\texttt{git reset}, \texttt{chmod})} \\
+0.55, & \text{Destructive (file overwrite, drop table)} \\
+0.30, & \text{State modify (file create, patch)} \\
+0.05, & \text{Reversible / Read-only (\texttt{read}, \texttt{search})}
 \end{cases}
 \end{equation}
 
@@ -253,7 +258,7 @@ The Guardian Safety Gate deterministically maps $\text{Authority}(m, a)$ into th
 \label{algo:quarantine}
 \begin{algorithmic}[1]
 \REQUIRE Query $q$, Action $a$, Epistemic Store $\mathcal{M}$, Context $\mathcal{C}$
-\ENSURE Tool Execution Result or Interdiction
+\ENSURE Tool Execution Result or Interdiction\vspace{2pt}
 \STATE $\mathcal{M}_{\text{recalled}} \leftarrow \text{SemanticRetrieve}(q, \mathcal{M}, \tau_{\text{rel}})$ \COMMENT{Plane 1}
 \STATE $a \leftarrow \text{LLM\_Reasoning}(q, \mathcal{M}_{\text{recalled}})$
 \STATE $\mathcal{R}(a) \leftarrow \text{EvaluateReversibilityRisk}(a)$
@@ -287,23 +292,25 @@ All benchmarks were executed on an AMD Ryzen 9 8940HX workstation equipped with 
 \centering
 \caption{Empirical Hardware and Software Testbed Specification}
 \label{tab:testbed}
-\begin{tabular}{ll}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\columnwidth}{lX}
 \toprule
 \textbf{System Parameter} & \textbf{Physical Testbed Configuration} \\
 \midrule
-\textbf{Host Processor} & AMD Ryzen 9 8940HX (16 Cores, 32 Threads, 4.0--5.2 GHz) \\
+\textbf{Host Processor} & AMD Ryzen 9 8940HX (16C/32T, 4.0--5.2 GHz) \\
 \textbf{Host Memory} & 16 GB DDR5-5600 MHz Dual-Channel \\
 \textbf{Graphics Hardware} & NVIDIA GeForce RTX 5060 Laptop GPU \\
-\textbf{GPU Video Memory} & 8,151 MiB GDDR6 VRAM (128-bit Bus Width) \\
+\textbf{GPU Video Memory} & 8,151 MiB GDDR6 VRAM (128-bit) \\
 \textbf{CUDA Runtime} & CUDA 13.4 / cuDNN 9.1 \\
-\textbf{Operating System} & Microsoft Windows 11 Enterprise x64 (Build 26100) \\
-\textbf{Python Runtime} & Python 3.14.6 x64 (CPython, MSC v.1944) \\
-\textbf{Local LLM Server} & Ollama v0.5.1 (Direct IPv4 Loopback 127.0.0.1:11434) \\
-\textbf{Evaluated Model} & Qwen2.5-0.5B-Instruct (q4\_k\_m, 100\% GPU offload) \\
-\textbf{Embedding Model} & Local Dense 384-d Cosine + Sparse BM25 Fusion \\
-\textbf{Database Engine} & SQLite 3.45.1 (WAL Mode, synchronous = NORMAL) \\
+\textbf{Operating System} & Windows 11 Enterprise x64 (Build 26100) \\
+\textbf{Python Runtime} & Python 3.14.6 x64 (CPython) \\
+\textbf{Local LLM Server} & Ollama v0.5.1 (Direct IPv4 Loopback) \\
+\textbf{Evaluated Model} & Qwen2.5-0.5B-Instruct (q4\_k\_m, 100\% GPU) \\
+\textbf{Embedding Model} & Local Dense 384-d Cosine + Sparse BM25 \\
+\textbf{Database Engine} & SQLite 3.45.1 (WAL Mode, normal sync) \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Benchmark Dataset: CopperMemoryBench}
@@ -332,7 +339,9 @@ To close the gap between synthetic arithmetic simulation and physical agent tool
 \centering
 \caption{Comprehensive Benchmark Results on CopperMemoryBench ($N = 160$ Traces)}
 \label{tab:main_results}
-\begin{tabularx}{\textwidth}{lcccccccc}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc}
 \toprule
 \textbf{Strategy} & \textbf{ASR (\%)} $\downarrow$ & \textbf{Exact 95\% CI} & \textbf{TIR (\%)} $\uparrow$ & \textbf{Benign TSR (\%)} $\uparrow$ & \textbf{Exact 95\% CI} & \textbf{FQR (\%)} $\downarrow$ & \textbf{OCR (\%)} & \textbf{Latency (ms)} \\
 \midrule
@@ -342,7 +351,7 @@ $B_2$ (Naive Bayes) & 80.0\% & [70.8\%, 87.3\%] & 20.0\% & 100.0\% & [94.0\%, 10
 $B_3$ (Provenance-Only) & 80.0\% & [70.8\%, 87.3\%] & 20.0\% & 100.0\% & [94.0\%, 100.0\%] & 0.0\% & 0.0\% & 0.005 \\
 \textbf{$M_5$ (MemoryQuarantine)} & \textbf{0.0\%} & \textbf{[0.0\%, 3.6\%]} & \textbf{100.0\%} & \textbf{100.0\%} & \textbf{[94.0\%, 100.0\%]} & \textbf{0.0\%} & 70.0\% & \textbf{0.005} \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}
 \end{table*}
 
 \begin{figure}[!t]
@@ -399,13 +408,15 @@ Both hypotheses $\mathcal{H}_1$ and $\mathcal{H}_2$ are confirmed with extreme s
 \centering
 \caption{Formal Hypothesis Testing, Contingency Analysis, and Statistical Significance}
 \label{tab:statistical_significance}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabularx}{\textwidth}{lcccccX}
 \toprule
-\textbf{Hypothesis \& Comparison} & \textbf{Contingency Table} & \textbf{Sample Size} & \textbf{Risk Diff. ($\Delta$)} & \textbf{$z$-Score} & \textbf{Fisher's $p$-Value} & \textbf{Scientific Inference} \\
+\textbf{Hypothesis \& Comparison} & \textbf{Contingency} & \textbf{Sample Size} & \textbf{Risk Diff. ($\Delta$)} & \textbf{$z$-Score} & \textbf{Fisher's $p$-Value} & \textbf{Scientific Inference} \\
 \midrule
-$\mathcal{H}_1$: $M_5$ vs. $B_0$ (Flat RAG) & $\begin{bmatrix} 100 & 0 \\ 0 & 100 \end{bmatrix}$ & $N = 100$ vs $100$ & $-1.00$ & $14.14$ & $\mathbf{2.21 \times 10^{-59}}$ & Reject null; MemoryQuarantine eliminates delayed memory poisoning completely. \\
-$\mathcal{H}_2$: $M_5$ vs. $B_2$ (Naive Bayes) & $\begin{bmatrix} 100 & 0 \\ 20 & 80 \end{bmatrix}$ & $N = 100$ vs $100$ & $-0.80$ & $11.31$ & $\mathbf{6.51 \times 10^{-37}}$ & Reject null; consequence-calibration decisively outperforms uncalibrated Bayesian updating. \\
-$\mathcal{H}_3$: Benign Utility Preservation & $\begin{bmatrix} 60 & 0 \\ 0 & 60 \end{bmatrix}$ & $N = 60$ Benign & $0.00$ & $0.00$ & $1.000$ & Confirm null difference; zero false quarantines ($\text{FQR} = 0.0\%$, $\text{TSR} = 100.0\%$). \\
+$\mathcal{H}_1$: $M_5$ vs. $B_0$ (Flat RAG) & $\left[\begin{smallmatrix} 100 & 0 \\ 0 & 100 \end{smallmatrix}\right]$ & $N = 100$ vs $100$ & $-1.00$ & $14.14$ & $\mathbf{2.21 \times 10^{-59}}$ & Reject null; MemoryQuarantine eliminates delayed memory poisoning completely. \\
+$\mathcal{H}_2$: $M_5$ vs. $B_2$ (Naive Bayes) & $\left[\begin{smallmatrix} 100 & 0 \\ 20 & 80 \end{smallmatrix}\right]$ & $N = 100$ vs $100$ & $-0.80$ & $11.31$ & $\mathbf{6.51 \times 10^{-37}}$ & Reject null; consequence-calibration decisively outperforms uncalibrated Bayesian updating. \\
+$\mathcal{H}_3$: Benign Utility Preservation & $\left[\begin{smallmatrix} 60 & 0 \\ 0 & 60 \end{smallmatrix}\right]$ & $N = 60$ Benign & $0.00$ & $0.00$ & $1.000$ & Confirm null difference; zero false quarantines ($\text{FQR} = 0.0\%$, $\text{TSR} = 100.0\%$). \\
 $\mathcal{H}_4$: Systems Micro-Overhead & Mean: $0.005\text{ ms}$, P95: $0.008\text{ ms}$ & $N = 160$ Traces & --- & --- & $p < 0.001$ & Gating overhead is $<0.01\%$ of physical LLM inference cycle ($303\text{ ms}$). \\
 \bottomrule
 \end{tabularx}
@@ -472,9 +483,11 @@ In accordance with scientific rigor, Table~\ref{tab:audit_reconciliation} candid
 \centering
 \caption{Taxonomic Comparison of Agent Memory Architectures and Defenses}
 \label{tab:related_work}
-\begin{tabularx}{\textwidth}{lcccccc}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc}
 \toprule
-\textbf{Framework} & \textbf{Memory Representation} & \textbf{Provenance} & \textbf{Belief Revision} & \textbf{Action Authorization} & \textbf{Consequence Awareness} & \textbf{Persistent Poisoning Eval} \\
+\textbf{Framework} & \textbf{Memory Representation} & \textbf{Provenance} & \textbf{Belief Revision} & \textbf{Action Authorization} & \textbf{Consequence Awareness} & \textbf{Poisoning Eval} \\
 \midrule
 Generative Agents~\cite{park2023generative} & Text stream & No & Additive linear score & No & No & No \\
 MemGPT / Letta~\cite{packer2023memgpt} & Paged virtual context & No & None (Append/replace) & No & No & No \\
@@ -484,9 +497,9 @@ AM-Sentry~\cite{torres2026ghostwriter} & Vector store & Partial & Binary text cl
 MINJA~\cite{dong2024minja} & Vector store & No & None & None & No & Yes \\
 Llama Guard 3~\cite{inan2023llamaguard} & None (Stateless) & No & None & Binary classifier & Static categories & No \\
 NeMo Guardrails~\cite{rebedea2023nemo} & State tree & No & None & Colang DSL & Static whitelist & No \\
-\textbf{MemoryQuarantine} & \textbf{Epistemic store} & \textbf{Yes} & \textbf{PW-EBR + UMF-EDR} & \textbf{Yes ($\text{Authority}(m,a)$)} & \textbf{Yes ($\mathcal{R}(a)$ coupling)} & \textbf{Yes (160 traces + Real GPU)} \\
+\textbf{MemoryQuarantine} & \textbf{Epistemic store} & \textbf{Yes} & \textbf{PW-EBR + UMF-EDR} & \textbf{Yes ($\text{Auth}(m,a)$)} & \textbf{Yes ($\mathcal{R}(a)$ coupling)} & \textbf{Yes (160 traces + GPU)} \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}
 \end{table*}
 
 \subsection{Agent Memory Architectures}

@@ -68,9 +68,9 @@ def audit_tex_file(file_path: Path, bib_keys: set):
     in_align = False
     unescaped_amp = []
     for idx, line in enumerate(lines, 1):
-        if any(tok in line for tok in ['\\begin{tabular}', '\\begin{tabularx}', '\\begin{table}']):
+        if any(tok in line for tok in ['\\begin{tabular}', '\\begin{tabular*}', '\\begin{tabularx}', '\\begin{table}']):
             in_table = True
-        if any(tok in line for tok in ['\\end{tabular}', '\\end{tabularx}', '\\end{table}']):
+        if any(tok in line for tok in ['\\end{tabular}', '\\end{tabular*}', '\\end{tabularx}', '\\end{table}']):
             in_table = False
         if any(tok in line for tok in ['\\begin{aligned}', '\\begin{matrix}', '\\begin{cases}']):
             in_align = True
