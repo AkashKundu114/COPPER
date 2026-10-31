@@ -186,7 +186,37 @@ papers/
 !papers/references.md
 
 # ── Unpublished Research & Academic Papers (Embargoed until publication) ──────
-research/
+research/*
+!research/README.md
+!research/MEMORYQUARANTINE_METADATA.txt
+!research/ARXIV_SUBMISSION_GUIDE_MEMORYQUARANTINE.md
+!research/validate_memoryquarantine_paper.py
+!research/experiments/
+!research/generate_all_academic_figures.py
+!research/generate_memoryquarantine_academic_figures.py
+!research/build_memoryquarantine_arxiv_package.py
+!research/paper_revised.tex
+!research/paper_revised.pdf
+!research/memoryquarantine.pdf
+!research/main.bbl
+!research/references.bib
+!research/compile_latexqc.py
+!research/ieee_latexqc_report_memoryquarantine.json
+!research/memoryquarantine_page1_preview.jpeg
+!research/figures/
+research/figures/*
+!research/figures/fig*_mq_*.png
+!research/tables/
+!research/EXPERIMENTAL_METHODOLOGY.md
+!research/RESULTS_PROVENANCE.md
+!research/RELATED_WORK_MATRIX.md
+!research/REVIEWER_OBJECTION_REGISTER.md
+!research/REPRODUCIBILITY.md
+!research/LIMITATIONS.md
+!research/00_initial_inventory.md
+!research/01_claim_evidence_register.csv
+!research/02_related_work_and_novelty.md
+!research/03_study_protocol.md
 
 # ── Legal Documents (Website Only) ────────────────────────────────────────────
 TERMS_AND_CONDITIONS.md

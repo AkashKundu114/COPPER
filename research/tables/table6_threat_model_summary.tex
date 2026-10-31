@@ -1,0 +1,35 @@
+\begin{table*}[!t]
+\centering
+\caption{Threat Model Specification: Adversary Capabilities, Protected Assets, and Security Invariants}
+\label{tab:threat_model}
+\begin{tabularx}{\textwidth}{p{3.5cm}Xp{4.2cm}}
+\toprule
+\textbf{Dimension} & \textbf{Formal Specification} & \textbf{Security Invariant / Constraint} \\
+\midrule
+\textbf{Adversary Capabilities ($\mathcal{A}$)} & 
+$\bullet$ May inject indirect prompt payloads into web pages, documents, and tool streams.\newline
+$\bullet$ May structure payloads across multiple sessions to exploit episodic consolidation.\newline
+$\bullet$ May trigger semantic memory retrieval via innocuous subsequent queries.\newline
+$\bullet$ May deliver conflicting assertions to induce epistemic drift or confidence collapse. & 
+\textbf{Assumption:} $\mathcal{A}$ lacks host root/kernel privileges, cannot alter base model weights, and cannot access the local SQLite file directly. \\
+\midrule
+\textbf{Protected Host Assets} & 
+$\bullet$ Local user files and persistent directory structures.\newline
+$\bullet$ Environment variables, API keys, and credential stores.\newline
+$\bullet$ Host process execution boundary (subshell / terminal invocation).\newline
+$\bullet$ Persistent Epistemic Store integrity and provenance labels. & 
+\textbf{Invariant 1 (Execution Authorization):} No destructive tool mutation can be authorized solely by $\gamma < 0.85$ or $C < 0.70$ without operator confirmation. \\
+\midrule
+\textbf{Epistemic Integrity} & 
+$\bullet$ Immutable provenance tags assigned deterministically upon ingestion.\newline
+$\bullet$ Symmetric tier demotions under PW-EBR upon conflicting evidence.\newline
+$\bullet$ Continuous Ebbinghaus forgetting without unbounded linear accumulation. & 
+\textbf{Invariant 2 (Provenance Immutability):} LLM reasoning traces cannot elevate provenance tags $\gamma(m)$ or modify SQLite audit records. \\
+\midrule
+\textbf{Utility Boundary} & 
+$\bullet$ Benign user preferences must remain authoritative for reversible actions.\newline
+$\bullet$ Read-only research queries must execute autonomously with 0\% false quarantines. & 
+\textbf{Invariant 3 (Utility Preservation):} Legitimate user requests with $\gamma \ge 0.85$ and $\mathcal{R}(a) \le 0.30$ execute without confirmation interruption. \\
+\bottomrule
+\end{tabularx}
+\end{table*}

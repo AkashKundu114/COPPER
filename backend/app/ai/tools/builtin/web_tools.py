@@ -6,7 +6,22 @@ from typing import Any
 import httpx
 
 from app.ai.tools.registry import tool_registry
-from app.core.config import settings
+from app.core.config import NetworkMode, settings
+
+
+class NetworkEgressForbiddenError(RuntimeError):
+    """Raised when external network egress is attempted in OFFLINE_AIRGAP or unauthorized mode."""
+    pass
+
+
+def get_current_network_mode() -> NetworkMode:
+    mode = getattr(settings, "NETWORK_MODE", NetworkMode.USER_AUTHORIZED_EGRESS)
+    if isinstance(mode, str):
+        try:
+            return NetworkMode(mode.lower())
+        except ValueError:
+            return NetworkMode.USER_AUTHORIZED_EGRESS
+    return mode
 from app.core.data_firewall import redact
 from app.core.logger import logger
 
@@ -73,6 +88,11 @@ def _fallback_extract_text(html_content: str, max_chars: int = 6000) -> str:
     guardian_level=1,
 )
 async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
+    mode = get_current_network_mode()
+    if mode == NetworkMode.OFFLINE_AIRGAP:
+        raise NetworkEgressForbiddenError(
+            f"Outbound network search for '{redact(query).strip()}' is prohibited under OFFLINE_AIRGAP mode."
+        )
     if not getattr(settings, "WEB_SEARCH_ENABLED", True):
         return {
             "status": "disabled",
@@ -118,6 +138,17 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
                     }
     except Exception as e:
         logger.debug(f"SearXNG search unavailable at {searxng_url}, falling back to DuckDuckGo: {e}")
+
+    if mode == NetworkMode.LOCAL_SERVICES:
+        logger.info("Skipping DuckDuckGo fallback: external WAN egress is prohibited under LOCAL_SERVICES mode.")
+        return {
+            "status": "partial",
+            "provider": "offline_notice",
+            "query": sanitized_query,
+            "count": 0,
+            "results": [],
+            "message": "SearXNG local search was unavailable, and external WAN egress is prohibited under LOCAL_SERVICES mode.",
+        }
 
     try:
         headers = {
@@ -218,6 +249,22 @@ async def web_search(query: str, num_results: int = 5) -> dict[str, Any]:
     guardian_level=1,
 )
 async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
+    mode = get_current_network_mode()
+    clean_url = url.strip()
+
+    if mode == NetworkMode.OFFLINE_AIRGAP:
+        raise NetworkEgressForbiddenError(
+            f"Outbound network fetch for '{clean_url}' is prohibited under OFFLINE_AIRGAP mode."
+        )
+
+    if mode == NetworkMode.LOCAL_SERVICES:
+        parsed = urllib.parse.urlparse(clean_url)
+        host = (parsed.hostname or "").lower()
+        is_loopback = host in ("127.0.0.1", "localhost", "::1") or host.startswith("127.")
+        if not is_loopback:
+            raise NetworkEgressForbiddenError(
+                f"Outbound WAN fetch for '{clean_url}' is prohibited under LOCAL_SERVICES mode. Only local loopback endpoints are permitted."
+            )
     if not getattr(settings, "WEB_SEARCH_ENABLED", True):
         return {
             "status": "disabled",

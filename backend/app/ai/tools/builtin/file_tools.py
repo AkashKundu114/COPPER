@@ -124,6 +124,38 @@ async def file_write(path: str, content: str, mode: str = "overwrite") -> dict[s
 
         p.parent.mkdir(parents=True, exist_ok=True)
 
+        # TaskWAL durability hook: record mutation intent prior to physical write
+        try:
+            from app.ai.orchestration.wal_executor import RecordType, current_task_id, current_wal
+
+            wal = current_wal.get()
+            task_id = current_task_id.get() or "file_write"
+            if wal is not None:
+                if not p.exists():
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {"task_id": task_id, "type": "file_created", "path": str(p)},
+                    )
+                else:
+                    pre_image = None
+                    try:
+                        if p.stat().st_size <= 2 * 1024 * 1024:
+                            pre_image = p.read_text(encoding="utf-8", errors="replace")
+                    except Exception:
+                        pass
+                    wal.append_record(
+                        RecordType.MUTATION_RECORD,
+                        {
+                            "task_id": task_id,
+                            "type": "file_modified",
+                            "path": str(p),
+                            "pre_image": pre_image,
+                            "mode": mode,
+                        },
+                    )
+        except Exception as wal_err:
+            logger.debug(f"TaskWAL mutation recording skipped: {wal_err}")
+
         write_mode = "a" if mode.lower() == "append" else "w"
         with open(p, write_mode, encoding="utf-8") as f:
             f.write(content)

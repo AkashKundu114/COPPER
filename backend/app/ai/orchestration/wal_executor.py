@@ -1,5 +1,6 @@
 """Crash-Consistent Write-Ahead Log (WAL) & Idempotent Checkpoint Engine."""
 
+import contextvars
 import hashlib
 import json
 import os
@@ -13,6 +14,9 @@ from typing import Any
 from app.core.logger import logger
 
 DEFAULT_WAL_DIR = Path(__file__).parent.parent.parent.parent / "data" / "wal"
+
+current_wal: contextvars.ContextVar[Any | None] = contextvars.ContextVar("current_wal", default=None)
+current_task_id: contextvars.ContextVar[str | None] = contextvars.ContextVar("current_task_id", default=None)
 
 
 class RecordType(str, Enum):
@@ -143,7 +147,7 @@ class CrashRecoveryEngine:
         is_complete = False
 
         for r in records:
-            if r.record_type == RecordType.DAG_COMMIT:
+            if r.record_type in (RecordType.DAG_COMMIT, RecordType.DAG_ABORT):
                 is_complete = True
             elif r.record_type == RecordType.TASK_COMMIT:
                 t_id = r.payload.get("task_id")
@@ -151,6 +155,14 @@ class CrashRecoveryEngine:
                 pending_mutations = [m for m in pending_mutations if m.get("task_id") != t_id]
             elif r.record_type == RecordType.MUTATION_RECORD:
                 pending_mutations.append(r.payload)
+            elif r.record_type == RecordType.TASK_COMPENSATE:
+                comp_task = r.payload.get("task_id")
+                comp_path = r.payload.get("path")
+                pending_mutations = [
+                    m
+                    for m in pending_mutations
+                    if not (m.get("task_id") == comp_task and (not comp_path or m.get("path") == comp_path))
+                ]
 
         return {
             "dag_id": dag_id,
@@ -164,6 +176,8 @@ class CrashRecoveryEngine:
         """Compensates (rolls back) uncommitted side effects."""
         wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
         analysis = self.analyze_dag_state(dag_id)
+        if analysis["is_complete"] or not analysis["uncommitted_mutations"]:
+            return 0
         rollbacks_performed = 0
 
         for mut in analysis["uncommitted_mutations"]:
@@ -182,6 +196,20 @@ class CrashRecoveryEngine:
                         logger.info(f"[RecoveryEngine] Rolled back orphaned file: {path_str}")
                     except Exception as e:
                         logger.error(f"[RecoveryEngine] Rollback failed for {path_str}: {e}")
+            elif mut_type == "file_modified" and path_str:
+                p = Path(path_str)
+                pre_image = mut.get("pre_image")
+                try:
+                    if pre_image is not None:
+                        p.write_text(pre_image, encoding="utf-8")
+                        rollbacks_performed += 1
+                        wal.append_record(
+                            RecordType.TASK_COMPENSATE,
+                            {"task_id": mut.get("task_id"), "action": "restored_file", "path": path_str},
+                        )
+                        logger.info(f"[RecoveryEngine] Restored modified file: {path_str}")
+                except Exception as e:
+                    logger.error(f"[RecoveryEngine] Restore failed for {path_str}: {e}")
 
         wal.append_record(RecordType.DAG_ABORT, {"reason": "crash_rollback_completed"})
         return rollbacks_performed

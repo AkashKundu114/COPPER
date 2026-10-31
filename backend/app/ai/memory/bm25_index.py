@@ -28,18 +28,20 @@ class BM25Index:
     def add_document(
         self,
         doc_id: str,
-        content: str,
+        content: str | None = None,
         metadata: dict[str, Any] | None = None,
         source: str = "document",
+        text: str | None = None,
     ) -> None:
         """Adds or updates a single document in the BM25 index."""
-        if not doc_id or not content:
+        actual_content = content or text or ""
+        if not doc_id or not actual_content:
             return
 
-        tokens = tokenize_text(content)
+        tokens = tokenize_text(actual_content)
         self._documents[doc_id] = {
             "id": doc_id,
-            "content": content,
+            "content": actual_content,
             "tokens": tokens,
             "metadata": metadata or {},
             "source": source,

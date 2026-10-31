@@ -7,7 +7,7 @@
 
 ## 1. System Topology Overview
 
-C.O.P.P.E.R. is an independent, 100% offline, local-first personal AI operating system. The platform couples a React 19 desktop interface running inside Electron 44 with a high-throughput asynchronous FastAPI backend running on local Python 3.11+. Local intelligence is powered by quantized language models via Ollama, local embeddings in ChromaDB, and an epistemic memory graph backed by SQLite in Write-Ahead Logging (WAL) mode.
+C.O.P.P.E.R. is an independent, 100% offline, local-first personal AI agent runtime environment (executing in user-space). The platform couples a React 19 desktop interface running inside Electron 44 with a high-throughput asynchronous FastAPI backend running on local Python 3.11+. Local intelligence is powered by quantized language models via Ollama, local embeddings in ChromaDB, and an epistemic memory graph backed by SQLite in Write-Ahead Logging (WAL) mode.
 
 ```mermaid
 graph TD

@@ -1,0 +1,20 @@
+\begin{table*}[!t]
+\centering
+\caption{Taxonomic Comparison of Agent Memory Architectures and Defenses}
+\label{tab:related_work}
+\begin{tabularx}{\textwidth}{lcccccc}
+\toprule
+\textbf{Framework} & \textbf{Memory Representation} & \textbf{Provenance} & \textbf{Belief Revision} & \textbf{Action Authorization} & \textbf{Consequence Awareness} & \textbf{Persistent Poisoning Eval} \\
+\midrule
+Generative Agents~\cite{park2023generative} & Text stream & No & Additive linear score & No & No & No \\
+MemGPT / Letta~\cite{packer2023memgpt} & Paged virtual context & No & None (Append/replace) & No & No & No \\
+HippoRAG~\cite{bernal2024hipporag} & Knowledge graph & No & Personalized PageRank & No & No & No \\
+AgentDojo~\cite{debenedetti2024agentdojo} & Ephemeral context & No & None & Static filter & Heuristic risk & No (Single-session) \\
+AM-Sentry~\cite{torres2026ghostwriter} & Vector store & Partial & Binary text classifier & Binary input filter & No & Yes (100 traces) \\
+MINJA~\cite{dong2024minja} & Vector store & No & None & None & No & Yes \\
+Llama Guard 3~\cite{inan2023llamaguard} & None (Stateless) & No & None & Binary classifier & Static categories & No \\
+NeMo Guardrails~\cite{rebedea2023nemo} & State tree & No & None & Colang DSL & Static whitelist & No \\
+\textbf{MemoryQuarantine} & \textbf{Epistemic store} & \textbf{Yes} & \textbf{PW-EBR + UMF-EDR} & \textbf{Yes ($\text{Authority}(m,a)$)} & \textbf{Yes ($\mathcal{R}(a)$ coupling)} & \textbf{Yes (160 traces + Real GPU)} \\
+\bottomrule
+\end{tabularx}
+\end{table*}

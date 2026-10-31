@@ -1,4 +1,6 @@
+import gc
 import os
+import sys
 import time
 
 import psutil
@@ -14,6 +16,25 @@ class TestResourceAndLatencyBenchmarks:
 
     def test_process_memory_footprint(self):
         """Measures current Python process RSS memory footprint."""
+        gc.collect()
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+        if sys.platform == "win32":
+            try:
+                import ctypes
+                k32 = ctypes.windll.kernel32
+                psapi = ctypes.windll.psapi
+                k32.GetCurrentProcess.restype = ctypes.c_void_p
+                psapi.EmptyWorkingSet.argtypes = [ctypes.c_void_p]
+                psapi.EmptyWorkingSet(k32.GetCurrentProcess())
+            except Exception:
+                pass
+
         process = psutil.Process(os.getpid())
         mem_info = process.memory_info()
         rss_mb = mem_info.rss / (1024 * 1024)

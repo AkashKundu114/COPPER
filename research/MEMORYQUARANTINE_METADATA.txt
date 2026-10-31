@@ -1,0 +1,35 @@
+=== arXiv & IEEE ICCECE 2027 Submission Metadata ===
+
+1. Title:
+MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents
+
+2. Authors:
+Akash Kundu (ORCID: 0009-0003-8246-7316)
+
+3. Author Affiliation:
+Department of Computer Science and Engineering, Research and Development Division, C.O.P.P.E.R. Project, Kolkata, India
+Contact: akashkundu1152@gmail.com | https://github.com/AkashKundu114/COPPER
+
+4. Primary Subject Classification:
+cs.CR (Cryptography and Security)
+
+5. Secondary Subject Classifications:
+cs.AI (Artificial Intelligence)
+cs.SE (Software Engineering)
+
+6. ACM / IEEE Keywords:
+Autonomous Agents, Persistent Memory, Delayed Prompt Injection, Memory Poisoning, Tool-Use Governance, Action Reversibility, AI Safety, Edge Computing.
+
+7. Abstract (Character count: 1,845 / 1,920 arXiv max limit):
+Equipping local-first autonomous agents with persistent episodic memory enables multi-session personalization, but introduces an insidious vulnerability: delayed memory poisoning. In existing agent architectures, an adversary can plant untrusted instructions via indirect prompt injection in external documents or tool outputs. Once ingested, the agent inadvertently recalls these memories in subsequent, unrelated sessions, executing unauthorized actions. Crucially, contemporary agent systems (e.g., MemGPT, Generative Agents, AutoGen) conflate semantic retrieval relevance with tool execution authority---treating any memory deemed relevant to the query as inherently trusted context.
+
+To resolve this vulnerability, we present MemoryQuarantine, a dual-plane governance architecture for local tool-using agents that decouples semantic recall from execution authority. MemoryQuarantine introduces consequence-calibrated authorization: the permission of memory m to authorize action a is bounded by Authority(m, a) = gamma(m) * C(m) * (1 - R(a)), coupling immutable source provenance gamma(m), calibrated epistemic confidence C(m), and semantic action reversibility risk R(a) enforced deterministically at the tool boundary. We evaluate MemoryQuarantine on CopperMemoryBench (160 multi-session traces spanning direct injection, indirect poisoning, delayed steering, bridging subversion, and contradiction floods) and an end-to-end physical execution harness running local models on an NVIDIA GeForce RTX 5060 Laptop GPU. MemoryQuarantine achieves an Attack Success Rate (ASR) of 0.0% (down from 100.0% in flat vector RAG and 80.0% in Bayesian baselines, two-tailed Fisher's exact p = 2.21 x 10^-59) and a Threat Interception Rate of 100.0% (exact 95% Clopper-Pearson CI: [96.4%, 100.0%]), while preserving 100.0% benign task completion with zero false quarantines and under 0.01 ms evaluation latency.
+
+8. Comments Field:
+IEEE Conference format (IEEEtran), 8 pages, 8 figures, 8 tables. Full experimental testbed, CopperMemoryBench benchmark (160 traces), and physical execution harness available at https://github.com/AkashKundu114/COPPER
+
+9. Target Venue:
+IEEE International Conference on Clean Energy and Carbon Neutrality (ICCECE 2027) / IEEE Conference Track
+
+10. License:
+arXiv.org perpetual, non-exclusive license to distribute this article (retains full copyright for conference/journal proceedings)

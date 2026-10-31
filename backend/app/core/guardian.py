@@ -91,6 +91,7 @@ class GuardianVerdict:
     requires_confirmation: bool = False
     friction_index: float = 0.0
     fatigue_score: float = 0.0
+    is_hard_safety: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -103,6 +104,7 @@ class GuardianVerdict:
             "requires_confirmation": self.requires_confirmation,
             "friction_index": round(self.friction_index, 3),
             "fatigue_score": round(self.fatigue_score, 3),
+            "is_hard_safety": self.is_hard_safety,
         }
 
 
@@ -164,14 +166,14 @@ SAFETY_TRIGGERS = [
 ]
 
 SAFETY_PATTERNS = [
-    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+constraint\s+.*cascade)\b",
-    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+([a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
+    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+(column|constraint))\b",
+    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+(/|/boot|[a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
     r"\b(ri|remove-item)\s+([a-z]:|/|\*)",
-    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|(\.bashrc|\.zshrc|\.profile)|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create)\b",
+    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create|backdoor|persistence\s+via|malicious\s+hook|systemd\s+cron|force\s+sudo\s+execution)\b|(?:\s|^)(?:\.?bashrc|\.?zshrc|\.?profile|\.?bash_profile)\b",
     r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
-    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:\|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib|pty\.spawn)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
+    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib|pty\.spawn)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
     r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
-    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux)|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+evil|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
+    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux|guardian|defcon|guardrails?)|deactivate\s+security\s+guardrails|terminate\s+all\s+host\s+processes|bypass\s+system\s+permissions|sql\s+injection\s+payload|extracts?\s+hashed\s+passwords|penetration\s+test\s+payload|unrestricted\s+ai|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+(evil|unrestricted)|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
 ]
 
 COMPILED_SAFETY_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SAFETY_PATTERNS]
@@ -284,6 +286,52 @@ def compute_action_reversibility_risk(proposed_action: str) -> float:
     if any(k in action_lower for k in ["write", "update", "modify", "patch", "edit"]):
         return 0.30
     return 0.05
+
+
+def evaluate_memory_authority(
+    memory_provenance: str,
+    memory_confidence: float,
+    action_reversibility: float,
+) -> tuple[float, str]:
+    """
+    Evaluates Dual-Plane Memory Governance Authority:
+        Authority(m, a) = gamma(m) * C(m) * (1 - R(a))
+    
+    Calibration decision boundaries:
+      - Authority >= 0.65 -> ALLOW (Silent autonomous execution)
+      - 0.25 <= Authority < 0.65 -> CHALLENGE (Require explicit operator confirmation)
+      - Authority < 0.25 -> BLOCK (Safety boundary quarantine interdiction)
+      
+    Returns:
+        (authority_score, verdict_string) where verdict_string in ("ALLOW", "CHALLENGE", "BLOCK")
+    """
+    prov_key = str(memory_provenance).lower().strip()
+    
+    provenance_weights = {
+        "user_explicit": 1.00,
+        "user_verified": 1.00,
+        "system_verified": 0.95,
+        "local_file": 0.85,
+        "file_system": 0.85,
+        "observation": 0.75,
+        "chat": 0.50,
+        "web_search": 0.35,
+        "external_untrusted": 0.15,
+        "injected": 0.10,
+    }
+    gamma = provenance_weights.get(prov_key, 0.50)
+    conf = max(0.0, min(1.0, float(memory_confidence)))
+    rev = max(0.0, min(1.0, float(action_reversibility)))
+    
+    authority = round(gamma * conf * (1.0 - rev), 4)
+    if authority >= 0.65:
+        verdict = "ALLOW"
+    elif authority >= 0.25:
+        verdict = "CHALLENGE"
+    else:
+        verdict = "BLOCK"
+        
+    return authority, verdict
 
 
 @dataclass
@@ -449,21 +497,74 @@ class GuardianEngine:
         has_conflict = bool(conflicts or detected_conflicts)
         goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
 
+        # Workstream C: Dual-Plane MemoryQuarantine Evaluation
+        mem_prov = context.get("memory_provenance")
+        mem_conf = context.get("memory_confidence")
+        if mem_prov is not None or mem_conf is not None:
+            prov_str = str(mem_prov or "chat")
+            conf_val = float(mem_conf) if mem_conf is not None else 0.50
+            auth_score, auth_verdict = evaluate_memory_authority(prov_str, conf_val, risk)
+            
+            if auth_verdict == "BLOCK":
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Blocked by MemoryQuarantine: Insufficient authority ({auth_score:.3f} < 0.25) for action with reversibility risk {risk:.2f} using '{prov_str}' memory.",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="The memory instructing this action lacks provenance authority. Verify or re-authorize manually.",
+                    friction_index=3.0,
+                    is_hard_safety=True,
+                    fatigue_score=fatigue,
+                )
+            elif auth_verdict == "CHALLENGE":
+                return GuardianVerdict(
+                    level=DisagreementLevel.CHALLENGE,
+                    reasoning=f"MemoryQuarantine Challenge: Action requires operator verification (Authority: {auth_score:.3f}, Reversibility risk: {risk:.2f}, Provenance: '{prov_str}').",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="Confirm explicitly before executing action derived from intermediate-authority memory.",
+                    friction_index=max(2.0, compute_dynamic_friction_index(risk, fatigue, goal_conflict, config=self.friction_config)),
+                    fatigue_score=fatigue,
+                )
+
         friction = compute_dynamic_friction_index(
             risk, fatigue, goal_conflict, config=self.friction_config
         )
 
-        if (
-            context.get("is_destructive")
-            or any(t in action_lower for t in SAFETY_TRIGGERS)
+        # 1. Hard safety invariants: permanently forbidden adversarial and wiping operations
+        is_hard_safety = (
+            any(t in action_lower for t in SAFETY_TRIGGERS)
             or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
-        ):
+        )
+        if is_hard_safety or context.get("is_destructive"):
             return GuardianVerdict(
                 level=DisagreementLevel.SAFETY,
                 reasoning="This action is destructive, adversarial, or violates safety boundaries.",
                 requires_confirmation=True,
-                recommendation="Confirm explicitly before I proceed, or choose a safer alternative.",
+                recommendation="Action is forbidden by system invariants. Choose a safer alternative.",
                 friction_index=max(2.85, friction),
+                is_hard_safety=is_hard_safety,
+                fatigue_score=fatigue,
+            )
+
+        # 2. Consequential operations or destructive disk modifications (Require operator confirmation)
+        if risk >= 0.85:
+            return GuardianVerdict(
+                level=DisagreementLevel.CHALLENGE,
+                reasoning="High-impact or destructive disk modification requested.",
+                requires_confirmation=True,
+                recommendation="Confirm explicitly before proceeding with disk modification.",
+                friction_index=max(2.0, friction),
                 fatigue_score=fatigue,
             )
 
