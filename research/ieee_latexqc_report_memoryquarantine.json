@@ -2,10 +2,10 @@
   "overview": {
     "status": 200,
     "data": {
-      "clientMediaId": "sequence-202289-attempt-1",
-      "receivedAt": "2026-10-31T04:58:24.936Z",
-      "startedAt": "2026-10-31T04:58:24.946Z",
-      "finishedAt": "2026-10-31T04:58:36.576Z",
+      "clientMediaId": "sequence-202320-attempt-1",
+      "receivedAt": "2026-10-31T08:18:45.630Z",
+      "startedAt": "2026-10-31T08:18:45.640Z",
+      "finishedAt": "2026-10-31T08:18:54.684Z",
       "status": "success",
       "error": {
         "code": null,
@@ -15,29 +15,29 @@
         "file": "./main.tex",
         "kind": "warning",
         "line": 0,
-        "message": "Package hyperref Warning: Difference (2) between bookmark levels is greater \n(hyperref)                than one, level fixed on input line 87.\n"
+        "message": "Package hyperref Warning: Difference (2) between bookmark levels is greater \n(hyperref)                than one, level fixed on input line 88.\n"
       },
       "mainFilePathname": "main.tex",
-      "resultsFileUri": "/api/v1/conversion/clients/ieee_latexqc/conversions/sequence-202289-attempt-1/output",
+      "resultsFileUri": "/api/v1/conversion/clients/ieee_latexqc/conversions/sequence-202320-attempt-1/output",
       "errorsCount": 0,
       "warningsCount": 5,
-      "conversionSequenceId": 202289,
-      "deliveredAt": "2026-10-31T04:58:36.586Z",
-      "thumbnailUri": "https://writelatex-conversions.s3.amazonaws.com/thumbnails/ieee_latexqc/sequence-202289-attempt-1.jpeg?X-Amz-Expires=14400&X-Amz-Date=20261031T045837Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=41b31821aa0a4c68c26107196f6026af33309563dc8600bc070ee7f61f4f0a3e"
+      "conversionSequenceId": 202320,
+      "deliveredAt": "2026-10-31T08:18:54.701Z",
+      "thumbnailUri": "https://writelatex-conversions.s3.amazonaws.com/thumbnails/ieee_latexqc/sequence-202320-attempt-1.jpeg?X-Amz-Expires=14400&X-Amz-Date=20261031T081855Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=05894419aa821729ad32207ef3c2af439802ac5474a52263f953f3e7909c8bcd"
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMjg5LWF0dGVtcHQtMSIsInNlcUlkIjoyMDIyODksImlhdCI6MTc5MzQyMjcwMSwiZXhwIjoxNzkzNjgxOTAxfQ.ekAB5RJQvQbrQ2D_n-isYnMkghIw40UM7RV3htP10Ow"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMzIwLWF0dGVtcHQtMSIsInNlcUlkIjoyMDIzMjAsImlhdCI6MTc5MzQzNDcyMCwiZXhwIjoxNzkzNjkzOTIwfQ.ppnVFVmF8o6TJH8svxzM8J6fTliSCeRvNvxmGAfiW94"
   },
   "overleafProject": {
     "status": 200,
     "data": {
       "projectStatus": "new",
-      "projectUrl": "https://www.overleaf.com/docs?brand_variation_id=64&partner=ieee_latexqc&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMjg5LWF0dGVtcHQtMSIsInNlcUlkIjoyMDIyODksImlhdCI6MTc5MzQyMjcwMSwiZXhwIjoxNzkzNjgxOTAxfQ.ekAB5RJQvQbrQ2D_n-isYnMkghIw40UM7RV3htP10Ow"
+      "projectUrl": "https://www.overleaf.com/docs?brand_variation_id=64&partner=ieee_latexqc&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMzIwLWF0dGVtcHQtMSIsInNlcUlkIjoyMDIzMjAsImlhdCI6MTc5MzQzNDcyMCwiZXhwIjoxNzkzNjkzOTIwfQ.ppnVFVmF8o6TJH8svxzM8J6fTliSCeRvNvxmGAfiW94"
     }
   },
   "pdf": {
     "status": 200,
     "data": {
-      "pdfUri": "https://writelatex-conversions.s3.amazonaws.com/pdfs/ieee_latexqc/sequence-202289-attempt-1?X-Amz-Expires=14400&X-Amz-Date=20261031T045837Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=e6bae56d00e99282d0a0cb808f8585c6b0ce5523ff876d76f5c1cb324c56d703"
+      "pdfUri": "https://writelatex-conversions.s3.amazonaws.com/pdfs/ieee_latexqc/sequence-202320-attempt-1?X-Amz-Expires=14400&X-Amz-Date=20261031T081855Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=aa4ebe89a54c64470a7ee632f44fbd56a92b1ffe349d21ec63935058581aa7c6"
     }
   }
 }

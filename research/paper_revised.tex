@@ -295,7 +295,7 @@ In Quadrant Q3, an untrusted memory ($\gamma = 0.15$) instructs a low-risk read 
 \subsection{Benign Utility Preservation \& Operator Challenge Rate}
 On the 60 benign control tasks, MemoryQuarantine achieved a \textbf{100.0\% Task Success Rate} (exact 95\% CI: [94.0\%, 100.0\%]) and a \textbf{0.0\% False Quarantine Rate}. Reversible read operations and verified user customizations executed autonomously without interruption. Consequential operations triggered clear confirmation dialogues ($\text{OCR} = 70.0\%$). We candidly note that a 70.0\% challenge rate under strict mode represents an operational friction cost; in Section~VI, we discuss semantic confirmation safeguards to mitigate habituation and confirmation fatigue.
 
-\subsection{Physical Execution & Micro-Latency Profile}
+\subsection{Physical Execution \& Micro-Latency Profile}
 In the physical end-to-end evaluation using \texttt{qwen2.5:0.5b} on the RTX 5060 GPU:
 \begin{itemize}
     \item Under Baseline $B_1$, the LLM parsed the injected document and generated tool calls overwriting \texttt{canary\_target.env}.
