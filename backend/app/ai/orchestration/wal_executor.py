@@ -125,7 +125,8 @@ class CrashRecoveryEngine:
         """Scans for WAL files that have DAG_START but lack DAG_COMMIT or DAG_ABORT."""
         incomplete = []
         for file in self.wal_dir.glob("dag_*.wal"):
-            wal = TaskWAL(dag_id=file.stem.replace("dag_", ""), wal_dir=self.wal_dir)
+            dag_id = file.stem.removeprefix("dag_")
+            wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
             records = wal.read_records()
             if not records:
                 continue

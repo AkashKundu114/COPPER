@@ -9,7 +9,9 @@ try:
 except ImportError:
     BeautifulSoup = None
 
+from app.ai.tools.builtin.web_tools import NetworkEgressForbiddenError, get_current_network_mode
 from app.ai.tools.registry import tool_registry
+from app.core.config import NetworkMode
 from app.core.logger import logger
 
 STEALTH_HEADERS = {
@@ -99,7 +101,7 @@ def _adaptive_content_extract(soup: Any, target_hint: str | None = None) -> str:
         "required": ["url"],
     },
     return_description="Extracted title, metadata, sanitized content, and key links.",
-    guardian_level=0,
+    guardian_level=1,
 )
 async def scrapling_scrape(
     url: str,
@@ -107,6 +109,11 @@ async def scrapling_scrape(
     extract_links: bool = True,
     max_length: int = 8000,
 ) -> dict[str, Any]:
+    mode = get_current_network_mode()
+    if mode == NetworkMode.OFFLINE_AIRGAP:
+        raise NetworkEgressForbiddenError(
+            f"Outbound network scraping for '{url}' is prohibited under OFFLINE_AIRGAP mode."
+        )
     parsed = urlparse(url)
     if not parsed.scheme or not parsed.netloc:
         return {"status": "error", "error": f"Invalid URL format: {url}"}

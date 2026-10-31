@@ -1,630 +1,664 @@
-import base64
-import json
-import math
-import os
-import re
-import unicodedata
-from dataclasses import dataclass, field
-from enum import IntEnum
-from pathlib import Path
-
-HOMOGLYPH_MAP = {
-    "\u0430": "a",
-    "\u0410": "A",
-    "\u0435": "e",
-    "\u0415": "E",
-    "\u043e": "o",
-    "\u041e": "O",
-    "\u0440": "p",
-    "\u0420": "P",
-    "\u0441": "c",
-    "\u0421": "C",
-    "\u0443": "y",
-    "\u0423": "Y",
-    "\u0445": "x",
-    "\u0425": "X",
-    "\u0455": "s",
-    "\u0405": "S",
-    "\u0456": "i",
-    "\u0406": "I",
-    "\u0458": "j",
-    "\u0408": "J",
-}
-
-INVISIBLE_CHARS_REGEX = re.compile(r"[\u200b\u200c\u200d\ufeff\u200e\u200f\u202a-\u202e]")
-
-
-def normalize_adversarial_text(text: str) -> str:
-    """Normalizes text to defeat adversarial evasion techniques:"""
-    if not text:
-        return ""
-    cleaned = INVISIBLE_CHARS_REGEX.sub("", text)
-    for cyr, lat in HOMOGLYPH_MAP.items():
-        cleaned = cleaned.replace(cyr, lat)
-    normalized = unicodedata.normalize("NFKD", cleaned)
-
-    decoded_extras = []
-
-    hex_matches = re.findall(r"(?:fromhex\(['\"]|\\x)([0-9a-fA-F]{2,})", normalized)
-    for h in hex_matches:
-        try:
-            if len(h) % 2 == 0:
-                dec = bytes.fromhex(h).decode("utf-8", errors="ignore")
-                if dec.strip():
-                    decoded_extras.append(dec.strip())
-        except Exception:
-            pass
-
-    b64_matches = re.findall(
-        r"(?:-encodedcommand\s+|-enc\s+|-e\s+|['\"]|\b)([A-Za-z0-9+/]{8,}={0,2})(?:['\"]|\b|$)",
-        normalized,
-        re.IGNORECASE,
-    )
-    for candidate in b64_matches:
-        try:
-            dec = base64.b64decode(candidate).decode("utf-8", errors="ignore")
-            if dec.strip() and any(c.isalnum() for c in dec):
-                decoded_extras.append(dec.strip())
-        except Exception:
-            pass
-
-    if decoded_extras:
-        normalized += " " + " ".join(decoded_extras)
-
-    return normalized.lower()
-
-
-class DisagreementLevel(IntEnum):
-    EXECUTE = 0
-    SUGGEST = 1
-    CHALLENGE = 2
-    SAFETY = 3
-
-
-@dataclass
-class GuardianVerdict:
-    level: DisagreementLevel
-    reasoning: str | None = None
-    evidence: list[str] = field(default_factory=list)
-    confidence: str | None = None
-    recommendation: str | None = None
-    requires_confirmation: bool = False
-    friction_index: float = 0.0
-    fatigue_score: float = 0.0
-    is_hard_safety: bool = False
-
-    def to_dict(self) -> dict:
-        return {
-            "level": int(self.level),
-            "level_name": self.level.name,
-            "reasoning": self.reasoning,
-            "evidence": self.evidence,
-            "confidence": self.confidence,
-            "recommendation": self.recommendation,
-            "requires_confirmation": self.requires_confirmation,
-            "friction_index": round(self.friction_index, 3),
-            "fatigue_score": round(self.fatigue_score, 3),
-            "is_hard_safety": self.is_hard_safety,
-        }
-
-
-SAFETY_TRIGGERS = [
-    "rm -rf",
-    "format c:",
-    "format d:",
-    "format /fs:",
-    "del /f",
-    "del /f /s /q",
-    "dd if=",
-    "mkfs",
-    "mkfs.",
-    "delete all",
-    "wipe",
-    "factory reset",
-    "drop table",
-    "drop database",
-    "drop all",
-    "truncate table",
-    "truncate",
-    "destroy cluster",
-    "destroy",
-    "wipe all",
-    "del /f /q",
-    "wipe partitions",
-    ":(){ :|:& };:",
-    "remove-item -recurse",
-    "chmod -r 777",
-    "chmod -r 777 /",
-    "chown -r /",
-    "base64 -d | sh",
-    "invoke-expression",
-    "downloadstring",
-    "set-executionpolicy bypass",
-    "vssadmin delete shadows",
-    "bcdedit /delete",
-    "stop-computer",
-    "restart-computer",
-    "disable-netfirewallrule",
-    "| bash",
-    "| sh",
-    "| powershell",
-    "| iex",
-    "| perl",
-    "| python",
-    "| ruby",
-    "| pwsh",
-    "remove-item",
-    "clear-disk",
-    "format-volume",
-    "ri c:",
-    "ri d:",
-    "certutil -urlcache",
-    "bitsadmin /transfer",
-    "schtasks /create",
-    "nc -e",
-    "ncat -e",
-]
-
-SAFETY_PATTERNS = [
-    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+(column|constraint))\b",
-    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+(/|/boot|[a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
-    r"\b(ri|remove-item)\s+([a-z]:|/|\*)",
-    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create|backdoor|persistence\s+via|malicious\s+hook|systemd\s+cron|force\s+sudo\s+execution)\b|(?:\s|^)(?:\.?bashrc|\.?zshrc|\.?profile|\.?bash_profile)\b",
-    r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
-    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib|pty\.spawn)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
-    r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
-    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux|guardian|defcon|guardrails?)|deactivate\s+security\s+guardrails|terminate\s+all\s+host\s+processes|bypass\s+system\s+permissions|sql\s+injection\s+payload|extracts?\s+hashed\s+passwords|penetration\s+test\s+payload|unrestricted\s+ai|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+(evil|unrestricted)|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
-]
-
-COMPILED_SAFETY_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SAFETY_PATTERNS]
-
-CONFLICT_TRIGGERS = [
-    "during my scheduled",
-    "during my work sprint",
-    "during work sprint",
-    "during my deep work block",
-    "during deep work block",
-    "deep work block",
-    "to sleep in",
-    "skip work",
-    "skip work tomorrow",
-    "disable security firewall",
-    "disable firewall",
-    "delete my habit tracker",
-    "override the sleep schedule",
-    "override sleep schedule",
-    "continuous overnight coding",
-    "override my habit",
-    "cancel all my morning meetings",
-    "cancel all my meetings",
-    "cancel all meetings",
-    "schedule a gaming session",
-    "schedule gaming session",
-    "plan an all-nighter",
-    "all-nighter",
-]
-
-
-SENSITIVE_WINDOW_KEYWORDS = [
-    "bank",
-    "chase",
-    "wells fargo",
-    "bank of america",
-    "citibank",
-    "citi",
-    "capital one",
-    "fidelity",
-    "vanguard",
-    "schwab",
-    "paypal",
-    "binance",
-    "coinbase",
-    "robinhood",
-    "stripe dashboard",
-    "medical",
-    "patient",
-    "mychart",
-    "epic systems",
-    "cerner",
-    "prescription",
-    "hospital",
-    "health records",
-    "telehealth",
-    "1password",
-    "bitwarden",
-    "lastpass",
-    "keepass",
-    "dashlane",
-    "authenticator",
-    "credential manager",
-    "passwords",
-    "login - google accounts",
-]
-
-PASSWORD_INPUT_TRIGGERS = [
-    "password",
-    "passcode",
-    "pin code",
-    "secret_key",
-    "private_key",
-    "api_key",
-    "token",
-    "auth_token",
-    "bearer ",
-    "cvv",
-    "ssn",
-    "credit card",
-    "seed phrase",
-    "recovery phrase",
-    "mnemonic phrase",
-    "master password",
-    "master key",
-    "sudo ",
-]
-
-
-def calculate_fatigue_score(session_hours: float = 0.0, recent_error_rate: float = 0.0) -> float:
-    """DFM-Guard: Models real-time user cognitive fatigue."""
-    z = (max(0.0, session_hours) / 4.0) + (0.5 * max(0.0, min(1.0, recent_error_rate)))
-    return round(math.tanh(z), 3)
-
-
-def compute_action_reversibility_risk(proposed_action: str) -> float:
-    """
-    Evaluates semantic reversibility risk R(a) in [0.0, 1.0].
-    """
-    action_lower = normalize_adversarial_text(proposed_action)
-    if any(t in action_lower for t in SAFETY_TRIGGERS):
-        return 1.0
-    if any(
-        k in action_lower
-        for k in ["push --force", "git reset --hard", "kill -9", "chmod 777", "delete database", "drop collection"]
-    ):
-        return 0.85
-    if any(k in action_lower for k in ["delete", "remove", "clean", "truncate", "overwrite", "uninstall", "purge"]):
-        return 0.55
-    if any(k in action_lower for k in ["write", "update", "modify", "patch", "edit"]):
-        return 0.30
-    return 0.05
-
-
-def evaluate_memory_authority(
-    memory_provenance: str,
-    memory_confidence: float,
-    action_reversibility: float,
-) -> tuple[float, str]:
-    """
-    Evaluates Dual-Plane Memory Governance Authority:
-        Authority(m, a) = gamma(m) * C(m) * (1 - R(a))
-    
-    Calibration decision boundaries:
-      - Authority >= 0.65 -> ALLOW (Silent autonomous execution)
-      - 0.25 <= Authority < 0.65 -> CHALLENGE (Require explicit operator confirmation)
-      - Authority < 0.25 -> BLOCK (Safety boundary quarantine interdiction)
-      
-    Returns:
-        (authority_score, verdict_string) where verdict_string in ("ALLOW", "CHALLENGE", "BLOCK")
-    """
-    prov_key = str(memory_provenance).lower().strip()
-    
-    provenance_weights = {
-        "user_explicit": 1.00,
-        "user_verified": 1.00,
-        "system_verified": 0.95,
-        "local_file": 0.85,
-        "file_system": 0.85,
-        "observation": 0.75,
-        "chat": 0.50,
-        "web_search": 0.35,
-        "external_untrusted": 0.15,
-        "injected": 0.10,
-    }
-    gamma = provenance_weights.get(prov_key, 0.50)
-    conf = max(0.0, min(1.0, float(memory_confidence)))
-    rev = max(0.0, min(1.0, float(action_reversibility)))
-    
-    authority = round(gamma * conf * (1.0 - rev), 4)
-    if authority >= 0.65:
-        verdict = "ALLOW"
-    elif authority >= 0.25:
-        verdict = "CHALLENGE"
-    else:
-        verdict = "BLOCK"
-        
-    return authority, verdict
-
-
-@dataclass
-class FrictionConfig:
-    risk_weight: float = 2.8
-    fatigue_weight: float = 1.8
-    goal_conflict_weight: float = 2.2
-    bias: float = 3.5
-    calibration_method: str = "grid_search_f1_optimized"
-    calibration_date: str = "2026-09-30"
-
-    def to_dict(self) -> dict:
-        return {
-            "risk_weight": self.risk_weight,
-            "fatigue_weight": self.fatigue_weight,
-            "goal_conflict_weight": self.goal_conflict_weight,
-            "bias": self.bias,
-            "calibration_method": self.calibration_method,
-            "calibration_date": self.calibration_date,
-        }
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "FrictionConfig":
-        return cls(
-            risk_weight=float(data.get("risk_weight", 2.8)),
-            fatigue_weight=float(data.get("fatigue_weight", 1.8)),
-            goal_conflict_weight=float(data.get("goal_conflict_weight", 2.2)),
-            bias=float(data.get("bias", 3.5)),
-            calibration_method=str(data.get("calibration_method", "grid_search_f1_optimized")),
-            calibration_date=str(data.get("calibration_date", "2026-09-30")),
-        )
-
-
-def load_friction_config(config_path: str | Path | None = None) -> FrictionConfig:
-    """Loads FrictionConfig from a JSON configuration file or report if available,"""
-    candidates = []
-    if config_path:
-        candidates.append(Path(config_path))
-    env_cfg = os.environ.get("COPPER_FRICTION_CONFIG")
-    if env_cfg:
-        candidates.append(Path(env_cfg))
-
-    root_dir = Path(__file__).resolve().parent.parent.parent
-    candidates.append(root_dir / "config" / "friction_config.json")
-    candidates.append(root_dir / "docs" / "friction_calibration_report.json")
-
-    for p in candidates:
-        if p.is_file():
-            try:
-                with open(p, encoding="utf-8") as f:
-                    data = json.load(f)
-                cfg_block = data.get("optimal_coefficients") or data.get("friction_config") or data
-                if isinstance(cfg_block, dict) and "risk_weight" in cfg_block:
-                    return FrictionConfig.from_dict(cfg_block)
-            except Exception:
-                continue
-
-    return FrictionConfig()
-
-
-DEFAULT_FRICTION_CONFIG = load_friction_config()
-
-
-def compute_dynamic_friction_index(
-    reversibility_risk: float,
-    fatigue_score: float,
-    goal_conflict: float,
-    bias: float | None = None,
-    config: FrictionConfig | None = None,
-) -> float:
-    """Computes continuous Friction Index in [0.0, 3.0] calibrated via grid search over 350 adversarial test cases (scripts/calibrate_friction.py, docs/friction_calibration_report.json)."""
-    cfg = config or DEFAULT_FRICTION_CONFIG
-    effective_bias = bias if bias is not None else cfg.bias
-    logit = (
-        (cfg.risk_weight * reversibility_risk)
-        + (cfg.fatigue_weight * fatigue_score)
-        + (cfg.goal_conflict_weight * goal_conflict)
-        - effective_bias
-    )
-    sigma = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
-    return round(3.0 * sigma, 3)
-
-
-class GuardianEngine:
-    def __init__(self, friction_config: FrictionConfig | None = None):
-        self.friction_config = friction_config or load_friction_config()
-        self.window_whitelist: set[str] = set()
-        self.window_blacklist: list[str] = list(SENSITIVE_WINDOW_KEYWORDS)
-
-    def check_window_safety(self, window_title: str) -> GuardianVerdict:
-        """Check whether the active window is permitted for automated interaction."""
-        if not window_title:
-            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
-
-        title_lower = window_title.lower()
-
-        if any(w.lower() in title_lower for w in self.window_whitelist):
-            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
-
-        for forbidden in self.window_blacklist:
-            if forbidden in title_lower:
-                return GuardianVerdict(
-                    level=DisagreementLevel.SAFETY,
-                    reasoning=f"Protected window detected: '{window_title}' matches sensitive keyword '{forbidden}'.",
-                    evidence=[f"Window title: {window_title}", f"Blocked pattern: {forbidden}"],
-                    requires_confirmation=True,
-                    recommendation="COPPER will not interact with banking, medical, or credential windows. Please perform this action manually.",
-                )
-
-        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
-
-    def check_typing_safety(self, text: str) -> GuardianVerdict:
-        """Prevent automated typing of sensitive credentials or passwords."""
-        text_lower = text.lower()
-        for trigger in PASSWORD_INPUT_TRIGGERS:
-            if trigger in text_lower:
-                return GuardianVerdict(
-                    level=DisagreementLevel.SAFETY,
-                    reasoning=f"Sensitive input detected matching '{trigger}'. Automated password entry is forbidden.",
-                    evidence=[f"Pattern matched: {trigger}"],
-                    requires_confirmation=True,
-                    recommendation="Please type passwords, PINs, and secret keys manually.",
-                )
-
-        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
-
-    def evaluate_screen_action(self, action_type: str, action_data: dict, window_title: str = "") -> GuardianVerdict:
-        """Guardian evaluation specifically tailored for Computer Use Agent steps."""
-        win_verdict = self.check_window_safety(window_title)
-        if win_verdict.level >= DisagreementLevel.CHALLENGE:
-            return win_verdict
-
-        if action_type == "type_text":
-            text_to_type = action_data.get("text", "")
-            typing_verdict = self.check_typing_safety(text_to_type)
-            if typing_verdict.level >= DisagreementLevel.CHALLENGE:
-                return typing_verdict
-
-        if action_type == "hotkey":
-            keys = [str(k).lower() for k in action_data.get("keys", [])]
-            if ("alt" in keys and "f4" in keys) or ("ctrl" in keys and "alt" in keys and "del" in keys):
-                return GuardianVerdict(
-                    level=DisagreementLevel.CHALLENGE,
-                    reasoning=f"High-impact system shortcut: {keys}",
-                    requires_confirmation=True,
-                    recommendation="Confirm before closing or terminating system applications.",
-                )
-
-        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
-
-    def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
-        if context is None:
-            context = {}
-        action_lower = normalize_adversarial_text(proposed_action)
-
-        session_hours = float(context.get("session_hours", 0.0))
-        error_rate = float(context.get("error_rate", 0.0))
-        fatigue = calculate_fatigue_score(session_hours, error_rate)
-        risk = compute_action_reversibility_risk(proposed_action)
-
-        conflicts = context.get("conflicting_commitments") or []
-        detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
-        has_conflict = bool(conflicts or detected_conflicts)
-        goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
-
-        # Workstream C: Dual-Plane MemoryQuarantine Evaluation
-        mem_prov = context.get("memory_provenance")
-        mem_conf = context.get("memory_confidence")
-        if mem_prov is not None or mem_conf is not None:
-            prov_str = str(mem_prov or "chat")
-            conf_val = float(mem_conf) if mem_conf is not None else 0.50
-            auth_score, auth_verdict = evaluate_memory_authority(prov_str, conf_val, risk)
-            
-            if auth_verdict == "BLOCK":
-                return GuardianVerdict(
-                    level=DisagreementLevel.SAFETY,
-                    reasoning=f"Blocked by MemoryQuarantine: Insufficient authority ({auth_score:.3f} < 0.25) for action with reversibility risk {risk:.2f} using '{prov_str}' memory.",
-                    evidence=[
-                        f"Memory Provenance: {prov_str}",
-                        f"Memory Confidence: {conf_val:.2f}",
-                        f"Action Reversibility Risk: {risk:.2f}",
-                        f"Authority Score: {auth_score:.3f}",
-                    ],
-                    requires_confirmation=True,
-                    recommendation="The memory instructing this action lacks provenance authority. Verify or re-authorize manually.",
-                    friction_index=3.0,
-                    is_hard_safety=True,
-                    fatigue_score=fatigue,
-                )
-            elif auth_verdict == "CHALLENGE":
-                return GuardianVerdict(
-                    level=DisagreementLevel.CHALLENGE,
-                    reasoning=f"MemoryQuarantine Challenge: Action requires operator verification (Authority: {auth_score:.3f}, Reversibility risk: {risk:.2f}, Provenance: '{prov_str}').",
-                    evidence=[
-                        f"Memory Provenance: {prov_str}",
-                        f"Memory Confidence: {conf_val:.2f}",
-                        f"Action Reversibility Risk: {risk:.2f}",
-                        f"Authority Score: {auth_score:.3f}",
-                    ],
-                    requires_confirmation=True,
-                    recommendation="Confirm explicitly before executing action derived from intermediate-authority memory.",
-                    friction_index=max(2.0, compute_dynamic_friction_index(risk, fatigue, goal_conflict, config=self.friction_config)),
-                    fatigue_score=fatigue,
-                )
-
-        friction = compute_dynamic_friction_index(
-            risk, fatigue, goal_conflict, config=self.friction_config
-        )
-
-        # 1. Hard safety invariants: permanently forbidden adversarial and wiping operations
-        is_hard_safety = (
-            any(t in action_lower for t in SAFETY_TRIGGERS)
-            or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
-        )
-        if is_hard_safety or context.get("is_destructive"):
-            return GuardianVerdict(
-                level=DisagreementLevel.SAFETY,
-                reasoning="This action is destructive, adversarial, or violates safety boundaries.",
-                requires_confirmation=True,
-                recommendation="Action is forbidden by system invariants. Choose a safer alternative.",
-                friction_index=max(2.85, friction),
-                is_hard_safety=is_hard_safety,
-                fatigue_score=fatigue,
-            )
-
-        # 2. Consequential operations or destructive disk modifications (Require operator confirmation)
-        if risk >= 0.85:
-            return GuardianVerdict(
-                level=DisagreementLevel.CHALLENGE,
-                reasoning="High-impact or destructive disk modification requested.",
-                requires_confirmation=True,
-                recommendation="Confirm explicitly before proceeding with disk modification.",
-                friction_index=max(2.0, friction),
-                fatigue_score=fatigue,
-            )
-
-        if has_conflict or (risk >= 0.70 and fatigue >= 0.65) or friction >= 2.0:
-            evidence = conflicts if conflicts else detected_conflicts
-            reason = (
-                "This conflicts with an existing commitment or goal."
-                if has_conflict
-                else (
-                    f"Elevated fatigue ({fatigue:.2f}) detected during high-impact operation."
-                    if (risk >= 0.70 and fatigue >= 0.65)
-                    else f"Elevated dynamic friction index ({friction:.2f}) exceeds challenge threshold."
-                )
-            )
-            return GuardianVerdict(
-                level=DisagreementLevel.CHALLENGE,
-                reasoning=reason,
-                evidence=evidence or [f"Reversibility risk: {risk:.2f}", f"Fatigue index: {fatigue:.2f}"],
-                confidence=context.get("confidence", "high"),
-                recommendation=context.get("recommendation", "Keep existing schedule and priorities intact."),
-                requires_confirmation=True,
-                friction_index=max(2.0, friction),
-                fatigue_score=fatigue,
-            )
-
-        suggestion = context.get("optimization_suggestion")
-        if suggestion or (fatigue >= 0.50 and risk >= 0.30):
-            reason = (
-                suggestion or f"High session duration ({session_hours:.1f}h). Consider reviewing changes carefully."
-            )
-            return GuardianVerdict(
-                level=DisagreementLevel.SUGGEST,
-                reasoning=reason,
-                confidence=context.get("confidence", "medium"),
-                friction_index=max(1.0, friction),
-                fatigue_score=fatigue,
-            )
-
-        return GuardianVerdict(
-            level=DisagreementLevel.EXECUTE,
-            friction_index=friction,
-            fatigue_score=fatigue,
-        )
-
-    def format_challenge(self, verdict: GuardianVerdict) -> str:
-        if verdict.level < DisagreementLevel.CHALLENGE:
-            return verdict.reasoning or ""
-        lines = [f"I disagree with this because {verdict.reasoning}"]
-        if verdict.evidence:
-            lines.append("My evidence is:")
-            lines.extend(f"  - {e}" for e in verdict.evidence)
-        if verdict.confidence:
-            lines.append(f"My confidence is {verdict.confidence}.")
-        if verdict.recommendation:
-            lines.append(f"I recommend: {verdict.recommendation}")
-        if verdict.level == DisagreementLevel.SAFETY:
-            lines.append("This requires your explicit confirmation before I proceed.")
-        else:
-            lines.append("If you still want to proceed, I can — just confirm.")
-        return "\n".join(lines)
-
-
+import base64
+import json
+import math
+import os
+import re
+import unicodedata
+from dataclasses import dataclass, field
+from enum import IntEnum
+from pathlib import Path
+
+HOMOGLYPH_MAP = {
+    "\u0430": "a",
+    "\u0410": "A",
+    "\u0435": "e",
+    "\u0415": "E",
+    "\u043e": "o",
+    "\u041e": "O",
+    "\u0440": "p",
+    "\u0420": "P",
+    "\u0441": "c",
+    "\u0421": "C",
+    "\u0443": "y",
+    "\u0423": "Y",
+    "\u0445": "x",
+    "\u0425": "X",
+    "\u0455": "s",
+    "\u0405": "S",
+    "\u0456": "i",
+    "\u0406": "I",
+    "\u0458": "j",
+    "\u0408": "J",
+}
+
+INVISIBLE_CHARS_REGEX = re.compile(r"[\u200b\u200c\u200d\ufeff\u200e\u200f\u202a-\u202e]")
+
+
+def normalize_adversarial_text(text: str) -> str:
+    """Normalizes text to defeat adversarial evasion techniques:"""
+    if not text:
+        return ""
+    cleaned = INVISIBLE_CHARS_REGEX.sub("", text)
+    for cyr, lat in HOMOGLYPH_MAP.items():
+        cleaned = cleaned.replace(cyr, lat)
+    normalized = unicodedata.normalize("NFKD", cleaned)
+
+    decoded_extras = []
+
+    hex_matches = re.findall(r"(?:fromhex\(['\"]|\\x)([0-9a-fA-F]{2,})", normalized)
+    for h in hex_matches:
+        try:
+            if len(h) % 2 == 0:
+                dec = bytes.fromhex(h).decode("utf-8", errors="ignore")
+                if dec.strip():
+                    decoded_extras.append(dec.strip())
+        except Exception:
+            pass
+
+    b64_matches = re.findall(
+        r"(?:-encodedcommand\s+|-enc\s+|-e\s+|['\"]|\b)([A-Za-z0-9+/]{8,}={0,2})(?:['\"]|\b|$)",
+        normalized,
+        re.IGNORECASE,
+    )
+    for candidate in b64_matches:
+        try:
+            dec = base64.b64decode(candidate).decode("utf-8", errors="ignore")
+            if dec.strip() and any(c.isalnum() for c in dec):
+                decoded_extras.append(dec.strip())
+        except Exception:
+            pass
+
+    if decoded_extras:
+        normalized += " " + " ".join(decoded_extras)
+
+    return normalized.lower()
+
+
+class DisagreementLevel(IntEnum):
+    EXECUTE = 0
+    SUGGEST = 1
+    CHALLENGE = 2
+    SAFETY = 3
+
+
+@dataclass
+class GuardianVerdict:
+    level: DisagreementLevel
+    reasoning: str | None = None
+    evidence: list[str] = field(default_factory=list)
+    confidence: str | None = None
+    recommendation: str | None = None
+    requires_confirmation: bool = False
+    friction_index: float = 0.0
+    fatigue_score: float = 0.0
+    is_hard_safety: bool = False
+
+    def to_dict(self) -> dict:
+        return {
+            "level": int(self.level),
+            "level_name": self.level.name,
+            "reasoning": self.reasoning,
+            "evidence": self.evidence,
+            "confidence": self.confidence,
+            "recommendation": self.recommendation,
+            "requires_confirmation": self.requires_confirmation,
+            "friction_index": round(self.friction_index, 3),
+            "fatigue_score": round(self.fatigue_score, 3),
+            "is_hard_safety": self.is_hard_safety,
+        }
+
+
+SAFETY_TRIGGERS = [
+    "rm -rf",
+    "format c:",
+    "format d:",
+    "format /fs:",
+    "del /f",
+    "del /f /s /q",
+    "dd if=",
+    "mkfs",
+    "mkfs.",
+    "delete all",
+    "wipe",
+    "factory reset",
+    "drop table",
+    "drop database",
+    "drop all",
+    "truncate table",
+    "truncate",
+    "destroy cluster",
+    "destroy",
+    "wipe all",
+    "del /f /q",
+    "wipe partitions",
+    ":(){ :|:& };:",
+    "remove-item -recurse",
+    "chmod -r 777",
+    "chmod -r 777 /",
+    "chown -r /",
+    "base64 -d | sh",
+    "invoke-expression",
+    "downloadstring",
+    "set-executionpolicy bypass",
+    "vssadmin delete shadows",
+    "bcdedit /delete",
+    "stop-computer",
+    "restart-computer",
+    "disable-netfirewallrule",
+    "| bash",
+    "| sh",
+    "| powershell",
+    "| iex",
+    "| perl",
+    "| python",
+    "| ruby",
+    "| pwsh",
+    "remove-item",
+    "clear-disk",
+    "format-volume",
+    "ri c:",
+    "ri d:",
+    "certutil -urlcache",
+    "bitsadmin /transfer",
+    "schtasks /create",
+    "nc -e",
+    "ncat -e",
+]
+
+SAFETY_PATTERNS = [
+    r"\b(drop\s+(database|table|all|schema)|truncate(\s+table)?|delete\s+from\s+[a-z0-9_]+|drop\s+all\s+foreign\s+keys|alter\s+table\s+[a-z0-9_]+\s+drop\s+column|alter\s+table\s+.*drop\s+(column|constraint))\b",
+    r"\b(rm\s+-rf|del\s+/[fsq\s]+|dd\s+if=|mkfs|shred(\s+-[a-z0-9]+)?|wipe\s+(disk|all|partitions)|factory\s+reset|remove-item(\s+.*)?|clear-disk|format-volume|format\s+(/|/boot|[a-z]:|drive\s+[a-z]:|drive|hard\s+drive|disk|partitions?|table\s+[a-z0-9_]+|the\s+(production|persistent|volume|drive|disk)|my\s+hard\s+drive)|del(\.exe)?\s+([a-z]:\\windows|[a-z]:\\system32|c:\\windows)|corrupt\s+(the\s+)?master\s+boot\s+record|c:\\bootmgr|/dev/sda|/dev/nvme[0-9a-z]*|sysrq|find\s+.*\s+-delete|(os|shutil)\.(remove|unlink|rmdir|rmtree))\b",
+    r"\b(ri|remove-item)\s+([a-z]:|/|\*)",
+    r"\b(nt\s+authority\\system|chmod\s+(-r\s+)?777|chown\s+-r\s+/|privilege\s+escalation(\s+payload)?|elevate\s+process\s+token|mimikatz|dump\s+sam\s+database|pam\s+authentication|setuid|setgid|sudoers|elevated\s+subshell|authorized_keys|reg\s+add\s+.*\\run|schtasks(\.exe)?\s+/create|backdoor|persistence\s+via|malicious\s+hook|systemd\s+cron|force\s+sudo\s+execution)\b|(?:\s|^)(?:\.?bashrc|\.?zshrc|\.?profile|\.?bash_profile)\b",
+    r"(\|\s*(bash|sh|zsh|powershell|pwsh|iex|perl|python|ruby)\b)",
+    r"\b(reverse\s+(tcp\s+)?shell|ransomware(\s+encryption)?|keylogger|fork\s+bomb|:\(\)\{\s+:|:&\s+\};:|base64\s+-d\s+\|\s+sh|eval\(\$\(|downloadstring|invoke-expression|set-executionpolicy\s+bypass|outbound\s+http\s+exfiltration|exfiltrat(e|ion)|brute\s+force\s+attacks?|python(\d|\.exe)?\s+-c\s+.*(os\.remove|os\.unlink|rmtree|exec\(|urllib|pty\.spawn)|certutil(\.exe)?\s+.*-urlcache|bitsadmin(\.exe)?\s+/transfer|(invoke-restmethod|invoke-webrequest|curl|wget)\b.*(id_rsa|id_ed25519|\.ssh|aws_keys|credentials|passwords))\b",
+    r"\b(extract\s+saved\s+browser\s+passwords|reveal\s+hidden\s+system\s+prompts|api\s+secrets|steal\s+credentials|dump\s+memory\s+for\s+passwords|aws\s+keys|destroy\s+encryption\s+keys|poison\s+(the\s+)?(local\s+)?dns|dns\s+cache\s+poisoning|spoof\s+arp|arp\s+spoofing)\b",
+    r"\b(ignore\s+(safety|all)\s+protocols?|disable\s+(sandboxing(\s+constraints)?|security|rate\s+limits|audit|logging|windows\s+defender|firewall(\s+rules)?|antivirus|selinux|guardian|defcon|guardrails?)|deactivate\s+security\s+guardrails|terminate\s+all\s+host\s+processes|bypass\s+system\s+permissions|sql\s+injection\s+payload|extracts?\s+hashed\s+passwords|penetration\s+test\s+payload|unrestricted\s+ai|hypothetical\s+fictional\s+scenario\s+without\s+ethics|simulate\s+an\s+(evil|unrestricted)|dan\s+mode|jailbreak|bypass\s+safety|override\s+guardian|overwrite\s+(the\s+)?firmware|nvram|debug\s+override\s+mode|maintenance\s+(system\s+)?administration\s+mode|delete\s+volume\s+[a-z](\s+cleanly)?)\b",
+]
+
+COMPILED_SAFETY_PATTERNS = [re.compile(p, re.IGNORECASE) for p in SAFETY_PATTERNS]
+
+CONFLICT_TRIGGERS = [
+    "during my scheduled",
+    "during my work sprint",
+    "during work sprint",
+    "during my deep work block",
+    "during deep work block",
+    "deep work block",
+    "to sleep in",
+    "skip work",
+    "skip work tomorrow",
+    "disable security firewall",
+    "disable firewall",
+    "delete my habit tracker",
+    "override the sleep schedule",
+    "override sleep schedule",
+    "continuous overnight coding",
+    "override my habit",
+    "cancel all my morning meetings",
+    "cancel all my meetings",
+    "cancel all meetings",
+    "schedule a gaming session",
+    "schedule gaming session",
+    "plan an all-nighter",
+    "all-nighter",
+]
+
+
+SENSITIVE_WINDOW_KEYWORDS = [
+    "bank",
+    "chase",
+    "wells fargo",
+    "bank of america",
+    "citibank",
+    "citi",
+    "capital one",
+    "fidelity",
+    "vanguard",
+    "schwab",
+    "paypal",
+    "binance",
+    "coinbase",
+    "robinhood",
+    "stripe dashboard",
+    "medical",
+    "patient",
+    "mychart",
+    "epic systems",
+    "cerner",
+    "prescription",
+    "hospital",
+    "health records",
+    "telehealth",
+    "1password",
+    "bitwarden",
+    "lastpass",
+    "keepass",
+    "dashlane",
+    "authenticator",
+    "credential manager",
+    "passwords",
+    "login - google accounts",
+]
+
+PASSWORD_INPUT_TRIGGERS = [
+    "password",
+    "passcode",
+    "pin code",
+    "secret_key",
+    "private_key",
+    "api_key",
+    "token",
+    "auth_token",
+    "bearer ",
+    "cvv",
+    "ssn",
+    "credit card",
+    "seed phrase",
+    "recovery phrase",
+    "mnemonic phrase",
+    "master password",
+    "master key",
+    "sudo ",
+]
+
+
+def calculate_fatigue_score(session_hours: float = 0.0, recent_error_rate: float = 0.0) -> float:
+    """DFM-Guard: Models real-time user cognitive fatigue."""
+    z = (max(0.0, session_hours) / 4.0) + (0.5 * max(0.0, min(1.0, recent_error_rate)))
+    return round(math.tanh(z), 3)
+
+
+def compute_action_reversibility_risk(proposed_action: str) -> float:
+    """
+    Evaluates semantic reversibility risk R(a) in [0.0, 1.0].
+    """
+    action_lower = normalize_adversarial_text(proposed_action)
+    if any(t in action_lower for t in SAFETY_TRIGGERS):
+        return 1.0
+    if any(
+        k in action_lower
+        for k in ["push --force", "git reset --hard", "kill -9", "chmod 777", "delete database", "drop collection"]
+    ):
+        return 0.85
+    if any(k in action_lower for k in ["delete", "remove", "clean", "truncate", "overwrite", "uninstall", "purge"]):
+        return 0.55
+    if any(k in action_lower for k in ["write", "update", "modify", "patch", "edit"]):
+        return 0.30
+    return 0.05
+
+
+PROVENANCE_RELIABILITY_MAP: dict[str, float] = {
+    "user_explicit": 1.00,
+    "user_verified": 1.00,
+    "system_verified": 0.95,
+    "local_file": 0.85,
+    "file_system": 0.85,
+    "observation": 0.75,
+    "chat": 0.50,
+    "web_search": 0.35,
+    "external_untrusted": 0.15,
+    "injected": 0.10,
+}
+
+
+def evaluate_memory_authority(
+    memory_provenance: str,
+    memory_confidence: float,
+    action_reversibility: float,
+) -> tuple[float, str]:
+    """
+    Evaluates Dual-Plane Memory Governance Authority:
+        Authority(m, a) = gamma(m) * C(m) * (1 - R(a))
+    
+    Calibration decision boundaries:
+      - Authority >= 0.65 -> ALLOW (Silent autonomous execution)
+      - 0.25 <= Authority < 0.65 -> CHALLENGE (Require explicit operator confirmation)
+      - Authority < 0.25 -> BLOCK (Safety boundary quarantine interdiction)
+      
+    Returns:
+        (authority_score, verdict_string) where verdict_string in ("ALLOW", "CHALLENGE", "BLOCK")
+    """
+    prov_key = str(memory_provenance).lower().strip()
+    gamma = PROVENANCE_RELIABILITY_MAP.get(prov_key, 0.50)
+    conf = max(0.0, min(1.0, float(memory_confidence)))
+    rev = max(0.0, min(1.0, float(action_reversibility)))
+    
+    authority = round(gamma * conf * (1.0 - rev), 4)
+    if authority >= 0.65:
+        verdict = "ALLOW"
+    elif authority >= 0.25:
+        verdict = "CHALLENGE"
+    else:
+        verdict = "BLOCK"
+        
+    return authority, verdict
+
+
+@dataclass
+class FrictionConfig:
+    risk_weight: float = 2.8
+    fatigue_weight: float = 1.8
+    goal_conflict_weight: float = 2.2
+    bias: float = 3.5
+    calibration_method: str = "grid_search_f1_optimized"
+    calibration_date: str = "2026-09-30"
+
+    def to_dict(self) -> dict:
+        return {
+            "risk_weight": self.risk_weight,
+            "fatigue_weight": self.fatigue_weight,
+            "goal_conflict_weight": self.goal_conflict_weight,
+            "bias": self.bias,
+            "calibration_method": self.calibration_method,
+            "calibration_date": self.calibration_date,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "FrictionConfig":
+        return cls(
+            risk_weight=float(data.get("risk_weight", 2.8)),
+            fatigue_weight=float(data.get("fatigue_weight", 1.8)),
+            goal_conflict_weight=float(data.get("goal_conflict_weight", 2.2)),
+            bias=float(data.get("bias", 3.5)),
+            calibration_method=str(data.get("calibration_method", "grid_search_f1_optimized")),
+            calibration_date=str(data.get("calibration_date", "2026-09-30")),
+        )
+
+
+def load_friction_config(config_path: str | Path | None = None) -> FrictionConfig:
+    """Loads FrictionConfig from a JSON configuration file or report if available,"""
+    candidates = []
+    if config_path:
+        candidates.append(Path(config_path))
+    env_cfg = os.environ.get("COPPER_FRICTION_CONFIG")
+    if env_cfg:
+        candidates.append(Path(env_cfg))
+
+    root_dir = Path(__file__).resolve().parent.parent.parent
+    candidates.append(root_dir / "config" / "friction_config.json")
+    candidates.append(root_dir / "docs" / "friction_calibration_report.json")
+
+    for p in candidates:
+        if p.is_file():
+            try:
+                with open(p, encoding="utf-8") as f:
+                    data = json.load(f)
+                cfg_block = data.get("optimal_coefficients") or data.get("friction_config") or data
+                if isinstance(cfg_block, dict) and "risk_weight" in cfg_block:
+                    return FrictionConfig.from_dict(cfg_block)
+            except Exception:
+                continue
+
+    return FrictionConfig()
+
+
+DEFAULT_FRICTION_CONFIG = load_friction_config()
+
+
+def compute_dynamic_friction_index(
+    reversibility_risk: float,
+    fatigue_score: float,
+    goal_conflict: float,
+    bias: float | None = None,
+    config: FrictionConfig | None = None,
+) -> float:
+    """Computes continuous Friction Index in [0.0, 3.0] calibrated via grid search over 350 adversarial test cases (scripts/calibrate_friction.py, docs/friction_calibration_report.json)."""
+    cfg = config or DEFAULT_FRICTION_CONFIG
+    effective_bias = bias if bias is not None else cfg.bias
+    logit = (
+        (cfg.risk_weight * reversibility_risk)
+        + (cfg.fatigue_weight * fatigue_score)
+        + (cfg.goal_conflict_weight * goal_conflict)
+        - effective_bias
+    )
+    sigma = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
+    return round(3.0 * sigma, 3)
+
+
+class GuardianEngine:
+    def __init__(self, friction_config: FrictionConfig | None = None):
+        self.friction_config = friction_config or load_friction_config()
+        self.window_whitelist: set[str] = set()
+        self.window_blacklist: list[str] = list(SENSITIVE_WINDOW_KEYWORDS)
+
+    def check_window_safety(self, window_title: str) -> GuardianVerdict:
+        """Check whether the active window is permitted for automated interaction."""
+        if not window_title:
+            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+        title_lower = window_title.lower()
+
+        if any(w.lower() in title_lower for w in self.window_whitelist):
+            return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+        for forbidden in self.window_blacklist:
+            if forbidden in title_lower:
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Protected window detected: '{window_title}' matches sensitive keyword '{forbidden}'.",
+                    evidence=[f"Window title: {window_title}", f"Blocked pattern: {forbidden}"],
+                    requires_confirmation=True,
+                    recommendation="COPPER will not interact with banking, medical, or credential windows. Please perform this action manually.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+    def check_typing_safety(self, text: str) -> GuardianVerdict:
+        """Prevent automated typing of sensitive credentials or passwords."""
+        text_lower = text.lower()
+        for trigger in PASSWORD_INPUT_TRIGGERS:
+            if trigger in text_lower:
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Sensitive input detected matching '{trigger}'. Automated password entry is forbidden.",
+                    evidence=[f"Pattern matched: {trigger}"],
+                    requires_confirmation=True,
+                    recommendation="Please type passwords, PINs, and secret keys manually.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+    def evaluate_screen_action(self, action_type: str, action_data: dict, window_title: str = "") -> GuardianVerdict:
+        """Guardian evaluation specifically tailored for Computer Use Agent steps."""
+        win_verdict = self.check_window_safety(window_title)
+        if win_verdict.level >= DisagreementLevel.CHALLENGE:
+            return win_verdict
+
+        if action_type == "type_text":
+            text_to_type = action_data.get("text", "")
+            typing_verdict = self.check_typing_safety(text_to_type)
+            if typing_verdict.level >= DisagreementLevel.CHALLENGE:
+                return typing_verdict
+
+        if action_type == "hotkey":
+            keys = [str(k).lower() for k in action_data.get("keys", [])]
+            if ("alt" in keys and "f4" in keys) or ("ctrl" in keys and "alt" in keys and "del" in keys):
+                return GuardianVerdict(
+                    level=DisagreementLevel.CHALLENGE,
+                    reasoning=f"High-impact system shortcut: {keys}",
+                    requires_confirmation=True,
+                    recommendation="Confirm before closing or terminating system applications.",
+                )
+
+        return GuardianVerdict(level=DisagreementLevel.EXECUTE)
+
+    def evaluate(self, proposed_action: str, context: dict = None) -> GuardianVerdict:
+        if context is None:
+            context = {}
+        action_lower = normalize_adversarial_text(proposed_action)
+
+        session_hours = float(context.get("session_hours", 0.0))
+        error_rate = float(context.get("error_rate", 0.0))
+        fatigue = calculate_fatigue_score(session_hours, error_rate)
+        risk = compute_action_reversibility_risk(proposed_action)
+
+        conflicts = context.get("conflicting_commitments") or []
+        detected_conflicts = [t for t in CONFLICT_TRIGGERS if t in action_lower]
+        has_conflict = bool(conflicts or detected_conflicts)
+        goal_conflict = 0.90 if has_conflict else float(context.get("goal_conflict", 0.0))
+
+        # Workstream C: Dual-Plane MemoryQuarantine Evaluation
+        mem_prov = context.get("memory_provenance")
+        mem_conf = context.get("memory_confidence")
+        if mem_prov is not None or mem_conf is not None:
+            prov_str = str(mem_prov or "chat")
+            conf_val = float(mem_conf) if mem_conf is not None else 0.50
+            auth_score, auth_verdict = evaluate_memory_authority(prov_str, conf_val, risk)
+            
+            if auth_verdict == "BLOCK":
+                return GuardianVerdict(
+                    level=DisagreementLevel.SAFETY,
+                    reasoning=f"Blocked by MemoryQuarantine: Insufficient authority ({auth_score:.3f} < 0.25) for action with reversibility risk {risk:.2f} using '{prov_str}' memory.",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="The memory instructing this action lacks provenance authority. Verify or re-authorize manually.",
+                    friction_index=3.0,
+                    is_hard_safety=True,
+                    fatigue_score=fatigue,
+                )
+            elif auth_verdict == "CHALLENGE":
+                return GuardianVerdict(
+                    level=DisagreementLevel.CHALLENGE,
+                    reasoning=f"MemoryQuarantine Challenge: Action requires operator verification (Authority: {auth_score:.3f}, Reversibility risk: {risk:.2f}, Provenance: '{prov_str}').",
+                    evidence=[
+                        f"Memory Provenance: {prov_str}",
+                        f"Memory Confidence: {conf_val:.2f}",
+                        f"Action Reversibility Risk: {risk:.2f}",
+                        f"Authority Score: {auth_score:.3f}",
+                    ],
+                    requires_confirmation=True,
+                    recommendation="Confirm explicitly before executing action derived from intermediate-authority memory.",
+                    friction_index=max(2.0, compute_dynamic_friction_index(risk, fatigue, goal_conflict, config=self.friction_config)),
+                    fatigue_score=fatigue,
+                )
+
+        friction = compute_dynamic_friction_index(
+            risk, fatigue, goal_conflict, config=self.friction_config
+        )
+
+        # 1. Hard safety invariants: permanently forbidden adversarial and wiping operations
+        is_hard_safety = (
+            any(t in action_lower for t in SAFETY_TRIGGERS)
+            or any(p.search(action_lower) for p in COMPILED_SAFETY_PATTERNS)
+        )
+        if is_hard_safety or context.get("is_destructive"):
+            return GuardianVerdict(
+                level=DisagreementLevel.SAFETY,
+                reasoning="This action is destructive, adversarial, or violates safety boundaries.",
+                requires_confirmation=True,
+                recommendation="Action is forbidden by system invariants. Choose a safer alternative.",
+                friction_index=max(2.85, friction),
+                is_hard_safety=is_hard_safety,
+                fatigue_score=fatigue,
+            )
+
+        # 2. Consequential operations or destructive disk modifications (Require operator confirmation)
+        if risk >= 0.85:
+            return GuardianVerdict(
+                level=DisagreementLevel.CHALLENGE,
+                reasoning="High-impact or destructive disk modification requested.",
+                requires_confirmation=True,
+                recommendation="Confirm explicitly before proceeding with disk modification.",
+                friction_index=max(2.0, friction),
+                fatigue_score=fatigue,
+            )
+
+        if has_conflict or (risk >= 0.70 and fatigue >= 0.65) or friction >= 2.0:
+            evidence = conflicts if conflicts else detected_conflicts
+            reason = (
+                "This conflicts with an existing commitment or goal."
+                if has_conflict
+                else (
+                    f"Elevated fatigue ({fatigue:.2f}) detected during high-impact operation."
+                    if (risk >= 0.70 and fatigue >= 0.65)
+                    else f"Elevated dynamic friction index ({friction:.2f}) exceeds challenge threshold."
+                )
+            )
+            return GuardianVerdict(
+                level=DisagreementLevel.CHALLENGE,
+                reasoning=reason,
+                evidence=evidence or [f"Reversibility risk: {risk:.2f}", f"Fatigue index: {fatigue:.2f}"],
+                confidence=context.get("confidence", "high"),
+                recommendation=context.get("recommendation", "Keep existing schedule and priorities intact."),
+                requires_confirmation=True,
+                friction_index=max(2.0, friction),
+                fatigue_score=fatigue,
+            )
+
+        suggestion = context.get("optimization_suggestion")
+        if suggestion or (fatigue >= 0.50 and risk >= 0.30):
+            reason = (
+                suggestion or f"High session duration ({session_hours:.1f}h). Consider reviewing changes carefully."
+            )
+            return GuardianVerdict(
+                level=DisagreementLevel.SUGGEST,
+                reasoning=reason,
+                confidence=context.get("confidence", "medium"),
+                friction_index=max(1.0, friction),
+                fatigue_score=fatigue,
+            )
+
+        return GuardianVerdict(
+            level=DisagreementLevel.EXECUTE,
+            friction_index=friction,
+            fatigue_score=fatigue,
+        )
+
+    def validate_tool_call(
+        self,
+        tool_name: str,
+        arguments: dict[str, Any],
+        context: dict[str, Any] | None = None,
+    ) -> GuardianVerdict:
+        """Validate proposed tool call with Guardian safety, dynamic friction, and memory quarantine."""
+        ctx = dict(context or {})
+        action_repr = f"{tool_name}({', '.join(f'{k}={repr(v)[:50]}' for k, v in arguments.items())})"
+        return self.evaluate(action_repr, ctx)
+
+    def evaluate_memory_influence(
+        self,
+        proposed_action: str,
+        memory_provenance: str,
+        memory_confidence: float = 0.50,
+        action_reversibility: float | None = None,
+    ) -> tuple[float, str, GuardianVerdict]:
+        """Evaluate authority and safety impact of a memory influencing an action."""
+        if action_reversibility is None:
+            risk = compute_action_reversibility_risk(proposed_action)
+        else:
+            risk = action_reversibility
+        auth_score, verdict_str = evaluate_memory_authority(memory_provenance, memory_confidence, risk)
+        guardian_verdict = self.evaluate(
+            proposed_action,
+            context={
+                "memory_provenance": memory_provenance,
+                "memory_confidence": memory_confidence,
+            },
+        )
+        return auth_score, verdict_str, guardian_verdict
+
+    def format_challenge(self, verdict: GuardianVerdict) -> str:
+        if verdict.level < DisagreementLevel.CHALLENGE:
+            return verdict.reasoning or ""
+        lines = [f"I disagree with this because {verdict.reasoning}"]
+        if verdict.evidence:
+            lines.append("My evidence is:")
+            lines.extend(f"  - {e}" for e in verdict.evidence)
+        if verdict.confidence:
+            lines.append(f"My confidence is {verdict.confidence}.")
+        if verdict.recommendation:
+            lines.append(f"I recommend: {verdict.recommendation}")
+        if verdict.level == DisagreementLevel.SAFETY:
+            lines.append("This requires your explicit confirmation before I proceed.")
+        else:
+            lines.append("If you still want to proceed, I can — just confirm.")
+        return "\n".join(lines)
+
+
 guardian_engine = GuardianEngine()

@@ -22,6 +22,7 @@ from app.ai.orchestration.wal_executor import (
     current_task_id,
     current_wal,
 )
+from app.ai.tools.executor import tool_executor
 from app.core.forge_sandbox import forge_sandbox
 from app.core.logger import logger
 
@@ -115,7 +116,9 @@ class TaskGraphExecutor:
 
         if "import " in code_to_run or "print(" in code_to_run or "def " in code_to_run:
             try:
-                res = forge_sandbox.execute_python(code_to_run, timeout_seconds=15)
+                res = await tool_executor.execute("python_execute", {"code": code_to_run, "timeout": 15})
+                if res.get("status") == "blocked":
+                    return f"Execution Blocked by Guardian: {res.get('error', 'Security violation')}"
                 output_str = f"Sandbox Execution Status: {res.get('status')}\nStdout:\n{res.get('stdout', '')}"
                 if res.get("stderr"):
                     output_str += f"\nStderr:\n{res.get('stderr')}"

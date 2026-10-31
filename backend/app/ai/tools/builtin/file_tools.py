@@ -154,7 +154,8 @@ async def file_write(path: str, content: str, mode: str = "overwrite") -> dict[s
                         },
                     )
         except Exception as wal_err:
-            logger.debug(f"TaskWAL mutation recording skipped: {wal_err}")
+            logger.error(f"TaskWAL mutation recording failed for '{p}': {wal_err}")
+            raise RuntimeError(f"TaskWAL mutation recording failed, aborting write to preserve crash consistency: {wal_err}") from wal_err
 
         write_mode = "a" if mode.lower() == "append" else "w"
         with open(p, write_mode, encoding="utf-8") as f:

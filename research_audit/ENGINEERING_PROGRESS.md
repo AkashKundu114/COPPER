@@ -84,3 +84,18 @@
   - Added 64-bit Windows ctypes `EmptyWorkingSet` trimming in `tests/core/test_resource_benchmarks.py`, preserving <750 MB RSS during full test runs.
   - Executed full repository test suites: 675+ passing, 0 failing across all modules.
   - Committed in `031b867`.
+- **Step 15 (TaskWAL Fail-Closed Durability - ISS-A03):** Enforced fail-closed semantics in `backend/app/ai/tools/builtin/file_tools.py`. If `wal.append_record` raises an exception during an active DAG, `file_write` immediately aborts the write and raises `RuntimeError`, preserving ACID crash recovery guarantees.
+- **Step 16 (Scrapling Airgap Enforcement - ISS-A05):** Integrated `get_current_network_mode()` into `backend/app/ai/tools/builtin/scrapling_tools.py`. When `NETWORK_MODE = OFFLINE_AIRGAP`, calling `scrapling_scrape` raises `NetworkEgressForbiddenError` before initiating any outbound HTTP requests. Updated `guardian_level=1`.
+- **Step 17 (Post-Crash Startup Lifespan Recovery - ISS-A04):** Integrated `CrashRecoveryEngine` scan and rollback into FastAPI lifespan startup in `backend/app/main.py`. Any incomplete DAGs left by unexpected system crashes or power failures are automatically detected and rolled back during boot.
+- **Step 18 (Tool Execution Bypass Remediation - ISS-A02):** Re-routed direct execution paths through `ToolExecutor` and Guardian:
+  - `TaskGraphExecutor` in `backend/app/ai/orchestration/task_graph.py` now executes Forge sandbox tasks via `tool_executor.execute("python_execute", ...)`.
+  - `VisionAgent` in `backend/app/ai/agents/vision_agent.py` now dispatches screen primitives (`click`, `double_click`, `type_text`, `hotkey`, `scroll`, `wait`) through `tool_executor.execute()`.
+- **Step 19 (Runtime MemoryQuarantine Dual-Plane Integration - ISS-A01):**
+  - Updated `memory_manager.py` (`get_relevant_memories`) to preserve `id`, `provenance`, and `confidence`.
+  - Updated `context_engine.py` to format prompt context with structured `[MEMORY id=... provenance=... confidence=... tier=...]` tags and integrated active `UserMemoryV2` facts.
+  - Updated `BaseAgent.run()` in `backend/app/ai/agents/base.py` to extract working set memory provenance and inject it into `tool_executor.execute()`.
+  - Added and verified end-to-end integration test `tests/security/test_runtime_memoryquarantine_pipeline.py` (100% passing).
+- **Step 20 (Physical Subprocess Crash Testing & Recovery - ISS-A06):**
+  - Fixed latent string prefix bug in `CrashRecoveryEngine.find_incomplete_dags()` using `file.stem.removeprefix("dag_")`.
+  - Created and executed physical OS-level subprocess crash test `scripts/test_real_subprocess_crash.py` using Windows `taskkill /F /PID`. Confirmed 2 uncommitted disk mutations rolled back cleanly.
+  - Added regression test `tests/wal/test_physical_subprocess_crash.py` to test suite.

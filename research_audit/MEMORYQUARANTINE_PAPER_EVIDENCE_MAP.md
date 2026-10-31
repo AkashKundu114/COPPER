@@ -1,0 +1,58 @@
+# MemoryQuarantine: Paper-to-Code Evidence Map
+**Target Manuscript**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents* (`research/paper_revised.tex`)  
+**Target Venue**: IEEE ICCECE 2027 / IEEE Transactions on Consumer Electronics  
+**Audit Date**: 2026-10-31  
+**Status**: AUDITED & RECONCILED  
+
+---
+
+## 1. Executive Summary of Paper-Code Alignment
+
+This document establishes a complete, line-by-line reconciliation between every scientific claim, mathematical equation, architectural block, and empirical metric in `research/paper_revised.tex` against the physical C.O.P.P.E.R. codebase (`backend/app/`), test suites (`tests/`), and experimental artifacts (`research/experiments/`).
+
+### Overall Alignment Verdict
+- **Mathematical Equations**: Implemented in Python runtime (`backend/app/ai/memory/memory_manager.py` and `backend/app/core/guardian.py`), but with empirical caveats regarding heuristic risk scoring.
+- **Runtime Integration**: Previously disconnected in the initial manuscript draft; fully connected and verified fail-closed during the system engineering loop (ISS-A01 through ISS-A06).
+- **Benchmark Validity**: The initial `CopperMemoryBench` ($N=160$) exhibited significant **bimodal action-risk separability** ($\mathcal{R}_{\text{adv}} \ge 0.85$ vs $\mathcal{R}_{\text{benign}} \le 0.25$) and counted `CHALLENGE` as benign task completion.
+- **Empirical Claims**: Must be qualified. While the triple-product authority gate deterministically blocks untrusted destructive actions, claims of "100.0% universal defense" must be bounded by the benchmark threat model and AST parsing limitations.
+
+---
+
+## 2. Line-by-Line Claim & Evidence Mapping
+
+| Paper Section & Line | Paper Claim / Assertion | Source Code / Artifact Path | Verification Status | Forensic Analysis & Audit Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Abstract (L46)** | Dual-plane governance architecture decoupling semantic recall from execution authority | [`backend/app/ai/memory/context_engine.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/context_engine.py#L182-L215)<br>[`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L320-L375) | **VERIFIED** | Plane 1 (retrieval) selects context; Plane 2 (`GuardianEngine.evaluate_memory_influence`) intercepts at physical `ToolExecutor` boundary. |
+| **Abstract (L46)** | $\text{Authority}(m, a) = \gamma(m) \cdot C(m) \cdot (1 - \mathcal{R}(a))$ | [`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L350-L370)<br>[`backend/app/ai/tools/executor.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/tools/executor.py#L110-L145) | **VERIFIED (HEURISTIC)** | Triple-product formula is implemented. Note: $\mathcal{R}(a)$ is evaluated via pattern-matching and command classification, not a learned continuous function. |
+| **Abstract (L46)** | Evaluated on CopperMemoryBench ($N=160$ traces) | [`research/experiments/memory_quarantine/copper_memory_bench.json`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/copper_memory_bench.json)<br>[`benchmark_memory_quarantine.py`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/benchmark_memory_quarantine.py) | **QUALIFIED (BENCHMARK DEFECT)** | 160 traces exist, but use 10 repetitive actions modulo 10. Adversarial actions have risk $\ge 0.85$; benign have risk $\le 0.25$. |
+| **Abstract (L46)** | ASR 0.0%, TIR 100.0%, Fisher's $p = 2.21 \times 10^{-59}$ | [`research/experiments/memory_quarantine/raw_results.json`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/raw_results.json)<br>[`tables/table1_main_security_results.tex`](file:///d:/C.O.P.P.E.R/research/tables/table1_main_security_results.tex) | **QUALIFIED** | Arithmetically correct on the synthetic 100 adversarial traces, but achieved because low $\gamma$ ($0.10 - 0.50$) multiplied by high $\mathcal{R}$ ($0.85 - 1.00$) forces $\text{Auth} \le 0.075 < 0.25$. |
+| **Abstract (L46)** | 100.0% Benign TSR with zero false quarantines | [`research/experiments/memory_quarantine/raw_results.json`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/raw_results.json) | **DEFECTIVE DEFINITION** | Paper counted `CHALLENGE` as benign task completion (`verdict in ["ALLOW", "CHALLENGE"]`). 70% of benign tasks actually required human intervention. |
+| **Sec II-A (L98)** | Persistent Epistemic Store $\mathcal{M}$ persists $m = \langle c, \gamma, C, t, \mathbf{v} \rangle$ | [`backend/app/database/models/memory_v2.py`](file:///d:/C.O.P.P.E.R/backend/app/database/models/memory_v2.py#L30-L75)<br>[`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L120-L160) | **VERIFIED** | SQLite table `user_memories_v2` stores `content`, `provenance`, `confidence`, `created_at`, `embedding_id`. |
+| **Sec II-C (L128)** | Threat model: Table I Invariants 1, 2, 3 | [`research/tables/table6_threat_model_summary.tex`](file:///d:/C.O.P.P.E.R/research/tables/table6_threat_model_summary.tex)<br>[`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L280-L315) | **VERIFIED** | Enforced at runtime: unconfirmed mutations blocked when memory is tainted; provenance tags are immutable in SQLite. |
+| **Sec III-A (L174)** | Hybrid Reciprocal Rank Fusion (RRF) dense cosine + sparse BM25 | [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L185-L215) | **VERIFIED** | Implemented in `get_relevant_memories()` combining dense embeddings and BM25 token frequencies with $k=60$ constant. |
+| **Sec III-B (L188)** | Provenance Weight Hierarchy $\gamma$: 9 channel levels (Table II) | [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L35-L55)<br>[`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L50-L65) | **VERIFIED** | `PROVENANCE_WEIGHTS` dictionary in `memory_manager.py` defines exact weights: `explicit_user`: 1.0, `system_verified`: 0.95, `untrusted_tool`: 0.10. |
+| **Sec III-B (L221)** | PW-EBR Log-odds belief revision with natural log surprise (Eq 2) | [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L58-L85) | **VERIFIED** | Function `compute_surprise_gated_log_odds()` computes $\mathcal{L}_{t+1} = \mathcal{L}_t + \text{polarity} \cdot \gamma \cdot \ln(1 + 1 / \max(C, 10^{-4}))$. |
+| **Sec III-B (L229)** | UMF-EDR Ebbinghaus decay with retrieval practice (Eq 3) | [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L90-L115) | **VERIFIED** | Function `compute_unified_epistemic_decay()` implements $C(t) = C_0 \exp(-\lambda_{\text{eff}} \Delta t)$ with $\lambda_{\text{eff}} = \lambda_0 / (1 + \ln(1 + N))$. |
+| **Sec III-B (L234)** | Symmetric tier demotion eliminating one-way ratcheting | [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py#L125-L145) | **VERIFIED** | `_update_tier()` checks if confidence drops below 0.70 (`FACT` $\to$ `OBSERVATION`) or 0.40 (`OBSERVATION` $\to$ `HYPOTHESIS`). |
+| **Sec III-B (L238)** | Action Reversibility Risk $\mathcal{R}(a)$ mapping (Eq 4) | [`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L180-L240) | **VERIFIED (RULE-BASED)** | Function `compute_action_reversibility_risk()` maps command types to $\{1.00, 0.85, 0.55, 0.30, 0.05\}$. |
+| **Sec III-C (L251)** | Decision thresholds: $\text{ALLOW} \ge 0.65$, $\text{CHALLENGE} \in [0.25, 0.65)$, $\text{BLOCK} < 0.25$ | [`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L360-L375) | **VERIFIED** | Hardcoded decision thresholds match paper specification exactly. |
+| **Sec III-C (L256)** | Algorithm 1: MemoryQuarantine Dual-Plane Tool Authorization | [`backend/app/ai/agents/base.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/agents/base.py#L150-L185)<br>[`backend/app/ai/tools/executor.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/tools/executor.py#L115-L140) | **VERIFIED** | Lines in `base.py` pass supporting memory provenance and confidence to `ToolExecutor`, which calls `GuardianEngine`. |
+| **Sec IV-D (L333)** | End-to-end physical execution harness running local GPU model | [`research/experiments/memory_quarantine/test_real_llm_harness.py`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/test_real_llm_harness.py)<br>[`tests/security/test_runtime_memoryquarantine_pipeline.py`](file:///d:/C.O.P.P.E.R/tests/security/test_runtime_memoryquarantine_pipeline.py) | **QUALIFIED** | Harness exists, but tested only 1 handcrafted scenario. Real runtime pipeline test was added in `tests/security/` during Phase 2. |
+| **Sec V-C (L400)** | Statistical significance: Fisher's exact $p = 2.21 \times 10^{-59}$ | [`research/tables/table8_statistical_significance.tex`](file:///d:/C.O.P.P.E.R/research/tables/table8_statistical_significance.tex) | **VERIFIED (PAIRED CAVEAT)** | Fisher's exact test calculation on $\left[\begin{smallmatrix} 100 & 0 \\ 0 & 100 \end{smallmatrix}\right]$ yields $p = 2.21 \times 10^{-59}$. However, because baselines were evaluated on identical traces, McNemar's paired test is the mathematically rigorous test. |
+| **Sec V-E (L450)** | Authority calculation micro-latency: mean $0.005\text{ ms}$, P95 $0.008\text{ ms}$ | [`research/experiments/memory_quarantine/benchmark_memory_quarantine.py`](file:///d:/C.O.P.P.E.R/research/experiments/memory_quarantine/benchmark_memory_quarantine.py#L261)<br>[`figures/fig8_mq_latency_distribution.png`](file:///d:/C.O.P.P.E.R/research/figures/fig8_mq_latency_distribution.png) | **VERIFIED** | Gate execution takes $\sim 5\text{ to }12\text{ microseconds}$ in pure Python arithmetic; confirmed $<0.01\text{ ms}$. |
+| **Sec VI (L460)** | Table IV Metric Reconciliation: Routing 76.69% vs 97.77% vs 99.98% | [`backend/eval/benchmark.py`](file:///d:/C.O.P.P.E.R/backend/eval/benchmark.py)<br>[`research_audit/FINAL_SYSTEM_AUDIT.md`](file:///d:/C.O.P.P.E.R/research_audit/FINAL_SYSTEM_AUDIT.md#L80-L125) | **VERIFIED** | Reconciled across 23,705 samples: 76.69% held-out test (2,372 roadmap OOD queries), 97.77% curated, 99.98% supported. |
+
+---
+
+## 3. Discrepancy & Vulnerability Ledger
+
+1. **Benchmark Bimodal Separability Defect**:
+   - In `copper_memory_bench.json`, all adversarial traces propose actions with reversibility risk $\mathcal{R}(a) \in \{0.85, 0.90, 0.95, 1.00\}$.
+   - All benign traces propose actions with $\mathcal{R}(a) \in \{0.05, 0.10, 0.15, 0.20, 0.25\}$.
+   - **Consequence**: The benchmark cannot evaluate whether the system can distinguish high-consequence benign tasks (e.g. `rm -rf ./build` or `git clean -fd`) from attacks, or detect low-consequence adversarial infiltration (e.g. reading credentials or planting a backdoor file).
+2. **Benign Task Success Definition Defect**:
+   - In `benchmark_memory_quarantine.py`, `benign_succeeded = verdict in ["ALLOW", "CHALLENGE"]`.
+   - Counting `CHALLENGE` as success without simulating user confirmation violates scientific integrity. In reality, 70% of benign tasks triggered a `CHALLENGE` dialog (Operator Confirmation Rate = 70.0%). If the user cancels or suffers confirmation fatigue, these tasks fail.
+3. **Action Reversibility Heuristics**:
+   - The paper implies $\mathcal{R}(a)$ is continuous and consequence-calibrated. In the code, it is an AST/regex pattern table (`file_tools.py`, `screen_tools.py`, `guardian.py`).
+   - Shell commands with indirect syntax (e.g., base64 encoded strings or variable expansions) may evade simple regex classification.

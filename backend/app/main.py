@@ -105,6 +105,19 @@ async def lifespan(app: FastAPI):
 
     clipboard_monitor.start()
 
+    try:
+        from app.ai.orchestration.wal_executor import CrashRecoveryEngine
+
+        recovery_engine = CrashRecoveryEngine()
+        incomplete_dags = recovery_engine.find_incomplete_dags()
+        if incomplete_dags:
+            logger.info(f"TaskWAL crash recovery: found {len(incomplete_dags)} incomplete DAGs. Performing rollback...")
+            for dag_id in incomplete_dags:
+                rolled_back = recovery_engine.rollback_uncommitted_mutations(dag_id)
+                logger.info(f"TaskWAL rolled back {rolled_back} uncommitted mutations for DAG {dag_id}")
+    except Exception as e:
+        logger.warning(f"TaskWAL startup recovery check error: {e}")
+
     logger.info("COPPER backend ready")
     yield
 
