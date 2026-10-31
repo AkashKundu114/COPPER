@@ -8,7 +8,7 @@ This directory contains the primary publication manuscripts, empirical benchmark
 
 | Track | Manuscript Title | Status | Target Venue | Primary Documents |
 | :--- | :--- | :--- | :--- | :--- |
-| **Active / Reconstructed** | **MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents** | **Ready for Submission** | **IEEE ICCECE 2027** / arXiv (`cs.CR`, `cs.AI`, `cs.SE`) | [`paper_revised.tex`](paper_revised.tex), [`memoryquarantine_package/`](memoryquarantine_package/), [`memoryquarantine_submission.zip`](memoryquarantine_submission.zip) |
+| **Active / Reconstructed** | **MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents** | **Ready for Submission (Compiled PDF Available)** | **IEEE ICCECE 2027** / arXiv (`cs.CR`, `cs.AI`, `cs.SE`) | [`paper_revised.pdf`](paper_revised.pdf), [`paper_revised.tex`](paper_revised.tex), [`memoryquarantine_package/`](memoryquarantine_package/), [`memoryquarantine_submission.zip`](memoryquarantine_submission.zip) |
 | **Historical / Audited** | *C.O.P.P.E.R.: A Resource-Bounded Local Multi-Agent Architecture for Consumer GPU* | Audited & Quarantined (See [`research_audit/`](../research_audit/)) | Archived | [`paper.tex`](paper.tex), [`paper.pdf`](paper.pdf), [`legacy/`](legacy/) |
 
 > **Notice on Audit Remediation:** The historical 25-page manuscript ([`paper.tex`](paper.tex)) was subjected to a rigorous 19-report academic and architectural audit ([`research_audit/`](../research_audit/)). The audit identified unsupported multi-agent claims and benchmark unobservables. In response, the research was reconstructed into **MemoryQuarantine**—a tightly focused, mathematically formalized, and physically validated IEEE conference paper with 100% reproducible empirical benchmarks on physical hardware.
@@ -163,13 +163,19 @@ Rebuild the standalone submission package and generate compressed `.zip` and `.t
 python research/build_memoryquarantine_arxiv_package.py
 ```
 
-### Step 3: Regenerate Publication Figures
+### Step 3: Compile Certified PDF via IEEE LaTeXQC
+Compile the LaTeX package using the official IEEE cloud compilation service to generate the verified PDF:
+```bash
+python research/compile_latexqc.py
+```
+
+### Step 4: Regenerate Publication Figures
 Regenerate all 8 figures at 350 DPI from verified benchmark data:
 ```bash
 python research/generate_memoryquarantine_academic_figures.py
 ```
 
-### Step 4: Re-Run Empirical Benchmarks
+### Step 5: Re-Run Empirical Benchmarks
 Re-execute the 160-trace benchmark suite or physical LLM tool harness:
 ```bash
 # Run 160-trace benchmark

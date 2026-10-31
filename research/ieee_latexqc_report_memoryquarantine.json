@@ -1,0 +1,43 @@
+{
+  "overview": {
+    "status": 200,
+    "data": {
+      "clientMediaId": "sequence-202287-attempt-1",
+      "receivedAt": "2026-10-31T04:41:05.130Z",
+      "startedAt": "2026-10-31T04:41:05.141Z",
+      "finishedAt": "2026-10-31T04:41:17.234Z",
+      "status": "success",
+      "error": {
+        "code": null,
+        "message": null
+      },
+      "logMessage": {
+        "file": "./main.tex",
+        "kind": "warning",
+        "line": 0,
+        "message": "Package hyperref Warning: Difference (2) between bookmark levels is greater \n(hyperref)                than one, level fixed on input line 87.\n"
+      },
+      "mainFilePathname": "main.tex",
+      "resultsFileUri": "/api/v1/conversion/clients/ieee_latexqc/conversions/sequence-202287-attempt-1/output",
+      "errorsCount": 0,
+      "warningsCount": 5,
+      "conversionSequenceId": 202287,
+      "deliveredAt": "2026-10-31T04:41:17.244Z",
+      "thumbnailUri": "https://writelatex-conversions.s3.amazonaws.com/thumbnails/ieee_latexqc/sequence-202287-attempt-1.jpeg?X-Amz-Expires=14400&X-Amz-Date=20261031T044117Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=c04f4b1dd665451b8b791bee53a015b34b1cdd8824d64d2e0d4c1c575ae740a6"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMjg3LWF0dGVtcHQtMSIsInNlcUlkIjoyMDIyODcsImlhdCI6MTc5MzQyMTY2MSwiZXhwIjoxNzkzNjgwODYxfQ.2CDHobdcl2-V7q2pIeZCHhGh5U8zVKDZl3bc1rfBWJU"
+  },
+  "overleafProject": {
+    "status": 200,
+    "data": {
+      "projectStatus": "new",
+      "projectUrl": "https://www.overleaf.com/docs?brand_variation_id=64&partner=ieee_latexqc&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRNZWRpYUlkIjoic2VxdWVuY2UtMjAyMjg3LWF0dGVtcHQtMSIsInNlcUlkIjoyMDIyODcsImlhdCI6MTc5MzQyMTY2MSwiZXhwIjoxNzkzNjgwODYxfQ.2CDHobdcl2-V7q2pIeZCHhGh5U8zVKDZl3bc1rfBWJU"
+    }
+  },
+  "pdf": {
+    "status": 200,
+    "data": {
+      "pdfUri": "https://writelatex-conversions.s3.amazonaws.com/pdfs/ieee_latexqc/sequence-202287-attempt-1?X-Amz-Expires=14400&X-Amz-Date=20261031T044117Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWJBOALPNFPV7PVH5%2F20261031%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=2657425407114adb4e7b8e9961e33322d8093f897565b36760b6ef77dc6bcc63"
+    }
+  }
+}

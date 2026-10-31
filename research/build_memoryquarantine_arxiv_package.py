@@ -30,6 +30,8 @@ def main():
     # 1. Copy core paper and bibliography
     shutil.copy2(BASE_DIR / "paper_revised.tex", PKG_DIR / "main.tex")
     shutil.copy2(BASE_DIR / "references.bib", PKG_DIR / "references.bib")
+    if (BASE_DIR / "main.bbl").exists():
+        shutil.copy2(BASE_DIR / "main.bbl", PKG_DIR / "main.bbl")
 
     # 2. Copy IEEE style and class dependencies
     for item in ["IEEEtran.cls", "orcidlink.sty"]:

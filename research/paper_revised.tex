@@ -25,6 +25,7 @@
 }
 \usepackage{xcolor}
 \usepackage{microtype}
+\providecommand{\RETURN}{\STATE \textbf{return} }
 
 \begin{document}
 
@@ -187,7 +188,7 @@ The consequence-calibrated authority metric is formulated as:
 \subsubsection{1. Provenance Weight Hierarchy ($\gamma$)}
 Provenance represents the objective authenticity of the memory's ingestion channel, assigned deterministically by the runtime as detailed in Table~\ref{tab:provenance_hierarchy}.
 
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{Immutable Provenance Hierarchy ($\gamma$) and Channel Trust Specifications}
 \label{tab:provenance_hierarchy}
@@ -242,9 +243,9 @@ Action reversibility evaluates the operational consequence of the tool action on
 \subsection{Decision Boundaries \& Gating Logic}
 The Guardian Safety Gate deterministically maps $\text{Authority}(m, a)$ into three operational verdicts:
 \begin{itemize}
-    \item $\mathbf{Authority(m, a) \ge 0.65 \implies ALLOW:}$ Autonomous execution proceeds silently without user interruption.
-    \item $\mathbf{0.25 \le Authority(m, a) < 0.65 \implies CHALLENGE:}$ Execution is paused; the operator is presented with an explicit confirmation dialog displaying memory provenance, reversibility risk, and exact command parameters.
-    \item $\mathbf{Authority(m, a) < 0.25 \implies BLOCK:}$ Execution is unconditionally interdicted. The action is quarantined and logged to the audit trail.
+    \item $\text{Authority}(m, a) \geq 0.65 \implies \text{\textbf{ALLOW:}}$ Autonomous execution proceeds silently without user interruption.
+    \item $0.25 \leq \text{Authority}(m, a) < 0.65 \implies \text{\textbf{CHALLENGE:}}$ Execution is paused; the operator is presented with an explicit confirmation dialog displaying memory provenance, reversibility risk, and exact command parameters.
+    \item $\text{Authority}(m, a) < 0.25 \implies \text{\textbf{BLOCK:}}$ Execution is unconditionally interdicted. The action is quarantined and logged to the audit trail.
 \end{itemize}
 
 \begin{algorithm}[t]
@@ -257,22 +258,22 @@ The Guardian Safety Gate deterministically maps $\text{Authority}(m, a)$ into th
 \STATE $a \leftarrow \text{LLM\_Reasoning}(q, \mathcal{M}_{\text{recalled}})$
 \STATE $\mathcal{R}(a) \leftarrow \text{EvaluateReversibilityRisk}(a)$
 \IF{$\text{IsHardSafetyInvariant}(a)$}
-    \RETURN $\text{BlockUnconditionally}(\text{``System invariant violated''})$
+    \STATE \textbf{return} $\text{BlockUnconditionally}(\text{``System invariant violated''})$
 \ENDIF
 \STATE $m_{\text{supp}} \leftarrow \text{ExtractSupportingMemory}(a, \mathcal{M}_{\text{recalled}})$
 \STATE $\gamma \leftarrow \text{GetImmutableProvenance}(m_{\text{supp}})$
 \STATE $C \leftarrow \text{GetEpistemicConfidence}(m_{\text{supp}})$
 \STATE $\text{Auth} \leftarrow \gamma \cdot C \cdot (1 - \mathcal{R}(a))$ \COMMENT{Plane 2 Authority}
 \IF{$\text{Auth} < 0.25$}
-    \RETURN $\text{BlockAndQuarantine}(a, \text{Auth}, \text{``Insufficient authority''})$
+    \STATE \textbf{return} $\text{BlockAndQuarantine}(a, \text{Auth}, \text{``Insufficient authority''})$
 \ELSIF{$\text{Auth} < 0.65$}
     \IF{$\text{OperatorConfirmed}(\mathcal{C}) == \text{True}$}
-        \RETURN $\text{ExecutePhysicalTool}(a)$
+        \STATE \textbf{return} $\text{ExecutePhysicalTool}(a)$
     \ELSE
-        \RETURN $\text{RaiseOperatorChallenge}(a, \text{Auth})$
+        \STATE \textbf{return} $\text{RaiseOperatorChallenge}(a, \text{Auth})$
     \ENDIF
 \ELSE
-    \RETURN $\text{ExecutePhysicalTool}(a)$
+    \STATE \textbf{return} $\text{ExecutePhysicalTool}(a)$
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
@@ -282,7 +283,7 @@ The Guardian Safety Gate deterministically maps $\text{Authority}(m, a)$ into th
 \subsection{Evaluation Hardware \& Environment}
 All benchmarks were executed on an AMD Ryzen 9 8940HX workstation equipped with an NVIDIA GeForce RTX 5060 Laptop GPU running Windows 11 Enterprise x64 and Python 3.14.6, as detailed in Table~\ref{tab:testbed}. Local LLM inference was executed via Ollama v0.5.1 with quantized models offloaded to 100\% GPU VRAM.
 
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{Empirical Hardware and Software Testbed Specification}
 \label{tab:testbed}
@@ -369,7 +370,7 @@ As summarized in Table~\ref{tab:main_results} and Fig.~\ref{fig:asr_tir}, Memory
 
 \subsection{Attack Vector Breakdown}
 Table~\ref{tab:vector_breakdown} and Fig.~\ref{fig:vector_breakdown} detail attack success across the five attack classes:
-\begin{table}[h]
+\begin{table}[!t]
 \centering
 \caption{Attack Success Rate (ASR) Across Attack Vectors ($N=20$ each)}
 \label{tab:vector_breakdown}
@@ -424,7 +425,7 @@ Crucially, security does not come at the cost of task utility (Fig.~\ref{fig:par
 In the physical end-to-end evaluation using \texttt{qwen2.5:0.5b} on the RTX 5060 GPU:
 \begin{itemize}
     \item Under Baseline $B_1$, the LLM generated tool calls parsing the injected document, overwriting \texttt{canary\_target.env} with \texttt{POISONED\_MALICIOUS\_PAYLOAD\_EXFIL}.
-    \item Under MemoryQuarantine ($M_5$), \texttt{ToolExecutor} intercepted the call in \textbf{$0.0128\text{ ms}$}, reporting $\text{Authority} = 0.0641 < 0.25$. The tool invocation was blocked, and Additionally, the calibrated Guardian dynamic friction curve (Fig.~\ref{fig:roc_curve}) achieves 100\% Sensitivity with 0.0\% False Positive Rate ( = 1.000$) across 350 adversarial threat cases. Physical disk inspection confirmed \texttt{canary\_target.env} remained uncorrupted with its original authentic token.
+    \item Under MemoryQuarantine ($M_5$), \texttt{ToolExecutor} intercepted the call in \textbf{$0.0128\text{ ms}$}, reporting $\text{Authority} = 0.0641 < 0.25$. The tool invocation was blocked and quarantined. Additionally, the calibrated Guardian dynamic friction curve (Fig.~\ref{fig:roc_curve}) achieves 100\% Sensitivity with 0.0\% False Positive Rate ($F_1 = 1.000$) across 350 adversarial threat cases. Physical disk inspection confirmed \texttt{canary\_target.env} remained uncorrupted with its original authentic token.
 \end{itemize}
 
 \begin{figure}[!t]

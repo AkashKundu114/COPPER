@@ -196,7 +196,13 @@ research/*
 !research/generate_memoryquarantine_academic_figures.py
 !research/build_memoryquarantine_arxiv_package.py
 !research/paper_revised.tex
+!research/paper_revised.pdf
+!research/memoryquarantine.pdf
+!research/main.bbl
 !research/references.bib
+!research/compile_latexqc.py
+!research/ieee_latexqc_report_memoryquarantine.json
+!research/memoryquarantine_page1_preview.jpeg
 !research/figures/
 research/figures/*
 !research/figures/fig*_mq_*.png
