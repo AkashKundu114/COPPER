@@ -1,9 +1,12 @@
 # Reviewer Report 3: Experimental Rigor, Reproducibility, and Empirical Integrity
 
-**Track:** IEEE Transactions on Information Forensics and Security / MLSys  
-**Reviewer:** Adversarial Peer Reviewer (Hostile but Fair)  
-**Target Manuscript:** `research/paper_revised.tex`  
-**Overall Recommendation:** **STRONG REJECT**  
+> [!NOTE]
+> **Pre-Submission Stress-Test**: This report is an internal adversarial audit conducted while the manuscript is **under preparation**, designed to detect and eliminate rejection-level empirical weaknesses before formal conference submission.
+
+**Track:** Empirical Systems, Robustness & Benchmark Integrity (Target: IEEE TIFS / MLSys)  
+**Reviewer Role:** Adversarial Peer Reviewer (Hostile but Fair Internal Red-Team)  
+**Target Manuscript:** `research/paper_revised.tex` (Working Draft Under Preparation)  
+**Pre-Submission Verdict on Original Draft:** **REJECT IN CURRENT FORM / REMEDIATE BEFORE SUBMISSION**  
 **Score:** 1 / 5
 
 ---

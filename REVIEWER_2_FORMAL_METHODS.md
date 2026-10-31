@@ -1,9 +1,12 @@
 # Reviewer Report 2: Formal Methods and Mathematical Foundations
 
+> [!NOTE]
+> **Pre-Submission Stress-Test**: This report is an internal adversarial audit conducted while the manuscript is **under preparation**, designed to resolve formal mathematical inconsistencies prior to initial submission.
+
 **Track:** Formal Methods and Information-Theoretic Foundations  
-**Reviewer:** Senior Mathematical & Formal Verification Specialist  
-**Target Manuscript:** `research/paper_revised.tex`  
-**Overall Recommendation:** **REJECT / MAJOR REVISION**  
+**Reviewer Role:** Senior Mathematical & Formal Verification Specialist  
+**Target Manuscript:** `research/paper_revised.tex` (Working Draft Under Preparation)  
+**Pre-Submission Evaluation:** **MAJOR REVISION REQUIRED BEFORE SUBMISSION**  
 **Score:** 2 / 5
 
 ---

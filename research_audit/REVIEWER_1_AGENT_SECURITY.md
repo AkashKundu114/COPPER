@@ -1,9 +1,12 @@
 # Reviewer Report 1: Agent Systems and Security Architecture
 
-**Track:** Systems and Agent Security  
-**Reviewer:** Senior Agent Systems & Security Specialist  
-**Target Manuscript:** `research/paper_revised.tex`  
-**Overall Recommendation:** **WEAK ACCEPT / MAJOR REVISION**  
+> [!NOTE]
+> **Pre-Submission Stress-Test**: This report is an internal adversarial audit conducted while the manuscript is **under preparation**, designed to identify and eliminate vulnerabilities prior to initial submission.
+
+**Track:** Systems and Agent Security (Pre-Submission Target: MLSys / IEEE S&P)  
+**Reviewer Role:** Senior Agent Systems & Security Specialist  
+**Target Manuscript:** `research/paper_revised.tex` (Working Draft Under Preparation)  
+**Pre-Submission Evaluation:** **WEAK ACCEPT / MAJOR REVISION NEEDED BEFORE SUBMISSION**  
 **Score:** 3 / 5
 
 ---

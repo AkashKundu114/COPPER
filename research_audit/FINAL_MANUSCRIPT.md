@@ -2,7 +2,7 @@
 
 **Author:** Akash Kundu  
 **Affiliation:** Department of Computer Science and Engineering, Research and Development Division, C.O.P.P.E.R. Project  
-**Status:** Post-Audit Remediated Manuscript (IEEE Transactions on Information Forensics and Security / MLSys Format)
+**Status:** Working Draft — Under Preparation (Pre-Submission Target: IEEE Transactions on Information Forensics and Security / MLSys)
 
 ---
 

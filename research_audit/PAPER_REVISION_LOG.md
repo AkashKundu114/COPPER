@@ -3,7 +3,7 @@
 **Target Manuscript:** `research/paper_revised.tex`  
 **Bibliography File:** `research/references.bib`  
 **Coordinating Role:** Lead Scientific Editor  
-**Status:** All Issues Audited and Remediation Plan Finalized
+**Status:** Pre-Submission Working Draft — Under Preparation (Internal Audit & Remediation Log)
 
 ---
 
