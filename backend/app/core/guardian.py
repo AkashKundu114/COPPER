@@ -6,6 +6,7 @@ import re
 import unicodedata
 from dataclasses import dataclass, field
 from enum import IntEnum
+from typing import Any
 from pathlib import Path
 
 HOMOGLYPH_MAP = {
@@ -39,6 +40,7 @@ def normalize_adversarial_text(text: str) -> str:
     if not text:
         return ""
     cleaned = INVISIBLE_CHARS_REGEX.sub("", text)
+    cleaned = re.sub(r"\^", "", cleaned)
     for cyr, lat in HOMOGLYPH_MAP.items():
         cleaned = cleaned.replace(cyr, lat)
     normalized = unicodedata.normalize("NFKD", cleaned)
@@ -62,9 +64,16 @@ def normalize_adversarial_text(text: str) -> str:
     )
     for candidate in b64_matches:
         try:
-            dec = base64.b64decode(candidate).decode("utf-8", errors="ignore")
-            if dec.strip() and any(c.isalnum() for c in dec):
-                decoded_extras.append(dec.strip())
+            raw_b = base64.b64decode(candidate)
+            dec_utf8 = raw_b.decode("utf-8", errors="ignore").replace("\x00", "").strip()
+            if dec_utf8 and any(ch.isalnum() for ch in dec_utf8):
+                decoded_extras.append(dec_utf8)
+            try:
+                dec_utf16 = raw_b.decode("utf-16le", errors="ignore").replace("\x00", "").strip()
+                if dec_utf16 and any(ch.isalnum() for ch in dec_utf16) and dec_utf16 != dec_utf8:
+                    decoded_extras.append(dec_utf16)
+            except Exception:
+                pass
         except Exception:
             pass
 
@@ -290,6 +299,8 @@ def compute_action_reversibility_risk(proposed_action: str) -> float:
 
 PROVENANCE_RELIABILITY_MAP: dict[str, float] = {
     "user_explicit": 1.00,
+    "explicit_user": 1.00,
+    "user_directive": 1.00,
     "user_verified": 1.00,
     "system_verified": 0.95,
     "local_file": 0.85,
@@ -470,15 +481,25 @@ class GuardianEngine:
             typing_verdict = self.check_typing_safety(text_to_type)
             if typing_verdict.level >= DisagreementLevel.CHALLENGE:
                 return typing_verdict
+            gen_verdict = self.evaluate(text_to_type)
+            if gen_verdict.level >= DisagreementLevel.CHALLENGE:
+                return gen_verdict
 
         if action_type == "hotkey":
             keys = [str(k).lower() for k in action_data.get("keys", [])]
-            if ("alt" in keys and "f4" in keys) or ("ctrl" in keys and "alt" in keys and "del" in keys):
+            high_impact_combinations = [
+                ("alt", "f4"),
+                ("ctrl", "alt", "del"),
+                ("win", "r"),
+                ("win", "x"),
+                ("ctrl", "shift", "esc"),
+            ]
+            if any(all(k in keys for k in combo) for combo in high_impact_combinations):
                 return GuardianVerdict(
                     level=DisagreementLevel.CHALLENGE,
                     reasoning=f"High-impact system shortcut: {keys}",
                     requires_confirmation=True,
-                    recommendation="Confirm before closing or terminating system applications.",
+                    recommendation="Confirm before triggering system shell or process control shortcuts.",
                 )
 
         return GuardianVerdict(level=DisagreementLevel.EXECUTE)

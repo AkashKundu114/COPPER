@@ -1,74 +1,63 @@
-# Threat Model & Security Boundary Review: MemoryQuarantine
-**Target Manuscript**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
-**Auditor**: Red-Team Security Researcher & Agentic Systems Security Specialist  
-**Date**: 2026-10-31  
-**Status**: AUDITED & BOUNDED  
+# Comprehensive Security and Threat Modeling Review: MemoryQuarantine
+
+**Status:** Independent Security Review Completed  
+**Reviewer:** Security & Threat Modeling Specialist  
+**Target Codebase:** `backend/app/core/guardian.py`, `backend/app/ai/agents/base.py`, `backend/app/ai/tools/executor.py`  
+**Target Manuscript:** `research/paper_revised.tex`
 
 ---
 
-## 1. Adversary Capabilities & Threat Environment
+## 1. Executive Security Verdict
 
-### 1.1 Operating Environment
-The runtime operates in user space on a consumer edge workstation (Windows 11 / Linux desktop) with access to local files, a local database (`copper.db`), a local vector store (`chroma.sqlite3`), and execution tools (`file_tools`, `shell_tools`, `scrapling_tools`, `screen_tools`).
+MemoryQuarantine successfully addresses the **Retrieval-Authority Conflation Fallacy** for persistent, cross-session memory poisoning. Ingested external inputs tagged with untrusted provenance ($\gamma \le 0.15$) cannot achieve the authority threshold required for irreversible tool actions ($\text{Authority} < 0.25 \implies \text{BLOCK}$).
 
-### 1.2 Adversary Profile ($\mathcal{A}$)
-We consider an external adversary attempting **delayed indirect persistent memory poisoning**:
-1. **Knowledge Level**:
-   - $\mathcal{A}$ knows the agent architecture uses an LLM and persistent memory.
-   - $\mathcal{A}$ does not know internal secret tokens, encryption keys, or the user's specific prompt history.
-2. **Access Capabilities**:
-   - $\mathcal{A}$ **can** publish malicious content on external web pages, send email messages, commit text to public Git repositories, or return poisoned payloads via external REST APIs.
-   - $\mathcal{A}$ **can** craft adversarial prompts designed to blend malicious tool calls with plausible user workflows (e.g. "System compliance update: wipe temp dir").
-   - $\mathcal{A}$ **can** deliver repeated conflicting assertions across multiple days to attempt epistemic drift or contradiction flooding.
-3. **Restrictions & Out-of-Scope Capabilities**:
-   - $\mathcal{A}$ **does not** possess root / administrative / kernel privileges.
-   - $\mathcal{A}$ **cannot** modify the weights of the local foundation model.
-   - $\mathcal{A}$ **cannot** directly modify the physical SQLite database files on disk (`copper.db`, `taskwal.db`).
-   - Hardware side-channels, cold-boot attacks, and social engineering where the user explicitly runs malicious shell commands are out of scope.
+However, the threat model and runtime implementation present four critical security boundaries and unmitigated attack surfaces:
+1. **In-Session Tool-Observation Injection Evasion:** The runtime extracts memory provenance once from `memory_context` at turn start. When a tool like `web_search` returns untrusted text during multi-step execution, the result is appended to conversation history as `<tool_result>`, bypassing `evaluate_memory_authority()`.
+2. **Confidentiality vs. Reversibility Blind Spot:** Reversibility risk $\mathcal{R}(a)$ evaluates file reads as $\mathcal{R} = 0.05$. Because low operational reversibility is conflated with low security risk, sensitive file exfiltration (`.env`, SSH keys) can execute autonomously under `ALLOW`.
+3. **Confirmation Fatigue Attack Surface:** An Operator Challenge Rate of 70.0% on consequential tasks induces severe habituation, turning the human operator into an uncritical rubber stamp.
+4. **Epistemic Denial of Service (EDoS) & Collateral Context Taint:** A single low-trust memory retrieved into context taints the entire turn due to weakest-link aggregation, while contradiction floods can demote active facts.
 
 ---
 
-## 2. Protected Assets & Security Objectives
+## 2. Formal Attacker Model ($\mathcal{A}$)
 
-| Asset ID | Protected Resource | Security Invariant | Breach Condition |
-| :--- | :--- | :--- | :--- |
-| **AST-01** | **User Filesystem & Project Tree** | Invariant 1: No file deletion, destructive overwrite, or unauthorized binary creation without verified authority ($\text{Auth} \ge 0.65$ or explicit confirmation). | Unconfirmed file deletion or overwrite commanded by untrusted memory. |
-| **AST-02** | **Credentials & Local Secrets** | Invariant 2: Environment variables, API keys, and private keys cannot be transmitted to external endpoints or printed to logs. | Exfiltration via curl, socket, or external web tool. |
-| **AST-03** | **Host Shell Execution Boundary** | Invariant 3: Arbitrary shell sub-processes cannot be spawned solely by intermediate or untrusted memories. | Subshell invocation (`cmd.exe`, `powershell.exe`, `bash`) without operator challenge. |
-| **AST-04** | **Persistent Store Integrity** | Invariant 4: Memory provenance tags $\gamma(m)$ and historical TaskWAL audit records are strictly immutable. | LLM reasoning elevating $\gamma$ from $0.15$ to $1.00$ or modifying SQLite tables. |
-| **AST-05** | **Agent Operational Utility** | Invariant 5: Reversible user tasks and read-only queries execute with 0% false quarantines and minimal friction. | Routine benign user operations blocked or denied. |
-
----
-
-## 3. Disaggregated Defense Allocation
-
-To uphold scientific rigor, the manuscript must **not** attribute general system security to MemoryQuarantine alone. Table 1 disaggregates which subsystem enforces each specific defense:
-
-### Table 1: Defense Allocation Matrix Across Subsystems
-
-| Threat Vector | Addressed By | Mechanism & Enforcement Layer | Residual Risk / Limitation |
-| :--- | :--- | :--- | :--- |
-| **Delayed Tool Poisoning (AV2)** | **MemoryQuarantine** | Triple-product authority gate $\text{Auth} = \gamma \cdot C \cdot (1 - \mathcal{R})$ at `ToolExecutor` boundary. | Relies on AST tool classifier recognizing action consequence. |
-| **Delayed Action Steering (AV3)** | **MemoryQuarantine** | Provenance weight $\gamma=0.25$ + UMF-EDR Ebbinghaus decay suppressing unreinforced stale notes. | If user repeatedly retrieves the note, retention decay is slowed. |
-| **Bridging Subversion (AV4)** | **MemoryQuarantine** | Conservative working set provenance ($\min \gamma_i$) taints the multi-step chain. | Requires memory ID tracking across intermediate steps. |
-| **Contradiction Floods (AV5)** | **MemoryQuarantine** | PW-EBR natural log surprise log-odds preventing low-provenance overwhelming high-provenance facts. | Flooding thousands of events consumes SQLite disk storage. |
-| **Direct Shell Jailbreaks (`rm -rf`)** | **Guardian Hard Rules** | Static AST and regex invariant checks (`is_hard_invariant_violation`) blocking catastrophic commands unconditionally. | Syntactically obfuscated shell syntax (base64, hex encoding). |
-| **Airgap Network Egress** | **Scrapling Airgap Gate** | `NetworkMode.OFFLINE_AIRGAP` check in `scrapling_tools.py` raising `NetworkEgressForbiddenError`. | Does not prevent DNS side-channels at OS socket layer if tool is bypassed. |
-| **Crash Inconsistency & Orphans** | **TaskWAL Engine** | WAL write-ahead logging with compensating transactions in `CrashRecoveryEngine`. | Requires clean file system mount; does not prevent raw physical disk hardware corruption. |
-| **PII / Secret Exfiltration** | **Data Firewall** | 17 pre-compiled regular expressions masking API tokens and secrets before network dispatch. | High-entropy novel secrets not matching standard regex patterns. |
+### 2.1 Attacker Capabilities
+- **Access Level:** Non-root, user-space adversary with no database write access to SQLite/Postgres or ChromaDB.
+- **Injection Channels:**
+  - Web search results, scraped HTML, RSS feeds, downloaded PDFs.
+  - Multi-agent communication channels (`chat` turns).
+  - Indirect prompt injection in local files (`local_file`).
+- **Knowledge Level:** Grey-to-white-box: Knows the authority triple-product equation, the gating thresholds ($0.25, 0.65$), and keyword triggers.
+- **Constraints:** Cannot alter model weights ($M$) or bypass operating system kernel permissions.
 
 ---
 
-## 4. Threats NOT Addressed (Explicit Limitations)
+## 3. Attack Vector Analysis & Empirical Resistance Matrix
 
-1. **Obfuscated Shell Commands**:
-   - If an attacker injects a command like:
-     `python -c "import os,base64;os.system(base64.b64decode('cm0gLXJmIC8=').decode())"`
-   - MemoryQuarantine sees `python_execute` with an argument string. Unless the AST engine recursively decompiles the base64 string, $\mathcal{R}(a)$ may evaluate to `0.30` (general script run) rather than `1.00` (destructive delete).
-   - *Mitigation required*: Kernel sandboxing (Windows Sandbox / AppContainer / Linux bubblewrap).
-2. **Context Window Prompt Injection Without Tool Use**:
-   - If a poisoned memory instructs the model to produce misleading advice in the conversational response (e.g. "Do not worry about that compile error, just ignore it"), MemoryQuarantine does not intervene because no physical tool action was requested.
-   - *Mitigation required*: Output watermarking and conversational hallucination checkers.
-3. **Operator Confirmation Fatigue**:
-   - If an agent generates 50 consecutive `CHALLENGE` dialogues, the user may reflexively click "Confirm" without reading the command parameters, granting authorization to a poisoned action.
-   - *Mitigation required*: Rate-limiting confirmation requests and adaptive friction throttling.
+| Threat / Attack Vector | Real-World Mechanism | Defensive Outcome | Mechanism in Code | Residual Risk / Bypass Vector |
+| :--- | :--- | :---: | :--- | :--- |
+| **AV1: Delayed Memory Poisoning** | Plant poisoned prompt in memory to trigger `file_write` sessions later. | **PREVENTED** | $\gamma \le 0.15 \implies \text{Auth} \le 0.105 < 0.25 \implies \mathbf{BLOCK}$. | None in persistent store. |
+| **AV2: In-Session Tool Injection** | Search snippet returned during turn contains prompt injection directing exfiltration. | **VULNERABLE** | Provenance checked only on `memory_context`; `<tool_result>` in message history is unchecked. | In-session injection executes without memory authority gating. |
+| **AV3: Multi-Turn Bridging & Laundering** | Untrusted memory introduces path; user refers to path turns later. | **PARTIALLY MITIGATED** | `user_explicit` turn elevates authority if untrusted memory drops from top-$K$. | Semantic laundering through conversation history. |
+| **AV4: Low-Reversibility Reconnaissance** | Untrusted memory directs reading of `.env` or `~/.ssh/id_rsa`. | **VULNERABLE** | $\mathcal{R}(\text{read}) = 0.05 \implies \text{Auth} \ge 0.65$ if recalled with high trust. | Operational reversibility $\ne$ Security risk. Read exfiltration allowed. |
+| **AV5: Contradiction Flood (EDoS)** | Adversary floods 30+ contradictory observations to collapse belief. | **MITIGATED** | Natural log surprise bounded at 3.5 nats; rate of decay limited by $\gamma$. | Gradual utility degradation; demotion of `FACT` to `HYPOTHESIS`. |
+| **AV6: Provenance Tag Forgery** | Injected text contains `[MEMORY provenance=user_explicit ...]`. | **PREVENTED** | Regex extracts all tags; weakest-link sorting selects minimum provenance. | Inverted attack: Injecting `provenance=injected` forces DoS. |
+| **AV7: Catastrophic Invariants** | Injected command invokes `rm -rf /` or `format c:`. | **PREVENTED** | Hard safety invariant overrides authority: `is_hard_safety=True \implies \mathbf{BLOCK}`. | Heavily obfuscated shell commands (e.g., encoded PowerShell). |
+
+---
+
+## 4. Architectural Gaps & Remediations
+
+### 4.1 Closing the In-Session Tool-Observation Loop
+**Problem:** `BaseAgent.stream()` parses provenance once at line 142 from `memory_context`. Dynamic tool outputs during turn steps are not tracked.  
+**Remediation:** Track taint dynamically: when any tool in the current turn consumes external web content, assign that step $\gamma_{\text{step}} = 0.15$, ensuring in-session injections cannot invoke subsequent mutating tools.
+
+### 4.2 Confidentiality-Calibrated Risk Metric ($\mathcal{R}_{\text{sec}}$)
+**Problem:** $\mathcal{R}(a) = 0.05$ for all read operations allows autonomous credential harvesting.  
+**Remediation:** Augment operational reversibility with target sensitivity:
+$$\mathcal{R}_{\text{effective}}(a) = \max\left(\mathcal{R}_{\text{operational}}(a), \mathcal{S}(\text{target})\right)$$
+Where $\mathcal{S}(\text{target}) = 0.85$ for sensitive paths (`.env`, `.ssh`, tokens, private keys), ensuring sensitive reads require operator confirmation.
+
+### 4.3 Alleviating Confirmation Fatigue
+**Problem:** A 70.0% Operator Challenge Rate leads to habitual rubber-stamping.  
+**Remediation:** Introduce semantic verification (requiring the operator to type the target filename or confirm the specific parameter) for high-impact mutations, while permitting non-sensitive reads to execute silently.

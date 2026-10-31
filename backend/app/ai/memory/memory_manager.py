@@ -11,13 +11,21 @@ from app.database.models.memory_v2 import MEMORY_PRIORITY, MemoryStatus, MemoryT
 
 PROVENANCE_WEIGHTS: dict[str, float] = {
     "explicit_user": 1.00,
+    "user_explicit": 1.00,
     "user_directive": 1.00,
+    "user_verified": 1.00,
+    "system_verified": 0.95,
+    "local_file": 0.85,
+    "file_system": 0.85,
     "tool_success": 0.85,
-    "system_verified": 0.75,
+    "observation": 0.75,
     "chat": 0.50,
-    "observation": 0.50,
+    "web_search": 0.35,
     "ambient_inferred": 0.25,
+    "external_untrusted": 0.15,
+    "ext_untrusted": 0.15,
     "speculative": 0.15,
+    "injected": 0.10,
 }
 
 DECAY_CONSTANTS: dict[MemoryType, float] = {
@@ -439,6 +447,9 @@ class MemoryManager:
         if category:
             q = q.filter(UserMemoryV2.category == category)
         return q.order_by(desc(UserMemoryV2.updated_at)).limit(limit).all()
+
+    # Alias for ContextEngine compatibility
+    get_active_memories = get_relevant_structured_memories
 
     def resolve_conflicts(
         self, db: Session, category: str, attribute: str | None = None

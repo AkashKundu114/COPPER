@@ -114,6 +114,13 @@ async def scrapling_scrape(
         raise NetworkEgressForbiddenError(
             f"Outbound network scraping for '{url}' is prohibited under OFFLINE_AIRGAP mode."
         )
+    if mode == NetworkMode.LOCAL_SERVICES:
+        host = (urlparse(url).hostname or "").lower()
+        is_loopback = host in ("127.0.0.1", "localhost", "::1") or host.startswith("127.")
+        if not is_loopback:
+            raise NetworkEgressForbiddenError(
+                f"Outbound WAN scraping for '{url}' is prohibited under LOCAL_SERVICES mode. Only local loopback endpoints are permitted."
+            )
     parsed = urlparse(url)
     if not parsed.scheme or not parsed.netloc:
         return {"status": "error", "error": f"Invalid URL format: {url}"}

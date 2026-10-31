@@ -11,6 +11,8 @@ try:
 except ImportError:
     DefusedET = None
 
+from app.ai.tools.builtin.web_tools import NetworkEgressForbiddenError, get_current_network_mode
+from app.core.config import NetworkMode
 from app.ai.tools.registry import tool_registry
 from app.core.logger import logger
 
@@ -36,6 +38,11 @@ from app.core.logger import logger
     guardian_level=0,
 )
 async def arxiv_search(query: str, max_results: int = 5) -> dict[str, Any]:
+    mode = get_current_network_mode()
+    if mode == NetworkMode.OFFLINE_AIRGAP:
+        raise NetworkEgressForbiddenError(
+            f"Outbound arXiv query for '{query}' is prohibited under OFFLINE_AIRGAP mode."
+        )
     url = "http://export.arxiv.org/api/query"
     params = {
         "search_query": f"all:{query}",

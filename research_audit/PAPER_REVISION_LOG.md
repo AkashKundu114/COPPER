@@ -1,26 +1,23 @@
-# Manuscript Revision & Evidence Correction Log: MemoryQuarantine
-**Manuscript**: `research/paper_revised.tex`  
-**Working Title**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
-**Auditor / Revision Lead**: Systems Engineering & Academic Quality Control Team  
-**Date**: 2026-10-31  
+# Paper Revision Log: Issue-by-Issue Remediation Matrix
+
+**Target Manuscript:** `research/paper_revised.tex`  
+**Bibliography File:** `research/references.bib`  
+**Coordinating Role:** Lead Scientific Editor  
+**Status:** All Issues Audited and Remediation Plan Finalized
 
 ---
 
-## 1. Revision Overview
+## 1. Revision Register
 
-This document records all scientific, empirical, and stylistic revisions applied to `research/paper_revised.tex` and its associated tables. Every major edit is directly mapped to an adversarial reviewer criticism, an empirical discrepancy discovered during codebase testing, or a statistical correction.
-
----
-
-## 2. Comprehensive Revision Mapping Ledger
-
-| Change ID | Paper Section & Lines | Original Text / Claim | Revised Text / Formulation | Reviewer / Audit Driver | Scientific Rationale |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **REV-01** | **Title & Abstract (L32, L43-47)** | Framed MemoryQuarantine as an algorithmic breakthrough achieving "100.0% universal defense" and "100% benign task success". | Reframed as an integrated dual-plane edge systems architecture; qualified benign task autonomy ($\text{TSR}_{\text{auto}} = 30.0\%$, $\text{TSR}_{\text{confirmed}} = 100.0\%$ under 70% OCR); bounded ASR by Clopper-Pearson $[0.0\%, 3.6\%]$. | Reviewer 1 (Objection 1.1) & Reviewer 2 (Objection 2.2) | Eliminates promotional overclaiming; accurately reports human friction tax instead of claiming frictionless 100% autonomy. |
-| **REV-02** | **Section I: Introduction (L73-84)** | Presented $\text{Authority}(m, a) = \gamma \cdot C \cdot (1 - \mathcal{R})$ without connecting to classical access control literature. | Added conceptual grounding in Saltzer & Schroeder (1975) capability-based security, Biba integrity (1977), and Risk-Adaptive Access Control (RAdAC). | Reviewer 1 (Objection 1.1) | Anchors the dual-plane separation firmly within established computer systems literature. |
-| **REV-03** | **Section III-B: Action Reversibility (L237-247)** | Implied $\mathcal{R}(a)$ is a continuous learned consequence probability distribution. | Explicitly defined $\mathcal{R}(a)$ as a deterministic AST and command pattern-matching heuristic mapping to $\{1.00, 0.85, 0.55, 0.30, 0.05\}$, with conservative default ($0.55$) for unmapped actions. | Reviewer 1 (Objection 1.2) | Eliminates ambiguity; transparently discloses rule-based implementation. |
-| **REV-04** | **Section III-B: Working Set Attribution (L248-255)** | Single memory $m$ assumed in Equation (1) without addressing multi-memory context prompts. | Formalized multi-memory working set attribution: $\gamma_{\text{eff}} = \min_{m_i \in \mathcal{M}} \gamma(m_i)$ (conservative fail-closed taint propagation). | Reviewer 3 (Objection 3.2) | Matches the verified implementation in `backend/app/ai/agents/base.py` line 363. |
-| **REV-05** | **Section V-A & Table II (L340-355)** | Reported Benign Task Success Rate as 100.0% and OCR as 70.0% without clarifying that `CHALLENGE` was counted as success. | Disaggregated metrics into Autonomous Success ($\text{TSR}_{\text{auto}} = 30.0\%$), Confirmed Success ($\text{TSR}_{\text{confirmed}} = 100.0\%$), and Operator Interruption ($\text{OCR} = 70.0\%$). | Reviewer 2 (Objection 2.2) | Upholds Non-Negotiable Rule 5: A CHALLENGE is not an autonomous benign success. |
-| **REV-06** | **Section V-C & Table VIII (L400-423)** | Reported two-tailed independent Fisher's exact test $p = 2.21 \times 10^{-59}$ on paired benchmark data. | Replaced with McNemar's paired test with continuity correction ($\chi^2 = 98.01, p = 4.16 \times 10^{-23}$) and exact paired binomial sign test ($p = 1.58 \times 10^{-30}$). | Reviewer 2 (Objection 2.3) | Eliminates independent-sample degree-of-freedom inflation on paired traces. |
-| **REV-07** | **Section VI & Table IV (L460-478)** | Historical metric reconciliation table addressed only routing and crash recovery. | Expanded Table IV to candidly document the **CopperMemoryBench bimodal risk separability defect** ($\mathcal{R}_{\text{adv}} \ge 0.85$ vs $\mathcal{R}_{\text{benign}} \le 0.25$) and specify the 4-quadrant un-leaked benchmark protocol. | Reviewer 2 (Objection 2.1) | Fulfills IEEE reproducibility standards by candidly acknowledging legacy benchmark flaws. |
-| **REV-08** | **Section VII-B: Limitations (L519-525)** | Listed only 3 generic limitations (small edge model, AST parsing, single-user). | Expanded Limitations to include: (1) Shell obfuscation via base64/polymorphism, (2) User confirmation fatigue under high OCR (70%), (3) Benchmark scenario duplication (10 actions modulo 10). | Reviewer 1 (1.2), Reviewer 2 (2.4), Reviewer 3 (3.4) | Provides exhaustive, mature disclosure of real-world edge deployment challenges. |
+| Issue ID | Category | Section / Lines in Manuscript | Problem Description | Reviewer / Source | Applied Remediation in Revised Manuscript |
+| :---: | :---: | :---: | :--- | :--- | :--- |
+| **REV-01** | **Statistical Rigor** | Abstract, Sec V-C, Tab V | Claiming Fisher's exact $p = 2.21 \times 10^{-59}$ on deterministic unit tests against synthetic dictionary traces. | Reviewer 3, Experimental Reviewer | **REMOVED** $p$-value from abstract and text. Replaced with exact 95% Clopper-Pearson binomial confidence intervals ($[96.38\%, 100.0\%]$ for $N=100$). |
+| **REV-02** | **Formal Theory** | Sec III-B, Eq. (4) | Equation (4) printed $\ln(1 + 1/C_t)$, which inverted Shannon surprise by penalizing confident beliefs less than doubted hypotheses during contradiction. | Reviewer 2, Formal Methods | **CORRECTED** Equation (4) to true negative log error $-\ln(1 - \|C_t - y\|)$ matching `backend/app/ai/memory/memory_manager.py#L85`. |
+| **REV-03** | **Formal Theory** | Sec I, Lines 83–84 | "Untrusted Memory Read-Only Deadlock": Claimed untrusted memories ($\gamma=0.15$) can execute harmless reads ($R=0.05$), but $\text{Auth}_{\max} = 0.141 < 0.25$ causes static threshold deadlock. | Reviewer 2, Novelty Reviewer | **RE-FRAMED** text: distinguished conversational in-context generation from physical tool invocation; introduced consequence-calibrated dynamic threshold $\tau_{\text{block}}(\mathcal{R})$. |
+| **REV-04** | **Benchmark Rigor** | Sec IV-B, Tab IV | Benchmark confounding: all 100 adversarial traces had $\mathcal{R}(a) \ge 0.85$, all 60 benign had $\mathcal{R}(a) \le 0.25$, making the two trivially separable by $\mathcal{R}(a) > 0.50$. | Reviewer 3, Benchmark Specialist | **DISCLOSED** the synthetic simulation nature of the 160 traces and incorporated the unconfounded $2 \times 2$ factorial evaluation protocol across Quadrants Q1–Q4. |
+| **REV-05** | **Physical Rigor** | Sec IV-D, Sec V-E | Claimed physical verification when test harness was an $N=1$ run on `qwen2.5:0.5b` with synthetic tool fallback injection. | Reviewer 3, Implementation Auditor | **RE-LABELED** $N=1$ run as a qualitative end-to-end integration case study; specified the multi-model stochastic evaluation protocol ($N=30$, Llama-3.2-3B, Qwen2.5-7B). |
+| **REV-06** | **Usability / HCI** | Sec V-D, Line 434 | 70.0% Operator Challenge Rate (OCR) presented as a success rather than an operational confirmation fatigue hazard. | Reviewer 1, Reviewer 3 | **CANDIDLY DOCUMENTED** the 70% OCR under strict mode as an operational friction cost and habituation risk, introducing semantic confirmation safeguards. |
+| **REV-07** | **Security Scope** | Sec V (Limitations) | In-session `<tool_result>` injection evasion and read-only credential reconnaissance ($\mathcal{R}=0.05$). | Threat Model Reviewer | **ADDED** explicit scope boundaries in Section V: MemoryQuarantine governs persistent epistemic memory; in-session web inputs require dynamic taint tracking and path sensitivity. |
+| **REV-08** | **Code-Paper Sync** | Sec III-B, Tab II | Parameter divergence: Table II claimed `system_verified` = 0.95, `observation` = 0.75; `memory_manager.py` had 0.75 and 0.50. | Agent Systems Reviewer | **SYNCHRONIZED** codebase `PROVENANCE_WEIGHTS` in `memory_manager.py` to match Table II and `guardian.py` (0.95, 0.75, 0.85). |
+| **REV-09** | **Code-Paper Sync** | Sec III-C, Lines 234–235 | Tier thresholds: Paper claimed demotions at $0.70$ and $0.40$; code enforced $0.85$ and $0.50$. | Agent Systems Reviewer | **HARMONIZED** thresholds: aligned paper text with the calibrated runtime tier boundaries ($0.85$ and $0.50$). |
+| **REV-10** | **Literature & Bib** | `references.bib` | Mangled citations: MINJA authors wrong, GhostWriter first names wrong, RouteLLM attributed to FrugalGPT, missing Louck (2026) and Singh (2026). | Novelty Reviewer | **PATCHED** `references.bib` with verified author lists, DOIs, arXiv identifiers, and added TMA-NM and Singh citations. |
