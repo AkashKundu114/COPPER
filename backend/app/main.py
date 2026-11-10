@@ -29,6 +29,7 @@ from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api import campaign_routes
 from app.api.routes import (
     accountability,
+    auth,
     activation,
     agents,
     ambient,
@@ -100,6 +101,11 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Telemetry init warning: {e}")
     start_scheduler()
     model_tier_manager.start()
+    try:
+        from app.core.inference_queue import inference_queue
+        await inference_queue.start()
+    except Exception as e:
+        logger.warning(f"Inference queue startup error: {e}")
 
     from app.ai.ambient.clipboard_monitor import clipboard_monitor
 
@@ -137,6 +143,12 @@ async def lifespan(app: FastAPI):
         model_tier_manager.stop()
     except Exception as e:
         logger.warning(f"Shutdown error in model_tier_manager.stop: {e}")
+
+    try:
+        from app.core.inference_queue import inference_queue
+        await inference_queue.stop()
+    except Exception as e:
+        logger.warning(f"Inference queue shutdown error: {e}")
 
     try:
         stop_scheduler()
@@ -233,6 +245,9 @@ app = FastAPI(
 )
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestSizeLimitMiddleware)
+from app.core.security.rate_limiter import RateLimiterMiddleware
+if getattr(settings, "RATE_LIMIT_ENABLED", True):
+    app.add_middleware(RateLimiterMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -305,6 +320,7 @@ app.include_router(campaign_routes.router, prefix="/api/v1")
 app.include_router(campaign_routes.ws_router)
 app.include_router(activation.router)
 app.include_router(setup.router)
+app.include_router(auth.router, prefix="/api/v1")
 
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)
 app.mount("/generated", StaticFiles(directory=settings.IMAGE_OUTPUT_DIR), name="generated")
@@ -326,3 +342,12 @@ async def health():
         "version": settings.APP_VERSION,
         "demo_mode": settings.COPPER_DEMO,
     }
+
+
+@app.get("/metrics", response_class=Response)
+async def metrics_endpoint():
+    """Prometheus exposition format endpoint for scraping metrics."""
+    from app.core.metrics import metrics_registry
+
+    exposition = metrics_registry.render_prometheus_exposition()
+    return Response(content=exposition, media_type="text/plain; version=0.0.4; charset=utf-8")

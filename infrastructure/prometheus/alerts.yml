@@ -1,10 +1,92 @@
 groups:
   - name: copper_alerts
     rules:
-      - alert: BackendHighLatency
-        expr: http_request_duration_seconds{quantile="0.95"} > 5
+      - alert: GPUVRAMPressure
+        expr: copper_vram_used_bytes / copper_vram_total_bytes > 0.90
+        for: 1m
+        labels:
+          severity: critical
+          subsystem: hardware
+        annotations:
+          summary: "GPU VRAM pressure exceeded 90% threshold"
+          description: "GPU VRAM allocation has reached {{ $value | humanizePercentage }} (limit is 8GB constraint). Immediate model eviction or tier fallback required."
+
+      - alert: HostCPUExhaustion
+        expr: copper_cpu_utilization_ratio > 0.92
         for: 2m
         labels:
           severity: warning
+          subsystem: hardware
         annotations:
-          summary: "COPPER Backend High Latency (p95 > 5s)"
+          summary: "Host CPU utilization critical"
+          description: "Host CPU utilization is {{ $value | humanizePercentage }} for over 2 minutes."
+
+      - alert: HostRAMExhaustion
+        expr: copper_ram_used_bytes / copper_ram_total_bytes > 0.90
+        for: 2m
+        labels:
+          severity: critical
+          subsystem: hardware
+        annotations:
+          summary: "Host RAM memory pressure critical"
+          description: "Host system RAM utilization is {{ $value | humanizePercentage }} for over 2 minutes."
+
+      - alert: InferenceQueueSaturation
+        expr: copper_inference_queue_depth > 10
+        for: 1m
+        labels:
+          severity: warning
+          subsystem: inference
+        annotations:
+          summary: "LLM inference queue saturated"
+          description: "Pending inference tasks queue depth is {{ $value }}, indicating model saturation or latency bottleneck."
+
+      - alert: HighAgentFailureRate
+        expr: sum(rate(copper_agent_executions_total{status="error"}[5m])) / sum(rate(copper_agent_executions_total[5m])) > 0.20
+        for: 2m
+        labels:
+          severity: critical
+          subsystem: agents
+        annotations:
+          summary: "High agent execution failure rate"
+          description: "Over 20% of agent executions are failing across the last 5 minutes."
+
+      - alert: ModelLoadFailures
+        expr: increase(copper_model_load_failures_total[5m]) > 2
+        for: 1m
+        labels:
+          severity: critical
+          subsystem: inference
+        annotations:
+          summary: "Repeated model loading failures"
+          description: "Detected {{ $value }} model hot-swapping or loading failures in the last 5 minutes."
+
+      - alert: DatabaseConnectivityDown
+        expr: copper_database_connection_status == 0
+        for: 30s
+        labels:
+          severity: critical
+          subsystem: database
+        annotations:
+          summary: "Database connectivity offline"
+          description: "Local SQLite / DuckDB / ChromaDB connection probe failed."
+
+      - alert: SecurityIncidentSpike
+        expr: sum(rate(copper_security_events_total[5m])) > 5
+        for: 1m
+        labels:
+          severity: critical
+          subsystem: security
+        annotations:
+          summary: "Abnormal surge in security violations"
+          description: "Security events rate exceeded 5 incidents per second over 5 minutes (possible injection or brute-force attack)."
+
+      - alert: TelemetryPipelineDegraded
+        expr: copper_telemetry_pipeline_status == 0
+        for: 2m
+        labels:
+          severity: warning
+          subsystem: telemetry
+        annotations:
+          summary: "Telemetry pipeline exporter degraded"
+          description: "Remote telemetry exporter connection degraded; falling back to local-first buffering."

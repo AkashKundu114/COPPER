@@ -26,6 +26,7 @@ class RecordType(str, Enum):
     TASK_COMMIT = "TASK_COMMIT"
     TASK_FAIL = "TASK_FAIL"
     TASK_COMPENSATE = "TASK_COMPENSATE"
+    DAG_RESUME = "DAG_RESUME"
     DAG_COMMIT = "DAG_COMMIT"
     DAG_ABORT = "DAG_ABORT"
 
@@ -214,6 +215,106 @@ class CrashRecoveryEngine:
 
         wal.append_record(RecordType.DAG_ABORT, {"reason": "crash_rollback_completed"})
         return rollbacks_performed
+
+
+
+    def can_resume_dag(self, dag_id: str) -> bool:
+        """Determines whether an interrupted DAG has recoverable progress."""
+        analysis = self.analyze_dag_state(dag_id)
+        return not analysis["is_complete"] and bool(analysis["committed_tasks"])
+
+    def prepare_dag_resumption(self, dag_id: str) -> dict[str, Any]:
+        """Compensates any uncommitted in-flight mutations, preserves committed results,
+        and logs a DAG_RESUME checkpoint record for safe replay.
+        """
+        wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
+        analysis = self.analyze_dag_state(dag_id)
+        if analysis["is_complete"]:
+            return {"resumable": False, "reason": "DAG already completed or aborted"}
+
+        # Compensate only uncommitted in-flight mutations
+        compensated = 0
+        for mut in analysis["uncommitted_mutations"]:
+            mut_type = mut.get("type")
+            path_str = mut.get("path")
+            if mut_type == "file_created" and path_str:
+                p = Path(path_str)
+                if p.exists():
+                    try:
+                        p.unlink()
+                        compensated += 1
+                        wal.append_record(
+                            RecordType.TASK_COMPENSATE,
+                            {"task_id": mut.get("task_id"), "action": "deleted_file", "path": path_str},
+                        )
+                    except Exception as e:
+                        logger.error(f"[RecoveryEngine] Compensation failed for {path_str}: {e}")
+            elif mut_type == "file_modified" and path_str:
+                p = Path(path_str)
+                pre_image = mut.get("pre_image")
+                if pre_image is not None:
+                    try:
+                        p.write_text(pre_image, encoding="utf-8")
+                        compensated += 1
+                        wal.append_record(
+                            RecordType.TASK_COMPENSATE,
+                            {"task_id": mut.get("task_id"), "action": "restored_file", "path": path_str},
+                        )
+                    except Exception as e:
+                        logger.error(f"[RecoveryEngine] Compensation restore failed for {path_str}: {e}")
+
+        wal.append_record(
+            RecordType.DAG_RESUME,
+            {
+                "resumed_at": time.time(),
+                "completed_tasks_count": len(analysis["committed_tasks"]),
+                "compensated_mutations": compensated,
+            },
+        )
+
+        return {
+            "resumable": True,
+            "dag_id": dag_id,
+            "committed_tasks": analysis["committed_tasks"],
+            "completed_task_ids": list(analysis["committed_tasks"].keys()),
+            "compensated_mutations_count": compensated,
+        }
+
+    def salvage_corrupted_wal(self, dag_id: str) -> dict[str, Any]:
+        """Recovers all valid records from a damaged WAL file, quarantining corrupted lines."""
+        wal = TaskWAL(dag_id=dag_id, wal_dir=self.wal_dir)
+        if not wal.file_path.exists():
+            return {"status": "not_found"}
+
+        valid_records: list[str] = []
+        corrupted_lines: list[str] = []
+
+        with open(wal.file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                s = line.strip()
+                if not s:
+                    continue
+                try:
+                    WALRecord.from_json_line(s)
+                    valid_records.append(s)
+                except Exception as e:
+                    corrupted_lines.append(s)
+
+        if corrupted_lines:
+            quarantine_path = self.wal_dir / f"quarantine_dag_{dag_id}.bad"
+            with open(quarantine_path, "a", encoding="utf-8") as qf:
+                for cl in corrupted_lines:
+                    qf.write(cl + "\n")
+
+            with open(wal.file_path, "w", encoding="utf-8") as vf:
+                for vr in valid_records:
+                    vf.write(vr + "\n")
+
+        return {
+            "status": "salvaged" if corrupted_lines else "intact",
+            "valid_records_count": len(valid_records),
+            "quarantined_records_count": len(corrupted_lines),
+        }
 
 
 crash_recovery_engine = CrashRecoveryEngine()

@@ -82,6 +82,9 @@ class Settings(BaseSettings):
     SANDBOX_CPU_LIMIT: float = 1.0
     SANDBOX_NETWORK_ENABLED: bool = False
     SANDBOX_DOCKER_IMAGE: str = "python:3.12-slim"
+    AUTH_ENFORCED: bool = False
+    RATE_LIMIT_ENABLED: bool = True
+    SSRF_PROTECTION_ENABLED: bool = True
 
     OTEL_ENABLED: bool = False
     OTEL_SERVICE_NAME: str = "copper-backend"

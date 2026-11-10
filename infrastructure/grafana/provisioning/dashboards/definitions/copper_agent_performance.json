@@ -1,0 +1,97 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "Total Agent Executions",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(copper_agent_executions_total)",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 2,
+      "title": "Agent Execution Success Rate",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_agent_executions_total{status='success'}[5m])) / sum(rate(copper_agent_executions_total[5m]))",
+          "legendFormat": "Success Rate"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 3,
+      "title": "Agent Inter-Handoffs Rate",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_agent_handoffs_total[5m]))",
+          "legendFormat": "Handoffs/sec"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "title": "Agent Executions by Agent Type",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_agent_executions_total[1m])) by (agent_type)",
+          "legendFormat": "{{agent_type}}"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 5,
+      "title": "Tool Execution Latency (seconds)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(copper_tool_execution_duration_seconds_bucket[5m])) by (le, tool_name))",
+          "legendFormat": "p95: {{tool_name}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "title": "COPPER - Agent Performance & Execution",
+  "uid": "copper-agent-performance",
+  "version": 1
+}

@@ -164,11 +164,20 @@ class BaseAgent:
                 continue
 
             logger.info(f"Agent {self.name} executing tool '{tool_call.tool}' at step {step + 1}")
+            from app.core.security.agent_token import agent_token_service
+            from app.core.security.prompt_injection import sanitize_untrusted_text
+            agent_token = agent_token_service.issue_token(
+                agent_id=self.name,
+                agent_type=self.agent_type.value,
+                allowed_tools=self.tools,
+                max_steps=self.max_tool_steps,
+            )
             result = await tool_executor.execute(
                 tool_name=tool_call.tool,
                 arguments=tool_call.arguments,
                 context={
                     "agent": self.name,
+                    "agent_token": agent_token,
                     "step": step + 1,
                     "memory_provenance": mem_prov,
                     "memory_confidence": mem_conf,
@@ -176,6 +185,9 @@ class BaseAgent:
             )
 
             messages.append({"role": "assistant", "content": current_response})
+            # Neutralize indirect prompt injection in tool outputs
+            if isinstance(result.output, str):
+                result.output = sanitize_untrusted_text(result.output)
             messages.append({"role": "user", "content": result.format_xml()})
 
         return current_response

@@ -1,5 +1,7 @@
 """Asynchronous Concurrency, Event Loop Isolation & Inference Priority Queue."""
 
+from __future__ import annotations
+
 import asyncio
 import time
 from collections.abc import Callable, Coroutine
@@ -8,6 +10,7 @@ from enum import IntEnum
 from typing import Any
 
 from app.core.logger import logger
+from app.core.metrics import metrics_registry
 
 
 class PriorityTier(IntEnum):
@@ -23,13 +26,13 @@ class QueuedInferenceTask:
     task_id: str = field(compare=False)
     timestamp: float = field(compare=False, default_factory=time.time)
     coro_fn: Any = field(compare=False, default=None)
+    fallback_fn: Any = field(compare=False, default=None)
+    timeout_s: float | None = field(compare=False, default=60.0)
     future: asyncio.Future = field(compare=False, default_factory=asyncio.Future)
 
 
 class InferenceQueueManager:
-    """
-    Manages priority dispatching, concurrency throttling, and event loop health.
-    """
+    """Manages priority dispatching, concurrency throttling, and event loop health."""
 
     def __init__(
         self,
@@ -50,12 +53,18 @@ class InferenceQueueManager:
             "total_enqueued": 0,
             "total_processed": 0,
             "total_rejected": 0,
+            "total_fallbacks_invoked": 0,
+            "total_timeouts": 0,
             "current_active_workers": 0,
             "max_event_loop_lag_ms": 0.0,
             "recent_event_loop_lag_ms": 0.0,
             "event_loop_lag_spikes": 0,
         }
         self._running = False
+
+    @property
+    def is_running(self) -> bool:
+        return self._running
 
     async def start(self) -> None:
         """Starts worker pool and event loop lag monitor."""
@@ -83,8 +92,13 @@ class InferenceQueueManager:
         task_id: str,
         coro_fn: Callable[[], Coroutine[Any, Any, Any]],
         priority: PriorityTier = PriorityTier.NORMAL,
+        timeout_s: float | None = 60.0,
+        fallback_fn: Callable[[], Coroutine[Any, Any, Any]] | None = None,
     ) -> Any:
-        """Submits an inference coroutine to the priority queue with backpressure."""
+        """Submits an inference coroutine to the priority queue with backpressure, timeout, and fallback."""
+        if not self._running:
+            await self.start()
+
         if self._queue.qsize() >= self.max_queue_size:
             if priority == PriorityTier.BACKGROUND:
                 self.metrics["total_rejected"] += 1
@@ -99,11 +113,14 @@ class InferenceQueueManager:
             priority=int(priority),
             task_id=task_id,
             coro_fn=coro_fn,
+            fallback_fn=fallback_fn,
+            timeout_s=timeout_s,
             future=future,
         )
 
         await self._queue.put(task)
         self.metrics["total_enqueued"] += 1
+        metrics_registry.update_queue_depth(self._queue.qsize())
 
         return await future
 
@@ -111,26 +128,61 @@ class InferenceQueueManager:
         while self._running:
             try:
                 task = await self._queue.get()
+                metrics_registry.update_queue_depth(self._queue.qsize())
                 async with self._semaphore:
                     self.metrics["current_active_workers"] += 1
                     try:
-                        res = await task.coro_fn()
+                        if task.timeout_s and task.timeout_s > 0:
+                            res = await asyncio.wait_for(task.coro_fn(), timeout=task.timeout_s)
+                        else:
+                            res = await task.coro_fn()
+
                         if not task.future.done():
                             task.future.set_result(res)
+
+                    except (asyncio.TimeoutError, TimeoutError) as t_err:
+                        self.metrics["total_timeouts"] += 1
+                        logger.warning(f"[InferenceQueue] Task {task.task_id} timed out after {task.timeout_s}s.")
+                        if task.fallback_fn:
+                            self.metrics["total_fallbacks_invoked"] += 1
+                            try:
+                                fallback_res = await task.fallback_fn()
+                                if not task.future.done():
+                                    task.future.set_result(fallback_res)
+                            except Exception as fb_err:
+                                if not task.future.done():
+                                    task.future.set_exception(fb_err)
+                        else:
+                            if not task.future.done():
+                                task.future.set_exception(t_err)
+
                     except Exception as exc:
-                        if not task.future.done():
-                            task.future.set_exception(exc)
+                        if task.fallback_fn:
+                            self.metrics["total_fallbacks_invoked"] += 1
+                            try:
+                                fallback_res = await task.fallback_fn()
+                                if not task.future.done():
+                                    task.future.set_result(fallback_res)
+                            except Exception as fb_err:
+                                if not task.future.done():
+                                    task.future.set_exception(fb_err)
+                        else:
+                            if not task.future.done():
+                                task.future.set_exception(exc)
+
                     finally:
                         self.metrics["current_active_workers"] -= 1
                         self.metrics["total_processed"] += 1
                         self._queue.task_done()
+                        metrics_registry.update_queue_depth(self._queue.qsize())
+
             except asyncio.CancelledError:
                 break
             except Exception as e:
                 logger.error(f"[InferenceQueue] Worker {worker_id} exception: {e}")
 
     async def _lag_heartbeat_loop(self) -> None:
-        """Calculates Event Loop Lag (ms):"""
+        """Calculates Event Loop Lag (ms)."""
         while self._running:
             t0 = time.perf_counter()
             try:

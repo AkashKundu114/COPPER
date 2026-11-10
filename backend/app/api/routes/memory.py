@@ -205,7 +205,7 @@ def update_memory(memory_id: str, body: MemoryUpdateInput, db: Session = Depends
 
 
 @router.delete("/{memory_id}", status_code=204)
-def delete_memory(memory_id: str, db: Session = Depends(get_db)):
+async def delete_memory(memory_id: str, db: Session = Depends(get_db)):
     try:
         mid = int(memory_id)
         memory = db.query(UserMemoryV2).filter(UserMemoryV2.id == mid).first()
@@ -214,6 +214,7 @@ def delete_memory(memory_id: str, db: Session = Depends(get_db)):
 
     if not memory:
         raise HTTPException(status_code=404, detail="Memory item not found")
-    db.delete(memory)
-    db.commit()
+
+    from app.core.privacy.governance_manager import data_governance_manager
+    await data_governance_manager.delete_single_memory(db, mid)
     return None

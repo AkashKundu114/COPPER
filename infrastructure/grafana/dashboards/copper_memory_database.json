@@ -1,0 +1,105 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "Vector Store (ChromaDB) Connectivity",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "copper_database_connection_status",
+          "legendFormat": "Status"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 2,
+      "title": "Memory Retrieval p95 Latency",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(copper_memory_retrieval_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 Latency (s)"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 3,
+      "title": "Memory Retrievals Rate",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_memory_retrieval_duration_seconds_count[1m]))",
+          "legendFormat": "Queries/sec"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "title": "Memory Retrieval Latency Distribution",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(copper_memory_retrieval_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(copper_memory_retrieval_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(copper_memory_retrieval_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 5,
+      "title": "Database Query Latency and Throughput",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_memory_retrieval_duration_seconds_count[1m]))",
+          "legendFormat": "Query Throughput"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "title": "COPPER - Memory & Database Telemetry",
+  "uid": "copper-memory-database",
+  "version": 1
+}

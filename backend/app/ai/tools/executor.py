@@ -145,6 +145,21 @@ class ToolExecutor:
                 execution_time_ms=round(elapsed_ms, 2),
             )
 
+        # Zero-Trust Tool Authorization Policy Gate
+        from app.core.security.tool_policy import tool_authorization_policy
+        is_authorized, auth_err = tool_authorization_policy.authorize_tool_call(tool, arguments, context)
+        if not is_authorized:
+            elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+            logger.warning(f"Tool authorization denied for '{tool_name}': {auth_err}")
+            return ToolResult(
+                tool_name=tool_name,
+                arguments=arguments,
+                output=None,
+                success=False,
+                error=auth_err or f"Tool '{tool_name}' execution unauthorized.",
+                execution_time_ms=round(elapsed_ms, 2),
+            )
+
         action_summary = f"{tool_name}({', '.join(f'{k}={repr(v)[:50]}' for k, v in arguments.items())})"
         guardian_context = {
             **context,

@@ -282,6 +282,18 @@ async def web_fetch(url: str, extract: str = "text") -> dict[str, Any]:
             "text": "",
         }
 
+    from app.core.security.network_policy import network_security_policy
+    if getattr(settings, "SSRF_PROTECTION_ENABLED", True):
+        try:
+            clean_url = network_security_policy.validate_url(clean_url)
+        except Exception as ssrf_err:
+            return {
+                "status": "error",
+                "message": f"Network policy blocked request: {ssrf_err}",
+                "url": clean_url,
+                "text": "",
+            }
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",

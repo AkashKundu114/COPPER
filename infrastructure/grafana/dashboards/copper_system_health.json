@@ -1,0 +1,133 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "System Uptime & Database Status",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "copper_database_connection_status",
+          "legendFormat": "Database Status"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "title": "CPU Utilization Ratio",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_cpu_utilization_ratio",
+          "legendFormat": "CPU"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "title": "RAM Utilization Ratio",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_ram_utilization_ratio",
+          "legendFormat": "RAM"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "title": "Active In-Flight Requests",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "copper_active_requests",
+          "legendFormat": "In-flight"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "title": "HTTP Request Throughput & Rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_http_requests_total[1m])) by (status)",
+          "legendFormat": "Status: {{status}}"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 6,
+      "title": "HTTP Latency (p50, p95, p99)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(copper_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(copper_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(copper_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "title": "COPPER - Overall Health & Availability",
+  "uid": "copper-system-health",
+  "version": 1
+}

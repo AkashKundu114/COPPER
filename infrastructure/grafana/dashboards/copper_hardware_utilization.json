@@ -1,0 +1,122 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "GPU Utilization Ratio",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_gpu_utilization_ratio",
+          "legendFormat": "GPU"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "title": "VRAM Used (Bytes / 8GB Cap)",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_vram_used_bytes / copper_vram_total_bytes",
+          "legendFormat": "VRAM %"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "title": "CPU Utilization Ratio",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_cpu_utilization_ratio",
+          "legendFormat": "Host CPU"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "title": "Host RAM Used",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "copper_ram_used_bytes / copper_ram_total_bytes",
+          "legendFormat": "Host RAM %"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "title": "VRAM Allocation History (8GB Constraint)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "copper_vram_used_bytes",
+          "legendFormat": "Used VRAM (Bytes)"
+        },
+        {
+          "expr": "copper_vram_total_bytes",
+          "legendFormat": "Total VRAM (8GB Limit)"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 6,
+      "title": "CPU and System Memory Saturation",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "copper_cpu_utilization_ratio * 100",
+          "legendFormat": "CPU %"
+        },
+        {
+          "expr": "(copper_ram_used_bytes / copper_ram_total_bytes) * 100",
+          "legendFormat": "RAM %"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "title": "COPPER - Hardware Utilization & 8GB VRAM Saturation",
+  "uid": "copper-hardware-utilization",
+  "version": 1
+}

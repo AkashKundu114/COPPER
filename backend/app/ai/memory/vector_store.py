@@ -100,3 +100,42 @@ class VectorStore:
             except Exception:
                 pass
         return 0
+
+
+    async def delete(self, ids: list[str]) -> int:
+        """Deletes documents by their ID list from the ChromaDB collection."""
+        if not ids or not self.collection:
+            return 0
+        try:
+            self.collection.delete(ids=ids)
+            return len(ids)
+        except Exception as e:
+            logger.warning(f"Vector delete failed: {e}")
+            return 0
+
+    async def delete_where(self, where: dict[str, Any]) -> bool:
+        """Deletes documents matching metadata filter from the ChromaDB collection."""
+        if not where or not self.collection:
+            return False
+        try:
+            self.collection.delete(where=where)
+            return True
+        except Exception as e:
+            logger.warning(f"Vector delete_where failed: {e}")
+            return False
+
+    async def clear(self) -> bool:
+        """Purges all entries from this ChromaDB collection."""
+        if not self.collection:
+            return False
+        try:
+            count = self.collection.count()
+            if count > 0:
+                # In ChromaDB, get all IDs and delete
+                existing = self.collection.get()
+                if existing and "ids" in existing and existing["ids"]:
+                    self.collection.delete(ids=existing["ids"])
+            return True
+        except Exception as e:
+            logger.warning(f"Vector clear failed: {e}")
+            return False

@@ -18,8 +18,10 @@ from enum import Enum
 
 class DataClass(str, Enum):
     PUBLIC = "public"
+    INTERNAL = "internal"
     PERSONAL = "personal"
     SENSITIVE = "sensitive"
+    RESTRICTED = "restricted"
     SECRET = "secret"
 
 
@@ -93,7 +95,7 @@ def classify_and_redact(text: str) -> FirewallResult:
     if not isinstance(text, str):
         text = str(text)
 
-    severity_order = [DataClass.PUBLIC, DataClass.PERSONAL, DataClass.SENSITIVE, DataClass.SECRET]
+    severity_order = [DataClass.PUBLIC, DataClass.INTERNAL, DataClass.PERSONAL, DataClass.SENSITIVE, DataClass.SECRET, DataClass.RESTRICTED]
     worst = DataClass.PUBLIC
     redaction_count = 0
     result_text = text

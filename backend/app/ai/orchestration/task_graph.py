@@ -15,6 +15,7 @@ from app.ai.agents.research_agent import research_agent
 from app.ai.agents.vision_agent import vision_agent
 from app.ai.orchestration.context_bus import context_bus
 from app.ai.orchestration.planner import PlanResult, SubTask
+from app.core.resilience.dead_letter_queue import dead_letter_queue
 from app.ai.orchestration.wal_executor import (
     RecordType,
     TaskWAL,
@@ -139,7 +140,8 @@ class TaskGraphExecutor:
     ) -> TaskGraphResult:
         """Executes a planned DAG of sub-tasks in dependency order:"""
         start_time = time.perf_counter()
-        dag_id = f"dag_{uuid.uuid4().hex[:8]}"
+        if not dag_id:
+            dag_id = f"dag_{uuid.uuid4().hex[:8]}"
 
         if not plan or not getattr(plan, "tasks", None):
             duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
@@ -177,6 +179,20 @@ class TaskGraphExecutor:
         completed_task_ids: set[str] = set()
         failed_task_ids: set[str] = set()
         layer_count = 0
+
+        # Checkpoint resumption: recover already-committed tasks from prior WAL
+        if resume_if_exists and crash_recovery_engine.can_resume_dag(dag_id):
+            res_info = crash_recovery_engine.prepare_dag_resumption(dag_id)
+            for tid, out in res_info.get("committed_tasks", {}).items():
+                outputs_by_id[tid] = out
+                completed_task_ids.add(tid)
+                task_obj = next((t for t in plan.tasks if t.id == tid), None)
+                if task_obj:
+                    task_obj.status = "done"
+                    task_obj.output = out
+                    if task_obj.output_key:
+                        outputs_by_key[task_obj.output_key] = out
+            logger.info(f"[TaskGraph] Resuming DAG {dag_id}: restored {len(completed_task_ids)} completed tasks from WAL.")
 
         while len(completed_task_ids) + len(failed_task_ids) < len(plan.tasks):
             layer_count += 1
@@ -327,6 +343,14 @@ class TaskGraphExecutor:
                             "error": str(e),
                             "execution_time_ms": dur,
                         },
+                    )
+
+                    dead_letter_queue.enqueue(
+                        task_id=f"{dag_id}:{sub_task.id}",
+                        origin_service=sub_task.agent,
+                        failure_reason=str(e),
+                        payload={"dag_id": dag_id, "instruction": interpolated_instruction, "task_id": sub_task.id},
+                        error_type="SubTaskExecutionError",
                     )
 
                     await context_bus.send_message(

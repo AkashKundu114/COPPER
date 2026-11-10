@@ -1,0 +1,97 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "Total Security Violations",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(copper_security_events_total)",
+          "legendFormat": "Total Violations"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 2,
+      "title": "Guardian Verdicts (Block/Quarantine)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(copper_guardian_verdicts_total{verdict=~'block|quarantine'})",
+          "legendFormat": "Interventions"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 3,
+      "title": "Security Events Per Second",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_security_events_total[1m]))",
+          "legendFormat": "Events/s"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "title": "Security Violations by Subsystem",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_security_events_total[1m])) by (event_type)",
+          "legendFormat": "{{event_type}}"
+        }
+      ]
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 5,
+      "title": "Guardian Verdict Breakdown",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(copper_guardian_verdicts_total[1m])) by (verdict)",
+          "legendFormat": "Verdict: {{verdict}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "title": "COPPER - Security Events & Zero-Trust Telemetry",
+  "uid": "copper-security-events",
+  "version": 1
+}

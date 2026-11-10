@@ -11,6 +11,7 @@ from app.ai.llm.ollama_client import ollama_client
 from app.ai.llm.vram_pager import vram_pager
 from app.core.config import settings
 from app.core.logger import logger
+from app.core.resilience.circuit_breaker import circuit_breaker_registry
 
 GATEKEEPER_MODEL_PATH = "gatekeeper.mini"
 
@@ -42,15 +43,26 @@ class ModelTierManager:
 
     async def _chat_with_keep_alive(self, model: str, messages: list[dict[str, str]], keep_alive) -> str:
         payload = {"model": model, "messages": messages, "stream": False, "keep_alive": keep_alive}
-        try:
+        cb = circuit_breaker_registry.get_or_create("ollama_llm", failure_threshold=3, recovery_timeout_s=15.0)
+
+        async def _invoke():
             async with httpx.AsyncClient(timeout=60.0) as client:
                 res = await client.post(f"{self._base_url}/api/chat", json=payload)
                 if res.status_code == 200:
                     return res.json().get("message", {}).get("content", "")
                 logger.warning(f"[tier-manager] Ollama non-200 for {model}: {res.status_code}")
                 return await ollama_client.chat(messages, model=model)
+
+        try:
+            return await cb.call(_invoke)
         except Exception as e:
-            logger.warning(f"[tier-manager] chat error for {model}: {e}")
+            logger.warning(f"[tier-manager] Model call failed for {model}: {e}. Triggering fallback.")
+            if model != self.gatekeeper_model:
+                try:
+                    logger.info(f"[tier-manager] Degrading gracefully to pinned gatekeeper: {self.gatekeeper_model}")
+                    return await self._chat_with_keep_alive(self.gatekeeper_model, messages, keep_alive=-1)
+                except Exception as fb_err:
+                    logger.error(f"[tier-manager] Fallback gatekeeper also failed: {fb_err}")
             return await ollama_client.chat(messages, model=model)
 
     def _touch(self, model: str, idle_timeout_seconds: int) -> None:
