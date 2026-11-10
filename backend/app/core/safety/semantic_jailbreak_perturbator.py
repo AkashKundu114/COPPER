@@ -35,7 +35,7 @@ class SemanticJailbreakPerturbator:
 
     RISK_PATTERNS = [
         (re.compile(r"\b(?:pretend|hypothetical(?:ly)?|imagine|in a story|fictional scenario)\b", re.I), 0.25, "hypothetical_framing"),
-        (re.compile(r"\b(?:forget (?:all )?rules|disregard|ignore previous)\b", re.I), 0.50, "rule_negation"),
+        (re.compile(r"\b(?:forget (?:all )?rules|disregard|ignore previous|rules? (?:do not|don't)? exist|no rules?)\b", re.I), 0.50, "rule_negation"),
         (re.compile(r"\b(?:DAN|unfiltered|jailbroken|godmode)\b", re.I), 0.75, "persona_override"),
         (re.compile(r"\b(?:bypass|override|exploit|vulnerability)\b", re.I), 0.35, "security_probing"),
         (re.compile(r"\b(?:evil|malicious|dark|destructive)\b", re.I), 0.30, "malicious_context"),
