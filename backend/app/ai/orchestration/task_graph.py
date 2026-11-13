@@ -140,6 +140,7 @@ class TaskGraphExecutor:
     ) -> TaskGraphResult:
         """Executes a planned DAG of sub-tasks in dependency order:"""
         start_time = time.perf_counter()
+        dag_id = getattr(plan, "dag_id", None)
         if not dag_id:
             dag_id = f"dag_{uuid.uuid4().hex[:8]}"
 
