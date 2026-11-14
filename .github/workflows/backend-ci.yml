@@ -94,7 +94,6 @@ jobs:
       DATABASE_URL: postgresql://copper:copperpass@localhost:5432/copper
       REDIS_URL: redis://localhost:6379/0
       DISPLAY: ":99"
-      XAUTHORITY: ${{ runner.temp }}/.Xauthority
       MPLBACKEND: Agg
 
     services:
