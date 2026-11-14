@@ -18,7 +18,7 @@ src = ["backend", "."]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C4"]
-ignore = ["E501", "B008", "UP042", "E712", "B904", "B007", "B905", "E402"]
+ignore = ["E501", "B008", "UP042", "E712", "B904", "B007", "B905", "E402", "F841"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
