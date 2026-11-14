@@ -198,6 +198,7 @@ class ArchitecturalControlPlane:
         task_id: Optional[str] = None,
         data_sensitivity: Optional[DataSensitivity] = None,
         operator_confirmed: bool = False,
+        wait_for_approval: bool = False,
     ) -> ExecutionResult:
         """Executes an operation across the standardized 15-step architectural lifecycle."""
         start_time = time.perf_counter()
@@ -213,7 +214,7 @@ class ArchitecturalControlPlane:
             execution_origin=origin,
             privacy_classification=data_sensitivity or DataSensitivity.INTERNAL,
             resource_budget=budget,
-            metadata={"operator_confirmed": operator_confirmed},
+            metadata={"operator_confirmed": operator_confirmed, "wait_for_approval": wait_for_approval},
         )
         self._active_tasks[exec_ctx.task_id] = exec_ctx
 
@@ -238,6 +239,35 @@ class ArchitecturalControlPlane:
             context=exec_ctx,
             payload=request_payload,
         )
+
+        if not policy_decision.is_allowed:
+            # Interactive Operator Approval Channel Integration
+            if policy_decision.decision == PolicyVerdict.REQUIRE_APPROVAL and (
+                wait_for_approval or exec_ctx.metadata.get("wait_for_approval", False)
+            ):
+                try:
+                    from app.core.safety.operator_approval_manager import operator_approval_manager
+
+                    ticket = await operator_approval_manager.create_ticket(
+                        action=raw_action,
+                        target=raw_target,
+                        actor=actor,
+                        reason=policy_decision.reason,
+                        required_controls=policy_decision.required_controls,
+                    )
+                    approved = await operator_approval_manager.wait_for_decision(ticket.ticket_id)
+                    if approved:
+                        operator_confirmed = True
+                        exec_ctx.metadata["operator_confirmed"] = True
+                        policy_decision = self.evaluate_policy(
+                            action=raw_action,
+                            target=raw_target,
+                            actor=actor,
+                            context=exec_ctx,
+                            payload=request_payload,
+                        )
+                except Exception as app_err:
+                    logger.warning(f"[ControlPlane] Operator approval wait error: {app_err}")
 
         if not policy_decision.is_allowed:
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0

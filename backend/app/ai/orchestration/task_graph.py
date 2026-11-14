@@ -137,6 +137,7 @@ class TaskGraphExecutor:
         memory_context: str = "",
         session_id: str | None = None,
         on_event: Callable[[str, dict[str, Any]], Coroutine[Any, Any, None]] | None = None,
+        resume_if_exists: bool = True,
     ) -> TaskGraphResult:
         """Executes a planned DAG of sub-tasks in dependency order:"""
         start_time = time.perf_counter()

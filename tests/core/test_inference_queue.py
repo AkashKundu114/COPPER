@@ -66,18 +66,24 @@ async def test_inference_queue_concurrency_throttling():
 
 @pytest.mark.asyncio
 async def test_inference_queue_backpressure_shedding():
-    iq = InferenceQueueManager(max_concurrent_inferences=1, max_queue_size=2)
+    iq = InferenceQueueManager(max_concurrent_inferences=1, max_queue_size=1)
     async def dummy():
+        await asyncio.sleep(0.05)
         return 1
 
-    _task_one = asyncio.create_task(iq.submit("t1", dummy, priority=PriorityTier.NORMAL))
-    _task_two = asyncio.create_task(iq.submit("t2", dummy, priority=PriorityTier.NORMAL))
-    await asyncio.sleep(0.01)
+    t1 = asyncio.create_task(iq.submit("t1", dummy, priority=PriorityTier.NORMAL))
+    await asyncio.sleep(0.005)
+    t2 = asyncio.create_task(iq.submit("t2", dummy, priority=PriorityTier.NORMAL))
+    await asyncio.sleep(0.005)
 
-    with pytest.raises(RuntimeError, match="Background task shed under load"):
-        await iq.submit("t3", dummy, priority=PriorityTier.BACKGROUND)
+    try:
+        with pytest.raises(RuntimeError, match="Background task shed under load"):
+            await iq.submit("t3", dummy, priority=PriorityTier.BACKGROUND)
 
-    assert iq.metrics["total_rejected"] == 1
+        assert iq.metrics["total_rejected"] == 1
+    finally:
+        await asyncio.gather(t1, t2, return_exceptions=True)
+        await iq.stop()
 
 
 @pytest.mark.asyncio

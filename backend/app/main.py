@@ -29,10 +29,12 @@ from app.ai.orchestration.task_scheduler import start_scheduler, stop_scheduler
 from app.api import campaign_routes
 from app.api.routes import (
     accountability,
-    auth,
     activation,
     agents,
     ambient,
+    approval,
+    audit,
+    auth,
     audit,
     briefing,
     cache,
@@ -123,6 +125,14 @@ async def lifespan(app: FastAPI):
                 logger.info(f"TaskWAL rolled back {rolled_back} uncommitted mutations for DAG {dag_id}")
     except Exception as e:
         logger.warning(f"TaskWAL startup recovery check error: {e}")
+
+    try:
+        from app.api.websocket.manager import manager
+        from app.core.safety.operator_approval_manager import operator_approval_manager
+
+        operator_approval_manager.register_broadcast_hook(manager.broadcast)
+    except Exception as e:
+        logger.warning(f"Operator approval hook registration warning: {e}")
 
     logger.info("COPPER backend ready")
     yield
@@ -321,6 +331,7 @@ app.include_router(campaign_routes.ws_router)
 app.include_router(activation.router)
 app.include_router(setup.router)
 app.include_router(auth.router, prefix="/api/v1")
+app.include_router(approval.router, prefix="/api/v1")
 
 os.makedirs(settings.IMAGE_OUTPUT_DIR, exist_ok=True)
 app.mount("/generated", StaticFiles(directory=settings.IMAGE_OUTPUT_DIR), name="generated")

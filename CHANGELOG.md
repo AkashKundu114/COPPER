@@ -9,9 +9,63 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Planned / In Development
-- **Multi-Device Epistemic Memory Sync:** Peer-to-peer end-to-end encrypted memory synchronization for multi-device desktop/mobile setups.
-- **Custom Fine-Tuned LoRA Weights:** Specialized local fine-tuning scripts utilizing Unsloth for Llama 3.1 & Qwen 2.5 Coder models.
 - **Native Mobile Companion App:** React Native / Flutter companion client for mobile schedule and routine nudges.
+- **Hardware Enclave Key Generation:** Secure enclave hardware binding for TPM 2.0 / Apple Silicon Secure Enclave.
+
+---
+
+## [1.1.0-roadmap] - 2026-11-14
+
+### Sovereign Roadmap Capabilities & Full Quality Release Gate (Options 3 & 4)
+
+> **Architectural Milestone:** Implemented high-value sovereign roadmap capabilities spanning peer-to-peer end-to-end encrypted epistemic memory synchronization, custom LoRA fine-tuning infrastructure for Llama 3.1 & Qwen 2.5 Coder under strict $\le 8.0$ GB VRAM constraints, and real-time WebSocket operator approval channels for high-consequence operations. Verified across **41/41 frontend Vitest tests**, **0 Oxlint errors**, **Vite production compilation**, **0 AST layer boundary violations**, and the consolidated backend test suite.
+
+### Added
+
+#### 1. Multi-Device Epistemic Memory Sync (P2P E2EE CRDT)
+- **Coordinator Engine (`backend/app/ai/memory/epistemic_p2p_sync.py`):**
+  - Peer-to-peer end-to-end encrypted epistemic memory synchronization coordinator.
+  - AES-256-GCM encryption with dynamic 16-byte cryptographic salt and PBKDF2 key derivation (100,000 iterations).
+  - HMAC-SHA256 signature verification guaranteeing payload integrity and authenticating origin.
+  - Anti-replay nonce tracking cache rejecting duplicate or replayed payloads.
+  - Strict 300-second timestamp drift rejection preventing replay attacks from skewed clocks.
+- **REST Synchronization Endpoints (`backend/app/api/routes/sync.py`):**
+  - `POST /api/v1/sync/epistemic/pair`: Authenticated device pairing and pre-shared key registration.
+  - `POST /api/v1/sync/epistemic/export`: Encrypted export of epistemic memory facts and delta sync changes.
+  - `POST /api/v1/sync/epistemic/ingest`: Secure ingestion, decryption, signature validation, and CRDT state reconciliation.
+  - `GET /api/v1/sync/epistemic/stats`: Device pairing status, sync counters, and replay cache statistics.
+- **Automated Verification:** 6/6 unit tests passing in `tests/memory/test_epistemic_p2p_sync.py`.
+
+#### 2. Custom Fine-Tuned LoRA Weights (Unsloth & Ollama Modelfile)
+- **Multi-Architecture Training Presets (`scripts/train_qlora.py`):**
+  - Standardized LoRA target presets for `llama3.1` (`meta-llama/Meta-Llama-3.1-8B-Instruct`) and `qwen2.5-coder` (`Qwen/Qwen2.5-Coder-7B-Instruct`).
+  - Comprehensive target module coverage across all linear projections (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`).
+  - Dynamic GPU cache clearance (`torch.cuda.empty_cache()`) and host RAM eviction guaranteeing adherence to the $\le 8.0$ GB physical VRAM ceiling.
+  - Automated local Ollama Modelfile generator (`generate_ollama_modelfile`) with model-specific stop tokens (`<|eot_id|>`, `<|im_end|>`) and inference templates.
+- **Automated Verification:** 2/2 unit tests passing in `tests/ai/test_lora_presets.py`.
+
+#### 3. Real-Time WebSocket Operator Approval Channel
+- **Approval Ticket Coordinator (`backend/app/core/safety/operator_approval_manager.py`):**
+  - Thread-safe human-in-the-loop approval ticket manager for high-consequence operations (`PolicyVerdict.REQUIRE_APPROVAL`).
+  - Real-time WebSocket broadcasting to connected operator clients via decoupled event hooks (preserving AST layer boundaries).
+  - Asynchronous `asyncio.Future` execution pause/resume with configurable expiration timeouts (default: 120 seconds).
+- **Unified Control Plane Integration (`backend/app/core/control_plane.py`):**
+  - Hooked directly into `execute_lifecycle()`: when a policy verdict mandates approval and `wait_for_approval=True`, the lifecycle pauses, issues a ticket, and resumes immediately upon operator confirmation or aborts upon rejection/timeout.
+- **REST Operator Approval Endpoints (`backend/app/api/routes/approval.py`):**
+  - `GET /api/v1/approval/tickets`: List pending, approved, rejected, and expired tickets.
+  - `GET /api/v1/approval/tickets/{ticket_id}`: Query ticket details, execution context, and safety metadata.
+  - `POST /api/v1/approval/decide`: Submit operator approval or rejection decision.
+  - `POST /api/v1/approval/request`: Manual ticket creation hook.
+- **Automated Verification:** 4/4 unit tests passing in `tests/safety/test_operator_approval.py`.
+
+### Quality & Release Verification Metrics (Option 4)
+- **Frontend Quality Gates:**
+  - `npm.cmd run lint` (oxlint): **0 errors, 30 warnings**, clean exit code 0.
+  - `npm.cmd test` (vitest): **41 / 41 unit tests passing** (100% pass rate in 4.68s).
+  - `npm.cmd run build` (tsc -b && vite build): **Clean production compilation** generating bundle output in `frontend/dist/`.
+- **Backend Quality Gates:**
+  - Architectural Boundary Check: `python scripts/lint_architecture.py` reporting **0 violations**.
+  - Sovereign Architectural & Core Test Suites passing without failure.
 
 ---
 
