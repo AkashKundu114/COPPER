@@ -16,7 +16,7 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 | **Agent Intent Routing** | 1,390 | **100.0%** | **100.0%** | **0.1 ms** | **~9,856 QPS** | 0 |
 | **Guardian Safety Catch**| 350 | **100.0%** | **100.0%** | **0.008 ms** | **~500,000 QPS**| **0 (0.0% Risk)**|
 | **Data Firewall Redaction**| 120 | **100.0%** | **100.0%** | **0.015 ms** | **~65,000 QPS** | 0 |
-| **Pytest & Vitest Suite** | 573 Backend + 41 Frontend | **100.0% / 100%** | **614 Total** | **573 + 41 Passing** | — | 0 |
+| **Pytest & Vitest Suite** | 687 Backend + 41 Frontend | **100.0% / 100%** | **728 Total** | **687 + 41 Passing** | N/A | 0 |
 
 ---
 
@@ -35,12 +35,12 @@ All benchmarks evaluated on the **1,740-sample combinatorial evaluation suite** 
 
 ## 3. Hardware Profiling: VRAM & System RAM Footprint
 
-### VRAM Budget Allocation (NVIDIA RTX 5060 — 8.0 GB Total)
+### VRAM Budget Allocation (NVIDIA RTX 5060 - 8.0 GB Total)
 ![VRAM Memory Allocation](images/vram_memory_allocation.png)
 
-- **Primary Core Model (7B/8B Q4_K_M Abliterated / 14B IQ3_XS Active Slot):** ~4.07 – 5.95 GB
+- **Primary Core Model (7B/8B Q4_K_M Abliterated / 14B IQ3_XS Active Slot):** ~4.07 to 5.95 GB
 - **Offline Image Studio (SD-Turbo Safetensors):** ~4.86 GB (transient on-demand slot)
-- **Active Micro-Subagent (1B-1.5B Q4_K_M):** ~0.94 – 1.09 GB
+- **Active Micro-Subagent (1B-1.5B Q4_K_M):** ~0.94 to 1.09 GB
 - **KV Context Cache (8,192 token window):** ~0.90 GB
 - **CUDA Runtime & Kernel Overhead:** ~0.30 GB
 - **Available Safety Headroom:** **~1.30 GB** (16.2% buffer preventing Out-Of-Memory spills)
@@ -125,7 +125,7 @@ The distilled reasoning engine explores counter-factual trade-offs step-by-step 
 | **C.O.P.P.E.R. Guardian Engine** | Pass **Instant** | **HARD BLOCK** | **Level 3 (Safety Boundary)** | **0.002 ms** | **100% ZERO RISK** |
 | **`Meta-Llama-3.1-8B-Instruct`** | Pass Detected | Refuses with safety explanation | Level 3 | 110 ms | Safe |
 | **`Qwen2.5-Coder-7B-Instruct`** | Pass Detected | Explains destruction of NVMe partition table | Level 3 | 125 ms | Safe |
-| **Unprotected Base LLM** | Fail Vulnerable | Occasionally provides partial shell execution boilerplate | — | 350 ms | **Critical Danger** |
+| **Unprotected Base LLM** | Fail Vulnerable | Occasionally provides partial shell execution boilerplate | N/A | 350 ms | **Critical Danger** |
 
 ---
 
@@ -139,11 +139,11 @@ The distilled reasoning engine explores counter-factual trade-offs step-by-step 
 
 > [!NOTE]
 > **14B Sovereign Core Fleet Upgrade (v3.0.0):** In v3.0.0, COPPER upgrades the primary heavy cognitive tier from initial 7B/8B candidates to a specialized 14B Sovereign Core fleet (quantized losslessly with IQ3_XS, dynamically multiplexed via the VRAM Pager within the 8GB VRAM envelope):
-> 1. **Chat & Orchestration (ATLAS / C.O.P.P.E.R.):** `Qwen2.5-14B-Instruct` (IQ3_XS, 5.95 GB) — Empathetic, structured, conversational multi-turn orchestration (upgraded from `Meta-Llama-3.1-8B-Instruct`).
-> 2. **Software Engineering (VULCAN):** `Qwen2.5-Coder-14B-Instruct-abliterated` (IQ3_XS, 6.38 GB) — Full-stack code architecture, sandbox execution, zero syntax errors (upgraded from `Qwen2.5-Coder-7B-Instruct`).
-> 3. **Deep Inquiry & Reasoning (PROMETHEUS):** `DeepSeek-R1-Distill-Qwen-14B` (IQ3_XS, 6.38 GB) — Exhaustive causal reasoning, logic verification, and formal proofs (upgraded from `DeepSeek-R1-Distill-Qwen-7B`).
-> 4. **Academic Synthesis & Documentation (SCRIBE):** `Phi-4-14B` (IQ3_XS, 5.50 GB) — Multi-source research synthesis, technical documentation, and Markdown/LaTeX reporting.
-> 5. **Tool & Agent Execution (DAEMON):** `Mistral-Nemo-12B-Instruct` (IQ3_XS, 5.80 GB) — Deterministic JSON tool invocation, CLI system automation, and workflow execution.
+> 1. **Chat & Orchestration (ATLAS / C.O.P.P.E.R.):** `Qwen2.5-14B-Instruct` (IQ3_XS, 5.95 GB): Empathetic, structured, conversational multi-turn orchestration (upgraded from `Meta-Llama-3.1-8B-Instruct`).
+> 2. **Software Engineering (VULCAN):** `Qwen2.5-Coder-14B-Instruct-abliterated` (IQ3_XS, 6.38 GB): Full-stack code architecture, sandbox execution, zero syntax errors (upgraded from `Qwen2.5-Coder-7B-Instruct`).
+> 3. **Deep Inquiry & Reasoning (PROMETHEUS):** `DeepSeek-R1-Distill-Qwen-14B` (IQ3_XS, 6.38 GB): Exhaustive causal reasoning, logic verification, and formal proofs (upgraded from `DeepSeek-R1-Distill-Qwen-7B`).
+> 4. **Academic Synthesis & Documentation (SCRIBE):** `Phi-4-14B` (IQ3_XS, 5.50 GB): Multi-source research synthesis, technical documentation, and Markdown/LaTeX reporting.
+> 5. **Tool & Agent Execution (DAEMON):** `Mistral-Nemo-12B-Instruct` (IQ3_XS, 5.80 GB): Deterministic JSON tool invocation, CLI system automation, and workflow execution.
 > 6. **Instant Intent Classification (Reflex Tier):** `DynamicRoutingMemory` + `Llama-3.2-1B` / `SmolLM2-1.7B` / `Qwen2.5-Coder-3B` resident micro-models (sub-0.05ms dispatch).
 
 ---

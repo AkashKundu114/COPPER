@@ -114,18 +114,18 @@ Mounted under `/api/v1` (with legacy aliases under `/api`):
 Defined in `backend/app/core/agent_registry.py` and `backend/app/core/constants.py`:
 
 ### 5.1 The 12 Active Core Agents (`AgentType` Enum)
-1. `chat` (ATLAS) — Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
-2. `coding` (VULCAN) — Model Tier: `MODEL_2_CODE` (`qwen2.5-coder-abliterated:14b`)
-3. `daemon` (DAEMON) — Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
-4. `vision` (ARGUS) — Model Tier: `MODEL_4_VISION` (`qwen2.5-vl:7b`)
-5. `research` (PROMETHEUS) — Model Tier: `MODEL_1_CORE` (`deepseek-r1:14b`)
-6. `memory` (MNEMOSYNE) — Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
-7. `router` (HERMES) — Model Tier: `MODEL_1_CORE` (`fast-pattern + GPU semantic`)
-8. `guardian` (AEGIS) — Model Tier: `MODEL_1_CORE` (`qwen2.5:1.5b` + regex AST)
-9. `documents` (SCRIBE) — Model Tier: `MODEL_1_CORE` (`phi-4:14b`)
-10. `executive` (CRONOS) — Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
-11. `system` (HEPHAESTUS) — Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
-12. `email` (MERCURY) — Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
+1. `chat` (ATLAS) - Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
+2. `coding` (VULCAN) - Model Tier: `MODEL_2_CODE` (`qwen2.5-coder-abliterated:14b`)
+3. `daemon` (DAEMON) - Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
+4. `vision` (ARGUS) - Model Tier: `MODEL_4_VISION` (`qwen2.5-vl:7b`)
+5. `research` (PROMETHEUS) - Model Tier: `MODEL_1_CORE` (`deepseek-r1:14b`)
+6. `memory` (MNEMOSYNE) - Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
+7. `router` (HERMES) - Model Tier: `MODEL_1_CORE` (`fast-pattern + GPU semantic`)
+8. `guardian` (AEGIS) - Model Tier: `MODEL_1_CORE` (`qwen2.5:1.5b` + regex AST)
+9. `documents` (SCRIBE) - Model Tier: `MODEL_1_CORE` (`phi-4:14b`)
+10. `executive` (CRONOS) - Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
+11. `system` (HEPHAESTUS) - Model Tier: `MODEL_3_OS` (`mistral-nemo:12b`)
+12. `email` (MERCURY) - Model Tier: `MODEL_1_CORE` (`qwen2.5:14b`)
 
 ### 5.2 The 18 Specialized Task Personas
 Defined in `backend/app/data/agency_agents_full_catalog.json` (e.g., Code Reviewer, Security Auditor, LaTeX Synthesizer, SQL Optimizer). These are task prompt configurations that route into the 12 core engines.

@@ -14,10 +14,12 @@ We provide active security updates, vulnerability fixes, and patches for the fol
 
 | Version | Supported | Status |
 | :--- | :---: | :--- |
-| **`3.0.x`** | **Yes** | **Current Active Release** |
-| **`2.5.x`** | **Yes** | **Maintenance Support** |
-| **`1.2.x`** | **Yes** | **Security Patches Only** |
-| `< 1.2.0` | No | Deprecated Pre-Release Builds |
+| **`0.1.0-alpha`** | **Yes** | **Active Public Alpha Baseline** |
+| **`3.0.0`** | **Yes** | **Supported Major Milestone** |
+| **`2.1.0`** | **Yes** | **Maintenance Support** |
+| **`2.0.0`** | **Yes** | **Maintenance Support** |
+| **`1.0.0`** | **Yes** | **Security Patches Only** |
+| `< 1.0.0` | No | Unsupported Prototype Builds |
 
 ---
 

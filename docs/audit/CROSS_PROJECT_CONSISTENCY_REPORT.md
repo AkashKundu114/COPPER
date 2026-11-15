@@ -1,8 +1,8 @@
 # Cross-Project Consistency & Portfolio Synchronization Report
 
 **Projects Evaluated:**
-1. **C.O.P.P.E.R.** (`D:\C.O.P.P.E.R`) — Personal AI Operating System
-2. **OphthalmoAI** (`D:\Projects\EyeDiseaseAI`) — AI-Assisted Eye Disease Screening Platform
+1. **C.O.P.P.E.R.** (`D:\C.O.P.P.E.R`) - Personal AI Operating System
+2. **OphthalmoAI** (`D:\Projects\EyeDiseaseAI`) - AI-Assisted Eye Disease Screening Platform
 
 **Date of Audit:** October 16, 2026  
 **Auditor:** Consolidated Cross-Project Audit Team  

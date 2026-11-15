@@ -1,4 +1,4 @@
-# Developer Guide — Extending COPPER with New Agents, Models, and Tools
+# Developer Guide: Extending COPPER with New Agents, Models, and Tools
 
 This guide explains how to add new capabilities to C.O.P.P.E.R. while ensuring they automatically inherit all foundational security, safety, observability, and resource controls.
 

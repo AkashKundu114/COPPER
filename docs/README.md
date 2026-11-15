@@ -65,6 +65,27 @@ docs/
 
 ---
 
+## Release Milestones & Repository Tags
+
+C.O.P.P.E.R. releases are aligned across git tags, packages, and verification gates:
+
+| Repository Tag | Focus | Verification Status |
+| :--- | :--- | :--- |
+| **`v0.1.0-alpha`** | **Active Alpha Baseline**: Public-release cleanup, zero-egress network isolation, 12 active core agents, 8 model pools, 15 Alembic clean-DB tables, terminal safety corpus (29 vectors). | **728 tests passing** (687 backend + 41 frontend) |
+| **`v3.0.0`** | **Forge UI Redesign & Chaos Resilience**: Forge warm-noir design system (`#D4845A`), Inter Variable and Geist Mono typography, 16+ views, chaos engineering harness (55/55 intercepted), CRC32 WAL recovery. | **614 tests passing** |
+| **`v2.1.0`** | **GPU Licensing & Ad-Tech**: Local GPU fingerprint detection, owner master access code, 6-step setup wizard, DeltaX campaign intelligence. | **512 tests passing** |
+| **`v2.0.0`** | **Next-Gen AI OS**: 25 ambient, predictive, delegation, and companion features, acoustic wake-word detection, causal state tracking, docx generator. | **508 tests passing** |
+| **`v1.0.0`** | **Consolidated Multi-Agent Architecture**: Agent orchestration layer, Guardian alignment framework (Levels 0-3), zero-trust PII firewall, epistemic memory. | **480 tests passing** |
+
+### Active Roadmap and Unreleased Capabilities
+- **Unified Execution Control Plane (`backend/app/core/control_plane.py`):** Standardized 15-step execution lifecycle coordinating authorization, sensitivity, Guardian policies, and resource allocation.
+- **Peer-to-Peer Epistemic Sync (`backend/app/ai/memory/epistemic_p2p_sync.py`):** End-to-end encrypted CRDT delta sync using AES-256-GCM and HMAC-SHA256 signatures.
+- **Custom LoRA Presets (`scripts/train_qlora.py`):** Unsloth training scripts for Llama 3.1 and Qwen 2.5 Coder under strict 8.0 GB VRAM budgets.
+- **WebSocket Operator Approval Channel (`backend/app/core/safety/operator_approval_manager.py`):** Real-time human-in-the-loop approval tickets for sensitive or high-friction operations.
+- **MemoryQuarantine IEEE Publication:** Submission package for IEEE ICCECE 2027 including empirical proofs and figure assets.
+
+---
+
 ## Key Document Links
 
 - **[Comprehensive Benchmark & Multi-Model Report](benchmarks.md)**

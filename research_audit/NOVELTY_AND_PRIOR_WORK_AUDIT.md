@@ -36,10 +36,10 @@
 
 | Framework / Paper | Core Defense Mechanism | Evaluated Attack Model | Awareness of Tool Reversibility $\mathcal{R}(a)$ | Handles Multi-Session Delayed Attacks? | Latency / Resource Overhead | Primary Failure Mode |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Llama Guard 3 / NeMo** | LLM text classifier on prompt/completion | Direct prompt injection & toxic inputs | **NO** | **NO** (Evaluates turn-by-turn isolation) | High (150–500 ms, 8B VRAM) | Semantic evasion; blind to memory consolidation. |
+| **Llama Guard 3 / NeMo** | LLM text classifier on prompt/completion | Direct prompt injection & toxic inputs | **NO** | **NO** (Evaluates turn-by-turn isolation) | High (150-500 ms, 8B VRAM) | Semantic evasion; blind to memory consolidation. |
 | **MINJA** (Dong et al., NeurIPS 2024) | Attack benchmark with progressive shortening | Delayed memory poisoning via bridging | **NO** | Analyzes attack, lacks operational runtime defense | N/A (Benchmark) | N/A |
 | **AgentPoison** (Chen et al., NeurIPS 2024) | Targeted backdoor trigger optimization | RAG vector memory poisoning | **NO** | Analyzes attack, proposes data sanitization | N/A (Attack) | Vulnerable to dynamic in-context synthesis. |
-| **GhostWriter & AM-Sentry** (Torres et al., 2026) | Retrieval-time text similarity & classifier | Two-phase delayed injection | **NO** | **YES** (Detects known injected templates) | Medium (25–80 ms) | Semantic reformulation bypasses classifier. |
+| **GhostWriter & AM-Sentry** (Torres et al., 2026) | Retrieval-time text similarity & classifier | Two-phase delayed injection | **NO** | **YES** (Detects known injected templates) | Medium (25-80 ms) | Semantic reformulation bypasses classifier. |
 | **TMA-NM** (Louck, June 2026) | Non-malleable IFC with TLA+ origin binding | Memory hijacking & origin spoofing | **NO** (Binary label sinks) | **YES** | Low (<1 ms) | Rigid over-filtering; cannot allow safe read-only queries. |
 | **Singh** (June 2026) | Provenance-capped Bayesian belief update | Memory contradiction floods | **NO** | **PARTIAL** | Low (<1 ms) | Stops at memory state; ignores physical tool impact. |
 | **MemoryQuarantine** (This Work) | **Dual-Plane Decoupling + Consequence-Calibrated Authority** | **Delayed Poisoning + Multi-Turn Bridging** | **YES** ($\mathcal{R}(a) \in [0.05, 1.0]$) | **YES** ($\gamma \le 0.15 \implies \text{Auth} < 0.25$) | **Sub-millisecond (<0.01 ms, 0 VRAM)** | Read-only reconnaissance ($\mathcal{R}=0.05$); in-session tool results. |
@@ -64,7 +64,7 @@
 
 ## 4. Analysis of the Mathematical Dead-Zone Paradox
 
-In manuscript Section I (lines 83–84), the paper claims:
+In manuscript Section I (lines 83-84), the paper claims:
 > *"MemoryQuarantine guarantees that low-provenance memories (e.g., untrusted web data with $\gamma = 0.15$) can be freely retrieved and used for harmless, reversible tasks (e.g., reading files, formatting code), but are mathematically blocked from authorizing irreversible operations..."*
 
 ### Mathematical Contradiction

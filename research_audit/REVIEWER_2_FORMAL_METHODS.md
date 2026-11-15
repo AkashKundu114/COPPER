@@ -30,7 +30,7 @@ $$\Delta \mathcal{L} \propto \ln\left(1 + \frac{1}{\max(C_t, 10^{-4})}\right)$$
 As $C_t \to 1.0$ (highly confident belief), the term evaluates to $\ln(2) \approx 0.693$. As $C_t \to 0.01$, it evaluates to $\ln(101) \approx 4.615$. When a contradiction arrives against an established belief, the manuscript's formula subtracts the *minimum* penalty, while heavily penalizing beliefs that are already doubted. This directly contradicts Shannon surprise $I(E) = -\ln P(E)$. The codebase implementation uses $-\ln(1 - |C - y|)$, which does not match the manuscript text.
 
 ### Flaw 2: The Untrusted Memory Read-Only Deadlock
-Manuscript lines 83–84 claim that untrusted memories ($\gamma = 0.15$) can authorize harmless read-only tasks ($R = 0.05$). Under the paper's static gating thresholds:
+Manuscript lines 83-84 claim that untrusted memories ($\gamma = 0.15$) can authorize harmless read-only tasks ($R = 0.05$). Under the paper's static gating thresholds:
 $$\text{Authority}_{\max} = 0.15 \times 1.00 \times (1 - 0.05) = 0.1425 < 0.25$$
 Under a $0.25$ threshold, an untrusted memory is mathematically barred from executing **any** tool call, even checking directory contents. The narrative is mathematically incompatible with the equations.
 

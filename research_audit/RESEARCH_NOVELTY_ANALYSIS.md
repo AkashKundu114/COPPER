@@ -73,5 +73,5 @@ Specifically:
    - *AgentDojo*: Focuses on single-session ephemeral prompt injections.
    - *MemoryQuarantine*: Focuses on multi-session delayed poisoning where the attack payload persists across restarts and dormancy intervals.
 4. **vs. NeMo Guardrails / Llama Guard 3**:
-   - *Guardrails*: Require heavy LLM classification passes (100–300 ms, extra VRAM) or static rigid whitelists.
+   - *Guardrails*: Require heavy LLM classification passes (100-300 ms, extra VRAM) or static rigid whitelists.
    - *MemoryQuarantine*: Pure mathematical runtime gate executing in $<0.01\text{ ms}$ with 0 bytes additional VRAM on an 8 GB consumer GPU.

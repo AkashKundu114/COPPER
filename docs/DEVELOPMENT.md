@@ -76,12 +76,12 @@ npm run desktop
 
 ### Option B: Decoupled Backend & Frontend
 
-**Terminal 1 — FastAPI Backend (Port 8000):**
+**Terminal 1: FastAPI Backend (Port 8000):**
 ```bash
 python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload
 ```
 
-**Terminal 2 — React 19 Frontend (Port 5173):**
+**Terminal 2: React 19 Frontend (Port 5173):**
 ```bash
 cd frontend
 npm run dev

@@ -34,7 +34,7 @@ The manuscript computes a two-tailed Fisher's exact test on a deterministic cont
 Computing Fisher's exact test on deterministic unit test executions of a hand-crafted rule engine is scientific posturing. Hypothesis testing assumes random sampling from a stochastic distribution; deterministic arithmetic has no sampling distribution.
 
 ### 3. Anecdotal Physical Evaluation ($N=1$) on an Inadequate Model
-The physical execution test in `test_real_llm_harness.py` evaluates exactly $N=1$ single prompt on `Qwen2.5-0.5B-Instruct`. Furthermore, lines 121–126 synthesize the attack tool call if the model's generation fails regex parsing, forcibly manufacturing the steering trajectory when the SLM fails.
+The physical execution test in `test_real_llm_harness.py` evaluates exactly $N=1$ single prompt on `Qwen2.5-0.5B-Instruct`. Furthermore, lines 121-126 synthesize the attack tool call if the model's generation fails regex parsing, forcibly manufacturing the steering trajectory when the SLM fails.
 
 ### 4. 70.0% Operator Interruption Rate
 In Table III, line 352, the author reports an Operator Challenge Rate of **70.0%** on benign tasks. Interrupting human operators on 7 out of 10 routine tasks induces severe confirmation fatigue, leading users to blindly approve prompts and destroying real-world security.

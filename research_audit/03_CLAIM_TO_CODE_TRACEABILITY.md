@@ -50,10 +50,10 @@ mindmap
 ### Contribution 1: Triple Fast-Path Router (TFP-Router)
 
 #### 1. Problem Solved
-Contemporary agent frameworks rely on cloud-hosted LLMs or heavy local neural classifiers (e.g., RouteLLM [28–88 ms], LatentGate [~28 ms]) to classify user intents before dispatching tasks. On consumer workstations with an 8 GB GPU, allocating VRAM and GPU compute to an intent classifier creates resource contention, introduces context prefill latency, and starves generative models.
+Contemporary agent frameworks rely on cloud-hosted LLMs or heavy local neural classifiers (e.g., RouteLLM [28-88 ms], LatentGate [~28 ms]) to classify user intents before dispatching tasks. On consumer workstations with an 8 GB GPU, allocating VRAM and GPU compute to an intent classifier creates resource contention, introduces context prefill latency, and starves generative models.
 
 #### 2. Why Existing Systems Fail
-Neural classifiers require continuous GPU residency or cold model loading. When run on host CPUs, transformer-based intent embedders (e.g., BERT, RoBERTa) incur 15–50 ms latency per query, unacceptable for interactive desktop OS command dispatch (e.g., opening a window, setting a timer, or pasting code).
+Neural classifiers require continuous GPU residency or cold model loading. When run on host CPUs, transformer-based intent embedders (e.g., BERT, RoBERTa) incur 15-50 ms latency per query, unacceptable for interactive desktop OS command dispatch (e.g., opening a window, setting a timer, or pasting code).
 
 #### 3. Mathematical & Algorithmic Definition
 TFP-Router decouples intent routing into three hierarchical stages:
@@ -66,15 +66,15 @@ TFP-Router decouples intent routing into three hierarchical stages:
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/orchestration/agent_router.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/agent_router.py)
-- **Lines:** Lines 65–145 (`DynamicRoutingMemory`), lines 147–485 (`KEYWORD_RULES`), lines 622–755 (`route_message_detailed`).
+- **Lines:** Lines 65-145 (`DynamicRoutingMemory`), lines 147-485 (`KEYWORD_RULES`), lines 622-755 (`route_message_detailed`).
 - **Data Structures:** `KEYWORD_RULES: dict[AgentType, list[tuple[str, float]]]`, `DynamicRoutingMemory` JSON ring buffer at `learned_routes.json`.
 
 #### 5. Baseline Comparison
-Compared against RouteLLM (BERT/matrix factorization classifiers, 28–88 ms) and FrugalGPT (static waterfall routing).
+Compared against RouteLLM (BERT/matrix factorization classifiers, 28-88 ms) and FrugalGPT (static waterfall routing).
 
 #### 6. Measurable Benefit
-- Latency: **0.165–0.238 ms median ($P_{50}$)**, $P_{95} = 0.379\text{ ms}$ on CPU.
-- Throughput: **4,202–6,061 QPS** (scaling to 9,856 QPS on Stage 0 hits). Zero GPU VRAM occupied.
+- Latency: **0.165-0.238 ms median ($P_{50}$)**, $P_{95} = 0.379\text{ ms}$ on CPU.
+- Throughput: **4,202-6,061 QPS** (scaling to 9,856 QPS on Stage 0 hits). Zero GPU VRAM occupied.
 
 #### 7. Failure Modes & Edge Cases
 - Syntactic perturbation: prepending arbitrary conversational fluff drops accuracy to 56.87%.
@@ -109,7 +109,7 @@ where $N = |\text{sub\_tasks}|$ and $p_{\text{base}}$ is scaled by $2.5\times$ i
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/orchestration/agent_router.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/agent_router.py)
-- **Lines:** Lines 494–515 (`estimate_dag_cascade_risk`), lines 518–534 (`decompose_compound_intent`).
+- **Lines:** Lines 494-515 (`estimate_dag_cascade_risk`), lines 518-534 (`decompose_compound_intent`).
 - **Data Structures:** `base_failure_rates: dict[AgentType, float]`.
 
 #### 5. Baseline Comparison
@@ -148,7 +148,7 @@ where $p_c = S_c / \sum_j S_j$. If $H(\mathbf{R}) > 2.5$, the router flags high 
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/orchestration/agent_router.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/agent_router.py)
-- **Lines:** Lines 537–547 (`calculate_routing_entropy`), lines 702–752 (`_finalize_result`).
+- **Lines:** Lines 537-547 (`calculate_routing_entropy`), lines 702-752 (`_finalize_result`).
 - **Data Structures:** `scores: dict[str, float]`, `routing_entropy: float`.
 
 #### 5. Baseline Comparison
@@ -188,7 +188,7 @@ $\lambda_{\text{Fact}} = 0.005$, $\lambda_{\text{Obs}} = 0.030$, $\lambda_{\text
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py)
-- **Lines:** Lines 23–45 (`compute_unified_epistemic_decay`), lines 313–322 (`record_retrieval`).
+- **Lines:** Lines 23-45 (`compute_unified_epistemic_decay`), lines 313-322 (`record_retrieval`).
 - **Data Structures:** `DECAY_CONSTANTS: dict[MemoryType, float]`, `UserMemoryV2.extra_metadata`.
 
 #### 5. Baseline Comparison
@@ -229,7 +229,7 @@ Seven-tier provenance hierarchy: $\gamma_{\text{explicit\_user}} = 1.00$, $\gamm
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py)
-- **Lines:** Lines 12–21 (`PROVENANCE_WEIGHTS`), lines 64–90 (`compute_surprise_gated_log_odds`), lines 268–311 (`reinforce_memory`).
+- **Lines:** Lines 12-21 (`PROVENANCE_WEIGHTS`), lines 64-90 (`compute_surprise_gated_log_odds`), lines 268-311 (`reinforce_memory`).
 - **Data Structures:** `PROVENANCE_WEIGHTS: dict[str, float]`, `UserMemoryV2.confidence`.
 
 #### 5. Baseline Comparison
@@ -268,7 +268,7 @@ Partitions propositions into three distinct epistemic classes:
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/memory/memory_manager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/memory/memory_manager.py)
-- **Lines:** Lines 23–27 (`DECAY_CONSTANTS`), lines 302–306 (dynamic promotion from OBSERVATION to FACT when confidence exceeds $0.85$).
+- **Lines:** Lines 23-27 (`DECAY_CONSTANTS`), lines 302-306 (dynamic promotion from OBSERVATION to FACT when confidence exceeds $0.85$).
 - **Data Structures:** `MemoryType` enum (`FACT`, `OBSERVATION`, `HYPOTHESIS`).
 
 #### 5. Baseline Comparison
@@ -305,14 +305,14 @@ $$F_{\text{fatigue}}(t_{\text{hours}}, \epsilon_{\text{error}}) = \tanh\left(\fr
 $$\mathcal{F}_{\text{dynamic}}(a) = 3.0 \cdot \sigma\left(w_R \cdot R(a) + w_F \cdot F_{\text{fatigue}} + w_G \cdot G(a) - \text{bias}\right)$$
 Calibrated optimal coefficients: $w_R = 2.8$, $w_F = 1.8$, $w_G = 2.2$, $\text{bias} = 3.5$.
 Four operational tiers:
-- Tier 0: `EXECUTE` ($\mathcal{F} < 1.0$) — non-blocking execution.
-- Tier 1: `SUGGEST` ($1.0 \le \mathcal{F} < 2.0$) — non-blocking advisory nudge.
-- Tier 2: `CHALLENGE` ($2.0 \le \mathcal{F} < 2.85$) — interactive confirmation required.
-- Tier 3: `SAFETY` ($\mathcal{F} \ge 2.85$) — hard block / boundary interception.
+- Tier 0: `EXECUTE` ($\mathcal{F} < 1.0$) - non-blocking execution.
+- Tier 1: `SUGGEST` ($1.0 \le \mathcal{F} < 2.0$) - non-blocking advisory nudge.
+- Tier 2: `CHALLENGE` ($2.0 \le \mathcal{F} < 2.85$) - interactive confirmation required.
+- Tier 3: `SAFETY` ($\mathcal{F} \ge 2.85$) - hard block / boundary interception.
 
 #### 4. Implementation Details
 - **File:** [`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py)
-- **Lines:** Lines 264–267 (`calculate_fatigue_score`), lines 270–287 (`compute_action_reversibility_risk`), lines 350–368 (`compute_dynamic_friction_index`), lines 437–510 (`evaluate`).
+- **Lines:** Lines 264-267 (`calculate_fatigue_score`), lines 270-287 (`compute_action_reversibility_risk`), lines 350-368 (`compute_dynamic_friction_index`), lines 437-510 (`evaluate`).
 - **Data Structures:** `FrictionConfig`, `GuardianVerdict`, `DisagreementLevel`.
 
 #### 5. Baseline Comparison
@@ -353,7 +353,7 @@ Multi-barrier deterministic interception:
 
 #### 4. Implementation Details
 - **Files:** [`backend/app/core/guardian.py`](file:///d:/C.O.P.P.E.R/backend/app/core/guardian.py#L376-L435), [`backend/app/core/ast_validator.py`](file:///d:/C.O.P.P.E.R/backend/app/core/ast_validator.py).
-- **Lines:** `guardian.py` lines 376–396 (`check_window_safety`), lines 398–411 (`check_typing_safety`), `ast_validator.py` lines 45–180.
+- **Lines:** `guardian.py` lines 376-396 (`check_window_safety`), lines 398-411 (`check_typing_safety`), `ast_validator.py` lines 45-180.
 - **Data Structures:** `SENSITIVE_WINDOW_KEYWORDS`, `PASSWORD_INPUT_TRIGGERS`.
 
 #### 5. Baseline Comparison
@@ -391,7 +391,7 @@ Enforced via strict localhost loopback bindings (`127.0.0.1`), offline local Oll
 
 #### 4. Implementation Details
 - **Files:** [`backend/app/core/config.py`](file:///d:/C.O.P.P.E.R/backend/app/core/config.py), [`backend/app/ai/llm/ollama_client.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/llm/ollama_client.py), [`frontend/electron-main.cjs`](file:///d:/C.O.P.P.E.R/frontend/electron-main.cjs).
-- **Lines:** `electron-main.cjs` lines 75–110 (blocking non-localhost navigation), `ollama_client.py` lines 30–65.
+- **Lines:** `electron-main.cjs` lines 75-110 (blocking non-localhost navigation), `ollama_client.py` lines 30-65.
 
 #### 5. Baseline Comparison
 Compared to AutoGen, MetaGPT, and CrewAI configured with OpenAI / Anthropic cloud API endpoints.
@@ -426,7 +426,7 @@ Deterministic regular expression filtering and SHA-256 cryptographic audit hashi
 
 #### 4. Implementation Details
 - **File:** [`backend/app/core/data_firewall.py`](file:///d:/C.O.P.P.E.R/backend/app/core/data_firewall.py)
-- **Lines:** Lines 23–69 (`_PATTERNS`), lines 72–105 (`classify_and_redact`).
+- **Lines:** Lines 23-69 (`_PATTERNS`), lines 72-105 (`classify_and_redact`).
 - **Data Structures:** `FirewallResult`, `DataClass`.
 
 #### 5. Baseline Comparison
@@ -468,7 +468,7 @@ Adapts ARIES database logging principles to distributed agent task graphs:
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/orchestration/wal_executor.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/wal_executor.py)
-- **Lines:** Lines 29–65 (`WALRecord`), lines 67–107 (`TaskWAL`), lines 109–190 (`CrashRecoveryEngine`), [`task_graph.py#L161-L410`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/task_graph.py#L161-L410).
+- **Lines:** Lines 29-65 (`WALRecord`), lines 67-107 (`TaskWAL`), lines 109-190 (`CrashRecoveryEngine`), [`task_graph.py#L161-L410`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/task_graph.py#L161-L410).
 - **Data Structures:** `RecordType` enum, `WALRecord`.
 
 #### 5. Baseline Comparison
@@ -510,7 +510,7 @@ Virtual GPU Memory Pager enforcing an 8.0 GB capacity envelope:
 
 #### 4. Implementation Details
 - **File:** [`backend/app/ai/llm/vram_pager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/llm/vram_pager.py)
-- **Lines:** Lines 12–42 (`MODEL_VRAM_ESTIMATES`), lines 48–70 (`ModelPage`), lines 72–221 (`VRAMPager`).
+- **Lines:** Lines 12-42 (`MODEL_VRAM_ESTIMATES`), lines 48-70 (`ModelPage`), lines 72-221 (`VRAMPager`).
 - **Data Structures:** `_pages: dict[str, ModelPage]`, `stats: dict[str, int]`.
 
 #### 5. Baseline Comparison

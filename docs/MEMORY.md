@@ -71,3 +71,15 @@ The memory engine combines relational and vector storage on the local filesystem
    - Zero network egress; all embeddings generated locally on CPU.
 3. **Knowledge Graph (`backend/app/knowledge_graph/`)**:
    - Maintains entity-relationship triples (Subject $\to$ Predicate $\to$ Object) with edge confidence scores.
+
+---
+
+## 5. Multi-Device Epistemic Memory Sync (P2P E2EE CRDT)
+
+For synchronization across trusted local devices without cloud storage:
+
+- **Cryptographic Encryption**: Encrypts memory payloads using AES-256-GCM with PBKDF2 key derivation (100,000 iterations) and 16-byte cryptographic salts.
+- **Message Authentication**: Validates every payload with an HMAC-SHA256 signature to guarantee origin authenticity and prevent tampering.
+- **Replay Protection**: Tracks observed nonces in an in-memory cache and rejects payloads with timestamp drift exceeding 300 seconds.
+- **CRDT Reconciliation**: Merges incoming epistemic memory facts and delta updates deterministically across nodes.
+- **Implementation & Tests**: Implemented in `backend/app/ai/memory/epistemic_p2p_sync.py` and validated by `tests/memory/test_epistemic_p2p_sync.py`.

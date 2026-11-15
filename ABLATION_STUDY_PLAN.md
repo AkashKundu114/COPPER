@@ -1,7 +1,7 @@
 # Factorial Ablation Study Plan: MemoryQuarantine
 
 **Objective:** Isolate and quantify the marginal contribution of each architectural component in the MemoryQuarantine governance pipeline.  
-**Evaluation Benchmark:** Unconfounded $2 \times 2$ Factorial Benchmark Matrix ($N = 120$ traces across Quadrants Q1–Q4).
+**Evaluation Benchmark:** Unconfounded $2 \times 2$ Factorial Benchmark Matrix ($N = 120$ traces across Quadrants Q1-Q4).
 
 ---
 

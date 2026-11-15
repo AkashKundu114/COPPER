@@ -1,6 +1,43 @@
-# Changelog & Verification Record: Project A — C.O.P.P.E.R.
+# Changelog & Verification Record: Project A - C.O.P.P.E.R.
 
-All notable changes made to C.O.P.P.E.R. during the October 16, 2026 Deep Audit are documented here.
+All notable changes and verification records for C.O.P.P.E.R. audits are documented here.
+
+---
+
+## [1.1.0-roadmap] - 2026-11-14
+
+### Sovereign Roadmap Verification Gate
+
+- **P2P E2EE Epistemic Memory Sync (`backend/app/ai/memory/epistemic_p2p_sync.py`):**
+  - Verified 6/6 unit tests in `tests/memory/test_epistemic_p2p_sync.py`.
+  - Validated AES-256-GCM encryption, HMAC-SHA256 signatures, replay cache, and 300-second clock drift rejection.
+- **Custom LoRA Presets (`scripts/train_qlora.py`):**
+  - Verified 2/2 unit tests in `tests/ai/test_lora_presets.py`.
+  - Adheres strictly to the 8.0 GB physical VRAM ceiling with cache clearance and Ollama Modelfile output.
+- **WebSocket Operator Approval Channel (`backend/app/core/safety/operator_approval_manager.py`):**
+  - Verified 4/4 unit tests in `tests/safety/test_operator_approval.py`.
+  - Validated ticket timeouts, approvals, rejections, and control plane pause/resume integration.
+- **Architectural Boundary Linting:**
+  - `python scripts/lint_architecture.py` reporting 0 violations across all module layers.
+
+---
+
+## [0.1.0-alpha] - 2026-10-17
+
+### Public Release Cleanup & Release Gate Verification
+
+- **Comprehensive Automated Test Gate:**
+  - 687 Backend Pytest tests passing across 92 modules (100% pass rate).
+  - 41 Frontend Vitest tests passing across 6 suites (100% pass rate).
+  - Total: 728 automated tests passing.
+- **Zero Network Egress Verification:**
+  - `tests/security/test_offline_egress.py` verified loopback-only sockets (`127.0.0.1`, `localhost`, `::1`).
+- **Terminal Safety Corpus:**
+  - 29 adversarial attack payloads blocked in `tests/security/test_terminal_safety_corpus.py`.
+- **Clean Database Migration:**
+  - 15 SQLite tables verified from scratch on empty database in `tests/test_migrations_clean_db.py`.
+- **Multi-Agent Registry Parity:**
+  - Exactly 12 active core agents and 8 model pools verified in `tests/test_agent_registry_counts.py`.
 
 ---
 

@@ -517,7 +517,7 @@ $$\text{Verdict}(m, a) = \begin{cases}
 #### Mathematical Guarantee of Safety
 For any destructive command with $R(a) = 1.00$:
 $$\text{Authority}(m, a) = \gamma_s \cdot C_m \cdot (1.0 - 1.00) \equiv 0.000$$
-Because $0.000 < 0.25$, **no memory item—regardless of confidence or provenance—can ever silently execute a destructive command**. It is mathematically guaranteed to be BLOCKED or require explicit operator confirmation.
+Because $0.000 < 0.25$, **no memory item, regardless of confidence or provenance, can ever silently execute a destructive command**. It is mathematically guaranteed to be BLOCKED or require explicit operator confirmation.
 
 ---
 
@@ -715,7 +715,7 @@ delta_l = polarity * gamma_s * min(3.5, (surprise * ln2) * scale)
 
 ## 9. Conclusion & Auditor's Certification
 
-This scientific audit establishes that C.O.P.P.E.R.'s Epistemic Memory Subsystem contains **groundbreaking theoretical concepts**—specifically, the formalization of UMF-EDR decay dynamics and the MemoryQuarantine decoupling theorem—that address critical vulnerabilities in persistent agent systems.
+This scientific audit establishes that C.O.P.P.E.R.'s Epistemic Memory Subsystem contains **novel theoretical concepts** - specifically, the formalization of UMF-EDR decay dynamics and the MemoryQuarantine decoupling theorem - that address critical vulnerabilities in persistent agent systems.
 
 However, the repository currently displays an acute gap between **theoretical specification** and **production software engineering**:
 1. The synthetic benchmark `benchmark_belief_revision.py` ($N=6$) is **scientifically invalid** and exhibits deterministic parity with Last-Write-Wins.

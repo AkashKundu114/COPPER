@@ -1,6 +1,6 @@
 # Security Architecture and Trust Boundaries
 
-C.O.P.P.E.R. operates under an uncompromising **Zero-Trust Security Architecture**. No component—whether an internal subagent, background worker, external tool, or memory provider—is inherently trusted.
+C.O.P.P.E.R. operates under an uncompromising **Zero-Trust Security Architecture**. No component (whether an internal subagent, background worker, external tool, or memory provider) is inherently trusted.
 
 ---
 

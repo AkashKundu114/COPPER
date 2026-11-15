@@ -1,6 +1,6 @@
 # Standardized 15-Step Execution Lifecycle
 
-Every operation in COPPER—whether originating from an incoming HTTP request, desktop UI interaction, autonomous agent step, Chronos scheduled task, or background worker—is executed under the **Architectural Control Plane** (`backend/app/core/control_plane.py`) according to the standardized 15-step execution lifecycle.
+Every operation in COPPER (whether originating from an incoming HTTP request, desktop UI interaction, autonomous agent step, Chronos scheduled task, or background worker) is executed under the **Architectural Control Plane** (`backend/app/core/control_plane.py`) according to the standardized 15-step execution lifecycle.
 
 ---
 

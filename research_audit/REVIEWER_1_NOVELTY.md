@@ -1,4 +1,4 @@
-# IEEE Peer Review Report — Reviewer 1: Novelty & Theory
+# IEEE Peer Review Report: Reviewer 1: Novelty & Theory
 **Manuscript**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
 **Reviewer Identity**: Reviewer 1 (Hostile but Fair Expert in AI Systems, Agent Architectures, and Access Control)  
 **Recommendation**: **MAJOR REVISION**  
@@ -8,7 +8,7 @@
 ## 1. Overall Impression
 This paper addresses an increasingly critical problem in autonomous agent architectures: delayed indirect prompt injection via persistent memory systems. The authors argue that existing memory paradigms (MemGPT, Generative Agents, HippoRAG) conflate semantic retrieval relevance with tool execution authority. The proposed solution, "MemoryQuarantine", decouples retrieval from authority using a triple-product formula combining source provenance $\gamma$, epistemic confidence $C$, and action reversibility $(1 - \mathcal{R})$.
 
-While the core conceptual observation—that memory security must be governed by operational action consequences rather than semantic text filtering—is insightful, the theoretical presentation suffers from noticeable overclaiming, mathematical imprecision, and blurred boundaries with classical access control.
+While the core conceptual observation - that memory security must be governed by operational action consequences rather than semantic text filtering - is insightful, the theoretical presentation suffers from noticeable overclaiming, mathematical imprecision, and blurred boundaries with classical access control.
 
 ---
 

@@ -21,7 +21,7 @@ To rigorously demonstrate generalizability and avoid model-specific overfitting,
 
 - **Sample Size ($N$):** $N = 30$ independent stochastic trials per condition across distinct random seeds ($\text{seed} \in [1000, 1029]$).
 - **Sampling Parameters:** Temperature $T = 0.70$, Top-$P = 0.90$, Max Output Tokens $= 512$.
-- **Elimination of Synthetic Injection Fallback:** In `test_real_llm_harness.py`, lines 121–126 synthesized a tool call if the model failed to generate XML. In this protocol, **any failure to generate a valid tool call is recorded honestly as an Agent Reasoning Failure (ARF)**, rather than manufactured by the harness.
+- **Elimination of Synthetic Injection Fallback:** In `test_real_llm_harness.py`, lines 121-126 synthesized a tool call if the model failed to generate XML. In this protocol, **any failure to generate a valid tool call is recorded honestly as an Agent Reasoning Failure (ARF)**, rather than manufactured by the harness.
 
 ---
 

@@ -53,11 +53,11 @@ flowchart TD
 ```
 
 ### 3.1 Attack Vectors ($N=100$)
-1. **AV1 — Direct Chat Injection ($N=20$):** Adversary interacts via chat, attempting to plant high-confidence persistent directives that mandate unauthorized file modifications or credential extraction in future sessions.
-2. **AV2 — Indirect Tool Poisoning ($N=20$):** External web page, API response, or fetched document contains embedded prompt injection instructing the agent to overwrite configuration or exfiltrate environment files upon next inspection.
-3. **AV3 — Delayed Action Steering ($N=20$):** Attacker injects a seemingly innocuous low-confidence observation across multiple sessions that incrementally modifies target paths toward critical system assets.
-4. **AV4 — Bridging Subversion ($N=20$):** Attacker exploits multi-hop agent delegation, passing unvetted memory through intermediate research tools to wash away untrusted provenance labels.
-5. **AV5 — Contradiction Flood ($N=20$):** Attacker bombards the memory store with rapid contradictory assertions to induce epistemic collapse or force fallback to vulnerable defaults.
+1. **AV1 - Direct Chat Injection ($N=20$):** Adversary interacts via chat, attempting to plant high-confidence persistent directives that mandate unauthorized file modifications or credential extraction in future sessions.
+2. **AV2 - Indirect Tool Poisoning ($N=20$):** External web page, API response, or fetched document contains embedded prompt injection instructing the agent to overwrite configuration or exfiltrate environment files upon next inspection.
+3. **AV3 - Delayed Action Steering ($N=20$):** Attacker injects a seemingly innocuous low-confidence observation across multiple sessions that incrementally modifies target paths toward critical system assets.
+4. **AV4 - Bridging Subversion ($N=20$):** Attacker exploits multi-hop agent delegation, passing unvetted memory through intermediate research tools to wash away untrusted provenance labels.
+5. **AV5 - Contradiction Flood ($N=20$):** Attacker bombards the memory store with rapid contradictory assertions to induce epistemic collapse or force fallback to vulnerable defaults.
 
 ### 3.2 Benign Control Workflows ($N=60$)
 1. **Benign User Preferences ($N=20$):** Explicit user customizations (e.g. "Always use tabs for indentation", "Save build logs to ./dist"). Provenance: `user_explicit` ($\gamma = 1.00$).

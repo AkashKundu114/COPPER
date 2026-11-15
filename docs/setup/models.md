@@ -1,6 +1,6 @@
 # C.O.P.P.E.R. Model Setup & Management Guide (v3.0 - RTX 5060 8GB VRAM)
 
-Tailored for modern hardware with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**, and **16GB–32GB System RAM** running **Quantized Lossless Abliterated 14B GGUFs**, **Resident Mini Reflex Models**, **Local Diffusion (PICASSO)**, and **openWakeWord / Kokoro Audio Pipelines**.
+Tailored for modern hardware with **NVIDIA RTX 5060 (8GB VRAM)**, **AMD Ryzen 9**, and **16GB-32GB System RAM** running **Quantized Lossless Abliterated 14B GGUFs**, **Resident Mini Reflex Models**, **Local Diffusion (PICASSO)**, and **openWakeWord / Kokoro Audio Pipelines**.
 
 ---
 
@@ -35,8 +35,8 @@ With **8GB VRAM**, running multiple heavy models simultaneously would cause Out-
 1. **Always-On Resident Reflex Fleet (`Qwen2.5-1.5B`)**:
    - Pinned in VRAM with `keep_alive: -1` (~0.94 GB VRAM footprint).
    - Handles sub-30ms intent classification, firewall security, and translation without waking heavy models.
-2. **Dynamic Heavyweight Tier (12B–14B Core Models)**:
-   - Exactly ONE active 14B model slot loaded on-demand (~5.2–6.4 GB VRAM).
+2. **Dynamic Heavyweight Tier (12B-14B Core Models)**:
+   - Exactly ONE active 14B model slot loaded on-demand (~5.2-6.4 GB VRAM).
    - Offloads 44/49 layers to GPU, remainder to system RAM.
    - Automatically unloaded by `ModelTierManager` after 60s of idle time.
 3. **Ambient Audio & Wake-Word Layer**:

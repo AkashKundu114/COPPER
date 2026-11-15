@@ -40,7 +40,7 @@ $$p\text{-value} = 2 \times \left(\frac{1}{2}\right)^{100} = \mathbf{1.58 \times
 *Scientific Conclusion:* Reject the null hypothesis $\mathcal{H}_0$. MemoryQuarantine significantly reduces Attack Success Rate compared to Flat RAG with overwhelming statistical significance ($p < 10^{-22}$ under both paired and exact binomial tests).
 
 ### 2.2 Hypothesis $\mathcal{H}_2$: MemoryQuarantine ($M_5$) vs. Naive Bayes ($B_2$)
-Out of 100 paired traces, Naive Bayes intercepted only the 20 Contradiction Flood traces (AV5) and missed the other 80 traces (AV1–AV4).
+Out of 100 paired traces, Naive Bayes intercepted only the 20 Contradiction Flood traces (AV5) and missed the other 80 traces (AV1-AV4).
 - $n_{11}$ (Both intercepted): $20$ (AV5)
 - $n_{10}$ ($M_5$ intercepted, $B_2$ missed): $80$ (AV1, AV2, AV3, AV4)
 - $n_{01}$ ($M_5$ missed, $B_2$ intercepted): $0$

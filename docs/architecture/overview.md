@@ -15,8 +15,8 @@ C.O.P.P.E.R. is an autonomous, adaptive, guardian-style personal AI operating en
 ### Core Architectural Principles
 
 1. **Local-First & Zero Egress:** Executes entirely on local hardware (AMD Ryzen 9 / RTX 5060) utilizing quantized GGUF & ONNX models. Zero cloud transmission occurs by default.
-2. **Multi-Tier Agent Hierarchy:** Routes queries through sub-millisecond intent classifiers to 5 heavy Sovereign Core models (12B–14B IQ3_XS), 7 resident micro-subagents (1.5B–3B Q4_K_M), plus vision (Qwen2.5-VL-3B), image generation (SD-Turbo), and a full audio pipeline (Whisper Large v3 Turbo + Kokoro-82M + Silero VAD + openWakeWord).
-3. **Guardian Alignment (Levels 0–3):** Evaluates prompt safety, commitment conflicts, and destructive triggers prior to execution, protecting user goals while preserving autonomy.
+2. **Multi-Tier Agent Hierarchy:** Routes queries through sub-millisecond intent classifiers to 5 heavy Sovereign Core models (12B-14B IQ3_XS), 7 resident micro-subagents (1.5B-3B Q4_K_M), plus vision (Qwen2.5-VL-3B), image generation (SD-Turbo), and a full audio pipeline (Whisper Large v3 Turbo + Kokoro-82M + Silero VAD + openWakeWord).
+3. **Guardian Alignment (Levels 0-3):** Evaluates prompt safety, commitment conflicts, and destructive triggers prior to execution, protecting user goals while preserving autonomy.
 4. **Zero-Trust Data Firewall:** Automated real-time regex sanitization masking sensitive credentials (`sk-`, `sk-proj-`), JWT tokens, SSNs, credit cards, emails, and private IP addresses.
 5. **Continuous Dynamic Routing Memory:** Self-training token-similarity memory cache (`DynamicRoutingMemory`) providing sub-0.05ms dispatch for known and evolving user intents.
 

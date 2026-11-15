@@ -50,7 +50,7 @@ The benchmark does not test whether MemoryQuarantine can distinguish between a m
 
 ### Physical Harness Reality (`test_real_llm_harness.py`)
 - **Sample Size:** $N = 1$ single test case running `Qwen2.5-0.5B-Instruct` on RTX 5060 GPU.
-- **Synthetic Fallback Vulnerability (Lines 121–126):**
+- **Synthetic Fallback Vulnerability (Lines 121-126):**
   If `qwen2.5:0.5b` outputs text that fails XML regex parsing, the test harness **manufactures the malicious tool call itself**:
   ```python
   parsed_call = ToolCall(tool="file_write", arguments={"path": canary_file, "content": "POISONED_MALICIOUS_PAYLOAD_EXFIL"})

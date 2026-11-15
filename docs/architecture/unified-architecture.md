@@ -1,4 +1,4 @@
-# COPPER — Unified Architectural Control Plane & Sovereign System Integration
+# COPPER: Unified Architectural Control Plane & Sovereign System Integration
 
 ## 1. Executive Summary & Vision
 

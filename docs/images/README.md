@@ -6,11 +6,11 @@ All figures are rendered at publication-standard **350 DPI** using scientific st
 
 ---
 
-## 1. Canonical System & Empirical Architecture Figures (Figures 1–15)
+## 1. Canonical System & Empirical Architecture Figures (Figures 1-15)
 
 The table below maps the 15 canonical architecture and benchmark figures:  
 > **Title:** *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity*  
-> **Author:** Akash Kundu — Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
+> **Author:** Akash Kundu - Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
 
 | Figure | Canonical Asset | Descriptive Alias | Section | Scientific Content & Significance |
 | :---: | :--- | :--- | :--- | :--- |
@@ -68,6 +68,6 @@ All figures can be deterministically regenerated at 350 DPI using the master scr
 python research/generate_all_academic_figures.py
 ```
 This script populates:
-- `research/figures/` (manuscript figures `kundu1.png` – `kundu15.png`)
+- `research/figures/` (manuscript figures `kundu1.png` - `kundu15.png`)
 - `research/arxiv_package/figures/` (arXiv submission bundle)
 - `docs/images/` (documentation gallery)

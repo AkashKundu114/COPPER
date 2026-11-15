@@ -14,17 +14,17 @@
 
 This audit evaluates the architectural integrity, mathematical soundness, empirical accuracy, and failure modes of the **TFP-Router** (Topological Failure-Predicting Router) in C.O.P.P.E.R. The manuscript draft (`research/paper.tex`, §III.A) claims a CPU-only cascade router achieving:
 1. **97.77% dispatch accuracy** across 1,390 routing queries.
-2. **0.165–0.238 ms median dispatch latency** (4,202–6,061 QPS).
+2. **0.165-0.238 ms median dispatch latency** (4,202-6,061 QPS).
 3. **Zero GPU interference** during agent dispatch.
 4. **Topological cascade failure prediction** across multi-agent Directed Acyclic Graphs (DAGs).
 
-Our investigation reveals an empirical and architectural bifurcation: while the CPU-only heuristic fast-paths are verified to execute in **24–300 µs** without CUDA calls, the reported 97.77% accuracy is an artifact of evaluation against an over-fitted, handcrafted 1,390-sample dataset aligned to compiled regex rules. When subjected to the scaled 12,204-sample benchmark (`backend/eval/datasets/partitions/master_routing/test.jsonl`), **dispatch accuracy collapses catastrophically from 97.77% to 56.87% (Weighted F1: 57.1%)**.
+Our investigation reveals an empirical and architectural bifurcation: while the CPU-only heuristic fast-paths are verified to execute in **24-300 µs** without CUDA calls, the reported 97.77% accuracy is an artifact of evaluation against an over-fitted, handcrafted 1,390-sample dataset aligned to compiled regex rules. When subjected to the scaled 12,204-sample benchmark (`backend/eval/datasets/partitions/master_routing/test.jsonl`), **dispatch accuracy collapses catastrophically from 97.77% to 56.87% (Weighted F1: 57.1%)**.
 
 ### Table 1.1: Core Claims and Evidence Verifications
 
 | ID | Claim Statement | Source Location | Audit Verdict | Empirical Evidence & Root Cause |
 | :--- | :--- | :--- | :--- | :--- |
-| **CLM-01** | Sub-millisecond dispatch latency (0.165–0.238 ms median, 4,202–6,061 QPS) | `paper.tex` Abstract, §III.A | **PARTIALLY VERIFIED** | **VERIFIED** strictly for CPU Stage 0/1/2 heuristic matching (measured 24.6–256.9 µs). **CONTRADICTED** if Stage 3 (micro-LLM) or Stage 2.5 (vector embeddings) is included, which requires 25–50 ms hot and >500 ms cold. |
+| **CLM-01** | Sub-millisecond dispatch latency (0.165-0.238 ms median, 4,202-6,061 QPS) | `paper.tex` Abstract, §III.A | **PARTIALLY VERIFIED** | **VERIFIED** strictly for CPU Stage 0/1/2 heuristic matching (measured 24.6-256.9 µs). **CONTRADICTED** if Stage 3 (micro-LLM) or Stage 2.5 (vector embeddings) is included, which requires 25-50 ms hot and >500 ms cold. |
 | **CLM-02** | 97.77% dispatch accuracy across 1,390 routing queries | `paper.tex` Abstract, §III.A | **CONTRADICTED / OVERFITTED** | Verified on curated 1,390 dataset (measured 97.41%, 1,354/1,390). Collapses to **56.87%** on scaled 12k test partition due to syntactic prefixes, anchor mismatches, and out-of-domain classes. |
 | **CLM-03** | Zero GPU interference during agent dispatch | `paper.tex` §III.A | **VERIFIED** | Code inspection of `agent_router.py` confirms Stages 0, 1, and 2 execute purely on host CPU threads with zero PyTorch/CUDA API invocations. |
 | **CLM-04** | Topological DAG Cascade Risk estimation ($\mathcal{R}_{\text{cascade}}$) | `paper.tex` Eq. 3, §III.A | **PARTIALLY VERIFIED** | Mathematical formula implemented in `estimate_dag_cascade_risk()`, but operates on static lookup tables rather than dynamically calibrated Bayesian runtime failure distributions. |
@@ -173,8 +173,8 @@ To understand why routing accuracy degraded by **40.90 percentage points**, we e
 | **`research`** | 15 | 0 | 439 | 10 | 0 | 0 | 0 | 0 | **577** | 0 | 0 | 1,041 | 55.43% | 63.06% |
 | **`vision`** | 0 | 0 | 520 | 0 | 0 | 0 | 0 | 0 | 119 | **449** | 0 | 1,088 | 41.27% | 58.43% |
 | **`voice`** | 1 | 0 | 1192 | 3 | 0 | 2 | 0 | 0 | 7 | 0 | **0** | 1,224 | **0.00%** | **0.00%** |
-| **Predicted Totals** | 858 | 0 | **5,531** | 859 | 616 | 1,022 | 1,067 | 814 | 789 | 449 | 0 | 12,204 | — | — |
-| **Class Precision** | 93.36% | 0.0% | **20.01%** | 85.80% | 100.0% | 99.80% | 100.0% | 69.53% | 73.13% | 100.0% | 0.0% | — | — | — |
+| **Predicted Totals** | 858 | 0 | **5,531** | 859 | 616 | 1,022 | 1,067 | 814 | 789 | 449 | 0 | 12,204 | N/A | N/A |
+| **Class Precision** | 93.36% | 0.0% | **20.01%** | 85.80% | 100.0% | 99.80% | 100.0% | 69.53% | 73.13% | 100.0% | 0.0% | N/A | N/A | N/A |
 
 ---
 
@@ -187,7 +187,7 @@ The scaled generator (`generate_scaled_benchmarks.py`, lines 491 & 493) syntheti
 - **1,148 samples** with `expected_agent: "behavior"`.
 - **1,224 samples** with `expected_agent: "voice"`.
 
-However, in `backend/app/core/constants.py` (lines 7–45), `AgentType` defines strictly **12 enum members**: `CHAT`, `CODING`, `DOCUMENT`, `AUTOMATION`, `REMINDER`, `RESEARCH`, `VISION`, `IMAGE`, `WEB_SEARCH`, `CAMPAIGN_INTELLIGENCE`, `PLANNER`, `GUARDIAN`. 
+However, in `backend/app/core/constants.py` (lines 7-45), `AgentType` defines strictly **12 enum members**: `CHAT`, `CODING`, `DOCUMENT`, `AUTOMATION`, `REMINDER`, `RESEARCH`, `VISION`, `IMAGE`, `WEB_SEARCH`, `CAMPAIGN_INTELLIGENCE`, `PLANNER`, `GUARDIAN`. 
 
 Neither `behavior` nor `voice` exists as an active agent! Furthermore, `KEYWORD_RULES` in `agent_router.py` contains zero rules for `behavior` or `voice`. When queries from these categories are evaluated, all regex scores evaluate to 0.0. The router drops through to Stage 4 (`default_conversational_fallback`), assigning `AgentType.CHAT`.
 
@@ -253,7 +253,7 @@ To rigorously quantify the router's sensitivity to operator input noise, we subj
 To restore mathematical validity and achieve >95% accuracy across out-of-domain and perturbed benchmarks for ICCECE 2027:
 
 1. **PROPOSED (Semantic Embedder Layer - Stage 2):**  
-   Replace brittle regex rules with a fast, quantized ONNX bi-encoder (e.g., `all-MiniLM-L6-v2` or `bge-micro-v2`) executing on CPU via ONNX Runtime with AVX-512 / NEON acceleration. At 384 dimensions, cosine distance scoring against canonical agent centroids executes in **1.8–3.5 ms** and is immune to typos, prefixes, and word order variations.
+   Replace brittle regex rules with a fast, quantized ONNX bi-encoder (e.g., `all-MiniLM-L6-v2` or `bge-micro-v2`) executing on CPU via ONNX Runtime with AVX-512 / NEON acceleration. At 384 dimensions, cosine distance scoring against canonical agent centroids executes in **1.8-3.5 ms** and is immune to typos, prefixes, and word order variations.
 
 2. **PROPOSED (Anchor Bug Fix in `agent_router.py`):**  
    Change line 670 to evaluate regular expressions separately against `core_text`:

@@ -21,19 +21,19 @@ This document tracks unresolved architectural inquiries, recently resolved desig
 
 ### Question 2: Local GPU Memory Pressure during Multi-Agent Swarms
 - **Status:** **RESOLVED in v3.0.0**
-- **Prior Issue:** Executing multi-agent swarms concurrently on consumer GPUs (8 GB – 16 GB VRAM) risked CUDA Out-Of-Memory (OOM) crashes and latency spikes caused by uncoordinated model swapping.
+- **Prior Issue:** Executing multi-agent swarms concurrently on consumer GPUs (8 GB - 16 GB VRAM) risked CUDA Out-Of-Memory (OOM) crashes and latency spikes caused by uncoordinated model swapping.
 - **Adopted Resolution:** Implemented the Dynamic VRAM Pager in [`backend/app/ai/llm/vram_pager.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/llm/vram_pager.py):
   - **Bounded Allocation Framework:** Treats GPU VRAM as a bounded memory space under a strict 8 GB baseline consumer constraint.
   - **Multi-Factor Weighted LRU Eviction:** Models are scored via:
     $$\text{Score}(M) = w_{\text{recency}} \cdot \text{RecencyScore}(M) + w_{\text{frequency}} \cdot \text{FrequencyScore}(M) + w_{\text{lookahead}} \cdot \text{LookaheadPriority}(M)$$
     Unpinned models with the lowest composite score are evicted (`keep_alive=0`) prior to allocating new frames.
   - **DAG Lookahead:** Inspects upcoming task nodes in planner (NEXUS) execution graphs to proactively protect or pre-warm impending agent models.
-  - **Single 14B Multiplexing Slot:** Constrains heavyweight 14B sovereign models (`qwen2.5:14b`, `deepseek-r1:14b`, `phi4:14b`, `mistral-nemo:12b` at ~5.2–6.4 GB) to a single multiplexed execution slot, co-residing safely alongside resident mini-models (≤3B, ~0.36–1.8 GB) without OOM faults.
+  - **Single 14B Multiplexing Slot:** Constrains heavyweight 14B sovereign models (`qwen2.5:14b`, `deepseek-r1:14b`, `phi4:14b`, `mistral-nemo:12b` at ~5.2-6.4 GB) to a single multiplexed execution slot, co-residing safely alongside resident mini-models (≤3B, ~0.36-1.8 GB) without OOM faults.
 
 ### Question 3: Background Reflection & Memory Consolidation Model
 - **Status:** **RESOLVED in v3.0.0**
 - **Prior Issue:** Continuous background thought cycles (epistemic extraction, knowledge graph consolidation, memory decay) risked evicting primary interactive models from VRAM or inducing user-visible response latency.
-- **Adopted Resolution:** Assigned `SmolLM2-1.7B-Instruct` (`smollm2:1.7b`, ~0.98–1.00 GB VRAM) as the dedicated background reflection engine:
+- **Adopted Resolution:** Assigned `SmolLM2-1.7B-Instruct` (`smollm2:1.7b`, ~0.98-1.00 GB VRAM) as the dedicated background reflection engine:
   - Powers **CHRONOS** (Epistemic Memory Consolidator) and **SPIDER** (DOM & Web Cleaner / Fact Extractor).
   - Maintained as a resident micro-agent (`keep_alive=-1`) or lightweight worker in [`backend/app/ai/orchestration/task_scheduler.py`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/task_scheduler.py).
   - Delivers high-throughput (~135+ T/s) epistemic fact classification, preference extraction, and vector embedding staging for ChromaDB without displacing active 14B reasoning models.
@@ -72,4 +72,4 @@ This document tracks unresolved architectural inquiries, recently resolved desig
 | **Local LLM Runtime** | Ollama API + `llama-cpp-python` GGUF Engine | vLLM / Raw C++ llama.cpp bindings | Enables universal cross-platform deployment on consumer hardware with standardized REST endpoints and quantized GGUF (IQ3_XS / Q4_K_M) execution. |
 | **Vector Database** | ChromaDB (In-Process) | Pinecone / Qdrant / Milvus | Runs locally without cloud subscriptions, external network egress, or telemetry leakage; integrates cleanly with SQLite metadata storage. |
 | **Audio Processing** | Kokoro-82M ONNX + Whisper Large v3 Turbo | Cloud Speech APIs (OpenAI / ElevenLabs) | Enables deterministic offline transcription and sub-300ms speech synthesis while preserving complete acoustic privacy. |
-| **Constitutional Safety** | Offline Guardian Engine (Levels 0–3) | Cloud Content Moderation APIs | Enforces local action reversibility analysis, zero-trust PII masking, and friction index scoring without external network dependencies. |
+| **Constitutional Safety** | Offline Guardian Engine (Levels 0-3) | Cloud Content Moderation APIs | Enforces local action reversibility analysis, zero-trust PII masking, and friction index scoring without external network dependencies. |

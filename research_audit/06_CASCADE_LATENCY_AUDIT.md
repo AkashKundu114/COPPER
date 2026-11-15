@@ -23,10 +23,10 @@ Our empirical timing benchmarks, queueing-theoretic models, and hardware profili
 
 | Claim ID | Paper Claim Statement | Codebase Location | Audit Classification | Empirical Measurement & Verification Details |
 | :--- | :--- | :--- | :--- | :--- |
-| **LAT-01** | Median dispatch latency: 0.165–0.238 ms | `paper.tex` Abstract, §III.A | **VERIFIED (QUALIFIED)** | **VERIFIED** strictly for CPU-bound heuristic matching (measured P50: 0.027 ms on Stage 0 cache hit, 0.287 ms on Stage 2 regex). |
-| **LAT-02** | Sequential throughput: 4,202–6,061 QPS | `paper.tex` Abstract, §III.A | **VERIFIED (QUALIFIED)** | **VERIFIED** in a single-threaded Python microbenchmark loop when cache hit ratio $h \in [0.25, 0.65]$. |
+| **LAT-01** | Median dispatch latency: 0.165-0.238 ms | `paper.tex` Abstract, §III.A | **VERIFIED (QUALIFIED)** | **VERIFIED** strictly for CPU-bound heuristic matching (measured P50: 0.027 ms on Stage 0 cache hit, 0.287 ms on Stage 2 regex). |
+| **LAT-02** | Sequential throughput: 4,202-6,061 QPS | `paper.tex` Abstract, §III.A | **VERIFIED (QUALIFIED)** | **VERIFIED** in a single-threaded Python microbenchmark loop when cache hit ratio $h \in [0.25, 0.65]$. |
 | **LAT-03** | Peak cached throughput: up to 9,856 QPS | `paper.tex` §IV.D, Line 1382 | **VERIFIED (QUALIFIED)** | **VERIFIED** for pure Jaccard cache hits (measured ~33,395 QPS on Stage 0 in isolation). |
-| **LAT-04** | Micro-LLM fallback P50 latency: 18.5 ms | `paper.tex` §III.A, Line 305 | **INVALID / CONTRADICTED** | **CONTRADICTED** by physical HTTP client overhead, prompt prefill, and token generation in Ollama. Hot SLM requires 25–50 ms; cold paging requires >500 ms. |
+| **LAT-04** | Micro-LLM fallback P50 latency: 18.5 ms | `paper.tex` §III.A, Line 305 | **INVALID / CONTRADICTED** | **CONTRADICTED** by physical HTTP client overhead, prompt prefill, and token generation in Ollama. Hot SLM requires 25-50 ms; cold paging requires >500 ms. |
 | **LAT-05** | Zero GPU interference during routing | `paper.tex` §III.A | **VERIFIED** | Stages 0, 1, 2 execute purely on CPU threads via Python standard library `re` and set operations. Zero CUDA memory allocations or kernels. |
 | **LAT-06** | End-to-end server throughput matches microbenchmark | Implied in §III.A | **CONTRADICTED** | Conflates single-threaded CPU loop speed with concurrent ASGI HTTP request throughput. FastAPI + Uvicorn server throughput is bounded by event-loop GIL serialization. |
 
@@ -37,7 +37,7 @@ Our empirical timing benchmarks, queueing-theoretic models, and hardware profili
 A foundational methodology distinction must be made between **serial microbenchmark latency** and **concurrent end-to-end server throughput**.
 
 ### 2.1 The Microbenchmark Artifact
-The throughput numbers in `paper.tex` (4,202–6,061 QPS) and `tests/core/test_resource_benchmarks.py` ([test_agent_routing_dispatch_throughput](file:///d:/C.O.P.P.E.R/tests/core/test_resource_benchmarks.py#L66-L89)) were obtained by executing:
+The throughput numbers in `paper.tex` (4,202-6,061 QPS) and `tests/core/test_resource_benchmarks.py` ([test_agent_routing_dispatch_throughput](file:///d:/C.O.P.P.E.R/tests/core/test_resource_benchmarks.py#L66-L89)) were obtained by executing:
 
 ```python
 t0 = time.perf_counter()
@@ -73,7 +73,7 @@ Accounting for FastAPI ASGI middleware overhead (~0.45 ms per request), the true
 
 $$\lambda_{\text{ASGI}} = \frac{1}{0.00028 + 0.00045} \approx \mathbf{1,370 \text{ QPS}}$$
 
-Claiming 6,061–9,856 QPS without qualifying that it represents an in-memory Python microbenchmark loop is an overstatement that conflates algorithmic loop efficiency with system service capacity.
+Claiming 6,061-9,856 QPS without qualifying that it represents an in-memory Python microbenchmark loop is an overstatement that conflates algorithmic loop efficiency with system service capacity.
 
 ---
 
@@ -160,17 +160,17 @@ We analyzed the computational physics of local LLM inference over HTTP:
 
 ### 5.1 Latency Budget Breakdown for an Ollama 1.7B Call
 An HTTP request to `http://localhost:11434/api/chat` for routing classification requires:
-1. **TCP Handshake & HTTP Serialization:** 0.8–1.5 ms.
+1. **TCP Handshake & HTTP Serialization:** 0.8-1.5 ms.
 2. **Context Ingestion & Prompt Prefill:**  
-   The system prompt `ROUTING_PROMPT` ([prompt_manager.py (Line 3)](file:///d:/C.O.P.P.E.R/backend/app/ai/llm/prompt_manager.py#L3)) contains 39 tokens; the user query contains 15–40 tokens.  
+   The system prompt `ROUTING_PROMPT` ([prompt_manager.py (Line 3)](file:///d:/C.O.P.P.E.R/backend/app/ai/llm/prompt_manager.py#L3)) contains 39 tokens; the user query contains 15-40 tokens.  
    $$\text{Prefill Tokens } N_{\text{prefill}} \approx 65 \text{ tokens}$$  
    At 800 tok/s prefill speed on RTX 5060:
    $$T_{\text{prefill}} = \frac{65}{800} \approx 0.081 \text{ s} = 8.1 \text{ ms}$$
-3. **Autoregressive Generation (1–3 Target Tokens):**  
-   To output an agent name (e.g. `coding`, `automation`), the model generates 2–3 tokens.  
+3. **Autoregressive Generation (1-3 Target Tokens):**  
+   To output an agent name (e.g. `coding`, `automation`), the model generates 2-3 tokens.  
    At 135 tok/s generation throughput:
    $$T_{\text{decode}} = \frac{3}{135} \approx 0.022 \text{ s} = 22.2 \text{ ms}$$
-4. **JSON Deserialization & Python ASGI Return:** 0.5–1.0 ms.
+4. **JSON Deserialization & Python ASGI Return:** 0.5-1.0 ms.
 
 $$\text{Minimum Theoretical Hot Latency} = 1.0 + 8.1 + 22.2 + 0.8 = \mathbf{32.1 \text{ ms}}$$
 
@@ -181,13 +181,13 @@ $$\text{Minimum Theoretical Hot Latency} = 1.0 + 8.1 + 22.2 + 0.8 = \mathbf{32.1
 ## 6. Recommendations for Performance Transparency
 
 1. **Adopt Bimodal Reporting in the Manuscript:**  
-   Replace the monolithic "0.165–0.238 ms" claim with dual-regime reporting:
-   - **Fast-Path Heuristic Dispatch (Stages 0–2):** P50: 0.198 ms, P95: 0.348 ms, Throughput: 4,200–5,000 QPS (CPU-only).
-   - **Micro-LLM Fallback Dispatch (Stage 3):** P50: 36.5 ms, P95: 49.8 ms, Throughput: 25–35 QPS.
+   Replace the monolithic "0.165-0.238 ms" claim with dual-regime reporting:
+   - **Fast-Path Heuristic Dispatch (Stages 0-2):** P50: 0.198 ms, P95: 0.348 ms, Throughput: 4,200-5,000 QPS (CPU-only).
+   - **Micro-LLM Fallback Dispatch (Stage 3):** P50: 36.5 ms, P95: 49.8 ms, Throughput: 25-35 QPS.
    - **End-to-End Composite Latency:** Reported as a function of the empirical escalation rate $m$.
 
 2. **Qualify Microbenchmark vs ASGI Throughput:**  
-   Explicitly identify the 4,202–6,061 QPS figure as an in-memory single-core Python microbenchmark, and report the real-world FastAPI / Uvicorn ASGI endpoint capacity as ~1,350 QPS.
+   Explicitly identify the 4,202-6,061 QPS figure as an in-memory single-core Python microbenchmark, and report the real-world FastAPI / Uvicorn ASGI endpoint capacity as ~1,350 QPS.
 
 3. **Disclose Cold-Start Penalty:**  
-   Document the latency overhead when models are paged into VRAM from NVMe storage (200–800 ms), establishing realistic performance expectations for memory-constrained edge deployment.
+   Document the latency overhead when models are paged into VRAM from NVMe storage (200-800 ms), establishing realistic performance expectations for memory-constrained edge deployment.

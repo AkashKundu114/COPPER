@@ -5,7 +5,7 @@
 **C.O.P.P.E.R.** is engineered for ultra-low latency, 100% offline inference on modern consumer hardware (AMD Ryzen 9 / NVIDIA RTX 5060 Laptop GPU with 8GB VRAM).
 
 To achieve maximum cognitive capability without exceeding the 8GB VRAM constraint, C.O.P.P.E.R. implements a **Tiered Model Hierarchy** featuring:
-- **5 Heavyweight 12B–14B Cognitive Specialists** (transiently loaded on demand in a single active GPU slot ~5.2–6.4 GB).
+- **5 Heavyweight 12B-14B Cognitive Specialists** (transiently loaded on demand in a single active GPU slot ~5.2-6.4 GB).
 - **6 Resident Mini Models (<=3B)** providing zero-latency firewall, reflex routing, code linting, shell safety, micro-reasoning, memory extraction, and desktop OCR.
 - **C.O.P.P.E.R Sovereign Meta-Agent** continuously fine-tuning via QLoRA from daily interaction telemetry, tools, and user preferences.
 
@@ -53,9 +53,9 @@ To achieve maximum cognitive capability without exceeding the 8GB VRAM constrain
 
 ## 3. Tier Breakdown
 
-### Tier 1: Primary Core Heavyweights (12B – 14B Cognitive Tier)
+### Tier 1: Primary Core Heavyweights (12B - 14B Cognitive Tier)
 
-*Loaded on-demand into GPU VRAM (1 active model slot at a time); managed by `ModelTierManager` with automatic idle eviction after 60s–120s.*
+*Loaded on-demand into GPU VRAM (1 active model slot at a time); managed by `ModelTierManager` with automatic idle eviction after 60s-120s.*
 
 | Agent Codename | Role | Base Model | Quantization | Size | Purpose & Specialization |
 | :--- | :--- | :--- | :---: | :---: | :--- |

@@ -1,4 +1,4 @@
-# AI, LLM, Memory, Voice & Safety Evaluation: Project A — C.O.P.P.E.R.
+# AI, LLM, Memory, Voice & Safety Evaluation: Project A: C.O.P.P.E.R.
 
 **Target Repository:** `D:\C.O.P.P.E.R`  
 **Date:** October 16, 2026  
@@ -65,6 +65,6 @@
   `voice` and `behavior` are explicitly registered under `PLANNED_AGENTS`. In the expanded 12,204-sample dataset, benchmark labels targeted these two non-production agents, causing keyword-level fall-through to the default conversational agent (`chat`).
 
 ### 4.2 Remediation & Ground Truth
-1. The curated evaluation partition ($n = 1,390$) accurately measures the 12 fully implemented production agents, achieving **97.77%–100.0% precision** across active dispatch paths.
+1. The curated evaluation partition ($n = 1,390$) accurately measures the 12 fully implemented production agents, achieving **97.77%-100.0% precision** across active dispatch paths.
 2. The full 12,204 benchmark demonstrates that future activation of `voice` and `behavior` from `PLANNED_AGENTS` will require corresponding agent handlers in `AGENT_MAP` and dedicated routing regex rules in `KEYWORD_RULES`.
 3. Verified in [`tests/ai/test_agent_consistency.py`](file:///D:/C.O.P.P.E.R/tests/ai/test_agent_consistency.py) that all 12 active agent types have 1:1 parity between frontend and backend, with zero unregistered handlers.

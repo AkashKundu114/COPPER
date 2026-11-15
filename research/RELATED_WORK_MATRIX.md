@@ -30,7 +30,7 @@ Every cited work below has been verified against archival publication records, D
 #### 2. Generative Agents
 - **Exact Title:** *Generative Agents: Interactive Simulacra of Human Behavior*
 - **Authors:** Joon Sung Park, Joseph C. O'Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein
-- **Year & Venue:** 2023 (ACM UIST 2023, pp. 1–22)
+- **Year & Venue:** 2023 (ACM UIST 2023, pp. 1-22)
 - **DOI / Identifier:** `10.1145/3586183.3606763`
 - **Actual Contribution:** Introduces a persistent memory stream for autonomous simulation agents, scoring recall by linear combination:
   $$\text{Score} = \alpha_{\text{recency}} \cdot \text{Recency} + \alpha_{\text{importance}} \cdot \text{Importance} + \alpha_{\text{relevance}} \cdot \text{Relevance}$$
@@ -104,7 +104,7 @@ Every cited work below has been verified against archival publication records, D
 #### 9. NeMo Guardrails
 - **Exact Title:** *NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications*
 - **Authors:** Traian Rebedea, Razvan Dinu, Makesh Sreedhar, Christopher Parisien, Jonathan Cohen
-- **Year & Venue:** 2023 (EMNLP 2023 System Demonstrations, pp. 431–438)
+- **Year & Venue:** 2023 (EMNLP 2023 System Demonstrations, pp. 431-438)
 - **DOI / Identifier:** `10.18653/v1/2023.emnlp-demo.40`
 - **Actual Contribution:** Programmable Colang language defining dialog rails, topical rails, and execution rails to constrain LLM dialog trees.
 - **Relevant Limitations:** Static hand-coded rules; does not adapt to memory confidence, action reversibility, or user cognitive fatigue.

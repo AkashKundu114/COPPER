@@ -240,7 +240,7 @@ $$\forall i < j, \quad \text{seq\_num}(r_i) < \text{seq\_num}(r_j) \quad \land \
 ### Invariant 2 (Physical Pre-Execution Intent Durability)
 No tool invocation or external action $a_k$ may execute until its corresponding `TASK_INTENT` record $r_k$ is physically synchronized to disk storage:
 $$\mathcal{T}_{\text{disk\_sync}}(r_k) < \mathcal{T}_{\text{exec\_start}}(a_k)$$
-*Verification:* Enforced by synchronous `os.fsync()` execution on line 90 of `wal_executor.py` prior to resolving and dispatching the sub-agent in `task_graph.py` lines 240–250.
+*Verification:* Enforced by synchronous `os.fsync()` execution on line 90 of `wal_executor.py` prior to resolving and dispatching the sub-agent in `task_graph.py` lines 240-250.
 
 ### Invariant 3 (Checksum Tamper & Truncation Invariance)
 A record $r$ is admissible to the recovery engine if and only if its stored checksum matches its calculated CRC32 digest:
@@ -260,7 +260,7 @@ $$\mathcal{K}_{\text{idempotent}} = \text{SHA-256}(\text{dag\_id} \parallel \tex
 ### Invariant 6 (Compensating Mutation Isolation)
 Any side effect (e.g., file creation) initiated by an interrupted task that lacks a `TASK_COMMIT` must be compensated before the DAG state is finalized:
 $$\forall m \in \text{Mutations}(\text{dag}), \quad (\nexists \text{Commit}(m.\text{task\_id})) \implies \text{Compensated}(m) \land (\exists r_{\text{compensate}} \in \mathcal{L})$$
-*Verification:* Enforced by `rollback_uncommitted_mutations()` lines 163–188.
+*Verification:* Enforced by `rollback_uncommitted_mutations()` lines 163-188.
 
 ---
 

@@ -1,4 +1,4 @@
-# MemoryQuarantine — Submission & Compilation Guide
+# MemoryQuarantine: Submission & Compilation Guide
 
 **Manuscript Title:** *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
 **Author:** Akash Kundu  

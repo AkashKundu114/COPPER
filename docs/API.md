@@ -134,6 +134,52 @@ Returns the status, assigned hardware tier, and description of all registered ag
 
 ---
 
+### 2.7 Multi-Device Epistemic Memory Sync
+
+Peer-to-peer end-to-end encrypted epistemic memory synchronization using AES-256-GCM, HMAC-SHA256 signatures, and anti-replay nonces:
+
+#### `POST /api/v1/sync/epistemic/pair`
+Registers an authenticated peer device and establishes a pre-shared encryption key.
+
+#### `POST /api/v1/sync/epistemic/export`
+Exports encrypted epistemic memory facts and delta sync payloads for paired devices.
+
+#### `POST /api/v1/sync/epistemic/ingest`
+Ingests, decrypts, validates signatures, and applies CRDT state updates from a paired peer.
+
+#### `GET /api/v1/sync/epistemic/stats`
+Returns active paired devices, sync counters, and replay cache metrics.
+
+---
+
+### 2.8 Operator Approval & Control Plane
+
+Human-in-the-loop approval tickets coordinated by `OperatorApprovalManager` and the Unified Architectural Control Plane:
+
+#### `GET /api/v1/approval/tickets`
+Lists all pending, approved, rejected, and expired operator approval tickets.
+
+#### `GET /api/v1/approval/tickets/{ticket_id}`
+Queries detailed execution context, safety metadata, and expiration status for a ticket.
+
+#### `POST /api/v1/approval/decide`
+Submits an operator decision (`approve` or `reject`) to resume or cancel paused execution.
+
+#### `POST /api/v1/approval/request`
+Manual ticket issuance hook for operations requiring explicit confirmation.
+
+---
+
+### 2.9 GPU Activation & Offline DRM Gate
+
+#### `GET /api/v1/activation/status`
+Returns hardware fingerprint evaluation and local activation state from `~/.copper/activation.json`.
+
+#### `POST /api/v1/activation/verify`
+Validates an owner master access code against the embedded SHA-256 hash offline.
+
+---
+
 ## 3. Error Handling
 
 All endpoints return standard RFC 7807 problem details or structured JSON errors:

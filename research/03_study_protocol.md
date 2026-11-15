@@ -5,7 +5,7 @@
 **Date:** October 29, 2026  
 **Investigator:** Systems Evaluator & Senior Research Collaborator  
 **Repository:** `D:\C.O.P.P.E.R` (`https://github.com/AkashKundu114/COPPER`)  
-**Target Venue:** Springer Nature — *Innovations in Systems and Software Engineering* (ISSE)
+**Target Venue:** Springer Nature - *Innovations in Systems and Software Engineering* (ISSE)
 
 ---
 

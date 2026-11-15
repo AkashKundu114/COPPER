@@ -48,7 +48,7 @@ All citations below have been verified against primary archival sources (arXiv, 
 
 9. **Ong, D., et al. (2024).** *"RouteLLM: Learning to Route LLMs with Preference Data"*. arXiv:2406.18665.
    - *Findings:* Uses preference-trained classifiers (matrix factorization, BERT, causal SLMs) for weak-vs-strong model routing.
-   - *Limitation:* GPU-based neural routing requires 28–88 ms per classification hop and is framed as binary selection rather than multi-agent role dispatch under tight VRAM constraints.
+   - *Limitation:* GPU-based neural routing requires 28-88 ms per classification hop and is framed as binary selection rather than multi-agent role dispatch under tight VRAM constraints.
 
 10. **Mei, K., et al. (2024).** *"AIOS: LLM Agent Operating System"*. arXiv:2403.16971.
     - *Findings:* Designs an operating system kernel for LLM agents providing scheduling, memory management, and tool access services.

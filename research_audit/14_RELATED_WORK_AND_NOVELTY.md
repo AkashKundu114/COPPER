@@ -37,11 +37,11 @@ This literature audit benchmarks C.O.P.P.E.R. against foundational and contempor
 - **RouteLLM (Ong et al., 2024):**  
   *Citation:* Ong, D. S., Chen, L., Zaharia, M., & Zou, J. (2024). *RouteLLM: Learning to Route LLMs with Preference Data*. arXiv:2406.18665.  
   *Capabilities:* Trains preference-based neural routers (matrix factorization, BERT, causal SLMs) to route binary decisions between strong and weak models.  
-  *Limitation / Gap:* Each routing classification hop requires 28–88 ms of GPU execution. Binary routing cannot handle fine-grained multi-agent role dispatch (e.g., 12 specialized roles) under zero-GPU overhead constraints.
+  *Limitation / Gap:* Each routing classification hop requires 28-88 ms of GPU execution. Binary routing cannot handle fine-grained multi-agent role dispatch (e.g., 12 specialized roles) under zero-GPU overhead constraints.
 
 ### 1.4 Agent Memory, Forgetting & Belief Revision
 - **Generative Agents (Park et al., ACM UIST 2023):**  
-  *Citation:* Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., & Bernstein, M. S. (2023). *Generative Agents: Interactive Simulacra of Human Behavior*. ACM UIST 2023, pp. 1–22. DOI: 10.1145/3586183.3606763.  
+  *Citation:* Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., & Bernstein, M. S. (2023). *Generative Agents: Interactive Simulacra of Human Behavior*. ACM UIST 2023, pp. 1-22. DOI: 10.1145/3586183.3606763.  
   *Capabilities:* Implements memory streams with linear scoring: $\text{Score} = \alpha_{\text{recency}} \cdot \text{Recency} + \alpha_{\text{importance}} \cdot \text{Importance} + \alpha_{\text{relevance}} \cdot \text{Relevance}$.  
   *Limitation / Gap:* Memories never undergo true decay or forgetting; vector databases accumulate indefinitely, causing semantic retrieval dilution. Contradictory observations are not reconciled mathematically.
 - **MemGPT / Letta (Packer et al., 2023):**  
@@ -59,16 +59,16 @@ This literature audit benchmarks C.O.P.P.E.R. against foundational and contempor
   *Capabilities:* Evaluates input and output text against a 6-category MLCommons safety taxonomy using a fine-tuned 7B model.  
   *Limitation / Gap:* Produces a coarse binary verdict (`safe` / `unsafe`). In personal computing, binary blocks cause agent paralysis on benign system administration, while false negatives cause irreversible filesystem destruction. Requires high VRAM overhead (7B model).
 - **NeMo Guardrails (Rebedea et al., NVIDIA EMNLP 2023):**  
-  *Citation:* Rebedea, T., Dinu, R., Sreedhar, M., Parisien, C., & Cohen, J. (2023). *NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications*. EMNLP 2023 System Demonstrations, pp. 431–438. DOI: 10.18653/v1/2023.emnlp-demo.40.  
+  *Citation:* Rebedea, T., Dinu, R., Sreedhar, M., Parisien, C., & Cohen, J. (2023). *NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications*. EMNLP 2023 System Demonstrations, pp. 431-438. DOI: 10.18653/v1/2023.emnlp-demo.40.  
   *Capabilities:* Programmable conversational rails via Colang DSL to constrain agent dialogue and tool execution flows.  
   *Limitation / Gap:* Static and brittle; requires exhaustive rule handcrafting. Does not model user cognitive fatigue or action reversibility.
 - **Confirmation Fatigue & Human-Automation Interaction:**  
-  *Citation:* Parasuraman, R., & Riley, V. (1997). *Humans and Automation: Use, Misuse, Disuse, Abuse*. Human Factors, 39(2), 230–253. DOI: 10.1518/001872097778543886.  
+  *Citation:* Parasuraman, R., & Riley, V. (1997). *Humans and Automation: Use, Misuse, Disuse, Abuse*. Human Factors, 39(2), 230-253. DOI: 10.1518/001872097778543886.  
   *Findings:* High-frequency false-alarm interruptions induce cognitive fatigue and habituation ("cry-wolf" effect), leading operators to blindly approve dangerous prompts.
 
 ### 1.6 Database Crash Consistency
 - **ARIES Recovery Algorithm (Mohan et al., ACM TODS 1992):**  
-  *Citation:* Mohan, C., Haderle, D., Lindsay, B., Pirahesh, H., & Schwarz, P. (1992). *ARIES: A Transaction Recovery Method Supporting Fine-Granularity Locking and Partial Rollbacks Using Write-Ahead Logging*. ACM Transactions on Database Systems (TODS), 17(1), 94–162. DOI: 10.1145/128765.128770.  
+  *Citation:* Mohan, C., Haderle, D., Lindsay, B., Pirahesh, H., & Schwarz, P. (1992). *ARIES: A Transaction Recovery Method Supporting Fine-Granularity Locking and Partial Rollbacks Using Write-Ahead Logging*. ACM Transactions on Database Systems (TODS), 17(1), 94-162. DOI: 10.1145/128765.128770.  
   *Foundational Principles:* Analysis, Redo, and Undo passes with physiological logging and Log Sequence Numbers (LSNs). C.O.P.P.E.R. adapts these exact principles to multi-agent task execution graphs.
 
 ---
@@ -81,7 +81,7 @@ The following matrix rigorously evaluates C.O.P.P.E.R. against existing state-of
 | :--- | :--- | :--- | :--- | :--- |
 | **AutoGen** (Wu et al. 2023) | Cloud Multi-Agent | Conversable agents, multi-agent dialogue orchestration | Sub-millisecond CPU cascade router; hardware-bounded local execution; transactional DAG WAL | AutoGen supports open-ended graph topologies; COPPER relies on a fixed 12-agent enum |
 | **MetaGPT** (Hong et al. 2024) | Software Engineering | SOP-driven waterfall agent development | Continuous dynamic friction; real-time desktop OS perception and tool execution | MetaGPT has deeper multi-file code synthesis capabilities |
-| **RouteLLM** (Ong et al. 2024) | Model Routing | Neural preference routing between weak and strong models (28–88 ms) | Sub-millisecond CPU-only cascade (<0.25 ms); multi-agent role dispatch across 12 roles | RouteLLM uses trained neural embeddings; COPPER regex collapses under syntactic noise (56.87% OOD) |
+| **RouteLLM** (Ong et al. 2024) | Model Routing | Neural preference routing between weak and strong models (28-88 ms) | Sub-millisecond CPU-only cascade (<0.25 ms); multi-agent role dispatch across 12 roles | RouteLLM uses trained neural embeddings; COPPER regex collapses under syntactic noise (56.87% OOD) |
 | **MemGPT / Letta** (Packer et al. 2023) | Agent Memory | Virtual context paging between working memory and vector stores | UMF-EDR temporal decay + PW-EBR surprise-gated log-odds belief revision + MemoryQuarantine | MemGPT manages arbitrary recursive context hierarchies; COPPER uses structured SQLite tables |
 | **Generative Agents** (Park et al. 2023) | Social Simulation | Linear recency + importance + relevance memory retrieval | Exponential Ebbinghaus forgetting curves with ACT-R retrieval spacing ($\lambda_{\text{eff}}$); provenance weighting | Generative Agents models complex multi-agent emergent societies; COPPER focuses on single-user OS |
 | **Llama Guard 3** (Inan et al. 2023) | Safety Moderation | 6-category MLCommons taxonomy; binary classification | Continuous 4-tier friction continuum ($\mathcal{F} \in [0, 3]$) scaling by action reversibility $R(a)$ and fatigue $F(t)$ | Llama Guard provides semantic generalization on hate/violence; COPPER regex misses unseen variants (770 breaches) |
@@ -154,5 +154,5 @@ This section reconciles all conflicting numerical claims across `research/paper.
 
 To elevate this paper from an engineering case study into an unassailable IEEE conference paper:
 1. **Adopt Candid Discrepancy Reporting:** Disclose the 56.87% routing accuracy on perturbed benchmarks alongside the 97.77% curated accuracy; explain the failure mode and demonstrate how semantic embedding restores performance to $>88\%$.
-2. **Pivot the Core Contribution to MemoryQuarantine:** Refocus the narrative from an indefensible "Personal AI OS" claim to a groundbreaking systems-security paper: *Consequence-Aware Persistent Memory Integrity in Edge Agents*.
+2. **Pivot the Core Contribution to MemoryQuarantine:** Refocus the narrative from an indefensible "Personal AI OS" claim to a rigorous systems-security paper: *Consequence-Aware Persistent Memory Integrity in Edge Agents*.
 3. **Preregister Ablations:** Present the multi-tier ablation results specified in `13_ABLATION_AND_EXPERIMENT_PLAN.md` with exact confidence intervals and statistical hypothesis tests.

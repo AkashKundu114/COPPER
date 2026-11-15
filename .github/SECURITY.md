@@ -6,15 +6,18 @@
 
 | Version | Supported | Status |
 | :--- | :---: | :--- |
-| **`1.1.x`** | **Yes** | **Current Active Release** |
-| **`1.0.x`** | **Yes** | **Maintenance Support** |
-| `< 1.0.0` | No | Deprecated Pre-Release Builds |
+| **`0.1.0-alpha`** | **Yes** | **Active Public Alpha Baseline** |
+| **`3.0.0`** | **Yes** | **Supported Major Milestone** |
+| **`2.1.0`** | **Yes** | **Maintenance Support** |
+| **`2.0.0`** | **Yes** | **Maintenance Support** |
+| **`1.0.0`** | **Yes** | **Security Patches Only** |
+| `< 1.0.0` | No | Unsupported Prototype Builds |
 
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability (such as a Data Firewall PII leak, Forge sandbox escape, or Guardian safety boundary bypass), please report it privately:
 
-1. **Email:** Send full vulnerability details to **`security@copper-ai.local`** (Maintainer: **Akash Kundu**).
+1. **Email:** Send full vulnerability details to **`akashkundu1152@gmail.com`** (Maintainer: **Akash Kundu**).
 2. **GitHub Security Advisory:** [Open a Private Vulnerability Report](https://github.com/AkashKundu114/COPPER/security/advisories/new).
 3. **Details to include:**
    - Proof of Concept (PoC) script or detailed reproduction steps.

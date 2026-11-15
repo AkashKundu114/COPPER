@@ -69,12 +69,12 @@ cd ..
 
 ### Option B: Manual Multi-Terminal Startup
 
-**Terminal 1 — FastAPI Backend:**
+**Terminal 1: FastAPI Backend:**
 ```bash
 python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload
 ```
 
-**Terminal 2 — Frontend Dev Server / Desktop App:**
+**Terminal 2: Frontend Dev Server / Desktop App:**
 ```bash
 cd frontend
 npm run dev           # Vite dev server (proxies /api to 127.0.0.1:8000)

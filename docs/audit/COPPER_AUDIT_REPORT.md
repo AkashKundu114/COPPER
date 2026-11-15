@@ -1,4 +1,4 @@
-# Comprehensive Application Audit Report: Project A — C.O.P.P.E.R.
+# Comprehensive Application Audit Report: Project A: C.O.P.P.E.R.
 
 **Project Name:** C.O.P.P.E.R. (Cognitive Offline Personal Partner & Epistemic Reasoner)  
 **Target Repository:** `D:\C.O.P.P.E.R`  

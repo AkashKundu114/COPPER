@@ -29,5 +29,5 @@ This directory contains the complete verification ledgers, empirical benchmark r
 - [**Release Test Results**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_RELEASE_TEST_RESULTS.md): Release verification gate and regression test execution logs.
 - [**AI Model & Safety Evaluation**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_AI_AND_SAFETY_EVALUATION.md): Ground-truth routing accuracy, 12-agent topology validation, and Guardian threat sensitivity benchmarks.
 - [**Resource Benchmarks**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_RESOURCE_BENCHMARKS.md): Empirical measurements of memory footprint, throughput (QPS), and latency percentiles.
-- [**UI Responsiveness & Accessibility Report**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_UI_RESPONSIVENESS_REPORT.md): Multi-viewport responsiveness audit (320px–1920px), WCAG 2.1 AA accessibility, and screen reader testing.
+- [**UI Responsiveness & Accessibility Report**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_UI_RESPONSIVENESS_REPORT.md): Multi-viewport responsiveness audit (320px-1920px), WCAG 2.1 AA accessibility, and screen reader testing.
 - [**Engineering Changelog**](file:///D:/C.O.P.P.E.R/docs/audit/COPPER_CHANGELOG.md): Chronological ledger of architectural, audio, security, and UI fixes.

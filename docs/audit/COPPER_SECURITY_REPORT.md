@@ -1,4 +1,4 @@
-# Security Audit & Vulnerability Assessment: Project A — C.O.P.P.E.R.
+# Security Audit & Vulnerability Assessment: Project A: C.O.P.P.E.R.
 
 **Target Repository:** `D:\C.O.P.P.E.R`  
 **Date:** October 16, 2026  
@@ -23,7 +23,7 @@ Two major security vulnerabilities were identified, reproduced, surgically patch
 - **Component:** `backend/app/core/ast_validator.py` (`ASTSecurityValidator._check_attr_builtins`)
 - **Severity:** **Critical (CVSS 9.8)**
 - **Vulnerability Description:**  
-  The AST validator's attribute check in `_check_attr_builtins` inspected only `ast.Constant` string literals. Dynamic expressions—such as string concatenation (`getattr(s, '__in' + 'it__')`) or variable-backed attribute lookups—did not evaluate as `ast.Constant`, resulting in zero recorded AST violations (`is_safe=True`, `violations=[]`). Additionally, several critical dunder attributes (`__class__`, `__dict__`, `__init__`, `__closure__`) were omitted from `FORBIDDEN_DUNDERS`.
+  The AST validator's attribute check in `_check_attr_builtins` inspected only `ast.Constant` string literals. Dynamic expressions (such as string concatenation (`getattr(s, '__in' + 'it__')`) or variable-backed attribute lookups) did not evaluate as `ast.Constant`, resulting in zero recorded AST violations (`is_safe=True`, `violations=[]`). Additionally, several critical dunder attributes (`__class__`, `__dict__`, `__init__`, `__closure__`) were omitted from `FORBIDDEN_DUNDERS`.
 - **Exploitation Impact:**  
   In environments where Docker containers were unavailable, `kernel_sandbox.py` fell back to `SubprocessSanitizedRunner`. Attackers could leverage standard Python object traversal (`().__class__.__bases__[0].__subclasses__()`) to escape the sandbox and execute arbitrary host operating system commands.
 - **Proof of Concept:**

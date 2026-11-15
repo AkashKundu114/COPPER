@@ -1,4 +1,4 @@
-# IEEE Peer Review Report — Reviewer 2: Experimental Design & Benchmark Validity
+# IEEE Peer Review Report: Reviewer 2: Experimental Design & Benchmark Validity
 **Manuscript**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
 **Reviewer Identity**: Reviewer 2 (Hostile but Fair Expert in AI Evaluation, Benchmarking, and Empirical Statistics)  
 **Recommendation**: **MAJOR REVISION / REJECT IN CURRENT FORM**  

@@ -1,4 +1,4 @@
-# COPPER v3.0.0 — Interface Specification & UI/UX Architecture
+# COPPER v3.0.0: Interface Specification & UI/UX Architecture
 
 > **Document Version:** 3.0.0  
 > **Design System:** Forge (Warm Noir & Molten Copper)  
@@ -13,7 +13,7 @@
 
 ### Design Principles
 1. **The Forge Aesthetic (Warm Noir & Molten Copper):** Unlike sterile flat dashboards or stereotypical dark-black/neon-green AI terminals, COPPER uses an organic dark canvas (`#0A0808`) accented with warm burnished copper tones (`#D4845A`). Dormant subsystems register as dim metallic filaments; active inferences flare with molten white and radiant amber currents.
-2. **Epistemic Transparency:** All cognitive state transitions—intent routing, DAG execution waterfalls, memory consolidation, and constitutional guardrail challenges—are visually exposed in real time rather than masked behind generic spinners.
+2. **Epistemic Transparency:** All cognitive state transitions (intent routing, DAG execution waterfalls, memory consolidation, and constitutional guardrail challenges) are visually exposed in real time rather than masked behind generic spinners.
 3. **High Information Density with Cognitive Ergonomics:** Clean spatial separation, 1px alpha hairline borders, deterministic layout grids, and keyboard-first accelerators (`Ctrl+K`, `Alt+Space`) enable friction-free operation for technical users.
 4. **Air-Gap Assurance:** Constant visual reassurance of zero cloud egress via status indicators, air-gap badges, and explicit network isolation controls.
 
@@ -47,10 +47,10 @@ The design system tokens are codified in [`tailwind.config.js`](file:///d:/C.O.P
 
 ```
 Status Colors:
-  ├── success: #5FC992 (dim: rgba(95, 201, 146, 0.12))  — Operational / Online / Clean
-  ├── warning: #FFB84D (dim: rgba(255, 184, 77, 0.12))  — Degradation / Review Needed
-  ├── danger:  #F06060 (dim: rgba(240, 96, 96, 0.12))   — Blocked / Constitutional Violation
-  └── info:    #6BB3E0 (dim: rgba(107, 179, 224, 0.12))  — Informational Telemetry
+  ├── success: #5FC992 (dim: rgba(95, 201, 146, 0.12))  - Operational / Online / Clean
+  ├── warning: #FFB84D (dim: rgba(255, 184, 77, 0.12))  - Degradation / Review Needed
+  ├── danger:  #F06060 (dim: rgba(240, 96, 96, 0.12))   - Blocked / Constitutional Violation
+  └── info:    #6BB3E0 (dim: rgba(107, 179, 224, 0.12))  - Informational Telemetry
 
 Agent Tier Palette:
   ├── Tier 1 (Core Reasoning):   #4ADE9A (Emerald)
@@ -91,7 +91,7 @@ COPPER v3.0.0 is packaged as a dedicated desktop client powered by Electron 44.0
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ TopBar (h-11, 44px) — Section Title | Git Air-Gap Badge | Search | Clock│
+│ TopBar (h-11, 44px) - Section Title | Git Air-Gap Badge | Search | Clock│
 ├───────────┬────────────────────────────────────────────────────────────┤
 │ Sidebar   │ Main Viewport (flex-1)                                     │
 │ (w-60 ↔   │                                                            │
@@ -138,26 +138,26 @@ The interface routes between 16 dedicated views managed in [`App.tsx`](file:///d
 
 ```
 WORKSPACE
-  ├── 1. Dashboard         — Mission Cockpit & System Health
-  ├── 2. Chat              — Pair Programming & Conversation Branching
-  ├── 3. Voice Companion   — Holographic HUD, ThinkingOrb & Full-Duplex Audio
-  └── 4. Campaigns         — DeltaX Campaign Intelligence & Ad-Tech Telemetry
+  ├── 1. Dashboard         - Mission Cockpit & System Health
+  ├── 2. Chat              - Pair Programming & Conversation Branching
+  ├── 3. Voice Companion   - Holographic HUD, ThinkingOrb & Full-Duplex Audio
+  └── 4. Campaigns         - DeltaX Campaign Intelligence & Ad-Tech Telemetry
 
 PRODUCTIVITY
-  ├── 5. Today             — Daily Standup, Priorities & Focus Blocks
-  ├── 6. Meetings          — Architecture Notes, Transcripts & Action Items
-  ├── 7. Alerts            — High-Priority System Events & Security Feeds
-  └── 8. Wellness          — Cognitive Ergonomics & Nutrition Telemetry
+  ├── 5. Today             - Daily Standup, Priorities & Focus Blocks
+  ├── 6. Meetings          - Architecture Notes, Transcripts & Action Items
+  ├── 7. Alerts            - High-Priority System Events & Security Feeds
+  └── 8. Wellness          - Cognitive Ergonomics & Nutrition Telemetry
 
 INTELLIGENCE
-  ├── 9. Memory            — D3 Knowledge Graph, Causal Explorer & Provenance
-  ├── 10. Agents           — Agent Registry, Tool Fleet, Personas & Skills
-  ├── 11. Benchmarks       — Real-Time Latency, Token/s & Hardware Gauges
-  ├── 12. Security         — Guardian Gatekeeper, Friction Index & Audit Trail
-  ├── 13. Activity         — OpenTelemetry Trace Waterfall & Task Graph Visualizer
-  ├── 14. Insights         — Epistemic Analytics, Cognitive Load & Habit Trends
-  ├── 15. Optimization     — Self-Improvement Loop, Synthetic Judge & LoRA Fine-Tuning
-  └── 16. Settings         — Model Fleet Configuration, Audio Devices & Air-Gap Flags
+  ├── 9. Memory            - D3 Knowledge Graph, Causal Explorer & Provenance
+  ├── 10. Agents           - Agent Registry, Tool Fleet, Personas & Skills
+  ├── 11. Benchmarks       - Real-Time Latency, Token/s & Hardware Gauges
+  ├── 12. Security         - Guardian Gatekeeper, Friction Index & Audit Trail
+  ├── 13. Activity         - OpenTelemetry Trace Waterfall & Task Graph Visualizer
+  ├── 14. Insights         - Epistemic Analytics, Cognitive Load & Habit Trends
+  ├── 15. Optimization     - Self-Improvement Loop, Synthetic Judge & LoRA Fine-Tuning
+  └── 16. Settings         - Model Fleet Configuration, Audio Devices & Air-Gap Flags
 ```
 
 ### 4.1 Detailed View Specifications

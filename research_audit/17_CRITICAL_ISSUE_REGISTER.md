@@ -35,7 +35,7 @@ Every finding in this register is categorized under one of six strict, non-negot
 - **Required Action:**  
   1. Candidly report both the 97.77% curated accuracy and the 56.87% out-of-distribution stress-test result in the revised manuscript.
   2. Implement Stage 1.5 semantic embedding classification (`nomic-embed-text`) and Stage 2 SLM fallback as specified in `13_ABLATION_AND_EXPERIMENT_PLAN.md` to restore OOD accuracy to $\ge 88\%$.
-- **Experiment Required:** Yes (Subsystem 1 Routing Ablation C1–C6).
+- **Experiment Required:** Yes (Subsystem 1 Routing Ablation C1-C6).
 
 ---
 
@@ -56,7 +56,7 @@ Every finding in this register is categorized under one of six strict, non-negot
   1. Retract the unverified 1,740 sample / 99.83% claim from the manuscript.
   2. Transparently publish both the 100.0% sensitivity on $N=350$ curated cases and the 93.3% sensitivity on $N=11,501$ scaled stress cases.
   3. Deploy semantic zero-shot classifier fallback for ambiguous tool calls.
-- **Experiment Required:** Yes (Subsystem 3 Safety Ablation S0–S5).
+- **Experiment Required:** Yes (Subsystem 3 Safety Ablation S0-S5).
 
 ---
 
@@ -64,7 +64,7 @@ Every finding in this register is categorized under one of six strict, non-negot
 - **Severity:** **`CRITICAL`**
 - **Category:** Architecture & Conceptual Overclaiming
 - **Status:** **`INVALID`**
-- **Manuscript Location:** Title, Abstract (line 66), §I (lines 74–106), §II (lines 126–175)
+- **Manuscript Location:** Title, Abstract (line 66), §I (lines 74-106), §II (lines 126-175)
 - **Source Files:** `backend/app/main.py`, `frontend/electron-main.cjs`, `research/notes/gap_analysis.md:5-10`
 - **Finding:**  
   The paper markets C.O.P.P.E.R. as a "Sovereign Personal AI Operating System." In computer engineering, an operating system manages hardware abstraction, kernel/user-space CPU protection rings (Ring 0 vs Ring 3), virtual memory paging tables, preemptive hardware interrupt dispatch, and filesystem drivers. C.O.P.P.E.R. is an application-level user-space Python/FastAPI web service communicating with SQLite and Ollama via HTTP, packaged inside an Electron desktop GUI.

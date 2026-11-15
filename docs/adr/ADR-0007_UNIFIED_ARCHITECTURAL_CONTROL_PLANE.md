@@ -33,4 +33,4 @@ While individual subsystem implementations were complete and verified in isolati
   - Cryptographically verifiable audit trail for all operations.
   - Consistent error formats and correlation IDs (`X-Trace-Id`) across the platform.
 - **Trade-offs:**
-  - Slight overhead (approx. 2–5ms) per execution lifecycle for cryptographic hashing and policy evaluation. This is acceptable given the local workstation environment and critical security requirements.
+  - Slight overhead (approx. 2-5ms) per execution lifecycle for cryptographic hashing and policy evaluation. This is acceptable given the local workstation environment and critical security requirements.

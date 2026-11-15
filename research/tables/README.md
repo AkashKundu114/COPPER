@@ -102,7 +102,7 @@ This directory contains the standalone LaTeX (`.tex`) and Markdown (`.md`) table
 
 | System Parameter | Physical Testbed Configuration | Notes & Verification |
 | :--- | :--- | :--- |
-| **Host Processor** | AMD Ryzen 9 8940HX | 16 physical cores, 32 hardware threads, 4.0–5.2 GHz boost |
+| **Host Processor** | AMD Ryzen 9 8940HX | 16 physical cores, 32 hardware threads, 4.0-5.2 GHz boost |
 | **Host Memory** | 16 GB DDR5-5600 MHz | Dual-channel SODIMM |
 | **Graphics Hardware** | NVIDIA GeForce RTX 5060 Laptop GPU | Ada/Blackwell mobile silicon, PCIe 4.0 x8 |
 | **GPU Video Memory** | 8,151 MiB GDDR6 VRAM | 128-bit memory bus width |

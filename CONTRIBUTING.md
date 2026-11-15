@@ -81,7 +81,7 @@ cd ..
 Before opening a pull request, you **MUST** pass all quality gates locally:
 
 ```bash
-# Gate 1: Full Pytest Test Suite (All 573 backend tests must pass)
+# Gate 1: Full Pytest Test Suite (All 687 backend tests must pass)
 python -m pytest tests/ -v
 
 # Gate 2: Frontend Unit Tests (All 41 Vitest tests must pass)

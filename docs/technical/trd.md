@@ -51,7 +51,7 @@ Real-time bi-directional streaming for text generation and visualizer node state
 2. `route_decision`: Agent selection finalized (e.g., `{"agent_id": "coding_agent", "tier": "execution"}`).
 3. `edge_pulse`: Fire visualizer synapse surge along calculated SVG coordinate path.
 4. `agent_active`: Target node rest glow changes to active molten state.
-5. `guardian_check`: Emits Guardian Level (0–3). If Level 2, fires challenge event payload.
+5. `guardian_check`: Emits Guardian Level (0-3). If Level 2, fires challenge event payload.
 6. `agent_speaking`: Emits response tokens and equalizer audio bar height values.
 7. `memory_update`: Emits newly reinforced facts or hypothesis adjustments.
 8. `done`: Request cycle complete.

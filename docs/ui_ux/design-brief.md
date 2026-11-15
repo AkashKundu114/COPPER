@@ -17,7 +17,7 @@ COPPER is positioned as **"Your Personal AI Operating System"**.
 
 ## 2. Forge Design System Foundation
 
-COPPER's visual language is defined by the **Forge Design System** — an industrial, warm-noir aesthetic pairing a deep obsidian canvas with molten copper conductivity accents. Dormant elements remain muted metallic bronze, while active execution flaring channels energy across conductors.
+COPPER's visual language is defined by the **Forge Design System** - an industrial, warm-noir aesthetic pairing a deep obsidian canvas with molten copper conductivity accents. Dormant elements remain muted metallic bronze, while active execution flaring channels energy across conductors.
 
 ### Color Tokens
 
@@ -49,9 +49,9 @@ COPPER's visual language is defined by the **Forge Design System** — an indust
 
 ### Typography
 
-- **Primary Sans:** `'Inter Variable'`, `Inter`, `-apple-system`, `BlinkMacSystemFont`, `'Segoe UI'`, `sans-serif` — Used for all primary interface labels, navigation, conversation text, and metrics.
-- **Monospace:** `'Geist Mono Variable'`, `'Geist Mono'`, `'JetBrains Mono'`, `Menlo`, `monospace` — Used for code generation, terminal execution, system telemetry, JSON payloads, and token metrics.
-- **Brand Wordmark:** `'Moon Walk'`, `'Inter Variable'`, `sans-serif` — Used for the COPPER brand masthead.
+- **Primary Sans:** `'Inter Variable'`, `Inter`, `-apple-system`, `BlinkMacSystemFont`, `'Segoe UI'`, `sans-serif` - Used for all primary interface labels, navigation, conversation text, and metrics.
+- **Monospace:** `'Geist Mono Variable'`, `'Geist Mono'`, `'JetBrains Mono'`, `Menlo`, `monospace` - Used for code generation, terminal execution, system telemetry, JSON payloads, and token metrics.
+- **Brand Wordmark:** `'Moon Walk'`, `'Inter Variable'`, `sans-serif` - Used for the COPPER brand masthead.
 
 ---
 
@@ -129,7 +129,7 @@ COPPER operates as an Electron desktop application built on React 19, TypeScript
 
 - **Voice Controls:** `[ + ] [ Text input... ] [ Mic ] [ Send ]` integrated into the chat dock.
 - **Equalizer Bar:** Dynamic audio waveform (`SpeakingBar` component) that animates during speech synthesis and audio playback.
-- **Voice States:** Seamless transitions through `Ready`, `Listening...`, `Processing...`, `Speaking...`, and `Paused`.
+- **Voice States:** Smooth transitions through `Ready`, `Listening...`, `Processing...`, `Speaking...`, and `Paused`.
 - **Playback Controls:** Inline audio controls for `Play`, `Pause`, and `Stop`.
 - **Output Modalities:** Quick toggle between `Text only`, `Voice only`, and `Text + Voice`.
 - **Privacy-First Audio Protocol:** Microphone capture requires explicit user activation; an unambiguous visual recording indicator remains active whenever audio hardware is open; speech processing is executed locally via Whisper with zero audio transmission to external servers.

@@ -12,7 +12,7 @@
 | :--- | :---: | :--- |
 | **Triple-Product Authority Equation** | **DEFENSIBLE AS POLICY** | $\text{Authority}(m, a) = \gamma(m) \cdot C(m) \cdot (1 - \mathcal{R}(a))$ is an empirical multi-attribute risk-scoring policy. It is **not** a joint probability distribution or axiomatic theorem. The manuscript must describe it as an empirical policy with fail-closed bounds. |
 | **Surprise Log-Odds Equation (4)** | **CRITICAL ERROR IN MANUSCRIPT** | Equation (4) in `paper_revised.tex` printed $\ln(1 + 1/C_t)$. When $C_t \to 1.0$, this evaluates to $\ln(2) = 0.693$, while for $C_t \to 0.01$, it evaluates to $4.615$. A contradictory observation against a confident belief was penalized the least! The codebase (`memory_manager.py#L85`) correctly implements negative log error $-\ln(1 - |C - y|)$, but the manuscript printed an inverted formula. |
-| **Untrusted Memory Deadlock** | **CONTRADICTION FOUND** | Manuscript lines 83–84 claimed $\gamma = 0.15$ untrusted memories can authorize harmless tasks ($R=0.05$). Under static $\tau = 0.25$, $\text{Authority}_{\max} = 0.141 < 0.25$, making execution mathematically impossible. |
+| **Untrusted Memory Deadlock** | **CONTRADICTION FOUND** | Manuscript lines 83-84 claimed $\gamma = 0.15$ untrusted memories can authorize harmless tasks ($R=0.05$). Under static $\tau = 0.25$, $\text{Authority}_{\max} = 0.141 < 0.25$, making execution mathematically impossible. |
 | **Multi-Memory Composition** | **CONSERVATIVE LOWER BOUND** | The runtime implementation enforces a weakest-link rule $\gamma_{\text{context}} = \min_{m \in \mathcal{M}} \gamma(m)$. This provides monotonicity against privilege escalation, but introduces collateral context taint. |
 
 ---

@@ -35,8 +35,8 @@ Our physical filesystem inspection, code audit, and computer-architecture physic
 | **SYS-02** | 57.68 GB model fleet orchestrates locally | `paper.tex` Abstract, §III.E | **PARTIALLY VERIFIED / ROADMAP INFLATION** | Verified in `ai-models/models_manifest.json` as a virtual registry manifest (exact sum = 57.68 GB). **CONTRADICTED ON DISK**: model directories contain only `.gitkeep` files (0 bytes). Physical LLM weights are not stored locally. |
 | **SYS-03** | Entire system operates within 8.0 GB VRAM envelope | `paper.tex` §III.E | **VERIFIED (ARCHITECTURALLY)** | Code audit of `vram_pager.py` confirms LRU eviction and memory bounds logic. Physical GPU VRAM baseline is 710 MiB OS load, leaving ~7.44 GiB headroom. |
 | **SYS-04** | VRAMPager prevents CUDA OOM via weighted LRU eviction | `paper.tex` §III.E | **VERIFIED (SIMULATED)** | Unit tests (`test_vram_pager.py`) verify eviction math and priority scoring. Real-world execution relies on external Ollama process honoring `keep_alive=0` unloads. |
-| **SYS-05** | 14B models achieve 38.08 tok/s generation on RTX 5060 | `paper.tex` §IV.E, Fig. 11 | **INVALID / HARDCODED** | Code audit of `research/generate_all_academic_figures.py` (lines 115–116, 146) reveals literal hardcoded Python arrays. Bandwidth physics prove an offloaded 14B Q4 model cannot exceed 10–15 tok/s over PCIe. |
-| **SYS-06** | Host System RAM footprint remains < 750 MB | `paper.tex` §IV.D | **PARTIALLY VERIFIED** | Idle FastAPI backend consumes ~180–240 MB RSS. Under full pytest execution, memory accumulates to 1010.97 MB RSS, failing the strict 750 MB assertion unless isolated. |
+| **SYS-05** | 14B models achieve 38.08 tok/s generation on RTX 5060 | `paper.tex` §IV.E, Fig. 11 | **INVALID / HARDCODED** | Code audit of `research/generate_all_academic_figures.py` (lines 115-116, 146) reveals literal hardcoded Python arrays. Bandwidth physics prove an offloaded 14B Q4 model cannot exceed 10-15 tok/s over PCIe. |
+| **SYS-06** | Host System RAM footprint remains < 750 MB | `paper.tex` §IV.D | **PARTIALLY VERIFIED** | Idle FastAPI backend consumes ~180-240 MB RSS. Under full pytest execution, memory accumulates to 1010.97 MB RSS, failing the strict 750 MB assertion unless isolated. |
 
 ---
 
@@ -241,6 +241,6 @@ Where $\mathcal{B}_{\text{effective}}$ is sustained memory bandwidth in GB/s, an
 
 3. **Disclose Real Offloaded vs Fully-Resident Throughputs:**  
    Explicitly publish dual-throughput figures:
-   - **Fully Resident Models ($\le 8\text{B}$ or 14B IQ3):** 28–34 tok/s.
-   - **Partially Offloaded Models (14B Q4_K_M):** 6–10 tok/s.
+   - **Fully Resident Models ($\le 8\text{B}$ or 14B IQ3):** 28-34 tok/s.
+   - **Partially Offloaded Models (14B Q4_K_M):** 6-10 tok/s.
    - Clarify the operational trade-offs between quantization degradation (IQ3) and generation latency.

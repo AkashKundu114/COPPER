@@ -20,6 +20,7 @@
 
 ## Table of Contents
 - [Overview & Project Independence](#overview--project-independence)
+- [Releases & Repository Tags](#releases--repository-tags)
 - [The 3-Tier Multi-Agent Routing Hierarchy](#the-3-tier-multi-agent-routing-hierarchy)
 - [Ambient Intelligence & Continuous Context](#ambient-intelligence-companion--knowledge-architecture)
 - [Campaign Intelligence Agent & DeltaX Ad-Tech Suite](#campaign-intelligence-agent--deltax-ad-tech-suite)
@@ -43,13 +44,34 @@
 Unlike conventional cloud-tethered assistants that leak private telemetry and prompt context over public APIs, C.O.P.P.E.R. routes every interaction through a multi-stage **12 specialized agent orchestration layer** executing entirely on local consumer hardware. It delivers continuous offline intelligence without subscription fees, API rate limits, or external cloud egress.
 
 ### By the Numbers:
-- **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms–2 s per response).
+- **97.77% Routing Precision / 98.78% Weighted F1:** Evaluated over 1,390 benchmark test cases [1]. Routing Dispatch: **~9,856 QPS** (Stage 0/1 regex & memory cache hit path, <0.10 ms). Full Combinatorial Routing: **~2,050 QPS** (<0.49 ms). End-to-end execution with LLM depends on model (typically 200 ms to 2 s per response).
 - **100.0% Guardian Threat Sensitivity:** 0 security breaches across 350 adversarial destructive trigger test cases [2] and 29 terminal evasion corpus test cases.
 - **100.0% Chaos & Adversarial Fuzzing Resilience:** 55/55 adversarial payloads intercepted across 5 attack families (zero-width spaces, homoglyphs, command chaining, Base64, and hypothetical roleplay), 0 CUDA OOM exceptions (29 dynamic VRAM pager evictions), and 100% crash-consistent WAL state rollback [3].
 - **728 Total Passing Tests (687 Backend + 41 Frontend):** Comprehensive test coverage across AI routing, DAG concurrency, REST APIs, audio pipelines, epistemic memory, AST static security analysis, process sandboxing, adversarial jailbreak protection, and zero-egress data sanitization [4]. 687 backend Pytest tests (100% pass rate) across 92 test modules, plus 41 frontend Vitest unit tests (6 test suites, 100% pass rate) covering NeuralBrain, ChatDock, GuardianChallengeModal, DocumentReaderModal, ErrorBoundary, and accessibility.
 - **~62,000 Lines of Code / 257 REST API Endpoints / 202 Backend Modules:** 36,200 Python LOC across 202 backend modules, 24,300 TypeScript/React LOC across 85 frontend source files, 80 test modules, 50 API route modules exposing 257 REST endpoints, 13 database models, 15 builtin tool categories, and 49 React components spanning 16 sidebar navigation views.
 - **Local GGUF / ONNX Model Fleet (12 Specialized Agent Types / 8 Model Pools):** Powered by the **14B Sovereign Core Fleet** (`Qwen2.5-14B-Instruct`, `Qwen2.5-Coder-14B-abliterated`, `DeepSeek-R1-Distill-Qwen-14B`, `phi-4-14B`, `Mistral-Nemo-12B`), paired with `Qwen2.5-VL-3B`, `SD-Turbo` offline image studio, `Kokoro-82M` TTS, `Whisper Large v3 Turbo`, `Silero VAD v5`, `openWakeWord` `hey_copper`, `bge-reranker-v2-m3`, and resident micro-subagents (`Qwen2.5-1.5B`, `Qwen2.5-Coder-3B`, `SmolLM2-1.7B`, `Granite-3.2-2B`).
 - **Zero Cloud Egress & Ambient Wake-Word:** 100% offline speech-to-text (Whisper Large v3 Turbo), neural TTS (Kokoro-82M), real-time "Hey COPPER" acoustic wake word, local 1-step diffusion (PICASSO), and local vector embeddings (ChromaDB).
+
+---
+
+## Releases & Repository Tags
+
+C.O.P.P.E.R. development and milestones are tracked through semantic version tags and structured changelogs:
+
+| Repository Tag | Tag Date | Status & Scope | Verification Baseline |
+| :--- | :--- | :--- | :--- |
+| **`v0.1.0-alpha`** | 2026-10-17 | **Current Active Alpha Baseline**: Public pre-release cleanup, strict loopback zero-egress enforcement, data-driven 12 active core agents + 8 model pools registry (`agent_registry.py`), verified clean-database migrations across all 15 Alembic revisions, terminal safety evasion corpus (29 attack vectors blocked). | **728 tests passing** (687 backend + 41 frontend) |
+| **`v3.0.0`** | 2026-10-01 | **Forge UI Redesign & Chaos Resilience**: Forge warm-noir design tokens (`#D4845A`), Inter Variable and Geist Mono typography, 16+ views migrated, WCAG AA compliance, chaos engineering harness (55/55 attacks intercepted), CRC32 WAL crash recovery, dynamic VRAM pager eviction. | **614 tests passing** (573 backend + 41 frontend) |
+| **`v2.1.0`** | 2026-09-30 | **GPU Hardware Licensing & Ad-Tech Suite**: Local GPU fingerprint detection (`COPPER-XXXX-XXXX-XXXX`), offline owner master access code (`COPPER-033D-EE4E-C150`), 6-step desktop setup wizard, DeltaX campaign intelligence engine (anomaly detection and budget optimization). | **512 tests passing** |
+| **`v2.0.0`** | 2026-09-11 | **Next-Gen AI OS Capabilities**: 25 ambient, predictive, delegation, and companion features; acoustic wake word detection; causal state tracking; academic docx report generator. | **508 tests passing** |
+| **`v1.0.0`** | 2026-08-22 | **Architecture Reconciliation**: Multi-agent orchestration layer, Guardian alignment framework (Levels 0-3), zero-trust PII data firewall, and epistemic decaying memory. | **480 tests passing** |
+
+### Post-Alpha & Roadmap Milestones (Main Branch)
+- **Unified Architectural Control Plane (`backend/app/core/control_plane.py`):** 15-step standardized lifecycle coordinating security gates, Guardian checks, VRAM limits, and operator approval tickets.
+- **Multi-Device Epistemic Sync (P2P E2EE CRDT):** Peer-to-peer encrypted memory delta sync using AES-256-GCM and HMAC-SHA256 signatures (`backend/app/ai/memory/epistemic_p2p_sync.py`).
+- **Custom Fine-Tuned LoRA Presets:** Unsloth training scripts for Llama 3.1 and Qwen 2.5 Coder operating under strict 8.0 GB VRAM budgets (`scripts/train_qlora.py`).
+- **WebSocket Operator Approval Channel:** Real-time human-in-the-loop approval tickets for high-consequence operations (`backend/app/core/safety/operator_approval_manager.py`).
+- **MemoryQuarantine IEEE Publication:** IEEE ICCECE 2027 submission package, figures, and research audit remediation.
 
 ---
 
@@ -181,8 +203,8 @@ C.O.P.P.E.R. includes an autonomous ambient layer that runs alongside daily engi
 
 ## Model & Subagent Topology (Master Fleet: ~47 GB Local Footprint)
 
-### 1. Sovereign Core Heavyweights (12B – 14B Cognitive Tier)
-*Loaded on-demand into single active GPU slot (5.2–6.4 GB VRAM) with automatic idle eviction after turn:*
+### 1. Sovereign Core Heavyweights (12B to 14B Cognitive Tier)
+*Loaded on-demand into single active GPU slot (5.2 to 6.4 GB VRAM) with automatic idle eviction after turn:*
 
 | Role / Agent Codename | Base Model Architecture | Quantization | Disk Size | Core Specialization |
 | :--- | :--- | :---: | :---: | :--- |
@@ -239,7 +261,7 @@ Evaluated using the automated evaluation suite ([`backend/eval/benchmark.py`](ba
 #### Routing & Latency Hierarchy:
 - **Routing Dispatch Layer:** **~9,856 QPS** (Stage 0 regex pre-filter + `DynamicRoutingMemory` cache hit path, latency < 0.10 ms, zero GPU overhead)
 - **Full Combinatorial Routing:** **~2,050 QPS** (exhaustive multi-class pattern scoring, negative suppression, and topological DAG cascade risk evaluation, latency < 0.49 ms)
-- **End-to-End Query Execution with LLM:** Model-dependent (typically **200 ms – 2 s** per response depending on prompt length, model size [1.5B vs 14B], and GPU quantization tier)
+- **End-to-End Query Execution with LLM:** Model-dependent (typically **200 ms to 2 s** per response depending on prompt length, model size [1.5B vs 14B], and GPU quantization tier)
 
 ### 2. Epistemic Memory & Belief Revision Benchmark (UMF-EDR & PW-EBR)
 Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/benchmark_belief_revision.py) comparing UMF-EDR against Naive Bayes and Last-Write-Wins (LWW):
@@ -260,16 +282,16 @@ Evaluated using [`backend/eval/benchmark_belief_revision.py`](backend/eval/bench
 *‡ Under UMF-EDR, high epistemic importance ($\mathcal{I}=0.95$) enforced a floor ($C_{\text{floor}}=0.525$), preventing decay over 180 days ($C=0.62$).*
 
 #### Benchmark Methodology & Metric Sources:
-1. **Routing Accuracy & Throughput:** Benchmarked via `backend/eval/benchmark.py` and `backend/eval/evaluator.py` across 1,390 synthetic and curated user prompt cases. `~9,856 QPS` measures the Stage 0/1 memory cache and compiled regex pre-dispatch filter path on AMD64 / Intel CPU cores with sub-0.10ms latency. `~2,050 QPS` measures full combinatorial multi-agent pattern matching and DAG cascade risk scoring. End-to-end query completion time is bounded by local LLM autoregressive token generation (~200ms–2s depending on quantization and parameter scale).
+1. **Routing Accuracy & Throughput:** Benchmarked via `backend/eval/benchmark.py` and `backend/eval/evaluator.py` across 1,390 synthetic and curated user prompt cases. `~9,856 QPS` measures the Stage 0/1 memory cache and compiled regex pre-dispatch filter path on AMD64 / Intel CPU cores with sub-0.10ms latency. `~2,050 QPS` measures full combinatorial multi-agent pattern matching and DAG cascade risk scoring. End-to-end query completion time is bounded by local LLM autoregressive token generation (~200ms to 2s depending on quantization and parameter scale).
 2. **Guardian Threat Sensitivity:** Evaluated using 350 adversarial, destructive shell, and jailbreak payloads (`backend/eval/datasets/guardian/master_guardian_dataset.json`). 0 breaches escaped Level 2/3 friction gates.
 3. **Chaos & Adversarial Fuzzing Intercept:** Evaluated in `backend/eval/test_chaos_and_fuzzing.py` testing homoglyphs, zero-width space injection, base64 smuggling, and simulated VRAM pressure evictions.
-4. **Test Suite Verification:** Verified live via `pytest tests/` (573 passed tests across 77 modules) and `vitest run` (41 passed unit tests across 6 test suites in `frontend/src/`). Total: 614 passing tests (100% pass rate).
+4. **Test Suite Verification:** Verified live via `pytest tests/` (687 passed tests across 92 modules) and `vitest run` (41 passed unit tests across 6 test suites in `frontend/src/`). Total: 728 passing tests (100% pass rate).
 
 ### 3. System Architecture & Empirical Profiling Figures
 
 All empirical benchmarks and system mechanics are thoroughly profiled and evaluated:  
 > **Title:** *Sovereign Multi-Agent Operating Systems on Consumer Hardware via Cascade-Aware Routing and Epistemic Memory Plasticity*  
-> **Author:** Akash Kundu — Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
+> **Author:** Akash Kundu - Independent Researcher & Systems Architect ([ORCID: 0009-0003-8246-7316](https://orcid.org/0009-0003-8246-7316))  
 
 All 15 figures below are rendered at 350 DPI vector resolution using scientific styling:
 
@@ -356,8 +378,8 @@ The DFM-Guard friction coefficients were calibrated using grid search optimizati
 
 To protect sovereignty without tethering to cloud authentication servers, C.O.P.P.E.R. implements a **Dual-Mode Offline Hardware Authorization Gate** (`backend/app/core/gpu_activation.py`):
 
-1. **Option A — Local GPU Fingerprint:** Automatically detects dedicated NVIDIA GPU hardware (`nvidia-smi`), VRAM capacity, CPU, and machine UUID to generate a deterministic local license `COPPER-XXXX-XXXX-XXXX` persisted to `~/.copper/activation.json`.
-2. **Option B — Owner Master Access Code:** When sharing the executable with colleagues or interviewers, recipients can input Akash's authorized master code:
+1. **Option A: Local GPU Fingerprint:** Automatically detects dedicated NVIDIA GPU hardware (`nvidia-smi`), VRAM capacity, CPU, and machine UUID to generate a deterministic local license `COPPER-XXXX-XXXX-XXXX` persisted to `~/.copper/activation.json`.
+2. **Option B: Owner Master Access Code:** When sharing the executable with colleagues or interviewers, recipients can input Akash's authorized master code:
    ```text
    COPPER-033D-EE4E-C150
    ```
@@ -395,9 +417,9 @@ Modeled on the DeltaX enterprise digital advertising automation architecture, th
 | Component | Minimum Specification | Recommended Specification | Reference Test Bench (Measured) |
 | :--- | :--- | :--- | :--- |
 | **Operating System** | Windows 10/11, macOS 13+, Ubuntu 22.04+ | Windows 11 or Linux x86_64 | **Windows 11 (AMD64)** |
-| **CPU** | 4 Physical Cores | 8–16 Cores | **16 Physical / 32 Logical Cores** |
-| **System RAM** | 8 GB | 16–32 GB | **15.21 GB Total (16 GB Physical)** |
-| **GPU / VRAM** | 4 GB VRAM (for 3B–7B models) | 8 GB+ VRAM (NVIDIA RTX 3060/4060/5060) | **NVIDIA GeForce RTX 5060 Laptop (8,151 MB VRAM)** |
+| **CPU** | 4 Physical Cores | 8-16 Cores | **16 Physical / 32 Logical Cores** |
+| **System RAM** | 8 GB | 16-32 GB | **15.21 GB Total (16 GB Physical)** |
+| **GPU / VRAM** | 4 GB VRAM (for 3B-7B models) | 8 GB+ VRAM (NVIDIA RTX 3060/4060/5060) | **NVIDIA GeForce RTX 5060 Laptop (8,151 MB VRAM)** |
 | **Disk Storage** | 15 GB free SSD space | 50 GB+ SSD space | **80.75 GB Free / 300 GB Total** |
 | **Ollama Daemon** | Optional (for Standalone Demo) | Installed locally (`localhost:11434`) | **Reachable on 127.0.0.1:11434** |
 
@@ -522,7 +544,7 @@ To ensure full technical defensibility under source-code audit and interview scr
 
 1. **Hardware VRAM Ceilings & Model Swapping Overhead:**
    - Under an 8 GB consumer GPU budget (e.g., RTX 5060 Laptop GPU), only a single 14B parameter model (IQ3_XS quantized at ~5.95 GB) can reside in active VRAM at any given instant.
-   - Dynamic model swapping between specialized tasks (e.g., switching from `Qwen2.5-Coder-14B` for software development to `DeepSeek-R1-Distill-14B` for mathematical proofing) requires dynamic VRAM pager eviction, adding ~1.5 s – 2.5 s of model load overhead between domain shifts.
+   - Dynamic model swapping between specialized tasks (e.g., switching from `Qwen2.5-Coder-14B` for software development to `DeepSeek-R1-Distill-14B` for mathematical proofing) requires dynamic VRAM pager eviction, adding ~1.5 s to 2.5 s of model load overhead between domain shifts.
 
 2. **Routing Throughput Scope (~9,856 QPS vs. End-to-End Latency):**
    - The reported **~9,856 QPS** benchmark specifically measures the Stage 0/1 routing dispatch layer (compiled regex matching and `DynamicRoutingMemory` exact/token cache lookup, <0.10 ms per dispatch).
@@ -550,7 +572,7 @@ To ensure full technical defensibility under source-code audit and interview scr
 **C.O.P.P.E.R.** is an **independent, proprietary software system** created and owned by **Akash Kundu**.
 
 - **All Rights Reserved:** Copyright &copy; 2026 Akash Kundu.
-- **Proprietary & Patent Protection:** The architectural concepts, TFP-Router cascade risk algorithms, UMF-EDR epistemic decay mathematical formulations ($C_i(\Delta t) = \max(C_{\text{floor}}, C_{i, 0} e^{-\lambda_{\text{eff}} \Delta t})$), DFM-Guard adaptive friction alignment mechanisms (Levels 0–3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
+- **Proprietary & Patent Protection:** The architectural concepts, TFP-Router cascade risk algorithms, UMF-EDR epistemic decay mathematical formulations ($C_i(\Delta t) = \max(C_{\text{floor}}, C_{i, 0} e^{-\lambda_{\text{eff}} \Delta t})$), DFM-Guard adaptive friction alignment mechanisms (Levels 0-3), zero-trust firewall sanitization pipelines, and visual neural map designs are the proprietary and patent-protected / patent-pending intellectual property of Akash Kundu.
 - **Strict Prohibition:** No part of this software may be copied, reproduced, modified, distributed, sublicensed, commercially exploited, or used to train artificial intelligence models without the express prior written consent of the copyright owner.
 - **Terms of License:** See the [`LICENSE`](LICENSE) file for the full proprietary license terms.
 

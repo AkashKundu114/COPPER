@@ -1,4 +1,4 @@
-# IEEE Peer Review Report — Reviewer 3: Systems Architecture & Runtime Security
+# IEEE Peer Review Report: Reviewer 3: Systems Architecture & Runtime Security
 **Manuscript**: *MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents*  
 **Reviewer Identity**: Reviewer 3 (Hostile but Fair Expert in Agentic Runtime Systems, OS Security, and Crash Durability)  
 **Recommendation**: **MAJOR REVISION**  
@@ -6,7 +6,7 @@
 ---
 
 ## 1. Overall Impression
-This paper describes an end-to-end integration of memory provenance and tool execution gating into the C.O.P.P.E.R. local edge runtime. The engineering goals—sub-millisecond evaluation latency, zero additional GPU VRAM allocation, and local SQLite/WAL persistence—are commendable and directly target consumer hardware constraints (8 GB VRAM laptop GPU).
+This paper describes an end-to-end integration of memory provenance and tool execution gating into the C.O.P.P.E.R. local edge runtime. The engineering goals - sub-millisecond evaluation latency, zero additional GPU VRAM allocation, and local SQLite/WAL persistence - are commendable and directly target consumer hardware constraints (8 GB VRAM laptop GPU).
 
 However, an audit of the runtime architecture reveals notable systems-level gaps between the conceptual diagram (Fig. 1) and actual enforcement boundaries.
 

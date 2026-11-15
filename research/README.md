@@ -11,7 +11,7 @@ This directory contains the primary publication manuscripts, empirical benchmark
 | **Active / Reconstructed** | **MemoryQuarantine: Consequence-Calibrated Persistent Memory Integrity for Local Tool-Using Agents** | **Ready for Submission (Compiled PDF Available)** | **IEEE ICCECE 2027** / arXiv (`cs.CR`, `cs.AI`, `cs.SE`) | [`paper_revised.pdf`](paper_revised.pdf), [`paper_revised.tex`](paper_revised.tex), [`memoryquarantine_package/`](memoryquarantine_package/), [`memoryquarantine_submission.zip`](memoryquarantine_submission.zip) |
 | **Historical / Audited** | *C.O.P.P.E.R.: A Resource-Bounded Local Multi-Agent Architecture for Consumer GPU* | Audited & Quarantined (See [`research_audit/`](../research_audit/)) | Archived | [`paper.tex`](paper.tex), [`paper.pdf`](paper.pdf), [`legacy/`](legacy/) |
 
-> **Notice on Audit Remediation:** The historical 25-page manuscript ([`paper.tex`](paper.tex)) was subjected to a rigorous 19-report academic and architectural audit ([`research_audit/`](../research_audit/)). The audit identified unsupported multi-agent claims and benchmark unobservables. In response, the research was reconstructed into **MemoryQuarantine**—a tightly focused, mathematically formalized, and physically validated IEEE conference paper with 100% reproducible empirical benchmarks on physical hardware.
+> **Notice on Audit Remediation:** The historical 25-page manuscript ([`paper.tex`](paper.tex)) was subjected to a rigorous 19-report academic and architectural audit ([`research_audit/`](../research_audit/)). The audit identified unsupported multi-agent claims and benchmark unobservables. In response, the research was reconstructed into **MemoryQuarantine** - a tightly focused, mathematically formalized, and physically validated IEEE conference paper with 100% reproducible empirical benchmarks on physical hardware.
 
 ---
 
@@ -124,7 +124,7 @@ All publication figures are rendered at **350 DPI** with high visual clarity, ge
 | **Fig. 1** | `fig1_mq_dual_plane_architecture.png` | Dual-Plane Governance Architecture | Decouples Semantic Recall Plane from Consequence-Calibrated Authority Gate Plane. |
 | **Fig. 2** | `fig2_mq_attack_lifecycle.png` | Attack Lifecycle Timeline | Illustrates how delayed prompt injection exploits the time lag between ingestion and execution. |
 | **Fig. 3** | `fig3_mq_asr_tir_baselines.png` | Benchmark Security Comparison | Bar chart comparing ASR and TIR across 5 strategies with exact 95% Clopper-Pearson CIs ($p = 2.21 \times 10^{-59}$). |
-| **Fig. 4** | `fig4_mq_vector_breakdown.png` | Granular Attack Vector Breakdown | Interception across AV1–AV5 showing Naive Bayes stops AV5, Prov-Only stops AV3, and MemoryQuarantine stops all 5. |
+| **Fig. 4** | `fig4_mq_vector_breakdown.png` | Granular Attack Vector Breakdown | Interception across AV1-AV5 showing Naive Bayes stops AV5, Prov-Only stops AV3, and MemoryQuarantine stops all 5. |
 | **Fig. 5** | `fig5_mq_security_utility_tradeoff.png` | Security vs. Utility Pareto Frontier | Demonstrates ideal upper-right frontier operating point (100% TIR, 100% TSR, 0% FQR). |
 | **Fig. 6** | `fig6_mq_epistemic_belief_dynamics.png` | Epistemic Belief Dynamics | Visualizes natural log surprise scaling $\ln(1 + \vert \Delta \vert)$ and Ebbinghaus decay under reinforcement. |
 | **Fig. 7** | `fig7_mq_guardian_friction_roc.png` | Continuous Safety Layer ROC Curve | Demonstrates 100% sensitivity with 0% false positives ($F_1 = 1.000$) on adversarial red-team traces. |

@@ -14,7 +14,7 @@ Traditional AI agent frameworks treat agents and internal orchestration pipeline
 1. **Explicit Identity Verification:** Never trust an agent, tool, or API request merely because it originates within the host environment.
 2. **Least Privilege Execution:** Every agent operates within a strictly defined, cryptographically signed capability boundary (`AgentToken`).
 3. **Execution-Time Authorization:** Every tool invocation is authorized at the `ToolExecutor` boundary regardless of prior routing decisions.
-4. **Untrusted Data Isolation:** All external inputs—including web search results, scraped pages, retrieved files, and multi-agent observations—are classified as untrusted and neutralized before reaching the LLM control plane.
+4. **Untrusted Data Isolation:** All external inputs (including web search results, scraped pages, retrieved files, and multi-agent observations) are classified as untrusted and neutralized before reaching the LLM control plane.
 5. **Dual-Plane Memory Governance:** Retrieval from epistemic memory does not confer execution authority ($\text{Authority} = \gamma(m) \times \mathcal{C}(m) \times (1 - \mathcal{R}(a))$).
 6. **Network Containment Outside LLM Control:** Network egress policies (`OFFLINE_AIRGAP`, `LOCAL_SERVICES`, `USER_AUTHORIZED_EGRESS`) and SSRF defenses are enforced deterministically at the socket and protocol layer, completely inaccessible to prompt manipulation.
 7. **Secret & Credential Segregation:** Secrets are stored in an in-memory vault and dynamically registered with the `DataFirewall` regex filter, preventing exposure through prompts, logs, or memory.

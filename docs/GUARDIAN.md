@@ -69,3 +69,13 @@ When a Level 2 action is evaluated:
    - Displays the command with destructive tokens highlighted in red.
    - Presents options: `Authorize Once`, `Modify Command`, or `Cancel`.
 3. If confirmed, backend verifies the matching signature and executes the command within the workspace sandbox.
+
+---
+
+## 6. Operator Approval Tickets & Control Plane Integration
+
+For high-consequence operations evaluated under the Unified Architectural Control Plane (`backend/app/core/control_plane.py`):
+- When a policy verdict specifies `PolicyVerdict.REQUIRE_APPROVAL`, the lifecycle pauses execution.
+- `OperatorApprovalManager` (`backend/app/core/safety/operator_approval_manager.py`) issues an operator ticket broadcast over real-time WebSockets to connected desktop clients.
+- If the operator approves within the timeout window (default: 120 seconds), execution resumes with the approved context.
+- If rejected or if the ticket expires, the control plane aborts the task, logs the security audit event, and safely releases all allocated VRAM and process resources.

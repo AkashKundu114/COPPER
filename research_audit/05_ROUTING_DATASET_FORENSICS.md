@@ -116,8 +116,8 @@ $$\text{Decorators} = |\text{PREFIXES}| \times |\text{MODIFIERS}| = 20 \times 25
 | **`behavior_nutrition`**| `behavior` (Phantom) | 5 | 7 | 1,008,000 | 100,000 | 10,000 |
 | **`image`** | `image` | 3 | 6 | 360 | 10,505 | 1,051 |
 | **`voice_audio`** | `voice` (Phantom) | 4 | 7 | 3,600 | 12,507 | 1,252 |
-| **`master_routing`** | Multi-Agent | Mixed | Mixed | — | 122,027 | **12,204** |
-| **Total Fleet** | — | **78** | — | — | **1,106,554** | **110,660** |
+| **`master_routing`** | Multi-Agent | Mixed | Mixed | N/A | 122,027 | **12,204** |
+| **Total Fleet** | N/A | **78** | N/A | N/A | **1,106,554** | **110,660** |
 
 #### Critical Findings on Template Saturation:
 1. **Automation Domain:** Only **4 root templates** were used to generate **115,000 samples**. On average, each template was instantiated **28,750 times**.

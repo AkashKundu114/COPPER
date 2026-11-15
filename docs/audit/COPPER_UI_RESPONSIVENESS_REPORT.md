@@ -1,4 +1,4 @@
-# UI Responsiveness, Viewport & Desktop UX Audit: Project A — C.O.P.P.E.R.
+# UI Responsiveness, Viewport & Desktop UX Audit: Project A: C.O.P.P.E.R.
 
 **Target Repository:** `D:\C.O.P.P.E.R`  
 **Date:** October 16, 2026  

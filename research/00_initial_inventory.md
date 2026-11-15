@@ -42,7 +42,7 @@ The project is a hybrid desktop application comprising a FastAPI backend and a R
 
 | Subsystem / Benchmark | Script / Test Entrypoint | Dataset Input | Reported Metric | Reproduced Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Cascade Router (Original Handcrafted)** | `python backend/eval/benchmark.py` (with fallback) | `backend/eval/datasets/routing/master_routing_dataset.json` (1,390 samples) | 97.77% accuracy, 0.165–0.238 ms median latency | **Reproduced** (Fast pattern matching over curated keywords) |
+| **Cascade Router (Original Handcrafted)** | `python backend/eval/benchmark.py` (with fallback) | `backend/eval/datasets/routing/master_routing_dataset.json` (1,390 samples) | 97.77% accuracy, 0.165-0.238 ms median latency | **Reproduced** (Fast pattern matching over curated keywords) |
 | **Cascade Router (Scaled Benchmark)** | `python backend/eval/benchmark.py` | `backend/eval/datasets/partitions/master_routing/test.jsonl` (12,204 samples) | 56.87% accuracy, 57.1% weighted F1, 1.544 ms P95 | **Reproduced from stored metrics** (Critical degradation under synthetic modifiers) |
 | **Guardian Safety (Curated 350)** | `python scripts/calibrate_friction.py --dataset tests/data/adversarial_guardian_350.json` | `tests/data/adversarial_guardian_350.json` (350 samples: 230 threats, 120 benign) | TPR: 100.0%, TNR: 100.0%, FPR: 0.0%, ROC-AUC: 0.9848 | **Independently Reproduced** (Matches calibrated weights $w_R=2.8, w_F=1.8, w_G=2.2, \text{bias}=3.5$) |
 | **Guardian Safety (Scaled 11.5k)** | `backend/eval/benchmark_report.md` | `backend/eval/datasets/partitions/threats/test.jsonl` (11,501 samples) | 93.3% accuracy, 6.7% FNR (770 breaches observed) | **Verified in stored artifact** (Unseen / modified prompts bypass regex patterns) |
@@ -97,7 +97,7 @@ Following critical assessment of the system's actual code, experimental data, an
   *Question:* Does modulating safety intervention via a continuous action-reversibility and session-fatigue friction index ($\mathcal{F}_{\text{dynamic}}$) reduce operator confirmation fatigue while maintaining zero destructive breaches compared to static thresholding?
   *Viability:* High. Supported by real mathematical implementation in `guardian.py` and calibrated by `calibrate_friction.py`, but requires a human-in-the-loop or simulated operator workload protocol.
 
-- **Candidate RQ3 (Trustworthy Persistent Memory & MemoryQuarantine for Local Agents — Recommended):**
+- **Candidate RQ3 (Trustworthy Persistent Memory & MemoryQuarantine for Local Agents - Recommended):**
   *Question:* Can a provenance-aware memory authorization layer (*MemoryQuarantine*) decouple semantic retrieval relevance from action authority to prevent delayed persistent prompt injection and memory poisoning from triggering consequential tool execution?
   *Viability:* **Highest**. Solves the primary methodological gap identified in `gap_analysis.md`. The mechanism bridges `memory_manager.py` (provenance, confidence, decay) with `guardian.py` (action reversibility, friction). It can be rigorously evaluated using reproducible synthetic and benchmarked poisoning attack traces without downloading multi-gigabyte LLM weights.
 
@@ -111,7 +111,7 @@ Following critical assessment of the system's actual code, experimental data, an
 
 | Claim in Previous Literature / Draft | Stated Metric | Source | Initial Verification Status | Action Required |
 | :--- | :--- | :--- | :--- | :--- |
-| Cascade Router Latency | Median 0.165–0.238 ms | `paper.tex`, §III.A | **Verified** | Microbenchmarks on CPU confirm sub-millisecond execution for Stage 0/1. |
+| Cascade Router Latency | Median 0.165-0.238 ms | `paper.tex`, §III.A | **Verified** | Microbenchmarks on CPU confirm sub-millisecond execution for Stage 0/1. |
 | Cascade Router Accuracy | 97.77% on 1,390 queries | `paper.tex`, §III.A | **Qualified** | True on static 1,390 dataset; drops to 56.87% on perturbed 12k dataset. |
 | Guardian Safety Interception | 99.83% threat catch | `paper.tex`, §III.C | **Qualified** | 100% on 350-sample curated corpus; 93.3% on scaled corpus (770 breaches). |
 | Zero Cloud Egress | 100% Offline, Zero Cloud Egress | `paper.tex`, Abstract & §I | **Unsubstantiated as an Absolute Guarantee** | System runs offline, but zero egress is enforced by application logic, not cryptographic or kernel-level network interdiction. |

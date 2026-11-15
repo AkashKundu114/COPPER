@@ -32,20 +32,20 @@ timeline
 
 ### 1.1 Chronological Manuscript Artifact Analysis
 
-#### Phase A: The Genesis Research Draft (`c4db498` — August 13, 2026)
+#### Phase A: The Genesis Research Draft (`c4db498`: August 13, 2026)
 - **Primary Artifact:** `docs/research/COPPER_Research_Paper.md` (114 lines).
 - **Core Concept:** First formal description of C.O.P.P.E.R. as an offline personal AI operating system. Outlined the 12-agent modular architecture, local Ollama execution, and early heuristic safety rules.
 - **Experimental Claims:** Stated preliminary zero-trust principles and claimed ~150 ms routing latency over basic keyword patterns.
 
-#### Phase B: The Technical Architecture White Paper (`2f1c12d` — August 13, 2026)
+#### Phase B: The Technical Architecture White Paper (`2f1c12d`: August 13, 2026)
 - **Primary Artifact:** `docs/research/COPPER_Technical_White_Paper.md` (119 lines).
 - **Transformation:** Replaced the academic draft with an engineering white paper. Emphasized local filesystem boundaries, offline privacy, and zero external cloud egress.
 
-#### Phase C: The Automated Academic Paper Generator (`40c8ecd` — September 11, 2026, Tag `v2.0.0`)
+#### Phase C: The Automated Academic Paper Generator (`40c8ecd`: September 11, 2026, Tag `v2.0.0`)
 - **Primary Artifact:** `scripts/generate_docx_paper.py` (557 lines).
 - **Architectural Shift:** Introduced programmatic generation of formatted Microsoft Word (`.docx`) academic manuscripts. Formatted multi-column tables, benchmark metrics, and system diagrams directly from script logic. Accompanied the milestone of **508 passing automated tests**.
 
-#### Phase D: The Formal IEEE Transactions Manuscript (`paper.tex` — September 18–19, 2026)
+#### Phase D: The Formal IEEE Transactions Manuscript (`paper.tex`: September 18-19, 2026)
 - **Primary Artifact:** [`research/paper.tex`](file:///d:/C.O.P.P.E.R/research/paper.tex) (1,586 lines, 143 KB) and [`research/submissions/paper.md`](file:///d:/C.O.P.P.E.R/research/submissions/paper.md) (1,152 lines, 100 KB).
 - **Format:** Formatted using `IEEEtran.cls` (v1.8b), targeting *IEEE Transactions on Consumer Electronics* (T-CE). Verified with zero errors via IEEE LaTeXQC (`research/ieee_latexqc_report.json`).
 - **Embargo Strategy:** `research/` was explicitly added to [`.gitignore`](file:///d:/C.O.P.P.E.R/.gitignore#L189) (`# Unpublished Research & Academic Papers (Embargoed until publication)`), isolating submission manuscripts from public Git syncs.
@@ -57,11 +57,11 @@ timeline
   - ARIES-style Write-Ahead Logging (TaskWAL) with CRC32 checksums.
   - DAG-Lookahead VRAM Paging within 8.0 GB consumer GPU budget.
 
-#### Phase E: Public Release Gate & Scorecard (`6c397b8` — October 17, 2026, Tag `v0.1.0-alpha`)
+#### Phase E: Public Release Gate & Scorecard (`6c397b8`: October 17, 2026, Tag `v0.1.0-alpha`)
 - **Primary Artifact:** `docs/release/V0.1.0_ALPHA_VERIFICATION_REPORT.md` and `RELEASE_SCORECARD.md`.
 - **Purpose:** Public release hardening. Enforced empirical release gates: 546 passing tests, 17-pattern Data Firewall redaction, zero-egress fonts, and synthetic DEMO mode (`COPPER_DEMO=1`). Down-versioned application manifests to `0.1.0-alpha` for public audit.
 
-#### Phase F: The Internal Gap Analysis & Pivot (`d4d3bfa` — October 29, 2026)
+#### Phase F: The Internal Gap Analysis & Pivot (`d4d3bfa`: October 29, 2026)
 - **Primary Artifact:** [`research/notes/gap_analysis.md`](file:///d:/C.O.P.P.E.R/research/notes/gap_analysis.md) (121 lines).
 - **Critical Self-Audit Finding:** Internal researchers recognized that claiming C.O.P.P.E.R. as an "operating system" is scientifically indefensible. The document explicitly advises:
   > *"The most credible next paper is not a broad claim that C.O.P.P.E.R. is a new operating system. It is a focused systems-and-security paper on protecting persistent memory in local tool-using agents... The present implementation is a strong prototype, but it is not yet the evidence base for archival publication. In particular, the current evaluation uses hand-authored streams and tests detection rules, rather than an external adversarial benchmark, real action traces, or an ablation of trust controls."*
@@ -91,7 +91,7 @@ Every empirical metric reported in `research/paper.tex` has been linked to its o
 
 | ID | Claimed Metric in Paper | Originating Commit SHA | Input Dataset Artifact | Host Hardware Profile | Evaluation Command | Output File / Test Result | Audit Label |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **E01** | **TFP-Router Latency:** Median 0.165–0.238 ms, P95 0.379 ms | [`41f3ddc`](file:///d:/C.O.P.P.E.R/backend/eval/benchmark.py) (2026-10-17) | `backend/eval/datasets/routing/master_routing_dataset.json` (1,390 samples) | AMD Ryzen 9 8940HX, DDR5 RAM | `python backend/eval/benchmark.py` | `backend/eval/benchmark_metrics.json` | **VERIFIED** |
+| **E01** | **TFP-Router Latency:** Median 0.165-0.238 ms, P95 0.379 ms | [`41f3ddc`](file:///d:/C.O.P.P.E.R/backend/eval/benchmark.py) (2026-10-17) | `backend/eval/datasets/routing/master_routing_dataset.json` (1,390 samples) | AMD Ryzen 9 8940HX, DDR5 RAM | `python backend/eval/benchmark.py` | `backend/eval/benchmark_metrics.json` | **VERIFIED** |
 | **E02** | **TFP-Router Accuracy:** 97.77% accuracy, 98.78% weighted F1 | [`1205b69`](file:///d:/C.O.P.P.E.R/backend/app/ai/orchestration/agent_router.py) (2026-09-30) | `master_routing_dataset.json` (1,390 curated commands) | AMD Ryzen 9 8940HX | `python backend/eval/benchmark.py` | `backend/eval/benchmark_metrics.json` | **VERIFIED (CURATED)** |
 | **E03** | **TFP-Router Scaled Test:** Claimed general intent capability | [`71c2856`](file:///d:/C.O.P.P.E.R/backend/eval/benchmark_report.md) (2026-10-29) | `backend/eval/datasets/partitions/master_routing/test.jsonl` (12,204 samples) | AMD Ryzen 9 8940HX | `python backend/eval/benchmark.py --dataset test.jsonl` | `backend/eval/benchmark_report.md` | **CONTRADICTED (56.87% Acc)** |
 | **E04** | **DFM-Guard Catch Rate:** 100.0% catch on red-team triggers ($N=350$) | [`1205b69`](file:///d:/C.O.P.P.E.R/scripts/calibrate_friction.py) (2026-09-30) | `tests/data/adversarial_guardian_350.json` (350 samples: 230 threats, 120 benign) | AMD Ryzen 9 8940HX | `python scripts/calibrate_friction.py` | `docs/friction_calibration_report.json` | **VERIFIED (CURATED)** |

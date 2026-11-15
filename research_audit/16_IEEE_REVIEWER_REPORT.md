@@ -22,7 +22,7 @@ Beneath the polished mathematical notation and extensive architectural diagrams 
 4. **Phantom Model Fleet & Hardcoded Benchmark Figures:** The paper reports empirical throughput (38 tok/s) and VRAM management across a 57.68 GB / 15-model fleet. On physical disk, the LLM weight directories contain only empty `.gitkeep` files, and the plotting script (`generate_all_academic_figures.py`) literally hardcodes python arrays (`after_tps = [38.08, 37.76...]`) rather than reading experimental telemetry.
 5. **Toy Validation of Core Algorithmic Claims:** The epistemic memory belief revision algorithm (PW-EBR) is evaluated on a synthetic toy benchmark of exactly **$N = 6$ scenarios**.
 
-To be accepted at ICCECE 2027, the authors must abandon the indefensible "Personal AI OS" framing, reconcile all contradictory metrics candidly, execute the pre-registered ablation protocols, and refocus the contribution around **MemoryQuarantine**—the only component demonstrating genuine academic novelty.
+To be accepted at ICCECE 2027, the authors must abandon the indefensible "Personal AI OS" framing, reconcile all contradictory metrics candidly, execute the pre-registered ablation protocols, and refocus the contribution around **MemoryQuarantine** - the only component demonstrating genuine academic novelty.
 
 ---
 
@@ -38,7 +38,7 @@ To be accepted at ICCECE 2027, the authors must abandon the indefensible "Person
 | **Statistical Validity** | **2.0 / 5.0** | Complete absence of hypothesis testing (t-tests, ANOVA, McNemar), effect size reporting, or statistical significance indicators in the main tables. Confidence intervals are reported only post-hoc. |
 | **Systems Performance** | **3.0 / 5.0** | Sub-millisecond CPU routing and sub-millisecond AST/regex safety interdiction are genuinely fast, but generation throughput figures are hardcoded mock arrays rather than logged measurements. |
 | **Reproducibility** | **2.0 / 5.0** | Code is open source, but reproducing full multi-model inference is impossible without downloading 50+ GB of external models that are absent from the repository manifests. |
-| **Writing & Presentation** | **4.0 / 5.0** | The manuscript is exceptionally well-written, structurally coherent, and adheres meticulously to IEEE format guidelines. However, the polished prose serves to obscure critical empirical gaps. |
+| **Writing & Presentation** | **4.0 / 5.0** | The manuscript is exceptionally well-written, structurally coherent, and adheres thoroughly to IEEE format guidelines. However, the polished prose serves to obscure critical empirical gaps. |
 
 ---
 
@@ -47,7 +47,7 @@ To be accepted at ICCECE 2027, the authors must abandon the indefensible "Person
 1. **Integrated Systems Engineering Vision:**  
    The authors have constructed a remarkably comprehensive end-to-end prototype uniting multi-agent routing, desktop tool interdiction, persistent vector memory, and crash-consistent write-ahead logging. Few academic prototypes bridge high-level LLM reasoning with real desktop window and process perception.
 2. **Sub-Millisecond CPU Heuristic Routing:**  
-   The realization that cloud-tethered neural routers (like RouteLLM at 28–88 ms) are incompatible with interactive edge computing is insightful. Demonstrating median dispatch latencies of 0.165–0.238 ms on CPU threads without consuming discrete GPU VRAM represents a practical systems optimization.
+   The realization that cloud-tethered neural routers (like RouteLLM at 28-88 ms) are incompatible with interactive edge computing is insightful. Demonstrating median dispatch latencies of 0.165-0.238 ms on CPU threads without consuming discrete GPU VRAM represents a practical systems optimization.
 3. **Sound Adaptation of Database WAL to Multi-Agent Workflows:**  
    The formalization of `TaskWAL` (`wal_executor.py`), incorporating monotonic Log Sequence Numbers (LSNs), CRC32 integrity checksums, and compensating rollbacks for partial tool executions, provides a rigorous blueprint for crash consistency in autonomous agents.
 4. **Formulation of Continuous Dynamic Friction:**  

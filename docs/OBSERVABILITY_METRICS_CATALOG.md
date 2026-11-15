@@ -8,11 +8,11 @@ Comprehensive catalog of all native Prometheus metrics emitted by COPPER at `/me
 | :--- | :--- | :--- | :--- | :--- |
 | `copper_cpu_utilization_ratio` | Gauge | None | System CPU utilization ratio (0.0 to 1.0) | `> 0.92` (Warning) |
 | `copper_ram_utilization_ratio` | Gauge | None | System RAM utilization ratio (0.0 to 1.0) | `> 0.90` (Critical) |
-| `copper_ram_used_bytes` | Gauge | None | Total host RAM consumed in bytes | — |
-| `copper_ram_total_bytes` | Gauge | None | Total host physical RAM available | — |
-| `copper_gpu_utilization_ratio` | Gauge | None | GPU compute core utilization ratio (0.0 to 1.0) | — |
+| `copper_ram_used_bytes` | Gauge | None | Total host RAM consumed in bytes | None |
+| `copper_ram_total_bytes` | Gauge | None | Total host physical RAM available | None |
+| `copper_gpu_utilization_ratio` | Gauge | None | GPU compute core utilization ratio (0.0 to 1.0) | None |
 | `copper_vram_used_bytes` | Gauge | None | GPU VRAM memory consumed in bytes | `> 90% of total` (Critical) |
-| `copper_vram_total_bytes` | Gauge | None | Total GPU VRAM budget (8GB hardware constraint) | — |
+| `copper_vram_total_bytes` | Gauge | None | Total GPU VRAM budget (8GB hardware constraint) | None |
 
 ---
 
@@ -22,8 +22,8 @@ Comprehensive catalog of all native Prometheus metrics emitted by COPPER at `/me
 | :--- | :--- | :--- | :--- | :--- |
 | `copper_model_loading_seconds` | Histogram | None | Time taken to load or hot-swap model into GPU VRAM (buckets: 0.5s to 30s) | `> 15s` (Warning) |
 | `copper_llm_inference_duration_seconds` | Histogram | `model_name` | End-to-end inference request duration in seconds (buckets: 0.1s to 30s) | p95 `> 10s` |
-| `copper_llm_tokens_generated_total` | Counter | `model_name` | Cumulative completion tokens generated | — |
-| `copper_llm_prompt_tokens_total` | Counter | `model_name` | Cumulative prompt tokens evaluated | — |
+| `copper_llm_tokens_generated_total` | Counter | `model_name` | Cumulative completion tokens generated | None |
+| `copper_llm_prompt_tokens_total` | Counter | `model_name` | Cumulative prompt tokens evaluated | None |
 | `copper_llm_tokens_per_second` | Gauge | `model_name` | Instantaneous token generation velocity (tokens/second) | `< 5.0` (Degraded) |
 | `copper_inference_queue_depth` | Gauge | None | Count of queued inference requests waiting for execution | `> 5` (Warning), `> 10` (Critical) |
 
@@ -34,8 +34,8 @@ Comprehensive catalog of all native Prometheus metrics emitted by COPPER at `/me
 | Metric Name | Type | Labels | Description | Alert Threshold |
 | :--- | :--- | :--- | :--- | :--- |
 | `copper_agent_executions_total` | Counter | `agent_type`, `status` | Total agent task executions partitioned by success or error | Error rate `> 20%` |
-| `copper_agent_handoffs_total` | Counter | None | Total inter-agent task delegation handoffs | — |
-| `copper_tool_executions_total` | Counter | `tool_name` | Cumulative count of tool invocations | — |
+| `copper_agent_handoffs_total` | Counter | None | Total inter-agent task delegation handoffs | None |
+| `copper_tool_executions_total` | Counter | `tool_name` | Cumulative count of tool invocations | None |
 | `copper_tool_execution_duration_seconds` | Histogram | `tool_name` | Execution latency of tools (buckets: 10ms to 30s) | p95 `> 5s` |
 
 ---
