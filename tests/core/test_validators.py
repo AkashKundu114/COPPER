@@ -31,6 +31,13 @@ def test_validate_message_empty_string():
     assert "empty" in err.lower()
 
 
+def test_validate_message_rejects_non_string_values():
+    for value in (None, 123, ["hello"], {"message": "hello"}):
+        valid, err = validate_message(value)
+        assert valid is False
+        assert "string" in err.lower()
+
+
 def test_validate_message_max_length_bound():
     message_20k = "a" * 20000
     valid, _err = validate_message(message_20k)
