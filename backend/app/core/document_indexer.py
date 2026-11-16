@@ -6,8 +6,15 @@ from app.core.logger import logger
 
 
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
-    if not text:
+    if text is None or text == "":
         return []
+    if not isinstance(text, str):
+        raise TypeError("text must be a string or None")
+    if isinstance(chunk_size, bool) or not isinstance(chunk_size, int):
+        raise TypeError("chunk_size must be an integer")
+    if isinstance(overlap, bool) or not isinstance(overlap, int):
+        raise TypeError("overlap must be an integer")
+
     safe_chunk_size = max(10, chunk_size)
     safe_overlap = max(0, min(overlap, safe_chunk_size - 1))
     step = safe_chunk_size - safe_overlap
